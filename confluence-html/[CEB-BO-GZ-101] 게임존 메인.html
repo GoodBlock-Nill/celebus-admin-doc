@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-GZ-101] 게임존 메인</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+
+<h1>[CEB-BO-GZ-101] 게임존 메인</h1>
+
+<h2>Page Properties</h2>
+
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Value</th>
+  </tr>
+  <tr>
+    <td>Screen ID</td>
+    <td>CEB-BO-GZ-101</td>
+  </tr>
+  <tr>
+    <td>기획담당자</td>
+    <td>@Nill Yoo</td>
+  </tr>
+  <tr>
+    <td>디자인담당자</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>개발담당자</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>API</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>기능영역(Epic)</td>
+    <td>GAM(게임)</td>
+  </tr>
+  <tr>
+    <td>상태</td>
+    <td>Draft / In progress / Done</td>
+  </tr>
+  <tr>
+    <td>버전</td>
+    <td>v1.0</td>
+  </tr>
+  <tr>
+    <td>최근 업데이트</td>
+    <td>2025-02-03</td>
+  </tr>
+  <tr>
+    <td>Jira 링크</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Figma 링크</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>다국어 영향</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>Breadcrumb</td>
+    <td>Home > 04-02_Screen Space_Admin > BO-GAM</td>
+  </tr>
+</table>
+
+<h2>1. 화면 목적</h2>
+
+<p>게임존 관리의 진입점으로, 전체 현황을 한눈에 파악하고 하위 메뉴로 빠르게 이동할 수 있는 대시보드 화면이다.</p>
+
+<h2>2. UI 설명</h2>
+
+<h3>2.1 화면 레이아웃</h3>
+
+<pre>
+┌─────────────────────────────────────────────────────────────────┐
+│ [Breadcrumb] 홈 &gt; 게임존                                         │
+│ [Header] 게임존                                                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ [Section] 전체 현황                                       │   │
+│  │                                                          │   │
+│  │ ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐ │   │
+│  │ │ 진행중    │ │결과 입력  │ │ 오늘 GP   │ │ 오늘 GP   │ │   │
+│  │ │ 게임      │ │필요 (주황)│ │ 충전      │ │ 출금      │ │   │
+│  │ │    4개    │ │    4개    │ │ 5,200 GP  │ │ 3,100 GP  │ │   │
+│  │ └───────────┘ └───────────┘ └───────────┘ └───────────┘ │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ [Section] 게임 관리                         [전체 보기 →] │   │
+│  │                                                          │   │
+│  │  ┌──────────────────────┐ ┌──────────────────────┐      │   │
+│  │  │ Prediction Market    │ │ Survival Trivia      │      │   │
+│  │  │            [바로가기]│ │ [준비중]             │      │   │
+│  │  │                      │ │                      │      │   │
+│  │  │ 진행중 게임      3개 │ │     🔧 준비중        │      │   │
+│  │  │ 결과 입력 필요   2개 │ │                      │      │   │
+│  │  │ 오늘 참여자     85명 │ │ Phase 2.5에서 제공   │      │   │
+│  │  │                      │ │ 예정입니다           │      │   │
+│  │  └──────────────────────┘ └──────────────────────┘      │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                 │
+│  ┌──────────────────────────┐ ┌──────────────────────────┐    │
+│  │ [Card] 랭킹    [바로가기] │ │ [Card] GP 교환소[바로가기]│    │
+│  │                          │ │                          │    │
+│  │ TOP 10 공개       ON     │ │ 오늘 GP 충전    5,200 GP │    │
+│  │ TOP 1        starlight23 │ │ 오늘 GP 출금    3,100 GP │    │
+│  │ TOP 1 누적 GP 100,520 GP │ │                          │    │
+│  └──────────────────────────┘ └──────────────────────────┘    │
+│                                                                 │
+│  ┌──────────────────────────┐                                  │
+│  │ [Card] GP 변동 내역       │                                  │
+│  │                [바로가기] │                                  │
+│  │ 오늘 GP 변동 건수   523건 │                                  │
+│  └──────────────────────────┘                                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</pre>
+
+<h3>2.2 영역별 구성요소</h3>
+
+<h4>2.2.1 Header 영역</h4>
+
+<table>
+  <tr>
+    <th>요소</th>
+    <th>내용</th>
+  </tr>
+  <tr>
+    <td>Breadcrumb</td>
+    <td>홈 > 게임존</td>
+  </tr>
+  <tr>
+    <td>페이지 타이틀</td>
+    <td>게임존</td>
+  </tr>
+</table>
+
+<h4>2.2.2 전체 현황 섹션</h4>
+
+<p>가로 4열 배치의 Summary Card</p>
+
+<table>
+  <tr>
+    <th>Card</th>
+    <th>Label</th>
+    <th>Value 형식</th>
+    <th>색상</th>
+    <th>설명</th>
+  </tr>
+  <tr>
+    <td>Card 1</td>
+    <td>진행중 게임</td>
+    <td>{숫자}개</td>
+    <td>기본</td>
+    <td>상태가 Active인 전체 게임 수</td>
+  </tr>
+  <tr>
+    <td>Card 2</td>
+    <td>결과 입력 필요</td>
+    <td>{숫자}개</td>
+    <td>주황색</td>
+    <td>상태가 Pending인 전체 게임 수 (관리자 액션 필요)</td>
+  </tr>
+  <tr>
+    <td>Card 3</td>
+    <td>오늘 GP 충전</td>
+    <td>{숫자} GP</td>
+    <td>파란색</td>
+    <td>오늘 CELB → GP 교환 완료된 GP 합계</td>
+  </tr>
+  <tr>
+    <td>Card 4</td>
+    <td>오늘 GP 출금</td>
+    <td>{숫자} GP</td>
+    <td>파란색</td>
+    <td>오늘 GP → CELB 교환 완료된 GP 합계</td>
+  </tr>
+</table>
+
+<h4>2.2.3 게임 관리 섹션</h4>
+
+<table>
+  <tr>
+    <th>요소</th>
+    <th>타입</th>
+    <th>내용</th>
+  </tr>
+  <tr>
+    <td>섹션 타이틀</td>
+    <td>Text</td>
+    <td>"게임 관리"</td>
+  </tr>
+  <tr>
+    <td>전체 보기</td>
+    <td>Text Link</td>
+    <td>"전체 보기 →" 클릭 시 게임 리스트 이동 (필터 없음)</td>
+  </tr>
+  <tr>
+    <td>게임 유형 카드</td>
+    <td>Card Grid</td>
+    <td>가로 2열 그리드 배치, 게임 유형 추가 시 자동 확장</td>
+  </tr>
+</table>
+
+<h5>Prediction Market 카드</h5>
+
+<table>
+  <tr>
+    <th>요소</th>
+    <th>타입</th>
+    <th>내용</th>
+  </tr>
+  <tr>
+    <td>카드 타이틀</td>
+    <td>Text</td>
+    <td>"Prediction Market"</td>
+  </tr>
+  <tr>
+    <td>바로가기</td>
+    <td>Text Link</td>
+    <td>"바로가기 →" 클릭 시 게임 리스트 이동 (필터: Prediction Market)</td>
+  </tr>
+  <tr>
+    <td>항목 1</td>
+    <td>Label + Value</td>
+    <td>진행중 게임 / {숫자}개</td>
+  </tr>
+  <tr>
+    <td>항목 2</td>
+    <td>Label + Value</td>
+    <td>결과 입력 필요 / {숫자}개</td>
+  </tr>
+  <tr>
+    <td>항목 3</td>
+    <td>Label + Value</td>
+    <td>오늘 참여자 / {숫자}명</td>
+  </tr>
+</table>
+
+<h5>Survival Trivia 카드 (Phase 2.5)</h5>
+
+<table>
+  <tr>
+    <th>요소</th>
+    <th>타입</th>
+    <th>내용</th>
+  </tr>
+  <tr>
+    <td>카드 타이틀</td>
+    <td>Text</td>
+    <td>"Survival Trivia"</td>
+  </tr>
+  <tr>
+    <td>상태 라벨</td>
+    <td>Badge</td>
+    <td>"준비중" (타이틀 옆)</td>
+  </tr>
+  <tr>
+    <td>중앙 아이콘</td>
+    <td>Icon</td>
+    <td>공구(WrenchScrewdriver) 아이콘</td>
+  </tr>
+  <tr>
+    <td>준비중 텍스트</td>
+    <td>Text</td>
+    <td>"준비중" (중앙 표시)</td>
+  </tr>
+  <tr>
+    <td>부가 설명</td>
+    <td>Text</td>
+    <td>"Phase 2.5에서 제공 예정입니다"</td>
+  </tr>
+  <tr>
+    <td>바로가기</td>
+    <td>-</td>
+    <td>미표시</td>
+  </tr>
+</table>
+
+<h4>2.2.4 랭킹 카드</h4>
+
+<table>
+  <tr>
+    <th>요소</th>
+    <th>타입</th>
+    <th>내용</th>
+  </tr>
+  <tr>
+    <td>카드 타이틀</td>
+    <td>Text</td>
+    <td>"랭킹"</td>
+  </tr>
+  <tr>
+    <td>바로가기</td>
+    <td>Text Link</td>
+    <td>"바로가기 →" 클릭 시 CEB-BO-GZ-401 이동</td>
+  </tr>
+  <tr>
+    <td>항목 1</td>
+    <td>Label + Badge</td>
+    <td>TOP 10 공개 / ON(초록) 또는 OFF(회색)</td>
+  </tr>
+  <tr>
+    <td>항목 2</td>
+    <td>Label + Value</td>
+    <td>TOP 1 / {닉네임}</td>
+  </tr>
+  <tr>
+    <td>항목 3</td>
+    <td>Label + Value</td>
+    <td>TOP 1 누적 GP / {숫자} GP</td>
+  </tr>
+</table>
+
+<h4>2.2.5 GP 교환소 카드</h4>
+
+<table>
+  <tr>
+    <th>요소</th>
+    <th>타입</th>
+    <th>내용</th>
+  </tr>
+  <tr>
+    <td>카드 타이틀</td>
+    <td>Text</td>
+    <td>"GP 교환소"</td>
+  </tr>
+  <tr>
+    <td>바로가기</td>
+    <td>Text Link</td>
+    <td>"바로가기 →" 클릭 시 CEB-BO-GZ-501 이동</td>
+  </tr>
+  <tr>
+    <td>항목 1</td>
+    <td>Label + Value</td>
+    <td>오늘 GP 충전 / {숫자} GP</td>
+  </tr>
+  <tr>
+    <td>항목 2</td>
+    <td>Label + Value</td>
+    <td>오늘 GP 출금 / {숫자} GP</td>
+  </tr>
+</table>
+
+<h4>2.2.6 GP 변동 내역 카드</h4>
+
+<table>
+  <tr>
+    <th>요소</th>
+    <th>타입</th>
+    <th>내용</th>
+  </tr>
+  <tr>
+    <td>카드 타이틀</td>
+    <td>Text</td>
+    <td>"GP 변동 내역"</td>
+  </tr>
+  <tr>
+    <td>바로가기</td>
+    <td>Text Link</td>
+    <td>"바로가기 →" 클릭 시 CEB-BO-GZ-601 이동</td>
+  </tr>
+  <tr>
+    <td>항목 1</td>
+    <td>Label + Value</td>
+    <td>오늘 GP 변동 건수 / {숫자}건</td>
+  </tr>
+</table>
+
+<h2>3. 화면 내 기능설명</h2>
+
+<h3>3.1 현황 데이터 조회</h3>
+
+<table>
+  <tr>
+    <th>기능</th>
+    <th>설명</th>
+  </tr>
+  <tr>
+    <td>자동 조회</td>
+    <td>화면 진입 시 모든 현황 데이터 자동 조회</td>
+  </tr>
+  <tr>
+    <td>수동 새로고침</td>
+    <td>브라우저 새로고침 또는 사이드 메뉴 재클릭 시 데이터 갱신</td>
+  </tr>
+</table>
+
+<h3>3.2 바로가기 기능</h3>
+
+<table>
+  <tr>
+    <th>클릭 요소</th>
+    <th>이동 화면</th>
+    <th>필터 적용</th>
+  </tr>
+  <tr>
+    <td>게임 관리 섹션 "전체 보기"</td>
+    <td>CEB-BO-GZ-201</td>
+    <td>필터 없음 (전체 조회)</td>
+  </tr>
+  <tr>
+    <td>Prediction Market 카드 바로가기</td>
+    <td>CEB-BO-GZ-201</td>
+    <td>게임유형 필터 "Prediction Market" 자동 적용</td>
+  </tr>
+  <tr>
+    <td>Survival Trivia 카드 바로가기</td>
+    <td>CEB-BO-GZ-201</td>
+    <td>(Phase 2.5) 게임유형 필터 "Survival Trivia" 자동 적용</td>
+  </tr>
+  <tr>
+    <td>랭킹 카드 바로가기</td>
+    <td>CEB-BO-GZ-401</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>GP 교환소 카드 바로가기</td>
+    <td>CEB-BO-GZ-501</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>GP 변동 내역 카드 바로가기</td>
+    <td>CEB-BO-GZ-601</td>
+    <td>-</td>
+  </tr>
+</table>
+
+<h2>4. 규칙/로직</h2>
+
+<h3>4.1 데이터 조회 기준</h3>
+
+<table>
+  <tr>
+    <th>항목</th>
+    <th>기준</th>
+  </tr>
+  <tr>
+    <td>"오늘" 기준 시간</td>
+    <td>서버 기준 00:00:00 ~ 23:59:59 (KST, UTC+9)</td>
+  </tr>
+  <tr>
+    <td>데이터 갱신 주기</td>
+    <td>화면 진입 시 1회 조회, 자동 갱신 없음</td>
+  </tr>
+  <tr>
+    <td>숫자 포맷</td>
+    <td>천 단위 콤마(,) 표시 (예: 1,234)</td>
+  </tr>
+</table>
+
+<h3>4.2 현황 항목별 집계 기준</h3>
+
+<table>
+  <tr>
+    <th>항목</th>
+    <th>집계 기준</th>
+  </tr>
+  <tr>
+    <td>진행중 게임</td>
+    <td>상태가 Active인 전체 게임 수</td>
+  </tr>
+  <tr>
+    <td>결과 입력 필요</td>
+    <td>상태가 Pending인 전체 게임 수</td>
+  </tr>
+  <tr>
+    <td>오늘 GP 충전</td>
+    <td>오늘 CELB → GP 교환 완료된 GP 합계</td>
+  </tr>
+  <tr>
+    <td>오늘 GP 출금</td>
+    <td>오늘 GP → CELB 교환 완료된 GP 합계</td>
+  </tr>
+  <tr>
+    <td>진행중 게임 (PM)</td>
+    <td>상태가 Active인 Prediction Market 게임 수</td>
+  </tr>
+  <tr>
+    <td>결과 입력 필요 (PM)</td>
+    <td>상태가 Pending인 Prediction Market 게임 수</td>
+  </tr>
+  <tr>
+    <td>오늘 참여자 (PM)</td>
+    <td>오늘 Prediction Market에 참여한 유저 수</td>
+  </tr>
+  <tr>
+    <td>TOP 10 공개</td>
+    <td>랭킹 설정의 TOP 10 공개 여부</td>
+  </tr>
+  <tr>
+    <td>TOP 1</td>
+    <td>누적 GP 기준 1위 유저의 닉네임</td>
+  </tr>
+  <tr>
+    <td>TOP 1 누적 GP</td>
+    <td>누적 GP 기준 1위 유저의 누적 GP</td>
+  </tr>
+  <tr>
+    <td>오늘 GP 변동 건수</td>
+    <td>오늘 발생한 모든 GP 증감 내역 건수</td>
+  </tr>
+</table>
+
+<h3>4.3 게임 유형별 카드 노출 조건</h3>
+
+<table>
+  <tr>
+    <th>게임 유형 상태</th>
+    <th>카드 노출</th>
+    <th>바로가기</th>
+    <th>상세 항목</th>
+  </tr>
+  <tr>
+    <td>Active</td>
+    <td>노출</td>
+    <td>활성화</td>
+    <td>표시</td>
+  </tr>
+  <tr>
+    <td>Inactive</td>
+    <td>미노출</td>
+    <td>-</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>Coming Soon</td>
+    <td>노출</td>
+    <td>미표시</td>
+    <td>중앙에 아이콘 + "준비중" 텍스트 + 부가설명</td>
+  </tr>
+</table>
+
+<h3>4.4 권한별 분기</h3>
+
+<table>
+  <tr>
+    <th>권한</th>
+    <th>동작</th>
+  </tr>
+  <tr>
+    <td>게임존 읽기 권한 있음</td>
+    <td>화면 접근 가능, 모든 현황 조회 가능</td>
+  </tr>
+  <tr>
+    <td>게임존 읽기 권한 없음</td>
+    <td>사이드 메뉴에서 "게임존" 메뉴 미노출</td>
+  </tr>
+</table>
+
+<h3>4.5 상태별 표시</h3>
+
+<table>
+  <tr>
+    <th>상태</th>
+    <th>조건</th>
+    <th>표시</th>
+  </tr>
+  <tr>
+    <td>Loading</td>
+    <td>데이터 로딩 중</td>
+    <td>각 카드/항목별 Skeleton UI</td>
+  </tr>
+  <tr>
+    <td>Default</td>
+    <td>데이터 정상 조회</td>
+    <td>조회된 값 표시</td>
+  </tr>
+  <tr>
+    <td>Empty</td>
+    <td>데이터 없음 (값이 0)</td>
+    <td>"0" 표시</td>
+  </tr>
+  <tr>
+    <td>Error</td>
+    <td>조회 실패</td>
+    <td>해당 카드에 "조회 실패" 메시지 + 재시도 링크</td>
+  </tr>
+</table>
+
+<h2>5. 에러 및 예외상황</h2>
+
+<table>
+  <tr>
+    <th>상황</th>
+    <th>처리</th>
+  </tr>
+  <tr>
+    <td>전체 데이터 조회 실패</td>
+    <td>토스트: "데이터를 불러오는데 실패했습니다."</td>
+  </tr>
+  <tr>
+    <td>특정 카드 데이터 조회 실패</td>
+    <td>해당 카드만 에러 표시, 나머지 카드 정상 표시</td>
+  </tr>
+  <tr>
+    <td>네트워크 에러</td>
+    <td>토스트: "네트워크 상태를 확인해주세요."</td>
+  </tr>
+  <tr>
+    <td>권한 없이 URL 직접 접근</td>
+    <td>권한 없음 페이지로 리다이렉트</td>
+  </tr>
+</table>
+
+<h2>6. 연관화면ID</h2>
+
+<table>
+  <tr>
+    <th>화면ID</th>
+    <th>화면명</th>
+    <th>연관 설명</th>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-201</td>
+    <td>게임 리스트</td>
+    <td>게임 관리 섹션 "전체 보기" 또는 게임 유형 카드 바로가기 클릭 시 이동</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-301</td>
+    <td>게임 유형 관리</td>
+    <td>(Phase 2) 사이드 메뉴에서 이동</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-401</td>
+    <td>랭킹 조회</td>
+    <td>랭킹 카드 바로가기 클릭 시 이동</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-501</td>
+    <td>교환 내역</td>
+    <td>GP 교환소 카드 바로가기 클릭 시 이동</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-601</td>
+    <td>GP 변동 내역</td>
+    <td>GP 변동 내역 카드 바로가기 클릭 시 이동</td>
+  </tr>
+</table>
+
+</body>
+</html>

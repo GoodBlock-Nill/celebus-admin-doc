@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-USR-203] 회원상세 (게임존 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+
+<h1>[CEB-BO-USR-203] 회원상세 (게임존 탭)</h1>
+
+<h2>Page Properties</h2>
+
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Value</th>
+  </tr>
+  <tr>
+    <td>Screen ID</td>
+    <td>CEB-BO-USR-203</td>
+  </tr>
+  <tr>
+    <td>기획담당자</td>
+    <td>@Nill Yoo</td>
+  </tr>
+  <tr>
+    <td>디자인담당자</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>개발담당자</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>API</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>기능영역(Epic)</td>
+    <td>USR(회원) / GAM(게임)</td>
+  </tr>
+  <tr>
+    <td>상태</td>
+    <td>Draft</td>
+  </tr>
+  <tr>
+    <td>버전</td>
+    <td>v1.0</td>
+  </tr>
+  <tr>
+    <td>최근 업데이트</td>
+    <td>2026.02.06</td>
+  </tr>
+  <tr>
+    <td>Jira 링크</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Figma 링크</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>다국어 영향</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>Breadcrumb</td>
+    <td>홈 > 회원 > 회원 상세</td>
+  </tr>
+</table>
+
+<hr>
+
+<h2>1. 화면 목적</h2>
+
+<p>회원상세 페이지 내 "게임존" 탭으로, 특정 회원의 게임존 활동 전체를 한눈에 파악할 수 있는 조회 전용 화면입니다.</p>
+
+<h5>주요 기능</h5>
+
+<ul>
+  <li>회원의 GP 보유/획득/사용 현황 요약</li>
+  <li>게임존 내 랭킹 순위 확인</li>
+  <li>게임 참여 내역 테이블 조회 (필터, 정렬, 페이지네이션)</li>
+  <li>GP 변동 내역 테이블 조회 (필터, 정렬, 페이지네이션)</li>
+</ul>
+
+<h5>접근 경로</h5>
+
+<table>
+  <tr>
+    <th>진입 화면</th>
+    <th>경로</th>
+  </tr>
+  <tr>
+    <td>CEB-BO-USR-201</td>
+    <td>회원상세 페이지에서 "게임존" 탭 클릭</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-401</td>
+    <td>랭킹 조회 테이블 ROW 클릭 시 이동</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-202</td>
+    <td>게임 상세 참여내역 탭에서 닉네임 클릭 시 이동</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-601</td>
+    <td>GP 변동 내역에서 닉네임 클릭 시 이동</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-501</td>
+    <td>교환 내역에서 닉네임 클릭 시 이동</td>
+  </tr>
+</table>
+
+<hr>
+
+<h2>2. UI 설명</h2>
+
+<h3>레이아웃</h3>
+
+<pre>
+┌──────────────────────────────────────────────────────────────────────┐
+│ Breadcrumb: 홈 &gt; 회원 &gt; 회원 상세                                       │
+│ 회원상세                                                               │
+│ {유저명}님의 상세 정보를 관리합니다.                                       │
+├──────────────────────────────────────────────────────────────────────┤
+│ [기본정보] [참여내역] [게임존★] [BIVE] [프로젝트] [Fans] [티켓] [지갑] [활동내역] │
+├──────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  ┌─ GP 요약 ───────────────────────────────────────────────────────┐ │
+│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌─────────┐ │ │
+│  │ │ 현재 GP 잔액  │ │ 누적 획득 GP  │ │ 누적 사용 GP  │ │  랭킹   │ │ │
+│  │ │  12,500 GP   │ │  45,200 GP   │ │  32,700 GP   │ │  23위   │ │ │
+│  │ │              │ │ 보상+환급+환불+충전 │ │ 참여+부스팅+출금│ │ / 150명 │ │ │
+│  │ └──────────────┘ └──────────────┘ └──────────────┘ └─────────┘ │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+│                                                                      │
+│  ┌─ 게임 성과 요약 ────────────────────────────────────────────────┐ │
+│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐             │ │
+│  │ │ 참여 게임 수  │ │    승률       │ │ 최근 참여일   │             │ │
+│  │ │    48회      │ │    75%       │ │ 2026.02.05   │             │ │
+│  │ └──────────────┘ └──────────────┘ └──────────────┘             │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+│                                                                      │
+│  ┌─ 게임 참여 내역 ───────────────────────────────────────────────┐ │
+│  │ [게임상태 ▼ 전체]  [기간 ▼ 전체]                                 │ │
+│  │                                                                │ │
+│  │ 게임타이틀 │참여일시│선택│참여GP│부스팅GP│게임결과│보상GP│환급GP│상태│ │
+│  │ ──────────────────────────────────────────────────────────── │ │
+│  │ BTS 컴백.. │02.05 14:30│YES│10 GP│5 GP│정답(YES)│120 GP│10 GP│종료│ │
+│  │ IVE 1위.. │02.03 09:15│ NO│10 GP│0 GP│오답(YES)│  0 GP│10 GP│종료│ │
+│  │ ...                                                            │ │
+│  │                      ◀ 1 2 3 4 5 ▶              총 {n}건     │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+│                                                                      │
+│  ┌─ GP 변동 내역 ─────────────────────────────────────────────────┐ │
+│  │ [변동유형 ▼ 전체]  [기간 ▼ 전체]                                 │ │
+│  │                                                                │ │
+│  │ 변동일시     │ 유형  │GP변동량  │변동후잔액 │비고          │ │
+│  │ ──────────────────────────────────────────────────────────── │ │
+│  │ 02.05 14:35 │[보상] │+120 GP  │12,620 GP│예측 성공 보상  │ │
+│  │ 02.05 14:30 │[참여] │ -10 GP  │12,500 GP│게임 참여       │ │
+│  │ 02.04 11:20 │[GP충전]│+2,000 GP│12,510 GP│CELB → GP 교환 │ │
+│  │ ...                                                            │ │
+│  │                      ◀ 1 2 3 4 5 ▶              총 {n}건     │ │
+│  └────────────────────────────────────────────────────────────────┘ │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+</pre>
+
+<h3>영역별 구성요소</h3>
+
+<h5>A. GP 요약 (Summary Cards, 4열)</h5>
+
+<table>
+  <tr>
+    <th>Card</th>
+    <th>Label</th>
+    <th>Value 형식</th>
+    <th>보조 텍스트</th>
+    <th>설명</th>
+  </tr>
+  <tr>
+    <td>Card 1</td>
+    <td>현재 GP 잔액</td>
+    <td>{숫자} GP</td>
+    <td>-</td>
+    <td>해당 회원의 현재 GP 보유량</td>
+  </tr>
+  <tr>
+    <td>Card 2</td>
+    <td>누적 획득 GP</td>
+    <td>{숫자} GP</td>
+    <td>보상+환급+환불+충전</td>
+    <td>REWARD + REFUND + EXCHANGE_IN + REFUND_CANCEL 합산</td>
+  </tr>
+  <tr>
+    <td>Card 3</td>
+    <td>누적 사용 GP</td>
+    <td>{숫자} GP</td>
+    <td>참여+부스팅+출금</td>
+    <td>PARTICIPATION + BOOSTING + EXCHANGE_OUT 합산</td>
+  </tr>
+  <tr>
+    <td>Card 4</td>
+    <td>랭킹</td>
+    <td>{숫자}위 / {전체}명</td>
+    <td>-</td>
+    <td>게임존 전체 랭킹 순위 (누적 GP 기준)</td>
+  </tr>
+</table>
+
+<ul>
+  <li>숫자는 천 단위 콤마 적용</li>
+  <li>랭킹 미참여 시 Card 4에 "-" 표시, 보조 텍스트 "랭킹 없음"</li>
+</ul>
+
+<h5>B. 게임 성과 요약 (Summary Cards, 3열)</h5>
+
+<table>
+  <tr>
+    <th>Card</th>
+    <th>Label</th>
+    <th>Value 형식</th>
+    <th>설명</th>
+  </tr>
+  <tr>
+    <td>Card 1</td>
+    <td>참여 게임 수</td>
+    <td>{숫자}회</td>
+    <td>상태 무관 전체 참여 게임 수 (게임 참여 내역 테이블의 총 건수와 동일)</td>
+  </tr>
+  <tr>
+    <td>Card 2</td>
+    <td>승률</td>
+    <td>{숫자}%</td>
+    <td>(정답 게임 수 / 참여 완료 게임 수) x 100, 정수 반올림</td>
+  </tr>
+  <tr>
+    <td>Card 3</td>
+    <td>최근 참여일</td>
+    <td>YYYY.MM.DD</td>
+    <td>마지막 게임 참여 날짜</td>
+  </tr>
+</table>
+
+<ul>
+  <li>참여 이력 없을 시: 참여 게임 수 "0회", 승률 "-", 최근 참여일 "-"</li>
+</ul>
+
+<h5>C. 게임 참여 내역</h5>
+
+<h6>필터 영역</h6>
+
+<table>
+  <tr>
+    <th>필터</th>
+    <th>옵션</th>
+    <th>기본값</th>
+  </tr>
+  <tr>
+    <td>게임 상태</td>
+    <td>전체 / 진행중 / 결과 대기 / 결과 확정 / 종료</td>
+    <td>전체</td>
+  </tr>
+  <tr>
+    <td>기간</td>
+    <td>전체 / 오늘 / 최근 7일 / 최근 30일 / 커스텀</td>
+    <td>전체</td>
+  </tr>
+</table>
+
+<ul>
+  <li>커스텀 기간: DateRangePicker (최대 90일)</li>
+  <li>필터 변경 시 즉시 적용</li>
+</ul>
+
+<h6>테이블 컬럼</h6>
+
+<table>
+  <tr>
+    <th>컬럼</th>
+    <th>설명</th>
+    <th>정렬</th>
+    <th>너비</th>
+  </tr>
+  <tr>
+    <td>게임 타이틀</td>
+    <td>게임 타이틀 (KO), 텍스트 링크</td>
+    <td>-</td>
+    <td>200px</td>
+  </tr>
+  <tr>
+    <td>참여일시</td>
+    <td>YYYY.MM.DD HH:mm</td>
+    <td>가능 (기본 내림차순)</td>
+    <td>140px</td>
+  </tr>
+  <tr>
+    <td>선택</td>
+    <td>YES 또는 NO (Badge)</td>
+    <td>가능</td>
+    <td>70px</td>
+  </tr>
+  <tr>
+    <td>참여 GP</td>
+    <td>{숫자} GP</td>
+    <td>가능</td>
+    <td>90px</td>
+  </tr>
+  <tr>
+    <td>부스팅 GP</td>
+    <td>{숫자} GP (0일 경우 "0 GP")</td>
+    <td>가능</td>
+    <td>90px</td>
+  </tr>
+  <tr>
+    <td>게임 결과</td>
+    <td>정답({결과}) / 오답({결과}) / "-"</td>
+    <td>-</td>
+    <td>100px</td>
+  </tr>
+  <tr>
+    <td>보상 GP</td>
+    <td>{숫자} GP (0일 경우 "0 GP")</td>
+    <td>가능</td>
+    <td>90px</td>
+  </tr>
+  <tr>
+    <td>환급 GP</td>
+    <td>{숫자} GP (0일 경우 "0 GP")</td>
+    <td>가능</td>
+    <td>90px</td>
+  </tr>
+  <tr>
+    <td>게임 상태</td>
+    <td>Badge (진행중/결과 대기/결과 확정/종료)</td>
+    <td>-</td>
+    <td>90px</td>
+  </tr>
+</table>
+
+<h6>게임 결과 표시 규칙</h6>
+
+<table>
+  <tr>
+    <th>상황</th>
+    <th>표시</th>
+    <th>색상</th>
+  </tr>
+  <tr>
+    <td>정답 (회원 선택 = 게임 결과)</td>
+    <td>정답(YES) 또는 정답(NO)</td>
+    <td>초록색</td>
+  </tr>
+  <tr>
+    <td>오답 (회원 선택 ≠ 게임 결과)</td>
+    <td>오답(YES) 또는 오답(NO)</td>
+    <td>빨간색</td>
+  </tr>
+  <tr>
+    <td>미확정 (결과 미입력)</td>
+    <td>"-"</td>
+    <td>회색</td>
+  </tr>
+</table>
+
+<h6>게임 상태 Badge</h6>
+
+<table>
+  <tr>
+    <th>상태</th>
+    <th>Badge 색상</th>
+  </tr>
+  <tr>
+    <td>진행중 (Active)</td>
+    <td>초록색</td>
+  </tr>
+  <tr>
+    <td>결과 대기 (Pending)</td>
+    <td>주황색</td>
+  </tr>
+  <tr>
+    <td>결과 확정 (Closed)</td>
+    <td>보라색</td>
+  </tr>
+  <tr>
+    <td>종료 (Ended)</td>
+    <td>검정색</td>
+  </tr>
+</table>
+
+<blockquote>
+<p>임시저장(Draft), 게시대기(Ready)는 참여 자체가 불가하므로 이 테이블에 표시되지 않음</p>
+</blockquote>
+
+<h6>페이지네이션</h6>
+
+<ul>
+  <li>페이지당 20건 고정</li>
+  <li>페이지 번호 클릭 이동, ◀ ▶ 이전/다음 페이지</li>
+  <li>테이블 하단 좌측에 "총 {n}건" 표시, 우측에 페이지네이션 컨트롤</li>
+</ul>
+
+<h6>Empty State</h6>
+
+<pre>
+게임 참여 내역이 없습니다.
+</pre>
+
+<h5>D. GP 변동 내역</h5>
+
+<h6>필터 영역</h6>
+
+<table>
+  <tr>
+    <th>필터</th>
+    <th>옵션</th>
+    <th>기본값</th>
+  </tr>
+  <tr>
+    <td>변동 유형</td>
+    <td>전체 / 참여 / 부스팅 / 환급 / 보상 / GP충전 / GP출금 / 환불</td>
+    <td>전체</td>
+  </tr>
+  <tr>
+    <td>기간</td>
+    <td>전체 / 오늘 / 최근 7일 / 최근 30일 / 커스텀</td>
+    <td>전체</td>
+  </tr>
+</table>
+
+<ul>
+  <li>커스텀 기간: DateRangePicker (최대 90일)</li>
+  <li>닉네임 검색 필터 없음 (이미 특정 회원 컨텍스트)</li>
+</ul>
+
+<h6>테이블 컬럼</h6>
+
+<table>
+  <tr>
+    <th>컬럼</th>
+    <th>설명</th>
+    <th>정렬</th>
+    <th>너비</th>
+  </tr>
+  <tr>
+    <td>변동일시</td>
+    <td>YYYY.MM.DD HH:mm</td>
+    <td>가능 (기본 내림차순)</td>
+    <td>140px</td>
+  </tr>
+  <tr>
+    <td>유형</td>
+    <td>Badge (7가지 유형)</td>
+    <td>-</td>
+    <td>90px</td>
+  </tr>
+  <tr>
+    <td>GP 변동량</td>
+    <td>+{숫자} GP 또는 -{숫자} GP</td>
+    <td>가능</td>
+    <td>100px</td>
+  </tr>
+  <tr>
+    <td>변동 후 잔액</td>
+    <td>{숫자} GP</td>
+    <td>가능</td>
+    <td>100px</td>
+  </tr>
+  <tr>
+    <td>비고</td>
+    <td>추가 정보 텍스트</td>
+    <td>-</td>
+    <td>120px</td>
+  </tr>
+</table>
+
+<h6>변동 유형 Badge</h6>
+
+<table>
+  <tr>
+    <th>유형</th>
+    <th>코드</th>
+    <th>Badge 색상</th>
+  </tr>
+  <tr>
+    <td>참여</td>
+    <td>PARTICIPATION</td>
+    <td>파란색</td>
+  </tr>
+  <tr>
+    <td>부스팅</td>
+    <td>BOOSTING</td>
+    <td>보라색</td>
+  </tr>
+  <tr>
+    <td>환급</td>
+    <td>REFUND</td>
+    <td>초록색</td>
+  </tr>
+  <tr>
+    <td>보상</td>
+    <td>REWARD</td>
+    <td>금색</td>
+  </tr>
+  <tr>
+    <td>GP 충전</td>
+    <td>EXCHANGE_IN</td>
+    <td>청록색</td>
+  </tr>
+  <tr>
+    <td>GP 출금</td>
+    <td>EXCHANGE_OUT</td>
+    <td>주황색</td>
+  </tr>
+  <tr>
+    <td>환불</td>
+    <td>REFUND_CANCEL</td>
+    <td>회색</td>
+  </tr>
+</table>
+
+<h6>GP 변동량 표시</h6>
+
+<table>
+  <tr>
+    <th>변동 방향</th>
+    <th>형식</th>
+    <th>색상</th>
+  </tr>
+  <tr>
+    <td>증가 (+)</td>
+    <td>+1,000 GP</td>
+    <td>초록색 텍스트</td>
+  </tr>
+  <tr>
+    <td>감소 (-)</td>
+    <td>-500 GP</td>
+    <td>빨간색 텍스트</td>
+  </tr>
+</table>
+
+<h6>비고 표시</h6>
+
+<table>
+  <tr>
+    <th>변동 유형</th>
+    <th>비고 내용</th>
+  </tr>
+  <tr>
+    <td>참여</td>
+    <td>"게임 참여"</td>
+  </tr>
+  <tr>
+    <td>부스팅</td>
+    <td>"부스팅 사용"</td>
+  </tr>
+  <tr>
+    <td>환급</td>
+    <td>"참여 GP 환급"</td>
+  </tr>
+  <tr>
+    <td>보상</td>
+    <td>"예측 성공 보상"</td>
+  </tr>
+  <tr>
+    <td>GP 충전</td>
+    <td>"CELB → GP 교환"</td>
+  </tr>
+  <tr>
+    <td>GP 출금</td>
+    <td>"GP → CELB 교환"</td>
+  </tr>
+  <tr>
+    <td>환불</td>
+    <td>"게임 취소 환불"</td>
+  </tr>
+</table>
+
+<h6>페이지네이션</h6>
+
+<ul>
+  <li>페이지당 20건 고정</li>
+  <li>페이지 번호 클릭 이동, ◀ ▶ 이전/다음 페이지</li>
+  <li>테이블 하단 좌측에 "총 {n}건" 표시, 우측에 페이지네이션 컨트롤</li>
+</ul>
+
+<h6>Empty State</h6>
+
+<pre>
+GP 변동 내역이 없습니다.
+</pre>
+
+<blockquote>
+<p>상세 스타일은 피그마 참조</p>
+</blockquote>
+
+<hr>
+
+<h2>3. 화면 내 기능설명</h2>
+
+<h3>3.1 탭 진입</h3>
+
+<h5>트리거</h5>
+
+<ul>
+  <li>회원상세 페이지에서 "게임존" 탭 클릭</li>
+  <li>외부 화면(랭킹, GP 변동, 교환 내역)에서 닉네임 클릭 시 <code>tab=gamezone</code> 파라미터로 직접 진입</li>
+</ul>
+
+<h5>동작</h5>
+
+<ol>
+  <li>GP 요약 카드, 게임 성과 요약 카드, 게임 참여 내역(1페이지), GP 변동 내역(1페이지) 동시 로딩</li>
+  <li>각 영역 독립 API 호출 (한 영역 실패가 다른 영역에 영향 없음)</li>
+  <li>로딩 중 각 영역 Skeleton UI 표시</li>
+</ol>
+
+<h3>3.2 게임 참여 내역 테이블</h3>
+
+<h5>게임 타이틀 클릭</h5>
+
+<ul>
+  <li>클릭 시: CEB-BO-GZ-202 (게임 상세) 화면 새 탭 오픈</li>
+  <li>전달 데이터: gameId</li>
+  <li>삭제된 게임: 타이틀 텍스트만 표시, 링크 비활성화 (회색 텍스트)</li>
+</ul>
+
+<h5>필터 동작</h5>
+
+<ul>
+  <li>필터 변경 시 즉시 적용 (페이지 1로 리셋)</li>
+  <li>다중 필터 AND 조건 적용</li>
+</ul>
+
+<h5>정렬 동작</h5>
+
+<ul>
+  <li>기본 정렬: 참여일시 내림차순 (최신순)</li>
+  <li>컬럼 헤더 클릭 시 오름차순 ↔ 내림차순 토글</li>
+  <li>정렬 변경 시 현재 페이지 유지</li>
+</ul>
+
+<h3>3.3 GP 변동 내역 테이블</h3>
+
+<h5>Row 클릭</h5>
+
+<ul>
+  <li>클릭 시: CEB-BO-GZ-601-MD-DETAIL (GP 변동 상세 모달) 오픈</li>
+  <li>전달 데이터: GP 변동 ID</li>
+  <li>모달은 기존 CEB-BO-GZ-601에서 사용하는 것과 동일</li>
+</ul>
+
+<h5>필터 / 정렬 / 페이지네이션</h5>
+
+<ul>
+  <li>게임 참여 내역 테이블과 동일한 동작 규칙 적용</li>
+</ul>
+
+<hr>
+
+<h2>4. 규칙/로직</h2>
+
+<h3>정렬 기준</h3>
+
+<table>
+  <tr>
+    <th>테이블</th>
+    <th>기본 정렬</th>
+    <th>정렬 가능 컬럼</th>
+  </tr>
+  <tr>
+    <td>게임 참여 내역</td>
+    <td>참여일시 내림차순</td>
+    <td>참여일시, 선택, 참여 GP, 부스팅 GP, 보상 GP, 환급 GP</td>
+  </tr>
+  <tr>
+    <td>GP 변동 내역</td>
+    <td>변동일시 내림차순</td>
+    <td>변동일시, GP 변동량, 변동 후 잔액</td>
+  </tr>
+</table>
+
+<h3>상태 정의</h3>
+
+<table>
+  <tr>
+    <th>상태</th>
+    <th>조건</th>
+    <th>표시</th>
+  </tr>
+  <tr>
+    <td>Loading</td>
+    <td>데이터 로딩 중</td>
+    <td>각 영역별 Skeleton UI</td>
+  </tr>
+  <tr>
+    <td>Default</td>
+    <td>데이터 정상 조회</td>
+    <td>조회된 값 표시</td>
+  </tr>
+  <tr>
+    <td>Empty</td>
+    <td>데이터 없음</td>
+    <td>카드: "0" 또는 "-" / 테이블: Empty State 메시지</td>
+  </tr>
+  <tr>
+    <td>Error</td>
+    <td>조회 실패</td>
+    <td>에러 메시지 + 재시도 버튼</td>
+  </tr>
+</table>
+
+<h3>데이터 기준값</h3>
+
+<table>
+  <tr>
+    <th>항목</th>
+    <th>기준</th>
+  </tr>
+  <tr>
+    <td>시간 기준</td>
+    <td>KST (UTC+9)</td>
+  </tr>
+  <tr>
+    <td>"오늘" 기준</td>
+    <td>00:00:00 ~ 23:59:59</td>
+  </tr>
+  <tr>
+    <td>숫자 포맷</td>
+    <td>천 단위 콤마 (예: 1,234)</td>
+  </tr>
+  <tr>
+    <td>GP 표시</td>
+    <td>{숫자} GP (예: 1,000 GP)</td>
+  </tr>
+  <tr>
+    <td>날짜 포맷</td>
+    <td>YYYY.MM.DD HH:mm</td>
+  </tr>
+  <tr>
+    <td>승률 포맷</td>
+    <td>정수 반올림 + % (예: 75%)</td>
+  </tr>
+  <tr>
+    <td>랭킹 표시</td>
+    <td>{순위}위 / {전체}명 (예: 23위 / 150명)</td>
+  </tr>
+</table>
+
+<h3>데이터 집계 기준</h3>
+
+<h5>누적 획득 GP</h5>
+
+<pre>
+누적 획득 GP = SUM(REWARD) + SUM(REFUND) + SUM(EXCHANGE_IN) + SUM(REFUND_CANCEL)
+</pre>
+
+<h5>누적 사용 GP</h5>
+
+<pre>
+누적 사용 GP = SUM(PARTICIPATION) + SUM(BOOSTING) + SUM(EXCHANGE_OUT)
+</pre>
+
+<h5>GP 정합성 규칙</h5>
+
+<pre>
+현재 GP 잔액 = 누적 획득 GP - 누적 사용 GP
+</pre>
+
+<ul>
+  <li>GP 변동 내역 테이블의 최신(첫 번째) Row의 "변동 후 잔액" = GP 요약의 "현재 GP 잔액"</li>
+  <li>모든 시점에서 잔액은 0 이상</li>
+</ul>
+
+<h5>랭킹 순위</h5>
+
+<p>CEB-BO-GZ-401 랭킹 조회의 집계 기준과 동일:</p>
+
+<pre>
+누적 GP = (보상 GP + 환급 GP) - (참여 GP + 부스팅 GP)
+</pre>
+
+<ul>
+  <li>최소 참여 횟수: CEB-BO-GZ-402 랭킹 설정 값 참조</li>
+  <li>최소 참여 횟수 미달 시: "-" 표시</li>
+</ul>
+
+<h5>승률</h5>
+
+<pre>
+승률 = (정답 게임 수 / 참여 완료 게임 수) × 100
+</pre>
+
+<ul>
+  <li>참여 완료 게임: 결과가 확정된 게임 (Closed 또는 Ended 상태)</li>
+  <li>참여 완료 게임 0건 시: "-" 표시</li>
+</ul>
+
+<h3>권한 구분</h3>
+
+<table>
+  <tr>
+    <th>권한</th>
+    <th>접근 가능</th>
+    <th>수정 가능</th>
+  </tr>
+  <tr>
+    <td>읽기</td>
+    <td>Yes</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>쓰기</td>
+    <td>Yes</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>없음</td>
+    <td>No</td>
+    <td>No</td>
+  </tr>
+</table>
+
+<blockquote>
+<p>이 탭은 조회 전용이며, 어떠한 데이터도 수정/삭제할 수 없습니다.</p>
+</blockquote>
+
+<h3>제약사항</h3>
+
+<ul>
+  <li>임시저장(Draft), 게시대기(Ready) 상태의 게임은 참여 불가하므로 게임 참여 내역에 표시되지 않음</li>
+  <li>GP 변동 내역은 CEB-BO-GZ-601의 데이터를 해당 회원으로 필터링하여 표시</li>
+  <li>게임이 삭제되어도 참여 내역과 GP 변동 내역은 유지됨 (게임 타이틀만 표시, 링크 비활성화)</li>
+  <li>탈퇴 예정 또는 정지 상태의 회원도 게임존 탭 데이터는 정상 조회됨</li>
+  <li>랭킹 순위는 CEB-BO-GZ-402 설정의 갱신 주기에 따라 지연될 수 있음</li>
+  <li>커스텀 기간 필터는 최대 90일까지 선택 가능</li>
+  <li>각 게임 참여는 반드시 대응하는 GP 변동 엔트리가 생성됨:
+    <ul>
+      <li>PARTICIPATION: 참여 시 (-참여 GP)</li>
+      <li>BOOSTING: 부스팅 사용 시 (-부스팅 GP, 부스팅 GP &gt; 0인 경우만)</li>
+      <li>REFUND: 결과 확정 후 참여 GP 환급 (+환급 GP, Closed/Ended 게임만)</li>
+      <li>REWARD: 정답 시 보상 지급 (+보상 GP, 정답인 경우만)</li>
+    </ul>
+  </li>
+  <li>게임 참여 내역의 참여 GP/부스팅 GP 금액 = GP 변동 내역의 대응 엔트리 금액</li>
+</ul>
+
+<h3>탭 진입 시 파라미터</h3>
+
+<table>
+  <tr>
+    <th>진입 경로</th>
+    <th>전달 파라미터</th>
+    <th>탭 상태</th>
+  </tr>
+  <tr>
+    <td>회원상세에서 탭 클릭</td>
+    <td>uid (회원상세 컨텍스트)</td>
+    <td>기본 상태 (필터 초기화)</td>
+  </tr>
+  <tr>
+    <td>랭킹(CEB-BO-GZ-401) ROW 클릭</td>
+    <td>uid, tab=gamezone</td>
+    <td>게임존 탭 활성화</td>
+  </tr>
+  <tr>
+    <td>게임 상세(CEB-BO-GZ-202) 닉네임 클릭</td>
+    <td>uid, tab=gamezone</td>
+    <td>게임존 탭 활성화</td>
+  </tr>
+  <tr>
+    <td>GP 변동(CEB-BO-GZ-601) 닉네임 클릭</td>
+    <td>uid, tab=gamezone</td>
+    <td>게임존 탭 활성화</td>
+  </tr>
+  <tr>
+    <td>교환(CEB-BO-GZ-501) 닉네임 클릭</td>
+    <td>uid, tab=gamezone</td>
+    <td>게임존 탭 활성화</td>
+  </tr>
+</table>
+
+<hr>
+
+<h2>5. 에러 및 예외상황</h2>
+
+<h5>게임존 활동 이력 없음</h5>
+
+<ul>
+  <li>GP 요약 카드: "0 GP", "0 GP", "0 GP", 랭킹 "-"</li>
+  <li>게임 성과 요약: "0회", "-", "-"</li>
+  <li>게임 참여 내역: "게임 참여 내역이 없습니다." Empty State</li>
+  <li>GP 변동 내역: "GP 변동 내역이 없습니다." Empty State</li>
+</ul>
+
+<h5>요약 카드 데이터 조회 실패</h5>
+
+<ul>
+  <li>카드에 "-" 표시</li>
+  <li>하단에 "재시도" 링크 제공</li>
+</ul>
+
+<h5>게임 참여 내역 조회 실패</h5>
+
+<ul>
+  <li>에러 토스트: "게임 참여 내역을 불러오는 중 오류가 발생했습니다."</li>
+  <li>테이블 영역에 [재시도] 버튼 표시</li>
+</ul>
+
+<h5>GP 변동 내역 조회 실패</h5>
+
+<ul>
+  <li>에러 토스트: "GP 변동 내역을 불러오는 중 오류가 발생했습니다."</li>
+  <li>테이블 영역에 [재시도] 버튼 표시</li>
+</ul>
+
+<h5>GP 변동 상세 모달 조회 실패</h5>
+
+<ul>
+  <li>에러 토스트: "상세 정보를 불러올 수 없습니다."</li>
+</ul>
+
+<h5>삭제된 게임 참조</h5>
+
+<ul>
+  <li>게임 타이틀은 텍스트로 표시</li>
+  <li>링크 비활성화 (회색 텍스트, 클릭 불가)</li>
+</ul>
+
+<h5>커스텀 기간 범위 초과</h5>
+
+<ul>
+  <li>인라인 에러: "조회 기간은 최대 90일까지 선택할 수 있습니다."</li>
+</ul>
+
+<h5>네트워크 오류</h5>
+
+<ul>
+  <li>에러 토스트: "네트워크 오류가 발생했습니다. 다시 시도해주세요."</li>
+</ul>
+
+<h5>권한 없음</h5>
+
+<ul>
+  <li>회원 읽기 권한 없음: 회원상세 페이지 전체 접근 불가</li>
+  <li>게임존 읽기 권한 없음: 탭 비활성화 또는 "접근 권한이 없습니다." 표시</li>
+</ul>
+
+<hr>
+
+<h2>6. 연관화면ID</h2>
+
+<table>
+  <tr>
+    <th>화면 ID</th>
+    <th>화면명</th>
+    <th>관계</th>
+  </tr>
+  <tr>
+    <td>CEB-BO-USR-201</td>
+    <td>회원 상세</td>
+    <td>부모 화면 (탭 컨테이너)</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-USR-101</td>
+    <td>회원 리스트</td>
+    <td>회원 닉네임 클릭으로 회원상세 진입</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-202</td>
+    <td>게임 상세</td>
+    <td>게임 타이틀 클릭 시 새 탭 이동</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-401</td>
+    <td>랭킹 조회</td>
+    <td>ROW 클릭 시 이 탭으로 이동</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-501</td>
+    <td>교환 내역</td>
+    <td>닉네임 클릭 시 이 탭으로 이동</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-601</td>
+    <td>GP 변동 내역</td>
+    <td>닉네임 클릭 시 이 탭으로 이동 / 데이터 소스 공유</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-601-MD-DETAIL</td>
+    <td>GP 변동 상세 모달</td>
+    <td>GP 변동 내역 Row 클릭 시 오픈</td>
+  </tr>
+</table>
+
+<h5>참조 문서</h5>
+
+<ul>
+  <li>게임 상태 정의서</li>
+  <li>GP 변동 유형 정의서</li>
+  <li>랭킹 집계 로직 문서</li>
+</ul>
+
+</body>
+</html>

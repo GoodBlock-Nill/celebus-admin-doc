@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-GZ-202-MD-DELETE] 삭제 확인</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+
+<h1>[CEB-BO-GZ-202-MD-DELETE] 삭제 확인</h1>
+
+<h2>Page Properties</h2>
+
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Value</th>
+  </tr>
+  <tr>
+    <td>Screen ID</td>
+    <td>CEB-BO-GZ-202-MD-DELETE</td>
+  </tr>
+  <tr>
+    <td>기획담당자</td>
+    <td>@Nill Yoo</td>
+  </tr>
+  <tr>
+    <td>디자인담당자</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>개발담당자</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>API</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>기능영역(Epic)</td>
+    <td>GAM(게임)</td>
+  </tr>
+  <tr>
+    <td>상태</td>
+    <td>Draft</td>
+  </tr>
+  <tr>
+    <td>버전</td>
+    <td>v1.0</td>
+  </tr>
+  <tr>
+    <td>최근 업데이트</td>
+    <td>2025.02.03</td>
+  </tr>
+  <tr>
+    <td>Jira 링크</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>Figma 링크</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>다국어 영향</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>Breadcrumb</td>
+    <td>홈 > 게임존 > 게임 관리 > {게임 타이틀}</td>
+  </tr>
+</table>
+
+<hr>
+
+<h2>1. 화면 목적</h2>
+
+<p>임시저장(Draft) 또는 게시대기(Ready) 상태의 게임을 완전히 삭제하는 확인 모달입니다. 삭제된 게임은 복구할 수 없으므로 신중한 확인이 필요합니다. Draft 또는 Ready 상태에서만 삭제가 가능하며, 진행 중이거나 종료된 게임은 삭제할 수 없습니다.</p>
+
+<hr>
+
+<h2>2. UI 설명</h2>
+
+<h3>레이아웃</h3>
+
+<pre>
+┌─────────────────────────────────────────────────┐
+│  게임을 삭제하시겠습니까?                    [X] │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  삭제된 게임은 복구할 수 없습니다.             │
+│                                                 │
+│  ┌───────────────────────────────────────────┐ │
+│  │ 타이틀  │ 손흥민이 다음 경기에서        │ │
+│  │         │ 골을 넣을까요?                │ │
+│  ├─────────┼───────────────────────────────┤ │
+│  │ 상태    │ {현재 상태: 임시저장/게시대기} │ │
+│  └───────────────────────────────────────────┘ │
+│                                                 │
+│                                                 │
+│                        [ 취소 ]  [ 삭제하기 ]  │
+└─────────────────────────────────────────────────┘
+</pre>
+
+<h3>구성요소</h3>
+
+<table>
+  <tr>
+    <th>요소</th>
+    <th>타입</th>
+    <th>설명</th>
+  </tr>
+  <tr>
+    <td>모달 타이틀</td>
+    <td>Text</td>
+    <td>"게임을 삭제하시겠습니까?" 고정</td>
+  </tr>
+  <tr>
+    <td>닫기 버튼</td>
+    <td>Icon Button</td>
+    <td>우측 상단 [X], 클릭 시 모달 닫기</td>
+  </tr>
+  <tr>
+    <td>경고 문구</td>
+    <td>Text</td>
+    <td>"삭제된 게임은 복구할 수 없습니다."</td>
+  </tr>
+  <tr>
+    <td>삭제 대상 요약 테이블</td>
+    <td>Table</td>
+    <td>타이틀, 상태 표시</td>
+  </tr>
+  <tr>
+    <td>취소 버튼</td>
+    <td>Secondary Button</td>
+    <td>모달 닫기</td>
+  </tr>
+  <tr>
+    <td>삭제하기 버튼</td>
+    <td>Danger Button</td>
+    <td>빨간색, 게임 삭제 API 호출</td>
+  </tr>
+</table>
+
+<h3>삭제 대상 요약 테이블 필드</h3>
+
+<table>
+  <tr>
+    <th>필드명</th>
+    <th>데이터 타입</th>
+    <th>형식</th>
+    <th>예시</th>
+  </tr>
+  <tr>
+    <td>타이틀</td>
+    <td>String</td>
+    <td>게임 타이틀 원문</td>
+    <td>손흥민이 다음 경기에서 골을 넣을까요?</td>
+  </tr>
+  <tr>
+    <td>상태</td>
+    <td>String</td>
+    <td>상태명 (한글), 현재 상태에 따라 동적 표시</td>
+    <td>임시저장 또는 게시대기</td>
+  </tr>
+</table>
+
+<hr>
+
+<h2>3. 화면 내 기능설명</h2>
+
+<h3>모달 트리거</h3>
+
+<table>
+  <tr>
+    <th>트리거 조건</th>
+    <th>동작</th>
+  </tr>
+  <tr>
+    <td>게임 상세(CEB-BO-GZ-202)에서 상태가 Draft 또는 Ready</td>
+    <td>"삭제하기" 버튼 활성화</td>
+  </tr>
+  <tr>
+    <td>"삭제하기" 버튼 클릭</td>
+    <td>본 모달 오픈</td>
+  </tr>
+</table>
+
+<h3>버튼 동작</h3>
+
+<h4>취소 버튼</h4>
+
+<ol>
+  <li>모달 닫기</li>
+  <li>게임 상세 화면으로 복귀</li>
+  <li>상태 변경 없음</li>
+</ol>
+
+<h4>삭제하기 버튼</h4>
+
+<ol>
+  <li>게임 삭제 요청 실행</li>
+  <li>성공 시:
+  <ul>
+    <li>게임 데이터 완전 삭제</li>
+    <li>토스트 메시지: "게임이 삭제되었습니다."</li>
+    <li>모달 닫기</li>
+    <li>게임 리스트 화면(CEB-BO-GZ-201)으로 이동</li>
+    <li>실패 시:
+    <ul>
+      <li>에러 토스트 표시</li>
+      <li>모달 유지 (재시도 가능)</li>
+    </ul>
+    </li>
+  </ul>
+  </li>
+</ol>
+
+<h4>닫기(X) 버튼</h4>
+
+<ul>
+  <li>취소 버튼과 동일한 동작</li>
+</ul>
+
+<hr>
+
+<h2>4. 규칙/로직</h2>
+
+<h3>삭제 가능 조건</h3>
+
+<table>
+  <tr>
+    <th>조건</th>
+    <th>검증 시점</th>
+    <th>실패 시 처리</th>
+  </tr>
+  <tr>
+    <td>게임 상태 = Draft 또는 Ready</td>
+    <td>모달 오픈 전</td>
+    <td>버튼 비활성화</td>
+  </tr>
+  <tr>
+    <td>관리자 권한 확인</td>
+    <td>API 호출 시</td>
+    <td>403 에러</td>
+  </tr>
+  <tr>
+    <td>참여자가 없음</td>
+    <td>API 호출 시</td>
+    <td>400 에러 (Draft/Ready 상태에서는 참여자 0명)</td>
+  </tr>
+</table>
+
+<h3>삭제 불가 상태</h3>
+
+<table>
+  <tr>
+    <th>상태</th>
+    <th>사유</th>
+  </tr>
+  <tr>
+    <td>Active</td>
+    <td>진행 중, 강제 종료 후에도 삭제 불가 (보관)</td>
+  </tr>
+  <tr>
+    <td>Pending</td>
+    <td>결과 입력 대기 중, 삭제 불가 (보관)</td>
+  </tr>
+  <tr>
+    <td>Closed</td>
+    <td>보상 지급 대기 중, 삭제 불가 (보관)</td>
+  </tr>
+  <tr>
+    <td>Ended</td>
+    <td>종료됨, 삭제 불가 (이력 보관)</td>
+  </tr>
+</table>
+
+<h3>삭제 시 처리 로직</h3>
+
+<h4>데이터 삭제</h4>
+
+<ol>
+  <li>게임 기본 정보 삭제</li>
+  <li>관련 이미지/파일 삭제 (S3 등)</li>
+  <li>연관 데이터 정리 (Draft/Ready 상태이므로 참여자 없음)</li>
+</ol>
+
+<h4>삭제 후 이동</h4>
+
+<ul>
+  <li>게임 리스트 화면(CEB-BO-GZ-201)으로 이동</li>
+  <li>필터/정렬 상태 유지</li>
+  <li>삭제된 게임이 있던 페이지로 이동 (가능한 경우)</li>
+</ul>
+
+<h3>관리자 로그</h3>
+
+<pre>
+게임 &#x27;{게임 타이틀}&#x27;을(를) 삭제했습니다.
+</pre>
+
+<table>
+  <tr>
+    <th>로그 필드</th>
+    <th>값</th>
+  </tr>
+  <tr>
+    <td>액션 타입</td>
+    <td>GAME_DELETE</td>
+  </tr>
+  <tr>
+    <td>게임 ID</td>
+    <td>{gameId}</td>
+  </tr>
+  <tr>
+    <td>게임 타이틀</td>
+    <td>{title}</td>
+  </tr>
+  <tr>
+    <td>게임 상태</td>
+    <td>{현재 상태: Draft 또는 Ready}</td>
+  </tr>
+  <tr>
+    <td>관리자 ID</td>
+    <td>{adminId}</td>
+  </tr>
+  <tr>
+    <td>타임스탬프</td>
+    <td>{ISO 8601}</td>
+  </tr>
+  <tr>
+    <td>삭제 사유</td>
+    <td>ADMIN_DELETE</td>
+  </tr>
+</table>
+
+<hr>
+
+<h2>5. 에러 및 예외상황</h2>
+
+<h3>클라이언트 에러</h3>
+
+<table>
+  <tr>
+    <th>에러 상황</th>
+    <th>에러 메시지</th>
+    <th>처리 방법</th>
+  </tr>
+  <tr>
+    <td>게임 상태가 Draft 또는 Ready가 아님</td>
+    <td>"임시저장 또는 게시대기 상태의 게임만 삭제할 수 있습니다."</td>
+    <td>모달 닫기, 상세 화면 갱신</td>
+  </tr>
+  <tr>
+    <td>이미 삭제된 게임</td>
+    <td>"이미 삭제된 게임입니다."</td>
+    <td>모달 닫기, 리스트로 이동</td>
+  </tr>
+</table>
+
+<h3>서버 에러</h3>
+
+<table>
+  <tr>
+    <th>HTTP 상태</th>
+    <th>에러 메시지</th>
+    <th>처리 방법</th>
+  </tr>
+  <tr>
+    <td>400</td>
+    <td>"삭제할 수 없는 게임 상태입니다."</td>
+    <td>에러 토스트, 모달 닫기, 화면 갱신</td>
+  </tr>
+  <tr>
+    <td>403</td>
+    <td>"게임 삭제 권한이 없습니다."</td>
+    <td>에러 토스트, 모달 닫기</td>
+  </tr>
+  <tr>
+    <td>404</td>
+    <td>"게임을 찾을 수 없습니다."</td>
+    <td>에러 토스트, 리스트로 이동</td>
+  </tr>
+  <tr>
+    <td>409</td>
+    <td>"이미 삭제 처리 중인 게임입니다."</td>
+    <td>에러 토스트, 리스트로 이동</td>
+  </tr>
+  <tr>
+    <td>500</td>
+    <td>"서버 오류가 발생했습니다."</td>
+    <td>에러 토스트, 모달 유지</td>
+  </tr>
+</table>
+
+<h3>파일 삭제 실패</h3>
+
+<table>
+  <tr>
+    <th>에러 상황</th>
+    <th>처리 방법</th>
+  </tr>
+  <tr>
+    <td>이미지 파일 삭제 실패</td>
+    <td>게임 데이터는 삭제, 파일 삭제 재시도 큐에 추가</td>
+  </tr>
+  <tr>
+    <td>S3 접근 불가</td>
+    <td>게임 데이터는 삭제, 백그라운드에서 파일 삭제 재시도</td>
+  </tr>
+</table>
+
+<h3>네트워크 에러</h3>
+
+<table>
+  <tr>
+    <th>에러 상황</th>
+    <th>처리 방법</th>
+  </tr>
+  <tr>
+    <td>타임아웃</td>
+    <td>"요청 시간이 초과되었습니다. 다시 시도해주세요."</td>
+  </tr>
+  <tr>
+    <td>연결 실패</td>
+    <td>"네트워크 연결을 확인해주세요."</td>
+  </tr>
+</table>
+
+<hr>
+
+<h2>6. 연관화면ID</h2>
+
+<table>
+  <tr>
+    <th>화면 ID</th>
+    <th>화면명</th>
+    <th>관계</th>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-202</td>
+    <td>게임 상세</td>
+    <td>모달 호출 화면</td>
+  </tr>
+  <tr>
+    <td>CEB-BO-GZ-201</td>
+    <td>게임 리스트</td>
+    <td>삭제 성공 시 이동 화면</td>
+  </tr>
+</table>
+
+</body>
+</html>
