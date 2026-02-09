@@ -123,7 +123,7 @@
 | ---- | -------- | ---- |
 | Header | Breadcrumb | 홈 > 게임존 > 게임 관리 > 게임 생성 |
 | | 타이틀 | "게임 생성" (H1) |
-| 게임 유형 | Radio 버튼 | Prediction Market (Phase 1에서 고정, Phase 2에서 셀렉트) |
+| 게임 유형 | Radio 버튼 | Prediction Market (고정, 추후 게임 유형 추가 시 선택 가능) |
 | 기본정보 | 타이틀 (필수) | 3개 언어 탭 (KO/EN/JP), 각 50자 제한, 실시간 글자 수 표시 |
 | | 상세설명 (필수) | WYSIWYG 에디터 (KO/EN/JP 탭, Toolbar: Bold/Italic/Underline/Link/리스트/이미지/정렬) |
 | | 힌트 링크 | Segmented Button (사용/미사용, 기본: 미사용), '사용' 선택 시 URL 입력 표시 |
@@ -340,7 +340,7 @@
 
 | 항목 | 기본값 | 참조 |
 | ---- | ------ | ---- |
-| 게임 유형 | Prediction Market | Phase 1 고정, Phase 2에서 선택 |
+| 게임 유형 | Prediction Market | 고정 (추후 게임 유형 추가 시 선택 가능) |
 | 참여 정원 | 무제한 | 체크박스 미체크 |
 | 참여 비용 | 1 GP | - |
 | 부스팅 | 사용 | - |

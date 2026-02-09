@@ -59,7 +59,7 @@ Frame: GZ-201-CREATE-게임생성
 | 1 | Section Container | Form Section | padding: 24px, border: gray-200 | - |
 | 2 | Section Label | Label | - | "게임 유형 *" |
 | 3 | Radio Button | Radio (Checked) | disabled: false | "● Prediction Market" |
-| 4 | Help Text | Text (Small) | color: gray-500 | Phase 1에서는 고정, Phase 2에서 추가 유형 선택 가능 |
+| 4 | Help Text | Text (Small) | color: gray-500 | Prediction Market 고정 (추후 게임 유형 추가 시 선택 가능) |
 
 ### 영역 3: 기본정보 섹션
 | 순서 | UI 요소 | Preline 컴포넌트 | 속성/Variant | 내용 |
