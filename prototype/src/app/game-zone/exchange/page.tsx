@@ -93,7 +93,8 @@ export default function ExchangePage() {
               )}
             </p>
             <p className="text-xl font-bold text-blue-600">{formatCELB(chargeWallet?.balance || 0)}</p>
-            <p className="text-xs text-gray-400 mt-1">{truncateHash(chargeWallet?.address || '-', 8, 6)}</p>
+            <p className="text-xs text-gray-500 mt-0.5">{(chargeWallet?.bnbBalance ?? 0).toFixed(6)} BNB</p>
+            <p className="text-xs text-gray-400 mt-0.5">{truncateHash(chargeWallet?.address || '-', 8, 6)}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500 mb-1">
@@ -103,7 +104,11 @@ export default function ExchangePage() {
               )}
             </p>
             <p className="text-xl font-bold text-orange-600">{formatCELB(withdrawWallet?.balance || 0)}</p>
-            <p className="text-xs text-gray-400 mt-1">{truncateHash(withdrawWallet?.address || '-', 8, 6)}</p>
+            <p className={`text-xs mt-0.5 ${(withdrawWallet?.bnbBalance ?? 0) < 0.01 ? 'text-red-600' : 'text-gray-500'}`}>
+              {(withdrawWallet?.bnbBalance ?? 0) < 0.01 && '⚠ '}
+              {(withdrawWallet?.bnbBalance ?? 0).toFixed(6)} BNB
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">{truncateHash(withdrawWallet?.address || '-', 8, 6)}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500 mb-1">전체 유저 보유 GP</p>
@@ -113,7 +118,7 @@ export default function ExchangePage() {
           <div>
             <p className="text-sm text-gray-500 mb-1">탈퇴 유저 GP</p>
             <p className="text-xl font-bold text-gray-400">{formatGP(mockGPStats.totalInactiveUserGP)}</p>
-            <p className="text-xs text-gray-400 mt-1">미환수 GP</p>
+            <p className="text-xs text-gray-400 mt-1">사용불가 GP</p>
           </div>
         </div>
       </div>
