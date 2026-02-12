@@ -34,4 +34,6 @@ export const mockExchanges: Exchange[] = Array.from({ length: 60 }, (_, i) => {
     status: (isFailed ? 'FAILED' : 'SUCCESS') as ExchangeStatus,
     failureReason: isFailed ? '일일 교환 한도 초과' : null,
   };
-}).sort((a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime());
+})
+// 기본 정렬: 최근내역순 (교환일시 내림차순)
+.sort((a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime());

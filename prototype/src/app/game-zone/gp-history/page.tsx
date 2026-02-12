@@ -97,7 +97,6 @@ export default function GPHistoryPage() {
         ]}
         data={paginated as (GPChange & Record<string, unknown>)[]}
         onRowClick={(item) => setSelected(item as unknown as GPChange)}
-        rowNumber={{ page, perPage: ITEMS_PER_PAGE }}
       />
       <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
       <GPChangeDetailModal isOpen={!!selected} onClose={() => setSelected(null)} change={selected} />

@@ -44,22 +44,21 @@ Frame: GZ-601_GP변동내역
 
 | 순서 | UI 요소 | Preline 컴포넌트 | 속성/Variant | 내용 |
 |------|---------|-----------------|-------------|------|
-| 1 | 테이블 컨테이너 | Tables (Striped) | With hover | 7개 컬럼 |
-| 2 | 테이블 헤더 | Table Header | Sortable | No, 일시, 닉네임, 유형, GP 변동, 변동 후 잔액, 비고 |
-| 3 | No | Typography (Body) | Size: sm, Align: center | 1, 2, 3... |
-| 4 | 일시 | Typography (Body) | Size: sm | YYYY.MM.DD HH:mm |
-| 5 | 닉네임 | Typography (Body) | Size: sm, Weight: Medium | user1, starlight23 |
-| 6 | 유형 Badge (참여) | Badge (Soft) | Color: Blue | 참여 |
-| 7 | 유형 Badge (부스팅) | Badge (Soft) | Color: Purple | 부스팅 |
-| 8 | 유형 Badge (환급) | Badge (Soft) | Color: Green | 환급 |
-| 9 | 유형 Badge (보상) | Badge (Soft) | Color: Gold | 보상 |
-| 10 | 유형 Badge (GP충전) | Badge (Soft) | Color: Cyan | GP 충전 |
-| 11 | 유형 Badge (GP출금) | Badge (Soft) | Color: Orange | GP 출금 |
-| 12 | GP 변동 (증가) | Typography (Body) | Size: sm, Weight: Semibold, Color: Green | +1,000 GP |
-| 13 | GP 변동 (감소) | Typography (Body) | Size: sm, Weight: Semibold, Color: Red | -500 GP |
-| 14 | 변동 후 잔액 | Typography (Body) | Size: sm, Align: right | 6,000 GP |
-| 15 | 비고 | Typography (Body) | Size: sm, Color: Gray | 정답, 참여, CELB교환 등 |
-| 16 | Row Hover | Table Row | State: Hover | 전체 행 hover 시 배경 연한 회색 |
+| 1 | 테이블 컨테이너 | Tables (Striped) | With hover | 6개 컬럼 |
+| 2 | 테이블 헤더 | Table Header | Sortable | 일시, 닉네임, 유형, GP 변동, 변동 후 잔액, 비고 |
+| 3 | 일시 | Typography (Body) | Size: sm | YYYY.MM.DD HH:mm |
+| 4 | 닉네임 | Typography (Body) | Size: sm, Weight: Medium | user1, starlight23 |
+| 5 | 유형 Badge (참여) | Badge (Soft) | Color: Blue | 참여 |
+| 6 | 유형 Badge (부스팅) | Badge (Soft) | Color: Purple | 부스팅 |
+| 7 | 유형 Badge (환급) | Badge (Soft) | Color: Green | 환급 |
+| 8 | 유형 Badge (보상) | Badge (Soft) | Color: Gold | 보상 |
+| 9 | 유형 Badge (GP충전) | Badge (Soft) | Color: Cyan | GP 충전 |
+| 10 | 유형 Badge (GP출금) | Badge (Soft) | Color: Orange | GP 출금 |
+| 11 | GP 변동 (증가) | Typography (Body) | Size: sm, Weight: Semibold, Color: Green | +1,000 GP |
+| 12 | GP 변동 (감소) | Typography (Body) | Size: sm, Weight: Semibold, Color: Red | -500 GP |
+| 13 | 변동 후 잔액 | Typography (Body) | Size: sm, Align: right | 6,000 GP |
+| 14 | 비고 | Typography (Body) | Size: sm, Color: Gray | 정답, 참여, CELB교환 등 |
+| 15 | Row Hover | Table Row | State: Hover | 전체 행 hover 시 배경 연한 회색 |
 
 ### Pagination 영역
 
@@ -138,7 +137,7 @@ Frame: GZ-601_GP변동내역
 - 정렬 전: ⬍ (회색, 비활성)
 - 오름차순: ▲ (파란색, 활성)
 - 내림차순: ▼ (파란색, 활성)
-- 기본 정렬: 변동일시 내림차순 (▼ 활성)
+- 기본 정렬: 최근내역순 - 변동일시 내림차순 (▼ 활성)
 
 ### 관련 게임 링크
 - 색상: 파란색 (#3B82F6)

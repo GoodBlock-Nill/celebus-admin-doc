@@ -165,7 +165,6 @@ export default function ExchangePage() {
         ]}
         data={paginated as (Exchange & Record<string, unknown>)[]}
         onRowClick={(item) => setSelected(item as unknown as Exchange)}
-        rowNumber={{ page, perPage: ITEMS_PER_PAGE }}
       />
       <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
       <ExchangeDetailModal isOpen={!!selected} onClose={() => setSelected(null)} exchange={selected} />
