@@ -123,7 +123,9 @@ export interface OperationWallet {
   id: string;
   type: 'CHARGE' | 'WITHDRAW';
   address: string;
+  privateKey?: string; // 출금용 PK (마스킹된 값, 예: "5a8f...3b2c")
   balance: number; // CELB 잔액
+  bnbBalance?: number; // BNB 잔액 (전체 지갑)
   isActive: boolean;
   isPrimary: boolean;
   createdAt: string;

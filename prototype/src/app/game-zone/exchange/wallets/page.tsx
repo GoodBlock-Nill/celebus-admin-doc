@@ -20,12 +20,14 @@ export default function WalletManagementPage() {
   // Form states
   const [walletType, setWalletType] = useState<'CHARGE' | 'WITHDRAW'>('CHARGE');
   const [walletAddress, setWalletAddress] = useState('');
+  const [walletPrivateKey, setWalletPrivateKey] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const handleOpenCreateForm = () => {
     setEditingWallet(null);
     setWalletType('CHARGE');
     setWalletAddress('');
+    setWalletPrivateKey('');
     setIsFormOpen(true);
   };
 
@@ -33,6 +35,7 @@ export default function WalletManagementPage() {
     setEditingWallet(wallet);
     setWalletType(wallet.type);
     setWalletAddress(wallet.address);
+    setWalletPrivateKey('');
     setIsFormOpen(true);
   };
 
@@ -42,11 +45,27 @@ export default function WalletManagementPage() {
       return;
     }
 
+    if (walletType === 'WITHDRAW' && !editingWallet && !walletPrivateKey.trim()) {
+      addToast('error', 'Private Key를 입력하세요.');
+      return;
+    }
+
     if (editingWallet) {
       // Update existing wallet
       setWallets(wallets.map(w =>
         w.id === editingWallet.id
-          ? { ...w, type: walletType, address: walletAddress, isPrimary: walletType === editingWallet.type ? w.isPrimary : false, updatedAt: new Date().toISOString() }
+          ? {
+              ...w,
+              type: walletType,
+              address: walletAddress,
+              ...(walletType === 'WITHDRAW' && walletPrivateKey ? {
+                privateKey: walletPrivateKey.substring(0, 4) + '...' + walletPrivateKey.substring(walletPrivateKey.length - 4),
+              } : {}),
+              ...(walletType === 'WITHDRAW' && !w.bnbBalance ? { bnbBalance: 0 } : {}),
+              ...(walletType === 'CHARGE' ? { privateKey: undefined, bnbBalance: undefined } : {}),
+              isPrimary: walletType === editingWallet.type ? w.isPrimary : false,
+              updatedAt: new Date().toISOString(),
+            }
           : w
       ));
       addToast('success', '지갑이 수정되었습니다.');
@@ -56,6 +75,10 @@ export default function WalletManagementPage() {
         id: `wallet-${Date.now()}`,
         type: walletType,
         address: walletAddress,
+        ...(walletType === 'WITHDRAW' && walletPrivateKey ? {
+          privateKey: walletPrivateKey.substring(0, 4) + '...' + walletPrivateKey.substring(walletPrivateKey.length - 4),
+          bnbBalance: 0,
+        } : {}),
         balance: 0,
         isActive: true,
         isPrimary: false,
@@ -69,6 +92,7 @@ export default function WalletManagementPage() {
     setIsFormOpen(false);
     setEditingWallet(null);
     setWalletAddress('');
+    setWalletPrivateKey('');
   };
 
   const handleDeleteWallet = () => {
@@ -157,28 +181,46 @@ export default function WalletManagementPage() {
               ),
             },
             {
-              key: 'address',
-              label: '지갑 주소',
+              key: 'walletInfo',
+              label: '지갑 정보',
               render: (item: OperationWallet) => (
-                <a
-                  href={`https://bscscan.com/address/${item.address}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="font-mono text-sm text-blue-600 hover:underline"
-                >
-                  {truncateHash(item.address, 12, 8)}
-                </a>
+                <div className="flex flex-col gap-0.5">
+                  <a
+                    href={`https://bscscan.com/address/${item.address}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="font-mono text-sm text-blue-600 hover:underline"
+                  >
+                    {truncateHash(item.address, 12, 8)}
+                  </a>
+                  {item.type === 'WITHDRAW' && item.privateKey && (
+                    <span className="font-mono text-xs text-gray-400">
+                      PK: {item.privateKey}
+                    </span>
+                  )}
+                </div>
               ),
             },
             {
-              key: 'balance',
+              key: 'balanceInfo',
               label: '잔액',
               align: 'right',
-              width: '200px',
-              render: (item: OperationWallet) => (
-                <span className="font-semibold">{formatCELB(item.balance, 8)}</span>
-              ),
+              width: '220px',
+              render: (item: OperationWallet) => {
+                const bnb = item.bnbBalance ?? 0;
+                const isWithdraw = item.type === 'WITHDRAW';
+                const bnbWarning = isWithdraw && bnb < 0.01;
+                return (
+                  <div className="flex flex-col gap-0.5 items-end">
+                    <span className="font-semibold">{formatCELB(item.balance, 8)}</span>
+                    <span className={`text-xs ${bnbWarning ? 'text-red-600' : 'text-gray-500'}`}>
+                      {bnbWarning && '⚠ '}
+                      {bnb.toFixed(6)} BNB
+                    </span>
+                  </div>
+                );
+              },
             },
             {
               key: 'isActive',
@@ -204,7 +246,7 @@ export default function WalletManagementPage() {
             {
               key: 'actions',
               label: '',
-              width: '340px',
+              width: '300px',
               render: (item: OperationWallet) => (
                 <div className="flex items-center gap-2 justify-end">
                   {!item.isPrimary && (
@@ -303,6 +345,32 @@ export default function WalletManagementPage() {
             />
             <p className="text-xs text-gray-400 mt-1">블록체인 지갑 주소를 입력하세요.</p>
           </div>
+          {walletType === 'WITHDRAW' && (
+            <>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  Private Key {!editingWallet && <span className="text-red-500">*</span>}
+                </label>
+                <input
+                  type="password"
+                  value={walletPrivateKey}
+                  onChange={(e) => setWalletPrivateKey(e.target.value)}
+                  placeholder="Private Key를 입력하세요"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  {editingWallet
+                    ? '변경이 필요한 경우에만 입력하세요.'
+                    : '토큰 전송 트랜잭션 서명에 필요합니다. 서버에 암호화하여 저장됩니다.'}
+                </p>
+              </div>
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                <p className="text-sm text-orange-700">
+                  ⚠ 출금용 지갑은 가스비(BNB) 잔고가 있어야 출금이 가능합니다.
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </Modal>
 
