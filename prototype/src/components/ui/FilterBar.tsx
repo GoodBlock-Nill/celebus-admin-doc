@@ -60,15 +60,24 @@ export default function FilterBar({ filters, onFilterChange, onReset }: FilterBa
 
         if (filter.type === 'search') {
           return (
-            <div key={filter.key} className="relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                value={filter.value}
-                onChange={(e) => onFilterChange(filter.key, e.target.value)}
-                placeholder={filter.placeholder || '검색'}
-                className="h-10 pl-9 pr-3 border border-gray-200 rounded-lg text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-w-[240px]"
-              />
+            <div key={filter.key} className="flex items-center">
+              <div className="relative">
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={filter.value}
+                  onChange={(e) => onFilterChange(filter.key, e.target.value)}
+                  placeholder={filter.placeholder || '검색'}
+                  className="h-10 pl-9 pr-3 border border-gray-200 border-r-0 rounded-l-lg rounded-r-none text-sm text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-w-[240px]"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => onFilterChange(filter.key, filter.value)}
+                className="h-10 px-4 bg-blue-600 text-white text-sm font-medium rounded-l-none rounded-r-lg border border-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+              >
+                검색
+              </button>
             </div>
           );
         }
