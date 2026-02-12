@@ -18,7 +18,7 @@ export default function PublishModal({ isOpen, onClose, onConfirm, game }: Publi
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="게시 확인"
+      title="게임을 게시하시겠습니까?"
       width="max-w-xl"
       footer={
         <>
@@ -32,6 +32,10 @@ export default function PublishModal({ isOpen, onClose, onConfirm, game }: Publi
       }
     >
       <div className="space-y-4">
+        <div className="text-sm text-gray-600 space-y-1 mb-4">
+          <p>게시하면 즉시 게임이 시작되어 참여가 가능해집니다.</p>
+          <p>게시 후에는 일부 항목만 수정 가능합니다.</p>
+        </div>
         <table className="w-full text-sm">
           <tbody>
             <tr className="border-b border-gray-100">
@@ -39,16 +43,8 @@ export default function PublishModal({ isOpen, onClose, onConfirm, game }: Publi
               <td className="py-2.5 text-gray-900 font-medium">{game.title.ko}</td>
             </tr>
             <tr className="border-b border-gray-100">
-              <td className="py-2.5 text-gray-500">투표 시작일시</td>
-              <td className="py-2.5 text-gray-900">게시 즉시 시작</td>
-            </tr>
-            <tr className="border-b border-gray-100">
-              <td className="py-2.5 text-gray-500">투표 종료일시</td>
-              <td className="py-2.5 text-gray-900">{formatDateTime(game.endDate)}</td>
-            </tr>
-            <tr className="border-b border-gray-100">
-              <td className="py-2.5 text-gray-500">결과 발표 예정일</td>
-              <td className="py-2.5 text-gray-900">{formatDateTime(game.resultDate)}</td>
+              <td className="py-2.5 text-gray-500">참여 기간</td>
+              <td className="py-2.5 text-gray-900">게시 즉시 ~ {formatDateTime(game.endDate)}</td>
             </tr>
             <tr className="border-b border-gray-100">
               <td className="py-2.5 text-gray-500">총 상금 GP</td>
@@ -56,12 +52,6 @@ export default function PublishModal({ isOpen, onClose, onConfirm, game }: Publi
             </tr>
           </tbody>
         </table>
-        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-700">
-            게시 즉시 게임이 시작되며, 사용자가 참여할 수 있습니다.
-            게시 후에는 일부 설정만 수정할 수 있습니다.
-          </p>
-        </div>
       </div>
     </Modal>
   );

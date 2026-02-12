@@ -6,7 +6,8 @@ import PageHeader from '@/components/layout/PageHeader';
 import Badge from '@/components/ui/Badge';
 import DataTable from '@/components/ui/DataTable';
 import Pagination from '@/components/ui/Pagination';
-import ConfirmModal from '@/components/modals/ConfirmModal';
+import ForceCloseModal from '@/components/modals/ForceCloseModal';
+import DeleteModal from '@/components/modals/DeleteModal';
 import PublishModal from '@/components/modals/PublishModal';
 import ResultInputModal from '@/components/modals/ResultInputModal';
 import RewardModal from '@/components/modals/RewardModal';
@@ -236,9 +237,9 @@ export default function GameDetailPage({ params }: { params: Promise<{ id: strin
               <DataTable<Participant & Record<string, unknown>>
                 columns={[
                   { key: 'nickname', label: '닉네임', render: (p: Participant) => p.nickname.toLowerCase() },
-                  { key: 'share', label: '지분', align: 'right', render: (p: Participant) => `${p.participationGP + (p.boostingGP * (game.boostingMultiplier || 2))} GP` },
                   { key: 'participationGP', label: '참여 GP', align: 'right', render: (p: Participant) => formatGP(p.participationGP) },
                   { key: 'boostingGP', label: '부스팅 GP', align: 'right', render: (p: Participant) => formatGP(p.boostingGP) },
+                  { key: 'share', label: '지분', align: 'right', render: (p: Participant) => `${p.participationGP + (p.boostingGP * (game.boostingMultiplier || 2))} GP` },
                   { key: 'rewardGP', label: '보상 GP', align: 'right', render: (p: Participant) => {
                     const share = p.participationGP + (p.boostingGP * (game.boostingMultiplier || 2));
                     const reward = totalShares > 0 ? Math.floor((share / totalShares) * game.totalPrizeGP) : 0;
@@ -257,13 +258,9 @@ export default function GameDetailPage({ params }: { params: Promise<{ id: strin
 
       <PublishModal isOpen={activeModal === 'publish'} onClose={closeModal} game={game}
         onConfirm={() => { changeGameStatus(id, 'Active'); closeModal(); addToast('success', '게임이 게시되었습니다.'); }} />
-      <ConfirmModal isOpen={activeModal === 'forceClose'} onClose={closeModal} title="강제 종료 확인"
-        message="게임을 강제 종료하시겠습니까?" warning="강제 종료 시 모든 참여자에게 참여 GP와 부스팅 GP가 전액 환급됩니다. 이 작업은 되돌릴 수 없습니다."
-        confirmText="강제 종료" confirmVariant="danger"
+      <ForceCloseModal isOpen={activeModal === 'forceClose'} onClose={closeModal} game={game}
         onConfirm={() => { changeGameStatus(id, 'Ended'); closeModal(); addToast('success', '게임이 강제 종료되었습니다.'); }} />
-      <ConfirmModal isOpen={activeModal === 'delete'} onClose={closeModal} title="삭제 확인"
-        message="게임을 삭제하시겠습니까?" warning="삭제된 게임은 복구할 수 없습니다."
-        confirmText="삭제하기" confirmVariant="danger"
+      <DeleteModal isOpen={activeModal === 'delete'} onClose={closeModal} game={game}
         onConfirm={() => { deleteGame(id); closeModal(); addToast('success', '게임이 삭제되었습니다.'); router.push('/game-zone/games'); }} />
       <ResultInputModal isOpen={activeModal === 'inputResult'} onClose={closeModal} game={game}
         onConfirm={(result, resultTitle, resultDescription, resultLinkText, resultLinkUrl) => { setGameResult(id, result, resultTitle, resultDescription, resultLinkText, resultLinkUrl); closeModal(); addToast('success', `결과가 "${result}"(으)로 확정되었습니다.`); }} />

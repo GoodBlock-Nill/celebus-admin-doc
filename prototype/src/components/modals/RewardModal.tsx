@@ -22,7 +22,7 @@ export default function RewardModal({ isOpen, onClose, onConfirm, game }: Reward
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="보상 지급 확인"
+      title="보상을 지급하시겠습니까?"
       width="max-w-xl"
       footer={
         <>
@@ -39,7 +39,11 @@ export default function RewardModal({ isOpen, onClose, onConfirm, game }: Reward
         <table className="w-full text-sm">
           <tbody>
             <tr className="border-b border-gray-100">
-              <td className="py-2.5 text-gray-500 w-[120px]">게임 결과</td>
+              <td className="py-2.5 text-gray-500 w-[140px]">타이틀</td>
+              <td className="py-2.5 text-gray-900 font-medium">{game.title.ko}</td>
+            </tr>
+            <tr className="border-b border-gray-100">
+              <td className="py-2.5 text-gray-500 w-[140px]">결과</td>
               <td className="py-2.5">
                 <span className={`px-2 py-0.5 rounded text-xs font-medium ${
                   game.result === 'YES' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
@@ -49,35 +53,31 @@ export default function RewardModal({ isOpen, onClose, onConfirm, game }: Reward
               </td>
             </tr>
             <tr className="border-b border-gray-100">
-              <td className="py-2.5 text-gray-500">총 상금 GP</td>
+              <td className="py-2.5 text-gray-500 w-[140px]">총 상금 GP</td>
               <td className="py-2.5 text-gray-900 font-medium">{formatGP(game.totalPrizeGP)}</td>
             </tr>
             <tr className="border-b border-gray-100">
-              <td className="py-2.5 text-gray-500">정답자 수</td>
+              <td className="py-2.5 text-gray-500 w-[140px]">정답자 수</td>
               <td className="py-2.5 text-gray-900">{winners.length}명</td>
             </tr>
-            <tr className="border-b border-gray-100">
-              <td className="py-2.5 text-gray-500">전체 참여자</td>
-              <td className="py-2.5 text-gray-900">{participants.length}명</td>
-            </tr>
             <tr>
-              <td className="py-2.5 text-gray-500">환급 대상</td>
-              <td className="py-2.5 text-gray-900">{participants.length}명 (전원)</td>
+              <td className="py-2.5 text-gray-500 w-[140px]">환급 대상</td>
+              <td className="py-2.5 text-gray-900">전체 참여자 {participants.length}명</td>
             </tr>
           </tbody>
         </table>
 
         <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg space-y-1">
-          <p className="text-sm text-blue-700">보상 계산 안내:</p>
+          <p className="text-sm font-medium text-blue-800">💡 보상 계산 안내</p>
           <ul className="text-sm text-blue-600 list-disc list-inside space-y-0.5">
-            <li>정답자에게 총 상금 GP를 (참여GP + 부스팅GP x2) 비율로 배분</li>
-            <li>참여 GP는 정답/오답 관계없이 전액 환급</li>
-            <li>부스팅 GP는 환급 없음, 보상 가중치 2배</li>
+            <li>정답자에게 총 상금 GP가 (참여GP + 부스팅GP×2) 비율로 배분됩니다.</li>
+            <li>모든 참여자에게 참여 GP가 전액 환급됩니다.</li>
+            <li>부스팅 GP는 환급되지 않습니다.</li>
           </ul>
         </div>
 
         <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
-          <p className="text-sm text-orange-700">보상 지급 후에는 취소할 수 없습니다.</p>
+          <p className="text-sm text-orange-700">⚠️ 보상 지급은 1회만 가능하며, 지급 후 취소할 수 없습니다.</p>
         </div>
       </div>
     </Modal>

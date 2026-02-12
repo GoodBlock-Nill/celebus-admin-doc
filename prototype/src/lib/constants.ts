@@ -33,7 +33,7 @@ export const GAME_STATUS_ACTIONS: Record<GameStatus, string[]> = {
   Draft: ['delete', 'edit'],
   Ready: ['delete', 'edit', 'publish'],
   Active: ['edit', 'forceClose'],
-  Pending: ['edit', 'inputResult'],
+  Pending: ['edit', 'inputResult', 'forceClose'],
   Closed: ['editResult', 'distributeReward'],
   Ended: [],
 };
