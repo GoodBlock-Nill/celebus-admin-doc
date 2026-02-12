@@ -200,11 +200,23 @@ export default function GameDetailPage({ params }: { params: Promise<{ id: strin
       {activeTab === 'results' && (
         <div className="space-y-8">
           <DetailSection title="결과 정보" fields={[
+            { label: '결과제목 (KO)', value: game.resultTitle?.ko || '-', full: true },
+            { label: '결과제목 (EN)', value: game.resultTitle?.en || '-', full: true },
+            { label: '결과제목 (JP)', value: game.resultTitle?.jp || '-', full: true },
             { label: '결과', value: game.result ? (
               <Badge variant="custom" value={game.result} customBg={game.result === 'YES' ? 'bg-green-100' : 'bg-red-100'} customText={game.result === 'YES' ? 'text-green-700' : 'text-red-700'} customLabel={game.result} />
             ) : '-' },
-            { label: '결과 확인 링크', value: game.resultLink ? (
-              <a href={game.resultLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{game.resultLink}</a>
+            { label: '결과설명 (KO)', value: game.resultDescription?.ko || '-', full: true },
+            { label: '결과설명 (EN)', value: game.resultDescription?.en || '-', full: true },
+            { label: '결과설명 (JP)', value: game.resultDescription?.jp || '-', full: true },
+            { label: '결과링크 (KO)', value: game.resultLinkUrl?.ko ? (
+              <a href={game.resultLinkUrl.ko} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{game.resultLinkText?.ko || game.resultLinkUrl.ko}</a>
+            ) : '-' },
+            { label: '결과링크 (EN)', value: game.resultLinkUrl?.en ? (
+              <a href={game.resultLinkUrl.en} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{game.resultLinkText?.en || game.resultLinkUrl.en}</a>
+            ) : '-' },
+            { label: '결과링크 (JP)', value: game.resultLinkUrl?.jp ? (
+              <a href={game.resultLinkUrl.jp} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{game.resultLinkText?.jp || game.resultLinkUrl.jp}</a>
             ) : '-' },
           ]} />
           <DetailSection title="보상 현황" fields={[
@@ -254,7 +266,7 @@ export default function GameDetailPage({ params }: { params: Promise<{ id: strin
         confirmText="삭제하기" confirmVariant="danger"
         onConfirm={() => { deleteGame(id); closeModal(); addToast('success', '게임이 삭제되었습니다.'); router.push('/game-zone/games'); }} />
       <ResultInputModal isOpen={activeModal === 'inputResult'} onClose={closeModal} game={game}
-        onConfirm={(result, resultLink) => { setGameResult(id, result, resultLink); closeModal(); addToast('success', `결과가 "${result}"(으)로 확정되었습니다.`); }} />
+        onConfirm={(result, resultTitle, resultDescription, resultLinkText, resultLinkUrl) => { setGameResult(id, result, resultTitle, resultDescription, resultLinkText, resultLinkUrl); closeModal(); addToast('success', `결과가 "${result}"(으)로 확정되었습니다.`); }} />
       <RewardModal isOpen={activeModal === 'distributeReward'} onClose={closeModal} game={game}
         onConfirm={() => { distributeReward(id); closeModal(); addToast('success', '보상이 지급되었습니다.'); }} />
     </div>

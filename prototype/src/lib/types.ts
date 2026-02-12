@@ -29,7 +29,10 @@ export interface Game {
   resultDate: string;
   resultBasis: MultiLangText;
   result: GameResult;
-  resultLink: string; // 결과 확인 링크
+  resultTitle: MultiLangText; // 결과제목 (다국어, 50자)
+  resultDescription: MultiLangText; // 결과설명 (다국어, 500자)
+  resultLinkText: MultiLangText; // 결과링크 텍스트 (다국어)
+  resultLinkUrl: MultiLangText; // 결과링크 URL (다국어)
   rewardDistributed: boolean;
   rewardDistributedAt: string | null;
   participantCount: number;

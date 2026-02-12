@@ -36,7 +36,9 @@ function createGame(index: number, status: GameStatus): Game {
 
   let endDate: string, resultDate: string, publishedAt: string | null = null;
   let result: 'YES' | 'NO' | null = null;
-  let resultLink = '';
+  let resultTitle = { ko: '', en: '', jp: '' };
+  let resultLinkText = { ko: '', en: '', jp: '' };
+  let resultLinkUrl = { ko: '', en: '', jp: '' };
   let rewardDistributed = false;
   let rewardDistributedAt: string | null = null;
   const participantCount = status === 'Draft' || status === 'Ready' ? 0 : Math.floor(Math.random() * 500) + 10;
@@ -65,14 +67,18 @@ function createGame(index: number, status: GameStatus): Game {
       endDate = randomDate(new Date(pastMonth.getTime() - 30 * 24 * 60 * 60 * 1000), pastMonth);
       resultDate = randomDate(new Date(new Date(endDate).getTime() + 1 * 24 * 60 * 60 * 1000), new Date(new Date(endDate).getTime() + 3 * 24 * 60 * 60 * 1000));
       result = Math.random() > 0.5 ? 'YES' : 'NO';
-      resultLink = `https://example.com/result/${index + 1}`;
+      resultTitle = { ko: '결과 발표', en: 'Result Announcement', jp: '結果発表' };
+      resultLinkText = { ko: '공식 결과 페이지', en: 'Official Result Page', jp: '公式結果ページ' };
+      resultLinkUrl = { ko: 'https://example.com/kr/result', en: 'https://example.com/en/result', jp: 'https://example.com/jp/result' };
       break;
     case 'Ended':
       publishedAt = randomDate(new Date(pastMonth.getTime() - 90 * 24 * 60 * 60 * 1000), new Date(pastMonth.getTime() - 60 * 24 * 60 * 60 * 1000));
       endDate = randomDate(new Date(pastMonth.getTime() - 60 * 24 * 60 * 60 * 1000), new Date(pastMonth.getTime() - 30 * 24 * 60 * 60 * 1000));
       resultDate = randomDate(new Date(new Date(endDate).getTime() + 1 * 24 * 60 * 60 * 1000), new Date(new Date(endDate).getTime() + 3 * 24 * 60 * 60 * 1000));
       result = Math.random() > 0.5 ? 'YES' : 'NO';
-      resultLink = `https://example.com/result/${index + 1}`;
+      resultTitle = { ko: '결과 발표', en: 'Result Announcement', jp: '結果発表' };
+      resultLinkText = { ko: '공식 결과 페이지', en: 'Official Result Page', jp: '公式結果ページ' };
+      resultLinkUrl = { ko: 'https://example.com/kr/result', en: 'https://example.com/en/result', jp: 'https://example.com/jp/result' };
       rewardDistributed = true;
       rewardDistributedAt = randomDate(new Date(new Date(resultDate).getTime() + 1 * 24 * 60 * 60 * 1000), new Date(new Date(resultDate).getTime() + 3 * 24 * 60 * 60 * 1000));
       break;
@@ -112,7 +118,10 @@ function createGame(index: number, status: GameStatus): Game {
       jp: '公式発表を基準に結果を確認します。',
     },
     result,
-    resultLink,
+    resultTitle,
+    resultDescription: result ? { ko: '결과가 확정되었습니다.', en: 'Result has been confirmed.', jp: '結果が確定しました。' } : { ko: '', en: '', jp: '' },
+    resultLinkText,
+    resultLinkUrl,
     rewardDistributed,
     rewardDistributedAt,
     participantCount,

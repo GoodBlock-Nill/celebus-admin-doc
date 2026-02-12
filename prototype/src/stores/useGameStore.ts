@@ -29,7 +29,7 @@ interface GameStore {
   updateGame: (id: string, updates: Partial<Game>) => void;
   deleteGame: (id: string) => void;
   changeGameStatus: (id: string, newStatus: GameStatus) => void;
-  setGameResult: (id: string, result: 'YES' | 'NO', resultLink?: string) => void;
+  setGameResult: (id: string, result: 'YES' | 'NO', resultTitle: { ko: string; en: string; jp: string }, resultDescription: { ko: string; en: string; jp: string }, resultLinkText?: { ko: string; en: string; jp: string }, resultLinkUrl?: { ko: string; en: string; jp: string }) => void;
   distributeReward: (id: string) => void;
 }
 
@@ -130,11 +130,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }),
   })),
 
-  setGameResult: (id, result, resultLink) => set((state) => ({
+  setGameResult: (id, result, resultTitle, resultDescription, resultLinkText, resultLinkUrl) => set((state) => ({
     games: state.games.map(g => g.id === id ? {
       ...g,
       result,
-      resultLink: resultLink || g.resultLink,
+      resultTitle: resultTitle || g.resultTitle,
+      resultDescription: resultDescription || g.resultDescription,
+      resultLinkText: resultLinkText || g.resultLinkText,
+      resultLinkUrl: resultLinkUrl || g.resultLinkUrl,
       status: 'Closed' as GameStatus,
       updatedAt: new Date().toISOString(),
     } : g),

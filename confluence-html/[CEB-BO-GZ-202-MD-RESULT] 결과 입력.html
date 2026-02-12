@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td>버전</td>
-    <td>v1.0</td>
+    <td>v1.2</td>
   </tr>
   <tr>
     <td>최근 업데이트</td>
-    <td>2025.02.06</td>
+    <td>2026.02.12</td>
   </tr>
   <tr>
     <td>Jira 링크</td>
@@ -132,7 +132,7 @@ p {
   </tr>
   <tr>
     <td>다국어 영향</td>
-    <td>No</td>
+    <td>Yes</td>
   </tr>
   <tr>
     <td>Breadcrumb</td>
@@ -161,6 +161,11 @@ p {
 │  총 참여자     │ {N}명                          │
 │  총 상금 GP    │ {N} GP                         │
 │                                                 │
+│  결과제목 *                                     │
+│  [KO] [EN] [JP]                                 │
+│  [ _________________________________________ ]  │
+│  0/50                                           │
+│                                                 │
 │  결과 선택                                      │
 │  ┌──────────────┐  ┌──────────────┐            │
 │  │    YES       │  │     NO       │            │
@@ -168,11 +173,18 @@ p {
 │  │    {N}명     │  │    {N}명     │            │
 │  └──────────────┘  └──────────────┘            │
 │                                                 │
-│  결과 확인 링크                                 │
+│  결과설명 *                                     │
+│  [KO] [EN] [JP]                                 │
 │  ┌────────────────────────────────────────┐    │
-│  │ https://example.com/result-proof       │    │
+│  │ (결과에 대한 설명을 입력하세요)         │    │
+│  │                                        │    │
 │  └────────────────────────────────────────┘    │
-│  결과를 확인할 수 있는 URL을 입력하세요. (선택) │
+│  0/500                                         │
+│                                                 │
+│  결과링크 (선택)                                │
+│  [KO] [EN] [JP]                                 │
+│  링크텍스트 [ ________________________________ ]│
+│  링크 URL   [ ________________________________ ]│
 │                                                 │
 │  ┌────────────────────────────────────────┐    │
 │  │ ⚠️ 결과 확정 후에는 변경할 수 없습니다.│    │
@@ -208,6 +220,11 @@ p {
     <td>타이틀, 총 참여자, 총 상금 GP</td>
   </tr>
   <tr>
+    <td>결과제목</td>
+    <td>Multilang Input</td>
+    <td>다국어 탭 (KO/EN/JP), 각 50자 제한, 필수 입력, 실시간 글자 수 표시</td>
+  </tr>
+  <tr>
     <td>결과 선택 안내</td>
     <td>Text</td>
     <td>"결과 선택"</td>
@@ -223,9 +240,14 @@ p {
     <td>빨간색 테두리/배경, 예상 정답자 수 표시</td>
   </tr>
   <tr>
-    <td>결과 확인 링크</td>
-    <td>URL Input</td>
-    <td>선택 입력, 결과 증빙 URL</td>
+    <td>결과설명</td>
+    <td>Multilang Textarea</td>
+    <td>다국어 탭 (KO/EN/JP), 각 500자 제한, 필수 입력, 실시간 글자 수 표시</td>
+  </tr>
+  <tr>
+    <td>결과링크</td>
+    <td>Multilang Input Group</td>
+    <td>다국어 탭 (KO/EN/JP), 링크텍스트 + 링크 URL 쌍, 선택 입력</td>
   </tr>
   <tr>
     <td>경고 박스</td>
@@ -338,6 +360,17 @@ p {
   </tr>
 </table>
 
+<h3>결과제목 입력</h3>
+
+<ol>
+  <li>다국어 입력 필드 (KO/EN/JP 탭 전환)</li>
+  <li>각 언어별 50자 제한</li>
+  <li>실시간 글자 수 표시: "25/50"</li>
+  <li>필수 입력 항목</li>
+  <li>Placeholder: "결과 제목을 입력하세요."</li>
+  <li>모든 언어(KO/EN/JP) 입력 필수</li>
+</ol>
+
 <h3>결과 선택 동작</h3>
 
 <h4>YES 버튼 클릭</h4>
@@ -358,6 +391,17 @@ p {
   <li>YES 버튼: 회색 테두리 복원</li>
   <li>confirmed 상태 초기화 (false)</li>
   <li>"결과 확정" 버튼 활성화</li>
+</ol>
+
+<h3>결과설명 입력</h3>
+
+<ol>
+  <li>다국어 입력 필드 (KO/EN/JP 탭 전환)</li>
+  <li>각 언어별 500자 제한</li>
+  <li>실시간 글자 수 표시: "25/500"</li>
+  <li>필수 입력 항목</li>
+  <li>Placeholder: "결과에 대한 설명을 입력하세요."</li>
+  <li>모든 언어(KO/EN/JP) 입력 필수</li>
 </ol>
 
 <h3>버튼 동작</h3>
@@ -389,28 +433,31 @@ p {
     <li>배경: 주황색 (bg-orange-50)</li>
     <li>테두리: 주황색 (border-orange-200)</li>
     <li>메시지: "결과 확정 후에는 변경할 수 없습니다. 정말로 "{YES/NO}"(으)로 확정하시겠습니까?"</li>
-    <li>버튼 텍스트 변경: "결과 확정" → "최종 확정"</li>
   </ul>
   </li>
+  <li>버튼 텍스트 변경: "결과 확정" → "최종 확정"</li>
 </ol>
 
 <h5>결과 선택 시 (2차 클릭 - 최종 확정)</h5>
 
 <ol>
-  <li>onConfirm(selected, resultLink) 호출
+  <li>onConfirm(selected, resultTitle, resultDescription, resultLinkText, resultLinkUrl) 호출
   <ul>
     <li>selected: 선택된 결과 (YES 또는 NO)</li>
-    <li>resultLink: 입력된 결과 확인 링크 (선택사항)</li>
+    <li>resultTitle: 결과제목 (다국어, 필수)</li>
+    <li>resultDescription: 결과설명 (다국어, 필수)</li>
+    <li>resultLinkText: 결과링크 텍스트 (다국어, 선택)</li>
+    <li>resultLinkUrl: 결과링크 URL (다국어, 선택)</li>
   </ul>
   </li>
   <li>성공 시:
   <ul>
     <li>게임 상태: Pending → Closed</li>
-    <li>게임 결과 저장 (결과값 + 결과 확인 링크)</li>
+    <li>게임 결과 저장 (결과값 + 결과제목 + 결과설명 + 결과링크)</li>
     <li>정답자/오답자 판정 완료</li>
     <li>토스트 메시지: "게임 결과가 확정되었습니다." (Success)</li>
     <li>모달 닫기</li>
-    <li>상태 초기화 (selected=null, resultLink='', confirmed=false)</li>
+    <li>상태 초기화 (selected=null, resultTitle={ko:'', en:'', jp:''}, resultDescription={ko:'', en:'', jp:''}, resultLinkText={ko:'', en:'', jp:''}, resultLinkUrl={ko:'', en:'', jp:''}, confirmed=false)</li>
     <li>게임 상세 화면 갱신 (결과 표시, 보상 지급 버튼 활성화)</li>
   </ul>
   </li>
@@ -422,21 +469,24 @@ p {
   </li>
 </ol>
 
-<h4>결과 확인 링크 입력</h4>
+<h4>결과링크 입력</h4>
 
 <ol>
-  <li>URL 형식 입력 필드</li>
-  <li>플레이스홀더: "https://example.com/result-proof"</li>
+  <li>다국어 입력 필드 (KO/EN/JP 탭 전환)</li>
+  <li>각 언어별 링크텍스트 + 링크 URL 쌍으로 구성</li>
+  <li>링크텍스트: 링크에 표시할 텍스트 (예: "FIFA 공식 결과 페이지")</li>
+  <li>링크 URL: URL 형식 검증</li>
   <li>선택 입력 항목 (필수 아님)</li>
-  <li>도움말: "결과를 확인할 수 있는 URL을 입력하세요. (선택)"</li>
-  <li>입력값은 onConfirm 호출 시 두 번째 인자로 전달</li>
+  <li>Placeholder (링크텍스트): "링크 텍스트를 입력하세요."</li>
+  <li>Placeholder (링크 URL): "https://example.com/result-proof"</li>
+  <li>도움말: "결과를 확인할 수 있는 링크를 입력하세요. (선택)"</li>
 </ol>
 
 <h4>닫기(X) 버튼</h4>
 
 <ul>
   <li>취소 버튼과 동일한 동작</li>
-  <li>상태 초기화: selected=null, resultLink='', confirmed=false</li>
+  <li>상태 초기화: selected=null, resultTitle={ko:'', en:'', jp:''}, resultDescription={ko:'', en:'', jp:''}, resultLinkText={ko:'', en:'', jp:''}, resultLinkUrl={ko:'', en:'', jp:''}, confirmed=false</li>
 </ul>
 
 <hr>
@@ -529,7 +579,9 @@ p {
 
 <ol>
   <li>게임 결과 저장 (YES 또는 NO)</li>
-  <li>결과 확인 링크 저장 (선택사항, 입력된 경우에만)</li>
+  <li>결과제목 저장 (다국어, 필수)</li>
+  <li>결과설명 저장 (다국어, 필수)</li>
+  <li>결과링크 저장 (링크텍스트 + URL, 다국어, 선택사항)</li>
   <li>각 참여자에게 정답/오답 플래그 저장</li>
   <li>게임 상태: Pending → Closed</li>
   <li>보상 계산 준비 (실제 지급은 보상 지급 모달에서 수행)</li>
@@ -609,6 +661,16 @@ p {
     <td>결과 미선택 상태에서 확정 시도</td>
     <td>"결과를 선택해주세요."</td>
     <td>토스트 표시 (방어 로직)</td>
+  </tr>
+  <tr>
+    <td>결과제목 미입력</td>
+    <td>"결과제목을 입력해주세요."</td>
+    <td>인라인 에러 표시, 해당 언어 탭으로 이동</td>
+  </tr>
+  <tr>
+    <td>결과설명 미입력</td>
+    <td>"결과설명을 입력해주세요."</td>
+    <td>인라인 에러 표시, 해당 언어 탭으로 이동</td>
   </tr>
   <tr>
     <td>이미 결과가 입력된 게임</td>
