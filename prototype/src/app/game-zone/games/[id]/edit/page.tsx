@@ -8,6 +8,7 @@ import MultiLangEditor from '@/components/forms/MultiLangEditor';
 import MultiLangTextarea from '@/components/forms/MultiLangTextarea';
 import NumberInput from '@/components/forms/NumberInput';
 import DateTimePicker from '@/components/forms/DateTimePicker';
+import DatePicker from '@/components/forms/DatePicker';
 import ConfirmModal from '@/components/modals/ConfirmModal';
 import { useGameStore } from '@/stores/useGameStore';
 import { useUIStore } from '@/stores/useUIStore';
@@ -349,7 +350,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
               error={errors.endDate}
               disabled={!canEditEndDate}
             />
-            <DateTimePicker
+            <DatePicker
               label="결과 발표 예정일"
               value={resultDate}
               onChange={setResultDate}

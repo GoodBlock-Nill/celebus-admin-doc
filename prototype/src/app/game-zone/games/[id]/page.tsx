@@ -15,7 +15,7 @@ import { useGameStore } from '@/stores/useGameStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { getParticipantsByGameId } from '@/mock/participants';
 import { GAME_STATUS_ACTIONS, GAME_TYPE_LABELS, ITEMS_PER_PAGE } from '@/lib/constants';
-import { formatDateTime, formatGP, formatNumber } from '@/lib/utils';
+import { formatDate, formatDateTime, formatGP, formatNumber } from '@/lib/utils';
 import type { Participant } from '@/lib/types';
 
 export default function GameDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -160,7 +160,7 @@ export default function GameDetailPage({ params }: { params: Promise<{ id: strin
           <DetailSection title="일정설정" fields={[
             { label: '투표 시작일시', value: game.publishedAt ? formatDateTime(game.publishedAt) : '(게시 시 설정)' },
             { label: '투표 종료일시', value: formatDateTime(game.endDate) },
-            { label: '결과 발표 예정일', value: formatDateTime(game.resultDate) },
+            { label: '결과 발표 예정일', value: formatDate(game.resultDate) },
           ]} />
           <DetailSection title="결과설정" fields={[
             { label: '결과 확인 기준 (KO)', value: game.resultBasis.ko || '-', full: true },

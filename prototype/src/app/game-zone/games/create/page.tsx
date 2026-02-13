@@ -8,6 +8,7 @@ import MultiLangTextarea from '@/components/forms/MultiLangTextarea';
 import MultiLangEditor from '@/components/forms/MultiLangEditor';
 import NumberInput from '@/components/forms/NumberInput';
 import DateTimePicker from '@/components/forms/DateTimePicker';
+import DatePicker from '@/components/forms/DatePicker';
 import ConfirmModal from '@/components/modals/ConfirmModal';
 import { useGameStore } from '@/stores/useGameStore';
 import { useUIStore } from '@/stores/useUIStore';
@@ -212,7 +213,7 @@ export default function CreateGamePage() {
               <span className="text-sm text-gray-500">(게시 시점에 자동 설정)</span>
             </div>
             <DateTimePicker label="투표 종료일시" value={endDate} onChange={setEndDate} required error={errors.endDate} />
-            <DateTimePicker label="결과 발표 예정일" value={resultDate} onChange={setResultDate} min={endDate} required error={errors.resultDate} />
+            <DatePicker label="결과 발표 예정일" value={resultDate} onChange={setResultDate} min={endDate} required error={errors.resultDate} />
           </div>
         </Section>
 
