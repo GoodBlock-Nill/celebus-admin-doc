@@ -31,7 +31,6 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
   const [boostingMultiplier, setBoostingMultiplier] = useState(2);
   const [hintLinkEnabled, setHintLinkEnabled] = useState(false);
   const [hintLink, setHintLink] = useState('');
-  const [boostingEnabled, setBoostingEnabled] = useState(true);
   const [endDate, setEndDate] = useState('');
   const [resultDate, setResultDate] = useState('');
   const [resultBasis, setResultBasis] = useState<MultiLangText>({ ko: '', en: '', jp: '' });
@@ -49,7 +48,6 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
       setBoostingMultiplier(game.boostingMultiplier || 2);
       setHintLinkEnabled(game.hintLinkEnabled ?? false);
       setHintLink(game.hintLink || '');
-      setBoostingEnabled(game.boostingEnabled ?? true);
       setEndDate(game.endDate);
       setResultDate(game.resultDate);
       setResultBasis({ ...game.resultBasis });
@@ -144,9 +142,8 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
       updateData.participationCost = participationCost;
     }
     if (canEditBoosting) {
-      updateData.boostingEnabled = boostingEnabled;
-      updateData.boostingCost = boostingEnabled ? boostingCost : 0;
-      updateData.boostingMultiplier = boostingEnabled ? boostingMultiplier : 2;
+      updateData.boostingCost = boostingCost;
+      updateData.boostingMultiplier = boostingMultiplier;
     }
     if (canEditEndDate) {
       updateData.endDate = endDate;
@@ -309,52 +306,27 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
                 unit="GP"
                 disabled={!canEditParticipation}
               />
-              <div>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-gray-700 w-[100px]">부스팅</span>
-                  <div className="flex rounded-lg border border-gray-200 overflow-hidden">
-                    <button
-                      type="button"
-                      onClick={() => canEditBoosting && setBoostingEnabled(true)}
-                      className={`px-4 py-1.5 text-sm font-medium transition-colors ${
-                        boostingEnabled ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
-                      } ${!canEditBoosting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    >
-                      사용
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => canEditBoosting && setBoostingEnabled(false)}
-                      className={`px-4 py-1.5 text-sm font-medium transition-colors ${
-                        !boostingEnabled ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
-                      } ${!canEditBoosting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    >
-                      미사용
-                    </button>
-                  </div>
-                </div>
-                {boostingEnabled && (
-                  <div className="mt-4 space-y-4">
-                    <NumberInput
-                      label="부스팅 비용"
-                      value={boostingCost}
-                      onChange={setBoostingCost}
-                      min={1}
-                      unit="GP"
-                      disabled={!canEditBoosting}
-                    />
-                    <NumberInput
-                      label="부스팅 배수"
-                      value={boostingMultiplier}
-                      onChange={setBoostingMultiplier}
-                      min={1}
-                      max={10}
-                      unit="배"
-                      disabled={!canEditBoosting}
-                    />
-                    <p className="text-xs text-gray-400">부스팅 GP는 보상 계산 시 해당 배수만큼 가중치가 적용됩니다.</p>
-                  </div>
-                )}
+              <div className="space-y-4">
+                <NumberInput
+                  label="부스팅 비용"
+                  value={boostingCost}
+                  onChange={setBoostingCost}
+                  min={1}
+                  unit="GP"
+                  required
+                  disabled={!canEditBoosting}
+                />
+                <NumberInput
+                  label="부스팅 배수"
+                  value={boostingMultiplier}
+                  onChange={setBoostingMultiplier}
+                  min={1}
+                  max={10}
+                  unit="배"
+                  required
+                  disabled={!canEditBoosting}
+                />
+                <p className="text-xs text-gray-400">부스팅 GP는 보상 계산 시 해당 배수만큼 가중치가 적용됩니다.</p>
               </div>
             </div>
           </Section>

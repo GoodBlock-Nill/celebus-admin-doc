@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>[CEB-GAM-401] 랭킹</title>
+</head>
+<body>
+
+<h1>[CEB-GAM-401] 랭킹</h1>
+
+<h2>Page Properties</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Key</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Screen ID</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-401</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기획담당자</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">디자인담당자</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">개발담당자</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">API</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기능영역(Epic)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GAM(게임)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상태</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Draft</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Figma 링크</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다국어 영향</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Yes</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Breadcrumb</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Game 탭 &gt; 게임존 메인 &gt; 랭킹</td>
+</tr>
+</tbody>
+</table>
+
+<h2>1. 화면 목적</h2>
+
+<p>게임존에 참여한 사용자들의 누적 GP 기준 랭킹을 확인하는 화면이다. 내 랭킹 정보를 상단에 고정 표시하고, TOP 10 사용자를 하이라이트하여 경쟁 동기를 부여한다.</p>
+
+<h2>2. UI 설명</h2>
+
+<h3>2.1 화면 레이아웃</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;"><code style="background-color: #f4f5f7; border-radius: 3px; padding: 2px 4px; font-family: SFMono-Regular, Consolas, monospace; font-size: 0.9em;">┌────────────────────────────────────────┐
+│ [Header]                               │
+│  &lt; 랭킹                          9:41  │
+├────────────────────────────────────────┤
+│                                        │
+│ ┌────────────────────────────────────┐ │
+│ │ [내 랭킹 영역]                      │ │
+│ │ 누적 GamePoint (ⓘ)                 │ │
+│ │                                    │ │
+│ │ 상위 13% · 123위                   │ │
+│ │                                    │ │
+│ │       🎮 2,914 GP                  │ │
+│ │                                    │ │
+│ │ 총 참여 1,223 · 승률 68%    ∨      │ │
+│ └────────────────────────────────────┘ │
+│                                        │
+│ [그라데이션 구분선]                     │
+│                                        │
+│ ┌────────────────────────────────────┐ │
+│ │ TOP 10 🏆                          │ │
+│ │ 순위는 매일 00시 업데이트됩니다.    │ │
+│ ├────────────────────────────────────┤ │
+│ │                                    │ │
+│ │ 🥇 CelebrityHunter1                │ │
+│ │    참여 1,223  승률 63%            │ │
+│ │                        2,914 GP    │ │
+│ │                                    │ │
+│ │ 🥈 CelebrityHunter2                │ │
+│ │    참여 1,003  승률 53%            │ │
+│ │                        2,014 GP    │ │
+│ │                                    │ │
+│ │ 🥉 CelebrityHunter3                │ │
+│ │    참여 903  승률 63%              │ │
+│ │                        2,004 GP    │ │
+│ │                                    │ │
+│ │  4  CelebrityHunter4   2,000 GP    │ │
+│ │  5  CelebrityHunter5   1,914 GP    │ │
+│ │  6  CelebrityHunter6   1,900 GP    │ │
+│ │  7  CelebrityHunter7   1,800 GP    │ │
+│ │  8  CelebrityHunter8   1,700 GP    │ │
+│ │  9  CelebrityHunter9   1,000 GP    │ │
+│ │ 10  CelebrityHunter99    914 GP    │ │
+│ └────────────────────────────────────┘ │
+│                                        │
+└────────────────────────────────────────┘
+</code></pre>
+
+<h3>2.2 영역별 구성요소</h3>
+
+<h4>2.2.1 Header 영역</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">타입</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">뒤로가기 버튼</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Icon Button</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">&lt;</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">클릭 시 게임존 메인 (CEB-GAM-101) 이동</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이틀</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"랭킹"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">중앙 정렬</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">시간 표시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"9:41" (기기 시간)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">우측 상단</td>
+</tr>
+</tbody>
+</table>
+
+<h4>2.2.2 내 랭킹 영역</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">타입</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">스타일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">라벨</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"누적 GamePoint"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">작은 회색 폰트</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">안내 아이콘</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Icon Button</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ⓘ</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탭 시 누적 GP 설명 바텀시트 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상위 비율 + 순위</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"상위 {비율}% · {순위}위"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초록색 강조 (상위권 시), 비율은 소수점 첫째 자리까지</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 아이콘 + 누적 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Icon + Text</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">🎮 2,914 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">큰 폰트, 중앙 정렬, 파란색 강조</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">펼치기 영역</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Collapsible</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 참여 1,223 · 승률 68%</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기본: 접힌 상태, 탭 시 게임별 상세 성과 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">펼침 화살표</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Icon</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">∨ (접힌 상태) / ∧ (펼쳐진 상태)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">우측 하단</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>펼침 영역 (접은 상태)</strong>:</p>
+<ul>
+<li>"총 참여 {숫자} · 승률 {숫자}%" (회색 텍스트)</li>
+<li>우측 하단에 ∨ 화살표</li>
+</ul>
+
+<p><strong>펼침 영역 (펼친 상태)</strong>:</p>
+<ul>
+<li>게임별 탭: "게임별"</li>
+<li>Prediction Market 섹션:
+<ul>
+<li>아이콘 + 타이틀: "Prediction Market 1,223 GP"</li>
+<li>참여 횟수 + 승률: "참여 1,223회  승률 63%" (회색)</li>
+</ul>
+</li>
+<li>Survival Trivia 섹션 (Live 2.5 버전에서 활성화):
+<ul>
+<li>아이콘 + 타이틀: "Survival Trivia 0 GP"</li>
+<li>참여 횟수 + 승률: "참여 0회  승률 -" (회색)</li>
+</ul>
+</li>
+<li>우측 하단에 ∧ 화살표</li>
+</ul>
+
+<h4>2.2.3 구분선</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">스타일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">구분선</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">그라데이션 효과 (밝음 → 어두움 → 밝음)</td>
+</tr>
+</tbody>
+</table>
+
+<h4>2.2.4 TOP 10 섹션</h4>
+
+<p><strong>헤더</strong>:</p>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이틀</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"TOP 10 🏆" (굵은 폰트)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">안내 문구</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"순위는 매일 00시 업데이트됩니다." (작은 회색 폰트)</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>1~3위 (상위 랭커)</strong>:</p>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">타입</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">스타일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">메달 아이콘</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Icon</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">🥇 (1위) / 🥈 (2위) / 🥉 (3위)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">좌측 상단</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">닉네임</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">사용자 닉네임</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">굵은 폰트</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 + 승률</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"참여 {숫자}  승률 {숫자}%"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">작은 회색 폰트</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">누적 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"{숫자} GP"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">우측 정렬, 파란색 강조</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>4~10위 (일반 랭커)</strong>:</p>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">타입</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">스타일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">순위 번호</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">4, 5, 6, ..., 10</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">좌측, 회색 폰트</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">닉네임</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">사용자 닉네임</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일반 폰트</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">누적 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"{숫자} GP"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">우측 정렬, 파란색 강조</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>내 순위 강조 (TOP 10 내)</strong>:</p>
+
+<ul>
+<li>본인이 TOP 10에 포함될 경우:
+<ul>
+<li>"YOU" 라벨 좌측에 표시 (주황색 배경)</li>
+<li>또는 행 전체 배경색 변경 (밝은 파란색 반투명)</li>
+</ul>
+</li>
+</ul>
+
+<h3>2.3 상태별 화면</h3>
+
+<h4>2.3.1 Default (정상 상태)</h4>
+
+<ul>
+<li>내 랭킹 영역: 상위 비율, 순위, 누적 GP, 참여/승률 표시</li>
+<li>TOP 10 섹션: 1~10위 사용자 목록 표시</li>
+</ul>
+
+<h4>2.3.2 오픈전 (랭킹 서비스 준비중)</h4>
+
+<p><strong>내 랭킹 영역</strong>:</p>
+<ul>
+<li>상위 비율 + 순위 위치에: "순위 집계 전" (회색 텍스트)</li>
+<li>GP 표시: "- GP"</li>
+<li>펼침 영역 비활성화</li>
+</ul>
+
+<p><strong>TOP 10 섹션</strong>:</p>
+<ul>
+<li>Empty State 표시:
+<ul>
+<li>아이콘: 📊 (회색)</li>
+<li>메시지: "아직 랭킹이 집계되지 않았습니다"</li>
+<li>서브 메시지: "게임에 참여하고 랭킹을 확인하세요!"</li>
+</ul>
+</li>
+</ul>
+
+<h4>2.3.3 Loading</h4>
+
+<ul>
+<li>Skeleton UI:
+<ul>
+<li>내 랭킹 영역: 텍스트 위치에 회색 플레이스홀더</li>
+<li>TOP 10 섹션: 각 행에 회색 플레이스홀더</li>
+</ul>
+</li>
+</ul>
+
+<h4>2.3.4 Error</h4>
+
+<ul>
+<li>토스트 (Error 타입): "랭킹 정보를 불러오는데 실패했습니다."</li>
+<li>[다시 시도] 버튼 표시</li>
+</ul>
+
+<h3>2.4 테마별 스타일</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">테마</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">배경색</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">카드 배경</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">GP 색상</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">메달 아이콘</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다크 (기본)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">어두운 배경</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">어두운 파란 톤</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">밝은 파란색</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">금/은/동 색상 유지</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">라이트</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">밝은 배경</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">흰색</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">진한 파란색</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">금/은/동 색상 유지</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
+<p>시각적 스타일 상세는 피그마 참조</p>
+</blockquote>
+
+<h2>3. 화면 내 기능설명</h2>
+
+<h3>3.1 뒤로가기</h3>
+
+<p><strong>트리거</strong>: Header 좌측 &lt; 버튼 탭</p>
+
+<p><strong>동작</strong>: 게임존 메인 (CEB-GAM-101) 화면으로 이동</p>
+
+<h3>3.2 누적 GP 안내</h3>
+
+<p><strong>트리거</strong>: 내 랭킹 영역 상단 ⓘ 아이콘 탭</p>
+
+<p><strong>동작</strong>: 바텀시트 표시</p>
+
+<p><strong>바텀시트 내용</strong>:</p>
+<ul>
+<li>타이틀: "누적 GP란?"</li>
+<li>본문:
+<ul>
+<li>"게임을 통해 내가 지금까지 쌓아온 보상이에요"</li>
+<li>"게임 참여로 얻은 GP가 모두 합산되며, 랭킹은 이 누적 GP를 기준으로 정해져요"</li>
+<li>"게임 별 상세 성과는 카드 펼침 영역에서 확인할 수 있어요"</li>
+</ul>
+</li>
+</ul>
+
+<h3>3.3 내 랭킹 펼치기/접기</h3>
+
+<p><strong>트리거</strong>: 내 랭킹 영역의 펼침 영역 또는 화살표 아이콘 탭</p>
+
+<p><strong>동작</strong>:</p>
+<ul>
+<li>접힌 상태 → 펼친 상태: 게임별 상세 성과 표시 (애니메이션)</li>
+<li>펼친 상태 → 접힌 상태: 간략 정보만 표시 (애니메이션)</li>
+</ul>
+
+<p><strong>애니메이션</strong>: 0.3초 Ease-in-out</p>
+
+<h3>3.4 Pull-to-Refresh</h3>
+
+<p><strong>트리거</strong>: 화면 상단에서 아래로 드래그</p>
+
+<p><strong>동작</strong>: 랭킹 데이터 재조회 (내 랭킹 + TOP 10)</p>
+
+<p><strong>완료</strong>: 로딩 인디케이터 사라짐, 데이터 갱신</p>
+
+<h2>4. 규칙/로직</h2>
+
+<h3>4.1 누적 GP 집계</h3>
+
+<p><strong>공식</strong>:</p>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;"><code style="background-color: #f4f5f7; border-radius: 3px; padding: 2px 4px; font-family: SFMono-Regular, Consolas, monospace; font-size: 0.9em;">누적 GP = (보상 GP + 환급 GP) - (참여 GP + 부스팅 GP)
+</code></pre>
+
+<p><strong>구성 요소</strong>:</p>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">부호</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답 맞힌 게임의 보상</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환급 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 취소/자동 환급 시 환급액</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 참여 시 지불한 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅으로 지불한 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>예시</strong>:</p>
+<ul>
+<li>보상 GP: 50,000</li>
+<li>환급 GP: 10,000</li>
+<li>참여 GP: 8,000</li>
+<li>부스팅 GP: 2,000</li>
+<li><strong>누적 GP = (50,000 + 10,000) - (8,000 + 2,000) = 50,000 GP</strong></li>
+</ul>
+
+<h3>4.2 승률 계산</h3>
+
+<p><strong>공식</strong>:</p>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;"><code style="background-color: #f4f5f7; border-radius: 3px; padding: 2px 4px; font-family: SFMono-Regular, Consolas, monospace; font-size: 0.9em;">승률 = (정답 게임 수 / 참여 완료 게임 수) × 100
+</code></pre>
+
+<p><strong>정답 게임</strong>: 사용자가 선택한 선택지가 최종 결과와 일치한 게임</p>
+
+<p><strong>참여 완료 게임</strong>: 결과가 확정된 게임 (종료 상태)</p>
+
+<p><strong>소수점</strong>: 반올림하여 정수 표시 (예: 68%)</p>
+
+<p><strong>참여 없을 시</strong>: "-" 표시</p>
+
+<h3>4.3 상위 비율 계산</h3>
+
+<p><strong>공식</strong>:</p>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;"><code style="background-color: #f4f5f7; border-radius: 3px; padding: 2px 4px; font-family: SFMono-Regular, Consolas, monospace; font-size: 0.9em;">상위 비율 = (내 순위 / 전체 랭킹 참여자 수) × 100
+</code></pre>
+
+<p><strong>소수점</strong>: 첫째 자리까지 표시 (예: 13.2%)</p>
+
+<p><strong>예시</strong>:</p>
+<ul>
+<li>내 순위: 123위</li>
+<li>전체 참여자: 1,000명</li>
+<li><strong>상위 비율 = (123 / 1,000) × 100 = 12.3%</strong></li>
+</ul>
+
+<h3>4.4 TOP 10 정렬 기준</h3>
+
+<p><strong>기본 정렬</strong>: 누적 GP 내림차순 (높은 순)</p>
+
+<p><strong>동점 시 정렬</strong>:</p>
+<ol>
+<li>누적 GP 동일 시: 누적 GP를 먼저 달성한 사용자 우선</li>
+<li>달성 시간도 동일 시: UID 오름차순</li>
+</ol>
+
+<h3>4.5 랭킹 갱신 주기</h3>
+
+<p><strong>기본</strong>: 매일 00시 (KST, UTC+9) 집계</p>
+
+<p><strong>안내</strong>: TOP 10 섹션 헤더에 "순위는 매일 00시 업데이트됩니다." 표시</p>
+
+<h3>4.6 게임별 누적 GP (펼침 영역)</h3>
+
+<p><strong>Prediction Market</strong>:</p>
+<ul>
+<li>누적 GP: 해당 게임 유형의 누적 GP 합계</li>
+<li>참여 횟수: 결과 확정된 게임 수</li>
+<li>승률: (정답 게임 수 / 참여 완료 게임 수) × 100</li>
+</ul>
+
+<p><strong>Survival Trivia</strong> (Live 2.5 버전):</p>
+<ul>
+<li>누적 GP: 해당 게임 유형의 누적 GP 합계</li>
+<li>참여 횟수: 결과 확정된 게임 수</li>
+<li>승률: (정답 게임 수 / 참여 완료 게임 수) × 100</li>
+<li>참여 없을 시: "참여 0회  승률 -"</li>
+</ul>
+
+<h3>4.7 숫자 포맷</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">포맷</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">예시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">누적 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">천 단위 콤마 + " GP"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"2,914 GP"</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 횟수</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"참여 {숫자}회"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"참여 1,223회"</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">승률</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"{숫자}%"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"68%"</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상위 비율</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"상위 {숫자}%"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"상위 13.2%"</td>
+</tr>
+</tbody>
+</table>
+
+<h3>4.8 상태별 표시</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상태</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">표시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Loading</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">데이터 로딩 중</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Skeleton UI</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Default</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">데이터 정상 조회</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">조회된 값 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Empty (오픈전)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">랭킹 집계 전</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"아직 랭킹이 집계되지 않았습니다"</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Empty (참여 없음)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">내가 게임 참여 이력 없음</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"순위 집계 전", GP: "- GP"</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Error</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">조회 실패</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">토스트: "랭킹 정보를 불러오는데 실패했습니다."</td>
+</tr>
+</tbody>
+</table>
+
+<h3>4.9 백오피스 설정 반영</h3>
+
+<h4>TOP 10 공개 설정</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">백오피스 설정</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">앱 반영</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">TOP 10 공개: ON</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">TOP 10 섹션 정상 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">TOP 10 공개: OFF</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">TOP 10 섹션 대신 "충분한 데이터가 쌓였을 때 공개" 메시지 표시</td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>공개 OFF 시 메시지</strong>:</p>
+<ul>
+<li>"충분한 데이터가 쌓였을 때 공개"</li>
+<li>"(시점: 의미 있는 비교가 가능해지는 운영·데이터 기준으로 판단, 추후)"</li>
+</ul>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
+<p>백오피스 설정은 CEB-BO-GZ-402 (랭킹 설정) 화면에서 관리</p>
+</blockquote>
+
+<h2>5. 에러 및 예외상황</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상황</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">네트워크 에러</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">토스트 (Error): "네트워크 상태를 확인해주세요." + 재시도 버튼</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">랭킹 조회 실패</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">토스트 (Error): "랭킹 정보를 불러오는데 실패했습니다." + [다시 시도] 버튼</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">내 랭킹 없음 (미참여)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상위 비율 위치에 "순위 집계 전", GP: "- GP", 펼침 영역 비활성화</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">TOP 10 데이터 없음 (오픈전)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Empty State: "아직 랭킹이 집계되지 않았습니다"</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">TOP 10 공개 OFF</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"충분한 데이터가 쌓였을 때 공개" 메시지 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ⓘ 아이콘 탭 시 바텀시트 로딩 실패</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">토스트 (Error): "안내 정보를 불러올 수 없습니다."</td>
+</tr>
+</tbody>
+</table>
+
+<h2>6. 연관화면ID</h2>
+
+<h3>연관 화면</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면ID</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면명</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">관계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-101</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존 메인</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">뒤로가기 시 이동</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-401</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[BO] 랭킹 조회</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">백오피스 대응 화면</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-402</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[BO] 랭킹 설정</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">백오피스 설정 화면 (TOP 10 공개 여부 등)</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Live 버전별 차이</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Live 2 ver</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Live 2.5 ver</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">펼침 영역 기본 상태</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">접어보기 (접힌 상태)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">접어보기 (접힌 상태)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형 표시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market만 표시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market + Survival Trivia 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 섹션</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미표시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">표시 (참여 없을 시 "참여 0회  승률 -")</td>
+</tr>
+</tbody>
+</table>
+
+<h3>디자인 시스템 참고</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Live 2 ver</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Live 2.5 ver</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">사용자 TOP 10 진입 시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3위 이내: 메달 아이콘 + 참여/승률 표시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">동일</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">사용자 TOP 10 진입 시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">4위 이후: 순위 번호 + GP만 표시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">동일</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">대시보드 영역</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">펼침 영역에 게임별 상세 성과 표시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형 추가 (Survival Trivia)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형 탭 확장 가능성 고려</td>
+</tr>
+</tbody>
+</table>
+
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+
+<h2>변경 이력</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">날짜</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초안 작성 (클라이언트 앱 랭킹 화면)</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

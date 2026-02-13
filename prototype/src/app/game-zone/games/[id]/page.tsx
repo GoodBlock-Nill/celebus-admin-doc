@@ -154,9 +154,8 @@ export default function GameDetailPage({ params }: { params: Promise<{ id: strin
           <DetailSection title="참여설정" fields={[
             { label: '참여 정원', value: game.maxParticipants === 0 ? '무제한' : `${formatNumber(game.maxParticipants)}명` },
             { label: '참여 비용', value: formatGP(game.participationCost) },
-            { label: '부스팅', value: game.boostingEnabled ? '사용' : '미사용' },
-            { label: '부스팅 비용', value: game.boostingEnabled ? formatGP(game.boostingCost) : '-' },
-            { label: '부스팅 배수', value: game.boostingEnabled ? `${game.boostingMultiplier}배` : '-' },
+            { label: '부스팅 비용', value: formatGP(game.boostingCost) },
+            { label: '부스팅 배수', value: `${game.boostingMultiplier}배` },
           ]} />
           <DetailSection title="일정설정" fields={[
             { label: '투표 시작일시', value: game.publishedAt ? formatDateTime(game.publishedAt) : '(게시 시 설정)' },

@@ -81,114 +81,114 @@
 
 <h2>1. 클라이언트 문서 분석 요약</h2>
 
-<table>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <thead>
     <tr>
-      <th>문서명</th>
-      <th>주요 기능</th>
-      <th>ADMIN에서 관리해야 할 항목</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">문서명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">주요 기능</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">ADMIN에서 관리해야 할 항목</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>game.pdf</td>
-      <td>Game Zone 메인, Prediction Market 상세</td>
-      <td>게임 생성/수정/삭제, 상태 관리, 결과 입력</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">game.pdf</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Game Zone 메인, Prediction Market 상세</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 생성/수정/삭제, 상태 관리, 결과 입력</td>
     </tr>
     <tr>
-      <td>GP활동내역.pdf</td>
-      <td>게임 참여내역, 교환 내역</td>
-      <td>유저별 참여/부스팅/환급/보상 내역 조회</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP활동내역.pdf</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 참여내역, 교환 내역</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유저별 참여/부스팅/환급/보상 내역 조회</td>
     </tr>
     <tr>
-      <td>랭킹.pdf</td>
-      <td>누적 GP 기준 전체 랭킹, TOP 10</td>
-      <td>랭킹 조회, TOP 10 공개 설정</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">랭킹.pdf</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">누적 GP 기준 전체 랭킹, TOP 10</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">랭킹 조회, TOP 10 공개 설정</td>
     </tr>
     <tr>
-      <td>교환소.pdf</td>
-      <td>GP↔CELB 교환</td>
-      <td>교환 설정(최소 수량, 비율), 교환 내역 조회</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환소.pdf</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP↔CELB 교환</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 설정(최소 수량, 비율), 교환 내역 조회</td>
     </tr>
   </tbody>
 </table>
 
 <h2>2. 설계 원칙</h2>
 
-<table>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <thead>
     <tr>
-      <th>원칙</th>
-      <th>설명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">원칙</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>확장성 확보</td>
-      <td>새 게임 유형 추가 시 최소한의 개발로 대응 (Phase 2에서 Survival Trivia 등 확장)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">확장성 확보</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">새 게임 유형 추가 시 최소한의 개발로 대응 (Phase 2에서 Survival Trivia 등 확장)</td>
     </tr>
     <tr>
-      <td>공통/개별 분리</td>
-      <td>랭킹/교환소/GP 변동 내역은 공통, 게임 관리는 유형별 분기</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">공통/개별 분리</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">랭킹/교환소/GP 변동 내역은 공통, 게임 관리는 유형별 분기</td>
     </tr>
     <tr>
-      <td>통합 리스트</td>
-      <td>게임별 메뉴 분리 대신 통합 관리 + 유형 필터</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">통합 리스트</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임별 메뉴 분리 대신 통합 관리 + 유형 필터</td>
     </tr>
     <tr>
-      <td>Phase 구분</td>
-      <td>Sprint 1은 Prediction Market만, 이후 게임 유형 확장</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Phase 구분</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Sprint 1은 Prediction Market만, 이후 게임 유형 확장</td>
     </tr>
   </tbody>
 </table>
 
 <h2>3. 용어 통일 가이드</h2>
 
-<table>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <thead>
     <tr>
-      <th>구분</th>
-      <th>통일 용어</th>
-      <th>설명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">구분</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">통일 용어</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>GP 증가</td>
-      <td>보상, 환급, 충전</td>
-      <td>+ GP</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 증가</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상, 환급, 충전</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+ GP</td>
     </tr>
     <tr>
-      <td>GP 감소</td>
-      <td>참여, 부스팅, 출금</td>
-      <td>− GP</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 감소</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여, 부스팅, 출금</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">− GP</td>
     </tr>
     <tr>
-      <td>교환 방향</td>
-      <td>GP 충전 (CELB→GP), GP 출금 (GP→CELB)</td>
-      <td>유저 관점 기준</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 충전 (CELB→GP), GP 출금 (GP→CELB)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유저 관점 기준</td>
     </tr>
     <tr>
-      <td>상금</td>
-      <td>총 상금 GP</td>
-      <td>"상금풀" 사용 금지, 통일</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상금</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"상금풀" 사용 금지, 통일</td>
     </tr>
     <tr>
-      <td>게임 상태</td>
-      <td>임시저장/게시대기/진행중/결과 대기/결과 확정/종료</td>
-      <td>한글 표기 통일</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 상태</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">임시저장/게시대기/진행중/결과 대기/결과 확정/종료</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">한글 표기 통일</td>
     </tr>
     <tr>
-      <td>GP 이력</td>
-      <td>GP 변동 내역</td>
-      <td>"거래" 용어 사용 금지</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 이력</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 변동 내역</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"거래" 용어 사용 금지</td>
     </tr>
   </tbody>
 </table>
 
 <h2>4. 사이드 메뉴 구조</h2>
 
-<pre>게임존
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">게임존
 ├── 게임존 홈          → CEB-BO-GZ-101
 ├── 게임 관리          → CEB-BO-GZ-201
 ├── 랭킹              → CEB-BO-GZ-401
@@ -200,7 +200,7 @@
 
 <h2>5. 전체 화면 구조</h2>
 
-<pre>게임존
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">게임존
 │
 ├── [CEB-BO-GZ-101] 게임존 메인
 │
@@ -247,184 +247,184 @@
 
 <h2>6. 화면 목록 (Phase 구분 포함)</h2>
 
-<table>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <thead>
     <tr>
-      <th>순서</th>
-      <th>화면ID</th>
-      <th>화면명</th>
-      <th>유형</th>
-      <th>Phase</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">순서</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면ID</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">유형</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Phase</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>1</td>
-      <td>CEB-BO-GZ-101</td>
-      <td>게임존 메인</td>
-      <td>Page</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-101</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존 메인</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>2</td>
-      <td>CEB-BO-GZ-201</td>
-      <td>게임 리스트</td>
-      <td>Page</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-201</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 리스트</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>3</td>
-      <td>CEB-BO-GZ-201-CREATE</td>
-      <td>게임 생성</td>
-      <td>Page</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-201-CREATE</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 생성</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>4</td>
-      <td>CEB-BO-GZ-201-MD-CANCEL</td>
-      <td>생성 취소 확인</td>
-      <td>Modal</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">4</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-201-MD-CANCEL</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생성 취소 확인</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Modal</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>5</td>
-      <td>CEB-BO-GZ-202</td>
-      <td>게임 상세 (탭 포함)</td>
-      <td>Page</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">5</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-202</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 상세 (탭 포함)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>6</td>
-      <td>CEB-BO-GZ-202-EDIT</td>
-      <td>게임 수정</td>
-      <td>Page</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">6</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-202-EDIT</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 수정</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>7</td>
-      <td>CEB-BO-GZ-202-MD-EDIT-CANCEL</td>
-      <td>수정 취소 확인</td>
-      <td>Modal</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">7</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-202-MD-EDIT-CANCEL</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">수정 취소 확인</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Modal</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>8</td>
-      <td>CEB-BO-GZ-202-MD-PUBLISH</td>
-      <td>게시 확인</td>
-      <td>Modal</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">8</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-202-MD-PUBLISH</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게시 확인</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Modal</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>9</td>
-      <td>CEB-BO-GZ-202-MD-CLOSE</td>
-      <td>종료 확인</td>
-      <td>Modal</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">9</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-202-MD-CLOSE</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">종료 확인</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Modal</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>10</td>
-      <td>CEB-BO-GZ-202-MD-DELETE</td>
-      <td>삭제 확인</td>
-      <td>Modal</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">10</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-202-MD-DELETE</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">삭제 확인</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Modal</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>11</td>
-      <td>CEB-BO-GZ-202-MD-RESULT</td>
-      <td>결과 입력</td>
-      <td>Modal</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">11</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-202-MD-RESULT</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 입력</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Modal</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>12</td>
-      <td>CEB-BO-GZ-202-MD-REWARD</td>
-      <td>보상 지급 확인</td>
-      <td>Modal</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">12</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-202-MD-REWARD</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 지급 확인</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Modal</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>13</td>
-      <td>CEB-BO-GZ-401</td>
-      <td>랭킹 조회</td>
-      <td>Page</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">13</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-401</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">랭킹 조회</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>14</td>
-      <td>CEB-BO-GZ-402</td>
-      <td>랭킹 설정</td>
-      <td>Page</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">14</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-402</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">랭킹 설정</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>15</td>
-      <td>CEB-BO-GZ-501</td>
-      <td>교환 내역</td>
-      <td>Page</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">15</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-501</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 내역</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>16</td>
-      <td>CEB-BO-GZ-501-MD-DETAIL</td>
-      <td>교환 상세</td>
-      <td>Modal</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">16</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-501-MD-DETAIL</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 상세</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Modal</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>17</td>
-      <td>CEB-BO-GZ-502</td>
-      <td>교환 설정</td>
-      <td>Page</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">17</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-502</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 설정</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>18</td>
-      <td>CEB-BO-GZ-503</td>
-      <td>지갑 관리</td>
-      <td>Page</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">18</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-503</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑 관리</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>19</td>
-      <td>CEB-BO-GZ-503-MD-REGISTER</td>
-      <td>지갑 등록/수정</td>
-      <td>Modal</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">19</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-503-MD-REGISTER</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑 등록/수정</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Modal</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>20</td>
-      <td>CEB-BO-GZ-503-MD-DELETE</td>
-      <td>지갑 삭제 확인</td>
-      <td>Modal</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">20</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-503-MD-DELETE</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑 삭제 확인</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Modal</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>21</td>
-      <td>CEB-BO-GZ-601</td>
-      <td>GP 변동 내역</td>
-      <td>Page</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">21</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-601</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 변동 내역</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>22</td>
-      <td>CEB-BO-GZ-601-MD-DETAIL</td>
-      <td>변동 상세</td>
-      <td>Modal</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">22</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-601-MD-DETAIL</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">변동 상세</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Modal</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
     <tr>
-      <td>23</td>
-      <td>CEB-BO-USR-203</td>
-      <td>회원상세 (게임존 탭)</td>
-      <td>Page (탭)</td>
-      <td>1</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">23</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-USR-203</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">회원상세 (게임존 탭)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Page (탭)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1</td>
     </tr>
   </tbody>
 </table>
 
 <h2>7. 화면 Flow 다이어그램</h2>
 
-<pre>[CEB-BO-GZ-101] 게임존 메인
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">[CEB-BO-GZ-101] 게임존 메인
     │
     ├─→ [CEB-BO-GZ-201] 게임 리스트
     │       │
@@ -481,303 +481,303 @@
 
 <h2>8. 게임 상태 정의</h2>
 
-<table>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <thead>
     <tr>
-      <th>상태</th>
-      <th>코드</th>
-      <th>설명</th>
-      <th>Badge 색상</th>
-      <th>앱 반영</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상태</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">코드</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Badge 색상</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">앱 반영</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>임시저장</td>
-      <td>Draft</td>
-      <td>작성 완료, 미게시</td>
-      <td>회색</td>
-      <td>노출 안됨</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">임시저장</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Draft</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">작성 완료, 미게시</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">회색</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">노출 안됨</td>
     </tr>
     <tr>
-      <td>게시대기</td>
-      <td>Ready</td>
-      <td>생성 완료, 게시 대기 중</td>
-      <td>파란색</td>
-      <td>노출 안됨</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게시대기</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Ready</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생성 완료, 게시 대기 중</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">파란색</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">노출 안됨</td>
     </tr>
     <tr>
-      <td>진행중</td>
-      <td>Active</td>
-      <td>참여 가능</td>
-      <td>초록색</td>
-      <td>참여 가능</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">진행중</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Active</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 가능</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초록색</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 가능</td>
     </tr>
     <tr>
-      <td>결과 대기</td>
-      <td>Pending</td>
-      <td>참여 마감, 결과 입력 대기</td>
-      <td>주황색</td>
-      <td>결과 대기 표시</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 대기</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Pending</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 마감, 결과 입력 대기</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">주황색</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 대기 표시</td>
     </tr>
     <tr>
-      <td>결과 확정</td>
-      <td>Closed</td>
-      <td>결과 확정, 보상 지급 전</td>
-      <td>보라색</td>
-      <td>결과 확인 가능</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확정</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Closed</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확정, 보상 지급 전</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보라색</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확인 가능</td>
     </tr>
     <tr>
-      <td>종료</td>
-      <td>Ended</td>
-      <td>보상 지급 완료</td>
-      <td>검정색</td>
-      <td>종료 표시</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">종료</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Ended</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 지급 완료</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">검정색</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">종료 표시</td>
     </tr>
   </tbody>
 </table>
 
 <h3>상태별 가능 액션</h3>
 
-<table>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <thead>
     <tr>
-      <th>현재 상태</th>
-      <th>가능 액션</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">현재 상태</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">가능 액션</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>임시저장 (Draft)</td>
-      <td>삭제하기, 수정하기</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">임시저장 (Draft)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">삭제하기, 수정하기</td>
     </tr>
     <tr>
-      <td>게시대기 (Ready)</td>
-      <td>삭제하기, 수정하기, 게시하기</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게시대기 (Ready)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">삭제하기, 수정하기, 게시하기</td>
     </tr>
     <tr>
-      <td>진행중 (Active)</td>
-      <td>수정하기, 강제 종료</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">진행중 (Active)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">수정하기, 강제 종료</td>
     </tr>
     <tr>
-      <td>결과 대기 (Pending)</td>
-      <td>수정하기, 결과 입력</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 대기 (Pending)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">수정하기, 결과 입력</td>
     </tr>
     <tr>
-      <td>결과 확정 (Closed)</td>
-      <td>결과 수정, 보상 지급</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확정 (Closed)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 수정, 보상 지급</td>
     </tr>
     <tr>
-      <td>종료 (Ended)</td>
-      <td>버튼 없음</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">종료 (Ended)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버튼 없음</td>
     </tr>
   </tbody>
 </table>
 
 <h2>9. GP 변동 유형 정의</h2>
 
-<table>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <thead>
     <tr>
-      <th>유형</th>
-      <th>코드</th>
-      <th>설명</th>
-      <th>GP 변동</th>
-      <th>비고</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">유형</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">코드</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">GP 변동</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>참여</td>
-      <td>PARTICIPATION</td>
-      <td>게임 참여 시</td>
-      <td>− (차감)</td>
-      <td>-</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PARTICIPATION</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 참여 시</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">− (차감)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
     </tr>
     <tr>
-      <td>부스팅</td>
-      <td>BOOSTING</td>
-      <td>부스팅 사용 시</td>
-      <td>− (차감)</td>
-      <td>-</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">BOOSTING</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 사용 시</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">− (차감)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
     </tr>
     <tr>
-      <td>환급</td>
-      <td>REFUND</td>
-      <td>결과 발표 후 참여 GP 반환</td>
-      <td>+ (증가)</td>
-      <td>-</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환급</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">REFUND</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 발표 후 참여 GP 반환</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+ (증가)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
     </tr>
     <tr>
-      <td>보상</td>
-      <td>REWARD</td>
-      <td>정답 시 보상 지급</td>
-      <td>+ (증가)</td>
-      <td>-</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">REWARD</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답 시 보상 지급</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+ (증가)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
     </tr>
     <tr>
-      <td>환불</td>
-      <td>REFUND_CANCEL</td>
-      <td>게임 취소 시 환불</td>
-      <td>+ (증가)</td>
-      <td>부스팅 환불, 참여GP 환불</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">REFUND_CANCEL</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 취소 시 환불</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+ (증가)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 환불, 참여GP 환불</td>
     </tr>
     <tr>
-      <td>GP 충전</td>
-      <td>EXCHANGE_IN</td>
-      <td>CELB → GP 교환</td>
-      <td>+ (증가)</td>
-      <td>-</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 충전</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">EXCHANGE_IN</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB → GP 교환</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+ (증가)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
     </tr>
     <tr>
-      <td>GP 출금</td>
-      <td>EXCHANGE_OUT</td>
-      <td>GP → CELB 교환</td>
-      <td>− (차감)</td>
-      <td>-</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 출금</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">EXCHANGE_OUT</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP → CELB 교환</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">− (차감)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
     </tr>
   </tbody>
 </table>
 
 <h2>10. 권한 관리 연동</h2>
 
-<table>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <thead>
     <tr>
-      <th>대메뉴</th>
-      <th>중메뉴</th>
-      <th>읽기</th>
-      <th>쓰기</th>
-      <th>삭제</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">대메뉴</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">중메뉴</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">읽기</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">쓰기</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">삭제</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>게임존</td>
-      <td>게임 관리</td>
-      <td>☑</td>
-      <td>☑</td>
-      <td>☑</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 관리</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">☑</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">☑</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">☑</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>랭킹</td>
-      <td>☑</td>
-      <td>☑</td>
-      <td>-</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">랭킹</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">☑</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">☑</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>GP 교환소</td>
-      <td>☑</td>
-      <td>☑</td>
-      <td>-</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 교환소</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">☑</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">☑</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>GP 변동 내역</td>
-      <td>☑</td>
-      <td>-</td>
-      <td>-</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 변동 내역</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">☑</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
     </tr>
   </tbody>
 </table>
 
 <h2>11. 관리자 활동 로그 정의</h2>
 
-<table>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <thead>
     <tr>
-      <th>대분류</th>
-      <th>중분류</th>
-      <th>소분류</th>
-      <th>로그 메시지</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">대분류</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">중분류</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">소분류</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">로그 메시지</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>게임존</td>
-      <td>게임 관리</td>
-      <td>생성</td>
-      <td>게임 '{타이틀}'을(를) 생성했습니다. (유형: {게임유형})</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 관리</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생성</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 '{타이틀}'을(를) 생성했습니다. (유형: {게임유형})</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>게임 관리</td>
-      <td>수정</td>
-      <td>게임 '{타이틀}'의 정보를 수정했습니다.</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 관리</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">수정</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 '{타이틀}'의 정보를 수정했습니다.</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>게임 관리</td>
-      <td>게시</td>
-      <td>게임 '{타이틀}'을(를) 게시했습니다.</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 관리</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게시</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 '{타이틀}'을(를) 게시했습니다.</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>게임 관리</td>
-      <td>종료</td>
-      <td>게임 '{타이틀}'을(를) 종료했습니다.</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 관리</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">종료</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 '{타이틀}'을(를) 종료했습니다.</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>게임 관리</td>
-      <td>삭제</td>
-      <td>게임 '{타이틀}'을(를) 삭제했습니다.</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 관리</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">삭제</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 '{타이틀}'을(를) 삭제했습니다.</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>게임 관리</td>
-      <td>결과 입력</td>
-      <td>게임 '{타이틀}'의 결과를 입력했습니다. (결과: {YES/NO})</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 관리</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 입력</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 '{타이틀}'의 결과를 입력했습니다. (결과: {YES/NO})</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>게임 관리</td>
-      <td>보상 지급</td>
-      <td>게임 '{타이틀}'의 보상을 지급했습니다. (대상: {n}명, 총 GP: {n})</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 관리</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 지급</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 '{타이틀}'의 보상을 지급했습니다. (대상: {n}명, 총 GP: {n})</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>랭킹</td>
-      <td>설정 변경</td>
-      <td>랭킹 설정을 변경했습니다. (TOP 10 공개: {ON/OFF})</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">랭킹</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">설정 변경</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">랭킹 설정을 변경했습니다. (TOP 10 공개: {ON/OFF})</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>교환소</td>
-      <td>설정 변경</td>
-      <td>GP 교환 설정을 변경했습니다.</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환소</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">설정 변경</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 교환 설정을 변경했습니다.</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>교환소</td>
-      <td>지갑 등록</td>
-      <td>지갑을 등록했습니다. (유형: {유형}, 주소: {주소})</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환소</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑 등록</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑을 등록했습니다. (유형: {유형}, 주소: {주소})</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>교환소</td>
-      <td>지갑 수정</td>
-      <td>지갑을 수정했습니다. (지갑ID: {id})</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환소</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑 수정</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑을 수정했습니다. (지갑ID: {id})</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>교환소</td>
-      <td>지갑 삭제</td>
-      <td>지갑을 삭제했습니다. (지갑ID: {id})</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환소</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑 삭제</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑을 삭제했습니다. (지갑ID: {id})</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>교환소</td>
-      <td>지갑 상태 변경</td>
-      <td>지갑 상태를 변경했습니다. (지갑ID: {id}, 상태: {상태})</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환소</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑 상태 변경</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑 상태를 변경했습니다. (지갑ID: {id}, 상태: {상태})</td>
     </tr>
     <tr>
-      <td>게임존</td>
-      <td>교환소</td>
-      <td>대표 지갑 변경</td>
-      <td>대표 지갑을 변경했습니다. (유형: {유형}, 지갑ID: {id})</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환소</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">대표 지갑 변경</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">대표 지갑을 변경했습니다. (유형: {유형}, 지갑ID: {id})</td>
     </tr>
   </tbody>
 </table>
@@ -786,34 +786,34 @@
 
 <p>회원상세 [CEB-BO-USR-203]의 "게임존" 탭 구성 (별도 화면설명서 참조):</p>
 
-<table>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <thead>
     <tr>
-      <th>표시 항목</th>
-      <th>설명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">표시 항목</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>GP 요약</td>
-      <td>현재 GP 잔액, 누적 획득 GP, 누적 사용 GP, 랭킹 순위</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 요약</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 GP 잔액, 누적 획득 GP, 누적 사용 GP, 랭킹 순위</td>
     </tr>
     <tr>
-      <td>게임 성과 요약</td>
-      <td>참여 게임 수, 승률, 최근 참여일</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 성과 요약</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 게임 수, 승률, 최근 참여일</td>
     </tr>
     <tr>
-      <td>게임 참여 내역</td>
-      <td>통합 리스트 (게임상태/기간 필터, 게임 타이틀 클릭 시 CEB-BO-GZ-202 이동)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 참여 내역</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">통합 리스트 (게임상태/기간 필터, 게임 타이틀 클릭 시 CEB-BO-GZ-202 이동)</td>
     </tr>
     <tr>
-      <td>GP 변동 내역</td>
-      <td>GP 변동 리스트 (변동유형/기간 필터, Row 클릭 시 CEB-BO-GZ-601-MD-DETAIL 모달)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 변동 내역</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 변동 리스트 (변동유형/기간 필터, Row 클릭 시 CEB-BO-GZ-601-MD-DETAIL 모달)</td>
     </tr>
   </tbody>
 </table>
 
-<blockquote>
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
 상세 사양은 [CEB-BO-USR-203] 회원상세 (게임존 탭) 화면설명서 참조
 </blockquote>
 

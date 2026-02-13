@@ -22,7 +22,6 @@ export interface Game {
   totalPrizeGP: number;
   maxParticipants: number; // 0 = unlimited
   participationCost: number;
-  boostingEnabled: boolean;
   boostingCost: number;
   boostingMultiplier: number; // 부스팅 배수 (1~10, 기본 2)
   endDate: string; // 투표 종료일시

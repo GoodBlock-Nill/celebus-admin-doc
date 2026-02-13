@@ -85,7 +85,6 @@ function createGame(index: number, status: GameStatus): Game {
   }
 
   const createdAt = randomDate(new Date(new Date(endDate).getTime() - 30 * 24 * 60 * 60 * 1000), new Date(new Date(endDate).getTime() - 14 * 24 * 60 * 60 * 1000));
-  const boostingEnabled = Math.random() > 0.2;
   const hintLinkEnabled = Math.random() > 0.5;
 
   return {
@@ -107,9 +106,8 @@ function createGame(index: number, status: GameStatus): Game {
     totalPrizeGP: [10000, 50000, 100000, 200000, 500000][Math.floor(Math.random() * 5)],
     maxParticipants: Math.random() > 0.3 ? [100, 500, 1000, 0][Math.floor(Math.random() * 4)] : 0,
     participationCost: [1, 5, 10, 20, 50][Math.floor(Math.random() * 5)],
-    boostingEnabled,
-    boostingCost: boostingEnabled ? [1, 5, 10, 20][Math.floor(Math.random() * 4)] : 0,
-    boostingMultiplier: boostingEnabled ? [2, 3, 5, 10][Math.floor(Math.random() * 4)] : 2,
+    boostingCost: [1, 5, 10, 20][Math.floor(Math.random() * 4)],
+    boostingMultiplier: [2, 3, 5, 10][Math.floor(Math.random() * 4)],
     endDate,
     resultDate,
     resultBasis: {
