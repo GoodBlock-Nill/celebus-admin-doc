@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2025.02.12</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -144,7 +144,7 @@ p {
 
 <h2>1. 화면 목적</h2>
 
-<p>운영용 블록체인 지갑(충전용/출금용)을 새로 등록하거나 기존 지갑을 수정하는 모달입니다. 지갑 유형과 주소를 입력하며, 출금용 지갑의 경우 토큰 전송에 필요한 Private Key도 함께 등록합니다. 등록과 수정 모두 동일한 모달 레이아웃을 사용하며, 타이틀과 버튼 레이블이 변경됩니다.</p>
+<p>운영용 블록체인 지갑(충전용/출금용)을 새로 등록하거나 기존 지갑을 수정하는 모달입니다. 지갑 유형과 주소를 입력하며, 지갑 유형에 관계없이 토큰 전송에 필요한 Private Key도 함께 등록합니다. 등록과 수정 모두 동일한 모달 레이아웃을 사용하며, 타이틀과 버튼 레이블이 변경됩니다.</p>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
 
@@ -169,14 +169,14 @@ p {
 │  │ 0x...                           │   │
 │  └─────────────────────────────────┘   │
 │                                         │
-│  Private Key * (출금용 선택 시 노출)    │
+│  Private Key *                            │
 │  ┌─────────────────────────────────┐   │
 │  │ ●●●●●●●●                       │   │
 │  └─────────────────────────────────┘   │
 │  ⓘ 토큰 전송 트랜잭션 서명에 필요합니다│
 │                                         │
 │  ┌─ ⚠ 안내 ─────────────────────────┐ │
-│  │ 출금용 지갑은 가스비(BNB) 잔고가   │ │
+│  │ 출금용 지갑은 가스비(BNB) 잔고가   │ │  ← 출금용 선택 시에만 노출
 │  │ 있어야 출금이 가능합니다.          │ │
 │  └───────────────────────────────────┘ │
 │                                         │
@@ -201,14 +201,14 @@ p {
 │  │ 0x9c2d1e4f...8a9b3c            │   │
 │  └─────────────────────────────────┘   │
 │                                         │
-│  Private Key (출금용 선택 시 노출)      │
+│  Private Key                              │
 │  ┌─────────────────────────────────┐   │
 │  │                                 │   │
 │  └─────────────────────────────────┘   │
 │  ⓘ 변경이 필요한 경우에만 입력하세요   │
 │                                         │
 │  ┌─ ⚠ 안내 ─────────────────────────┐ │
-│  │ 출금용 지갑은 가스비(BNB) 잔고가   │ │
+│  │ 출금용 지갑은 가스비(BNB) 잔고가   │ │  ← 출금용 선택 시에만 노출
 │  │ 있어야 출금이 가능합니다.          │ │
 │  └───────────────────────────────────┘ │
 │                                         │
@@ -257,12 +257,12 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PK 라벨</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Label</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"Private Key *" (출금용 선택 시에만 노출, 수정 모드에서는 * 없음)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"Private Key *" (항상 노출, 수정 모드에서는 * 없음)</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PK 입력필드</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Password Input</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Private Key 입력 (마스킹), 출금용 선택 시에만 노출</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Private Key 입력 (마스킹), 항상 노출</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PK 도움말</td>
@@ -336,8 +336,8 @@ p {
   <li>선택된 버튼이 활성 상태로 변경</li>
   <li>선택되지 않은 버튼은 비활성 상태로 변경</li>
   <li>선택값이 즉시 변경됨 (별도 확인 없음)</li>
-  <li>출금용 선택 시: Private Key 입력 필드 및 BNB 안내 박스 노출</li>
-  <li>충전용 선택 시: Private Key 입력 필드 및 BNB 안내 박스 숨김 (기존 입력값 폐기)</li>
+  <li>출금용 선택 시: BNB 안내 박스 노출</li>
+  <li>충전용 선택 시: BNB 안내 박스 숨김</li>
 </ul>
 
 <ul>
@@ -367,12 +367,11 @@ p {
   </li>
 </ul>
 
-<h3>3.4 Private Key 입력 (출금용 전용)</h3>
+<h3>3.4 Private Key 입력</h3>
 
 <ul>
   <li><strong>노출 조건:</strong></li>
-  <li>지갑 유형이 "출금용 (WITHDRAW)"으로 선택된 경우에만 노출</li>
-  <li>충전용 선택 시 숨김</li>
+  <li>지갑 유형에 관계없이 항상 노출 (충전용/출금용 모두)</li>
 </ul>
 
 <ul>
@@ -384,7 +383,7 @@ p {
 
 <ul>
   <li><strong>등록 모드:</strong></li>
-  <li>필수 입력 (출금용일 때)</li>
+  <li>필수 입력</li>
   <li>도움말: "토큰 전송 트랜잭션 서명에 필요합니다. 서버에 암호화하여 저장됩니다."</li>
 </ul>
 
@@ -447,7 +446,7 @@ p {
   <li><strong>사전 검증:</strong></li>
   <li>지갑 주소 필수 입력 확인</li>
   <li>지갑 주소 형식 검증 (0x로 시작, 42자)</li>
-  <li>출금용인 경우 Private Key 필수 입력 확인</li>
+  <li>Private Key 필수 입력 확인</li>
   <li>검증 실패 시:
   <ul>
     <li>에러 토스트 메시지 표시</li>
@@ -653,7 +652,7 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Private Key</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">조건부 (출금용 등록 시 O, 수정 시 X)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">조건부 (등록 시 O, 수정 시 X)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">64~66자 hex 문자열</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"Private Key를 입력하세요."</td>
   </tr>
@@ -771,7 +770,7 @@ p {
   <li>등록된 지갑 주소는 중복 불가 (같은 주소의 지갑을 2개 이상 등록할 수 없음)</li>
   <li>지갑 유형과 주소를 모두 변경할 수 있음 (수정 모드)</li>
   <li>모달 닫기 시 입력값은 완전히 폐기됨 (로컬 저장소 미사용)</li>
-  <li>출금용 지갑 등록 시 Private Key는 필수이며, 서버에 암호화하여 저장한다</li>
+  <li>지갑 등록 시 Private Key는 필수이며, 서버에 암호화하여 저장한다</li>
   <li>Private Key는 등록 후 화면에 전체 노출하지 않으며, 마스킹 처리한다</li>
   <li>수정 모드에서 Private Key를 입력하지 않으면 기존 값을 유지한다</li>
   <li>출금용 지갑은 BNB 잔고가 있어야 출금 트랜잭션 실행이 가능하다</li>
@@ -843,7 +842,7 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">실시간 에러 표시, 입력 필드 하단</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Private Key 미입력 (출금용)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Private Key 미입력 (등록 모드)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"Private Key를 입력하세요."</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">토스트 표시, 모달 유지</td>
   </tr>
@@ -991,6 +990,12 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2025.02.12</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">출금용 PK 입력 필드 추가, BNB 안내 박스 추가 (개발팀 피드백 반영)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Private Key 입력을 충전용/출금용 모두 필수로 변경 (출금용 전용 → 유형 무관)</td>
   </tr>
 </table>
 

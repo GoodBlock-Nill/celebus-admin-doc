@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <!-- Gradient for LIGHT text (white to magical pink) -->
+    <linearGradient id="lightGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff69b4;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Purple-tinted spotlight gradient from top -->
+    <linearGradient id="spotlightGradient" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff69b4;stop-opacity:0.15" />
+      <stop offset="50%" style="stop-color:#9a7fbf;stop-opacity:0.08" />
+      <stop offset="100%" style="stop-color:#0a0014;stop-opacity:0" />
+    </linearGradient>
+
+    <!-- STRONG neon glow for the colon -->
+    <filter id="neonGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="12" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle glow for sparkles -->
+    <filter id="sparkleGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Medium glow for some sparkles -->
+    <filter id="mediumGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background (deep purple-black) -->
+  <rect width="800" height="400" fill="#0a0014" rx="8" ry="8"/>
+
+  <!-- Spotlight beam effect with purple tint -->
+  <path d="M 400 0 L 500 200 L 300 200 Z" fill="url(#spotlightGradient)" opacity="1"/>
+
+  <!-- Sparkles/stars decorations -->
+  <!-- Top left area -->
+  <g opacity="0.7">
+    <!-- 4-point star -->
+    <path d="M 180 120 L 184 128 L 192 132 L 184 136 L 180 144 L 176 136 L 168 132 L 176 128 Z"
+          fill="#ff1493" filter="url(#sparkleGlow)"/>
+  </g>
+
+  <g opacity="0.5">
+    <!-- Small diamond -->
+    <rect x="220" y="100" width="5" height="5" fill="#ff69b4" transform="rotate(45 222.5 102.5)"/>
+  </g>
+
+  <g opacity="0.8">
+    <!-- 4-point star -->
+    <path d="M 260 140 L 262 145 L 267 147 L 262 149 L 260 154 L 258 149 L 253 147 L 258 145 Z"
+          fill="#ffffff" filter="url(#sparkleGlow)"/>
+  </g>
+
+  <!-- Top right area -->
+  <g opacity="0.6">
+    <!-- Diamond -->
+    <rect x="580" y="110" width="6" height="6" fill="#ff1493" transform="rotate(45 583 113)"
+          filter="url(#sparkleGlow)"/>
+  </g>
+
+  <g opacity="0.4">
+    <!-- Small 4-point star -->
+    <path d="M 620 130 L 622 134 L 626 136 L 622 138 L 620 142 L 618 138 L 614 136 L 618 134 Z"
+          fill="#ff69b4"/>
+  </g>
+
+  <g opacity="0.7">
+    <!-- Diamond -->
+    <rect x="540" y="95" width="4" height="4" fill="#ffffff" transform="rotate(45 542 97)"/>
+  </g>
+
+  <!-- Near LIGHT text -->
+  <g opacity="0.8">
+    <!-- Larger 4-point star with glow -->
+    <path d="M 560 170 L 564 178 L 572 182 L 564 186 L 560 194 L 556 186 L 548 182 L 556 178 Z"
+          fill="#ff1493" filter="url(#mediumGlow)"/>
+  </g>
+
+  <g opacity="0.5">
+    <!-- Diamond -->
+    <rect x="590" y="200" width="5" height="5" fill="#ff69b4" transform="rotate(45 592.5 202.5)"/>
+  </g>
+
+  <!-- Near UNDER text -->
+  <g opacity="0.6">
+    <!-- 4-point star -->
+    <path d="M 200 170 L 203 176 L 209 179 L 203 182 L 200 188 L 197 182 L 191 179 L 197 176 Z"
+          fill="#ffffff" filter="url(#sparkleGlow)"/>
+  </g>
+
+  <g opacity="0.3">
+    <!-- Small diamond -->
+    <rect x="235" y="195" width="4" height="4" fill="#ff1493" transform="rotate(45 237 197)"/>
+  </g>
+
+  <!-- Below main text area -->
+  <g opacity="0.7">
+    <!-- Diamond with glow -->
+    <rect x="320" y="240" width="6" height="6" fill="#ff69b4" transform="rotate(45 323 243)"
+          filter="url(#sparkleGlow)"/>
+  </g>
+
+  <g opacity="0.5">
+    <!-- 4-point star -->
+    <path d="M 480 245 L 482 249 L 486 251 L 482 253 L 480 257 L 478 253 L 474 251 L 478 249 Z"
+          fill="#ffffff"/>
+  </g>
+
+  <!-- Main text container -->
+  <g transform="translate(400, 180)">
+    <!-- UNDER text (lavender silver) -->
+    <text
+      x="-240"
+      y="0"
+      font-family="'Helvetica Neue', Arial, sans-serif"
+      font-size="80"
+      font-weight="800"
+      fill="#b8b8d4"
+      text-anchor="start">UNDER</text>
+
+    <!-- Colon with STRONG neon glow (hot pink) -->
+    <text
+      x="-15"
+      y="0"
+      font-family="'Helvetica Neue', Arial, sans-serif"
+      font-size="90"
+      font-weight="900"
+      fill="#ff1493"
+      text-anchor="middle"
+      filter="url(#neonGlow)">:</text>
+
+    <!-- LIGHT text with gradient (white to magical pink) -->
+    <text
+      x="30"
+      y="0"
+      font-family="'Helvetica Neue', Arial, sans-serif"
+      font-size="80"
+      font-weight="800"
+      fill="url(#lightGradient)"
+      text-anchor="start">LIGHT</text>
+  </g>
+
+  <!-- Horizontal separator line (hot pink) -->
+  <line
+    x1="200"
+    y1="220"
+    x2="600"
+    y2="220"
+    stroke="#ff1493"
+    stroke-width="1"
+    opacity="0.3"/>
+
+  <!-- Subtitle (lavender) -->
+  <text
+    x="400"
+    y="260"
+    font-family="'Helvetica Neue', Arial, sans-serif"
+    font-size="20"
+    font-weight="400"
+    fill="#9a7fbf"
+    text-anchor="middle"
+    letter-spacing="3">地下から、光へ。</text>
+</svg>

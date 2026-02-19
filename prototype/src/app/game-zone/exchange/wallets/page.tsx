@@ -45,7 +45,7 @@ export default function WalletManagementPage() {
       return;
     }
 
-    if (walletType === 'WITHDRAW' && !editingWallet && !walletPrivateKey.trim()) {
+    if (!editingWallet && !walletPrivateKey.trim()) {
       addToast('error', 'Private Key를 입력하세요.');
       return;
     }
@@ -58,11 +58,11 @@ export default function WalletManagementPage() {
               ...w,
               type: walletType,
               address: walletAddress,
-              ...(walletType === 'WITHDRAW' && walletPrivateKey ? {
+              ...(walletPrivateKey ? {
                 privateKey: walletPrivateKey.substring(0, 4) + '...' + walletPrivateKey.substring(walletPrivateKey.length - 4),
               } : {}),
               ...(walletType === 'WITHDRAW' && !w.bnbBalance ? { bnbBalance: 0 } : {}),
-              ...(walletType === 'CHARGE' ? { privateKey: undefined, bnbBalance: undefined } : {}),
+              ...(walletType === 'CHARGE' ? { bnbBalance: undefined } : {}),
               isPrimary: walletType === editingWallet.type ? w.isPrimary : false,
               updatedAt: new Date().toISOString(),
             }
@@ -75,10 +75,8 @@ export default function WalletManagementPage() {
         id: `wallet-${Date.now()}`,
         type: walletType,
         address: walletAddress,
-        ...(walletType === 'WITHDRAW' && walletPrivateKey ? {
-          privateKey: walletPrivateKey.substring(0, 4) + '...' + walletPrivateKey.substring(walletPrivateKey.length - 4),
-          bnbBalance: 0,
-        } : {}),
+        privateKey: walletPrivateKey.substring(0, 4) + '...' + walletPrivateKey.substring(walletPrivateKey.length - 4),
+        ...(walletType === 'WITHDRAW' ? { bnbBalance: 0 } : {}),
         balance: 0,
         isActive: true,
         isPrimary: false,
@@ -194,7 +192,7 @@ export default function WalletManagementPage() {
                   >
                     {truncateHash(item.address, 12, 8)}
                   </a>
-                  {item.type === 'WITHDRAW' && item.privateKey && (
+                  {item.privateKey && (
                     <span className="font-mono text-xs text-gray-400">
                       PK: {item.privateKey}
                     </span>
@@ -345,31 +343,29 @@ export default function WalletManagementPage() {
             />
             <p className="text-xs text-gray-400 mt-1">블록체인 지갑 주소를 입력하세요.</p>
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              Private Key {!editingWallet && <span className="text-red-500">*</span>}
+            </label>
+            <input
+              type="password"
+              value={walletPrivateKey}
+              onChange={(e) => setWalletPrivateKey(e.target.value)}
+              placeholder="Private Key를 입력하세요"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <p className="text-xs text-gray-400 mt-1">
+              {editingWallet
+                ? '변경이 필요한 경우에만 입력하세요.'
+                : '토큰 전송 트랜잭션 서명에 필요합니다. 서버에 암호화하여 저장됩니다.'}
+            </p>
+          </div>
           {walletType === 'WITHDRAW' && (
-            <>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Private Key {!editingWallet && <span className="text-red-500">*</span>}
-                </label>
-                <input
-                  type="password"
-                  value={walletPrivateKey}
-                  onChange={(e) => setWalletPrivateKey(e.target.value)}
-                  placeholder="Private Key를 입력하세요"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <p className="text-xs text-gray-400 mt-1">
-                  {editingWallet
-                    ? '변경이 필요한 경우에만 입력하세요.'
-                    : '토큰 전송 트랜잭션 서명에 필요합니다. 서버에 암호화하여 저장됩니다.'}
-                </p>
-              </div>
-              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-                <p className="text-sm text-orange-700">
-                  ⚠ 출금용 지갑은 가스비(BNB) 잔고가 있어야 출금이 가능합니다.
-                </p>
-              </div>
-            </>
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+              <p className="text-sm text-orange-700">
+                ⚠ 출금용 지갑은 가스비(BNB) 잔고가 있어야 출금이 가능합니다.
+              </p>
+            </div>
           )}
         </div>
       </Modal>
