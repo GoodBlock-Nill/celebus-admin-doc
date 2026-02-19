@@ -360,13 +360,6 @@ export default function WalletManagementPage() {
                 : '토큰 전송 트랜잭션 서명에 필요합니다. 서버에 암호화하여 저장됩니다.'}
             </p>
           </div>
-          {walletType === 'WITHDRAW' && (
-            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-              <p className="text-sm text-orange-700">
-                ⚠ 출금용 지갑은 가스비(BNB) 잔고가 있어야 출금이 가능합니다.
-              </p>
-            </div>
-          )}
         </div>
       </Modal>
 
