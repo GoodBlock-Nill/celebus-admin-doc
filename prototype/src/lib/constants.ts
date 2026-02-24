@@ -14,14 +14,14 @@ export const GP_TYPE_CONFIG: Record<GPChangeType, { label: string; bg: string; t
   BOOSTING: { label: '부스팅', bg: 'bg-purple-100', text: 'text-purple-600' },
   REFUND: { label: '환급', bg: 'bg-green-100', text: 'text-green-600' },
   REWARD: { label: '보상', bg: 'bg-amber-100', text: 'text-amber-700' },
-  EXCHANGE_IN: { label: 'GP 충전', bg: 'bg-cyan-100', text: 'text-cyan-600' },
-  EXCHANGE_OUT: { label: 'GP 출금', bg: 'bg-orange-100', text: 'text-orange-600' },
+  EXCHANGE_IN: { label: 'GP 가져오기', bg: 'bg-cyan-100', text: 'text-cyan-600' },
+  EXCHANGE_OUT: { label: 'CELB으로 보내기', bg: 'bg-orange-100', text: 'text-orange-600' },
   REFUND_CANCEL: { label: '환불', bg: 'bg-red-100', text: 'text-red-600' },
 };
 
 export const EXCHANGE_DIRECTION_CONFIG: Record<ExchangeDirection, { label: string; bg: string; text: string }> = {
-  CHARGE: { label: 'GP 충전', bg: 'bg-blue-100', text: 'text-blue-600' },
-  WITHDRAW: { label: 'GP 출금', bg: 'bg-orange-100', text: 'text-orange-600' },
+  CHARGE: { label: 'GP 가져오기', bg: 'bg-blue-100', text: 'text-blue-600' },
+  WITHDRAW: { label: 'CELB으로 보내기', bg: 'bg-orange-100', text: 'text-orange-600' },
 };
 
 export const EXCHANGE_STATUS_CONFIG: Record<ExchangeStatus, { label: string; bg: string; text: string }> = {

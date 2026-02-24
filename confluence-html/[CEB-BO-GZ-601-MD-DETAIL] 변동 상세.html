@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2025.02.03</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -200,7 +200,7 @@ p {
 │  변동일시        2025.02.03 14:25:10        │
 │  닉네임          fanatic99 🔗               │
 │  지갑주소        0xabcd...ef12              │
-│  변동 유형       [GP 충전]                  │
+│  변동 유형       [GP 가져오기]                  │
 │  GP 변동량       +2,000 GP                  │
 │  변동 전 잔액    5,000 GP                   │
 │  변동 후 잔액    7,000 GP                   │
@@ -345,11 +345,11 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보라색</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 충전</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">주황색</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 출금</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">빨간색</td>
   </tr>
 </table>
@@ -393,7 +393,7 @@ p {
   <li>클릭 시: CEB-BO-GZ-202 게임 상세 화면으로 이동 (새 탭)</li>
 </ul>
 
-<h4>교환 관련 변동 (GP 충전, GP 출금)</h4>
+<h4>교환 관련 변동 (GP 가져오기, CELB으로 보내기)</h4>
 
 <ul>
   <li>관련 게임: "-"</li>
@@ -431,11 +431,11 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"정답", "1등", "2등", "3등"</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 충전</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"CELB 교환"</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 출금</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"CELB 교환"</td>
   </tr>
 </table>
@@ -487,14 +487,14 @@ p {
   <li>비고: "참여"</li>
 </ol>
 
-<h4>시나리오 3: GP 충전 변동 확인</h4>
+<h4>시나리오 3: GP 가져오기 변동 확인</h4>
 
 <ol>
-  <li>GP 변동 내역 화면에서 유형이 "GP 충전"인 Row 클릭</li>
+  <li>GP 변동 내역 화면에서 유형이 "GP 가져오기"인 Row 클릭</li>
   <li>GP 변동 상세 모달 오픈</li>
   <li>닉네임: fanatic99</li>
   <li>지갑주소: 0xabcd...ef12 (mono 폰트)</li>
-  <li>변동 유형: [GP 충전] Badge (주황색)</li>
+  <li>변동 유형: [GP 가져오기] Badge (주황색)</li>
   <li>GP 변동량: +2,000 GP (초록색)</li>
   <li>변동 전 잔액: 5,000 GP</li>
   <li>변동 후 잔액: 7,000 GP</li>
@@ -639,7 +639,7 @@ p {
   <li>감소 변동: 변동 후 잔액 = 변동 전 잔액 - GP 변동량 (절댓값)</li>
   <li>관련 게임과 관련 교환은 동시에 존재할 수 없습니다 (둘 중 하나만)</li>
   <li>지갑주소는 BSC 메인넷 주소이며, mono 폰트로 표시됩니다</li>
-  <li>관련 교환 필드는 교환 관련 변동(GP 충전/GP 출금)에만 표시되며, Txid가 BSCScan 링크로 제공됩니다</li>
+  <li>관련 교환 필드는 교환 관련 변동(GP 가져오기/CELB으로 보내기)에만 표시되며, Txid가 BSCScan 링크로 제공됩니다</li>
   <li>게임 관련 변동(참여/부스팅/환급/보상)의 경우 관련 교환 필드가 표시되지 않습니다</li>
 </ol>
 
@@ -670,7 +670,7 @@ GP 변동량: -100 GP
 비고: &quot;2배&quot;
 </pre>
 
-<h4>GP 충전 (EXCHANGE_IN)</h4>
+<h4>GP 가져오기 (EXCHANGE_IN)</h4>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 변동 전 GP 잔액: 5,000 GP
@@ -680,7 +680,7 @@ GP 변동량: +2,000 GP
 비고: &quot;CELB 교환&quot;
 </pre>
 
-<h4>GP 출금 (EXCHANGE_OUT)</h4>
+<h4>CELB으로 보내기 (EXCHANGE_OUT)</h4>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 변동 전 GP 잔액: 7,000 GP
@@ -897,6 +897,13 @@ GP 변동량: -1,000 GP
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관련 교환(Txid) 클릭 시 새 탭에서 열림</td>
   </tr>
 </table>
+
+
+<h2>변경 이력</h2>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;"><thead><tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">일자</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th></tr></thead><tbody>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향 용어 통일: GP 충전→GP 가져오기, GP 출금→CELB으로 보내기</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2025.02.03</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초안 작성</td></tr>
+</tbody></table>
 
 </body>
 </html>

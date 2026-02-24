@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.13</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -475,8 +475,8 @@ Ended(종료):         (버튼 없음)
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가능</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지분</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 GP + (부스팅 GP × 배수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">배분 값</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 GP 또는 참여 GP × 부스팅 배수</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가능</td>
   </tr>
   <tr>
@@ -567,10 +567,16 @@ Ended(종료):         (버튼 없음)
 <h6>보상 계산 로직</h6>
 
 <ul>
-  <li>정답자에게 총 상금 GP를 (참여 GP + 부스팅 GP × 배수) 비율로 배분</li>
-  <li>배수는 게임별 설정값 (기본 2배)</li>
+  <li>정답자 보상 = 총 상금 GP × (개인 배분 값 / 전체 합)</li>
+  <li>기본: 개인 배분 값 = 참여 GP
+    <ul>
+      <li>부스팅 구매시: 개인 배분 값 = 참여 GP × 부스팅 배수</li>
+    </ul>
+  </li>
+  <li>전체 합 = ∑(각 참여자의 배분 값)</li>
   <li>참여 GP는 정답/오답 관계없이 전액 환급</li>
-  <li>부스팅 GP는 환급 없음, 보상 가중치로 적용</li>
+  <li>부스팅 GP는 환급 없음, 배분 가중치로만 사용</li>
+  <li>소수점 8자리 이하 절삭, 단수는 시스템 귀속</li>
 </ul>
 
 <h3>3.3 액션 버튼별 동작</h3>
@@ -761,6 +767,12 @@ Ended(종료):         (버튼 없음)
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">일자</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 계산 로직 변경: 지분→배분 값, 공식/용어 업데이트</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>

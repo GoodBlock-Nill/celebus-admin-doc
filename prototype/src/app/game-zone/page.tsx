@@ -44,8 +44,8 @@ export default function GameZoneHome() {
         <div className="grid grid-cols-4 gap-4">
           <StatsCard label="진행중 게임" value={`${activeGames.length}개`} />
           <StatsCard label="결과 입력 필요" value={`${pendingGames.length}개`} variant="warning" />
-          <StatsCard label="오늘 GP 충전" value={formatGP(todayChargeGP)} variant="gp" />
-          <StatsCard label="오늘 GP 출금" value={formatGP(todayWithdrawGP)} variant="gp" />
+          <StatsCard label="오늘 GP 가져오기" value={formatGP(todayChargeGP)} variant="gp" />
+          <StatsCard label="오늘 CELB으로 보내기" value={formatGP(todayWithdrawGP)} variant="gp" />
         </div>
       </section>
 
@@ -89,8 +89,8 @@ export default function GameZoneHome() {
             title="GP 교환소"
             href="/game-zone/exchange"
             items={[
-              { label: '오늘 GP 충전', value: formatGP(todayChargeGP) },
-              { label: '오늘 GP 출금', value: formatGP(todayWithdrawGP) },
+              { label: '오늘 GP 가져오기', value: formatGP(todayChargeGP) },
+              { label: '오늘 CELB으로 보내기', value: formatGP(todayWithdrawGP) },
             ]}
           />
         </div>

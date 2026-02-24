@@ -125,8 +125,8 @@ export default function ExchangePage() {
 
       {/* 오늘 교환 현황 */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <StatsCard label="오늘 GP 충전" value={formatGP(todayCharge)} variant="gp" />
-        <StatsCard label="오늘 GP 출금" value={formatGP(todayWithdraw)} variant="gp" />
+        <StatsCard label="오늘 GP 가져오기" value={formatGP(todayCharge)} variant="gp" />
+        <StatsCard label="오늘 CELB으로 보내기" value={formatGP(todayWithdraw)} variant="gp" />
         <StatsCard label="오늘 교환 건수" value={`${todayExchanges.length}건`} />
       </div>
 
@@ -143,7 +143,7 @@ export default function ExchangePage() {
               { key: 'startDate', label: '시작일', type: 'date' as const, value: startDate },
               { key: 'endDate', label: '종료일', type: 'date' as const, value: endDate },
             ] : []),
-            { key: 'direction', label: '교환 방향', type: 'select' as const, value: direction, options: [{ value: 'CHARGE', label: 'GP 충전' }, { value: 'WITHDRAW', label: 'GP 출금' }] },
+            { key: 'direction', label: '교환 방향', type: 'select' as const, value: direction, options: [{ value: 'CHARGE', label: 'GP 가져오기' }, { value: 'WITHDRAW', label: 'CELB으로 보내기' }] },
             { key: 'search', label: '검색', type: 'search' as const, value: search, placeholder: '닉네임 검색' },
           ]}
           onFilterChange={(k, v) => {

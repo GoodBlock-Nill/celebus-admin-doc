@@ -187,8 +187,8 @@ export default function GameZoneTab({ member }: GameZoneTabProps) {
         <h3 className="text-base font-semibold text-gray-900 mb-3">GP 요약</h3>
         <div className="grid grid-cols-4 gap-4">
           <StatsCard label="현재 GP 잔액" value={`${formatNumber(member.currentGP)} GP`} variant="gp" />
-          <StatsCard label="누적 획득 GP" value={`${formatNumber(earnedGP)} GP`} subtitle="보상+환급+환불+충전" variant="gp" />
-          <StatsCard label="누적 사용 GP" value={`${formatNumber(usedGP)} GP`} subtitle="참여+부스팅+출금" variant="gp" />
+          <StatsCard label="누적 획득 GP" value={`${formatNumber(earnedGP)} GP`} subtitle="보상+환급+환불+GP가져오기" variant="gp" />
+          <StatsCard label="누적 사용 GP" value={`${formatNumber(usedGP)} GP`} subtitle="참여+부스팅+CELB으로보내기" variant="gp" />
           <StatsCard label="랭킹" value={ranking ? `${ranking.rank}위 / ${mockRankings.length}명` : '-'} variant="count" />
         </div>
       </div>
@@ -258,8 +258,8 @@ export default function GameZoneTab({ member }: GameZoneTabProps) {
                 { value: 'BOOSTING', label: '부스팅' },
                 { value: 'REFUND', label: '환급' },
                 { value: 'REWARD', label: '보상' },
-                { value: 'EXCHANGE_IN', label: 'GP 충전' },
-                { value: 'EXCHANGE_OUT', label: 'GP 출금' },
+                { value: 'EXCHANGE_IN', label: 'GP 가져오기' },
+                { value: 'EXCHANGE_OUT', label: 'CELB으로 보내기' },
                 { value: 'REFUND_CANCEL', label: '환불' },
               ]},
               { key: 'gpPeriod', label: '기간', type: 'select', value: gpPeriod, options: [

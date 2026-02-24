@@ -104,11 +104,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다국어 영향</td>
@@ -124,12 +124,12 @@ p {
 
 <h2>1. 화면 목적</h2>
 
-<p>게임 참여 관련 GP 변동 내역의 상세 정보를 보여주는 화면입니다. 참여, 부스팅, 환급, 보상 4가지 유형에 따라 다른 상세 정보를 표시하며, 게임 정보와 결과를 확인할 수 있습니다.</p>
+<p>게임 참여 관련 GP 변동 내역의 상세 정보를 보여주는 화면입니다. 참여, 부스팅, 환급, 보상, 환불 5가지 유형에 따라 다른 상세 정보를 표시하며, 게임 정보와 결과를 확인할 수 있습니다.</p>
 
 <h3>주요 기능</h3>
 
 <ul>
-  <li>게임 참여 상세 정보 조회 (참여/부스팅/환급/보상)</li>
+  <li>게임 참여 상세 정보 조회 (참여/부스팅/환급/보상/환불)</li>
   <li>GP 변동량 및 게임 정보 확인</li>
   <li>게임 상세 화면으로 이동</li>
   <li>결과 확인 링크 제공 (보상 유형)</li>
@@ -247,13 +247,39 @@ p {
 │                                            │
 └────────────────────────────────────────────┘</pre>
 
+<h3>ASCII Layout (환불 상세)</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">┌────────────────────────────────────────────┐
+│  &lt;  환불 상세                               │
+├────────────────────────────────────────────┤
+│                                            │
+│  ┌──────────────────────────────────────┐ │
+│  │  1월 4주차 인기가요 1위는 투바투다?  │ │
+│  │                                      │ │
+│  │  + 11 GP                             │ │
+│  │  참가비 10GP + 부스팅 1GP            │ │
+│  └──────────────────────────────────────┘ │
+│                                            │
+│  ─────────────────────────────────────────│
+│                                            │
+│  내 선택          Yes + 🔥부스팅          │
+│                                            │
+│  게임상태         취소                     │
+│                                            │
+│  환불일시         2026.02.01. 09:53:32    │
+│                  (UTC+9)                   │
+│                                            │
+│  게임정보         Prediction Market        │
+│                                            │
+└────────────────────────────────────────────┘</pre>
+
 <h3>영역별 구성요소</h3>
 
 <h4>Header 영역</h4>
 
 <ul>
   <li>좌측: &lt; 뒤로가기 버튼 (GP 히스토리로 복귀)</li>
-  <li>중앙: "{유형} 상세" 타이틀 (참여 상세 / 부스팅 상세 / 환급 상세 / 보상 상세)</li>
+  <li>중앙: "{유형} 상세" 타이틀 (참여 상세 / 부스팅 상세 / 환급 상세 / 보상 상세 / 환불 상세)</li>
 </ul>
 
 <h4>상단 카드 영역</h4>
@@ -486,6 +512,61 @@ p {
   </tr>
 </table>
 
+<h4>E. 환불 상세 (REFUND_CANCEL)</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">필드</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">형식</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">예시</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 타이틀</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">텍스트</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 제목 (최대 2줄)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1월 4주차 인기가요 1위는 투바투다?</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 변동량</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+ {숫자} GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불된 총 GP (파란색)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+ 11 GP</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 내역</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">텍스트</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참가비 + 부스팅 금액 내역</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참가비 10GP + 부스팅 1GP</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">내 선택</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Yes / No (+ 🔥부스팅)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택 + 부스팅 여부</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Yes + 🔥부스팅</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임상태</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">텍스트</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"취소" 고정</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">취소</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불일시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">YYYY.MM.DD. HH:mm:ss (UTC+9)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불 처리 시각</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.01. 09:53:32 (UTC+9)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임정보</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">텍스트</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market</td>
+  </tr>
+</table>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">환불은 게임 취소 시 참가비(참여 GP) + 부스팅 GP를 합산하여 돌려주는 것으로, GP 내역에 각 금액의 내역을 표시한다.</blockquote>
+
 <h3>3.2 GP 변동량 표시</h3>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
@@ -499,7 +580,7 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">증가 (+)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+ {숫자} GP</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">파란색 (#1E90FF)</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환급, 보상</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환급, 보상, 환불</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">감소 (-)</td>
@@ -556,6 +637,11 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 발표 / 종료</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[결과보기 &gt;] 링크 (보상만)</td>
   </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">취소</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+  </tr>
 </table>
 
 <h4>결과보기 링크 (보상만)</h4>
@@ -589,6 +675,10 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지급일시</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불일시</td>
   </tr>
 </table>
 
@@ -662,7 +752,20 @@ p {
   <li>결과 확인 링크 및 결과 상세 정보 확인</li>
 </ol>
 
-<h4>시나리오 5: 게임 상세 정보 확인</h4>
+<h4>시나리오 5: 환불 상세 확인</h4>
+
+<ol>
+  <li>GP 히스토리 > 참여내역 탭에서 "[환불]" 내역 탭</li>
+  <li>환불 상세 화면 진입</li>
+  <li>Header: "환불 상세"</li>
+  <li>상단 카드: 게임 타이틀 + "+ 11 GP" (파란색) + "참가비 10GP + 부스팅 1GP"</li>
+  <li>내 선택: Yes + 🔥부스팅</li>
+  <li>게임상태: 취소</li>
+  <li>환불일시: 2026.02.01. 09:53:32 (UTC+9)</li>
+  <li>게임정보: Prediction Market</li>
+</ol>
+
+<h4>시나리오 6: 게임 상세 정보 확인</h4>
 
 <ol>
   <li>참여내역 상세 화면에서 상단 카드의 게임 타이틀 탭</li>
@@ -694,8 +797,8 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O (서버에서 언어별 제공)</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형 (Prediction Market)</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형 (Prediction Market, Survival Trivia)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">X (영문 고정)</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"부스팅", "결과보기"</td>
@@ -761,6 +864,10 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Ended</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">종료</td>
   </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Cancelled</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">취소</td>
+  </tr>
 </table>
 
 <h3>성능 요구사항</h3>
@@ -812,7 +919,7 @@ p {
   <li>게임 삭제 시에도 타이틀은 표시됩니다</li>
   <li>환급은 참여 GP 전액 반환입니다</li>
   <li>보상은 정답자에게만 지급됩니다</li>
-  <li>부스팅은 보상 가중치로 작용하며 환급되지 않습니다</li>
+  <li>부스팅은 보상 배분 가중치로만 사용되며 환급되지 않습니다</li>
   <li>결과보기 링크는 결과 확인 링크(URL)가 있는 경우에만 표시됩니다</li>
 </ol>
 
@@ -840,7 +947,7 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">변동 유형</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PARTICIPATION/BOOSTING/REFUND/REWARD</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PARTICIPATION/BOOSTING/REFUND/REWARD/REFUND_CANCEL</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Toast: "잘못된 변동 유형입니다."</td>
   </tr>
   <tr>
@@ -952,6 +1059,37 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-203</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 상세</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 상세에서 "결과보기" 탭 시 이동</td>
+  </tr>
+</table>
+
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+
+<h2>변경 이력</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성일</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초기 작성</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불 상세(REFUND_CANCEL) 유형 추가, 게임상태 "취소"(Cancelled) 매핑 추가, GP 내역(참가비+부스팅 breakdown) 표시, 게임유형 다국어 X(영문 고정)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 계산 로직 변경: "보상 가중치" → "배분 값" 용어 변경</td>
   </tr>
 </table>
 

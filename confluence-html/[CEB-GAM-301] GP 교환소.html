@@ -125,8 +125,8 @@
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">API</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기능영역(Epic)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GAM(게임)</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상태</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"><span class="badge badge-draft">Draft</span></td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.6</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Figma 링크</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다국어 영향</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"><span class="badge badge-yes">Yes</span></td></tr>
@@ -138,17 +138,17 @@
 
 <h2>1. 화면 목적</h2>
 
-<p>사용자가 CELB 토큰과 GP(Game Point)를 상호 교환할 수 있는 화면입니다. GP 충전(CELB→GP)과 GP 출금(GP→CELB) 기능을 제공하며, 사용자의 GP 잔액을 실시간으로 확인하고 교환 내역으로 이동할 수 있습니다.</p>
+<p>사용자가 CELB 토큰과 GP(Game Point)를 상호 교환할 수 있는 화면입니다. GP 가져오기(CELB→GP)과 CELB으로 보내기(GP→CELB) 기능을 제공하며, 사용자의 GP 잔액을 실시간으로 확인하고 교환 내역으로 이동할 수 있습니다.</p>
 
 <h3>주요 기능</h3>
 
 <ul>
 <li>GP 잔액 조회 (실시간)</li>
-<li>GP 충전 (CELB → GP)</li>
-<li>GP 출금 (GP → CELB)</li>
+<li>GP 가져오기 (CELB → GP)</li>
+<li>CELB으로 보내기 (GP → CELB)</li>
 <li>교환 비율 안내 (1 GP = 1 CELB)</li>
 <li>CELB 잔액 조회 (가용 잔액)</li>
-<li>CELB 입금주소 확인</li>
+<li>Celeb 입금주소 확인</li>
 <li>GP 히스토리 이동</li>
 <li>본인 인증 연동</li>
 </ul>
@@ -172,7 +172,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 ├─────────────────────────────────────────────────┤
 │                                                 │
 │  ┌─────────────────────────────────────────┐   │
-│  │  🔵 GP   보유 GamePoint      2,914  &gt;   │   │
+│  │  🔵 GP   보유 Game Point      2,914  &gt;   │   │
 │  └─────────────────────────────────────────┘   │
 │                                                 │
 │  ┌──────────────┬───────────────┐              │
@@ -180,7 +180,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 │  └──────────────┴───────────────┘              │
 │  (활성: 파란 밑줄)                              │
 │                                                 │
-│  Celeb을 사용해 GamePoint를 가져올 수 있어요.   │
+│  Celeb을 사용해 Game Point를 가져올 수 있어요.   │
 │  1GP = 1CELB                                    │
 │                                                 │
 │  사용할 Celeb                                   │
@@ -191,12 +191,12 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 │  └─────────────────────────────────────────┘   │
 │                                                 │
 │  ┌─────────────────────────────────────────┐   │
-│  │        [CELB 입금주소]                   │   │
+│  │        [Celeb 입금주소]                   │   │
 │  └─────────────────────────────────────────┘   │
 │                                                 │
 │                   ↓                             │
 │                                                 │
-│  가져올 GamePoint                               │
+│  가져올 Game Point                               │
 │                                                 │
 │  ┌─────────────────────────────────────────┐   │
 │  │ 🔵 GP                       0 GP         │   │
@@ -204,7 +204,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 │                                                 │
 ├─────────────────────────────────────────────────┤
 │                                                 │
-│         [GamePoint 가져오기] (비활성)           │
+│         [가져오기] (비활성)           │
 │                                                 │
 └─────────────────────────────────────────────────┘</pre>
 
@@ -215,7 +215,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 ├─────────────────────────────────────────────────┤
 │                                                 │
 │  ┌─────────────────────────────────────────┐   │
-│  │  🔵 GP   보유 GamePoint      2,914  &gt;   │   │
+│  │  🔵 GP   보유 Game Point      2,914  &gt;   │   │
 │  └─────────────────────────────────────────┘   │
 │                                                 │
 │  ┌──────────────┬───────────────┐              │
@@ -223,14 +223,14 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 │  └──────────────┴───────────────┘              │
 │                 (활성: 파란 밑줄)               │
 │                                                 │
-│  GamePoint를 CELB으로 보낼 수 있어요.           │
+│  Game Point를 Celeb으로 보낼 수 있어요.           │
 │  1GP = 1CELB                                    │
 │                                                 │
-│  보낼 GamePoint                                 │
+│  보낼 Game Point                                 │
 │  보유: 2,914 GP                                 │
 │                                                 │
 │  ┌─────────────────────────────────────────┐   │
-│  │ 🔵 GP 최소 출금 100 GP       0 GP       │   │
+│  │ 🔵 GP 최소 입력 100GP       0 GP       │   │
 │  └─────────────────────────────────────────┘   │
 │                                                 │
 │                   ↓                             │
@@ -249,7 +249,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 │                                                 │
 ├─────────────────────────────────────────────────┤
 │                                                 │
-│           [CELB으로 보내기] (비활성)            │
+│           [보내기] (비활성)            │
 │                                                 │
 └─────────────────────────────────────────────────┘</pre>
 
@@ -261,15 +261,34 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">뒤로가기 버튼 (&lt;)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-101 (게임존 메인)으로 이동</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이틀</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"Game Point 교환소"</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">안내 아이콘 (ⓘ)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-301-MD-INFO (이용 안내) 모달 오픈</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">안내 아이콘 (ⓘ)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-301-BS-INFO (이용 안내) 바텀시트 오픈</td></tr>
 </table>
+
+<h4>이용 안내 바텀시트 (CEB-GAM-301-BS-INFO)</h4>
+
+<ul>
+<li>타이틀: "교환소 안내"</li>
+<li>설명: Game Point와 Celeb은 1:1 비율로 교환돼요.</li>
+<li>안내 항목:
+<ul>
+<li>1GP = 1CELB</li>
+<li>교환 수수료는 없어요.</li>
+<li>교환은 내 계정에 연결된 Celeb 주소를 통해 진행돼요.</li>
+<li>Game Point는 게임 내에서만 사용할 수 있어요.</li>
+<li>네트워크 상황에 따라 반영까지 시간이 소요될 수 있어요.</li>
+</ul>
+</li>
+<li>닫기: 바텀시트 외부 탭 또는 아래로 스와이프</li>
+</ul>
+
+<blockquote><p>참고: 교환 비율(1GP = 1CELB)은 어드민 설정값 기준 변수 처리. 정책 변경 시 별도 정의 후 반영.</p></blockquote>
 
 <h4>GP 잔액 카드</h4>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 아이콘</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">파란색 원형 아이콘</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">라벨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"보유 GamePoint"</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">라벨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"보유 Game Point"</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 수량</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">큰 숫자 표시 (예: 2,914)</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">화살표 (&gt;)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-501 (GP 히스토리)로 이동</td></tr>
 </table>
@@ -297,29 +316,30 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상태</th></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">설명 텍스트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"Celeb을 사용해 GamePoint를 가져올 수 있어요. 1GP = 1CELB"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">설명 텍스트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"Celeb을 사용해 Game Point를 가져올 수 있어요. 1GP = 1CELB"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">사용할 Celeb 라벨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"사용할 Celeb"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가용 잔액</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"가능: 2,500 CELB"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Dynamic</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">새로고침 버튼</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">🔄 아이콘 버튼</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Clickable</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB 입력 필드</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input + CELB 아이콘</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Input</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력 힌트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"최소 입력 100 CELB" (Placeholder)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력값 표시</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"0 CELB"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Dynamic</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB 입금주소 버튼</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[CELB 입금주소] 버튼</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Clickable</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Celeb 입금주소 버튼</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[Celeb 입금주소] 버튼</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Clickable</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">구분선</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">↓ 화살표</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가져올 GP 라벨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"가져올 GamePoint"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가져올 GP 라벨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"가져올 Game Point"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 출력 필드</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 아이콘 + "0 GP"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Display Only</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CTA 버튼</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[GamePoint 가져오기]</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Clickable</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CTA 버튼</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[가져오기]</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Clickable</td></tr>
 </table>
 
 <h4>CELB으로 보내기 탭 구성요소</h4>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상태</th></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">설명 텍스트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"GamePoint를 CELB으로 보낼 수 있어요. 1GP = 1CELB"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보낼 GP 라벨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"보낼 GamePoint"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">설명 텍스트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"Game Point를 Celeb으로 보낼 수 있어요. 1GP = 1CELB"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보낼 GP 라벨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"보낼 Game Point"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보유 잔액</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"보유: 2,914 GP"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Dynamic</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 입력 필드</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input + GP 아이콘</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Input</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력 힌트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"최소 출금 100 GP" (Placeholder)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력 힌트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"최소 입력 100GP" (Placeholder)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가이드 텍스트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"입력 수량을 확인해주세요." (입력 미완료 시)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Dynamic</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력값 표시</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"0 GP"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Dynamic</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">구분선</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">↓ 화살표</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">받을 CELB 라벨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"받을 Celeb"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
@@ -327,7 +347,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">받을 지갑 주소 라벨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"받을 지갑 주소"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑 주소 입력 필드</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text Input</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Input</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력 힌트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"지갑 주소 입력" (Placeholder)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Static</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CTA 버튼</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[CELB으로 보내기]</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Clickable</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CTA 버튼</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[보내기]</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Clickable</td></tr>
 </table>
 
 <blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">상세 스타일은 피그마 참조</blockquote>
@@ -373,6 +393,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <li>버튼 탭 시 아이콘 회전 애니메이션 (360도, 0.5초)</li>
 <li>CELB 잔액 재조회</li>
 <li>조회 완료 시 애니메이션 종료</li>
+<li>성공 시: ✅ 최신 Celeb 잔액으로 업데이트했어요 (인라인 메시지, GP 출력 필드 하단)</li>
 <li>실패 시: Toast "잔액 조회에 실패했습니다. 다시 시도해주세요."</li>
 </ol>
 </li>
@@ -396,19 +417,19 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <li>자동 계산 (입력 즉시 반영)</li>
 </ul>
 
-<h4>CELB 입금주소 버튼</h4>
+<h4>Celeb 입금주소 버튼</h4>
 
 <ul>
-<li>라벨: [CELB 입금주소]</li>
+<li>라벨: [Celeb 입금주소]</li>
 <li>스타일: 회색 테두리 버튼 (Secondary)</li>
-<li>동작: CEB-GAM-302 (CELB 입금주소 상세) 화면으로 이동</li>
+<li>동작: CEB-GAM-302 (Celeb 입금 주소) 바텀시트 오픈</li>
 <li>설명: CELB를 입금할 수 있는 지갑 주소 안내</li>
 </ul>
 
-<h4>GamePoint 가져오기 버튼</h4>
+<h4>가져오기 버튼</h4>
 
 <ul>
-<li>라벨: [GamePoint 가져오기]</li>
+<li>라벨: [가져오기]</li>
 <li>위치: 하단 고정 CTA</li>
 <li>스타일:
 <ul>
@@ -427,12 +448,29 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <li>동작:
 <ol>
 <li>버튼 탭 시 본인 인증 모달 (CEB-AUTH-115) 오픈</li>
-<li>인증 성공 시 확인 모달 (CEB-GAM-301-MD-CONFIRM-IN) 오픈</li>
+<li>인증 성공 시 확인 바텀시트 (CEB-GAM-301-BS-CONFIRM-IN) 오픈</li>
 <li>확인 시 교환 요청 (API 호출)</li>
-<li>성공 시: Toast "GP 충전이 완료되었습니다." + GP 잔액 갱신</li>
+<li>성공 시: Toast "GP 가져오기이 완료되었습니다." + GP 잔액 갱신</li>
 <li>실패 시: Toast + 실패 사유</li>
 </ol>
 </li>
+</ul>
+
+<h4>가져오기 확인 바텀시트 (CEB-GAM-301-BS-CONFIRM-IN)</h4>
+
+<ul>
+<li>타이틀: "가져오기 전 확인"</li>
+<li>금액 카드: 가져올 Game Point / {숫자} GP (GP 아이콘 포함)</li>
+<li>안내 항목:
+<ol>
+<li>Celeb을 Game Point로 바꾸는 교환이에요.</li>
+<li>교환 완료 후에는 취소할 수 없어요.</li>
+<li>네트워크 상황에 따라 반영까지 시간이 소요될 수 있어요.</li>
+</ol>
+</li>
+<li>버튼: [취소] [계속하기]</li>
+<li>[계속하기] 탭 시 교환 요청 (API 호출)</li>
+<li>[취소] 탭 시 바텀시트 닫힘</li>
 </ul>
 
 <h3>3.3 CELB으로 보내기 탭 (GP → CELB)</h3>
@@ -472,10 +510,10 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <li>Placeholder: "지갑 주소 입력"</li>
 </ul>
 
-<h4>CELB으로 보내기 버튼</h4>
+<h4>보내기 버튼</h4>
 
 <ul>
-<li>라벨: [CELB으로 보내기]</li>
+<li>라벨: [보내기]</li>
 <li>위치: 하단 고정 CTA</li>
 <li>스타일:
 <ul>
@@ -495,12 +533,29 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <li>동작:
 <ol>
 <li>버튼 탭 시 본인 인증 모달 (CEB-AUTH-115) 오픈</li>
-<li>인증 성공 시 확인 모달 (CEB-GAM-301-MD-CONFIRM-OUT) 오픈</li>
+<li>인증 성공 시 확인 바텀시트 (CEB-GAM-301-BS-CONFIRM-OUT) 오픈</li>
 <li>확인 시 교환 요청 (API 호출)</li>
-<li>성공 시: Toast "GP 출금이 완료되었습니다." + GP 잔액 갱신</li>
+<li>성공 시: Toast "CELB으로 보내기이 완료되었습니다." + GP 잔액 갱신</li>
 <li>실패 시: Toast + 실패 사유</li>
 </ol>
 </li>
+</ul>
+
+<h4>보내기 확인 바텀시트 (CEB-GAM-301-BS-CONFIRM-OUT)</h4>
+
+<ul>
+<li>타이틀: "보내기 전 확인"</li>
+<li>금액 카드: 보낼 Game Point / {숫자} GP (GP 아이콘 포함)</li>
+<li>안내 항목:
+<ol>
+<li>Game Point를 Celeb으로 바꾸는 교환이에요.</li>
+<li>교환 완료 후에는 취소할 수 없습니다.</li>
+<li>네트워크 상황에 따라 반영까지 시간이 소요될 수 있습니다.</li>
+</ol>
+</li>
+<li>버튼: [취소] [계속하기]</li>
+<li>[계속하기] 탭 시 교환 요청 (API 호출)</li>
+<li>[취소] 탭 시 바텀시트 닫힘</li>
 </ul>
 
 <h3>3.4 본인 인증 연동</h3>
@@ -508,8 +563,8 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <h4>인증 시점</h4>
 
 <ul>
-<li>GP 충전 실행 시 (버튼 탭 후)</li>
-<li>GP 출금 실행 시 (버튼 탭 후)</li>
+<li>GP 가져오기 실행 시 (버튼 탭 후)</li>
+<li>CELB으로 보내기 실행 시 (버튼 탭 후)</li>
 </ul>
 
 <h4>인증 방식</h4>
@@ -517,13 +572,13 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <ul>
 <li>CEB-AUTH-115 (본인 인증) 화면 호출</li>
 <li>생체 인증 / 비밀번호 선택</li>
-<li>인증 성공 시: 확인 모달로 진행</li>
+<li>인증 성공 시: 확인 바텀시트로 진행</li>
 <li>인증 실패 시: Toast "본인 인증에 실패했습니다."</li>
 </ul>
 
 <h3>3.5 사용자 시나리오</h3>
 
-<h4>시나리오 1: GP 충전 (CELB → GP)</h4>
+<h4>시나리오 1: GP 가져오기 (CELB → GP)</h4>
 
 <ol>
 <li>사용자가 [Game 탭 &gt; 게임존 메인] 진입</li>
@@ -531,28 +586,28 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <li>GP 교환소 화면 진입 (기본: GP 가져오기 탭)</li>
 <li>"가능: 2,500 CELB" 확인</li>
 <li>CELB 입력란에 "1,000" 입력</li>
-<li>자동 계산: "가져올 GamePoint: 1,000 GP"</li>
-<li>[GamePoint 가져오기] 버튼 활성화</li>
+<li>자동 계산: "가져올 Game Point: 1,000 GP"</li>
+<li>[가져오기] 버튼 활성화</li>
 <li>버튼 탭 → 본인 인증 모달 (생체 인증 선택)</li>
-<li>인증 성공 → 확인 모달 표시</li>
+<li>인증 성공 → 확인 바텀시트 표시</li>
 <li>[확인] 탭 → 교환 요청</li>
-<li>Toast "GP 충전이 완료되었습니다."</li>
+<li>Toast "GP 가져오기이 완료되었습니다."</li>
 <li>GP 잔액: 2,914 → 3,914 GP (자동 갱신)</li>
 </ol>
 
-<h4>시나리오 2: GP 출금 (GP → CELB)</h4>
+<h4>시나리오 2: CELB으로 보내기 (GP → CELB)</h4>
 
 <ol>
-<li>GP 교환소 화면에서 [CELB으로 보내기] 탭 선택</li>
+<li>GP 교환소 화면에서 [보내기] 탭 선택</li>
 <li>"보유: 2,914 GP" 확인</li>
 <li>GP 입력란에 "500" 입력</li>
 <li>자동 계산: "받을 Celeb: 500 CELB"</li>
 <li>지갑 주소 입력란에 "0x7a3b...8a9b" 입력</li>
-<li>[CELB으로 보내기] 버튼 활성화</li>
+<li>[보내기] 버튼 활성화</li>
 <li>버튼 탭 → 본인 인증 모달 (비밀번호 선택)</li>
-<li>인증 성공 → 확인 모달 표시</li>
+<li>인증 성공 → 확인 바텀시트 표시</li>
 <li>[확인] 탭 → 교환 요청</li>
-<li>Toast "GP 출금이 완료되었습니다."</li>
+<li>Toast "CELB으로 보내기이 완료되었습니다."</li>
 <li>GP 잔액: 2,914 → 2,414 GP (자동 갱신)</li>
 </ol>
 
@@ -561,7 +616,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <ol>
 <li>GP 가져오기 탭에서 CELB 입력란에 "50" 입력</li>
 <li>입력란 하단에 빨간색 에러 메시지: "최소 충전 금액은 100 CELB입니다."</li>
-<li>[GamePoint 가져오기] 버튼 비활성 상태 유지</li>
+<li>[가져오기] 버튼 비활성 상태 유지</li>
 <li>"150" 입력으로 수정</li>
 <li>에러 메시지 사라지고 버튼 활성화</li>
 </ol>
@@ -572,7 +627,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <li>CELB으로 보내기 탭에서 GP 입력란에 "5,000" 입력</li>
 <li>보유 GP: 2,914 GP (부족)</li>
 <li>입력란 하단에 빨간색 에러 메시지: "보유 GP가 부족합니다. (보유: 2,914 GP)"</li>
-<li>[CELB으로 보내기] 버튼 비활성 상태 유지</li>
+<li>[보내기] 버튼 비활성 상태 유지</li>
 </ol>
 
 <h4>시나리오 5: 1일 한도 초과</h4>
@@ -587,20 +642,20 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <h4>시나리오 6: 교환 기능 비활성화</h4>
 
 <ol>
-<li>백오피스에서 "GP 충전 활성화" OFF 설정</li>
+<li>백오피스에서 "GP 가져오기 활성화" OFF 설정</li>
 <li>앱에서 GP 교환소 진입 시도</li>
-<li>Toast "현재 GP 충전 기능이 점검 중입니다. 잠시 후 다시 시도해주세요."</li>
+<li>Toast "현재 GP 가져오기 기능이 점검 중입니다. 잠시 후 다시 시도해주세요."</li>
 <li>GP 가져오기 탭 비활성화 (CELB으로 보내기 탭은 정상 노출)</li>
 </ol>
 
-<h4>시나리오 7: CELB 입금주소 확인</h4>
+<h4>시나리오 7: Celeb 입금주소 확인</h4>
 
 <ol>
-<li>GP 가져오기 탭에서 [CELB 입금주소] 버튼 탭</li>
-<li>CEB-GAM-302 화면으로 이동</li>
+<li>GP 가져오기 탭에서 [Celeb 입금주소] 버튼 탭</li>
+<li>CEB-GAM-302 바텀시트 오픈</li>
 <li>대표 충전용 지갑 주소 및 QR 코드 확인</li>
-<li>주소 복사 또는 QR 코드 저장</li>
-<li>뒤로가기로 GP 교환소로 복귀</li>
+<li>주소 복사 또는 공유</li>
+<li>바텀시트 닫기로 GP 교환소로 복귀</li>
 </ol>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
@@ -621,7 +676,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <li>소수점 1자리까지 허용 (예: 1 GP = 1.5 CELB)</li>
 </ul>
 
-<h3>GP 충전 (CELB → GP)</h3>
+<h3>GP 가져오기 (CELB → GP)</h3>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">기본값</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th></tr>
@@ -637,7 +692,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <li>충전 내역은 CEB-GAM-501 (GP 히스토리)에 기록</li>
 </ul>
 
-<h3>GP 출금 (GP → CELB)</h3>
+<h3>CELB으로 보내기 (GP → CELB)</h3>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">기본값</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th></tr>
@@ -655,7 +710,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 
 <h3>입력 검증</h3>
 
-<h4>CELB 입력 검증 (GP 충전)</h4>
+<h4>CELB 입력 검증 (GP 가져오기)</h4>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">검증 항목</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">에러 메시지</th></tr>
@@ -666,7 +721,7 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1일 한도 (횟수)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오늘 충전 횟수 &lt; 10회</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"1일 충전 횟수를 초과했습니다. (10 / 10)"</td></tr>
 </table>
 
-<h4>GP 입력 검증 (GP 출금)</h4>
+<h4>GP 입력 검증 (CELB으로 보내기)</h4>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">검증 항목</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">에러 메시지</th></tr>
@@ -691,8 +746,8 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설정</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">ON</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">OFF</th></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 충전 활성화</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기 탭 정상 노출</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기 탭 비활성 + Toast</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 출금 활성화</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기 탭 정상 노출</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기 탭 비활성 + Toast</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기 활성화</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기 탭 정상 노출</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기 탭 비활성 + Toast</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기 활성화</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기 탭 정상 노출</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기 탭 비활성 + Toast</td></tr>
 </table>
 
 <ul>
@@ -726,8 +781,8 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <ol>
 <li>교환 비율은 백오피스 설정값을 따릅니다</li>
 <li>1일 한도는 금액 한도와 횟수 한도 모두 충족해야 합니다</li>
-<li>GP 충전 시 트랜잭션 완료 후 GP가 즉시 반영됩니다</li>
-<li>GP 출금 시 GP는 즉시 차감되고 CELB는 비동기로 전송됩니다</li>
+<li>GP 가져오기 시 트랜잭션 완료 후 GP가 즉시 반영됩니다</li>
+<li>CELB으로 보내기 시 GP는 즉시 차감되고 CELB는 비동기로 전송됩니다</li>
 <li>교환 실패 시 GP는 원복됩니다</li>
 <li>교환 내역은 CEB-GAM-501 (GP 히스토리)에 실시간 기록됩니다</li>
 <li>본인 인증은 교환 실행 시점에 필수입니다</li>
@@ -748,10 +803,10 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최소 출금 금액 미달</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"최소 출금 금액은 100 GP입니다."</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력란 하단 (빨간색)</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최대 출금 금액 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"1회 최대 출금 금액은 10,000 GP입니다."</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력란 하단 (빨간색)</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 잔액 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"보유 GP가 부족합니다. (보유: {잔액} GP)"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력란 하단 (빨간색)</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1일 충전 한도 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"1일 충전 한도를 초과했습니다. ({오늘 충전} / 100,000)"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력란 하단 (빨간색)</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1일 충전 횟수 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"1일 충전 횟수를 초과했습니다. (10 / 10)"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력란 하단 (빨간색)</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1일 출금 한도 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"1일 출금 한도를 초과했습니다. ({오늘 출금} / 100,000)"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력란 하단 (빨간색)</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1일 출금 횟수 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"1일 출금 횟수를 초과했습니다. (10 / 10)"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력란 하단 (빨간색)</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1일 가져오기 수량 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다이얼로그 표시 (→ 5.4 참조)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다이얼로그</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1일 가져오기 횟수 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다이얼로그 표시 (→ 5.4 참조)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다이얼로그</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1일 보내기 수량 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다이얼로그 표시 (→ 5.4 참조)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다이얼로그</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1일 보내기 횟수 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다이얼로그 표시 (→ 5.4 참조)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다이얼로그</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑 주소 미입력</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"지갑 주소를 입력해주세요."</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력란 하단 (빨간색)</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지갑 주소 형식 오류</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"올바른 지갑 주소를 입력해주세요."</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력란 하단 (빨간색)</td></tr>
 </table>
@@ -761,8 +816,8 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">에러 코드</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">사용자 메시지 (Toast)</th></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">E_EXC_001</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB 잔액 조회 실패</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"잔액 조회에 실패했습니다. 다시 시도해주세요."</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">E_EXC_002</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 충전 실패</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"GP 충전에 실패했습니다. 다시 시도해주세요."</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">E_EXC_003</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 출금 실패</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"GP 출금에 실패했습니다. 다시 시도해주세요."</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">E_EXC_002</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기 실패</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"GP 가져오기에 실패했습니다. 다시 시도해주세요."</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">E_EXC_003</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기 실패</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"CELB으로 보내기에 실패했습니다. 다시 시도해주세요."</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">E_EXC_004</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">네트워크 오류</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"네트워크 오류가 발생했습니다. 연결을 확인해주세요."</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">E_EXC_005</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 기능 비활성화</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"현재 GP {충전/출금} 기능이 점검 중입니다. 잠시 후 다시 시도해주세요."</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">E_EXC_006</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">본인 인증 실패</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"본인 인증에 실패했습니다."</td></tr>
@@ -783,7 +838,36 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">본인 인증 취소</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 취소, Toast 없음</td></tr>
 </table>
 
-<h3>5.4 UI 상태 정의</h3>
+<h3>5.4 실행 에러 다이얼로그</h3>
+
+<p>교환 실행 시 서버에서 반환하는 에러를 센터 다이얼로그(Alert)로 표시한다.</p>
+
+<h4>가져오기 에러 다이얼로그</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">에러</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">타이틀</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">메시지</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버튼</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고</th></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">횟수 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가져오기 횟수 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오늘 가져오기 횟수를 모두 사용했습니다. 내일 다시 이용해주세요.</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[확인]</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">횟수+수량 동시 초과 시 우선 노출</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">수량 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가져오기 수량 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오늘 가져오기 가능 수량 10,000GP</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[확인]</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">잔여 가능 금액 노출</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">운영 잔고 부족</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(없음)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[확인]</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">공통 사용</td></tr>
+</table>
+
+<h4>보내기 에러 다이얼로그</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">에러</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">타이틀</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">메시지</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버튼</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고</th></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">횟수 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보내기 횟수 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오늘 내보내기 횟수를 모두 사용했습니다. 내일 다시 이용해주세요.</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[확인]</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">횟수+수량 동시 초과 시 우선 노출</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">수량 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보내기 수량 초과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오늘 내보내기 가능 수량 10,000CELB</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[확인]</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">잔여 가능 금액 노출</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">운영 잔고 부족</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(없음)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[확인]</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">공통 사용</td></tr>
+</table>
+
+<h4>우선순위 규칙</h4>
+
+<ul>
+<li>횟수 초과와 수량 초과가 동시에 해당되는 경우, <strong>횟수 초과 다이얼로그를 우선 노출</strong>한다.</li>
+<li>[확인] 버튼 탭 시 다이얼로그 닫힘, 입력 화면으로 복귀한다.</li>
+</ul>
+
+<h3>5.5 UI 상태 정의</h3>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상태</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">표시</th></tr>
@@ -802,14 +886,29 @@ Game 탭 &gt; 하단 플로팅 버튼 &gt; [GP 교환소]</pre>
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면ID</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면명</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">관계</th></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-101</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존 메인</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">뒤로가기 시 이동</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-302</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB 입금주소 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[CELB 입금주소] 버튼 탭 시 이동</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-302</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Celeb 입금 주소 (바텀시트)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[Celeb 입금주소] 버튼 탭 시 바텀시트 오픈</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-501</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 히스토리</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 잔액 카드 "&gt;" 탭 시 이동</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-301-MD-INFO</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">이용 안내 모달</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ⓘ 아이콘 탭 시 오픈</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-301-MD-CONFIRM-IN</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 충전 확인 모달</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">충전 실행 전 확인</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-301-MD-CONFIRM-OUT</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 출금 확인 모달</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">출금 실행 전 확인</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-301-BS-INFO</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">이용 안내 바텀시트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ⓘ 아이콘 탭 시 오픈</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-301-BS-CONFIRM-IN</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가져오기 확인 바텀시트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가져오기 실행 전 확인</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-301-BS-CONFIRM-OUT</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보내기 확인 바텀시트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보내기 실행 전 확인</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-AUTH-115</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">본인 인증</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 실행 시 인증 필요 (외부 모듈)</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-501</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[BO] 교환 내역</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">백오피스 교환 내역 조회</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-502</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[BO] 교환 설정</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">백오피스 교환 설정 관리</td></tr>
+</table>
+
+<hr>
+
+<h2>변경이력</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">날짜</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.6</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향 용어 통일: GP 충전→GP 가져오기, GP 출금→CELB으로 보내기</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초안 작성</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가져오기/보내기 Default 탭 디자인 변경 반영 (Game Point 표기 통일, CTA 간소화)</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">확인 바텀시트 상세 추가, 새로고침 성공 메시지 추가, 모달→바텀시트 용어 변경 (확인, 이용 안내)</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">실행 에러 다이얼로그 섹션 추가 (가져오기/보내기 횟수·수량 초과, 운영 잔고 부족), 입력 검증 에러 테이블 표시 위치 업데이트</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">이용 안내 바텀시트(INFO) 상세 추가, 화면ID 접두사 -MD- → -BS- 변경</td></tr>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">이용 안내 바텀시트(INFO) 내용 수정 (간소화된 안내 형식 반영, 교환 비율 변수 처리 참고 추가)</td></tr>
 </table>
 
 </body>

@@ -53,8 +53,8 @@ Modal: GZ-501-MD-DETAIL_교환상세
 | 7 | 지갑주소 Label | Typography (Body) | Size: sm, Weight: Medium, Color: Gray | 지갑주소 |
 | 8 | 지갑주소 Value | Typography (Body) + Link + Icon Button | Size: xs, Font: Mono, Color: Blue, break-all | 0x1234...5678 (전체 표시), 클릭→BSCScan 새 탭, 📋 복사 |
 | 9 | 교환 방향 Label | Typography (Body) | Size: sm, Weight: Medium, Color: Gray | 교환 방향 |
-| 10 | 교환 방향 Badge (충전) | Badge (Soft) | Color: Blue | GP 충전 |
-| 11 | 교환 방향 Badge (출금) | Badge (Soft) | Color: Orange | GP 출금 |
+| 10 | 교환 방향 Badge (가져오기) | Badge (Soft) | Color: Blue | GP 가져오기 |
+| 11 | 교환 방향 Badge (보내기) | Badge (Soft) | Color: Orange | CELB으로 보내기 |
 | 12 | GP 수량 Label | Typography (Body) | Size: sm, Weight: Medium, Color: Gray | GP 수량 |
 | 13 | GP 수량 Value | Typography (Body) | Size: sm, Weight: Semibold | 1,000 GP |
 | 14 | CELB 수량 Label | Typography (Body) | Size: sm, Weight: Medium, Color: Gray | CELB 수량 |
@@ -86,8 +86,8 @@ Modal: GZ-501-MD-DETAIL_교환상세
 
 | 방향 | Badge 색상 | 텍스트 |
 |------|----------|--------|
-| GP 충전 | 배경 #DBEAFE, 텍스트 #1D4ED8 | GP 충전 |
-| GP 출금 | 배경 #FFEDD5, 텍스트 #C2410C | GP 출금 |
+| GP 가져오기 | 배경 #DBEAFE, 텍스트 #1D4ED8 | GP 가져오기 |
+| CELB으로 보내기 | 배경 #FFEDD5, 텍스트 #C2410C | CELB으로 보내기 |
 
 ### 상태 Badge
 
@@ -186,14 +186,14 @@ Modal: GZ-501-MD-DETAIL_교환상세
 - 폰트 크기: 12px
 - 폰트 무게: Medium
 
-### 계산 예시 (GP 충전)
+### 계산 예시 (GP 가져오기)
 ```
 교환 전 GP 잔액: 5,000 GP
 GP 수량: 1,000 GP
 교환 후 GP 잔액: 6,000 GP (5,000 + 1,000)
 ```
 
-### 계산 예시 (GP 출금)
+### 계산 예시 (CELB으로 보내기)
 ```
 교환 전 GP 잔액: 5,000 GP
 GP 수량: 500 GP

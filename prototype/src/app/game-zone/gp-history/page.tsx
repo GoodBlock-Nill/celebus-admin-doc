@@ -70,7 +70,7 @@ export default function GPHistoryPage() {
             { key: 'type', label: '변동 유형', type: 'select' as const, value: type, options: [
               { value: 'PARTICIPATION', label: '참여' }, { value: 'BOOSTING', label: '부스팅' },
               { value: 'REFUND', label: '환급' }, { value: 'REWARD', label: '보상' },
-              { value: 'EXCHANGE_IN', label: 'GP 충전' }, { value: 'EXCHANGE_OUT', label: 'GP 출금' },
+              { value: 'EXCHANGE_IN', label: 'GP 가져오기' }, { value: 'EXCHANGE_OUT', label: 'CELB으로 보내기' },
               { value: 'REFUND_CANCEL', label: '환불' },
             ]},
             { key: 'search', label: '검색', type: 'search' as const, value: search, placeholder: '닉네임 검색' },

@@ -48,11 +48,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -75,7 +75,7 @@
 
 <h2>1. 화면 목적</h2>
 
-<p>게임존에 참여한 사용자들의 누적 GP 기준 랭킹을 확인하는 화면이다. 내 랭킹 정보를 상단에 고정 표시하고, TOP 10 사용자를 하이라이트하여 경쟁 동기를 부여한다.</p>
+<p>모든 게임을 통해 얻은 '누적 Game Point'와 현재 '내 순위'를 확인하는 화면이다. 보상 성과를 우선적으로 보여주며(순위 경쟁보다 내가 얻은 성과가 먼저 인지되도록), 개인 기록 중심으로 구성한다. 서비스 초기에는 데이터 부족으로 의미 있는 순위 제공이 어려워 개인 기록 중심의 화면을 우선 제공한다.</p>
 
 <h2>2. UI 설명</h2>
 
@@ -88,11 +88,11 @@
 │                                        │
 │ ┌────────────────────────────────────┐ │
 │ │ [내 랭킹 영역]                      │ │
-│ │ 누적 GamePoint (ⓘ)                 │ │
+│ │ 누적 Game Point ⓘ                  │ │
 │ │                                    │ │
 │ │ 상위 13% · 123위                   │ │
 │ │                                    │ │
-│ │       🎮 2,914 GP                  │ │
+│ │       Ⓖ 2,914 GP                  │ │
 │ │                                    │ │
 │ │ 총 참여 1,223 · 승률 68%    ∨      │ │
 │ └────────────────────────────────────┘ │
@@ -178,7 +178,7 @@
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">라벨</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"누적 GamePoint"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"누적 Game Point"</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">작은 회색 폰트</td>
 </tr>
 <tr>
@@ -196,8 +196,8 @@
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 아이콘 + 누적 GP</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Icon + Text</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">🎮 2,914 GP</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">큰 폰트, 중앙 정렬, 파란색 강조</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Ⓖ 2,914 GP</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">큰 폰트, 중앙 정렬, 파란색 강조 (Ⓖ = Celeb 로고 아이콘, 원형)</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">펼치기 영역</td>
@@ -222,7 +222,7 @@
 
 <p><strong>펼침 영역 (펼친 상태)</strong>:</p>
 <ul>
-<li>게임별 탭: "게임별"</li>
+<li>섹션 라벨: "게임별 누적"</li>
 <li>Prediction Market 섹션:
 <ul>
 <li>아이콘 + 타이틀: "Prediction Market 1,223 GP"</li>
@@ -295,6 +295,12 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Icon</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">🥇 (1위) / 🥈 (2위) / 🥉 (3위)</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">좌측 상단</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">프로필 사진</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Image</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">사용자 프로필 (원형)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">메달 아이콘 우측</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">닉네임</td>
@@ -461,9 +467,9 @@
 <li>타이틀: "누적 GP란?"</li>
 <li>본문:
 <ul>
-<li>"게임을 통해 내가 지금까지 쌓아온 보상이에요"</li>
-<li>"게임 참여로 얻은 GP가 모두 합산되며, 랭킹은 이 누적 GP를 기준으로 정해져요"</li>
-<li>"게임 별 상세 성과는 카드 펼침 영역에서 확인할 수 있어요"</li>
+<li>"누적 GP는 게임을 통해 지금까지 획득한 Game Point의 합계에요."</li>
+<li>"게임 참여로 얻은 GP가 모두 합산되며, 랭킹은 누적 GP를 기준으로 정해져요."</li>
+<li>"게임별 상세 성과는 카드 펼침 영역에서 확인할 수 있어요."</li>
 </ul>
 </li>
 </ul>
@@ -494,7 +500,7 @@
 
 <p><strong>공식</strong>:</p>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;"><code style="background-color: #f4f5f7; border-radius: 3px; padding: 2px 4px; font-family: SFMono-Regular, Consolas, monospace; font-size: 0.9em;">누적 GP = (보상 GP + 환급 GP) - (참여 GP + 부스팅 GP)
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;"><code style="background-color: #f4f5f7; border-radius: 3px; padding: 2px 4px; font-family: SFMono-Regular, Consolas, monospace; font-size: 0.9em;">누적 GP = 보상 GP + 환급 GP
 </code></pre>
 
 <p><strong>구성 요소</strong>:</p>
@@ -515,18 +521,8 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환급 GP</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 취소/자동 환급 시 환급액</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 발표 후 참여 GP 반환</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+</td>
-</tr>
-<tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 GP</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 참여 시 지불한 GP</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
-</tr>
-<tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 GP</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅으로 지불한 GP</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
 </tr>
 </tbody>
 </table>
@@ -535,9 +531,7 @@
 <ul>
 <li>보상 GP: 50,000</li>
 <li>환급 GP: 10,000</li>
-<li>참여 GP: 8,000</li>
-<li>부스팅 GP: 2,000</li>
-<li><strong>누적 GP = (50,000 + 10,000) - (8,000 + 2,000) = 50,000 GP</strong></li>
+<li><strong>누적 GP = 50,000 + 10,000 = 60,000 GP</strong></li>
 </ul>
 
 <h3>4.2 승률 계산</h3>
@@ -859,6 +853,12 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초안 작성 (클라이언트 앱 랭킹 화면)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">화면 목적 개인 기록 중심으로 변경, GP 아이콘 Celeb 로고로 변경, "Game Point" 띄어쓰기 통일, 펼침 영역 "게임별 누적" 라벨 변경, TOP 10 상위 랭커 프로필 사진 추가, ⓘ 바텀시트 본문 수정, 누적 GP 집계 공식 수정 (획득 GP 합산)</td>
 </tr>
 </tbody>
 </table>

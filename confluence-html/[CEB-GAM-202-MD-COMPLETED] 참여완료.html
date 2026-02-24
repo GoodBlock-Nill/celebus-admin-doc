@@ -40,11 +40,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -270,9 +270,11 @@
 <h3>부스팅 계산 로직</h3>
 
 <ul>
-<li>부스팅 사용 시: 보상 가중치 = 참여 GP + (부스팅 GP × 배수)</li>
-<li>부스팅 미사용 시: 보상 가중치 = 참여 GP</li>
+<li>부스팅 사용 시: 배분 값 = 참여 GP × 부스팅 배수</li>
+<li>부스팅 미사용 시: 배분 값 = 참여 GP</li>
 <li>배수는 게임별 설정값 (기본 2배, 최대 10배)</li>
+<li>정답자 보상 = 총 상금 GP × (개인 배분 값 / 전체 합)</li>
+<li>소수점 8자리 이하 절삭, 단수는 시스템 귀속</li>
 </ul>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
@@ -445,6 +447,12 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 필수화: 부스팅 사용/미사용 게임 분기 제거, 모든 게임에서 부스팅 항상 활성</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 계산 로직 변경: 부스팅 계산 로직 배분 값 기반으로 변경</td>
 </tr>
 </tbody>
 </table>

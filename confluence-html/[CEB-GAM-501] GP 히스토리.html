@@ -104,11 +104,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다국어 영향</td>
@@ -146,7 +146,7 @@ p {
 <h3>ASCII Layout (참여내역 탭)</h3>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">┌────────────────────────────────────────────┐
-│  &lt;  GP History                             │
+│  &lt;  Game Point History                             │
 ├────────────────────────────────────────────┤
 │                                            │
 │  [참여내역]  [교환내역]                     │
@@ -168,6 +168,9 @@ p {
 │      + 1,000,000 &gt;                         │
 │      19:31 (UTC+9)      Prediction Market  │
 │                                            │
+│  ⚡ [환불] T1 월드컵 우승예측      + 1 &gt;   │
+│      19:31 (UTC+9)      Prediction Market  │
+│                                            │
 │  2026. 01. 01 ─────────────────────────    │
 │                                            │
 │  ⚡ [참여] 페이커 MVP 수상여부   - 10 &gt;    │
@@ -181,7 +184,7 @@ p {
 <h3>ASCII Layout (교환내역 탭)</h3>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">┌────────────────────────────────────────────┐
-│  &lt;  GP History                             │
+│  &lt;  Game Point History                             │
 ├────────────────────────────────────────────┤
 │                                            │
 │  [참여내역]  [교환내역]                     │
@@ -212,7 +215,7 @@ p {
 
 <ul>
   <li>좌측: &lt; 뒤로가기 버튼 (게임존 메인으로 이동)</li>
-  <li>중앙: "GP History" 타이틀</li>
+  <li>중앙: "Game Point History" 타이틀</li>
 </ul>
 
 <h4>탭 영역</h4>
@@ -226,7 +229,7 @@ p {
 
 <ul>
   <li>좌측: "전체 {건수}건" 텍스트</li>
-  <li>우측: 필터 드롭다운 ▼ (기본: "전체")</li>
+  <li>우측: 필터 버튼 (전체 ▼) — 탭 시 바텀시트 오픈</li>
 </ul>
 
 <h4>리스트 영역</h4>
@@ -348,7 +351,7 @@ p {
   <li>3행: 시간 + 게임 유형</li>
 </ul>
 
-<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">보상 금액이 크기 때문에 2행 레이아웃 사용</blockquote>
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">보상 금액이 크기 때문에 2행 레이아웃 사용<br>보상 = 상금풀내에서 받은 GP (돌려받는 GP는 제외)</blockquote>
 
 <h5>C. 환급</h5>
 
@@ -396,13 +399,13 @@ p {
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">GP 변동</th>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기 (충전)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기 (가져오기)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">EXCHANGE_IN</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">⬇ (파란)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+ (증가)</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기 (출금)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기 (보내기)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">EXCHANGE_OUT</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">⬆ (파란)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">- (차감)</td>
@@ -495,12 +498,15 @@ p {
   <li>날짜별 내림차순 (최신 날짜가 위)</li>
 </ul>
 
-<h3>3.4 필터 드롭다운</h3>
+<h3>3.4 필터 바텀시트</h3>
 
 <ul>
-  <li>위치: 우측 상단, "전체 {건수}건" 우측</li>
+  <li>위치: 우측 상단, "전체 {건수}건" 우측의 필터 버튼 (전체 ▼)</li>
+  <li>트리거: 필터 버튼 탭 시 바텀시트 오픈</li>
   <li>기본값: "전체"</li>
-  <li>선택 시: 필터링된 내역만 표시, 건수 업데이트</li>
+  <li>참여내역 탭 옵션: 전체 / 참여 / 부스팅 / 보상 / 환급 / 환불</li>
+  <li>교환내역 탭 옵션: 전체 / GP 가져오기 / CELB으로 보내기</li>
+  <li>선택 시: 바텀시트 닫힘, 필터링된 내역만 표시, 건수 업데이트</li>
 </ul>
 
 <h3>3.5 GP 변동량 표시</h3>
@@ -601,7 +607,7 @@ p {
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">다국어 적용</th>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">화면 타이틀 (GP History)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">화면 타이틀 (Game Point History)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O</td>
   </tr>
   <tr>
@@ -629,8 +635,8 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O (서버에서 언어별 제공)</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형 (Prediction Market)</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형 (Prediction Market, Survival Trivia)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">X (영문 고정)</td>
   </tr>
 </table>
 
@@ -781,6 +787,7 @@ p {
   <li>교환 관련 변동은 교환 방향과 금액만 표시됩니다</li>
   <li>변동일시는 GP가 실제로 증감된 시각입니다 (KST)</li>
   <li>게임 삭제 시에도 참여내역은 유지되며 게임 타이틀은 표시됩니다</li>
+  <li>예측 성공한 유저는 보상 내역과 환급 내역이 각각 별도로 생성됩니다</li>
 </ol>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
@@ -934,6 +941,12 @@ p {
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
   </tr>
   <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향 용어 통일: GP 충전→GP 가져오기, GP 출금→CELB으로 보내기</td>
+  </tr>
+  <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
@@ -944,6 +957,12 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불(REFUND_CANCEL) 유형 추가, 필터 순서 PDF 기준 수정 (보상→환급→환불)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Header "Game Point History" 변경, 필터 드롭다운→바텀시트 변경, 게임유형 다국어 X(영문 고정), ASCII 레이아웃 환불 항목 추가, 보상 설명 보강, 예측 성공 시 보상/환급 내역 분리 규칙 추가</td>
   </tr>
 </table>
 

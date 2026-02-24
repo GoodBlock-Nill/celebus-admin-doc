@@ -43,7 +43,7 @@ export default function ExchangeSettingsPage() {
             </div>
           </div>
         </Card>
-        <Card title="GP 충전 (CELB → GP)">
+        <Card title="GP 가져오기 (CELB → GP)">
           <div className="grid grid-cols-2 gap-4">
             <NumberInput label="최소 금액" value={exchangeSettings.chargeMinCelb} onChange={(v) => updateExchangeSettings({ chargeMinCelb: v })} min={1} unit="CELB" />
             <NumberInput label="최대 금액" value={exchangeSettings.chargeMaxCelb} onChange={(v) => updateExchangeSettings({ chargeMaxCelb: v })} min={1} unit="CELB" />
@@ -51,7 +51,7 @@ export default function ExchangeSettingsPage() {
             <NumberInput label="일일 한도 (횟수)" value={exchangeSettings.chargeDailyLimitCount} onChange={(v) => updateExchangeSettings({ chargeDailyLimitCount: v })} min={1} unit="회" />
           </div>
         </Card>
-        <Card title="GP 출금 (GP → CELB)">
+        <Card title="CELB으로 보내기 (GP → CELB)">
           <div className="grid grid-cols-2 gap-4">
             <NumberInput label="최소 금액" value={exchangeSettings.withdrawMinGP} onChange={(v) => updateExchangeSettings({ withdrawMinGP: v })} min={1} unit="GP" />
             <NumberInput label="최대 금액" value={exchangeSettings.withdrawMaxGP} onChange={(v) => updateExchangeSettings({ withdrawMaxGP: v })} min={1} unit="GP" />
@@ -61,8 +61,8 @@ export default function ExchangeSettingsPage() {
         </Card>
         <Card title="교환 기능">
           <div className="space-y-4">
-            <Toggle label="GP 충전 활성화" checked={exchangeSettings.chargeEnabled} onChange={(v) => updateExchangeSettings({ chargeEnabled: v })} />
-            <Toggle label="GP 출금 활성화" checked={exchangeSettings.withdrawEnabled} onChange={(v) => updateExchangeSettings({ withdrawEnabled: v })} />
+            <Toggle label="GP 가져오기 활성화" checked={exchangeSettings.chargeEnabled} onChange={(v) => updateExchangeSettings({ chargeEnabled: v })} />
+            <Toggle label="CELB으로 보내기 활성화" checked={exchangeSettings.withdrawEnabled} onChange={(v) => updateExchangeSettings({ withdrawEnabled: v })} />
           </div>
         </Card>
         <div className="flex justify-end gap-3">

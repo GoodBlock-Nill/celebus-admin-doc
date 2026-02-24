@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2025.02.12</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -144,7 +144,7 @@ p {
 
 <h2>1. 화면 목적</h2>
 
-<p>GP와 CELB 간 교환 내역을 조회하고 관리하는 화면입니다. 관리자는 사용자들의 GP 충전(CELB→GP) 및 GP 출금(GP→CELB) 내역을 실시간으로 모니터링하고, 교환 현황을 통계로 확인할 수 있습니다.</p>
+<p>GP와 CELB 간 교환 내역을 조회하고 관리하는 화면입니다. 관리자는 사용자들의 GP 가져오기(CELB→GP) 및 CELB으로 보내기(GP→CELB) 내역을 실시간으로 모니터링하고, 교환 현황을 통계로 확인할 수 있습니다.</p>
 
 <h3>주요 기능</h3>
 
@@ -185,7 +185,7 @@ p {
 │ └──────────────┴──────────────┴──────────────┴──────────────┘   │
 ├─────────────────────────────────────────────────────────────────┤
 │ ┌───────────────┬───────────────┬───────────────┐               │
-│ │ 오늘 GP 충전  │ 오늘 GP 출금  │ 오늘 교환 건수│               │
+│ │ 오늘 GP 가져오기  │ 오늘 CELB으로 보내기  │ 오늘 교환 건수│               │
 │ │  12,500 GP    │   8,300 GP    │    156건      │               │
 │ │ CELB→GP 합계  │ GP→CELB 합계  │               │               │
 │ └───────────────┴───────────────┴───────────────┘               │
@@ -282,12 +282,12 @@ p {
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오늘 GP 충전</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오늘 GP 가져오기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB→GP 합계 (오늘 00:00~23:59)</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오늘 GP 출금</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오늘 CELB으로 보내기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP→CELB 합계 (오늘 00:00~23:59)</td>
   </tr>
@@ -313,7 +313,7 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전체 / GP 충전 / GP 출금</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전체 / GP 가져오기 / CELB으로 보내기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전체</td>
   </tr>
   <tr>
@@ -344,7 +344,7 @@ p {
 
 <h3>3.1 요약 카드</h3>
 
-<h4>오늘 GP 충전</h4>
+<h4>오늘 GP 가져오기</h4>
 
 <ul>
   <li>계산식: SUM(CELB→GP 교환의 GP 수량) WHERE 교환일시 = TODAY AND 상태 = '완료'</li>
@@ -352,7 +352,7 @@ p {
   <li>예시: "12,500 GP"</li>
 </ul>
 
-<h4>오늘 GP 출금</h4>
+<h4>오늘 CELB으로 보내기</h4>
 
 <ul>
   <li>계산식: SUM(GP→CELB 교환의 GP 수량) WHERE 교환일시 = TODAY AND 상태 = '완료'</li>
@@ -386,11 +386,11 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모든 교환 내역 표시</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 충전</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB→GP 교환만 표시</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 출금</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP→CELB 교환만 표시</td>
   </tr>
 </table>
@@ -459,7 +459,7 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 충전 / GP 출금</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기 / CELB으로 보내기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
   </tr>
   <tr>
@@ -507,8 +507,8 @@ p {
 <h4>교환 방향 표시</h4>
 
 <ul>
-  <li>GP 충전: "GP 충전" (CELB→GP) - 파란색 텍스트</li>
-  <li>GP 출금: "GP 출금" (GP→CELB) - 주황색 텍스트</li>
+  <li>GP 가져오기: "GP 가져오기" (CELB→GP) - 파란색 텍스트</li>
+  <li>CELB으로 보내기: "CELB으로 보내기" (GP→CELB) - 주황색 텍스트</li>
 </ul>
 
 <h4>Row 클릭 동작</h4>
@@ -585,13 +585,13 @@ p {
   <li>모달에서 교환 전/후 GP 잔액 확인</li>
 </ol>
 
-<h4>시나리오 3: GP 충전 내역만 조회</h4>
+<h4>시나리오 3: GP 가져오기 내역만 조회</h4>
 
 <ol>
-  <li>[교환 방향] 필터에서 "GP 충전" 선택</li>
+  <li>[교환 방향] 필터에서 "GP 가져오기" 선택</li>
   <li>CELB→GP 교환 내역만 표시</li>
   <li>[기간 필터]에서 "최근 7일" 선택</li>
-  <li>최근 7일간의 GP 충전 내역 확인</li>
+  <li>최근 7일간의 GP 가져오기 내역 확인</li>
 </ol>
 
 <h4>시나리오 4: 실패한 교환 건 확인</h4>
@@ -754,11 +754,11 @@ p {
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">정의</th>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 충전</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB를 GP로 교환하는 행위 (CELB → GP)</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 출금</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP를 CELB로 교환하는 행위 (GP → CELB)</td>
   </tr>
   <tr>
@@ -930,6 +930,11 @@ p {
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">날짜</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향 용어 통일: GP 충전→GP 가져오기, GP 출금→CELB으로 보내기</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>

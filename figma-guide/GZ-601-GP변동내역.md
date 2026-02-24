@@ -52,8 +52,8 @@ Frame: GZ-601_GP변동내역
 | 6 | 유형 Badge (부스팅) | Badge (Soft) | Color: Purple | 부스팅 |
 | 7 | 유형 Badge (환급) | Badge (Soft) | Color: Green | 환급 |
 | 8 | 유형 Badge (보상) | Badge (Soft) | Color: Gold | 보상 |
-| 9 | 유형 Badge (GP충전) | Badge (Soft) | Color: Cyan | GP 충전 |
-| 10 | 유형 Badge (GP출금) | Badge (Soft) | Color: Orange | GP 출금 |
+| 9 | 유형 Badge (GP충전) | Badge (Soft) | Color: Cyan | GP 가져오기 |
+| 10 | 유형 Badge (GP출금) | Badge (Soft) | Color: Orange | CELB으로 보내기 |
 | 11 | GP 변동 (증가) | Typography (Body) | Size: sm, Weight: Semibold, Color: Green | +1,000 GP |
 | 12 | GP 변동 (감소) | Typography (Body) | Size: sm, Weight: Semibold, Color: Red | -500 GP |
 | 13 | 변동 후 잔액 | Typography (Body) | Size: sm, Align: right | 6,000 GP |
@@ -81,8 +81,8 @@ Frame: GZ-601_GP변동내역
 | 부스팅 | #EDE9FE | #6B21A8 | 부스팅 |
 | 환급 | #DCFCE7 | #15803D | 환급 |
 | 보상 | #FEF3C7 | #D97706 | 보상 |
-| GP 충전 | #CFFAFE | #0E7490 | GP 충전 |
-| GP 출금 | #FFEDD5 | #C2410C | GP 출금 |
+| GP 가져오기 | #CFFAFE | #0E7490 | GP 가져오기 |
+| CELB으로 보내기 | #FFEDD5 | #C2410C | CELB으로 보내기 |
 
 ### GP 변동량 표시
 
@@ -163,5 +163,5 @@ Frame: GZ-601_GP변동내역
 | 부스팅 | "2배", "3배", "5배" |
 | 환급 | "환급" |
 | 보상 | "정답", "1등", "2등", "3등" |
-| GP 충전 | "CELB 교환" |
-| GP 출금 | "CELB 교환" |
+| GP 가져오기 | "CELB 교환" |
+| CELB으로 보내기 | "CELB 교환" |
