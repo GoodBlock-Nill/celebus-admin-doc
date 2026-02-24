@@ -1,0 +1,799 @@
+<h1>[CEB-GAM-206] 트리비아 상세 (게임 진행)</h1>
+
+<h2>Page Properties</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Key</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Screen ID</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기획담당자</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">디자인담당자</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">개발담당자</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">API</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기능영역(Epic)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GAM(게임)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상태</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Draft</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Figma 링크</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다국어 영향</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Yes</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Breadcrumb</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Game 탭 &gt; 게임존 메인 &gt; Survival Trivia &gt; 게임 진행</td>
+</tr>
+</tbody>
+</table>
+
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+
+<h2>1. 화면 목적</h2>
+
+<p>실시간 Survival Trivia 퀴즈 게임 진행 화면입니다. 각 스테이지(문제)별로 4지선다 선택지를 제공하고, 제한 시간(10초) 내에 정답을 선택해야 합니다. 정답/오답 결과가 실시간으로 공개되며, 참여자 간 라이브 채팅을 통해 소통할 수 있습니다.</p>
+
+<blockquote><p>이 문서는 Stage별 문제 풀이 진행 화면을 다룹니다. 탈락 모달(CEB-GAM-206-MD-ELIMINATE), 나가기 모달(CEB-GAM-206-MD-LEAVE), 관전 모드(CEB-GAM-206-SPECTATE), 게임 결과(CEB-GAM-206-RESULT)는 별도 문서입니다.</p></blockquote>
+
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+
+<h2>2. UI 설명</h2>
+
+<h3>레이아웃</h3>
+
+<h4>A. 문제 출제 (Stage N)</h4>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+┌─────────────────────────────────────────────────────────────────┐
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ [&lt;]                                                         │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────────┤
+│ 상태 바                                                           │
+│ ❤️ ×{N}                   {N}/{총문제수}               👥 {N}     │
+├─────────────────────────────────────────────────────────────────┤
+│ [██████████░░░░░░░░░░░░░░░░░░░░░] 타이머 바 (파란→회색)          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│ {문제 텍스트}                                                      │
+│                                                                   │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 1   {선택지1}                                               │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 2   {선택지2}                                               │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 3   {선택지3}                                               │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 4   {선택지4}                                               │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────────┤
+│ 채팅 영역                                                         │
+│ {닉네임}  {메시지}                                                │
+│ {닉네임}  {메시지}                                                │
+│ {닉네임}  {메시지}                                                │
+│                                                           [💬]  │
+└─────────────────────────────────────────────────────────────────┘
+</pre>
+
+<h4>B. 정답 확인 (정답 시)</h4>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+┌─────────────────────────────────────────────────────────────────┐
+│ [&lt;]                                                               │
+├─────────────────────────────────────────────────────────────────┤
+│ ❤️ ×{N}                   {N}/{총문제수}               👥 {N}     │
+├─────────────────────────────────────────────────────────────────┤
+│                   정답입니다 (파란색, 볼드)                         │
+│         🙌 정답입니다! 다음 라운드로 진출합니다                     │
+├─────────────────────────────────────────────────────────────────┤
+│ [████████░░░░░░░░░] 타이머 바                                     │
+│ {문제 텍스트}                                                      │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 1   {선택지1}                                     {N} %    │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│ ┌═══════════════════════════════════════════════(파란 테두리)══┐ │
+│ │ 2   {정답선택지}  [내 선택]           ⭕          {N} %    │ │
+│ └═════════════════════════════════════════════════════════════┘ │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 3   {선택지3}                                     {N} %    │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 4   {선택지4}                                     {N} %    │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────────┤
+│ 채팅 영역                                                         │
+└─────────────────────────────────────────────────────────────────┘
+</pre>
+
+<ul>
+<li>하트 수 변화 없음</li>
+<li>정답 선택지: 파란 테두리 + ⭕ 마크 + "내 선택" 배지</li>
+<li>모든 선택지에 선택 비율(%) 표시</li>
+</ul>
+
+<h4>C. 오답 확인 (오답 시)</h4>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+┌─────────────────────────────────────────────────────────────────┐
+│ [&lt;]                                                               │
+├─────────────────────────────────────────────────────────────────┤
+│ ❤️ ×{N-1} (하트 1개 감소!)   {N}/{총문제수}           👥 {N}       │
+├─────────────────────────────────────────────────────────────────┤
+│                   오답입니다 (빨간색, 볼드)                         │
+│              아쉽네요, 다음엔 맞혀보시죠!                           │
+├─────────────────────────────────────────────────────────────────┤
+│ [████████░░░░░░░░░] 타이머 바                                     │
+│ {문제 텍스트}                                                      │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 1   {선택지1}                                     {N} %    │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+│ ┌═══════════════════════════════════════════════(파란 테두리)══┐ │
+│ │ 2   {정답선택지}                      ⭕          {N} %    │ │
+│ └═════════════════════════════════════════════════════════════┘ │
+│ ┌═══════════════════════════════════════════════(빨간 테두리)══┐ │
+│ │ 3   {오답선택지}  [내 선택]                        {N} %    │ │
+│ └═════════════════════════════════════════════════════════════┘ │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 4   {선택지4}                                     {N} %    │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────────┤
+│ 채팅 영역                                                         │
+└─────────────────────────────────────────────────────────────────┘
+</pre>
+
+<ul>
+<li>하트 1개 감소 + 하트 소진 애니메이션</li>
+<li>정답: 파란 테두리 + ⭕</li>
+<li>오답(내 선택): 빨간 테두리 + "내 선택" 배지</li>
+<li>하트 0개가 되면 → CEB-GAM-206-MD-ELIMINATE 모달 표시</li>
+</ul>
+
+<h4>D. 키보드 활성화 (채팅 입력 시)</h4>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+┌─────────────────────────────────────────────────────────────────┐
+│ [&lt;]                                                               │
+├─────────────────────────────────────────────────────────────────┤
+│ [████████░░░░░░░░░] 타이머 바                                     │
+│ {문제 텍스트}                                                      │
+│ {선택지 4개} (압축 표시)                                           │
+├─────────────────────────────────────────────────────────────────┤
+│ ┌─────────────────────────────────────────────┐ [▶ 전송]       │
+│ │ {입력 텍스트}                                │                  │
+│ └─────────────────────────────────────────────┘                  │
+│ [QWERTY 키보드]                                                   │
+└─────────────────────────────────────────────────────────────────┘
+</pre>
+
+<ul>
+<li>상태 바(하트/스테이지/참여자) 숨김 처리</li>
+<li>키보드 닫기: 빈 영역 탭 또는 전송 완료 후</li>
+</ul>
+
+<h3>영역별 구성요소</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">영역</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">구성요소</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Header</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[&lt;] 뒤로가기</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 나가기 확인 모달(CEB-GAM-206-MD-LEAVE) 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상태 바</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">❤️ 하트</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">좌측, 현재 보유 하트 수</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">스테이지 표시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">중앙, "{현재}/{총 문제수}" (예: "1/10")</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">👥 참여자 수</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">우측, 현재 생존 참여자 수 (실시간 갱신)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이머 바</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">프로그레스 바</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">파란색→회색, 좌에서 우로 감소, {N}초 카운트다운</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 영역</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 텍스트</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">중앙 정렬, 볼드, 흰색</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">4개 버튼</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">번호(1~4) + 텍스트, 탭하면 선택 확정</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 텍스트</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답/오답</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답: 파란색 "정답입니다", 오답: 빨간색 "오답입니다"</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서브 텍스트</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답: "🙌 정답입니다! 다음 라운드로 진출합니다" / 오답: "아쉽네요, 다음엔 맞혀보시죠!"</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">채팅 영역</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">메시지 리스트</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">닉네임 + 메시지, 실시간 스트림</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">💬 채팅 버튼</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">우측 하단, 탭 시 키보드 오픈</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력 필드</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">키보드 모드에서 텍스트 입력 + [▶] 전송 버튼</td>
+</tr>
+</tbody>
+</table>
+
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+
+<h2>3. 화면 내 기능설명</h2>
+
+<h3>3.1 선택지 탭 (응답)</h3>
+
+<h5>트리거</h5>
+<ul>
+<li>4개 선택지 중 하나를 탭</li>
+</ul>
+
+<h5>동작</h5>
+<ol>
+<li>선택 즉시 서버로 전송</li>
+<li>선택한 선택지 하이라이트 (선택 확정 표시)</li>
+<li>나머지 선택지 탭 비활성화 (변경 불가)</li>
+<li>다른 참여자 응답 대기</li>
+<li>제한시간 종료 시 서버에서 정답 공개 이벤트 수신</li>
+</ol>
+
+<h5>규칙</h5>
+<ul>
+<li>선택 후 변경 불가 (실시간 게임 특성)</li>
+</ul>
+
+<h3>3.2 타이머 바</h3>
+
+<h5>표시 규칙</h5>
+<ul>
+<li>서버 기준 {N}초(기본 10초) 카운트다운</li>
+<li>프로그레스 바: 좌→우 파란색, 시간 경과에 따라 감소</li>
+<li>서버 시간 기준 (클라이언트 시간 보정)</li>
+</ul>
+
+<h5>동작</h5>
+<ul>
+<li>시간 종료 시 자동으로 정답 공개 화면 전환</li>
+</ul>
+
+<h3>3.3 정답/오답 공개</h3>
+
+<h5>트리거</h5>
+<ul>
+<li>서버에서 정답 + 선택지별 선택 비율(%) 수신</li>
+</ul>
+
+<h5>동작</h5>
+<ol>
+<li>정답 선택지: 파란 테두리 + ⭕ 마크</li>
+<li>오답 선택지 (내가 선택한 경우): 빨간 테두리 + "내 선택" 배지</li>
+<li>정답 선택지 (내가 선택한 경우): 파란 테두리 + ⭕ 마크 + "내 선택" 배지</li>
+<li>나머지 선택지: 기본 테두리 + 비율만 표시</li>
+<li>공개 후 5초 대기 → 자동으로 다음 스테이지 전환</li>
+</ol>
+
+<h3>3.4 하트 소진</h3>
+
+<h5>오답 시</h5>
+<ul>
+<li>하트 1개 자동 소진 + 하트 소진 애니메이션 (❤️→💔 효과)</li>
+<li>하트 0개에서 오답 시: 오답 공개 화면 5초 표시 후 CEB-GAM-206-MD-ELIMINATE 모달 표시</li>
+<li>단, 마지막 스테이지(10/10)에서 하트 0 + 오답 시 → 모달 없이 CEB-GAM-206-RESULT 직행</li>
+</ul>
+
+<h5>미응답(시간 초과) 시</h5>
+<ul>
+<li>타이머 만료 시 키보드가 열려 있다면 자동 닫힘</li>
+<li>정답 공개 화면 표시 (선택지에 "미선택" 표시, 선택 비율 노출)</li>
+<li>정답 공개 5초 후 CEB-GAM-206-MD-ELIMINATE 모달 표시 (오답과 동일 플로우)</li>
+<li>하트 여부 무관하게 즉시 탈락</li>
+<li>단, 마지막 스테이지(10/10)에서 미응답 시 → 모달 없이 CEB-GAM-206-RESULT 직행</li>
+</ul>
+
+<h3>3.5 채팅 기능</h3>
+
+<h5>메시지 표시</h5>
+<ul>
+<li>화면 하단 채팅 영역에 실시간 메시지 스트림 표시</li>
+<li>닉네임 + 메시지 형태로 좌측 정렬</li>
+<li>새 메시지 수신 시 자동 하단 스크롤</li>
+</ul>
+
+<h5>메시지 입력/전송</h5>
+<ul>
+<li>💬 버튼 탭 → 키보드 오픈 + 입력 필드 활성화</li>
+<li>▶ 전송 버튼 탭 → 메시지 서버 전송</li>
+</ul>
+
+<h5>제한 규칙</h5>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">규칙</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">욕설 필터링</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">금칙어 목록 기반 자동 마스킹 처리 ("***")</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">발송 제한</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초당 1회 (rate limit), 초과 시 발송 무시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문자 수 제한</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최대 100자, 초과 입력 불가</td>
+</tr>
+</tbody>
+</table>
+
+<h5>키보드 활성화 시</h5>
+<ul>
+<li>상태 바(하트/스테이지/참여자) 숨김</li>
+<li>타이머 바와 문제/선택지는 축소 표시</li>
+<li>채팅 중에도 선택지 탭 가능 (키보드가 선택지를 가릴 수 있지만 스크롤로 접근 가능)</li>
+<li>키보드 닫기: 빈 영역 탭, 전송 완료 후, 또는 타이머 만료 시 자동 닫힘</li>
+</ul>
+
+<h3>3.6 뒤로가기</h3>
+
+<h5>트리거</h5>
+<ul>
+<li>Header 좌측 [&lt;] 버튼 탭</li>
+</ul>
+
+<h5>동작</h5>
+<ol>
+<li>CEB-GAM-206-MD-LEAVE (나가기 확인) 모달 표시</li>
+<li>나가기 확인 시: 게임 포기 + CEB-GAM-204(트리비아 홈)로 이동</li>
+<li>GP 환불 없음</li>
+</ol>
+
+<h3>3.7 스테이지 전환</h3>
+
+<h5>트리거</h5>
+<ul>
+<li>정답/오답 공개 후 5초 대기</li>
+</ul>
+
+<h5>동작 (자동 전환 시 화면 초기화)</h5>
+<ol>
+<li>타이머 바 리셋 (풀 파란색)</li>
+<li>선택지 활성화 (선택 가능 상태)</li>
+<li>결과 텍스트(정답/오답) 제거</li>
+<li>새 문제 텍스트 + 선택지 표시</li>
+<li>스테이지 번호 +1 (예: 1/10 → 2/10)</li>
+</ol>
+
+<h5>마지막 스테이지 완료 시</h5>
+<ul>
+<li>마지막 스테이지(10/10) 정답 후 → CEB-GAM-206-RESULT (완주 성공)</li>
+<li>마지막 스테이지(10/10) 오답/미응답으로 탈락 시 → 탈락 모달 없이 CEB-GAM-206-RESULT 직행 (탈락자 결과)</li>
+</ul>
+
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+
+<h2>4. 규칙/로직</h2>
+
+<h3>게임 진행 규칙</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">규칙</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 문제 수</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">10문제 (서버에서 설정, 변동 가능)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제당 제한 시간</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">10초 (서버 기준)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지 수</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">4개 (객관식)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">응답 변경</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">불가 (선택 즉시 확정)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미응답 (시간 초과)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">즉시 탈락 (하트 여부 무관)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오답</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 1개 소진</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 0개 + 오답</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">즉시 탈락</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 변화 없음, 다음 스테이지 진출</td>
+</tr>
+</tbody>
+</table>
+
+<h3>하트 시스템</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최초 지급</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">트리비아 최초 참여 시 1개 지급</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보너스 획득</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">친구 초대 완료 시 +1, 게임 끝까지 관전 시 +1, 게임 완주 성공 시 +1</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최대 보유</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3개</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보유 방식</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">계정 레벨 영구 보유 (게임별 초기화 없음)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오답 소진</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1개</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미응답</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">즉시 탈락 (하트 소진 아님)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">재획득</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">소진된 하트는 보너스 조건 달성으로만 재획득</td>
+</tr>
+</tbody>
+</table>
+
+<h3>정답/오답 시각 표시</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상태</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">테두리 색상</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">아이콘</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">배지</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비율 표시</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답 (내 선택)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">파란색</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">⭕</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"내 선택"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답 (타인 선택)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">파란색</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">⭕</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">없음</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오답 (내 선택)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">빨간색</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">없음</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"내 선택"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일반 선택지</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기본 (회색)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">없음</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">없음</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O</td>
+</tr>
+</tbody>
+</table>
+
+<h3>선택 비율 계산</h3>
+
+<ul>
+<li>각 선택지별 선택 비율 = (해당 선택지 선택 인원 / 전체 응답 인원) × 100</li>
+<li>소수점 없이 정수로 표시 (반올림)</li>
+<li>미응답자는 비율 계산에서 제외</li>
+</ul>
+
+<h3>다국어 적용</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">다국어</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 텍스트</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O (서버에서 언어별 제공)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관리자가 게임 생성 시 입력</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지 텍스트</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O (서버에서 언어별 제공)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관리자가 게임 생성 시 입력</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 메시지 (정답/오답)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O (KO/EN/JP)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">고정 텍스트</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"내 선택" 배지</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O (KO/EN/JP)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">고정 텍스트</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">채팅 메시지</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">X (사용자 입력 그대로)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+</tr>
+</tbody>
+</table>
+
+<h3>테마 지원</h3>
+
+<ul>
+<li>라이트/다크 테마 모두 지원</li>
+<li>시스템 설정 또는 앱 내 설정에 따라 자동 전환</li>
+<li>PDF 디자인: 다크 모드 기준 + 라이트 모드 변형 제공</li>
+</ul>
+
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+
+<h2>5. 에러 및 예외상황</h2>
+
+<h3>네트워크 끊김 중 응답</h3>
+
+<h5>상황</h5>
+<ul>
+<li>선택지 탭 후 서버 전송 실패</li>
+</ul>
+
+<h5>처리</h5>
+<ol>
+<li>자동 재전송 시도 (최대 3회)</li>
+<li>성공 시: 정상 진행</li>
+<li>실패 시: 미응답 처리 → 즉시 탈락</li>
+</ol>
+
+<h3>서버 오류</h3>
+
+<h5>상황</h5>
+<ul>
+<li>문제 수신 또는 정답 수신 실패</li>
+</ul>
+
+<h5>처리</h5>
+<ol>
+<li>에러 토스트: "일시적 오류가 발생했습니다."</li>
+</ol>
+
+<h3>라이브 서버 다운</h3>
+
+<h5>상황</h5>
+<ul>
+<li>게임 진행 중 서버 전체 장애</li>
+</ul>
+
+<h5>처리</h5>
+<ol>
+<li>"서버 장애로 게임이 중단되었습니다." 안내</li>
+<li>GP 100% 환불 처리 (서버 자동)</li>
+<li>공지 발송</li>
+</ol>
+
+<h3>채팅 전송 실패</h3>
+
+<h5>상황</h5>
+<ul>
+<li>채팅 메시지 전송 실패</li>
+</ul>
+
+<h5>처리</h5>
+<ol>
+<li>전송 실패 표시 (빨간색 느낌표)</li>
+<li>재전송 없음 (다시 입력)</li>
+</ol>
+
+<h3>채팅 금칙어 감지</h3>
+
+<h5>상황</h5>
+<ul>
+<li>욕설/금칙어가 포함된 메시지 전송 시도</li>
+</ul>
+
+<h5>처리</h5>
+<ol>
+<li>메시지 내 금칙어 부분 "***" 마스킹 후 전송 (차단이 아닌 마스킹)</li>
+</ol>
+
+<h3>운영자 강제 종료</h3>
+
+<h5>상황</h5>
+<ul>
+<li>운영자가 게임을 강제 종료한 경우</li>
+</ul>
+
+<h5>처리</h5>
+<ol>
+<li>안내 모달: "운영자에 의해 게임이 종료되었습니다."</li>
+<li>GP 100% 환불 처리 (서버 자동)</li>
+<li>모달 확인 시 CEB-GAM-204(트리비아 홈)로 이동</li>
+</ol>
+
+<h3>앱 백그라운드 복귀</h3>
+
+<h5>상황</h5>
+<ul>
+<li>게임 진행 중 앱이 백그라운드로 전환된 후 다시 포그라운드로 복귀</li>
+</ul>
+
+<h5>처리</h5>
+<ol>
+<li>게임이 아직 진행 중인 경우: 현재 스테이지부터 게임 합류</li>
+<li>복귀 시 놓친 문제가 있는 경우: 해당 문제는 미응답 처리 → 즉시 탈락</li>
+<li>게임이 이미 종료된 경우: CEB-GAM-204(트리비아 홈)로 이동</li>
+</ol>
+
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+
+<h2>6. 연관화면ID</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면ID</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면명</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">관계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-205</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Pre-start</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">이전 화면 (카운트다운 완료 후 전환)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-MD-ELIMINATE</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 시 모달 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-MD-LEAVE</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">나가기 확인</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">뒤로가기 시 모달 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-SPECTATE</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 모드</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 모달에서 관전 선택 시 전환</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-RESULT</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 결과</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">마지막 스테이지 완료 시 전환</td>
+</tr>
+</tbody>
+</table>
+
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+
+<h2>변경 이력</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성일</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최초 작성</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 시스템 전면 개편(계정 레벨 영구 보유), 정답 공개 5초 고정, 탈락 모달 표시 시점 명확화, 마지막 스테이지 탈락 시 RESULT 직행, 키보드 자동 닫힘, 운영자 강제 종료/앱 복귀 처리 추가</td>
+</tr>
+</tbody>
+</table>

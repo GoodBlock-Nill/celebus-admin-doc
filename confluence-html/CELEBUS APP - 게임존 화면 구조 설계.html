@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>CELEBUS APP - 게임존 화면 구조 설계</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #172b4d;
+      line-height: 1.6;
+    }
+    h1 { font-size: 24px; margin-top: 32px; }
+    h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+    h3 { font-size: 16px; margin-top: 24px; }
+    h4 { font-size: 14px; margin-top: 20px; }
+    h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+    blockquote {
+      border-left: 3px solid #dfe1e6;
+      margin: 12px 0;
+      padding: 8px 16px;
+      color: #6b778c;
+      background-color: #f9fafb;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 12px 0;
+    }
+    th, td {
+      border: 1px solid #dfe1e6;
+      padding: 8px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: #f4f5f7;
+      font-weight: 600;
+    }
+    pre {
+      background-color: #f4f5f7;
+      border: 1px solid #dfe1e6;
+      border-radius: 3px;
+      padding: 12px;
+      overflow-x: auto;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 12px;
+      line-height: 1.4;
+      white-space: pre;
+    }
+    code {
+      background-color: #f4f5f7;
+      border-radius: 3px;
+      padding: 2px 4px;
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 0.9em;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #dfe1e6;
+      margin: 24px 0;
+    }
+    ul, ol {
+      padding-left: 24px;
+      margin: 8px 0;
+    }
+    li {
+      margin: 4px 0;
+    }
+    p {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+
+<h1>CELEBUS APP - 게임존 화면 구조 설계</h1>
+
+<hr>
+
+<h2>1. 설계 배경 및 목적</h2>
+
+<h3>서비스 개요</h3>
+
+<p>CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, <strong>게임존(Game Zone)</strong>은 GP(Game Point)를 활용하여 게임에 참여하고 보상을 획득하는 모바일 앱 기능입니다.</p>
+
+<h3>게임 유형</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">게임 유형</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Phase</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">YES/NO 예측에 참여하고 결과에 따라 GP를 획득하는 참여형 게임</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Phase 1</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">실시간 생존형 퀴즈 게임 (10문제, 4지선다, 10초 제한)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Phase 2</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>본 문서의 목적</h3>
+
+<ul>
+  <li><strong>디자이너</strong>: 게임존 전체 화면 구조와 플로우를 파악하여 일관된 UX/UI를 설계</li>
+  <li><strong>개발자</strong>: 화면 간 네비게이션 관계, 상태 관리, 데이터 흐름을 이해하여 개발 구조 설계</li>
+</ul>
+
+<h3>관련 문서</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">문서</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">APP-GAM 화면설명서 (20개)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">각 화면의 상세 기획 (UI, 기능, 규칙, 에러 처리)</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELEBUS ADMIN - 게임존 메뉴 구조 설계</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">백오피스 측 구조설계 문서</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">BO-GAM 화면설명서 (23개)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">백오피스 각 화면의 상세 기획</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>2. 설계 원칙</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">원칙</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">실시간 인터랙션 우선</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia는 라이브 퀴즈 + 채팅, Prediction Market은 실시간 투표 비율 표시</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 경제 투명성</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모든 화면에서 GP 잔액 표시, 참여 비용/보상 명확 안내</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 상태별 UI 자동 전환</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서버 상태 변경에 따라 버튼, 카드, 화면이 자동으로 전환</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">에러 안전성</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 트랜잭션은 서버에서 검증, 실패 시 롤백 보장</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다국어 지원</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">KO/EN/JP 3개 언어, 브랜드명(Survival Trivia, Prediction Market)은 영문 고정</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다크/라이트 테마</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">시스템 설정 또는 앱 내 설정에 따라 자동 전환</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>3. 용어 통일 가이드</h2>
+
+<h3>GP 관련</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">구분</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">통일 용어</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">사용 금지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 증가</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상, 환급, 충전</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">발급</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 감소</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여, 부스팅, 출금</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기 (CELB→GP), CELB으로 보내기 (GP→CELB)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가져오기, 보내기</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상금</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상금풀</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>게임 상태</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">통일 용어</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">코드</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">임시저장</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Draft</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게시대기</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Ready</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">진행중</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Active</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 대기</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Pending</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확정</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Closed</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">종료</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Ended</td></tr>
+  </tbody>
+</table>
+
+<h3>기타</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">구분</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">통일 용어</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">사용 금지</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 이력</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 변동 내역</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 거래 내역</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여자</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여자 수</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 현황</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 문제</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">스테이지</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">라운드, 문제 번호</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>4. 앱 네비게이션 구조</h2>
+
+<h3>Bottom Tab Bar</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">┌──────────────────────────────────────────────────────┐
+│  Home  │  Collection  │  CELEBUS  │  Game  │  My    │
+│        │              │           │(Active)│        │
+└──────────────────────────────────────────────────────┘</pre>
+
+<ul>
+  <li>Game 탭 선택 시 게임존 메인(CEB-GAM-101)으로 진입</li>
+  <li>다른 탭 이동 시 게임존 네비게이션 스택 유지</li>
+</ul>
+
+<h3>화면 스택 구조</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">깊이</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면 유형</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">네비게이션</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1 (Root)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임존 메인</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Bottom Tab에서 직접 진입</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형 리스트/홈</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[&lt;] 뒤로가기 → 게임존 메인</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 상세/진행</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[&lt;] 뒤로가기 → 리스트/홈</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">4 (Overlay)</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모달/바텀시트</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">배경 딤 탭 또는 버튼으로 닫기</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>5. 전체 화면 구조</h2>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">Game 탭
+│
+└─→ [CEB-GAM-101] 게임존 메인
+    │
+    ├─→ Prediction Market
+    │   │
+    │   ├─→ [CEB-GAM-201] PM 리스트
+    │   │       └─→ 게임 카드 탭
+    │   │
+    │   ├─→ [CEB-GAM-202] PM 상세
+    │   │       ├─→ [CEB-GAM-202-MD-CONFIRMED] 참여확정 모달
+    │   │       ├─→ [CEB-GAM-202-MD-COMPLETED] 참여완료 바텀시트
+    │   │       └─→ [CEB-GAM-202-MD-NOBALANCE] GP 잔고 부족 모달
+    │   │
+    │   └─→ [CEB-GAM-203] 결과 상세
+    │
+    ├─→ Survival Trivia
+    │   │
+    │   ├─→ [CEB-GAM-204] 트리비아 홈
+    │   │       └─→ 입장하기 버튼
+    │   │
+    │   ├─→ [CEB-GAM-205] Pre-start (대기/카운트다운)
+    │   │       └─→ 자동 전환 (카운트다운 완료)
+    │   │
+    │   ├─→ [CEB-GAM-206] 트리비아 상세 (게임 진행)
+    │   │       ├─→ [CEB-GAM-206-MD-ELIMINATE] 탈락 모달
+    │   │       └─→ [CEB-GAM-206-MD-LEAVE] 나가기 확인 모달
+    │   │
+    │   ├─→ [CEB-GAM-206-SPECTATE] 관전 모드
+    │   │
+    │   └─→ [CEB-GAM-206-RESULT] 게임 결과
+    │
+    ├─→ [CEB-GAM-401] 랭킹
+    │
+    ├─→ GP 교환소
+    │   ├─→ [CEB-GAM-301] GP 교환소
+    │   └─→ [CEB-GAM-302] CELB 입금주소 상세 (바텀시트)
+    │
+    └─→ GP 히스토리
+        ├─→ [CEB-GAM-501] GP 히스토리
+        ├─→ [CEB-GAM-502] 참여내역 상세
+        └─→ [CEB-GAM-503] 교환내역 상세</pre>
+
+<hr>
+
+<h2>6. 화면 목록 (Phase 구분)</h2>
+
+<h3>Phase 1 — Prediction Market + 공통</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">순서</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면ID</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">유형</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">게임유형</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">다국어</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">1</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-101</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임존 메인</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">공통</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">No</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.0</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">2</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-201</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Prediction Market 리스트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.0</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">3</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-202</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Prediction Market 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.1</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">4</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-202-MD-CONFIRMED</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">참여확정</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Modal</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.0</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">5</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-202-MD-COMPLETED</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">참여완료</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">BottomSheet</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.2</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">6</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-202-MD-NOBALANCE</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP 잔고 부족</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Modal</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">공통</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.1</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">7</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-203</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.0</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">8</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-301</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP 교환소</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">공통</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.5</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">9</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-302</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CELB 입금주소 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">BottomSheet</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">공통</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.1</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">10</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-401</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">랭킹</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">공통</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.1</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">11</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-501</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP 히스토리</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">공통</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.2</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">12</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-502</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">참여내역 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">공통</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.1</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">13</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-503</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">교환내역 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">공통</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.0</td></tr>
+  </tbody>
+</table>
+
+<h3>Phase 2 — Survival Trivia</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">순서</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면ID</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">유형</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">게임유형</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">다국어</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">14</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-204</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">트리비아 홈</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">ST</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.2</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">15</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-205</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Pre-start (대기/카운트다운)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">ST</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.1</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">16</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">트리비아 상세 (게임 진행)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">ST</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.1</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">17</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206-MD-ELIMINATE</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">탈락</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Modal</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">ST</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.2</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">18</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206-MD-LEAVE</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">나가기</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Modal</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">ST</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.0</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">19</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206-SPECTATE</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">관전 모드</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">ST</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.1</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">20</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206-RESULT</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 결과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Page</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">ST</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">v1.2</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>7. 화면 Flow 다이어그램</h2>
+
+<h3>7.1 공통 플로우 (게임존 메인 기준)</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">[CEB-GAM-101] 게임존 메인
+    │
+    ├─→ Survival Trivia 카드 탭 ─→ [CEB-GAM-204] 트리비아 홈
+    │
+    ├─→ Prediction Market 카드 탭 ─→ [CEB-GAM-201] PM 리스트
+    │
+    ├─→ 유저 랭킹 카드 탭 ─→ [CEB-GAM-401] 랭킹
+    │
+    ├─→ GP 히스토리 카드 탭 ─→ [CEB-GAM-501] GP 히스토리
+    │
+    └─→ Header GP 잔액 탭 ─→ [CEB-GAM-501] GP 히스토리</pre>
+
+<h3>7.2 Prediction Market 플로우</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">[CEB-GAM-201] PM 리스트
+    │
+    └─→ 게임 카드 탭
+        │
+        └─→ [CEB-GAM-202] PM 상세
+                │
+                ├─→ [진행중 + 미참여] YES/NO 선택
+                │       └─→ [CEB-GAM-202-MD-CONFIRMED] 참여확정 모달
+                │               ├─→ [참여하기] 버튼
+                │               │       ├─→ 성공 → 토스트 + [CEB-GAM-202-MD-COMPLETED] 부스팅 유도
+                │               │       │       ├─→ [부스팅 참여] → 부스팅 반영
+                │               │       │       └─→ [다음에 할게요] → 모달 닫기
+                │               │       └─→ GP 부족 → [CEB-GAM-202-MD-NOBALANCE] 잔고 부족
+                │               │               ├─→ [GP 교환소로 이동] → [CEB-GAM-301]
+                │               │               └─→ [닫기] → 모달 닫기
+                │               └─→ [취소] → 모달 닫기
+                │
+                ├─→ [진행중 + 참여완료] 부스팅 참여
+                │       └─→ 부스팅 확인 → 부스팅 반영 → 토스트
+                │
+                ├─→ [결과 대기] 결과 대기 안내 표시
+                │
+                └─→ [결과 발표] 결과 확인
+                        └─→ [결과 자세히 보기 &gt;] → [CEB-GAM-203] 결과 상세</pre>
+
+<h3>7.3 Survival Trivia 플로우</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">[CEB-GAM-204] 트리비아 홈
+    │
+    ├─→ [입장하기 버튼] (시작 10분 전 ~ 시작 시점)
+    │       ├─→ GP 부족 → [CEB-GAM-202-MD-NOBALANCE] 잔고 부족 모달
+    │       └─→ 성공 → GP 차감
+    │
+    └─→ [CEB-GAM-205] Pre-start (대기/카운트다운)
+            │
+            ├─→ 카운트다운 완료 (5초) → 자동 전환
+            │
+            └─→ [CEB-GAM-206] 트리비아 상세 (게임 진행)
+                    │
+                    ├─→ [&lt;] 뒤로가기 → [CEB-GAM-206-MD-LEAVE] 나가기 확인
+                    │       ├─→ [나가기] → [CEB-GAM-204] 트리비아 홈
+                    │       └─→ [계속하기] → 모달 닫기
+                    │
+                    ├─→ 정답 → 다음 스테이지 계속
+                    │
+                    ├─→ 오답 + 하트 ≥ 1 → 하트 -1, 다음 스테이지 계속
+                    │
+                    ├─→ 오답 + 하트 = 0 → [CEB-GAM-206-MD-ELIMINATE] 탈락 모달
+                    │       ├─→ [관전하고 하트 받기] → [CEB-GAM-206-SPECTATE] 관전 모드
+                    │       │       └─→ 게임 종료 → [CEB-GAM-206-RESULT] (C타입, 하트 보상)
+                    │       └─→ [나가기] → [CEB-GAM-204] 트리비아 홈
+                    │               └─→ 게임 종료 이벤트 → [CEB-GAM-206-RESULT] (D타입, 보상 없음)
+                    │
+                    ├─→ 미응답 (시간 초과) → [CEB-GAM-206-MD-ELIMINATE] 탈락 모달
+                    │       └─→ (위와 동일)
+                    │
+                    └─→ 마지막 스테이지 (10/10)
+                            ├─→ 정답 (생존) → [CEB-GAM-206-RESULT] (A 또는 B타입, GP 보상)
+                            └─→ 오답/미응답 (탈락) → [CEB-GAM-206-RESULT] (D타입, 보상 없음)</pre>
+
+<h3>7.4 GP 교환소 / 히스토리 플로우</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">[CEB-GAM-301] GP 교환소
+    │
+    ├─→ [GP 가져오기] (CELB→GP)
+    │       ├─→ CELB 잔액 부족 → [CEB-GAM-302] CELB 입금주소 (바텀시트)
+    │       └─→ 교환 실행 → 성공 토스트 / 실패 에러
+    │
+    ├─→ [CELB으로 보내기] (GP→CELB)
+    │       └─→ 교환 실행 → 성공 토스트 / 실패 에러
+    │
+    └─→ [GP 히스토리] → [CEB-GAM-501]
+
+[CEB-GAM-501] GP 히스토리
+    │
+    ├─→ [참여내역 탭] → ROW 탭 → [CEB-GAM-502] 참여내역 상세
+    │
+    └─→ [교환내역 탭] → ROW 탭 → [CEB-GAM-503] 교환내역 상세</pre>
+
+<hr>
+
+<h2>8. 게임 유형별 특성 비교</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Prediction Market</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Survival Trivia</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 방식</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">YES/NO 이진 예측</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">4지선다 퀴즈 (10문제)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">참여 시점</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">진행중(Active) 동안 언제든</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">시작 10분 전 ~ 시작 시점</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">참여 비용</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임별 설정 (기본 1GP)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임별 설정</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">부스팅</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">있음 (참여 후 추가 GP 투입, 2~10배)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">없음</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">하트 시스템</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">없음</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">있음 (오답 시 소진, 최대 3개)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">정원</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임별 설정 (무제한 가능)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">최대 500명</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">진행 시간</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">투표 종료일시까지 (수일~수주)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">실시간 (약 5~10분)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 결정</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">관리자가 결과 입력 (YES/NO)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">서버 자동 판정 (정답/오답)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">보상 방식</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">정답자에게 비율 배분 (참여+부스팅 가중)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">최종 생존자에게 균등 분배</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">참여GP 환급</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">정답/오답 무관 전액 환급</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">환급 없음</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">관전</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">없음</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">있음 (탈락 후 관전 → 하트 보상)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">채팅</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">없음</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">있음 (게임 진행 중 실시간)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 화면</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-203 결과 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206-RESULT 게임 결과 (A/B/C/D 4개 타입)</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>9. 게임 상태별 앱 노출</h2>
+
+<h3>Prediction Market</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">BO 상태</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">코드</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">앱 노출</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">카드 표시 (201)</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상세 화면 (202)</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">사용자 액션</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">임시저장</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Draft</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">노출 안됨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게시대기</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Ready</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">노출 안됨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">진행중</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Active</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">노출됨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">"진행중" 배지</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">YES/NO 투표 참여 가능</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">참여, 부스팅</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 대기</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Pending</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">노출됨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">"발표대기중" 배지</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 대기 안내 표시</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">조회만</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 확정</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Closed</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">노출됨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">"결과 발표" 배지 + 건수</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 확인 + 보상 확인</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 확인</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">종료</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Ended</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">노출됨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">"종료" 배지</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 확인 (보상 지급 완료)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">조회만</td></tr>
+  </tbody>
+</table>
+
+<h3>Survival Trivia</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">BO 상태</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">코드</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">앱 노출</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">게임존 메인 카드 (101)</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">트리비아 홈 (204)</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">사용자 액션</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">임시저장</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Draft</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">노출 안됨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게시대기</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Ready</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">노출됨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">일정 표시 (날짜/시간)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 정보 표시, 버튼 비활성화</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">조회만</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">진행중</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Active</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">노출됨</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">LIVE 배지 + 진행중 표시</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">입장 가능 (시작 10분 전~시작)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">입장</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 확정</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Closed</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">종료</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Ended</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">"다음 라이브 일정 준비중"</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">다음 게임 정보 또는 일정 없음 안내</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td></tr>
+  </tbody>
+</table>
+
+<blockquote>Survival Trivia는 실시간 진행이므로 결과 대기(Pending) / 결과 확정(Closed) 상태가 사용자에게 별도 노출되지 않습니다. 게임 종료 즉시 결과 화면(CEB-GAM-206-RESULT)으로 전환됩니다.</blockquote>
+
+<hr>
+
+<h2>10. GP 시스템</h2>
+
+<h3>GP 변동 유형</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">유형</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">코드</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">GP 변동</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">적용 게임</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">참여</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PARTICIPATION</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 참여 시</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">- (차감)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM, ST</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">부스팅</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">BOOSTING</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">부스팅 사용 시</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">- (차감)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">환급</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">REFUND</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 발표 후 참여 GP 반환</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">+ (증가)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">보상</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">REWARD</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">정답/생존 시 보상 지급</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">+ (증가)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM, ST</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">환불</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">REFUND_CANCEL</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 취소 시 환불</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">+ (증가)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM, ST</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP 가져오기</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">EXCHANGE_IN</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CELB → GP 교환</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">+ (증가)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CELB으로 보내기</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">EXCHANGE_OUT</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP → CELB 교환</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">- (차감)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td></tr>
+  </tbody>
+</table>
+
+<h3>보상 계산 로직</h3>
+
+<h4>Prediction Market</h4>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">정답자 보상 = 총 상금 GP × (개인 배분 값 / 전체 합)
+기본: 개인 배분 값 = 참여 GP
+- 부스팅 구매시: 개인 배분 값 = 참여 GP × 부스팅 배수
+전체 합 = ∑(각 참여자의 배분 값)</pre>
+
+<ul>
+  <li>참여 GP는 정답/오답 무관 <strong>전액 환급</strong></li>
+  <li>부스팅 GP는 환급 없음 (배분 가중치로만 사용)</li>
+  <li>부스팅 배수: 게임별 설정 (기본 2배, 최대 10배)</li>
+  <li>소수점 8자리 이하 절삭, 단수는 시스템 귀속</li>
+</ul>
+
+<h4>Survival Trivia</h4>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">생존자 개인 보상 = floor(총 상금 GP / 최종 생존자 수)</pre>
+
+<ul>
+  <li>총 상금 GP를 최종 생존자에게 <strong>균등 분배</strong></li>
+  <li>소수점 이하 절사 (나머지는 플랫폼 귀속)</li>
+  <li>참여 GP는 환급 없음 (입장 비용)</li>
+  <li>부스팅 없음</li>
+</ul>
+
+<h3>GP 잔액 표시 위치</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">표시 위치</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">탭 시 이동</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-101 게임존 메인</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Header GP 잔액 배지</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-501</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-201 PM 리스트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Header 우측</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-202 PM 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Header 우측</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-204 트리비아 홈</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Header 우측</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-501</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-301 GP 교환소</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">상단 잔액 카드</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>11. 하트 시스템 (Survival Trivia 전용)</h2>
+
+<h3>기본 규칙</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">보유 범위</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">0 ~ 3개 (계정 레벨 영구 보유, 게임별 리셋 아님)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">최초 지급</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Survival Trivia 첫 참여 시 1개 자동 지급</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">소진 조건</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">오답 선택 시 자동 -1개</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">탈락 조건 (하트)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">하트 0개 상태에서 오답 → 탈락</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">탈락 조건 (시간 초과)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">미응답(시간 초과) → 하트 수 무관 즉시 탈락</td></tr>
+  </tbody>
+</table>
+
+<h3>보너스 획득 방법</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">방법</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">보상</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">친구 초대 완료</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">+1 하트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">초대한 친구가 가입 완료</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 끝까지 관전</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">+1 하트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">탈락 후 관전 모드에서 게임 종료까지 관전</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 완주 성공</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">+1 하트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">마지막 스테이지까지 생존</td></tr>
+  </tbody>
+</table>
+
+<h3>하트 표시 위치</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">표시 방식</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-204 트리비아 홈</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">이용 안내 섹션에 하트 시스템 설명</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206 트리비아 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Header 좌측 하트 아이콘 + 잔여 수</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206-SPECTATE 관전 모드</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Header에 "관전중" 배지 (하트 미표시)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206-RESULT 게임 결과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">C타입: 하트 보상 안내 표시, D타입: 미표시</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>12. 다국어 범위</h2>
+
+<h3>화면별 다국어 적용 여부</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면ID</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">다국어</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-101</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임존 메인</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">No</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">브랜드명/카드명 영문 고정</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-201</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM 리스트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 타이틀, 필터 탭, 상태 배지</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-202</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 타이틀, 상세설명, 버튼, 안내 텍스트</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-202-MD-CONFIRMED</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">참여확정</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">모달 텍스트, 버튼</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-202-MD-COMPLETED</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">참여완료</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">토스트, 바텀시트 텍스트</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-202-MD-NOBALANCE</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP 잔고 부족</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">모달 텍스트, 버튼</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-203</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 텍스트, 판정 기준</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-204</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">트리비아 홈</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 타이틀, 이용 안내, 버튼</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-205</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Pre-start</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">안내 텍스트, 규칙 설명</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">트리비아 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">문제, 선택지, 채팅 UI</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206-MD-ELIMINATE</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">탈락</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">모달 타이틀, 안내, 버튼</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206-MD-LEAVE</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">나가기</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">모달 타이틀, 안내, 버튼</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206-SPECTATE</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">관전 모드</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">관전 배지, 채팅 UI</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-206-RESULT</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 결과</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">타이틀, 서브메시지, 보상 안내 (A/B/C/D 타입별)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-301</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP 교환소</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">탭, 버튼, 안내 텍스트</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-302</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CELB 입금주소</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">안내 텍스트, 버튼</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-401</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">랭킹</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">순위 라벨, 안내 텍스트</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-501</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP 히스토리</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">탭, 필터, 변동 유형 라벨</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-502</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">참여내역 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">상세 항목 라벨</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-503</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">교환내역 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Yes</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">상세 항목 라벨, 상태 표시</td></tr>
+  </tbody>
+</table>
+
+<h3>다국어 적용 분류</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">분류</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">예시</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">고정 영문</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">브랜드명, 게임 유형명 (번역 안 함)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">"Survival Trivia", "Prediction Market", "GP", "CELB"</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">관리자 입력</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 생성 시 KO/EN/JP 입력</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 타이틀, 상세설명, 힌트 링크</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">시스템 텍스트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">앱 내 고정 텍스트 (번역 필요)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">버튼 라벨, 안내 문구, 에러 메시지, 토스트</td></tr>
+  </tbody>
+</table>
+
+<h3>Survival Trivia RESULT 다국어 예시</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">타입</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">KO</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">EN</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">JP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">A (100% 정답)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">축하해요! 모든 문제를 맞혔어요!</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Congratulations! You got every answer right!</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">おめでとうございます！全問正解です！</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">B (하트 사용)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">축하해요! 끝까지 살아남았어요!</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Congratulations! You survived to the end!</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">おめでとうございます！最後まで生き残りました！</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">C (관전 완료)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">끝까지 관전해 주셔서 감사합니다!</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Thank you for watching until the end!</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">最後まで観戦いただきありがとうございます！</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">D (미관전)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">다음에는 꼭 완주해 보세요!</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">Try to complete it next time!</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">次こそクリアを目指しましょう！</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>13. 백오피스 연동</h2>
+
+<h3>APP ↔ BO 화면 매핑</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">APP 화면ID</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">APP 화면명</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">BO 대응 화면</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">연동 내용</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-101</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임존 메인</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-BO-GZ-101</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임존 홈 통계</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-201</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM 리스트</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-BO-GZ-201</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 리스트 (Active/Pending/Closed/Ended 노출)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-202</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-BO-GZ-202</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 상세 (타이틀, 설명, 상금, 참여 설정)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-203</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 상세</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-BO-GZ-202 (결과/보상 탭)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 입력, 결과 확인 링크</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-204</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">트리비아 홈</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-BO-GZ-201 + CEB-BO-GZ-202</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 생성/설정에서 관리</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-301</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP 교환소</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-BO-GZ-501, CEB-BO-GZ-502</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">교환 내역, 교환 설정</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-302</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CELB 입금주소</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-BO-GZ-503</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">지갑 관리 (등록된 입금 주소)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-401</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">랭킹</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-BO-GZ-401, CEB-BO-GZ-402</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">랭킹 조회, TOP 10 공개 설정</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-501</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP 히스토리</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-BO-GZ-601</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP 변동 내역 조회</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">-</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">(회원 정보)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-BO-USR-203 (게임존 탭)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">회원별 게임 참여/GP 내역 조회</td></tr>
+  </tbody>
+</table>
+
+<h3>BO 관리 항목 → APP 반영 범위</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">BO 관리 항목</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">APP 반영 화면</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">반영 방식</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 생성/수정 (타이틀, 설명, 상금, 비용)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">201, 202, 204</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">실시간 반영 (API 조회)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 상태 변경 (게시/종료)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">101, 201, 202, 204</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">실시간 반영 (상태에 따라 UI 자동 전환)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 입력 (YES/NO)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">202, 203</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">결과 확정 즉시 반영</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">보상 지급</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">202, 501, 502</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">GP 잔액 및 히스토리에 반영</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">교환 설정 (비율, 한도)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">301</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">실시간 반영</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">지갑 등록/수정</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">302</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">입금 주소 실시간 반영</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">랭킹 설정 (TOP 10 공개 여부)</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">401</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">TOP 10 섹션 표시/숨김</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">게임 강제 종료</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">202, 206</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">즉시 종료 처리, 참여 GP 환불</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>14. Phase 구분 요약</h2>
+
+<h3>Phase 1</h3>
+
+<ul>
+  <li><strong>범위</strong>: Prediction Market + 공통 기능 (랭킹, GP 교환소, GP 히스토리)</li>
+  <li><strong>화면 수</strong>: 13개</li>
+  <li><strong>주요 기능</strong>: YES/NO 예측 게임 참여, 부스팅, 결과 확인, GP 교환, 랭킹 조회</li>
+</ul>
+
+<h3>Phase 2</h3>
+
+<ul>
+  <li><strong>범위</strong>: Survival Trivia</li>
+  <li><strong>화면 수</strong>: 7개</li>
+  <li><strong>주요 기능</strong>: 실시간 라이브 퀴즈 게임, 하트 시스템, 관전 모드, 4가지 결과 타입</li>
+  <li><strong>공통 기능 연동</strong>: GP 교환소, GP 히스토리, 랭킹에 Survival Trivia 데이터 통합</li>
+</ul>
+
+<h3>Phase 간 의존성</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <thead>
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Phase 1</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Phase 2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-101 게임존 메인</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM 카드 활성화</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">ST 카드 활성화 (Phase 1에서는 "준비중" 표시)</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-401 랭킹</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM 누적 GP 기준</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM + ST 통합 누적 GP</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-501 GP 히스토리</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM 참여내역</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM + ST 참여내역 통합</td></tr>
+    <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">CEB-GAM-202-MD-NOBALANCE</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">PM 참여 시 GP 부족</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px;">ST 입장 시에도 동일 모달 재사용</td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>
