@@ -8,7 +8,7 @@
 | 기획담당자 | @Nill Yoo |
 | 기능영역(Epic) | GAM(게임) |
 | 상태 | Draft |
-| 버전 | v1.3 |
+| 버전 | v1.4 |
 | 최근 업데이트 | 2026.02.24 |
 | 다국어 영향 | Yes |
 | Breadcrumb | Game 탭 > 게임존 메인 > GP 히스토리 |
@@ -72,6 +72,13 @@ Game 탭 > 게임존 메인 > GP 히스토리
 │                                            │
 │  ⚡ [환급] 페이커 MVP 수상여부   + 10 >    │
 │      15:00 (UTC+9)      Prediction Market  │
+│                                            │
+│  ⚡ [참여] 서바이벌 트리비아 #5    - 1 >   │
+│      20:00 (UTC+9)      Survival Trivia    │
+│                                            │
+│  ⚡ [보상] 서바이벌 트리비아 #5            │
+│      + 500 >                               │
+│      21:00 (UTC+9)      Survival Trivia    │
 │                                            │
 └────────────────────────────────────────────┘
 ```
@@ -157,29 +164,38 @@ Game 탭 > 게임존 메인 > GP 히스토리
 | 환급 | REFUND만 |
 | 환불 | REFUND_CANCEL만 |
 
+#### 게임유형별 변동 유형 규칙
+
+| 게임유형 | 발생 가능 유형 |
+| ---- | ---- |
+| Prediction Market | PARTICIPATION, BOOSTING, REWARD, REFUND, REFUND_CANCEL |
+| Survival Trivia | PARTICIPATION, REWARD, REFUND_CANCEL |
+
+> Survival Trivia는 부스팅(BOOSTING) 기능을 지원하지 않으므로 BOOSTING, REFUND 유형이 발생하지 않습니다.
+
 #### 내역 아이템 구성
 
 **A. 참여/부스팅**
 
 ```
 ⚡ [참여] 게임 타이틀              - {GP} >
-    HH:mm (UTC+9)        Prediction Market
+    HH:mm (UTC+9)        {게임유형}
 ```
 
 - 1행: 아이콘 + [유형] + 게임 타이틀 (최대 1줄, 말줄임) + GP 변동량(빨간)
-- 2행: 시간 + 게임 유형
+- 2행: 시간 + 게임유형: Prediction Market 또는 Survival Trivia (영문 고정)
 
 **B. 보상**
 
 ```
 ⚡ [보상] 게임 타이틀 (길면 말줄임...)
     + {GP} >
-    HH:mm (UTC+9)        Prediction Market
+    HH:mm (UTC+9)        {게임유형}
 ```
 
 - 1행: 아이콘 + [유형] + 게임 타이틀 (최대 1줄, 말줄임)
 - 2행: GP 변동량(파란)
-- 3행: 시간 + 게임 유형
+- 3행: 시간 + 게임유형: Prediction Market 또는 Survival Trivia (영문 고정)
 
 > 보상 금액이 크기 때문에 2행 레이아웃 사용
 > 보상 = 상금풀내에서 받은 GP (돌려받는 GP는 제외)
@@ -188,21 +204,21 @@ Game 탭 > 게임존 메인 > GP 히스토리
 
 ```
 ⚡ [환급] 게임 타이틀              + {GP} >
-    HH:mm (UTC+9)        Prediction Market
+    HH:mm (UTC+9)        {게임유형}
 ```
 
 - 1행: 아이콘 + [환급] + 게임 타이틀 (최대 1줄, 말줄임) + GP 변동량(파란)
-- 2행: 시간 + 게임 유형
+- 2행: 시간 + 게임유형: Prediction Market 또는 Survival Trivia (영문 고정)
 
 **D. 환불**
 
 ```
 ⚡ [환불] 게임 타이틀              + {GP} >
-    HH:mm (UTC+9)        Prediction Market
+    HH:mm (UTC+9)        {게임유형}
 ```
 
 - 1행: 아이콘 + [환불] + 게임 타이틀 (최대 1줄, 말줄임) + GP 변동량(파란)
-- 2행: 시간 + 게임 유형
+- 2행: 시간 + 게임유형: Prediction Market 또는 Survival Trivia (영문 고정)
 
 #### 정렬 기준
 
@@ -438,7 +454,7 @@ Game 탭 > 게임존 메인 > GP 히스토리
 | ---- | ---- | ---- |
 | 변동 내역 존재 | 최소 0건 이상 | Empty State 표시 |
 | 게임 타이틀 | 1자 이상 | 기본값: "(제목 없음)" |
-| 게임 유형 | 유효한 게임 유형 | 기본값: "Prediction Market" |
+| 게임 유형 | 유효한 게임 유형 (Prediction Market, Survival Trivia) | 게임 데이터의 gameType 기반 표시 |
 | 변동 유형 | 정의된 7가지 유형 중 1개 | Toast: "잘못된 변동 유형입니다." |
 | GP 변동량 | 숫자 타입 | 기본값: 0 |
 
@@ -480,6 +496,7 @@ Game 탭 > 게임존 메인 > GP 히스토리
 
 | 버전 | 작성일 | 작성자 | 변경 내용 |
 | ---- | ---- | ---- | ---- |
+| v1.4 | 2026.02.24 | @Nill Yoo | Survival Trivia 반영: 참여내역 게임유형 동적 표시, ST 변동 유형 규칙 추가 (부스팅/환급 미발생), ASCII Layout ST 예시 추가 |
 | v1.3 | 2026.02.24 | @Nill Yoo | 교환 방향 용어 통일: GP 충전→GP 가져오기, GP 출금→CELB으로 보내기 |
 | v1.0 | 2026.02.12 | @Nill Yoo | 초기 작성 |
 | v1.1 | 2026.02.12 | @Nill Yoo | 환불(REFUND_CANCEL) 유형 추가, 필터 순서 PDF 기준 수정 (보상→환급→환불) |

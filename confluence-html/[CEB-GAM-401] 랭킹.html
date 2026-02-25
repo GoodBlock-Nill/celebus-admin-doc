@@ -48,11 +48,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -75,7 +75,7 @@
 
 <h2>1. 화면 목적</h2>
 
-<p>모든 게임을 통해 얻은 '누적 Game Point'와 현재 '내 순위'를 확인하는 화면이다. 보상 성과를 우선적으로 보여주며(순위 경쟁보다 내가 얻은 성과가 먼저 인지되도록), 개인 기록 중심으로 구성한다. 서비스 초기에는 데이터 부족으로 의미 있는 순위 제공이 어려워 개인 기록 중심의 화면을 우선 제공한다.</p>
+<p>모든 게임(Prediction Market + Survival Trivia)을 통해 얻은 '누적 Game Point'와 그에 따른 현재 '내 순위'를 확인하는 화면이다. 보상 성과를 우선적으로 보여주며(순위 경쟁보다 내가 얻은 성과가 먼저 인지되도록), 상세 성과는 카드 확장 영역에서 확인 가능하다. 서비스 초기에는 데이터 부족으로 의미 있는 순위 제공이 어려워 개인 기록 중심의 화면을 우선 제공한다.</p>
 
 <h2>2. UI 설명</h2>
 
@@ -516,12 +516,12 @@
 <tbody>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 GP</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답 맞힌 게임의 보상</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 승리 시 보상 (PM: 정답 맞힌 게임, ST: 최종 생존)</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환급 GP</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 발표 후 참여 GP 반환</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 발표 후 참여 GP 반환 (PM만 해당, ST는 환급 없음)</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+</td>
 </tr>
 </tbody>
@@ -541,7 +541,12 @@
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;"><code style="background-color: #f4f5f7; border-radius: 3px; padding: 2px 4px; font-family: SFMono-Regular, Consolas, monospace; font-size: 0.9em;">승률 = (정답 게임 수 / 참여 완료 게임 수) × 100
 </code></pre>
 
-<p><strong>정답 게임</strong>: 사용자가 선택한 선택지가 최종 결과와 일치한 게임</p>
+<p><strong>정답(승리) 게임 기준</strong>:</p>
+
+<ul>
+<li>Prediction Market: 사용자가 선택한 선택지가 최종 결과와 일치한 게임</li>
+<li>Survival Trivia: 마지막 문제까지 생존(완주)한 게임</li>
+</ul>
 
 <p><strong>참여 완료 게임</strong>: 결과가 확정된 게임 (종료 상태)</p>
 
@@ -594,7 +599,11 @@
 <ul>
 <li>누적 GP: 해당 게임 유형의 누적 GP 합계</li>
 <li>참여 횟수: 결과 확정된 게임 수</li>
-<li>승률: (정답 게임 수 / 참여 완료 게임 수) × 100</li>
+<li>승률: (완주 게임 수 / 참여 완료 게임 수) × 100
+<ul>
+<li>완주 = 마지막 문제까지 생존</li>
+</ul>
+</li>
 <li>참여 없을 시: "참여 0회  승률 -"</li>
 </ul>
 
@@ -859,6 +868,12 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">화면 목적 개인 기록 중심으로 변경, GP 아이콘 Celeb 로고로 변경, "Game Point" 띄어쓰기 통일, 펼침 영역 "게임별 누적" 라벨 변경, TOP 10 상위 랭커 프로필 사진 추가, ⓘ 바텀시트 본문 수정, 누적 GP 집계 공식 수정 (획득 GP 합산)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 반영: 누적 GP 집계 게임유형별 분리 (ST 환급 없음), 승률 계산 게임유형별 분리 (ST 완주 기준), 펼침 영역 ST 승률 설명 보강</td>
 </tr>
 </tbody>
 </table>

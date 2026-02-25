@@ -40,11 +40,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -282,7 +282,7 @@
 <h5>동작</h5>
 <ol>
 <li>CEB-GAM-204(트리비아 홈)으로 이동</li>
-<li>상금 GP는 RESULT 화면 진입 시 서버에서 자동 지급 완료 상태</li>
+<li>상금 GP는 게임 종료 시점에 서버에서 자동 지급 완료 상태</li>
 <li>별도 수령 동작 불필요</li>
 </ol>
 
@@ -309,7 +309,7 @@
 <h5>동작</h5>
 <ul>
 <li>CEB-GAM-204(트리비아 홈)으로 이동</li>
-<li>보상은 RESULT 화면 진입 시 서버에서 자동 지급되므로 별도 수령 필요 없음</li>
+<li>보상은 게임 종료 시점에 서버에서 자동 지급되므로 별도 수령 필요 없음</li>
 </ul>
 
 <h3>3.4 확인 버튼 (탈락 미관전자)</h3>
@@ -358,6 +358,34 @@
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여비 환급</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">없음 (참여비 10 GP는 환급되지 않음)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 지급 시점</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 종료 시점에 서버에서 자동 지급 완료</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">RESULT 화면 역할</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">이미 지급된 보상 결과를 표시만 함 (별도 지급 API 호출 없음)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">지급 실패 시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서버에서 자동 재시도. RESULT 화면에서는 "보상 정산 중..." 표시 후 새로고침 안내</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정산 중 UI</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 표시 영역에 "+{N} GP" 대신 "보상 정산 중..." 텍스트 + 소형 로딩 스피너 표시. [확인] 버튼은 활성화 상태 유지 (탭 시 CEB-GAM-204로 이동 가능). 보상은 서버 백그라운드에서 재시도하므로 화면을 떠나도 문제 없음</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">뒤로가기 동작</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[&lt;] 뒤로가기와 [확인] 버튼 모두 서버에 '결과 확인 완료' API 호출 후 CEB-GAM-204로 이동. 이 API는 로깅 + 미확인 결과 상태 해소 목적 (보상 지급 API 아님). 호출 실패 시에도 CEB-GAM-204로 이동하며, 다음 204 진입 시 미확인 결과로 다시 표시될 수 있음</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">네트워크 실패 시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">리트라이 + "일시적 오류가 발생했습니다" 에러 토스트. 재시도 실패 시에도 CEB-GAM-204로 이동 (다음 204 진입 시 다시 조회)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">소멸 후 재조회</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확인 완료 또는 자동 소멸된 게임 결과는 RESULT 화면에서 재조회 불가. GP 변동 금액은 GP 변동 내역(CEB-BO-GZ-601)에서 확인 가능</td>
 </tr>
 </tbody>
 </table>
@@ -569,6 +597,64 @@
 
 <h2>5. 에러 및 예외상황</h2>
 
+<h3>Loading 상태</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">표시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">화면 중앙에 로딩 스피너 표시 (Skeleton UI 아님)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Header</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[&lt;] 뒤로가기 버튼 활성화 상태 유지</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">뒤로가기 동작</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">로딩 중 [&lt;] 탭 시 CEB-GAM-204로 즉시 이동 (보상은 서버에서 이미 지급 완료 상태)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타임아웃</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">10초 내 응답 없으면 Error 상태로 전환</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Error 상태</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">레이아웃</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Header + 화면 중앙 에러 영역 (아이콘 + 메시지 + 버튼)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">에러 메시지</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"결과를 불러올 수 없습니다." (중앙 정렬)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[다시 시도] 버튼</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">에러 메시지 하단, 탭 시 결과 데이터 재조회</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[&lt;] 뒤로가기</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">활성화, 탭 시 CEB-GAM-204로 이동</td>
+</tr>
+</tbody>
+</table>
+
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <thead>
 <tr>
@@ -658,6 +744,24 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 미관전자 결과 화면(D타입) 추가, 204 자동 전환 기능 추가</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유저플로우 갭 분석 반영 (뒤로가기 시 미확인 결과 소멸 규칙 추가)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2차 플로우 검증: 결과 확인 서버 API·보상 지급 타이밍 명확화 반영</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3차 최종 검증: 디자이너/개발자 질문 최소화를 위한 36건 명확화</td>
 </tr>
 </tbody>
 </table>

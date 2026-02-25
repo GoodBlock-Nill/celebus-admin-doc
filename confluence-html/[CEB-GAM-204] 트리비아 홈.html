@@ -40,11 +40,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -111,6 +111,7 @@
 │                                                                   │
 │ 이용 안내                                                          │
 │ • 최초 참여 시 ❤️ 하트 1개 지급                                    │
+│ • 하트 0개 시 새 게임 참여하면 1개 자동 지급                        │
 │ • 오답 시 하트가 자동으로 소진돼요                                  │
 │ • 하트가 없으면 탈락해요                                           │
 │ • 탈락 후에도 관전 가능                                            │
@@ -349,9 +350,69 @@
 <ol>
 <li>버튼 로딩 상태로 전환 (중복 탭 방지)</li>
 <li>서버에 입장 요청 (GP 차감 포함)</li>
+<li>GP 차감과 동시에 하트 지급 (첫 참여: 1개 / 0개 보유 시: 1개)</li>
 <li>성공 시: CEB-GAM-205(Pre-start) 화면으로 전환</li>
 <li>실패 시: 에러 처리 (하단 에러 섹션 참조)</li>
 </ol>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">트랜잭션 보증</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 차감과 하트 지급은 서버에서 단일 트랜잭션으로 처리. GP 차감 성공 + 하트 지급 실패 시 트랜잭션 롤백 (GP 복구). 부분 성공은 발생하지 않음 (원자성 보장)</td>
+</tr>
+</tbody>
+</table>
+
+<h5>다중 탭/기기 검증</h5>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다중 탭 감지</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입장 버튼 탭 시 BroadcastChannel로 다른 탭의 게임 진행 여부 확인. 진행 중 탭 있으면 입장 차단 + "이미 다른 탭에서 게임이 진행 중입니다" 토스트</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">BC 타임아웃</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">BroadcastChannel 메시지 전송 후 500ms 내 응답 없으면 "다른 탭 없음"으로 판단하여 입장 진행. 서버 검증이 최종 게이트</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">BC 미지원 환경</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">BroadcastChannel API 미지원 시 → BC 검증 건너뛰고 서버 검증만 진행</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서버 검증</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입장 API 호출 시 서버에서 동일 유저 활성 세션 확인. 있으면 입장 거부 + "이미 다른 기기에서 게임이 진행 중입니다" 에러 토스트</td>
+</tr>
+</tbody>
+</table>
+
+<h5>로딩 타임아웃</h5>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">로딩 타임아웃</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입장 버튼 탭 후 10초 내 서버 응답 없으면 버튼 자동 복구 + "일시적 오류가 발생했습니다" 에러 토스트</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">재시도</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타임아웃 후 사용자가 직접 버튼 재탭으로 수동 재시도. 자동 재시도 없음. GP는 서버 응답 없었으므로 차감되지 않은 상태</td>
+</tr>
+</tbody>
+</table>
 
 <h5>GP 부족 시</h5>
 <ul>
@@ -363,6 +424,22 @@
 <h3>카운트다운 표시</h3>
 
 <h5>표시 규칙</h5>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">시간 기준</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서버 시간 기준. 화면 진입 시 서버 시간과 동기화하여 클라이언트-서버 오프셋 보정</td>
+</tr>
+</tbody>
+</table>
+
 <ul>
 <li>시작까지 남은 시간에 따라 툴팁 메시지 실시간 갱신</li>
 <li>10분 이상: "10분 전 부터 입장할 수 있어요"</li>
@@ -381,15 +458,38 @@
 
 <h3>미확인 결과 자동 전환</h3>
 
-<h5>트리거 (실시간)</h5>
-<ul>
-<li>사용자가 204 화면에 머무르는 중, 참여했던 게임이 종료됨 (서버에서 게임 종료 이벤트 수신)</li>
-</ul>
+<h5>감지 방식</h5>
 
-<h5>동작</h5>
-<ol>
-<li>게임 종료 이벤트 수신 즉시 CEB-GAM-206-RESULT(D타입)으로 자동 전환</li>
-</ol>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">감지 방식</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">204 화면 진입/복귀(visibilitychange) 시 서버 API로 미확인 결과 조회</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">조회 시점</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">화면 초기 렌더링 완료 후 (useEffect/onMounted 시점). UI 골격 먼저 표시 → API 응답 수신 → 미확인 결과 있으면 RESULT(D)로 전환</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전환 UX</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">로딩 스피너 없이 자연스러운 페이지 전환 (SPA 라우팅). 미확인 결과 조회 동안 기존 204 화면 정상 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전환 동작</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미확인 결과 있으면 CEB-GAM-206-RESULT(D타입)으로 자동 전환</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">체류 중 동작</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">204 체류 중 갑작스러운 전환 없음. 게임이 종료되더라도 화면 전환하지 않음. 다른 탭/앱 갔다가 204로 복귀(visibilitychange) 시에만 미확인 결과 재조회 → 있으면 RESULT(D)로 전환</td>
+</tr>
+</tbody>
+</table>
 
 <h5>트리거 (재방문)</h5>
 <ul>
@@ -492,6 +592,43 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버튼 텍스트</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O (KO/EN/JP)</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">고정 텍스트</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Empty State (예정된 게임 없음)</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">영역</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상태</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">배너</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유지 (정상 표시)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 정보 카드</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"다음 라이브 일정을 준비중입니다" 안내 텍스트 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">이용 안내</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유지 (정상 표시)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 보너스</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유지 (정상 표시)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입장 버튼</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">숨김</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">새 게임 감지</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">화면 진입 시 및 탭 복귀(visibilitychange) 시 서버 API 재조회. 새 게임 있으면 정상 화면으로 전환</td>
 </tr>
 </tbody>
 </table>
@@ -700,6 +837,30 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 미관전자 결과 자동 전환 기능 추가, 미확인 결과 만료 규칙 추가</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 0개 유저 신규 게임 참여 시 1개 자동 지급 규칙 추가</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유저플로우 갭 분석 반영 (하트 지급 시점, Empty State 추가)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2차 플로우 검증: 미확인 결과 진입 시 조회·다중 탭/서버 검증·서버 시간 통일 등 반영</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.6</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3차 최종 검증: 디자이너/개발자 질문 최소화를 위한 36건 명확화</td>
 </tr>
 </tbody>
 </table>

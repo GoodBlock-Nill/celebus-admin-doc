@@ -40,11 +40,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -200,7 +200,7 @@
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">👥 참여자 수</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 생존 참여자 수 (실시간 갱신)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 생존 참여자 수 (매 스테이지 정답 공개 이벤트 시 갱신)</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이머 바</td>
@@ -250,7 +250,7 @@
 
 <h5>규칙</h5>
 <ul>
-<li>관전자는 선택지를 탭해도 응답이 전송되지 않음</li>
+<li>관전자는 선택지를 탭해도 응답이 전송되지 않음. 선택지는 시각적으로 비활성화 (회색 처리, 탭 피드백 없음 (pointer-events: none 적용. 리플 효과, 하이라이트, 애니메이션 모두 제거))</li>
 <li>타이머 바는 표시만 하며 탈락 이벤트와 무관</li>
 </ul>
 
@@ -343,6 +343,21 @@
 <li>관전자 결과 화면: 탈락자 결과 표시 + 하트 1개 지급 안내</li>
 </ol>
 
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">마지막 스테이지 RESULT 전환</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">마지막 스테이지 정답 공개 5초 표시 후 CEB-GAM-206-RESULT로 자동 전환 (다른 스테이지와 동일 패턴). 하트는 정답 공개 이벤트 수신 시점에 서버에서 지급 (화면 전환과 무관)</td>
+</tr>
+</tbody>
+</table>
+
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
 
 <h2>4. 규칙/로직</h2>
@@ -389,6 +404,25 @@
 
 <blockquote><p><strong>관전 완료 판정 기준</strong>: 마지막 스테이지의 정답 공개 이벤트를 서버로부터 수신한 시점을 기준으로 합니다. 클라이언트 상태가 아닌 서버 이벤트 수신 여부로 판단합니다.</p></blockquote>
 
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 지급 기준</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서버가 마지막 스테이지 정답 공개 이벤트 발생 시점에 관전 세션이 활성(WebSocket 연결 중)이면 하트 지급. 세션이 끊어져 있으면 미지급</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">재연결 후 게임 종료</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">재연결 성공 시 서버 로그 기준: 마지막 이벤트 시점에 세션이 활성이었으면 지급 완료 상태, 끊겨 있었으면 미지급</td>
+</tr>
+</tbody>
+</table>
+
 <h3>관전 재진입 불가</h3>
 
 <ul>
@@ -396,6 +430,37 @@
 <li>한 번 나가기를 선택하면 관전 기회는 영구 소멸</li>
 <li>재진입 시도 경로 자체가 존재하지 않음 (CEB-GAM-204에서 해당 게임은 이미 "참여 완료" 상태)</li>
 </ul>
+
+<h4>관전 기회는 1회</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">시나리오</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">관전 가능 여부</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ELIMINATE 모달에서 [관전하고 하트 받기] 선택</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 모드 진입</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ELIMINATE 모달에서 [나가기] 선택</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 불가, 영구 소멸</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ELIMINATE 모달 5초 유예 만료 (미선택)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-204로 자동 이동, 관전 불가, 영구 소멸</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 중 LEAVE 모달에서 [나가기] 선택</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 종료, 재진입 불가</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote><p>5초 유예 만료로 자동 이동된 경우도 [나가기]와 동일하게 취급</p></blockquote>
 
 <h3>[관전중] 배지</h3>
 
@@ -497,13 +562,48 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 비정상 종료 (서버)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"게임이 비정상 종료되었습니다."</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">에러 안내 + CEB-GAM-204 이동, 하트 미지급</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"게임이 비정상 종료되었습니다. 참여 GP가 환불됩니다."</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">에러 안내 + CEB-GAM-204 이동. 하트 일괄 미지급. GP 전액 환불</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">비정상 종료 조건</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">운영자 강제 취소, 서버 장애 등으로 게임이 정상 진행되지 못한 경우</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">채팅 전송 실패</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전송 실패 표시 (빨간색 느낌표), 재전송 없음 (다시 입력)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">브라우저 탭 비활성화 / 화면 잠금</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">WebSocket 끊김 감지 시 자동 재연결 최대 3회 (3초 간격). 성공 → 서버에서 현재 게임 상태 조회 후 관전 계속. 실패 → CEB-GAM-204 이동 (하트 미지급). 게임 종료 → RESULT(C) (하트는 서버 판단)</td>
+</tr>
+</tbody>
+</table>
+
+<h3>페이지 새로고침 처리</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">새로고침 방지</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CSS overscroll-behavior: none으로 pull-to-refresh 차단</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">beforeunload</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 중 새로고침/탭 닫기 시 브라우저 기본 경고 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">세션 복구</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">페이지 로드 시 서버 API로 활성 세션 확인. 있으면 관전 모드로 복귀 (WebSocket 재연결). 게임 종료 시 RESULT(C)로 이동</td>
 </tr>
 </tbody>
 </table>
@@ -574,6 +674,24 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 완료 기준 명확화(서버 이벤트 수신 시점), 관전 재진입 불가 명시, 정답 공개 5초 고정</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유저플로우 갭 분석 및 PWA 환경 고려사항 반영</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2차 플로우 검증: 탭 복귀 서버 동기화·비정상 종료 규칙·참여자 수 갱신·선택지 비활성 반영</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3차 최종 검증: 디자이너/개발자 질문 최소화를 위한 36건 명확화</td>
 </tr>
 </tbody>
 </table>

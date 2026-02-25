@@ -104,7 +104,7 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
@@ -178,6 +178,13 @@ p {
 │                                            │
 │  ⚡ [환급] 페이커 MVP 수상여부   + 10 &gt;    │
 │      15:00 (UTC+9)      Prediction Market  │
+│                                            │
+│  ⚡ [참여] 서바이벌 트리비아 #5    - 1 &gt;   │
+│      20:00 (UTC+9)      Survival Trivia    │
+│                                            │
+│  ⚡ [보상] 서바이벌 트리비아 #5            │
+│      + 500 &gt;                               │
+│      21:00 (UTC+9)      Survival Trivia    │
 │                                            │
 └────────────────────────────────────────────┘</pre>
 
@@ -327,28 +334,47 @@ p {
   </tr>
 </table>
 
+<h4>게임유형별 변동 유형 규칙</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">게임유형</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">발생 가능 유형</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PARTICIPATION, BOOSTING, REWARD, REFUND, REFUND_CANCEL</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PARTICIPATION, REWARD, REFUND_CANCEL</td>
+  </tr>
+</table>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">Survival Trivia는 부스팅(BOOSTING) 기능을 지원하지 않으므로 BOOSTING, REFUND 유형이 발생하지 않습니다.</blockquote>
+
 <h4>내역 아이템 구성</h4>
 
 <h5>A. 참여/부스팅</h5>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">⚡ [참여] 게임 타이틀              - {GP} &gt;
-    HH:mm (UTC+9)        Prediction Market</pre>
+    HH:mm (UTC+9)        {게임유형}</pre>
 
 <ul>
   <li>1행: 아이콘 + [유형] + 게임 타이틀 (최대 1줄, 말줄임) + GP 변동량(빨간)</li>
-  <li>2행: 시간 + 게임 유형</li>
+  <li>2행: 시간 + 게임유형: Prediction Market 또는 Survival Trivia (영문 고정)</li>
 </ul>
 
 <h5>B. 보상</h5>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">⚡ [보상] 게임 타이틀 (길면 말줄임...)
     + {GP} &gt;
-    HH:mm (UTC+9)        Prediction Market</pre>
+    HH:mm (UTC+9)        {게임유형}</pre>
 
 <ul>
   <li>1행: 아이콘 + [유형] + 게임 타이틀 (최대 1줄, 말줄임)</li>
   <li>2행: GP 변동량(파란)</li>
-  <li>3행: 시간 + 게임 유형</li>
+  <li>3행: 시간 + 게임유형: Prediction Market 또는 Survival Trivia (영문 고정)</li>
 </ul>
 
 <blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">보상 금액이 크기 때문에 2행 레이아웃 사용<br>보상 = 상금풀내에서 받은 GP (돌려받는 GP는 제외)</blockquote>
@@ -356,21 +382,21 @@ p {
 <h5>C. 환급</h5>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">⚡ [환급] 게임 타이틀              + {GP} &gt;
-    HH:mm (UTC+9)        Prediction Market</pre>
+    HH:mm (UTC+9)        {게임유형}</pre>
 
 <ul>
   <li>1행: 아이콘 + [환급] + 게임 타이틀 (최대 1줄, 말줄임) + GP 변동량(파란)</li>
-  <li>2행: 시간 + 게임 유형</li>
+  <li>2행: 시간 + 게임유형: Prediction Market 또는 Survival Trivia (영문 고정)</li>
 </ul>
 
 <h5>D. 환불</h5>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">⚡ [환불] 게임 타이틀              + {GP} &gt;
-    HH:mm (UTC+9)        Prediction Market</pre>
+    HH:mm (UTC+9)        {게임유형}</pre>
 
 <ul>
   <li>1행: 아이콘 + [환불] + 게임 타이틀 (최대 1줄, 말줄임) + GP 변동량(파란)</li>
-  <li>2행: 시간 + 게임 유형</li>
+  <li>2행: 시간 + 게임유형: Prediction Market 또는 Survival Trivia (영문 고정)</li>
 </ul>
 
 <h4>정렬 기준</h4>
@@ -814,8 +840,8 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유효한 게임 유형</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기본값: "Prediction Market"</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유효한 게임 유형 (Prediction Market, Survival Trivia)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 데이터의 gameType 기반 표시</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">변동 유형</td>
@@ -939,6 +965,12 @@ p {
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성일</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 반영: 참여내역 게임유형 동적 표시, ST 변동 유형 규칙 추가 (부스팅/환급 미발생), ASCII Layout ST 예시 추가</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>

@@ -40,11 +40,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -240,7 +240,7 @@
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">👥 참여자 수</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">우측, 현재 생존 참여자 수 (실시간 갱신)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">우측, 현재 생존 참여자 수 (매 스테이지 정답 공개 이벤트 시 갱신)</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이머 바</td>
@@ -305,6 +305,31 @@
 <li>제한시간 종료 시 서버에서 정답 공개 이벤트 수신</li>
 </ol>
 
+<h5>선택 확정 표시 UI</h5>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택 확정 표시</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택된 선택지: 파란색 반투명 배경 (opacity 20%) + 파란색 테두리 (2px solid). 좌측 번호: 파란색 원형 배경 + 흰색 숫자</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미선택 선택지</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기본 스타일 유지, 탭 비활성화 (중복 선택 불가)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전환 애니메이션</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택 시 0.2초 페이드인</td>
+</tr>
+</tbody>
+</table>
+
 <h5>규칙</h5>
 <ul>
 <li>선택 후 변경 불가 (실시간 게임 특성)</li>
@@ -318,6 +343,21 @@
 <li>프로그레스 바: 좌→우 파란색, 시간 경과에 따라 감소</li>
 <li>서버 시간 기준 (클라이언트 시간 보정)</li>
 </ul>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이머 시작</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">매 문제 시작 시 서버에서 시작 시각 전달, 클라이언트는 오프셋 적용하여 카운트다운 표시</td>
+</tr>
+</tbody>
+</table>
 
 <h5>동작</h5>
 <ul>
@@ -340,22 +380,46 @@
 <li>공개 후 5초 대기 → 자동으로 다음 스테이지 전환</li>
 </ol>
 
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택 비율 갱신</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답 공개 시점에 서버에서 최종 비율 1회 전달. 5초 표시 동안 비율 변경 없음 (고정)</td>
+</tr>
+</tbody>
+</table>
+
 <h3>3.4 하트 소진</h3>
 
 <h5>오답 시</h5>
 <ul>
 <li>하트 1개 자동 소진 + 하트 소진 애니메이션 (❤️→💔 효과)</li>
-<li>하트 0개에서 오답 시: 오답 공개 화면 5초 표시 후 CEB-GAM-206-MD-ELIMINATE 모달 표시</li>
-<li>단, 마지막 스테이지(10/10)에서 하트 0 + 오답 시 → 모달 없이 CEB-GAM-206-RESULT 직행</li>
+<li>하트 0개에서 오답 시: 정답 공개 5초 표시 → (5초 종료) → 탈락 모달(CEB-GAM-206-MD-ELIMINATE) 표시 → 5초 유예 → 미선택 시 CEB-GAM-204 이동
+<ul><li>※ 정답 공개와 탈락 모달은 연속 표시 (총 10초). 생존자는 정답 공개 5초 후 다음 스테이지로 이동</li></ul></li>
+<li>단, 마지막 스테이지(10/10)에서 하트 0 + 오답 시 → 정답 공개 5초 표시 후 탈락 모달 생략 → CEB-GAM-206-RESULT 직행 (D타입: 탈락 미관전)</li>
 </ul>
 
 <h5>미응답(시간 초과) 시</h5>
 <ul>
 <li>타이머 만료 시 키보드가 열려 있다면 자동 닫힘</li>
-<li>정답 공개 화면 표시 (선택지에 "미선택" 표시, 선택 비율 노출)</li>
-<li>정답 공개 5초 후 CEB-GAM-206-MD-ELIMINATE 모달 표시 (오답과 동일 플로우)</li>
+<li>미응답(시간 초과) → 정답 공개 5초 표시 → (5초 종료) → 탈락 모달(CEB-GAM-206-MD-ELIMINATE) 표시 → 5초 유예 → 미선택 시 CEB-GAM-204 이동 (오답 탈락과 동일 플로우, 동일 타이밍)</li>
 <li>하트 여부 무관하게 즉시 탈락</li>
-<li>단, 마지막 스테이지(10/10)에서 미응답 시 → 모달 없이 CEB-GAM-206-RESULT 직행</li>
+<li>단, 마지막 스테이지(10/10)에서 미응답 시 → 정답 공개 5초 표시 후 탈락 모달 생략 → CEB-GAM-206-RESULT 직행 (D타입: 탈락 미관전)</li>
+</ul>
+
+<h5>미응답(시간 초과) 후 정답 공개</h5>
+
+<ul>
+<li>오답 시 정답 공개 UI와 동일한 레이아웃</li>
+<li>차이점: 선택지에 "오답" 배지 대신 "미선택" 배지(회색) 표시</li>
+<li>선택 비율(%)은 동일하게 표시 (미응답자는 비율 계산에서 제외)</li>
+<li>정답 공개 후 탈락 플로우도 오답과 동일 (정답 공개 5초 → 탈락 모달 5초 유예)</li>
 </ul>
 
 <h3>3.5 채팅 기능</h3>
@@ -402,16 +466,36 @@
 <ul>
 <li>상태 바(하트/스테이지/참여자) 숨김</li>
 <li>타이머 바와 문제/선택지는 축소 표시</li>
-<li>채팅 중에도 선택지 탭 가능 (키보드가 선택지를 가릴 수 있지만 스크롤로 접근 가능)</li>
-<li>키보드 닫기: 빈 영역 탭, 전송 완료 후, 또는 타이머 만료 시 자동 닫힘</li>
+<li>채팅 중에도 선택지 탭 가능 (키보드가 선택지를 가릴 수 있지만 스크롤로 접근 가능). 선택지 탭 시 키보드 자동 닫힘</li>
+<li>키보드 닫기: 빈 영역 탭, 전송 완료 후, 선택지 탭 시, 또는 타이머 만료 시 자동 닫힘</li>
 </ul>
+
+<h5>키보드 열림 중 타이머 만료 시 전환 순서</h5>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이머 만료 시 전환 순서</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(1) 키보드 자동 닫힘 (blur 처리) (2) 상태 바 복원 (하트/스테이지/참여자 재표시) (3) 정답 공개 화면 전환 (서버 이벤트 수신 즉시). 키보드 닫힘 애니메이션 완료를 기다리지 않음 (동시 진행)</td>
+</tr>
+</tbody>
+</table>
 
 <h3>3.6 뒤로가기</h3>
 
 <h5>트리거</h5>
 <ul>
 <li>Header 좌측 [&lt;] 버튼 탭</li>
+<li>브라우저 뒤로가기 버튼 및 제스처 (Android HW 백 버튼, popstate 이벤트)도 동일하게 CEB-GAM-206-MD-LEAVE 모달 표시</li>
 </ul>
+
+<blockquote><p>iOS Safari에서 스와이프 백 제스처는 완전 차단 불가 → 세션 복구(페이지 새로고침 처리 참조)로 대응</p></blockquote>
 
 <h5>동작</h5>
 <ol>
@@ -439,7 +523,12 @@
 <h5>마지막 스테이지 완료 시</h5>
 <ul>
 <li>마지막 스테이지(10/10) 정답 후 → CEB-GAM-206-RESULT (완주 성공)</li>
-<li>마지막 스테이지(10/10) 오답/미응답으로 탈락 시 → 탈락 모달 없이 CEB-GAM-206-RESULT 직행 (탈락자 결과)</li>
+<li>마지막 스테이지(10/10) 오답/미응답 시:
+<ul>
+<li>→ 정답 공개 5초 표시 (유저가 마지막 문제의 정답 확인 가능)</li>
+<li>→ 탈락 모달 생략</li>
+<li>→ CEB-GAM-206-RESULT 직행 (D타입: 탈락 미관전)</li>
+</ul></li>
 </ul>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
@@ -506,6 +595,10 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">트리비아 최초 참여 시 1개 지급</td>
 </tr>
 <tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">신규 게임 참여 지급</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 0개인 유저가 새 게임 참여 시 1개 자동 지급</td>
+</tr>
+<tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보너스 획득</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">친구 초대 완료 시 +1, 게임 끝까지 관전 시 +1, 게임 완주 성공 시 +1</td>
 </tr>
@@ -527,7 +620,7 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">재획득</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">소진된 하트는 보너스 조건 달성으로만 재획득</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">신규 게임 참여 시 자동 지급(0개일 때) 또는 보너스 조건 달성으로 재획득</td>
 </tr>
 </tbody>
 </table>
@@ -581,8 +674,25 @@
 <ul>
 <li>각 선택지별 선택 비율 = (해당 선택지 선택 인원 / 전체 응답 인원) × 100</li>
 <li>소수점 없이 정수로 표시 (반올림)</li>
-<li>미응답자는 비율 계산에서 제외</li>
+<li>미응답자는 비율 계산에서 제외 (응답자 기준 비율 계산. 예: 총 100명 중 80명 응답 → 응답자 80명 기준으로 각 선택지 비율 계산)</li>
 </ul>
+
+<h3>참여자 수 갱신</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여자 수 갱신</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">매 스테이지 정답 공개 이벤트 시 서버에서 현재 생존 참여자 수 전달. 스테이지 진행 중에는 갱신하지 않음</td>
+</tr>
+</tbody>
+</table>
 
 <h3>다국어 적용</h3>
 
@@ -649,6 +759,31 @@
 <li>실패 시: 미응답 처리 → 즉시 탈락</li>
 </ol>
 
+<h5>응답 전송 사용자 피드백 UI</h5>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">응답 전송</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지 탭 시 즉시 선택 확정 UI 표시 (낙관적 업데이트). 백그라운드에서 서버 전송 시도 (최대 3회, 1초 간격)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전송 성공</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정상 진행 (추가 UI 변화 없음)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전송 실패</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">에러 토스트: "응답 전송에 실패했습니다." (Error 타입). 미응답 처리 → 하트 0이면 탈락</td>
+</tr>
+</tbody>
+</table>
+
 <h3>서버 오류</h3>
 
 <h5>상황</h5>
@@ -714,19 +849,82 @@
 <li>모달 확인 시 CEB-GAM-204(트리비아 홈)로 이동</li>
 </ol>
 
-<h3>앱 백그라운드 복귀</h3>
+<h3>브라우저 탭 비활성화/활성화 전환</h3>
 
 <h5>상황</h5>
 <ul>
-<li>게임 진행 중 앱이 백그라운드로 전환된 후 다시 포그라운드로 복귀</li>
+<li>게임 진행 중 브라우저 탭이 비활성화된 후 다시 활성화될 때 (visibilitychange 이벤트 기반)</li>
 </ul>
 
 <h5>처리</h5>
-<ol>
-<li>게임이 아직 진행 중인 경우: 현재 스테이지부터 게임 합류</li>
-<li>복귀 시 놓친 문제가 있는 경우: 해당 문제는 미응답 처리 → 즉시 탈락</li>
-<li>게임이 이미 종료된 경우: CEB-GAM-204(트리비아 홈)로 이동</li>
-</ol>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탭 복귀 동작</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">WebSocket 재연결 성공 → 서버에서 현재 게임 상태 조회</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">놓친 문제 처리</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서버에서 미응답 처리 완료 상태 (하트 차감 반영됨)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 0인 경우</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 모달(CEB-GAM-206-MD-ELIMINATE) 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 남은 경우</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 진행 중인 스테이지에 합류</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 종료된 경우</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-RESULT 화면으로 이동</td>
+</tr>
+</tbody>
+</table>
+
+<h3>브라우저 탭 닫기 / 종료</h3>
+
+<h5>상황</h5>
+<ul>
+<li>게임 진행 중 브라우저 탭을 닫거나 브라우저를 종료한 경우</li>
+</ul>
+
+<h5>처리</h5>
+<ul>
+<li>beforeunload 이벤트로 경고 표시. 닫힘 시 서버에서 WebSocket 끊김 감지 → 30초 타임아웃 후 이탈 처리 (미응답 = 즉시 탈락)</li>
+</ul>
+
+<h3>페이지 새로고침 처리</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">새로고침 방지</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CSS overscroll-behavior: none으로 pull-to-refresh 차단</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">beforeunload</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 진행 중 새로고침/탭 닫기 시 브라우저 기본 경고 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">세션 복구</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">페이지 로드 시 서버 API로 활성 세션 확인. 있으면 현재 스테이지로 복귀 (WebSocket 재연결). 놓친 문제는 미응답 처리. 게임 종료 시 RESULT로 이동</td>
+</tr>
+</tbody>
+</table>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
 
@@ -794,6 +992,30 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 시스템 전면 개편(계정 레벨 영구 보유), 정답 공개 5초 고정, 탈락 모달 표시 시점 명확화, 마지막 스테이지 탈락 시 RESULT 직행, 키보드 자동 닫힘, 운영자 강제 종료/앱 복귀 처리 추가</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 0개 유저 신규 게임 참여 시 1개 자동 지급 규칙 추가, 재획득 조건 수정</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유저플로우 갭 분석 및 PWA 환경 고려사항 반영</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2차 플로우 검증: 탈락 타이밍 연속 명확화, 미응답 UI, 탭 복귀 서버 동기화, 10/10 탈락 등 반영</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3차 최종 검증: 디자이너/개발자 질문 최소화를 위한 36건 명확화</td>
 </tr>
 </tbody>
 </table>

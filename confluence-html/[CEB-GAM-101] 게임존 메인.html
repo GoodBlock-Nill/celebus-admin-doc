@@ -98,8 +98,6 @@
 │ │ 실시간 생존형 퀴즈 게임          │ │
 │ │                                 │ │
 │ │ 오늘 12:00 (UTC+9)              │ │
-│ │ 또는                            │ │
-│ │ [LIVE] 1개 퀴즈 진행중           │ │
 │ └─────────────────────────────────┘ │
 │                                     │
 │ ┌─────────────────────────────────┐ │
@@ -223,8 +221,8 @@
     <tr>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일정 표시</td>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Text/Badge</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"오늘 12:00 (UTC+9)" 또는 "[LIVE] 1개 퀴즈 진행중"</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Phase 2 준비중일 때는 "준비중" 배지</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상태별 표시 (Section 4.3 참조)</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">4가지 상태: 당일 예정/당일 예정이 아닌 경우/진행중/일정 없음</td>
     </tr>
     <tr>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">클릭 액션</td>
@@ -530,32 +528,66 @@
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
     <tr>
         <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상태</th>
+        <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
         <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">표시 내용</th>
         <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">스타일</th>
     </tr>
     <tr>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">준비중 (Phase 2)</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"준비중" 배지 + "Phase 2에서 제공 예정입니다"</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">회색 처리, 클릭 불가</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">당일 예정</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다음 라이브 일정이 오늘인 경우</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"오늘 12:00 (UTC+9)"</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">피그마 참조</td>
     </tr>
     <tr>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다음 게임 예정</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"오늘 12:00 (UTC+9)"</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일반 스타일</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">당일 예정이 아닌 경우</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다음 라이브 일정이 당일이 아닌 경우</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"12월 10일 13:00 (UTC+9)" (예시)</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">피그마 참조</td>
     </tr>
     <tr>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">진행중</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"[LIVE] 1개 퀴즈 진행중"</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">LIVE 배지 빨간색, 애니메이션 효과</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 퀴즈 진행중</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"퀴즈 진행중"</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">피그마 참조</td>
     </tr>
     <tr>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오늘 일정 없음</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"다음 게임을 기다려주세요"</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">회색 텍스트</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일정 없음</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">예정 일정 없음</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"다음 라이브 일정 준비중 입니다."</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">피그마 참조</td>
     </tr>
 </table>
 
-<h3>4.4 숫자 포맷</h3>
+<h3>4.4 Prediction Market 카드 상태별 표시</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+    <tr>
+        <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상태</th>
+        <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
+        <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">표시 내용</th>
+        <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">스타일</th>
+    </tr>
+    <tr>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">진행 중 예측 있음</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Active 상태 게임 &ge; 1</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"{n}개의 예측 진행중"</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">피그마 참조</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">진행 중 예측 없음 + 결과 있음</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Active 게임 0개 + 결과 확정(Closed) 게임 &ge; 1</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"결과 확인하기"</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">피그마 참조</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">진행 중 예측 없음 + 결과 없음</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Active 게임 0개 + 결과 확정 게임 0개</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문구없음, auto height</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">피그마 참조</td>
+    </tr>
+</table>
+
+<h3>4.5 숫자 포맷</h3>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
     <tr>
@@ -573,14 +605,9 @@
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"{숫자}개 예측 진행중"</td>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"3개 예측 진행중"</td>
     </tr>
-    <tr>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">퀴즈 진행중</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"{숫자}개 퀴즈 진행중"</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"1개 퀴즈 진행중"</td>
-    </tr>
 </table>
 
-<h3>4.5 상태별 표시</h3>
+<h3>4.6 상태별 표시</h3>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
     <tr>
@@ -601,7 +628,7 @@
     <tr>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Empty</td>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">진행중 게임 없음</td>
-        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"진행중인 게임이 없습니다" (Prediction Market 카드)</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market 카드: 문구없음 (Section 4.4 참조), Survival Trivia 카드: "다음 라이브 일정 준비중 입니다."</td>
     </tr>
     <tr>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Error</td>
@@ -610,7 +637,7 @@
     </tr>
 </table>
 
-<h3>4.6 Pull-to-Refresh</h3>
+<h3>4.7 Pull-to-Refresh</h3>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
     <tr>
@@ -624,6 +651,14 @@
     <tr>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">새로고침 완료</td>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">토스트 없이 조용하게 데이터 갱신</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">새로고침 인디케이터</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">드래그 시 상단에 스피너 표시 → 데이터 갱신 완료 시 스피너 사라짐 (피그마 참조). 갱신 완료 후 토스트 없음</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">새로고침 실패</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">에러 토스트: "데이터를 불러오는데 실패했습니다." (Error 타입)</td>
     </tr>
 </table>
 
@@ -683,6 +718,43 @@
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-101</td>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[BO] 게임존 메인</td>
         <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">백오피스 대응 화면</td>
+    </tr>
+</table>
+
+<hr>
+
+<h2>변경 이력</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+    <tr>
+        <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th>
+        <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성일</th>
+        <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
+        <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+    </tr>
+    <tr>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.19</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최초 작성</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유저플로우 갭 분석 반영 (일정 없음 클릭 가능, 퀴즈 수 표현 수정)</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3차 최종 검증: 디자이너/개발자 질문 최소화를 위한 36건 명확화</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+        <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PDF 사양 정합성 반영 (4.3/4.4 상태명 통일, 준비중 4.2 이관)</td>
     </tr>
 </table>
 

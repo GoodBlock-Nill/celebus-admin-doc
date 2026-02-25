@@ -104,7 +104,7 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
@@ -272,6 +272,58 @@ p {
 │  게임정보         Prediction Market        │
 │                                            │
 └────────────────────────────────────────────┘</pre>
+
+<h3>ASCII Layout (ST 참여 상세)</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">┌────────────────────────────────────────────┐
+│  &lt;  참여 상세                               │
+├────────────────────────────────────────────┤
+│                                            │
+│  ┌──────────────────────────────────────┐ │
+│  │  서바이벌 트리비아 퀴즈 #5           │ │
+│  │                                      │ │
+│  │  - 1 GP                             │ │
+│  └──────────────────────────────────────┘ │
+│                                            │
+│  ─────────────────────────────────────────│
+│                                            │
+│  게임 상태        종료                     │
+│                                            │
+│  참여일시         2026.02.15. 20:00:00    │
+│                  (UTC+9)                   │
+│                                            │
+│  게임 정보        Survival Trivia          │
+│                                            │
+└────────────────────────────────────────────┘</pre>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">Survival Trivia는 사전 선택(Yes/No)이 없으므로 "내 선택" 필드가 표시되지 않습니다.</blockquote>
+
+<h3>ASCII Layout (ST 보상 상세)</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">┌────────────────────────────────────────────┐
+│  &lt;  보상 상세                               │
+├────────────────────────────────────────────┤
+│                                            │
+│  ┌──────────────────────────────────────┐ │
+│  │  서바이벌 트리비아 퀴즈 #5           │ │
+│  │                                      │ │
+│  │  + 500 GP                           │ │
+│  └──────────────────────────────────────┘ │
+│                                            │
+│  ─────────────────────────────────────────│
+│                                            │
+│  결과             생존 (10라운드)          │
+│                                            │
+│  게임 상태        종료   [결과보기 &gt;]      │
+│                                            │
+│  지급일시         2026.02.15. 21:00:00    │
+│                  (UTC+9)                   │
+│                                            │
+│  게임 정보        Survival Trivia          │
+│                                            │
+└────────────────────────────────────────────┘</pre>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">Survival Trivia 보상 상세에서 "결과"는 "생존 (N라운드)" 또는 "탈락 (N라운드)" 형식으로 표시됩니다.</blockquote>
 
 <h3>영역별 구성요소</h3>
 
@@ -567,6 +619,51 @@ p {
 
 <blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">환불은 게임 취소 시 참가비(참여 GP) + 부스팅 GP를 합산하여 돌려주는 것으로, GP 내역에 각 금액의 내역을 표시한다.</blockquote>
 
+<h4>게임유형별 표시 분기</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">필드</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Prediction Market</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Survival Trivia</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">내 선택</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Yes / No (+ 부스팅 배수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미표시 (사전 선택 없음)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Yes / No</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존 (N라운드) / 탈락 (N라운드)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 정보</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">사용 시 표시 (🔥 부스팅 N배)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미표시 (ST 부스팅 미지원)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불 GP 내역</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참가비 + 부스팅 breakdown</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참가비만 표시</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 정보</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"Prediction Market"</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"Survival Trivia"</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 타이틀 탭</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-202 (PM 상세)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206 (트리비아 상세)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과보기 링크</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-203 (결과 상세)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206 (트리비아 결과)</td>
+  </tr>
+</table>
+
 <h3>3.2 GP 변동량 표시</h3>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
@@ -614,6 +711,12 @@ p {
   <li>부스팅 적용 시에만 추가 표시</li>
 </ul>
 
+<h4>Survival Trivia</h4>
+
+<ul>
+  <li>Survival Trivia는 게임 참여 시 사전 선택(Yes/No)이 없으므로 "내 선택" 필드 자체를 표시하지 않습니다.</li>
+</ul>
+
 <h3>3.4 게임 상태 표시</h3>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
@@ -651,6 +754,13 @@ p {
   <li>표시: [결과보기 &gt;] (파란색 링크)</li>
   <li>탭 동작: CEB-GAM-203 결과 상세 화면 이동</li>
   <li>전달 파라미터: 게임 ID</li>
+</ul>
+
+<h4>Survival Trivia 결과보기 링크</h4>
+
+<ul>
+  <li>ST 보상 상세에서 "결과보기" 탭 시: CEB-GAM-206 트리비아 결과 화면으로 이동</li>
+  <li>전달 파라미터: 트리비아 게임 ID</li>
 </ul>
 
 <h3>3.5 날짜/시간 필드명</h3>
@@ -692,7 +802,8 @@ p {
 <h3>3.7 게임 타이틀 탭</h3>
 
 <ul>
-  <li>상단 카드의 게임 타이틀 탭 → CEB-GAM-202 PM 상세 화면 이동</li>
+  <li>Prediction Market: 상단 카드의 게임 타이틀 탭 → CEB-GAM-202 PM 상세 화면 이동</li>
+  <li>Survival Trivia: 상단 카드의 게임 타이틀 탭 → CEB-GAM-206 트리비아 상세 화면 이동</li>
   <li>전달 파라미터: 게임 ID</li>
 </ul>
 
@@ -838,6 +949,41 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 사용 (최대 10배)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Yes 🔥 부스팅 (10배)</td>
+  </tr>
+</table>
+
+<h3>게임유형별 표시 규칙</h3>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Prediction Market</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Survival Trivia</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 유형 (BOOSTING)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정상 표시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">발생하지 않음</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환급 유형 (REFUND)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정상 표시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">발생하지 않음</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불 유형 (REFUND_CANCEL)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참가비 + 부스팅 내역</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참가비만 표시</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">내 선택 필드</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">표시 (Yes/No)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미표시</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 필드</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Yes / No</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존 (N라운드) / 탈락 (N라운드)</td>
   </tr>
 </table>
 
@@ -1060,6 +1206,11 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 상세</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 상세에서 "결과보기" 탭 시 이동</td>
   </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">트리비아 상세</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 게임 타이틀 탭 / 결과보기 시 이동</td>
+  </tr>
 </table>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
@@ -1084,6 +1235,12 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불 상세(REFUND_CANCEL) 유형 추가, 게임상태 "취소"(Cancelled) 매핑 추가, GP 내역(참가비+부스팅 breakdown) 표시, 게임유형 다국어 X(영문 고정)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 반영: ST용 ASCII Layout 추가, 게임유형별 표시 분기 규칙 추가 (내 선택 미표시, 결과=생존/탈락, 부스팅 미표시), 게임 타이틀 탭 ST→CEB-GAM-206 분기, 연관화면 CEB-GAM-206 추가</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
