@@ -132,22 +132,53 @@ export default function GameZoneTab({ member }: GameZoneTabProps) {
     },
     { key: 'participatedAt', label: '참여일시', width: '140px', sortable: true, render: (p: EnrichedParticipant) => formatDateTime(p.participatedAt) },
     {
-      key: 'choice',
-      label: '선택',
-      width: '70px',
+      key: 'gameType',
+      label: '게임유형',
       align: 'center',
-      render: (p: EnrichedParticipant) => (
-        <Badge
-          variant="custom"
-          value={p.choice}
-          customBg={p.choice === 'YES' ? 'bg-green-100' : 'bg-red-100'}
-          customText={p.choice === 'YES' ? 'text-green-700' : 'text-red-700'}
-          customLabel={p.choice}
-        />
-      )
+      width: '80px',
+      render: (p: EnrichedParticipant) => {
+        const type = p.gameType ?? p.game?.type;
+        return type ? <Badge variant="gameType" value={type} /> : <span className="text-gray-400">-</span>;
+      },
+    },
+    {
+      key: 'choice',
+      label: '선택/결과',
+      width: '120px',
+      align: 'center',
+      render: (p: EnrichedParticipant) => {
+        if (p.gameType === 'SURVIVAL_TRIVIA') {
+          return (
+            <span className={p.survivedStage === 10 ? 'text-green-600 font-medium' : ''}>
+              {p.survivedStage ?? '-'}/10
+            </span>
+          );
+        }
+        return p.choice ? (
+          <Badge
+            variant="custom"
+            value={p.choice}
+            customBg={p.choice === 'YES' ? 'bg-green-100' : 'bg-red-100'}
+            customText={p.choice === 'YES' ? 'text-green-700' : 'text-red-700'}
+            customLabel={p.choice}
+          />
+        ) : <span className="text-gray-400">-</span>;
+      }
     },
     { key: 'participationGP', label: '참여 GP', width: '90px', align: 'right', sortable: true, render: (p: EnrichedParticipant) => formatGP(p.participationGP) },
-    { key: 'boostingGP', label: '부스팅 GP', width: '90px', align: 'right', sortable: true, render: (p: EnrichedParticipant) => formatGP(p.boostingGP) },
+    {
+      key: 'boostingGP',
+      label: '부스팅/하트',
+      width: '90px',
+      align: 'right',
+      sortable: true,
+      render: (p: EnrichedParticipant) => {
+        if (p.gameType === 'SURVIVAL_TRIVIA') {
+          return `${p.heartsUsed ?? 0}개`;
+        }
+        return formatGP(p.boostingGP);
+      },
+    },
     {
       key: 'gameResult',
       label: '게임 결과',

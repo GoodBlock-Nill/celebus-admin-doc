@@ -1,7 +1,7 @@
-import { GAME_STATUS_CONFIG, GP_TYPE_CONFIG, EXCHANGE_DIRECTION_CONFIG, EXCHANGE_STATUS_CONFIG } from '@/lib/constants';
+import { GAME_STATUS_CONFIG, GP_TYPE_CONFIG, EXCHANGE_DIRECTION_CONFIG, EXCHANGE_STATUS_CONFIG, GAME_TYPE_BADGE_CONFIG } from '@/lib/constants';
 
 interface BadgeProps {
-  variant: 'gameStatus' | 'gpType' | 'exchangeDir' | 'exchangeStatus' | 'custom';
+  variant: 'gameStatus' | 'gpType' | 'exchangeDir' | 'exchangeStatus' | 'gameType' | 'custom';
   value: string;
   customBg?: string;
   customText?: string;
@@ -13,6 +13,7 @@ const CONFIG_MAP = {
   gpType: GP_TYPE_CONFIG,
   exchangeDir: EXCHANGE_DIRECTION_CONFIG,
   exchangeStatus: EXCHANGE_STATUS_CONFIG,
+  gameType: GAME_TYPE_BADGE_CONFIG,
 };
 
 export default function Badge({ variant, value, customBg, customText, customLabel }: BadgeProps) {

@@ -23,9 +23,6 @@ export default function GameListPage() {
     currentPage * ITEMS_PER_PAGE
   );
 
-  // Survival Trivia 선택 시 개발 준비중 표시
-  const isSurvivalTriviaSelected = filters.type === 'SURVIVAL_TRIVIA';
-
   const columns = [
     {
       key: 'title',
@@ -35,6 +32,13 @@ export default function GameListPage() {
           {item.title.ko}
         </span>
       ),
+    },
+    {
+      key: 'type',
+      label: '게임유형',
+      align: 'center' as const,
+      width: '120px',
+      render: (item: Game) => <Badge variant="gameType" value={item.type} />,
     },
     {
       key: 'status',
@@ -63,7 +67,9 @@ export default function GameListPage() {
       key: 'period',
       label: '참여기간',
       width: '220px',
-      render: (item: Game) => formatPeriod(item.publishedAt, item.endDate),
+      render: (item: Game) => item.type === 'SURVIVAL_TRIVIA'
+        ? formatDateTime(item.startDateTime || '')
+        : formatPeriod(item.publishedAt, item.endDate),
     },
     {
       key: 'createdAt',
@@ -81,31 +87,39 @@ export default function GameListPage() {
     },
   ];
 
-  const filterConfig = [
-    {
-      key: 'type',
-      label: '게임유형',
-      type: 'select' as const,
-      value: filters.type || 'PREDICTION_MARKET',
-      options: [
-        { value: 'PREDICTION_MARKET', label: 'Prediction Market' },
-        { value: 'SURVIVAL_TRIVIA', label: 'Survival Trivia' },
-      ],
-      hideAllOption: true,
-    },
-    {
-      key: 'status',
-      label: '상태',
-      type: 'select' as const,
-      value: filters.status,
-      options: [
+  const statusOptions = filters.type === 'SURVIVAL_TRIVIA'
+    ? [
+        { value: 'Draft', label: '임시저장' },
+        { value: 'Ready', label: '게시대기' },
+        { value: 'Active', label: '진행중' },
+        { value: 'Ended', label: '종료' },
+      ]
+    : [
         { value: 'Draft', label: '임시저장' },
         { value: 'Ready', label: '게시대기' },
         { value: 'Active', label: '진행중' },
         { value: 'Pending', label: '결과대기' },
         { value: 'Closed', label: '결과확정' },
         { value: 'Ended', label: '종료' },
+      ];
+
+  const filterConfig = [
+    {
+      key: 'type',
+      label: '게임유형',
+      type: 'select' as const,
+      value: filters.type,
+      options: [
+        { value: 'PREDICTION_MARKET', label: 'Prediction Market' },
+        { value: 'SURVIVAL_TRIVIA', label: 'Survival Trivia' },
       ],
+    },
+    {
+      key: 'status',
+      label: '상태',
+      type: 'select' as const,
+      value: filters.status,
+      options: statusOptions,
     },
     {
       key: 'search',
@@ -142,33 +156,24 @@ export default function GameListPage() {
         />
       </div>
 
-      {isSurvivalTriviaSelected ? (
-        <div className="bg-white border border-gray-200 rounded-lg p-16 text-center">
-          <div className="text-gray-400 text-lg font-medium mb-2">개발 준비중</div>
-          <div className="text-gray-500 text-sm">Survival Trivia 게임 유형은 현재 개발 중입니다.</div>
-        </div>
-      ) : (
-        <DataTable<Game & Record<string, unknown>>
-          columns={columns}
-          data={paginatedGames as (Game & Record<string, unknown>)[]}
-          onRowClick={(item) => router.push(`/game-zone/games/${item.id}`)}
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          onSort={setSort}
-          emptyMessage={filters.search || filters.status
-            ? '검색 조건에 맞는 게임이 없습니다.'
-            : '등록된 게임이 없습니다.'
-          }
-        />
-      )}
+      <DataTable<Game & Record<string, unknown>>
+        columns={columns}
+        data={paginatedGames as (Game & Record<string, unknown>)[]}
+        onRowClick={(item) => router.push(`/game-zone/games/${item.id}`)}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        onSort={setSort}
+        emptyMessage={filters.search || filters.status
+          ? '검색 조건에 맞는 게임이 없습니다.'
+          : '등록된 게임이 없습니다.'
+        }
+      />
 
-      {!isSurvivalTriviaSelected && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setPage}
-        />
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
   );
 }

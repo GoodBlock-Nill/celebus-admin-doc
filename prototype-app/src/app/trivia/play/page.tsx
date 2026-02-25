@@ -3,188 +3,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatNumber } from '@/lib/utils';
-import type { TriviaQuestion } from '@/lib/types';
 import QuizQuestion from '@/components/game/QuizQuestion';
 import LiveChat from '@/components/game/LiveChat';
 import EliminateModal from '@/components/modals/EliminateModal';
 import LeaveModal from '@/components/modals/LeaveModal';
 import { TriviaDebugPanel } from '@/components/ui/TriviaDebugPanel';
+import { mockTriviaQuestions } from '@/mock/trivia';
 
 const TIME_PER_QUESTION = 10;
 const REVEAL_DURATION = 5000;
-
-const mockQuestions: TriviaQuestion[] = [
-  {
-    id: 'q1',
-    questionNumber: 1,
-    text: {
-      ko: 'BTS의 데뷔곡은?',
-      en: "What is BTS's debut song?",
-      jp: 'BTSのデビュー曲は？',
-    },
-    choices: [
-      { ko: 'No More Dream', en: 'No More Dream', jp: 'No More Dream' },
-      { ko: 'Boy In Luv', en: 'Boy In Luv', jp: 'Boy In Luv' },
-      { ko: 'Danger', en: 'Danger', jp: 'Danger' },
-      { ko: 'I Need U', en: 'I Need U', jp: 'I Need U' },
-    ],
-    correctIndex: 0,
-    timeLimit: TIME_PER_QUESTION,
-  },
-  {
-    id: 'q2',
-    questionNumber: 2,
-    text: {
-      ko: 'BLACKPINK의 데뷔 연도는?',
-      en: 'What year did BLACKPINK debut?',
-      jp: 'BLACKPINKのデビュー年は？',
-    },
-    choices: [
-      { ko: '2014년', en: '2014', jp: '2014年' },
-      { ko: '2015년', en: '2015', jp: '2015年' },
-      { ko: '2016년', en: '2016', jp: '2016年' },
-      { ko: '2017년', en: '2017', jp: '2017年' },
-    ],
-    correctIndex: 2,
-    timeLimit: TIME_PER_QUESTION,
-  },
-  {
-    id: 'q3',
-    questionNumber: 3,
-    text: {
-      ko: 'TWICE의 데뷔 서바이벌 프로그램 이름은?',
-      en: 'What was the name of TWICE debut survival program?',
-      jp: 'TWICEのデビューサバイバル番組の名前は？',
-    },
-    choices: [
-      { ko: 'SIXTEEN', en: 'SIXTEEN', jp: 'SIXTEEN' },
-      { ko: 'PRODUCE 101', en: 'PRODUCE 101', jp: 'PRODUCE 101' },
-      { ko: 'IDOL SCHOOL', en: 'IDOL SCHOOL', jp: 'IDOL SCHOOL' },
-      { ko: 'MY NAME IS', en: 'MY NAME IS', jp: 'MY NAME IS' },
-    ],
-    correctIndex: 0,
-    timeLimit: TIME_PER_QUESTION,
-  },
-  {
-    id: 'q4',
-    questionNumber: 4,
-    text: {
-      ko: 'EXO가 소속된 엔터테인먼트 회사는?',
-      en: 'Which entertainment company does EXO belong to?',
-      jp: 'EXOが所属するエンタメ会社は？',
-    },
-    choices: [
-      { ko: 'HYBE', en: 'HYBE', jp: 'HYBE' },
-      { ko: 'JYP', en: 'JYP', jp: 'JYP' },
-      { ko: 'YG', en: 'YG', jp: 'YG' },
-      { ko: 'SM', en: 'SM', jp: 'SM' },
-    ],
-    correctIndex: 3,
-    timeLimit: TIME_PER_QUESTION,
-  },
-  {
-    id: 'q5',
-    questionNumber: 5,
-    text: {
-      ko: 'aespa의 데뷔곡은?',
-      en: "What is aespa's debut song?",
-      jp: 'aespaのデビュー曲は？',
-    },
-    choices: [
-      { ko: 'Next Level', en: 'Next Level', jp: 'Next Level' },
-      { ko: 'Black Mamba', en: 'Black Mamba', jp: 'Black Mamba' },
-      { ko: 'Savage', en: 'Savage', jp: 'Savage' },
-      { ko: 'Drama', en: 'Drama', jp: 'Drama' },
-    ],
-    correctIndex: 1,
-    timeLimit: TIME_PER_QUESTION,
-  },
-  {
-    id: 'q6',
-    questionNumber: 6,
-    text: {
-      ko: 'SEVENTEEN은 몇 명으로 구성되어 있나요?',
-      en: 'How many members are in SEVENTEEN?',
-      jp: 'SEVENTEENは何人で構成されていますか？',
-    },
-    choices: [
-      { ko: '12명', en: '12 members', jp: '12人' },
-      { ko: '13명', en: '13 members', jp: '13人' },
-      { ko: '14명', en: '14 members', jp: '14人' },
-      { ko: '17명', en: '17 members', jp: '17人' },
-    ],
-    correctIndex: 1,
-    timeLimit: TIME_PER_QUESTION,
-  },
-  {
-    id: 'q7',
-    questionNumber: 7,
-    text: {
-      ko: 'Stray Kids의 팬덤 공식 이름은?',
-      en: "What is Stray Kids' official fandom name?",
-      jp: 'Stray Kidsの公式ファンダム名は？',
-    },
-    choices: [
-      { ko: 'STAR', en: 'STAR', jp: 'STAR' },
-      { ko: 'STAY', en: 'STAY', jp: 'STAY' },
-      { ko: 'STANDS', en: 'STANDS', jp: 'STANDS' },
-      { ko: 'STANS', en: 'STANS', jp: 'STANS' },
-    ],
-    correctIndex: 1,
-    timeLimit: TIME_PER_QUESTION,
-  },
-  {
-    id: 'q8',
-    questionNumber: 8,
-    text: {
-      ko: 'NewJeans의 소속사는?',
-      en: 'Which company does NewJeans belong to?',
-      jp: 'NewJeansの所属会社は？',
-    },
-    choices: [
-      { ko: 'ADOR', en: 'ADOR', jp: 'ADOR' },
-      { ko: 'HYBE', en: 'HYBE', jp: 'HYBE' },
-      { ko: 'BELIFT LAB', en: 'BELIFT LAB', jp: 'BELIFT LAB' },
-      { ko: 'SOURCE MUSIC', en: 'SOURCE MUSIC', jp: 'SOURCE MUSIC' },
-    ],
-    correctIndex: 0,
-    timeLimit: TIME_PER_QUESTION,
-  },
-  {
-    id: 'q9',
-    questionNumber: 9,
-    text: {
-      ko: 'LE SSERAFIM의 데뷔곡은?',
-      en: "What is LE SSERAFIM's debut song?",
-      jp: 'LE SSERAFIMのデビュー曲は？',
-    },
-    choices: [
-      { ko: 'ANTIFRAGILE', en: 'ANTIFRAGILE', jp: 'ANTIFRAGILE' },
-      { ko: 'FEARLESS', en: 'FEARLESS', jp: 'FEARLESS' },
-      { ko: 'UNFORGIVEN', en: 'UNFORGIVEN', jp: 'UNFORGIVEN' },
-      { ko: 'EASY', en: 'EASY', jp: 'EASY' },
-    ],
-    correctIndex: 1,
-    timeLimit: TIME_PER_QUESTION,
-  },
-  {
-    id: 'q10',
-    questionNumber: 10,
-    text: {
-      ko: '(G)I-DLE의 팬덤 공식 이름은?',
-      en: "What is (G)I-DLE's official fandom name?",
-      jp: '(G)I-DLEの公式ファンダム名は？',
-    },
-    choices: [
-      { ko: 'NEVERLAND', en: 'NEVERLAND', jp: 'NEVERLAND' },
-      { ko: 'UNIVERSE', en: 'UNIVERSE', jp: 'UNIVERSE' },
-      { ko: 'NEVERMIND', en: 'NEVERMIND', jp: 'NEVERMIND' },
-      { ko: 'NEVERFALL', en: 'NEVERFALL', jp: 'NEVERFALL' },
-    ],
-    correctIndex: 0,
-    timeLimit: TIME_PER_QUESTION,
-  },
-];
 
 const MOCK_SURVIVOR_START = 312;
 
@@ -212,8 +39,8 @@ export default function TriviaPlayPage() {
   const [sendFailed, setSendFailed] = useState(false);
   const [autoCorrect, setAutoCorrect] = useState(false);
 
-  const question = mockQuestions[currentQ];
-  const isLastQuestion = currentQ === mockQuestions.length - 1;
+  const question = mockTriviaQuestions[currentQ];
+  const isLastQuestion = currentQ === mockTriviaQuestions.length - 1;
 
   // Timer countdown
   useEffect(() => {
@@ -266,7 +93,7 @@ export default function TriviaPlayPage() {
         setTimeout(() => {
           if (isLastQuestion) {
             const finalCorrect = correctCount + 1;
-            const allCorrect = finalCorrect === mockQuestions.length;
+            const allCorrect = finalCorrect === mockTriviaQuestions.length;
             router.push(`/trivia/result?type=${allCorrect ? 'A' : 'B'}`);
           } else {
             goNextQuestion();
@@ -321,7 +148,7 @@ export default function TriviaPlayPage() {
   }
 
   function handleSkipToQuestion(n: number) {
-    const targetIndex = Math.min(n - 1, mockQuestions.length - 1);
+    const targetIndex = Math.min(n - 1, mockTriviaQuestions.length - 1);
     setCurrentQ(targetIndex);
     setSelectedAnswer(null);
     setIsRevealed(false);
@@ -404,7 +231,7 @@ export default function TriviaPlayPage() {
 
         {/* Question number */}
         <span className="text-white font-bold text-sm">
-          {currentQ + 1}/{mockQuestions.length}
+          {currentQ + 1}/{mockTriviaQuestions.length}
         </span>
 
         {/* Survivors */}
@@ -456,7 +283,7 @@ export default function TriviaPlayPage() {
         hearts={hearts}
         onHeartsChange={setHearts}
         currentQuestion={currentQ + 1}
-        totalQuestions={mockQuestions.length}
+        totalQuestions={mockTriviaQuestions.length}
         onSkipToQuestion={handleSkipToQuestion}
         autoCorrect={autoCorrect}
         onToggleAutoCorrect={() => setAutoCorrect(prev => !prev)}

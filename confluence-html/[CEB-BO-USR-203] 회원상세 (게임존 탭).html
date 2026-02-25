@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -136,7 +136,7 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Breadcrumb</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">홈 > 회원 > 회원 상세</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">홈 &gt; 회원 &gt; 회원 상세</td>
   </tr>
 </table>
 
@@ -147,7 +147,6 @@ p {
 <p>회원상세 페이지 내 "게임존" 탭으로, 특정 회원의 게임존 활동 전체를 한눈에 파악할 수 있는 조회 전용 화면입니다.</p>
 
 <h5>주요 기능</h5>
-
 <ul>
   <li>회원의 GP 보유/획득/사용 현황 요약</li>
   <li>게임존 내 랭킹 순위 확인</li>
@@ -190,8 +189,7 @@ p {
 
 <h3>레이아웃</h3>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
-┌──────────────────────────────────────────────────────────────────────┐
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">┌──────────────────────────────────────────────────────────────────────┐
 │ Breadcrumb: 홈 &gt; 회원 &gt; 회원 상세                                       │
 │ 회원상세                                                               │
 │ {유저명}님의 상세 정보를 관리합니다.                                       │
@@ -203,7 +201,7 @@ p {
 │  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌─────────┐ │ │
 │  │ │ 현재 GP 잔액  │ │ 누적 획득 GP  │ │ 누적 사용 GP  │ │  랭킹   │ │ │
 │  │ │  12,500 GP   │ │  45,200 GP   │ │  32,700 GP   │ │  23위   │ │ │
-│  │ │              │ │ 보상+환급+환불+충전 │ │ 참여+부스팅+출금│ │ / 150명 │ │ │
+│  │ │              │ │보상+환급+환불+충전│ │ 참여+부스팅+출금│ │ / 150명 │ │ │
 │  │ └──────────────┘ └──────────────┘ └──────────────┘ └─────────┘ │ │
 │  └─────────────────────────────────────────────────────────────────┘ │
 │                                                                      │
@@ -237,8 +235,7 @@ p {
 │  │                      ◀ 1 2 3 4 5 ▶              총 {n}건     │ │
 │  └────────────────────────────────────────────────────────────────┘ │
 │                                                                      │
-└──────────────────────────────────────────────────────────────────────┘
-</pre>
+└──────────────────────────────────────────────────────────────────────┘</pre>
 
 <h3>영역별 구성요소</h3>
 
@@ -306,7 +303,7 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Card 2</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">승률</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}%</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(정답 게임 수 / 참여 완료 게임 수) x 100, 정수 반올림</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM+ST 통합: (성공 게임 수 / 참여 완료 게임 수) x 100, 정수 반올림. PM 성공=정답, ST 성공=최종 생존</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Card 3</td>
@@ -412,7 +409,67 @@ p {
   </tr>
 </table>
 
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;"><strong>게임유형별 컬럼 차이</strong><br>
+게임 참여 내역 테이블은 게임유형에 따라 일부 컬럼의 내용이 변경됩니다.</blockquote>
+
+<h6>게임유형별 컬럼 매핑</h6>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">컬럼</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Prediction Market</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Survival Trivia</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 타이틀</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) 게임 타이틀</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) 게임 타이틀</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여일시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) YYYY.MM.DD HH:mm</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) YYYY.MM.DD HH:mm</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택 / 생존 스테이지</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">YES 또는 NO (Badge)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존 스테이지: "{N}/10" (예: "7/10")</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) {숫자} GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) {숫자} GP</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 GP / 하트 사용</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}개 (하트 사용 횟수, 0일 경우 "0개")</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 결과</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답({결과}) / 오답({결과})</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존 / 탈락({N}스테이지)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) {숫자} GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) {숫자} GP</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환급 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"-" (ST는 환급 없음)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 상태</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) Badge</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) Badge</td>
+  </tr>
+</table>
+
 <h6>게임 결과 표시 규칙</h6>
+
+<p><strong>Prediction Market</strong>:</p>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
@@ -432,6 +489,31 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미확정 (결과 미입력)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"-"</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">회색</td>
+  </tr>
+</table>
+
+<p><strong>Survival Trivia</strong>:</p>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상황</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">표시</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">색상</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최종 생존 (10스테이지 완료)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초록색</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락({N}스테이지)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">빨간색</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">진행중</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"-"</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">회색</td>
   </tr>
@@ -462,23 +544,17 @@ p {
   </tr>
 </table>
 
-<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
-<p>임시저장(Draft), 게시대기(Ready)는 참여 자체가 불가하므로 이 테이블에 표시되지 않음</p>
-</blockquote>
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">임시저장(Draft), 게시대기(Ready)는 참여 자체가 불가하므로 이 테이블에 표시되지 않음</blockquote>
 
 <h6>페이지네이션</h6>
-
 <ul>
   <li>페이지당 20건 고정</li>
   <li>페이지 번호 클릭 이동, ◀ ▶ 이전/다음 페이지</li>
-  <li>테이블 하단 좌측에 "총 {n}건" 표시, 우측에 페이지네이션 컨트롤</li>
+  <li>좌측에 "총 {n}건" 표시 (필터 적용 후 총 건수)</li>
 </ul>
 
 <h6>Empty State</h6>
-
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
-게임 참여 내역이 없습니다.
-</pre>
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">게임 참여 내역이 없습니다.</pre>
 
 <h5>D. GP 변동 내역</h5>
 
@@ -651,22 +727,16 @@ p {
 </table>
 
 <h6>페이지네이션</h6>
-
 <ul>
   <li>페이지당 20건 고정</li>
   <li>페이지 번호 클릭 이동, ◀ ▶ 이전/다음 페이지</li>
-  <li>테이블 하단 좌측에 "총 {n}건" 표시, 우측에 페이지네이션 컨트롤</li>
+  <li>좌측에 "총 {n}건" 표시 (필터 적용 후 총 건수)</li>
 </ul>
 
 <h6>Empty State</h6>
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">GP 변동 내역이 없습니다.</pre>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
-GP 변동 내역이 없습니다.
-</pre>
-
-<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
-<p>상세 스타일은 피그마 참조</p>
-</blockquote>
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">상세 스타일은 피그마 참조</blockquote>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
 
@@ -675,14 +745,12 @@ GP 변동 내역이 없습니다.
 <h3>3.1 탭 진입</h3>
 
 <h5>트리거</h5>
-
 <ul>
   <li>회원상세 페이지에서 "게임존" 탭 클릭</li>
-  <li>외부 화면(랭킹, GP 변동, 교환 내역)에서 닉네임 클릭 시 <code style="background-color: #f4f5f7; border-radius: 3px; padding: 2px 4px; font-family: SFMono-Regular, Consolas, monospace; font-size: 0.9em;">tab=gamezone</code> 파라미터로 직접 진입</li>
+  <li>외부 화면(랭킹, GP 변동, 교환 내역)에서 닉네임 클릭 시 <code>tab=gamezone</code> 파라미터로 직접 진입</li>
 </ul>
 
 <h5>동작</h5>
-
 <ol>
   <li>GP 요약 카드, 게임 성과 요약 카드, 게임 참여 내역(1페이지), GP 변동 내역(1페이지) 동시 로딩</li>
   <li>각 영역 독립 API 호출 (한 영역 실패가 다른 영역에 영향 없음)</li>
@@ -692,7 +760,6 @@ GP 변동 내역이 없습니다.
 <h3>3.2 게임 참여 내역 테이블</h3>
 
 <h5>게임 타이틀 클릭</h5>
-
 <ul>
   <li>클릭 시: CEB-BO-GZ-202 (게임 상세) 화면 새 탭 오픈</li>
   <li>전달 데이터: gameId</li>
@@ -700,14 +767,12 @@ GP 변동 내역이 없습니다.
 </ul>
 
 <h5>필터 동작</h5>
-
 <ul>
   <li>필터 변경 시 즉시 적용 (페이지 1로 리셋)</li>
   <li>다중 필터 AND 조건 적용</li>
 </ul>
 
 <h5>정렬 동작</h5>
-
 <ul>
   <li>기본 정렬: 참여일시 내림차순 (최신순)</li>
   <li>컬럼 헤더 클릭 시 오름차순 ↔ 내림차순 토글</li>
@@ -717,7 +782,6 @@ GP 변동 내역이 없습니다.
 <h3>3.3 GP 변동 내역 테이블</h3>
 
 <h5>Row 클릭</h5>
-
 <ul>
   <li>클릭 시: CEB-BO-GZ-601-MD-DETAIL (GP 변동 상세 모달) 오픈</li>
   <li>전달 데이터: GP 변동 ID</li>
@@ -725,7 +789,6 @@ GP 변동 내역이 없습니다.
 </ul>
 
 <h5>필터 / 정렬 / 페이지네이션</h5>
-
 <ul>
   <li>게임 참여 내역 테이블과 동일한 동작 규칙 적용</li>
 </ul>
@@ -745,7 +808,7 @@ GP 변동 내역이 없습니다.
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 참여 내역</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여일시 내림차순</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여일시, 선택, 참여 GP, 부스팅 GP, 보상 GP, 환급 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여일시, 선택/생존 스테이지, 참여 GP, 부스팅 GP/하트 사용, 보상 GP, 환급 GP</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 변동 내역</td>
@@ -825,21 +888,18 @@ GP 변동 내역이 없습니다.
 
 <h5>누적 획득 GP</h5>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
-누적 획득 GP = SUM(REWARD) + SUM(REFUND) + SUM(EXCHANGE_IN) + SUM(REFUND_CANCEL)
-</pre>
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">누적 획득 GP = SUM(REWARD) + SUM(REFUND) + SUM(EXCHANGE_IN) + SUM(REFUND_CANCEL)</pre>
 
 <h5>누적 사용 GP</h5>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
-누적 사용 GP = SUM(PARTICIPATION) + SUM(BOOSTING) + SUM(EXCHANGE_OUT)
-</pre>
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">누적 사용 GP = SUM(PARTICIPATION) + SUM(BOOSTING) + SUM(EXCHANGE_OUT)</pre>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">ST 게임은 부스팅이 없으므로 BOOSTING 항목은 PM 게임에서만 발생합니다.<br>
+ST 게임은 참여 GP 환급이 없으므로 REFUND 항목은 PM 게임에서만 발생합니다.</blockquote>
 
 <h5>GP 정합성 규칙</h5>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
-현재 GP 잔액 = 누적 획득 GP - 누적 사용 GP
-</pre>
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">현재 GP 잔액 = 누적 획득 GP - 누적 사용 GP</pre>
 
 <ul>
   <li>GP 변동 내역 테이블의 최신(첫 번째) Row의 "변동 후 잔액" = GP 요약의 "현재 GP 잔액"</li>
@@ -849,11 +909,7 @@ GP 변동 내역이 없습니다.
 <h5>랭킹 순위</h5>
 
 <p>CEB-BO-GZ-401 랭킹 조회의 집계 기준과 동일:</p>
-
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
-누적 GP = (보상 GP + 환급 GP) - (참여 GP + 부스팅 GP)
-</pre>
-
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">누적 GP = (보상 GP + 환급 GP) - (참여 GP + 부스팅 GP)</pre>
 <ul>
   <li>최소 참여 횟수: CEB-BO-GZ-402 랭킹 설정 값 참조</li>
   <li>최소 참여 횟수 미달 시: "-" 표시</li>
@@ -861,10 +917,9 @@ GP 변동 내역이 없습니다.
 
 <h5>승률</h5>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
-승률 = (정답 게임 수 / 참여 완료 게임 수) × 100
-</pre>
-
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">승률 = (성공 게임 수 / 참여 완료 게임 수) × 100
+- PM 성공: 정답 (회원 선택 = 게임 결과)
+- ST 성공: 최종 생존 (10스테이지 모두 완료)</pre>
 <ul>
   <li>참여 완료 게임: 결과가 확정된 게임 (Closed 또는 Ended 상태)</li>
   <li>참여 완료 게임 0건 시: "-" 표시</li>
@@ -895,9 +950,7 @@ GP 변동 내역이 없습니다.
   </tr>
 </table>
 
-<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
-<p>이 탭은 조회 전용이며, 어떠한 데이터도 수정/삭제할 수 없습니다.</p>
-</blockquote>
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">이 탭은 조회 전용이며, 어떠한 데이터도 수정/삭제할 수 없습니다.</blockquote>
 
 <h3>제약사항</h3>
 
@@ -917,6 +970,15 @@ GP 변동 내역이 없습니다.
     </ul>
   </li>
   <li>게임 참여 내역의 참여 GP/부스팅 GP 금액 = GP 변동 내역의 대응 엔트리 금액</li>
+  <li>ST 게임의 "환급 GP" 컬럼은 항상 "-"으로 표시됨 (ST는 참여 GP를 환급하지 않음)</li>
+  <li>ST 게임의 "부스팅 GP" 컬럼은 "하트 사용"으로 변경되어 하트 사용 횟수를 표시</li>
+  <li>ST 게임의 GP 변동 엔트리:
+    <ul>
+      <li>PARTICIPATION: 참여 시 (-참여 GP)</li>
+      <li>REWARD: 최종 생존 시 보상 지급 (+보상 GP)</li>
+      <li>BOOSTING, REFUND: 발생하지 않음</li>
+    </ul>
+  </li>
 </ul>
 
 <h3>탭 진입 시 파라미터</h3>
@@ -959,7 +1021,6 @@ GP 변동 내역이 없습니다.
 <h2>5. 에러 및 예외상황</h2>
 
 <h5>게임존 활동 이력 없음</h5>
-
 <ul>
   <li>GP 요약 카드: "0 GP", "0 GP", "0 GP", 랭킹 "-"</li>
   <li>게임 성과 요약: "0회", "-", "-"</li>
@@ -968,53 +1029,45 @@ GP 변동 내역이 없습니다.
 </ul>
 
 <h5>요약 카드 데이터 조회 실패</h5>
-
 <ul>
   <li>카드에 "-" 표시</li>
   <li>하단에 "재시도" 링크 제공</li>
 </ul>
 
 <h5>게임 참여 내역 조회 실패</h5>
-
 <ul>
   <li>에러 토스트: "게임 참여 내역을 불러오는 중 오류가 발생했습니다."</li>
   <li>테이블 영역에 [재시도] 버튼 표시</li>
 </ul>
 
 <h5>GP 변동 내역 조회 실패</h5>
-
 <ul>
   <li>에러 토스트: "GP 변동 내역을 불러오는 중 오류가 발생했습니다."</li>
   <li>테이블 영역에 [재시도] 버튼 표시</li>
 </ul>
 
 <h5>GP 변동 상세 모달 조회 실패</h5>
-
 <ul>
   <li>에러 토스트: "상세 정보를 불러올 수 없습니다."</li>
 </ul>
 
 <h5>삭제된 게임 참조</h5>
-
 <ul>
   <li>게임 타이틀은 텍스트로 표시</li>
   <li>링크 비활성화 (회색 텍스트, 클릭 불가)</li>
 </ul>
 
 <h5>커스텀 기간 범위 초과</h5>
-
 <ul>
   <li>인라인 에러: "조회 기간은 최대 90일까지 선택할 수 있습니다."</li>
 </ul>
 
 <h5>네트워크 오류</h5>
-
 <ul>
   <li>에러 토스트: "네트워크 오류가 발생했습니다. 다시 시도해주세요."</li>
 </ul>
 
 <h5>권한 없음</h5>
-
 <ul>
   <li>회원 읽기 권한 없음: 회원상세 페이지 전체 접근 불가</li>
   <li>게임존 읽기 권한 없음: 탭 비활성화 또는 "접근 권한이 없습니다." 표시</li>
@@ -1068,19 +1121,42 @@ GP 변동 내역이 없습니다.
 </table>
 
 <h5>참조 문서</h5>
-
 <ul>
   <li>게임 상태 정의서</li>
   <li>GP 변동 유형 정의서</li>
   <li>랭킹 집계 로직 문서</li>
 </ul>
 
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
 
 <h2>변경 이력</h2>
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;"><thead><tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">일자</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th></tr></thead><tbody>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향 용어 통일: GP 충전→GP 가져오기, GP 출금→CELB으로 보내기</td></tr>
-<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.06</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초안 작성</td></tr>
-</tbody></table>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">일자</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 게임유형 지원: 게임유형별 컬럼 매핑 추가, ST 게임 결과 표시 규칙, 승률 계산 ST 포함, GP 집계 ST 설명 추가</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향 용어 통일: GP 충전→GP 가져오기, GP 출금→CELB으로 보내기</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.06</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초안 작성</td>
+  </tr>
+</table>
 
 </body>
 </html>

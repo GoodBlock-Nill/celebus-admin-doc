@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.0</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -144,7 +144,7 @@ p {
 
 <h2>1. 화면 목적</h2>
 
-<p>새로운 게임을 생성하는 폼 화면입니다. 관리자는 게임 유형을 선택하고, 기본 정보, 보상 설정, 참여 설정, 일정 설정, 결과 설정을 입력하여 게임을 임시저장하거나 즉시 게시할 수 있습니다.</p>
+<p>새로운 게임을 생성하는 폼 화면입니다. 관리자는 게임 유형(Prediction Market 또는 Survival Trivia)을 선택하고, 기본 정보, 보상 설정, 참여 설정, 일정 설정, 결과 설정을 입력하여 게임을 임시저장하거나 즉시 게시할 수 있습니다. 선택한 게임 유형에 따라 폼 항목이 조건부로 표시됩니다.</p>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
 
@@ -160,7 +160,9 @@ p {
 ├─────────────────────────────────────────────────────────────────┤
 │ 게임 유형 선택                                                     │
 │ ┌─────────────────────────────────────────────────────────────┐ │
-│ │ ● Prediction Market (Phase 1 고정)                          │ │
+│ │ ● Prediction Market                                         │ │
+│ │ ○ Survival Trivia                                           │ │
+│ │ (게임유형 선택 시 하단 폼이 선택한 유형에 맞게 변경됩니다.)    │ │
 │ └─────────────────────────────────────────────────────────────┘ │
 ├─────────────────────────────────────────────────────────────────┤
 │ [기본정보]                                                         │
@@ -187,6 +189,24 @@ p {
 │ │ (게임 관련 힌트 페이지 URL을 입력하세요.)                      │ │
 │ └─────────────────────────────────────────────────────────────┘ │
 ├─────────────────────────────────────────────────────────────────┤
+│ [퀴즈설정] (Survival Trivia 선택 시에만 표시)                        │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ 문제 수: 10문제 (고정)                                        │ │
+│ │ 문제당 제한시간: [ 10 ] 초 (기본값: 10)                        │ │
+│ │                                                              │ │
+│ │ ── 문제 1 ────────────────────────────────────────────────   │ │
+│ │ 문제 텍스트 *                                                 │ │
+│ │ ┌─────────────┬─────────────┬─────────────┐                 │ │
+│ │ │ [KO] ______ │ [EN] ______ │ [JP] ______ │ (각 200자)      │ │
+│ │ └─────────────┴─────────────┴─────────────┘                 │ │
+│ │ 선택지 1 * [ KO / EN / JP ] ● 정답                            │ │
+│ │ 선택지 2 * [ KO / EN / JP ] ○                                 │ │
+│ │ 선택지 3 * [ KO / EN / JP ] ○                                 │ │
+│ │ 선택지 4 * [ KO / EN / JP ] ○                                 │ │
+│ │                                                              │ │
+│ │ ── 문제 2 ── ... (문제 10까지 반복)                             │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────────┤
 │ [보상설정]                                                         │
 │ ┌─────────────────────────────────────────────────────────────┐ │
 │ │ 총 상금 GP *                                                 │ │
@@ -195,6 +215,7 @@ p {
 ├─────────────────────────────────────────────────────────────────┤
 │ [참여설정]                                                         │
 │ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ [Prediction Market 선택 시]                                  │ │
 │ │ 참여 정원                                                     │ │
 │ │ ☐ 참여 정원 제한  ← 체크박스                                  │ │
 │ │ (체크 시에만 아래 입력 표시)                                   │ │
@@ -209,10 +230,20 @@ p {
 │ │                                                              │ │
 │ │ 부스팅 배수 *                                                 │ │
 │ │ [ ______________ ] 배  (기본값: 2, 최대: 10)                 │ │
+│ ├──────────────────────────────────────────────────────────────│ │
+│ │ [Survival Trivia 선택 시]                                    │ │
+│ │ 참여 정원 * (최대 500명)                                      │ │
+│ │ [ ______________ ] 명  (기본값: 100)                         │ │
+│ │                                                              │ │
+│ │ 참여 비용 *                                                   │ │
+│ │ [ ______________ ] GP  (기본값: 10)                         │ │
+│ │                                                              │ │
+│ │ ※ 부스팅은 Survival Trivia에서 지원하지 않습니다.             │ │
 │ └─────────────────────────────────────────────────────────────┘ │
 ├─────────────────────────────────────────────────────────────────┤
 │ [일정설정]                                                         │
 │ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ [Prediction Market 선택 시]                                  │ │
 │ │ 투표 시작일시                                                 │ │
 │ │ (게시 시점에 자동 설정)                                        │ │
 │ │                                                              │ │
@@ -221,15 +252,23 @@ p {
 │ │                                                              │ │
 │ │ 결과 발표 예정일 *                                            │ │
 │ │ [ 📅 YYYY.MM.DD ]                                           │ │
+│ ├──────────────────────────────────────────────────────────────│ │
+│ │ [Survival Trivia 선택 시]                                    │ │
+│ │ 게임 시작일시 *                                               │ │
+│ │ [ 📅 YYYY.MM.DD ] [ 🕐 HH:mm ]                              │ │
+│ │ (게임 시작 10분 전부터 참여자가 입장할 수 있으며,              │ │
+│ │  시작 시점에 자동으로 게임이 진행됩니다.)                      │ │
 │ └─────────────────────────────────────────────────────────────┘ │
 ├─────────────────────────────────────────────────────────────────┤
-│ [결과설정]                                                         │
+│ [결과설정] (Prediction Market 선택 시에만 표시)                       │
 │ ┌─────────────────────────────────────────────────────────────┐ │
 │ │ 결과 확인 기준 *                                              │ │
 │ │ [ __________________________________________ ]               │ │
 │ │ [ __________________________________________ ]               │ │
 │ │ (예: &quot;FIFA 공식 홈페이지 발표 기준&quot;)                           │ │
 │ └─────────────────────────────────────────────────────────────┘ │
+│ (Survival Trivia는 서버에서 자동으로 결과를 판정하므로            │ │
+│  결과설정이 필요 없습니다. - 섹션 숨김)                            │ │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │ [취소]                                 [임시저장]  [생성하기]     │
@@ -257,7 +296,7 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Radio 버튼</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market (고정, 추후 게임 유형 추가 시 선택 가능)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market / Survival Trivia 선택 가능 (기본 선택: Prediction Market), 유형 변경 시 하단 폼 항목 변경됨</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기본정보</td>
@@ -275,12 +314,37 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Segmented Button (사용/미사용, 기본: 미사용), '사용' 선택 시 URL 입력 표시</td>
   </tr>
   <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">퀴즈설정 (ST 전용)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 수</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">10문제 고정, 변경 불가</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제당 제한시간 (필수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, 기본값: 10초</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 텍스트 (필수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3개 언어 탭 (KO/EN/JP), 각 200자 제한</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지 1~4 (필수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3개 언어 탭 (KO/EN/JP), 각 100자 제한, Radio 버튼으로 정답 1개 지정</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 순서</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">드래그앤드롭으로 재정렬 가능</td>
+  </tr>
+  <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상설정</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP (필수)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, GP 단위 표시</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여설정</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여설정 (PM)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">체크박스 '참여 정원 제한' + Number Input (체크 시에만 표시, 미체크 시 무제한)</td>
   </tr>
@@ -300,7 +364,22 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, 기본값: 2배, 최대 10배</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일정설정</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여설정 (ST)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원 (필수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, 기본값: 100명, 최대 500명</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용 (필수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, 기본값: 10 GP</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미지원 (안내 텍스트만 표시)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일정설정 (PM)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">투표 시작일시</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(게시 시점에 자동 설정)</td>
   </tr>
@@ -315,9 +394,19 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Date Picker</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과설정</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일정설정 (ST)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 시작일시 (필수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Date Picker + Time Picker, 현재 시간 + 30분 이후만 선택 가능</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과설정 (PM)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확인 기준 (필수)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3개 언어 탭 (KO/EN/JP), 각 500자 제한, Textarea</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과설정 (ST)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(섹션 숨김)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서버 자동 판정으로 결과설정 불필요</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하단 버튼</td>
@@ -374,6 +463,48 @@ p {
   <li>URL 형식 검증 (입력 시)</li>
 </ul>
 
+<h3>퀴즈 입력 (Survival Trivia 선택 시)</h3>
+
+<h5>문제당 제한시간</h5>
+
+<ul>
+  <li>Number Input 사용</li>
+  <li>기본값: 10초</li>
+  <li>최소값: 5초, 최대값: 60초</li>
+</ul>
+
+<h5>문제 텍스트</h5>
+
+<ul>
+  <li>KO/EN/JP 탭으로 언어 전환</li>
+  <li>각 언어별 200자 제한</li>
+  <li>실시간 글자 수 표시</li>
+  <li>필수 입력: 모든 언어 필수 (KO/EN/JP)</li>
+</ul>
+
+<h5>선택지 입력</h5>
+
+<ul>
+  <li>선택지 4개 고정 (추가/삭제 불가)</li>
+  <li>각 선택지: KO/EN/JP 탭으로 언어 전환</li>
+  <li>각 언어별 100자 제한</li>
+  <li>필수 입력: 모든 언어 필수 (KO/EN/JP)</li>
+</ul>
+
+<h5>정답 지정</h5>
+
+<ul>
+  <li>각 문제별 Radio 버튼으로 4개 선택지 중 정답 1개 지정</li>
+  <li>정답 미지정 시 저장/생성 불가</li>
+</ul>
+
+<h5>문제 순서 재정렬</h5>
+
+<ul>
+  <li>드래그앤드롭으로 문제 순서 변경 가능</li>
+  <li>문제 수 10개 고정 (추가/삭제 불가)</li>
+</ul>
+
 <h3>보상설정 입력</h3>
 
 <h5>총 상금 GP</h5>
@@ -387,7 +518,7 @@ p {
 
 <h3>참여설정 입력</h3>
 
-<h5>참여 정원</h5>
+<h5>참여 정원 (Prediction Market)</h5>
 
 <ul>
   <li>체크박스 '참여 정원 제한' 표시</li>
@@ -396,7 +527,7 @@ p {
   <li>최소값: 1명</li>
 </ul>
 
-<h5>참여 비용</h5>
+<h5>참여 비용 (Prediction Market)</h5>
 
 <ul>
   <li>Number Input 사용</li>
@@ -404,7 +535,7 @@ p {
   <li>최소값: 1 GP</li>
 </ul>
 
-<h5>부스팅 비용</h5>
+<h5>부스팅 비용 (Prediction Market)</h5>
 
 <ul>
   <li>Number Input 사용</li>
@@ -412,7 +543,7 @@ p {
   <li>최소값: 1 GP</li>
 </ul>
 
-<h5>부스팅 배수</h5>
+<h5>부스팅 배수 (Prediction Market)</h5>
 
 <ul>
   <li>Number Input 사용</li>
@@ -421,9 +552,26 @@ p {
   <li>최대값: 10배</li>
 </ul>
 
+<h5>참여 정원 (Survival Trivia)</h5>
+
+<ul>
+  <li>Number Input 사용 (필수)</li>
+  <li>기본값: 100명</li>
+  <li>최소값: 1명</li>
+  <li>최대값: 500명</li>
+</ul>
+
+<h5>참여 비용 (Survival Trivia)</h5>
+
+<ul>
+  <li>Number Input 사용</li>
+  <li>기본값: 10 GP</li>
+  <li>최소값: 1 GP</li>
+</ul>
+
 <h3>일정설정 입력</h3>
 
-<h5>투표 시작일시</h5>
+<h5>투표 시작일시 (Prediction Market)</h5>
 
 <ul>
   <li>게시 시점에 자동 설정됨</li>
@@ -431,7 +579,7 @@ p {
   <li>정보성 텍스트로만 표시</li>
 </ul>
 
-<h5>투표 종료일시</h5>
+<h5>투표 종료일시 (Prediction Market)</h5>
 
 <ul>
   <li>Date Picker로 날짜 선택</li>
@@ -440,7 +588,7 @@ p {
   <li>형식: YYYY.MM.DD HH:mm</li>
 </ul>
 
-<h5>결과 발표 예정일</h5>
+<h5>결과 발표 예정일 (Prediction Market)</h5>
 
 <ul>
   <li>Date Picker로 날짜 선택</li>
@@ -448,7 +596,17 @@ p {
   <li>형식: YYYY.MM.DD</li>
 </ul>
 
-<h3>결과설정 입력</h3>
+<h5>게임 시작일시 (Survival Trivia)</h5>
+
+<ul>
+  <li>Date Picker로 날짜 선택</li>
+  <li>Time Picker로 시간 선택 (분 단위)</li>
+  <li>현재 시간 + 30분 이후만 선택 가능</li>
+  <li>형식: YYYY.MM.DD HH:mm</li>
+  <li>게임 시작 10분 전부터 참여자가 입장 가능하며, 시작 시점에 자동으로 게임 진행</li>
+</ul>
+
+<h3>결과설정 입력 (Prediction Market 전용)</h3>
 
 <h5>결과 확인 기준 (다국어)</h5>
 
@@ -459,6 +617,10 @@ p {
   <li>예시 텍스트 제공: "예: FIFA 공식 홈페이지 발표 기준"</li>
   <li>필수 입력: 모든 언어 필수 (KO/EN/JP)</li>
 </ul>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
+<p>Survival Trivia는 서버에서 자동으로 결과를 판정하므로 결과설정 섹션이 표시되지 않습니다.</p>
+</blockquote>
 
 <h3>취소</h3>
 
@@ -498,12 +660,12 @@ p {
     <li>서버에 저장</li>
     <li>Success 토스트: "게임이 임시저장되었습니다."</li>
     <li>CEB-BO-GZ-201 (게임 리스트)로 이동</li>
-    <li>실패 시:
-    <ul>
-      <li>인라인 에러 메시지 표시</li>
-      <li>첫 번째 에러 필드로 스크롤</li>
-    </ul>
-    </li>
+  </ul>
+  </li>
+  <li>실패 시:
+  <ul>
+    <li>인라인 에러 메시지 표시</li>
+    <li>첫 번째 에러 필드로 스크롤</li>
   </ul>
   </li>
 </ol>
@@ -526,22 +688,23 @@ p {
     <li>서버에 저장</li>
     <li>Success 토스트: "게임이 생성되었습니다."</li>
     <li>CEB-BO-GZ-201 (게임 리스트)로 이동</li>
-    <li>실패 시:
-    <ul>
-      <li>인라인 에러 메시지 표시</li>
-      <li>첫 번째 에러 필드로 스크롤</li>
-    </ul>
-    </li>
-    <li>---</li>
+  </ul>
+  </li>
+  <li>실패 시:
+  <ul>
+    <li>인라인 에러 메시지 표시</li>
+    <li>첫 번째 에러 필드로 스크롤</li>
   </ul>
   </li>
 </ol>
+
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
 
 <h2>4. 규칙/로직</h2>
 
 <h3>Validation 규칙</h3>
 
-<h5>필수 항목</h5>
+<h5>공통 필수 항목 (게임유형 무관)</h5>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
@@ -563,6 +726,15 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1 GP 이상</td>
+  </tr>
+</table>
+
+<h5>Prediction Market 전용 필수 항목</h5>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용</td>
@@ -590,7 +762,44 @@ p {
   </tr>
 </table>
 
-<h5>날짜/시간 관계 검증</h5>
+<h5>Survival Trivia 전용 필수 항목</h5>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1 ~ 500명</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1 GP 이상</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제당 제한시간</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">5 ~ 60초</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 텍스트 (10개)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모든 문제 모든 언어 입력 필수 (KO/EN/JP), 각 200자 이내</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지 텍스트 (4개×10문제)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모든 선택지 모든 언어 입력 필수 (KO/EN/JP), 각 100자 이내</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답 지정 (10문제)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">각 문제별 정답 1개 지정 필수</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 시작일시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 시간 + 30분 이후</td>
+  </tr>
+</table>
+
+<h5>날짜/시간 관계 검증 (Prediction Market)</h5>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 현재 시간 &lt; 투표 종료일시 &lt; 결과 발표 예정일
@@ -600,6 +809,16 @@ p {
 <ul>
   <li>투표 종료일시가 현재보다 과거일 경우: "투표 종료일시는 현재 시간 이후여야 합니다."</li>
   <li>결과 발표일이 종료일보다 이전일 경우: "결과 발표 예정일은 투표 종료일 이후여야 합니다."</li>
+</ul>
+
+<h5>날짜/시간 검증 (Survival Trivia)</h5>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+현재 시간 + 30분 ≤ 게임 시작일시
+</pre>
+
+<ul>
+  <li>게임 시작일시가 현재 시간 + 30분 이내일 경우: "게임 시작일시는 현재 시간으로부터 30분 이후여야 합니다."</li>
 </ul>
 
 <h3>상태 설정 규칙</h3>
@@ -647,7 +866,7 @@ p {
   </tr>
 </table>
 
-<h5>[생성하기] 활성화 필수 조건</h5>
+<h5>[생성하기] 활성화 필수 조건 - Prediction Market</h5>
 
 <ul>
   <li>타이틀: KO, EN, JP 모두 입력</li>
@@ -656,6 +875,19 @@ p {
   <li>투표 종료일시: 선택 완료</li>
   <li>결과 발표 예정일: 선택 완료</li>
   <li>결과 확인 기준: KO, EN, JP 모두 입력</li>
+</ul>
+
+<h5>[생성하기] 활성화 필수 조건 - Survival Trivia</h5>
+
+<ul>
+  <li>타이틀: KO, EN, JP 모두 입력</li>
+  <li>상세설명: KO, EN, JP 모두 입력</li>
+  <li>총 상금 GP: 0보다 큰 값</li>
+  <li>참여 정원: 1 이상 500 이하</li>
+  <li>게임 시작일시: 선택 완료 (현재 시간 + 30분 이후)</li>
+  <li>모든 문제(10개) 텍스트: KO, EN, JP 모두 입력</li>
+  <li>모든 선택지(4개×10문제): KO, EN, JP 모두 입력</li>
+  <li>모든 문제(10개) 정답: 각 1개씩 지정 완료</li>
 </ul>
 
 <blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
@@ -673,15 +905,15 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">고정 (추후 게임 유형 추가 시 선택 가능)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Radio 버튼 기본 선택</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원 (PM)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">무제한</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">체크박스 미체크</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용 (PM)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1 GP</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
   </tr>
@@ -693,6 +925,21 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 배수</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2배</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원 (ST)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">100명</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용 (ST)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">10 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제당 제한시간 (ST)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">10초</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
   </tr>
   <tr>
@@ -720,6 +967,14 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확인 기준 (각 언어)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">500자</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 텍스트 (각 언어)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">200자</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지 텍스트 (각 언어)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">100자</td>
   </tr>
 </table>
 
@@ -749,7 +1004,7 @@ p {
 <h5>상황</h5>
 
 <ul>
-  <li>투표 종료일시 < 현재 시간</li>
+  <li>투표 종료일시 &lt; 현재 시간 (Prediction Market)</li>
 </ul>
 
 <h5>처리</h5>
@@ -762,7 +1017,7 @@ p {
 <h5>상황</h5>
 
 <ul>
-  <li>결과 발표 예정일 < 참여 종료일</li>
+  <li>결과 발표 예정일 &lt; 참여 종료일 (Prediction Market)</li>
 </ul>
 
 <h5>처리</h5>
@@ -770,6 +1025,19 @@ p {
 <ul>
   <li>인라인 에러 메시지: "결과 발표 예정일은 참여 종료일 이후여야 합니다."</li>
   <li>결과 발표 예정일 필드 빨간색 테두리</li>
+</ul>
+
+<h5>상황</h5>
+
+<ul>
+  <li>게임 시작일시가 현재 시간 + 30분 이내 (Survival Trivia)</li>
+</ul>
+
+<h5>처리</h5>
+
+<ul>
+  <li>인라인 에러 메시지: "게임 시작일시는 현재 시간으로부터 30분 이후여야 합니다."</li>
+  <li>게임 시작일시 필드 빨간색 테두리</li>
 </ul>
 
 <h3>서버 저장 실패</h3>
@@ -886,10 +1154,16 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">필수 항목 및 버튼 활성화 조건 명확화</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.12</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 필수화: 사용/미사용 토글 제거, 부스팅 비용/배수 항상 필수 입력으로 변경</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.0</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 게임유형 추가: 퀴즈 관리, ST 전용 참여/일정 설정, 게임유형별 조건부 폼 렌더링</td>
   </tr>
 </table>
 

@@ -1,4 +1,4 @@
-import type { Game, GameStatus, GameType } from '@/lib/types';
+import type { Game, GameStatus, GameType, Quiz } from '@/lib/types';
 
 const KOREAN_GAME_TITLES = [
   'BTS 컴백 날짜 예측', 'BLACKPINK 신곡 1위 예측', 'aespa 콘서트 티켓 예측',
@@ -130,6 +130,206 @@ function createGame(index: number, status: GameStatus): Game {
   };
 }
 
+const ST_GAME_TITLES = [
+  'K-pop 아이돌 데뷔 연도 퀴즈', 'K-pop 히트곡 맞추기 챌린지', '아이돌 멤버 이름 퀴즈',
+  'K-pop 시상식 수상 퀴즈', '뮤직비디오 장면 퀴즈', 'K-pop 그룹 소속사 맞추기',
+  '아이돌 포메이션 퀴즈', 'K-pop 가사 완성 퀴즈', 'K-pop 앨범 커버 맞추기',
+  'K-pop 콜라보 아티스트 퀴즈', 'SM 소속 아이돌 퀴즈', 'JYP 걸그룹 총정리 퀴즈',
+];
+
+const ST_QUIZ_TEMPLATES: Quiz[] = [
+  {
+    id: 'q-001', questionNumber: 1,
+    text: { ko: 'BTS의 데뷔곡은?', en: 'What is BTS debut song?', jp: 'BTSのデビュー曲は？' },
+    choices: [
+      { ko: 'No More Dream', en: 'No More Dream', jp: 'No More Dream' },
+      { ko: 'Dynamite', en: 'Dynamite', jp: 'Dynamite' },
+      { ko: 'Boy In Luv', en: 'Boy In Luv', jp: 'Boy In Luv' },
+      { ko: 'DNA', en: 'DNA', jp: 'DNA' },
+    ],
+    correctIndex: 0, timeLimit: 10,
+  },
+  {
+    id: 'q-002', questionNumber: 2,
+    text: { ko: 'BLACKPINK 멤버가 아닌 사람은?', en: 'Who is NOT a BLACKPINK member?', jp: 'BLACKPINKのメンバーでないのは？' },
+    choices: [
+      { ko: '제니', en: 'Jennie', jp: 'ジェニー' },
+      { ko: '리사', en: 'Lisa', jp: 'リサ' },
+      { ko: '카리나', en: 'Karina', jp: 'カリナ' },
+      { ko: '로제', en: 'Rosé', jp: 'ロゼ' },
+    ],
+    correctIndex: 2, timeLimit: 10,
+  },
+  {
+    id: 'q-003', questionNumber: 3,
+    text: { ko: 'aespa의 가상 멤버 이름은?', en: 'What is the name of aespa virtual members?', jp: 'aespaのバーチャルメンバーの名前は？' },
+    choices: [
+      { ko: 'æ-members', en: 'æ-members', jp: 'æ-members' },
+      { ko: 'ae-aespa', en: 'ae-aespa', jp: 'ae-aespa' },
+      { ko: 'meta-aespa', en: 'meta-aespa', jp: 'meta-aespa' },
+      { ko: 'SM-aespa', en: 'SM-aespa', jp: 'SM-aespa' },
+    ],
+    correctIndex: 1, timeLimit: 10,
+  },
+  {
+    id: 'q-004', questionNumber: 4,
+    text: { ko: 'NewJeans가 데뷔한 연도는?', en: 'In what year did NewJeans debut?', jp: 'NewJeansがデビューした年は？' },
+    choices: [
+      { ko: '2021년', en: '2021', jp: '2021年' },
+      { ko: '2022년', en: '2022', jp: '2022年' },
+      { ko: '2023년', en: '2023', jp: '2023年' },
+      { ko: '2020년', en: '2020', jp: '2020年' },
+    ],
+    correctIndex: 1, timeLimit: 10,
+  },
+  {
+    id: 'q-005', questionNumber: 5,
+    text: { ko: 'TWICE의 소속사는?', en: 'What company does TWICE belong to?', jp: 'TWICEの所属事務所は？' },
+    choices: [
+      { ko: 'SM엔터테인먼트', en: 'SM Entertainment', jp: 'SMエンターテインメント' },
+      { ko: 'YG엔터테인먼트', en: 'YG Entertainment', jp: 'YGエンターテインメント' },
+      { ko: 'JYP엔터테인먼트', en: 'JYP Entertainment', jp: 'JYPエンターテインメント' },
+      { ko: 'HYBE', en: 'HYBE', jp: 'HYBE' },
+    ],
+    correctIndex: 2, timeLimit: 10,
+  },
+  {
+    id: 'q-006', questionNumber: 6,
+    text: { ko: 'IVE 멤버 중 "원영"의 성은?', en: 'What is the last name of IVE member "Wonyoung"?', jp: 'IVEのメンバー"ウォニョン"の苗字は？' },
+    choices: [
+      { ko: '김', en: 'Kim', jp: 'キム' },
+      { ko: '이', en: 'Lee', jp: 'イ' },
+      { ko: '장', en: 'Jang', jp: 'チャン' },
+      { ko: '박', en: 'Park', jp: 'パク' },
+    ],
+    correctIndex: 2, timeLimit: 10,
+  },
+  {
+    id: 'q-007', questionNumber: 7,
+    text: { ko: 'Stray Kids의 리더는?', en: 'Who is the leader of Stray Kids?', jp: 'Stray Kidsのリーダーは？' },
+    choices: [
+      { ko: '필릭스', en: 'Felix', jp: 'フィリックス' },
+      { ko: '방찬', en: 'Bang Chan', jp: 'バンチャン' },
+      { ko: '리노', en: 'Lee Know', jp: 'リノ' },
+      { ko: '창빈', en: 'Changbin', jp: 'チャンビン' },
+    ],
+    correctIndex: 1, timeLimit: 10,
+  },
+  {
+    id: 'q-008', questionNumber: 8,
+    text: { ko: 'SEVENTEEN의 멤버 수는?', en: 'How many members does SEVENTEEN have?', jp: 'SEVENTEENのメンバーは何人？' },
+    choices: [
+      { ko: '12명', en: '12', jp: '12人' },
+      { ko: '13명', en: '13', jp: '13人' },
+      { ko: '14명', en: '14', jp: '14人' },
+      { ko: '15명', en: '15', jp: '15人' },
+    ],
+    correctIndex: 1, timeLimit: 10,
+  },
+  {
+    id: 'q-009', questionNumber: 9,
+    text: { ko: 'LE SSERAFIM의 팬덤 이름은?', en: 'What is the fandom name for LE SSERAFIM?', jp: 'LE SSERAFIMのファンダム名は？' },
+    choices: [
+      { ko: 'FEARNOT', en: 'FEARNOT', jp: 'FEARNOT' },
+      { ko: 'FEARLESS', en: 'FEARLESS', jp: 'FEARLESS' },
+      { ko: 'FLAMING', en: 'FLAMING', jp: 'FLAMING' },
+      { ko: 'FEATHER', en: 'FEATHER', jp: 'FEATHER' },
+    ],
+    correctIndex: 0, timeLimit: 10,
+  },
+  {
+    id: 'q-010', questionNumber: 10,
+    text: { ko: 'EXO가 데뷔한 연도는?', en: 'In what year did EXO debut?', jp: 'EXOがデビューした年は？' },
+    choices: [
+      { ko: '2011년', en: '2011', jp: '2011年' },
+      { ko: '2012년', en: '2012', jp: '2012年' },
+      { ko: '2013년', en: '2013', jp: '2013年' },
+      { ko: '2010년', en: '2010', jp: '2010年' },
+    ],
+    correctIndex: 1, timeLimit: 10,
+  },
+];
+
+function createSTGame(index: number, status: GameStatus): Game {
+  const now = new Date();
+  const pastMonth = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const futureMonth = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+  const title = ST_GAME_TITLES[index % ST_GAME_TITLES.length];
+
+  let startDateTime: string;
+  let publishedAt: string | null = null;
+  let rewardDistributed = false;
+  let rewardDistributedAt: string | null = null;
+  let survivorCount: number | undefined;
+  const participantCount = status === 'Draft' || status === 'Ready' ? 0 : Math.floor(Math.random() * 300) + 50;
+
+  switch (status) {
+    case 'Draft':
+      startDateTime = randomDate(futureMonth, new Date(futureMonth.getTime() + 30 * 24 * 60 * 60 * 1000));
+      break;
+    case 'Ready':
+      startDateTime = randomDate(futureMonth, new Date(futureMonth.getTime() + 30 * 24 * 60 * 60 * 1000));
+      break;
+    case 'Active':
+      publishedAt = randomDate(pastMonth, new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000));
+      startDateTime = randomDate(new Date(now.getTime() - 2 * 60 * 60 * 1000), new Date(now.getTime() - 10 * 60 * 1000));
+      break;
+    case 'Ended':
+      publishedAt = randomDate(new Date(pastMonth.getTime() - 90 * 24 * 60 * 60 * 1000), new Date(pastMonth.getTime() - 60 * 24 * 60 * 60 * 1000));
+      startDateTime = randomDate(new Date(pastMonth.getTime() - 60 * 24 * 60 * 60 * 1000), new Date(pastMonth.getTime() - 30 * 24 * 60 * 60 * 1000));
+      survivorCount = Math.floor(Math.random() * 26) + 5; // 5-30
+      rewardDistributed = true;
+      rewardDistributedAt = randomDate(new Date(new Date(startDateTime).getTime() + 2 * 60 * 60 * 1000), new Date(new Date(startDateTime).getTime() + 24 * 60 * 60 * 1000));
+      break;
+    default:
+      startDateTime = randomDate(futureMonth, new Date(futureMonth.getTime() + 30 * 24 * 60 * 60 * 1000));
+  }
+
+  const createdAt = randomDate(new Date(new Date(startDateTime).getTime() - 30 * 24 * 60 * 60 * 1000), new Date(new Date(startDateTime).getTime() - 7 * 24 * 60 * 60 * 1000));
+
+  return {
+    id: `st-game-${String(index + 1).padStart(3, '0')}`,
+    type: 'SURVIVAL_TRIVIA' as GameType,
+    title: {
+      ko: title,
+      en: `[EN] ${title}`,
+      jp: `[JP] ${title}`,
+    },
+    description: {
+      ko: `${title} — 10문제를 풀고 최후의 생존자가 되세요!`,
+      en: `${title} — Answer 10 questions and be the last survivor!`,
+      jp: `${title} — 10問に答えて最後の生存者になってください！`,
+    },
+    hintLinkEnabled: false,
+    hintLink: '',
+    status,
+    totalPrizeGP: [10000, 50000, 100000, 200000][Math.floor(Math.random() * 4)],
+    maxParticipants: [100, 200, 300, 500][Math.floor(Math.random() * 4)],
+    participationCost: [1, 5, 10][Math.floor(Math.random() * 3)],
+    boostingCost: 0,
+    boostingMultiplier: 0,
+    endDate: '',
+    resultDate: '',
+    resultBasis: { ko: '', en: '', jp: '' },
+    result: null,
+    resultTitle: { ko: '', en: '', jp: '' },
+    resultDescription: { ko: '', en: '', jp: '' },
+    resultLinkText: { ko: '', en: '', jp: '' },
+    resultLinkUrl: { ko: '', en: '', jp: '' },
+    rewardDistributed,
+    rewardDistributedAt,
+    participantCount,
+    createdAt,
+    createdBy: ADMINS[Math.floor(Math.random() * ADMINS.length)],
+    updatedAt: createdAt,
+    publishedAt,
+    quizzes: ST_QUIZ_TEMPLATES,
+    timePerQuestion: 10,
+    startDateTime,
+    survivorCount,
+  };
+}
+
 // 상태별 4개씩 생성 (총 24개, 2페이지 이상)
 // 1페이지(20개)에 모든 상태가 표시되도록 배열 순서 조정
 const statusDistribution: GameStatus[] = [
@@ -141,4 +341,17 @@ const statusDistribution: GameStatus[] = [
   'Draft', 'Ready', 'Active', 'Pending', 'Closed', 'Ended',
 ] as GameStatus[];
 
-export const mockGames: Game[] = statusDistribution.map((status, i) => createGame(i, status));
+// ST: Draft×2, Ready×2, Active×2, Ended×6 (총 12개)
+const stStatusDistribution: GameStatus[] = [
+  'Draft', 'Draft',
+  'Ready', 'Ready',
+  'Active', 'Active',
+  'Ended', 'Ended', 'Ended', 'Ended', 'Ended', 'Ended',
+] as GameStatus[];
+
+const stGames: Game[] = stStatusDistribution.map((status, i) => createSTGame(i, status));
+
+export const mockGames: Game[] = [
+  ...statusDistribution.map((status, i) => createGame(i, status)),
+  ...stGames,
+];

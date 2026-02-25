@@ -57,6 +57,10 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 | GP 이력 | GP 변동 내역 | GP 거래 내역 |
 | 참여자 | 참여자 수 | 참여 현황 |
 | 관리자 액션 필요 | 결과 입력 필요 | 결과 대기 게임 |
+| ST 진행 단위 | 스테이지 | 라운드 |
+| ST 결과 | 생존/탈락 | 정답/오답 (PM 전용) |
+| ST 보상 | 균등 분배 | 비율 배분 (PM 전용) |
+| 게임유형 약칭 | PM (Prediction Market), ST (Survival Trivia) | - |
 
 ---
 
@@ -79,29 +83,29 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 
 | 순서 | 화면ID | 화면명 | 유형 | Phase | 작성상태 |
 |------|--------|--------|------|-------|---------|
-| 1 | CEB-BO-GZ-101 | 게임존 메인 | Page | 1 | ✅ 완료 |
-| 2 | CEB-BO-GZ-201 | 게임 리스트 | Page | 1 | ✅ 완료 |
-| 3 | CEB-BO-GZ-201-CREATE | 게임 생성 | Page | 1 | ✅ 완료 |
-| 4 | CEB-BO-GZ-201-MD-CANCEL | 생성 취소 확인 | Modal | 1 | ✅ 완료 |
-| 5 | CEB-BO-GZ-202 | 게임 상세 (탭 포함) | Page | 1 | ✅ 완료 |
-| 6 | CEB-BO-GZ-202-EDIT | 게임 수정 | Page | 1 | ✅ 완료 |
-| 7 | CEB-BO-GZ-202-MD-EDIT-CANCEL | 수정 취소 확인 | Modal | 1 | ✅ 완료 |
-| 8 | CEB-BO-GZ-202-MD-PUBLISH | 게시 확인 | Modal | 1 | ✅ 완료 |
-| 9 | CEB-BO-GZ-202-MD-CLOSE | 종료 확인 | Modal | 1 | ✅ 완료 |
-| 10 | CEB-BO-GZ-202-MD-DELETE | 삭제 확인 | Modal | 1 | ✅ 완료 |
-| 11 | CEB-BO-GZ-202-MD-RESULT | 결과 입력 | Modal | 1 | ✅ 완료 |
-| 12 | CEB-BO-GZ-202-MD-REWARD | 보상 지급 확인 | Modal | 1 | ✅ 완료 |
-| 13 | CEB-BO-GZ-401 | 랭킹 조회 | Page | 1 | ✅ 완료 |
-| 14 | CEB-BO-GZ-402 | 랭킹 설정 | Page | 1 | ✅ 완료 |
-| 15 | CEB-BO-GZ-501 | 교환 내역 | Page | 1 | ✅ 완료 |
-| 16 | CEB-BO-GZ-501-MD-DETAIL | 교환 상세 | Modal | 1 | ✅ 완료 |
-| 17 | CEB-BO-GZ-502 | 교환 설정 | Page | 1 | ✅ 완료 |
-| 18 | CEB-BO-GZ-503 | 지갑 관리 | Page | 1 | ✅ 완료 |
-| 19 | CEB-BO-GZ-503-MD-REGISTER | 지갑 등록/수정 | Modal | 1 | ✅ 완료 |
-| 20 | CEB-BO-GZ-503-MD-DELETE | 지갑 삭제 확인 | Modal | 1 | ✅ 완료 |
-| 21 | CEB-BO-GZ-601 | GP 변동 내역 | Page | 1 | ✅ 완료 |
-| 22 | CEB-BO-GZ-601-MD-DETAIL | 변동 상세 | Modal | 1 | ✅ 완료 |
-| 23 | CEB-BO-USR-203 | 회원상세 (게임존 탭) | Page (탭) | 1 | ✅ 완료 |
+| 1 | CEB-BO-GZ-101 | 게임존 메인 | Page | 1, 2 | ✅ Phase 2 반영 |
+| 2 | CEB-BO-GZ-201 | 게임 리스트 | Page | 1, 2 | ✅ Phase 2 반영 |
+| 3 | CEB-BO-GZ-201-CREATE | 게임 생성 | Page | 1, 2 | ✅ Phase 2 반영 |
+| 4 | CEB-BO-GZ-201-MD-CANCEL | 생성 취소 확인 | Modal | 1 | ✅ 완료 (변경 없음) |
+| 5 | CEB-BO-GZ-202 | 게임 상세 (탭 포함) | Page | 1, 2 | ✅ Phase 2 반영 |
+| 6 | CEB-BO-GZ-202-EDIT | 게임 수정 | Page | 1, 2 | ✅ Phase 2 반영 |
+| 7 | CEB-BO-GZ-202-MD-EDIT-CANCEL | 수정 취소 확인 | Modal | 1 | ✅ 완료 (변경 없음) |
+| 8 | CEB-BO-GZ-202-MD-PUBLISH | 게시 확인 | Modal | 1, 2 | ✅ Phase 2 반영 |
+| 9 | CEB-BO-GZ-202-MD-CLOSE | 종료 확인 | Modal | 1, 2 | ✅ Phase 2 반영 |
+| 10 | CEB-BO-GZ-202-MD-DELETE | 삭제 확인 | Modal | 1 | ✅ 완료 (변경 없음) |
+| 11 | CEB-BO-GZ-202-MD-RESULT | 결과 입력 | Modal | 1, 2 | ✅ Phase 2 반영 |
+| 12 | CEB-BO-GZ-202-MD-REWARD | 보상 지급 확인 | Modal | 1, 2 | ✅ Phase 2 반영 |
+| 13 | CEB-BO-GZ-401 | 랭킹 조회 | Page | 1, 2 | ✅ Phase 2 반영 |
+| 14 | CEB-BO-GZ-402 | 랭킹 설정 | Page | 1 | ✅ 완료 (변경 없음) |
+| 15 | CEB-BO-GZ-501 | 교환 내역 | Page | 1 | ✅ 완료 (변경 없음) |
+| 16 | CEB-BO-GZ-501-MD-DETAIL | 교환 상세 | Modal | 1 | ✅ 완료 (변경 없음) |
+| 17 | CEB-BO-GZ-502 | 교환 설정 | Page | 1 | ✅ 완료 (변경 없음) |
+| 18 | CEB-BO-GZ-503 | 지갑 관리 | Page | 1 | ✅ 완료 (변경 없음) |
+| 19 | CEB-BO-GZ-503-MD-REGISTER | 지갑 등록/수정 | Modal | 1 | ✅ 완료 (변경 없음) |
+| 20 | CEB-BO-GZ-503-MD-DELETE | 지갑 삭제 확인 | Modal | 1 | ✅ 완료 (변경 없음) |
+| 21 | CEB-BO-GZ-601 | GP 변동 내역 | Page | 1, 2 | ✅ Phase 2 반영 |
+| 22 | CEB-BO-GZ-601-MD-DETAIL | 변동 상세 | Modal | 1, 2 | ✅ Phase 2 반영 |
+| 23 | CEB-BO-USR-203 | 회원상세 (게임존 탭) | Page (탭) | 1, 2 | ✅ Phase 2 반영 |
 
 #### 앱 화면 (Phase 1 - Prediction Market)
 
@@ -146,7 +150,12 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 | 결과 확정 | Closed | 결과 확정, 보상 지급 전 | 보라색 | 결과 확인 가능 |
 | 종료 | Ended | 보상 지급 완료 | 검정색 | 종료 표시 |
 
-### 상태별 가능 액션
+### 게임유형별 상태 흐름
+
+- **Prediction Market**: Draft → Ready → Active → Pending → Closed → Ended (관리자 수동 결과 입력/보상 지급)
+- **Survival Trivia**: Draft → Ready → Active → Ended (서버 자동 판정/보상 지급, Pending/Closed 없음)
+
+### 상태별 가능 액션 (Prediction Market)
 
 | 현재 상태 | 가능 액션 |
 |----------|----------|
@@ -157,19 +166,28 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 | 결과 확정 (Closed) | 결과 수정, 보상 지급 |
 | 종료 (Ended) | 버튼 없음 |
 
+### 상태별 가능 액션 (Survival Trivia)
+
+| 현재 상태 | 가능 액션 |
+|----------|----------|
+| 임시저장 (Draft) | 삭제하기, 수정하기 |
+| 게시대기 (Ready) | 삭제하기, 수정하기, 게시하기 |
+| 진행중 (Active) | 수정하기 (퀴즈 제외), 강제 종료 |
+| 종료 (Ended) | 버튼 없음 |
+
 ---
 
 ## GP 변동 유형 정의
 
-| 유형 | 코드 | 설명 | GP 변동 | 비고 |
-|------|------|------|---------|------|
-| 참여 | PARTICIPATION | 게임 참여 시 | - (차감) | - |
-| 부스팅 | BOOSTING | 부스팅 사용 시 | - (차감) | - |
-| 환급 | REFUND | 결과 발표 후 참여 GP 반환 | + (증가) | - |
-| 보상 | REWARD | 정답 시 보상 지급 | + (증가) | - |
-| 환불 | REFUND_CANCEL | 게임 취소 시 환불 | + (증가) | 부스팅 환불, 참여GP 환불 |
-| GP 가져오기 | EXCHANGE_IN | CELB → GP 교환 | + (증가) | - |
-| CELB으로 보내기 | EXCHANGE_OUT | GP → CELB 교환 | - (차감) | - |
+| 유형 | 코드 | 설명 | GP 변동 | 게임유형 | 비고 |
+|------|------|------|---------|----------|------|
+| 참여 | PARTICIPATION | 게임 참여 시 | - (차감) | PM, ST | - |
+| 부스팅 | BOOSTING | 부스팅 사용 시 | - (차감) | PM 전용 | ST에는 부스팅 없음 |
+| 환급 | REFUND | 결과 발표 후 참여 GP 반환 | + (증가) | PM 전용 | ST는 참여GP 환급 없음 |
+| 보상 | REWARD | 정답/생존 시 보상 지급 | + (증가) | PM, ST | PM: 비율배분, ST: 균등분배 |
+| 환불 | REFUND_CANCEL | 게임 취소 시 환불 | + (증가) | PM, ST | PM: 부스팅+참여GP, ST: 참여GP만 |
+| GP 가져오기 | EXCHANGE_IN | CELB → GP 교환 | + (증가) | 공통 | 게임유형 무관 |
+| CELB으로 보내기 | EXCHANGE_OUT | GP → CELB 교환 | - (차감) | 공통 | 게임유형 무관 |
 
 ---
 
@@ -218,7 +236,43 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 
 ---
 
+## Survival Trivia 게임 생성 입력 항목 (참고)
+
+### 게임유형
+- Survival Trivia 선택
+
+### 기본정보
+- 타이틀 (KO/EN/JP, 각 50자)
+- 상세설명 (KO/EN/JP, WYSIWYG 에디터)
+
+### 퀴즈 관리 (ST 전용)
+- 총 10문제, 각 문제당:
+  - 문제 텍스트 (KO/EN/JP)
+  - 4개 선택지 (KO/EN/JP)
+  - 정답 지정 (Radio)
+  - 제한시간 (기본 10초)
+
+### 보상설정
+- 총 상금 GP
+
+### 참여설정
+- 참여 정원 (최대 500명, 필수)
+- 참여 비용 (기본 1GP)
+- 부스팅 없음
+
+### 일정설정
+- 게임 시작일시 (Date + Time Picker)
+
+> 게시 시 게임 일정이 앱에 공개되며, 시작 10분 전부터 입장 가능
+
+### CTA 버튼
+- [취소] / [임시저장] / [생성하기]
+
+---
+
 ## 보상 계산 로직 (참고)
+
+### Prediction Market (비율 배분)
 
 - 정답자 보상 = 총 상금 GP × (개인 배분 값 / 전체 합)
 - 기본: 개인 배분 값 = 참여 GP
@@ -228,6 +282,15 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 - 참여 GP는 정답/오답 관계없이 전액 환급
 - 부스팅 GP는 환급 없음, 배분 가중치로만 사용
 - 소수점 8자리 이하 절삭, 단수는 시스템 귀속
+
+### Survival Trivia (균등 분배)
+
+- 생존자 1인당 보상 = 총 상금 GP ÷ 최종 생존자 수
+- 참여 GP 환급 없음
+- 부스팅 없음
+- 전원 탈락 시: 총 상금 GP가 시스템에 귀속
+- 소수점 8자리 이하 절삭, 단수는 시스템 귀속
+- 보상은 서버에서 자동 지급 (관리자 수동 지급 불필요)
 
 ---
 

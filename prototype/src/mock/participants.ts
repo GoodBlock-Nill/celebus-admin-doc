@@ -1,4 +1,4 @@
-import type { Participant } from '@/lib/types';
+import type { Participant, GameType } from '@/lib/types';
 import { mockGames } from './games';
 
 const NICKNAMES = [
@@ -26,15 +26,54 @@ function createParticipants(gameId: string, count: number, gameIndex: number): P
   }));
 }
 
-export const mockParticipants: Participant[] = mockGames
-  .filter(g => g.status !== 'Draft')
-  .flatMap((game, i) => {
-    // 결과확정/종료 상태 게임은 50-80명, 나머지는 10-30명으로 생성하여 페이지네이션 테스트 가능
-    const count = (game.status === 'Closed' || game.status === 'Ended')
-      ? Math.floor(Math.random() * 30) + 50
-      : Math.floor(Math.random() * 20) + 10;
-    return createParticipants(game.id, count, i);
+function createSTParticipants(gameId: string, count: number, gameIndex: number): Participant[] {
+  const game = mockGames.find(g => g.id === gameId);
+  const totalStages = 10;
+
+  return Array.from({ length: count }, (_, i) => {
+    const survived = Math.random() > 0.7; // 30% survival rate
+    const survivedStage = survived ? totalStages : Math.floor(Math.random() * 9) + 1;
+    const heartsUsed = Math.floor(Math.random() * 3); // 0-2 hearts
+
+    return {
+      id: `part-${gameId}-${String(i + 1).padStart(3, '0')}`,
+      gameId,
+      nickname: NICKNAMES[(gameIndex * 7 + i) % NICKNAMES.length] + String(Math.floor(Math.random() * 100)),
+      uid: `UID${String(gameIndex * 100 + i + 1).padStart(6, '0')}`,
+      choice: null,
+      participationGP: game?.participationCost ?? 10,
+      boostingGP: 0,
+      status: '참여 완료',
+      participatedAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+      rewardGP: 0,
+      refundGP: 0,
+      survivedStage,
+      heartsUsed,
+      eliminatedAtStage: survived ? null : survivedStage,
+      gameType: 'SURVIVAL_TRIVIA' as GameType,
+    };
   });
+}
+
+export const mockParticipants: Participant[] = [
+  ...mockGames
+    .filter(g => g.status !== 'Draft' && g.type === 'PREDICTION_MARKET')
+    .flatMap((game, i) => {
+      // 결과확정/종료 상태 게임은 50-80명, 나머지는 10-30명으로 생성하여 페이지네이션 테스트 가능
+      const count = (game.status === 'Closed' || game.status === 'Ended')
+        ? Math.floor(Math.random() * 30) + 50
+        : Math.floor(Math.random() * 20) + 10;
+      return createParticipants(game.id, count, i);
+    }),
+  ...mockGames
+    .filter(g => g.status !== 'Draft' && g.type === 'SURVIVAL_TRIVIA')
+    .flatMap((game, i) => {
+      const count = game.status === 'Ended'
+        ? Math.floor(Math.random() * 30) + 50
+        : Math.floor(Math.random() * 20) + 10;
+      return createSTParticipants(game.id, count, i + 100); // offset index to avoid UID collision
+    }),
+];
 
 export function getParticipantsByGameId(gameId: string): Participant[] {
   return mockParticipants.filter(p => p.gameId === gameId);

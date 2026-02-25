@@ -91,6 +91,15 @@ export default function GPHistoryPage() {
           { key: 'datetime', label: '일시', width: '160px', render: (item: GPChange) => formatDateTime(item.datetime) },
           { key: 'nickname', label: '닉네임', render: (item: GPChange) => <span className="text-blue-600">{item.nickname.toLowerCase()}</span> },
           { key: 'type', label: '유형', align: 'center', width: '110px', render: (item: GPChange) => <Badge variant="gpType" value={item.type} /> },
+          {
+            key: 'relatedGameType',
+            label: '게임유형',
+            align: 'center' as const,
+            width: '100px',
+            render: (item: GPChange) => item.relatedGameType ? (
+              <Badge variant="gameType" value={item.relatedGameType} />
+            ) : <span className="text-gray-400">-</span>,
+          },
           { key: 'amount', label: 'GP 변동', align: 'right', width: '130px', render: (item: GPChange) => <GPDisplay amount={item.amount} showSign /> },
           { key: 'balanceAfter', label: '변동 후 잔액', align: 'right', width: '130px', render: (item: GPChange) => `${formatNumber(item.balanceAfter)} GP` },
           { key: 'notes', label: '비고', width: '200px' },

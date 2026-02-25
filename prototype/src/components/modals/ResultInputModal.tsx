@@ -42,6 +42,7 @@ export default function ResultInputModal({ isOpen, onClose, onConfirm, game }: R
 
   if (!game) return null;
 
+  const isST = game.type === 'SURVIVAL_TRIVIA';
   const participants = getParticipantsByGameId(game.id);
   const yesCount = participants.filter(p => p.choice === 'YES').length;
   const noCount = participants.filter(p => p.choice === 'NO').length;
@@ -76,6 +77,47 @@ export default function ResultInputModal({ isOpen, onClose, onConfirm, game }: R
     resetState();
     onClose();
   };
+
+  if (isST) {
+    return (
+      <Modal
+        isOpen={isOpen}
+        onClose={handleClose}
+        title="결과 입력"
+        width="max-w-xl"
+        footer={
+          <button onClick={handleClose} className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+            확인
+          </button>
+        }
+      >
+        <div className="space-y-4">
+          {/* 게임 정보 테이블 */}
+          <table className="w-full text-sm">
+            <tbody>
+              <tr className="border-b border-gray-100">
+                <td className="py-2.5 text-gray-500 w-[120px]">타이틀</td>
+                <td className="py-2.5 text-gray-900">{game.title.ko}</td>
+              </tr>
+              <tr className="border-b border-gray-100">
+                <td className="py-2.5 text-gray-500">총 참여자</td>
+                <td className="py-2.5 text-gray-900">{participants.length}명</td>
+              </tr>
+              <tr className="border-b border-gray-100">
+                <td className="py-2.5 text-gray-500">총 상금 GP</td>
+                <td className="py-2.5 text-gray-900">{formatGP(game.totalPrizeGP)}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg text-center">
+            <p className="text-sm font-medium text-purple-800 mb-1">Survival Trivia는 서버가 자동으로 결과를 판정합니다.</p>
+            <p className="text-sm text-purple-600">퀴즈 정답에 따라 생존자가 자동 결정되며, 별도의 결과 입력이 필요하지 않습니다.</p>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
 
   return (
     <Modal

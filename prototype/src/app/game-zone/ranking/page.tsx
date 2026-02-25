@@ -38,6 +38,11 @@ export default function RankingPage() {
           </Link>
         }
       />
+      <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+        <p className="text-sm text-blue-700">
+          Prediction Market과 Survival Trivia의 누적 GP를 통합하여 랭킹이 산출됩니다.
+        </p>
+      </div>
       <div className="mb-4">
         <FilterBar
           filters={[{ key: 'search', label: '검색', type: 'search', value: search, placeholder: '닉네임 검색' }]}

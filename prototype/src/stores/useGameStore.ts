@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Game, GameStatus } from '@/lib/types';
+import type { Game, GameStatus, GameType } from '@/lib/types';
 import { mockGames } from '@/mock/games';
 
 interface GameFilters {
@@ -34,7 +34,7 @@ interface GameStore {
 }
 
 const DEFAULT_FILTERS: GameFilters = {
-  type: 'PREDICTION_MARKET',
+  type: '',
   status: '',
   dateFrom: '',
   dateTo: '',

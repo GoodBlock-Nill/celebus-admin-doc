@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -136,7 +136,7 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Breadcrumb</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">홈 > 게임존 > GP 변동 내역 > 변동 상세 (모달)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">홈 &gt; 게임존 &gt; GP 변동 내역 &gt; 변동 상세 (모달)</td>
   </tr>
 </table>
 
@@ -169,7 +169,7 @@ p {
 
 <h3>ASCII Layout (게임 관련 변동)</h3>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 ┌─────────────────────────────────────────────┐
 │ GP 변동 상세                           ✕    │
 ├─────────────────────────────────────────────┤
@@ -191,7 +191,7 @@ p {
 
 <h3>ASCII Layout (교환 관련 변동)</h3>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 ┌─────────────────────────────────────────────┐
 │ GP 변동 상세                           ✕    │
 ├─────────────────────────────────────────────┤
@@ -393,17 +393,21 @@ p {
   <li>클릭 시: CEB-BO-GZ-202 게임 상세 화면으로 이동 (새 탭)</li>
 </ul>
 
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
+<p><strong>ST 게임 관련 변동</strong>: 참여(PARTICIPATION)와 보상(REWARD)만 발생합니다. 부스팅(BOOSTING)과 환급(REFUND)은 PM 게임에서만 발생합니다.</p>
+</blockquote>
+
 <h4>교환 관련 변동 (GP 가져오기, CELB으로 보내기)</h4>
 
 <ul>
   <li>관련 게임: "-"</li>
   <li>관련 교환: Txid (BSCScan 링크)
-  <ul>
-    <li>형식: 0x로 시작하는 트랜잭션 해시 전체 표시</li>
-    <li>폰트: mono 폰트 (고정폭)</li>
-    <li>클릭 시: 새 탭에서 BSCScan 트랜잭션 페이지 열림</li>
-    <li>링크 형식: <code style="background-color: #f4f5f7; border-radius: 3px; padding: 2px 4px; font-family: SFMono-Regular, Consolas, monospace; font-size: 0.9em;">https://bscscan.com/tx/{txid}</code></li>
-  </ul>
+    <ul>
+      <li>형식: 0x로 시작하는 트랜잭션 해시 전체 표시</li>
+      <li>폰트: mono 폰트 (고정폭)</li>
+      <li>클릭 시: 새 탭에서 BSCScan 트랜잭션 페이지 열림</li>
+      <li>링크 형식: https://bscscan.com/tx/{txid}</li>
+    </ul>
   </li>
 </ul>
 
@@ -412,31 +416,43 @@ p {
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변동 유형</th>
-    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고 예시</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고 예시 (PM)</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고 예시 (ST)</th>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"참여"</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"참여"</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"2배", "3배", "5배"</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(ST에서 발생하지 않음)</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환급</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"환급"</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(ST에서 발생하지 않음)</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"정답", "1등", "2등", "3등"</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"생존 보상"</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"CELB 교환"</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"CELB 교환"</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CELB으로 보내기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"CELB 교환"</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"CELB 교환"</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"게임 취소 환불"</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"게임 강제 종료 환불"</td>
   </tr>
 </table>
 
@@ -647,7 +663,7 @@ p {
 
 <h4>게임 참여 (PARTICIPATION)</h4>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 변동 전 GP 잔액: 5,000 GP
 GP 변동량: -500 GP
 변동 후 GP 잔액: 4,500 GP (5,000 - 500)
@@ -655,7 +671,7 @@ GP 변동량: -500 GP
 
 <h4>보상 지급 (REWARD)</h4>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 변동 전 GP 잔액: 4,500 GP
 GP 변동량: +1,000 GP
 변동 후 GP 잔액: 5,500 GP (4,500 + 1,000)
@@ -663,31 +679,31 @@ GP 변동량: +1,000 GP
 
 <h4>부스팅 (BOOSTING)</h4>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 변동 전 GP 잔액: 5,500 GP
 GP 변동량: -100 GP
 변동 후 GP 잔액: 5,400 GP (5,500 - 100)
-비고: &quot;2배&quot;
+비고: "2배"
 </pre>
 
 <h4>GP 가져오기 (EXCHANGE_IN)</h4>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 변동 전 GP 잔액: 5,000 GP
 GP 변동량: +2,000 GP
 변동 후 GP 잔액: 7,000 GP (5,000 + 2,000)
 관련 교환: 0x7a3b... (Txid, BSCScan 링크)
-비고: &quot;CELB 교환&quot;
+비고: "CELB 교환"
 </pre>
 
 <h4>CELB으로 보내기 (EXCHANGE_OUT)</h4>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 변동 전 GP 잔액: 7,000 GP
 GP 변동량: -1,000 GP
 변동 후 GP 잔액: 6,000 GP (7,000 - 1,000)
 관련 교환: 0x8c4d... (Txid, BSCScan 링크)
-비고: &quot;CELB 교환&quot;
+비고: "CELB 교환"
 </pre>
 
 <h3>모달과 외부 링크</h3>
@@ -898,9 +914,11 @@ GP 변동량: -1,000 GP
   </tr>
 </table>
 
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
 
 <h2>변경 이력</h2>
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;"><thead><tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">일자</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th></tr></thead><tbody>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 게임유형별 비고 내용 분기 추가, ST 변동 유형 안내</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향 용어 통일: GP 충전→GP 가져오기, GP 출금→CELB으로 보내기</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2025.02.03</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초안 작성</td></tr>
 </tbody></table>

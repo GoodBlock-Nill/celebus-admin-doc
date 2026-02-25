@@ -1,6 +1,6 @@
 import { mockRankings } from './rankings';
 import { mockGames } from './games';
-import type { Participant, GPChange, GPChangeType, RankingUser } from '@/lib/types';
+import type { Participant, GPChange, GPChangeType, GameType, RankingUser } from '@/lib/types';
 
 export interface Member {
   id: string;
@@ -66,10 +66,39 @@ function generateMemberParticipants(member: Member, memberIndex: number): Partic
     .slice(0, gameCount);
 
   return selectedGames.map((game, i) => {
-    const choice: 'YES' | 'NO' = rand() > 0.5 ? 'YES' : 'NO';
-    const isCorrect = game.result ? choice === game.result : false;
+    const isST = game.type === 'SURVIVAL_TRIVIA';
     const isCompleted = game.status === 'Closed' || game.status === 'Ended';
     const participationGP = game.participationCost;
+
+    if (isST) {
+      // Survival Trivia participant
+      const survivedStage = Math.floor(rand() * 10) + 1; // 1-10
+      const survivedAll = survivedStage === 10;
+      const heartsUsed = Math.floor(rand() * 3); // 0-2
+      const rewardGP = isCompleted && survivedAll ? Math.floor(rand() * 300) + 100 : 0;
+
+      return {
+        id: `mpart-${member.id}-${String(i + 1).padStart(3, '0')}`,
+        gameId: game.id,
+        nickname: member.nickname,
+        uid: member.id,
+        choice: null,
+        participationGP,
+        boostingGP: 0,
+        status: '참여 완료',
+        participatedAt: new Date(REF_DATE - rand() * 50 * 24 * 60 * 60 * 1000).toISOString(),
+        rewardGP,
+        refundGP: 0,
+        survivedStage,
+        heartsUsed,
+        eliminatedAtStage: survivedAll ? null : survivedStage,
+        gameType: 'SURVIVAL_TRIVIA' as GameType,
+      };
+    }
+
+    // Prediction Market participant
+    const choice: 'YES' | 'NO' = rand() > 0.5 ? 'YES' : 'NO';
+    const isCorrect = game.result ? choice === game.result : false;
     const boostingGP = rand() > 0.4 ? game.boostingCost : 0;
     const rewardGP = isCompleted && isCorrect ? Math.floor(rand() * 200) + 50 : 0;
     const refundGP = isCompleted ? participationGP : 0;
@@ -86,6 +115,7 @@ function generateMemberParticipants(member: Member, memberIndex: number): Partic
       participatedAt: new Date(REF_DATE - rand() * 50 * 24 * 60 * 60 * 1000).toISOString(),
       rewardGP,
       refundGP,
+      gameType: 'PREDICTION_MARKET' as GameType,
     };
   }).sort((a, b) => new Date(b.participatedAt).getTime() - new Date(a.participatedAt).getTime());
 }
@@ -100,12 +130,14 @@ function generateMemberGPChanges(member: Member, memberIndex: number, participan
   const makeEntry = (
     type: GPChangeType, amount: number, datetime: string,
     gameId: string | null, gameTitle: string | null,
-    exchangeId: string | null, txid: string | null, notes: string
+    exchangeId: string | null, txid: string | null, notes: string,
+    gameType?: GameType
   ): GPChange => ({
     id: `MGPC-${member.id}-${String(++entryIndex).padStart(4, '0')}`,
     datetime, nickname: member.nickname, walletAddress,
     type, amount, balanceAfter: 0,
     relatedGameId: gameId, relatedGameTitle: gameTitle,
+    relatedGameType: gameType,
     relatedExchangeId: exchangeId, txid, notes,
   });
 
@@ -113,34 +145,42 @@ function generateMemberGPChanges(member: Member, memberIndex: number, participan
   for (const p of participants) {
     const game = mockGames.find(g => g.id === p.gameId);
     const gameTitle = game?.title.ko ?? null;
+    const gameType = p.gameType ?? game?.type;
+    const isST = gameType === 'SURVIVAL_TRIVIA';
     const pAt = new Date(p.participatedAt).getTime();
 
+    // PARTICIPATION note differs by game type
+    const participationNote = isST ? '트리비아 참여' : '게임 참여';
     entries.push(makeEntry(
       'PARTICIPATION', -p.participationGP, p.participatedAt,
-      p.gameId, gameTitle, null, null, '게임 참여'
+      p.gameId, gameTitle, null, null, participationNote, gameType
     ));
 
-    if (p.boostingGP > 0) {
+    // BOOSTING: PM only (ST has no boosting)
+    if (!isST && p.boostingGP > 0) {
       entries.push(makeEntry(
         'BOOSTING', -p.boostingGP,
         new Date(pAt + 60000).toISOString(),
-        p.gameId, gameTitle, null, null, '부스팅 사용'
+        p.gameId, gameTitle, null, null, '부스팅 사용', gameType
       ));
     }
 
-    if (p.refundGP > 0) {
+    // REFUND: PM only (ST has no GP refund)
+    if (!isST && p.refundGP > 0) {
       entries.push(makeEntry(
         'REFUND', p.refundGP,
         new Date(pAt + 2 * 86400000 + Math.floor(rand() * 3600000)).toISOString(),
-        p.gameId, gameTitle, null, null, '참여 GP 환급'
+        p.gameId, gameTitle, null, null, '참여 GP 환급', gameType
       ));
     }
 
     if (p.rewardGP > 0) {
+      // REWARD note differs by game type
+      const rewardNote = isST ? '생존 보상' : '예측 성공 보상';
       entries.push(makeEntry(
         'REWARD', p.rewardGP,
         new Date(pAt + 2 * 86400000 + 3600000 + Math.floor(rand() * 3600000)).toISOString(),
-        p.gameId, gameTitle, null, null, '예측 성공 보상'
+        p.gameId, gameTitle, null, null, rewardNote, gameType
       ));
     }
   }

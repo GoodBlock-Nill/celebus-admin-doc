@@ -142,7 +142,9 @@ export default function HistoryPage() {
                             // 보상은 2행 레이아웃
                             <div className="space-y-0.5">
                               <div className="flex items-center gap-2">
-                                <span className="text-blue-500">⚡</span>
+                                <span className={item.gameType === 'SURVIVAL_TRIVIA' ? 'text-purple-500' : 'text-blue-500'}>
+                                  {item.gameType === 'SURVIVAL_TRIVIA' ? '🎮' : '⚡'}
+                                </span>
                                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${cfg.bg} ${cfg.text}`}>
                                   {cfg.label}
                                 </span>
@@ -168,7 +170,9 @@ export default function HistoryPage() {
                             // 나머지는 1행 레이아웃
                             <div className="space-y-0.5">
                               <div className="flex items-center gap-2">
-                                <span className="text-blue-500">⚡</span>
+                                <span className={item.gameType === 'SURVIVAL_TRIVIA' ? 'text-purple-500' : 'text-blue-500'}>
+                                  {item.gameType === 'SURVIVAL_TRIVIA' ? '🎮' : '⚡'}
+                                </span>
                                 <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${cfg.bg} ${cfg.text}`}>
                                   {cfg.label}
                                 </span>

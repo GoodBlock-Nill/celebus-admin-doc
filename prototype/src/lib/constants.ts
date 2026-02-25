@@ -1,4 +1,4 @@
-import type { GameStatus, GPChangeType, ExchangeDirection, ExchangeStatus } from './types';
+import type { GameStatus, GameType, GPChangeType, ExchangeDirection, ExchangeStatus } from './types';
 
 export const GAME_STATUS_CONFIG: Record<GameStatus, { label: string; bg: string; text: string }> = {
   Draft: { label: '임시저장', bg: 'bg-gray-100', text: 'text-gray-600' },
@@ -38,10 +38,24 @@ export const GAME_STATUS_ACTIONS: Record<GameStatus, string[]> = {
   Ended: [],
 };
 
+export const GAME_STATUS_ACTIONS_ST: Record<string, string[]> = {
+  Draft: ['delete', 'edit'],
+  Ready: ['delete', 'edit', 'publish'],
+  Active: ['forceClose'],
+  Ended: [],
+};
+
 export const GAME_TYPE_LABELS: Record<string, string> = {
   PREDICTION_MARKET: 'Prediction Market',
   SURVIVAL_TRIVIA: 'Survival Trivia',
 };
+
+export const GAME_TYPE_BADGE_CONFIG: Record<GameType, { label: string; bg: string; text: string }> = {
+  PREDICTION_MARKET: { label: 'PM', bg: 'bg-indigo-100', text: 'text-indigo-600' },
+  SURVIVAL_TRIVIA: { label: 'ST', bg: 'bg-purple-100', text: 'text-purple-600' },
+};
+
+export const ST_STATUSES: GameStatus[] = ['Draft', 'Ready', 'Active', 'Ended'];
 
 export const ITEMS_PER_PAGE = 20;
 export const RANKING_ITEMS_PER_PAGE = 50;

@@ -4,6 +4,21 @@ export interface MultiLangText {
   jp: string;
 }
 
+export interface QuizChoice {
+  ko: string;
+  en: string;
+  jp: string;
+}
+
+export interface Quiz {
+  id: string;
+  questionNumber: number;
+  text: MultiLangText;
+  choices: [QuizChoice, QuizChoice, QuizChoice, QuizChoice];
+  correctIndex: number; // 0-3
+  timeLimit: number; // seconds (default 10)
+}
+
 export type GameStatus = 'Draft' | 'Ready' | 'Active' | 'Pending' | 'Closed' | 'Ended';
 export type GameType = 'PREDICTION_MARKET' | 'SURVIVAL_TRIVIA';
 export type GPChangeType = 'PARTICIPATION' | 'BOOSTING' | 'REFUND' | 'REWARD' | 'EXCHANGE_IN' | 'EXCHANGE_OUT' | 'REFUND_CANCEL';
@@ -39,6 +54,11 @@ export interface Game {
   createdBy: string;
   updatedAt: string;
   publishedAt: string | null; // 게시일시 (투표 시작일시로 사용)
+  // Survival Trivia fields
+  quizzes?: Quiz[];
+  timePerQuestion?: number; // seconds (default 10)
+  startDateTime?: string; // ST 게임 시작일시
+  survivorCount?: number; // ST 최종 생존자 수
 }
 
 export interface Participant {
@@ -46,13 +66,18 @@ export interface Participant {
   gameId: string;
   nickname: string;
   uid: string;
-  choice: 'YES' | 'NO';
+  choice: 'YES' | 'NO' | null; // PM: YES/NO, ST: null
   participationGP: number;
-  boostingGP: number;
+  boostingGP: number; // PM only, ST = 0
   status: string;
   participatedAt: string;
   rewardGP: number;
   refundGP: number;
+  // Survival Trivia fields
+  survivedStage?: number; // 1-10, how far they survived
+  heartsUsed?: number; // hearts consumed
+  eliminatedAtStage?: number | null; // null if survived all
+  gameType?: GameType; // to identify PM vs ST participant
 }
 
 export interface Exchange {
@@ -81,6 +106,7 @@ export interface GPChange {
   balanceAfter: number;
   relatedGameId: string | null;
   relatedGameTitle: string | null;
+  relatedGameType?: GameType;
   relatedExchangeId: string | null;
   notes: string;
 }

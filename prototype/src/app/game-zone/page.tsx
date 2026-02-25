@@ -16,9 +16,11 @@ export default function GameZoneHome() {
   const games = useGameStore((s) => s.games);
   const rankingSettings = useSettingsStore((s) => s.rankingSettings);
 
-  const activeGames = games.filter(g => g.status === 'Active');
-  const pendingGames = games.filter(g => g.status === 'Pending');
-  const todayParticipants = activeGames.reduce((sum, g) => sum + g.participantCount, 0);
+  const pmGames = games.filter(g => g.type === 'PREDICTION_MARKET');
+  const stGames = games.filter(g => g.type === 'SURVIVAL_TRIVIA');
+  const pmActiveGames = pmGames.filter(g => g.status === 'Active');
+  const stActiveGames = stGames.filter(g => g.status === 'Active');
+  const pendingGames = pmGames.filter(g => g.status === 'Pending'); // Only PM has Pending
 
   const todayExchanges = mockExchanges.slice(0, 10);
   const todayChargeGP = todayExchanges
@@ -42,7 +44,7 @@ export default function GameZoneHome() {
       <section className="mb-10">
         <h2 className="text-xl font-bold text-gray-900 mb-4">전체 현황</h2>
         <div className="grid grid-cols-4 gap-4">
-          <StatsCard label="진행중 게임" value={`${activeGames.length}개`} />
+          <StatsCard label="진행중 게임" value={`${pmActiveGames.length + stActiveGames.length}개`} />
           <StatsCard label="결과 입력 필요" value={`${pendingGames.length}개`} variant="warning" />
           <StatsCard label="오늘 GP 가져오기" value={formatGP(todayChargeGP)} variant="gp" />
           <StatsCard label="오늘 CELB으로 보내기" value={formatGP(todayWithdrawGP)} variant="gp" />
@@ -61,15 +63,19 @@ export default function GameZoneHome() {
             name="Prediction Market"
             href="/game-zone/games"
             stats={[
-              { label: '진행중 게임', value: `${activeGames.length}개` },
+              { label: '진행중 게임', value: `${pmActiveGames.length}개` },
               { label: '결과 입력 필요', value: `${pendingGames.length}개` },
-              { label: '오늘 참여자', value: `${formatNumber(todayParticipants)}명` },
+              { label: '오늘 참여자', value: `${formatNumber(pmActiveGames.reduce((sum, g) => sum + g.participantCount, 0))}명` },
             ]}
           />
           <GameTypeCard
             name="Survival Trivia"
-            href="#"
-            comingSoon
+            href="/game-zone/games"
+            stats={[
+              { label: '진행중 게임', value: `${stActiveGames.length}개` },
+              { label: '예정 게임', value: `${stGames.filter(g => g.status === 'Ready').length}개` },
+              { label: '참여자', value: `${formatNumber(stActiveGames.reduce((sum, g) => sum + g.participantCount, 0))}명` },
+            ]}
           />
         </div>
       </section>

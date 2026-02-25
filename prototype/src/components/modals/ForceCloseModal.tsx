@@ -15,8 +15,11 @@ interface ForceCloseModalProps {
 export default function ForceCloseModal({ isOpen, onClose, onConfirm, game }: ForceCloseModalProps) {
   if (!game) return null;
 
+  const isST = game.type === 'SURVIVAL_TRIVIA';
   const participants = getParticipantsByGameId(game.id);
-  const totalRefundGP = participants.reduce((sum, p) => sum + p.participationGP + p.boostingGP, 0);
+  const totalRefundGP = isST
+    ? participants.reduce((sum, p) => sum + p.participationGP, 0)
+    : participants.reduce((sum, p) => sum + p.participationGP + p.boostingGP, 0);
 
   return (
     <Modal
@@ -39,7 +42,7 @@ export default function ForceCloseModal({ isOpen, onClose, onConfirm, game }: Fo
         {/* Warning text block */}
         <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg space-y-1">
           <p className="text-sm font-medium text-orange-800">
-            {game.status === 'Active' && '⚠️ 강제 종료 시 진행 중인 참여가 즉시 마감됩니다.'}
+            {game.status === 'Active' && (isST ? '⚠️ 강제 종료 시 진행 중인 게임이 즉시 중단됩니다.' : '⚠️ 강제 종료 시 진행 중인 참여가 즉시 마감됩니다.')}
             {game.status === 'Pending' && '⚠️ 결과를 입력하지 않고 즉시 종료됩니다.'}
           </p>
           <p className="text-sm text-orange-700">참여자에게는 참여 GP가 전액 환급됩니다.</p>
@@ -52,7 +55,7 @@ export default function ForceCloseModal({ isOpen, onClose, onConfirm, game }: Fo
           <ul className="list-disc list-inside text-sm text-blue-700 space-y-1">
             <li>게임 상태: {game.status} → Ended</li>
             <li>모든 참여자 참여 GP 전액 환급</li>
-            <li>부스팅 GP도 전액 환급</li>
+            {!isST && <li>부스팅 GP도 전액 환급</li>}
             <li>보상 미지급 (결과 없이 종료)</li>
           </ul>
         </div>

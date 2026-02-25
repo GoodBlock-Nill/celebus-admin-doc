@@ -14,6 +14,8 @@ interface PublishModalProps {
 export default function PublishModal({ isOpen, onClose, onConfirm, game }: PublishModalProps) {
   if (!game) return null;
 
+  const isST = game.type === 'SURVIVAL_TRIVIA';
+
   return (
     <Modal
       isOpen={isOpen}
@@ -33,7 +35,11 @@ export default function PublishModal({ isOpen, onClose, onConfirm, game }: Publi
     >
       <div className="space-y-4">
         <div className="text-sm text-gray-600 space-y-1 mb-4">
-          <p>게시하면 즉시 게임이 시작되어 참여가 가능해집니다.</p>
+          {isST ? (
+            <p>게시하면 게임 일정이 공개되어 시작 시간 10분 전부터 참여자가 입장할 수 있습니다.</p>
+          ) : (
+            <p>게시하면 즉시 게임이 시작되어 참여가 가능해집니다.</p>
+          )}
           <p>게시 후에는 일부 항목만 수정 가능합니다.</p>
         </div>
         <table className="w-full text-sm">
@@ -43,8 +49,17 @@ export default function PublishModal({ isOpen, onClose, onConfirm, game }: Publi
               <td className="py-2.5 text-gray-900 font-medium">{game.title.ko}</td>
             </tr>
             <tr className="border-b border-gray-100">
-              <td className="py-2.5 text-gray-500">참여 기간</td>
-              <td className="py-2.5 text-gray-900">게시 즉시 ~ {formatDateTime(game.endDate)}</td>
+              {isST ? (
+                <>
+                  <td className="py-2.5 text-gray-500">게임 시작일시</td>
+                  <td className="py-2.5 text-gray-900">{formatDateTime(game.startDateTime || '')}</td>
+                </>
+              ) : (
+                <>
+                  <td className="py-2.5 text-gray-500">참여 기간</td>
+                  <td className="py-2.5 text-gray-900">게시 즉시 ~ {formatDateTime(game.endDate)}</td>
+                </>
+              )}
             </tr>
             <tr className="border-b border-gray-100">
               <td className="py-2.5 text-gray-500">총 상금 GP</td>
