@@ -78,9 +78,12 @@ export default function GameZoneTab({ member }: GameZoneTabProps) {
   const completedGames = enrichedParticipants.filter(p =>
     p.game && (p.game.status === 'Closed' || p.game.status === 'Ended')
   );
-  const correctGames = completedGames.filter(p =>
-    p.game && p.game.result && p.choice === p.game.result
-  );
+  const correctGames = completedGames.filter(p => {
+    if (p.gameType === 'SURVIVAL_TRIVIA') {
+      return p.survivedStage === 10;
+    }
+    return p.game && p.game.result && p.choice === p.game.result;
+  });
   const winRate = completedGames.length > 0
     ? Math.round((correctGames.length / completedGames.length) * 100)
     : null;

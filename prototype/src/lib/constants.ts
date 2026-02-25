@@ -41,7 +41,7 @@ export const GAME_STATUS_ACTIONS: Record<GameStatus, string[]> = {
 export const GAME_STATUS_ACTIONS_ST: Record<string, string[]> = {
   Draft: ['delete', 'edit'],
   Ready: ['delete', 'edit', 'publish'],
-  Active: ['forceClose'],
+  Active: ['edit', 'forceClose'],
   Ended: [],
 };
 

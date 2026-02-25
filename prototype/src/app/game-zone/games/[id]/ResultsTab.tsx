@@ -37,8 +37,9 @@ function STResultsContent({ game, participants, rewardPage, setRewardPage }: Con
   const survivors = participants.filter(p => p.survivedStage === 10);
   const survivorCount = game.survivorCount || survivors.length;
   const perPerson = survivorCount > 0 ? Math.floor(game.totalPrizeGP / survivorCount) : 0;
-  const totalPages = Math.ceil(survivors.length / REWARD_PER_PAGE);
-  const paginated = survivors.slice((rewardPage - 1) * REWARD_PER_PAGE, rewardPage * REWARD_PER_PAGE);
+  const allParticipants = [...participants].sort((a, b) => (b.survivedStage ?? 0) - (a.survivedStage ?? 0));
+  const totalPages = Math.ceil(allParticipants.length / REWARD_PER_PAGE);
+  const paginated = allParticipants.slice((rewardPage - 1) * REWARD_PER_PAGE, rewardPage * REWARD_PER_PAGE);
 
   return (
     <div className="space-y-8">
@@ -61,15 +62,26 @@ function STResultsContent({ game, participants, rewardPage, setRewardPage }: Con
         <p className="text-sm text-purple-700">Survival Trivia는 게임 종료 시 서버가 자동으로 보상을 지급합니다. 별도의 결과 입력이나 보상 지급 액션이 필요하지 않습니다.</p>
       </div>
 
-      {survivors.length > 0 && (
+      {participants.length > 0 && (
         <div className="bg-white border border-gray-200 rounded-lg p-6">
-          <h3 className="text-base font-semibold text-gray-900 mb-4">생존자 목록</h3>
+          <h3 className="text-base font-semibold text-gray-900 mb-4">참여자 목록</h3>
           <DataTable<Participant & Record<string, unknown>>
             columns={[
               { key: 'nickname', label: '닉네임', render: (p: Participant) => p.nickname.toLowerCase() },
               { key: 'participationGP', label: '참여 GP', align: 'right' as const, render: (p: Participant) => formatGP(p.participationGP) },
               { key: 'heartsUsed', label: '하트 사용', align: 'center' as const, render: (p: Participant) => `${p.heartsUsed ?? 0}개` },
-              { key: 'rewardGP', label: '보상 GP', align: 'right' as const, render: () => <span className="font-semibold">{formatGP(perPerson)}</span> },
+              { key: 'result', label: '결과', align: 'center' as const, render: (p: Participant) => {
+                const stage = p.survivedStage ?? 0;
+                return stage === 10
+                  ? <span className="text-green-600 font-medium">생존</span>
+                  : <span className="text-red-600">{`탈락(${stage}스테이지)`}</span>;
+              }},
+              { key: 'rewardGP', label: '보상 GP', align: 'right' as const, render: (p: Participant) => {
+                const isSurvivor = p.survivedStage === 10;
+                return isSurvivor
+                  ? <span className="font-semibold">{formatGP(perPerson)}</span>
+                  : <span className="text-gray-400">-</span>;
+              }},
             ]}
             data={paginated as (Participant & Record<string, unknown>)[]}
             rowNumber={{ page: rewardPage, perPage: REWARD_PER_PAGE }}

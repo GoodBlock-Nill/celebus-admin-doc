@@ -67,6 +67,11 @@ export default function CreateGamePage() {
     setErrors({});
     setBoostingCost(1); setBoostingMultiplier(2); setEndDate(''); setResultDate(''); setResultBasis({ ...EMPTY_LANG });
     setQuizzes(createEmptyQuizzes()); setStartDateTime(''); setStMaxParticipants(100);
+    if (type === 'SURVIVAL_TRIVIA') {
+      setParticipationCost(10);
+    } else {
+      setParticipationCost(1);
+    }
   };
 
   const validateForReady = () => {
