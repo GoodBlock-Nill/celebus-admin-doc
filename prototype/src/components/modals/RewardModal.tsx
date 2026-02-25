@@ -14,64 +14,10 @@ interface RewardModalProps {
 
 export default function RewardModal({ isOpen, onClose, onConfirm, game }: RewardModalProps) {
   if (!game) return null;
-
-  const isST = game.type === 'SURVIVAL_TRIVIA';
-
-  if (!isST && !game.result) return null;
+  if (!game.result) return null;
 
   const participants = getParticipantsByGameId(game.id);
   const winners = participants.filter(p => p.choice === game.result);
-  const survivors = participants.filter(p => p.survivedStage === 10);
-  const survivorCount = game.survivorCount ?? survivors.length;
-  const perPersonGP = Math.floor(game.totalPrizeGP / (survivorCount || 1));
-
-  if (isST) {
-    return (
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        title="보상을 지급하시겠습니까?"
-        width="max-w-xl"
-        footer={
-          <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-            확인
-          </button>
-        }
-      >
-        <div className="space-y-4">
-          <table className="w-full text-sm">
-            <tbody>
-              <tr className="border-b border-gray-100">
-                <td className="py-2.5 text-gray-500 w-[140px]">타이틀</td>
-                <td className="py-2.5 text-gray-900 font-medium">{game.title.ko}</td>
-              </tr>
-              <tr className="border-b border-gray-100">
-                <td className="py-2.5 text-gray-500 w-[140px]">총 상금 GP</td>
-                <td className="py-2.5 text-gray-900 font-medium">{formatGP(game.totalPrizeGP)}</td>
-              </tr>
-              <tr className="border-b border-gray-100">
-                <td className="py-2.5 text-gray-500 w-[140px]">생존자 수</td>
-                <td className="py-2.5 text-gray-900">{survivorCount}명</td>
-              </tr>
-              <tr>
-                <td className="py-2.5 text-gray-500 w-[140px]">1인당 보상</td>
-                <td className="py-2.5 text-gray-900">{formatGP(perPersonGP)}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg space-y-1">
-            <p className="text-sm font-medium text-blue-800">💡 보상 계산 안내</p>
-            <ul className="text-sm text-blue-600 list-disc list-inside space-y-0.5">
-              <li>생존자에게 총 상금 GP가 균등 분배됩니다.</li>
-              <li>환급은 없습니다.</li>
-              <li>1인당 보상: {formatGP(game.totalPrizeGP)} ÷ {survivorCount} = {formatGP(perPersonGP)}</li>
-            </ul>
-          </div>
-        </div>
-      </Modal>
-    );
-  }
 
   return (
     <Modal
