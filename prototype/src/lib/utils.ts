@@ -63,3 +63,15 @@ export function truncateHash(hash: string, front = 6, back = 4): string {
 export function cn(...classes: (string | boolean | undefined | null)[]): string {
   return classes.filter(Boolean).join(' ');
 }
+
+/** ST 게임 종료 예정시각 계산 */
+export function calcSTEndTime(
+  startDateTime: string,
+  quizCount: number,
+  timePerQuestion: number,
+  revealDurationSec: number,
+): string {
+  const startMs = new Date(startDateTime).getTime();
+  const durationMs = quizCount * (timePerQuestion + revealDurationSec) * 1000;
+  return new Date(startMs + durationMs).toISOString();
+}

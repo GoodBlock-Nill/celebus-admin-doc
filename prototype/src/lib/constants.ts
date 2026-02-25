@@ -57,6 +57,8 @@ export const GAME_TYPE_BADGE_CONFIG: Record<GameType, { label: string; bg: strin
 
 export const ST_STATUSES: GameStatus[] = ['Draft', 'Ready', 'Active', 'Ended'];
 
+export const ST_REVEAL_DURATION_SEC = 5;
+
 export const ITEMS_PER_PAGE = 20;
 export const RANKING_ITEMS_PER_PAGE = 50;
 

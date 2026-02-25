@@ -1,7 +1,7 @@
 'use client';
 
-import { formatDate, formatDateTime, formatGP, formatNumber } from '@/lib/utils';
-import { GAME_TYPE_LABELS } from '@/lib/constants';
+import { formatDate, formatDateTime, formatGP, formatNumber, calcSTEndTime } from '@/lib/utils';
+import { GAME_TYPE_LABELS, ST_REVEAL_DURATION_SEC } from '@/lib/constants';
 import QuizEditor from '@/components/forms/QuizEditor';
 import type { Game } from '@/lib/types';
 
@@ -41,6 +41,9 @@ export default function BasicInfoTab({ game }: BasicInfoTabProps) {
           ]} />
           <DetailSection title="일정설정" fields={[
             { label: '게임 시작일시', value: formatDateTime(game.startDateTime || '') },
+            { label: '게임 종료 예정시각', value: game.startDateTime
+              ? formatDateTime(calcSTEndTime(game.startDateTime, game.quizzes?.length ?? 10, game.timePerQuestion ?? 10, ST_REVEAL_DURATION_SEC))
+              : '-' },
             { label: '게시일시', value: game.publishedAt ? formatDateTime(game.publishedAt) : '(게시 시 설정)' },
           ]} />
           {game.quizzes && game.quizzes.length > 0 && (
