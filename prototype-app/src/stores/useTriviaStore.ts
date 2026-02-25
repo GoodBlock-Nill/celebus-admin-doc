@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import type { TriviaGame, TriviaQuestion, TriviaResult, TriviaResultType } from '@/lib/types';
 import { mockTriviaGame, mockTriviaQuestions } from '@/mock/trivia';
+import { mockUser } from '@/mock/user';
 
 interface TriviaState {
   triviaGame: TriviaGame | null;
@@ -24,7 +25,7 @@ export const useTriviaStore = create<TriviaState>((set, get) => ({
   triviaGame: mockTriviaGame,
   currentQuestion: mockTriviaQuestions[0] ?? null,
   questions: mockTriviaQuestions,
-  userHearts: 1,
+  userHearts: mockUser.hearts,
   isEliminated: false,
   isSpectating: false,
   selectedAnswer: null,

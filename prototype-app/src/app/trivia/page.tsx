@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { TRIVIA_STATUS_CONFIG } from '@/lib/constants';
 import { formatGP, formatNumber, getRemainingTime } from '@/lib/utils';
 import { TriviaDebugPanel } from '@/components/ui/TriviaDebugPanel';
+import { mockUser } from '@/mock/user';
 import type { TriviaGame } from '@/lib/types';
 
 const ENTER_TIMEOUT_MS = 10000;
@@ -32,7 +33,7 @@ const mockTrivia: TriviaGame = {
 };
 
 const MOCK_GP = 300;
-const MOCK_HEARTS = 1;
+const MOCK_HEARTS = mockUser.hearts;
 
 export default function TriviaHomePage() {
   const router = useRouter();
