@@ -22,9 +22,9 @@ export default function BasicInfoTab({ game }: BasicInfoTabProps) {
         { label: '상세설명 (KO)', value: game.description.ko || '-', full: true, html: true },
         { label: '상세설명 (EN)', value: game.description.en || '-', full: true, html: true },
         { label: '상세설명 (JP)', value: game.description.jp || '-', full: true, html: true },
-        { label: '힌트 링크', value: game.hintLinkEnabled && game.hintLink ? (
+        ...(!isST ? [{ label: '힌트 링크', value: game.hintLinkEnabled && game.hintLink ? (
           <a href={game.hintLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{game.hintLink}</a>
-        ) : '-' },
+        ) : '-' }] : []),
         { label: '생성일', value: formatDateTime(game.createdAt) },
         { label: '생성자', value: game.createdBy },
       ]} />

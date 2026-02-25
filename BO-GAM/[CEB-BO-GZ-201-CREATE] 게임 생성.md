@@ -162,7 +162,7 @@
 | 게임 유형 | Radio 버튼 | Prediction Market / Survival Trivia 선택 가능 (기본 선택: Prediction Market), 유형 변경 시 하단 폼 항목 변경됨 |
 | 기본정보 | 타이틀 (필수) | 3개 언어 탭 (KO/EN/JP), 각 50자 제한, 실시간 글자 수 표시 |
 | | 상세설명 (필수) | WYSIWYG 에디터 (KO/EN/JP 탭, Toolbar: Bold/Italic/Underline/Link/리스트/이미지/정렬) |
-| | 힌트 링크 | Segmented Button (사용/미사용, 기본: 미사용), '사용' 선택 시 URL 입력 표시 |
+| | 힌트 링크 (PM 전용) | Segmented Button (사용/미사용, 기본: 미사용), '사용' 선택 시 URL 입력 표시 |
 | 퀴즈설정 (ST 전용) | 문제 수 | 10문제 고정, 변경 불가 |
 | | 문제당 제한시간 (필수) | Number Input, 기본값: 10초 |
 | | 문제 텍스트 (필수) | 3개 언어 탭 (KO/EN/JP), 각 200자 제한 |
@@ -205,7 +205,7 @@
 - 각 언어별 500자 제한
 - 필수 입력: 모든 언어 필수 (KO/EN/JP)
 
-### 힌트 링크 입력
+### 힌트 링크 입력 (Prediction Market 전용)
 
 ##### 힌트 링크
 - Segmented Button: 사용/미사용 (기본값: 미사용)
@@ -376,7 +376,7 @@
 | ---- | ---- |
 | 타이틀 | 모든 언어 입력 필수 (KO/EN/JP), 각 50자 이내 |
 | 상세설명 | 모든 언어 입력 필수 (KO/EN/JP), 각 500자 이내 |
-| 힌트 링크 | URL 형식 검증 (사용 선택 시) |
+| 힌트 링크 (PM 전용) | URL 형식 검증 (사용 선택 시) |
 | 총 상금 GP | 1 GP 이상 |
 
 ##### Prediction Market 전용 필수 항목
@@ -469,7 +469,7 @@
 | 참여 정원 (ST) | 100명 | - |
 | 참여 비용 (ST) | 10 GP | - |
 | 문제당 제한시간 (ST) | 10초 | - |
-| 힌트 링크 | 미사용 | Segmented Button |
+| 힌트 링크 (PM 전용) | 미사용 | Segmented Button |
 
 ### 글자 수 제한
 

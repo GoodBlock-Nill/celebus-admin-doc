@@ -101,7 +101,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
   const canEditAll = !!(('all' in editable) && editable.all);
   const canEditTitle = !!(canEditAll || editable.title);
   const canEditDescription = !!(canEditAll || editable.description);
-  const canEditHintLink = !!(canEditAll || editable.hintLink);
+  const canEditHintLink = !!(canEditAll || editable.hintLink) && !isST;
   const canEditEndDate = !!(canEditAll || editable.endDate);
   const canEditResultDate = !!(canEditAll || editable.resultDate);
   const canEditResultBasis = !!(canEditAll || editable.resultBasis);
@@ -223,7 +223,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
               onChange={setDescription}
               disabled={!canEditDescription}
             />
-            {(canEditAll || canEditHintLink) && (
+            {(!isST && (canEditAll || canEditHintLink)) && (
               <HintLinkField
                 hintLinkEnabled={hintLinkEnabled}
                 setHintLinkEnabled={setHintLinkEnabled}

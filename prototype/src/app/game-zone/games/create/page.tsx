@@ -39,6 +39,7 @@ export default function CreateGamePage() {
 
   // Common state
   const [gameType, setGameType] = useState<GameType>('PREDICTION_MARKET');
+  const isST = gameType === 'SURVIVAL_TRIVIA';
   const [title, setTitle] = useState<MultiLangText>({ ...EMPTY_LANG });
   const [description, setDescription] = useState<MultiLangText>({ ...EMPTY_LANG });
   const [totalPrizeGP, setTotalPrizeGP] = useState(10000);
@@ -117,8 +118,8 @@ export default function CreateGamePage() {
       type: gameType,
       title,
       description,
-      hintLinkEnabled,
-      hintLink: hintLinkEnabled ? hintLink : '',
+      hintLinkEnabled: isST ? false : hintLinkEnabled,
+      hintLink: isST ? '' : (hintLinkEnabled ? hintLink : ''),
       status,
       totalPrizeGP,
       maxParticipants: gameType === 'SURVIVAL_TRIVIA' ? stMaxParticipants : (useLimit ? maxParticipants : 0),
@@ -195,43 +196,45 @@ export default function CreateGamePage() {
             </div>
             <MultiLangInput label="타이틀" values={title} onChange={setTitle} maxLength={50} required error={errors.titleKo || errors.titleEn || errors.titleJp} />
             <MultiLangEditor label="상세설명" values={description} onChange={setDescription} required error={errors.descKo || errors.descEn || errors.descJp} />
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-sm font-medium text-gray-700 w-[100px]">힌트 링크</span>
-                <div className="flex rounded-lg border border-gray-200 overflow-hidden">
-                  <button
-                    type="button"
-                    onClick={() => setHintLinkEnabled(true)}
-                    className={`px-4 py-1.5 text-sm font-medium transition-colors ${
-                      hintLinkEnabled ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    사용
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setHintLinkEnabled(false)}
-                    className={`px-4 py-1.5 text-sm font-medium transition-colors ${
-                      !hintLinkEnabled ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    미사용
-                  </button>
+            {!isST && (
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-sm font-medium text-gray-700 w-[100px]">힌트 링크</span>
+                  <div className="flex rounded-lg border border-gray-200 overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setHintLinkEnabled(true)}
+                      className={`px-4 py-1.5 text-sm font-medium transition-colors ${
+                        hintLinkEnabled ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      사용
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setHintLinkEnabled(false)}
+                      className={`px-4 py-1.5 text-sm font-medium transition-colors ${
+                        !hintLinkEnabled ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      미사용
+                    </button>
+                  </div>
                 </div>
+                {hintLinkEnabled && (
+                  <div>
+                    <input
+                      type="url"
+                      value={hintLink}
+                      onChange={(e) => setHintLink(e.target.value)}
+                      placeholder="https://example.com/hint"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">게임 관련 힌트 페이지 URL을 입력하세요.</p>
+                  </div>
+                )}
               </div>
-              {hintLinkEnabled && (
-                <div>
-                  <input
-                    type="url"
-                    value={hintLink}
-                    onChange={(e) => setHintLink(e.target.value)}
-                    placeholder="https://example.com/hint"
-                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <p className="text-xs text-gray-400 mt-1">게임 관련 힌트 페이지 URL을 입력하세요.</p>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </Section>
 
