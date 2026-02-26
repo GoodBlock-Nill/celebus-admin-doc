@@ -64,11 +64,11 @@
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -106,7 +106,7 @@
 
 <h2>2. UI 설명</h2>
 
-<h3>레이아웃</h3>
+<h3>레이아웃 (Prediction Market)</h3>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 ┌─────────────────────────────────────────────────┐
@@ -115,7 +115,8 @@
 │                                                 │
 │  ⚠️ 강제 종료 시 진행 중인 참여가 즉시        │
 │  마감됩니다.                                    │
-│  참여자에게는 참여 GP가 전액 환급됩니다.       │
+│  참여자에게는 참여 GP와 부스팅 GP가 전액       │
+│  환불됩니다.                                    │
 │  이 작업은 되돌릴 수 없습니다.                 │
 │                                                 │
 │  ┌───────────────────────────────────────────┐ │
@@ -123,7 +124,7 @@
 │  ├───────────────────────────────────────────┤ │
 │  │ • 게임 상태: Active/Pending → Ended      │ │
 │  │ • 모든 참여자 참여 GP 전액 환불          │ │
-│  │ • 게임유형별 부스팅 GP 환급 여부         │ │
+│  │ • 부스팅 GP도 전액 환불                  │ │
 │  │ • 보상 미지급 (결과 없이 종료)          │ │
 │  └───────────────────────────────────────────┘ │
 │                                                 │
@@ -141,7 +142,69 @@
 └─────────────────────────────────────────────────┘
 </pre>
 
+<h3>레이아웃 (Survival Trivia)</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+┌─────────────────────────────────────────────────┐
+│  게임을 강제 종료하시겠습니까?               [X] │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ⚠️ 강제 종료 시 진행 중인 게임이 즉시        │
+│  중단됩니다.                                    │
+│  참여자에게는 참여 GP가 전액 환불됩니다.       │
+│  이 작업은 되돌릴 수 없습니다.                 │
+│                                                 │
+│  ┌───────────────────────────────────────────┐ │
+│  │ 강제 종료 시 처리 내용                    │ │
+│  ├───────────────────────────────────────────┤ │
+│  │ • 게임 상태: Active → Ended              │ │
+│  │ • 모든 참여자 참여 GP 전액 환불          │ │
+│  │ • 보상 미지급 (결과 없이 종료)          │ │
+│  └───────────────────────────────────────────┘ │
+│                                                 │
+│  ┌───────────────────────────────────────────┐ │
+│  │ 타이틀       │ K-pop 아이돌 데뷔 연도  │ │
+│  │              │ 퀴즈                     │ │
+│  ├──────────────┼──────────────────────────┤ │
+│  │ 현재 참여자  │ 245명                    │ │
+│  ├──────────────┼──────────────────────────┤ │
+│  │ 환급 예정 GP │ 245 GP                   │ │
+│  └───────────────────────────────────────────┘ │
+│                                                 │
+│                                                 │
+│                        [ 취소 ]  [ 강제 종료 ] │
+└─────────────────────────────────────────────────┘
+</pre>
+
 <blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
+<p><strong>게임유형별 차이점</strong></p>
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">구분</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Prediction Market</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Survival Trivia</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">경고 문구</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"강제 종료 시 진행 중인 참여가 즉시 마감됩니다."</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"강제 종료 시 진행 중인 게임이 즉시 중단됩니다."</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환급 안내</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"참여 GP와 부스팅 GP가 전액 환불됩니다."</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"참여 GP가 전액 환불됩니다."</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">처리 내용 (부스팅)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"부스팅 GP도 전액 환불" 항목 포함</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 항목 없음</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상태 전환</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Active/Pending → Ended</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Active → Ended</td>
+  </tr>
+</table>
 <p><strong>상태별 경고 문구 분기</strong></p>
 <ul>
   <li><strong>Active(진행중) - PM</strong>: "⚠️ 강제 종료 시 진행 중인 참여가 즉시 마감됩니다."</li>
@@ -328,10 +391,28 @@
 <h4>게임 상태 변경</h4>
 
 <ul>
-  <li>Active → Ended 또는 Pending → Ended</li>
-  <li>Active: 더 이상 참여 불가</li>
-  <li>Pending: 결과 입력 단계 없이 바로 종료 상태로 전환</li>
+  <li><strong>PM</strong>: Active → Ended 또는 Pending → Ended
+    <ul>
+      <li>Active: 진행 중인 투표가 즉시 마감되어 더 이상 참여 불가</li>
+      <li>Pending: 결과 입력 단계 없이 바로 종료 상태로 전환</li>
+    </ul>
+  </li>
+  <li><strong>ST</strong>: Active → Ended (Pending 상태 없음)
+    <ul>
+      <li>게임 시작 전(Active, 아직 시작일시 미도래): 게임 일정이 취소되어 참여자 입장 불가</li>
+      <li>게임 진행 중(Active, 퀴즈 진행 중): 실시간 진행 중인 게임이 즉시 중단됨</li>
+    </ul>
+  </li>
 </ul>
+
+<h4>ST Active 강제 종료 시 특수 처리</h4>
+
+<ol>
+  <li><strong>진행 중인 참여자 즉시 퇴장</strong>: 현재 퀴즈에 참여 중인 모든 참여자에게 게임 중단 알림 표시</li>
+  <li><strong>현재 스테이지까지 데이터 보존</strong>: 강제 종료 시점까지의 스테이지별 생존/탈락 기록은 이력으로 보존</li>
+  <li><strong>보상 미지급</strong>: 생존자가 있더라도 게임이 정상 완료되지 않았으므로 보상 없음</li>
+  <li><strong>앱 표시</strong>: 게임존에서 해당 게임이 "종료" 상태로 전환됨</li>
+</ol>
 
 <h4>참여 GP 환급</h4>
 
@@ -562,6 +643,12 @@
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 강제 종료 처리 추가: ST는 Active에서만 종료, 부스팅 없음, 게임유형별 환급 안내 분기</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 전용 와이어프레임 추가, ST Active 강제 종료 특수 처리 (실시간 중단·데이터 보존), 게임유형별 상태 변경 상세화</td>
   </tr>
 </table>
 

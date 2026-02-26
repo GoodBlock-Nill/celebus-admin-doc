@@ -64,11 +64,11 @@
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -105,7 +105,7 @@
 
 <h2>2. UI 설명</h2>
 
-<h3>레이아웃</h3>
+<h3>레이아웃 (Prediction Market)</h3>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 ┌─────────────────────────────────────────────────┐
@@ -131,6 +131,58 @@
 │                        [ 취소 ]  [ 게시하기 ]  │
 └─────────────────────────────────────────────────┘
 </pre>
+
+<h3>레이아웃 (Survival Trivia)</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+┌─────────────────────────────────────────────────┐
+│  게임을 게시하시겠습니까?                    [X] │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  게시하면 게임 일정이 공개되어 시작 시간         │
+│  10분 전부터 참여자가 입장할 수 있습니다.       │
+│  게시 후에는 일부 항목만 수정 가능합니다.        │
+│                                                  │
+│                                                 │
+│  ┌───────────────────────────────────────────┐ │
+│  │ 타이틀       │ K-pop 아이돌 데뷔 연도  │ │
+│  │              │ 퀴즈                     │ │
+│  ├──────────────┼──────────────────────────┤ │
+│  │ 게임 시작일시│ 2025.02.15 14:00        │ │
+│  ├──────────────┼──────────────────────────┤ │
+│  │ 총 상금 GP   │ 50,000 GP               │ │
+│  └───────────────────────────────────────────┘ │
+│                                                 │
+│                                                 │
+│                        [ 취소 ]  [ 게시하기 ]  │
+└─────────────────────────────────────────────────┘
+</pre>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
+  <p><strong>게임유형별 차이점</strong></p>
+  <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+    <tr>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">구분</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Prediction Market</th>
+      <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Survival Trivia</th>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">안내 문구</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"게시하면 즉시 게임이 시작되어 참여가 가능해집니다."</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"게시하면 게임 일정이 공개되어 시작 시간 10분 전부터 참여자가 입장할 수 있습니다."</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일정 필드명</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 기간</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 시작일시</td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일정 표시 형식</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게시 즉시 ~ {종료일시}</td>
+      <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{시작일시} 단일값</td>
+    </tr>
+  </table>
+</blockquote>
 
 <h3>구성요소</h3>
 
@@ -266,6 +318,8 @@
 
 <h3>게시 가능 조건</h3>
 
+<h4>공통 조건</h4>
+
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
@@ -284,6 +338,72 @@
   </tr>
 </table>
 
+<h4>Prediction Market 필수 정보</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">필수 항목</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이틀</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">KO/EN/JP 모두 입력</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상세설명</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">KO/EN/JP 모두 입력</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">0보다 큰 값</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">투표 종료일시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 시각 이후</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 발표 예정일</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">종료일시 이후</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확인 기준</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">KO/EN/JP 모두 입력</td>
+  </tr>
+</table>
+
+<h4>Survival Trivia 필수 정보</h4>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">필수 항목</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이틀</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">KO/EN/JP 모두 입력</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상세설명</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">KO/EN/JP 모두 입력</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">0보다 큰 값</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 시작일시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 시각 이후</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1~500명 범위</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">퀴즈</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">10문제 완성 (문제 텍스트 KO/EN/JP, 4개 선택지 KO/EN/JP, 정답 지정, 제한시간)</td>
+  </tr>
+</table>
+
 <h3>게시 후 동작</h3>
 
 <h4>Prediction Market</h4>
@@ -291,7 +411,7 @@
 <ol>
   <li>게임 상태가 Active로 변경됨</li>
   <li>투표 시작일시가 현재 시각으로 자동 설정됨</li>
-  <li>즉시 참여 가능</li>
+  <li>앱에서 즉시 게임 참여 가능</li>
   <li>게시 후에도 일부 항목 수정 가능 (상세는 CEB-BO-GZ-202-EDIT 참조)</li>
 </ol>
 
@@ -299,10 +419,11 @@
 
 <ol>
   <li>게임 상태가 Active로 변경됨</li>
-  <li>게임 일정이 앱에 공개됨</li>
-  <li>게임 시작 10분 전부터 참여자 입장 가능</li>
-  <li>게시 후에도 일부 항목 수정 가능 (상세는 CEB-BO-GZ-202-EDIT 참조)</li>
-  <li>퀴즈 수정은 Active 상태에서 불가</li>
+  <li>앱 게임존에서 게임 카드가 노출됨 (시작 전 "예정" 표시)</li>
+  <li>게임 시작 10분 전부터 참여자 입장 가능 (CEB-GAM-205 Pre-start 화면)</li>
+  <li>게임 시작일시에 자동으로 퀴즈 진행 시작</li>
+  <li>게시 후에도 타이틀, 상세설명만 수정 가능 (상세는 CEB-BO-GZ-202-EDIT 참조)</li>
+  <li><strong>퀴즈, 참여 정원, 참여 비용, 게임 시작일시는 Active 상태에서 수정 불가</strong></li>
 </ol>
 
 <h3>관리자 로그</h3>
@@ -461,6 +582,12 @@
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 게시 동작 추가: ST 게임 일정 공개, 게임유형별 안내 문구 분기</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 전용 와이어프레임 추가, 게임유형별 게시 가능 조건 상세화 (퀴즈·정원·시작일시), ST 게시 후 동작 보강</td>
   </tr>
 </table>
 

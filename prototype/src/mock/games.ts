@@ -87,30 +87,34 @@ function createGame(index: number, status: GameStatus): Game {
   const createdAt = randomDate(new Date(new Date(endDate).getTime() - 30 * 24 * 60 * 60 * 1000), new Date(new Date(endDate).getTime() - 14 * 24 * 60 * 60 * 1000));
   const hintLinkEnabled = Math.random() > 0.5;
 
+  // Draft: 필수값 일부 미입력 (모두 입력 시 자동으로 Ready 전환)
+  const isDraft = status === 'Draft';
+  const draftVariant = index % 2; // 0: 초기 작성, 1: 거의 완성
+
   return {
     id: `game-${String(index + 1).padStart(3, '0')}`,
     type: 'PREDICTION_MARKET' as GameType,
     title: {
       ko: title,
-      en: `[EN] ${title}`,
-      jp: `[JP] ${title}`,
+      en: isDraft && draftVariant === 0 ? '' : `[EN] ${title}`,
+      jp: isDraft && draftVariant === 0 ? '' : `[JP] ${title}`,
     },
     description: {
       ko: `${title}에 대한 예측 게임입니다. YES 또는 NO를 선택하여 참여하세요.`,
-      en: `This is a prediction game about ${title}. Choose YES or NO to participate.`,
-      jp: `${title}に関する予測ゲームです。YESまたはNOを選択して参加してください。`,
+      en: isDraft ? '' : `This is a prediction game about ${title}. Choose YES or NO to participate.`,
+      jp: isDraft ? '' : `${title}に関する予測ゲームです。YESまたはNOを選択して参加してください。`,
     },
-    hintLinkEnabled,
-    hintLink: hintLinkEnabled ? `https://example.com/hint/${index + 1}` : '',
+    hintLinkEnabled: isDraft ? false : hintLinkEnabled,
+    hintLink: isDraft ? '' : (hintLinkEnabled ? `https://example.com/hint/${index + 1}` : ''),
     status,
-    totalPrizeGP: [10000, 50000, 100000, 200000, 500000][Math.floor(Math.random() * 5)],
+    totalPrizeGP: isDraft && draftVariant === 0 ? 0 : [10000, 50000, 100000, 200000, 500000][Math.floor(Math.random() * 5)],
     maxParticipants: Math.random() > 0.3 ? [100, 500, 1000, 0][Math.floor(Math.random() * 4)] : 0,
     participationCost: [1, 5, 10, 20, 50][Math.floor(Math.random() * 5)],
     boostingCost: [1, 5, 10, 20][Math.floor(Math.random() * 4)],
     boostingMultiplier: [2, 3, 5, 10][Math.floor(Math.random() * 4)],
-    endDate,
-    resultDate,
-    resultBasis: {
+    endDate: isDraft && draftVariant === 0 ? '' : endDate,
+    resultDate: isDraft ? '' : resultDate,
+    resultBasis: isDraft ? { ko: '', en: '', jp: '' } : {
       ko: '공식 발표 기준으로 결과를 확인합니다.',
       en: 'Results are confirmed based on official announcements.',
       jp: '公式発表を基準に結果を確認します。',
@@ -285,26 +289,33 @@ function createSTGame(index: number, status: GameStatus): Game {
       startDateTime = randomDate(futureMonth, new Date(futureMonth.getTime() + 30 * 24 * 60 * 60 * 1000));
   }
 
-  const createdAt = randomDate(new Date(new Date(startDateTime).getTime() - 30 * 24 * 60 * 60 * 1000), new Date(new Date(startDateTime).getTime() - 7 * 24 * 60 * 60 * 1000));
+  const actualStartDateTime = status === 'Draft' && index % 2 === 0 ? '' : startDateTime;
+  const createdAt = actualStartDateTime
+    ? randomDate(new Date(new Date(actualStartDateTime).getTime() - 30 * 24 * 60 * 60 * 1000), new Date(new Date(actualStartDateTime).getTime() - 7 * 24 * 60 * 60 * 1000))
+    : randomDate(new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000), new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000));
+
+  // Draft: 필수값 일부 미입력 (모두 입력 시 자동으로 Ready 전환)
+  const isDraft = status === 'Draft';
+  const draftVariant = index % 2; // 0: 초기 작성, 1: 거의 완성
 
   return {
     id: `st-game-${String(index + 1).padStart(3, '0')}`,
     type: 'SURVIVAL_TRIVIA' as GameType,
     title: {
       ko: title,
-      en: `[EN] ${title}`,
-      jp: `[JP] ${title}`,
+      en: isDraft && draftVariant === 0 ? '' : `[EN] ${title}`,
+      jp: isDraft && draftVariant === 0 ? '' : `[JP] ${title}`,
     },
     description: {
       ko: `${title} — 10문제를 풀고 최후의 생존자가 되세요!`,
-      en: `${title} — Answer 10 questions and be the last survivor!`,
-      jp: `${title} — 10問に答えて最後の生存者になってください！`,
+      en: isDraft ? '' : `${title} — Answer 10 questions and be the last survivor!`,
+      jp: isDraft ? '' : `${title} — 10問に答えて最後の生存者になってください！`,
     },
     hintLinkEnabled: false,
     hintLink: '',
     status,
-    totalPrizeGP: [10000, 50000, 100000, 200000][Math.floor(Math.random() * 4)],
-    maxParticipants: [100, 200, 300, 500][Math.floor(Math.random() * 4)],
+    totalPrizeGP: isDraft && draftVariant === 0 ? 0 : [10000, 50000, 100000, 200000][Math.floor(Math.random() * 4)],
+    maxParticipants: isDraft && draftVariant === 0 ? 0 : [100, 200, 300, 500][Math.floor(Math.random() * 4)],
     participationCost: [1, 5, 10][Math.floor(Math.random() * 3)],
     boostingCost: 0,
     boostingMultiplier: 0,
@@ -323,9 +334,9 @@ function createSTGame(index: number, status: GameStatus): Game {
     createdBy: ADMINS[Math.floor(Math.random() * ADMINS.length)],
     updatedAt: createdAt,
     publishedAt,
-    quizzes: ST_QUIZ_TEMPLATES,
+    quizzes: isDraft && draftVariant === 0 ? [] : (isDraft ? ST_QUIZ_TEMPLATES.slice(0, 5) : ST_QUIZ_TEMPLATES),
     timePerQuestion: 10,
-    startDateTime,
+    startDateTime: isDraft && draftVariant === 0 ? '' : startDateTime,
     survivorCount,
   };
 }

@@ -2,7 +2,7 @@
 
 import Modal from '@/components/ui/Modal';
 import type { Game } from '@/lib/types';
-import { GAME_STATUS_CONFIG } from '@/lib/constants';
+import { GAME_STATUS_CONFIG, GAME_TYPE_BADGE_CONFIG } from '@/lib/constants';
 
 interface DeleteModalProps {
   isOpen: boolean;
@@ -38,6 +38,14 @@ export default function DeleteModal({ isOpen, onClose, onConfirm, game }: Delete
             <tr className="border-b border-gray-100">
               <td className="py-2.5 text-gray-500 w-[140px]">타이틀</td>
               <td className="py-2.5 text-gray-900 font-medium">{game.title.ko}</td>
+            </tr>
+            <tr className="border-b border-gray-100">
+              <td className="py-2.5 text-gray-500 w-[140px]">게임유형</td>
+              <td className="py-2.5 text-gray-900">
+                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${GAME_TYPE_BADGE_CONFIG[game.type].bg} ${GAME_TYPE_BADGE_CONFIG[game.type].text}`}>
+                  {GAME_TYPE_BADGE_CONFIG[game.type].label}
+                </span>
+              </td>
             </tr>
             <tr className="border-b border-gray-100">
               <td className="py-2.5 text-gray-500">상태</td>

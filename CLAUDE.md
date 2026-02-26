@@ -92,7 +92,7 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 | 7 | CEB-BO-GZ-202-MD-EDIT-CANCEL | 수정 취소 확인 | Modal | 1 | ✅ 완료 (변경 없음) |
 | 8 | CEB-BO-GZ-202-MD-PUBLISH | 게시 확인 | Modal | 1, 2 | ✅ Phase 2 반영 |
 | 9 | CEB-BO-GZ-202-MD-CLOSE | 종료 확인 | Modal | 1, 2 | ✅ Phase 2 반영 |
-| 10 | CEB-BO-GZ-202-MD-DELETE | 삭제 확인 | Modal | 1 | ✅ 완료 (변경 없음) |
+| 10 | CEB-BO-GZ-202-MD-DELETE | 삭제 확인 | Modal | 1, 2 | ✅ Phase 2 반영 |
 | 11 | CEB-BO-GZ-202-MD-RESULT | 결과 입력 | Modal | 1, 2 | ✅ Phase 2 반영 |
 | 12 | CEB-BO-GZ-202-MD-REWARD | 보상 지급 확인 | Modal | 1, 2 | ✅ Phase 2 반영 |
 | 13 | CEB-BO-GZ-401 | 랭킹 조회 | Page | 1, 2 | ✅ Phase 2 반영 |

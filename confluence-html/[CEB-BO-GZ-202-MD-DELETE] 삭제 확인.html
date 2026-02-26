@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2025.02.03</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -144,7 +144,7 @@ p {
 
 <h2>1. 화면 목적</h2>
 
-<p>임시저장(Draft) 또는 게시대기(Ready) 상태의 게임을 완전히 삭제하는 확인 모달입니다. 삭제된 게임은 복구할 수 없으므로 신중한 확인이 필요합니다. Draft 또는 Ready 상태에서만 삭제가 가능하며, 진행 중이거나 종료된 게임은 삭제할 수 없습니다.</p>
+<p>임시저장(Draft) 또는 게시대기(Ready) 상태의 게임을 완전히 삭제하는 확인 모달입니다. <strong>Prediction Market 및 Survival Trivia 공통</strong>으로 사용됩니다. 삭제된 게임은 복구할 수 없으므로 신중한 확인이 필요합니다. Draft 또는 Ready 상태에서만 삭제가 가능하며, 진행 중이거나 종료된 게임은 삭제할 수 없습니다.</p>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
 
@@ -160,10 +160,12 @@ p {
 │  삭제된 게임은 복구할 수 없습니다.             │
 │                                                 │
 │  ┌───────────────────────────────────────────┐ │
-│  │ 타이틀  │ 손흥민이 다음 경기에서        │ │
-│  │         │ 골을 넣을까요?                │ │
-│  ├─────────┼───────────────────────────────┤ │
-│  │ 상태    │ {현재 상태: 임시저장/게시대기} │ │
+│  │ 타이틀    │ 손흥민이 다음 경기에서      │ │
+│  │           │ 골을 넣을까요?              │ │
+│  ├───────────┼────────────────────────────┤ │
+│  │ 게임유형  │ [Prediction Market]         │ │
+│  ├───────────┼────────────────────────────┤ │
+│  │ 상태      │ {현재 상태: 임시저장/게시대기}│ │
 │  └───────────────────────────────────────────┘ │
 │                                                 │
 │                                                 │
@@ -197,7 +199,7 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">삭제 대상 요약 테이블</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Table</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이틀, 상태 표시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이틀, 게임유형, 상태 표시</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">취소 버튼</td>
@@ -225,6 +227,12 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">String</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 타이틀 원문</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">손흥민이 다음 경기에서 골을 넣을까요?</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임유형</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">String</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임유형 Badge (PM/ST)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market 또는 Survival Trivia</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상태</td>
@@ -353,6 +361,7 @@ p {
   <li>게임 기본 정보 삭제</li>
   <li>관련 이미지/파일 삭제 (S3 등)</li>
   <li>연관 데이터 정리 (Draft/Ready 상태이므로 참여자 없음)</li>
+  <li><strong>ST</strong>: 퀴즈 데이터 삭제 (문제, 선택지, 정답, 제한시간 등)</li>
 </ol>
 
 <h4>삭제 후 이동</h4>
@@ -385,6 +394,10 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 타이틀</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{title}</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임유형</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{gameType: PREDICTION_MARKET 또는 SURVIVAL_TRIVIA}</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 상태</td>
@@ -516,6 +529,32 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-BO-GZ-201</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 리스트</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">삭제 성공 시 이동 화면</td>
+  </tr>
+</table>
+
+
+<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+
+<h2>변경 이력</h2>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">일자</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2025.02.03</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초안 작성</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM/ST 공통 모달 명시, 게임유형 필드 추가, ST 퀴즈 데이터 삭제 로직 추가</td>
   </tr>
 </table>
 
