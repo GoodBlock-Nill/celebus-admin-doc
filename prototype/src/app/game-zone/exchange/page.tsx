@@ -162,7 +162,7 @@ export default function ExchangePage() {
           { key: 'datetime', label: '일시', width: '160px', render: (item: Exchange) => formatDateTime(item.datetime) },
           { key: 'nickname', label: '닉네임', render: (item: Exchange) => <span className="text-blue-600">{item.nickname.toLowerCase()}</span> },
           { key: 'txid', label: 'Txid', width: '160px', render: (item: Exchange) => <span className="font-mono text-xs">{truncateHash(item.txid)}</span> },
-          { key: 'direction', label: '교환 방향', align: 'center', width: '120px', render: (item: Exchange) => <Badge variant="exchangeDir" value={item.direction} /> },
+          { key: 'direction', label: '교환 방향', align: 'center', width: '150px', render: (item: Exchange) => <Badge variant="exchangeDir" value={item.direction} /> },
           { key: 'gpAmount', label: 'GP 수량', align: 'right', width: '120px', render: (item: Exchange) => formatGP(item.gpAmount) },
           { key: 'celbAmount', label: 'CELB 수량', align: 'right', width: '120px', render: (item: Exchange) => formatCELB(item.celbAmount) },
           { key: 'rate', label: '비율', align: 'right', width: '80px', render: () => '1:1' },

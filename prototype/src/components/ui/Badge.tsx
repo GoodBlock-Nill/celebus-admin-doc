@@ -19,7 +19,7 @@ const CONFIG_MAP = {
 export default function Badge({ variant, value, customBg, customText, customLabel }: BadgeProps) {
   if (variant === 'custom') {
     return (
-      <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${customBg} ${customText}`}>
+      <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium whitespace-nowrap ${customBg} ${customText}`}>
         {customLabel || value}
       </span>
     );
@@ -31,7 +31,7 @@ export default function Badge({ variant, value, customBg, customText, customLabe
   if (!item) return <span className="text-gray-400">-</span>;
 
   return (
-    <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium ${item.bg} ${item.text}`}>
+    <span className={`inline-flex items-center px-3 py-1 rounded text-xs font-medium whitespace-nowrap ${item.bg} ${item.text}`}>
       {item.label}
     </span>
   );

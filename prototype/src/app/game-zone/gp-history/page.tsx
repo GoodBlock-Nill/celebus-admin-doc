@@ -90,7 +90,7 @@ export default function GPHistoryPage() {
         columns={[
           { key: 'datetime', label: '일시', width: '160px', render: (item: GPChange) => formatDateTime(item.datetime) },
           { key: 'nickname', label: '닉네임', render: (item: GPChange) => <span className="text-blue-600">{item.nickname.toLowerCase()}</span> },
-          { key: 'type', label: '유형', align: 'center', width: '110px', render: (item: GPChange) => <Badge variant="gpType" value={item.type} /> },
+          { key: 'type', label: '유형', align: 'center', width: '140px', render: (item: GPChange) => <Badge variant="gpType" value={item.type} /> },
           {
             key: 'relatedGameType',
             label: '게임유형',
