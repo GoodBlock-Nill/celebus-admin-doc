@@ -40,11 +40,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.7</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -481,7 +481,35 @@
 <ol>
 <li>클라이언트 카운트다운은 UX 목적으로 계속 표시</li>
 <li>카운트다운 완료 후 서버 자동 재연결 시도 (최대 3회, 3초 간격)</li>
-<li>재연결 성공 시 즉시 서버 게임 상태 조회: 게임 진행 중이면 현재 스테이지 합류, 종료되었으면 CEB-GAM-206-RESULT 이동</li>
+<li>재연결 성공 시 즉시 서버 게임 상태 조회:</li>
+</ol>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<thead>
+<tr>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">서버 상태</th>
+<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">아직 Stage 1 진행 중 (놓친 스테이지 없음)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206 합류 (정상 복귀)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">놓친 스테이지 존재 (이미 탈락 처리)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-205-MD-RECONNECT 모달 표시 (나가기/관전 선택)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 종료</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-RESULT 이동</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote><p>놓친 스테이지가 있으면 "미응답 = 즉시 탈락" 규칙이 동일 적용되어 이미 탈락 상태입니다. 합류가 아닌 탈락 안내 후 관전/나가기 선택을 제공합니다.</p></blockquote>
+
+<ol start="4">
 <li>재연결 실패(3회) 시: GP 100% 자동 환불 (입장 비용 전액. Survival Trivia에는 부스팅이 없으므로 입장 비용 = 전체 참여 비용) 후 CEB-GAM-204 이동</li>
 </ol>
 
@@ -604,6 +632,11 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">뒤로가기(나가기 선택) 시 이동</td>
 </tr>
 <tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-205-MD-RECONNECT</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">재연결 안내</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">카운트다운 중 네트워크 끊김 → 재연결 시 놓친 스테이지 존재 시 모달 표시</td>
+</tr>
+<tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">트리비아 상세</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">카운트다운 완료 시 자동 전환</td>
@@ -612,6 +645,11 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-MD-LEAVE</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">나가기 확인</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">대기 중 뒤로가기 탭 시 모달 표시</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-RESULT</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 결과</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">재연결 시 게임 종료된 경우 이동</td>
 </tr>
 </tbody>
 </table>
@@ -671,6 +709,12 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 0개 신규 게임 참여 시 자동 지급 규칙 제거, 재획득/환불 규칙 수정</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.7</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">§5 카운트다운 중 네트워크 끊김 처리 수정: 놓친 스테이지 존재 시 합류 → 탈락 안내(CEB-GAM-205-MD-RECONNECT) 모달로 변경, 미응답=즉시 탈락 규칙 일관 적용</td>
 </tr>
 </tbody>
 </table>

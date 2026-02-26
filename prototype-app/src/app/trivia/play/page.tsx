@@ -7,6 +7,7 @@ import QuizQuestion from '@/components/game/QuizQuestion';
 import LiveChat from '@/components/game/LiveChat';
 import EliminateModal from '@/components/modals/EliminateModal';
 import LeaveModal from '@/components/modals/LeaveModal';
+import ReconnectModal from '@/components/modals/ReconnectModal';
 import { TriviaDebugPanel } from '@/components/ui/TriviaDebugPanel';
 import { mockTriviaQuestions } from '@/mock/trivia';
 
@@ -35,6 +36,7 @@ export default function TriviaPlayPage() {
   const [percentages, setPercentages] = useState<number[]>([]);
   const [showEliminateModal, setShowEliminateModal] = useState(false);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [showReconnectModal, setShowReconnectModal] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [sendFailed, setSendFailed] = useState(false);
   const [autoCorrect, setAutoCorrect] = useState(false);
@@ -287,6 +289,7 @@ export default function TriviaPlayPage() {
         onSkipToQuestion={handleSkipToQuestion}
         autoCorrect={autoCorrect}
         onToggleAutoCorrect={() => setAutoCorrect(prev => !prev)}
+        onShowReconnect={() => setShowReconnectModal(true)}
       />
 
       {/* Modals */}
@@ -298,6 +301,18 @@ export default function TriviaPlayPage() {
       )}
       {showLeaveModal && (
         <LeaveModal onClose={() => setShowLeaveModal(false)} />
+      )}
+      {showReconnectModal && (
+        <ReconnectModal
+          onSpectate={() => {
+            setShowReconnectModal(false);
+            router.push('/trivia/spectate');
+          }}
+          onLeave={() => {
+            setShowReconnectModal(false);
+            router.push('/trivia');
+          }}
+        />
       )}
     </div>
   );

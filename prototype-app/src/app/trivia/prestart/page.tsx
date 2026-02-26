@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatNumber } from '@/lib/utils';
 import LeaveModal from '@/components/modals/LeaveModal';
+import ReconnectModal from '@/components/modals/ReconnectModal';
 
 const MOCK_HEARTS = 1;
 const MOCK_PARTICIPANTS = 312;
@@ -18,6 +19,7 @@ const SCHEDULED_AT = '2026-02-24T19:00:00+09:00';
 export default function PrestartPage() {
   const router = useRouter();
   const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [showReconnectModal, setShowReconnectModal] = useState(false);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [countdown, setCountdown] = useState(5);
   const [liveTimeLeft, setLiveTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
@@ -210,12 +212,18 @@ export default function PrestartPage() {
 
       {/* Dev shortcut: force start countdown */}
       {!isCountingDown && (
-        <div className="px-5 pb-6">
+        <div className="px-5 pb-6 space-y-2">
           <button
             onClick={() => setIsCountingDown(true)}
             className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-xl text-sm font-semibold text-white transition-colors"
           >
             게임 시작 (테스트용)
+          </button>
+          <button
+            onClick={() => setShowReconnectModal(true)}
+            className="w-full py-3 bg-gray-700 hover:bg-gray-600 rounded-xl text-sm font-semibold text-white transition-colors"
+          >
+            재연결 테스트
           </button>
         </div>
       )}
@@ -223,6 +231,20 @@ export default function PrestartPage() {
       {/* Leave modal */}
       {showLeaveModal && (
         <LeaveModal onClose={() => setShowLeaveModal(false)} />
+      )}
+
+      {/* Reconnect modal */}
+      {showReconnectModal && (
+        <ReconnectModal
+          onSpectate={() => {
+            setShowReconnectModal(false);
+            router.push('/trivia/spectate');
+          }}
+          onLeave={() => {
+            setShowReconnectModal(false);
+            router.push('/trivia');
+          }}
+        />
       )}
 
       <style jsx global>{`

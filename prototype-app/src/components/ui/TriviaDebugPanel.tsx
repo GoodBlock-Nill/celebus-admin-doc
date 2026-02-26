@@ -14,6 +14,7 @@ interface TriviaDebugPanelProps {
   onSkipToQuestion?: (n: number) => void;
   autoCorrect?: boolean;
   onToggleAutoCorrect?: () => void;
+  onShowReconnect?: () => void;
 }
 
 const RESULT_TYPES = ['A', 'B', 'C', 'D'] as const;
@@ -36,6 +37,7 @@ export function TriviaDebugPanel({
   onSkipToQuestion,
   autoCorrect,
   onToggleAutoCorrect,
+  onShowReconnect,
 }: TriviaDebugPanelProps) {
   const router = useRouter();
 
@@ -140,6 +142,16 @@ export function TriviaDebugPanel({
                 onClick={onToggleAutoCorrect}
               >
                 {autoCorrect ? 'ON' : 'OFF'}
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-gray-400 text-xs font-mono shrink-0">재연결</span>
+              <button
+                className="text-xs px-2.5 py-1 rounded bg-gray-700 text-gray-300 hover:bg-gray-600"
+                onClick={onShowReconnect}
+              >
+                모달 테스트
               </button>
             </div>
           </>
