@@ -10,6 +10,8 @@ const NICKNAMES = [
   'musicbank', 'inkigayo', 'mcountdown', 'theshowfan', 'showchamp',
 ];
 
+const NO_PARTICIPANTS_STATUSES = ['Draft', 'Ready'];
+
 function createParticipants(gameId: string, count: number, gameIndex: number): Participant[] {
   return Array.from({ length: count }, (_, i) => ({
     id: `part-${gameId}-${String(i + 1).padStart(3, '0')}`,
@@ -28,12 +30,46 @@ function createParticipants(gameId: string, count: number, gameIndex: number): P
 
 function createSTParticipants(gameId: string, count: number, gameIndex: number): Participant[] {
   const game = mockGames.find(g => g.id === gameId);
+  const status = game?.status;
+  const targetSurvivorCount = game?.survivorCount;
   const totalStages = 10;
 
   return Array.from({ length: count }, (_, i) => {
-    const survived = Math.random() > 0.7; // 30% survival rate
-    const survivedStage = survived ? totalStages : Math.floor(Math.random() * 9) + 1;
-    const heartsUsed = Math.floor(Math.random() * 3); // 0-2 hearts
+    let survivedStage: number;
+    let eliminatedAtStage: number | null;
+
+    if (status === 'Active') {
+      // 게임 진행 중: 현재 스테이지까지만 진행 (4-7)
+      const currentStage = 4 + (gameIndex % 4);
+      const eliminated = Math.random() > 0.5;
+      if (eliminated) {
+        survivedStage = Math.floor(Math.random() * currentStage) + 1;
+        eliminatedAtStage = survivedStage;
+      } else {
+        survivedStage = currentStage;
+        eliminatedAtStage = null;
+      }
+    } else if (status === 'Ended' && targetSurvivorCount === 0) {
+      // 전원 탈락: 모든 참여자 1-9에서 탈락
+      survivedStage = Math.floor(Math.random() * 9) + 1;
+      eliminatedAtStage = survivedStage;
+    } else if (status === 'Ended' && targetSurvivorCount !== undefined && targetSurvivorCount > 0) {
+      // 지정된 생존자 수만큼 생존
+      if (i < targetSurvivorCount) {
+        survivedStage = totalStages;
+        eliminatedAtStage = null;
+      } else {
+        survivedStage = Math.floor(Math.random() * 9) + 1;
+        eliminatedAtStage = survivedStage;
+      }
+    } else {
+      // fallback (Ended without survivorCount 등)
+      const survived = Math.random() > 0.7;
+      survivedStage = survived ? totalStages : Math.floor(Math.random() * 9) + 1;
+      eliminatedAtStage = survived ? null : survivedStage;
+    }
+
+    const heartsUsed = Math.floor(Math.random() * 3);
 
     return {
       id: `part-${gameId}-${String(i + 1).padStart(3, '0')}`,
@@ -49,7 +85,7 @@ function createSTParticipants(gameId: string, count: number, gameIndex: number):
       refundGP: 0,
       survivedStage,
       heartsUsed,
-      eliminatedAtStage: survived ? null : survivedStage,
+      eliminatedAtStage,
       gameType: 'SURVIVAL_TRIVIA' as GameType,
     };
   });
@@ -57,21 +93,20 @@ function createSTParticipants(gameId: string, count: number, gameIndex: number):
 
 export const mockParticipants: Participant[] = [
   ...mockGames
-    .filter(g => g.status !== 'Draft' && g.type === 'PREDICTION_MARKET')
+    .filter(g => !NO_PARTICIPANTS_STATUSES.includes(g.status) && g.type === 'PREDICTION_MARKET')
     .flatMap((game, i) => {
-      // 결과확정/종료 상태 게임은 50-80명, 나머지는 10-30명으로 생성하여 페이지네이션 테스트 가능
       const count = (game.status === 'Closed' || game.status === 'Ended')
         ? Math.floor(Math.random() * 30) + 50
         : Math.floor(Math.random() * 20) + 10;
       return createParticipants(game.id, count, i);
     }),
   ...mockGames
-    .filter(g => g.status !== 'Draft' && g.type === 'SURVIVAL_TRIVIA')
+    .filter(g => !NO_PARTICIPANTS_STATUSES.includes(g.status) && g.type === 'SURVIVAL_TRIVIA')
     .flatMap((game, i) => {
       const count = game.status === 'Ended'
         ? Math.floor(Math.random() * 30) + 50
         : Math.floor(Math.random() * 20) + 10;
-      return createSTParticipants(game.id, count, i + 100); // offset index to avoid UID collision
+      return createSTParticipants(game.id, count, i + 100);
     }),
 ];
 

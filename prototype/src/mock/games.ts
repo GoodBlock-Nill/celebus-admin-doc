@@ -351,6 +351,15 @@ const stStatusDistribution: GameStatus[] = [
 
 const stGames: Game[] = stStatusDistribution.map((status, i) => createSTGame(i, status));
 
+// 전원 탈락 ST 게임 (survivorCount: 0)
+if (stGames.length > 6) {
+  stGames[6] = {
+    ...stGames[6],
+    title: { ko: '전원 탈락 퀴즈쇼', en: '[EN] All Eliminated Quiz', jp: '[JP] 全員脱落クイズ' },
+    survivorCount: 0,
+  };
+}
+
 export const mockGames: Game[] = [
   ...statusDistribution.map((status, i) => createGame(i, status)),
   ...stGames,

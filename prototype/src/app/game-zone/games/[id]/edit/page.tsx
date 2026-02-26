@@ -76,7 +76,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
         case 'Ready':
           return { all: true };
         case 'Active':
-          return { title: true, description: true, hintLink: true, startDateTime: true };
+          return { title: true, description: true };
         case 'Ended':
         default:
           return {};
@@ -108,7 +108,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
   const canEditReward = canEditAll;
   const canEditParticipation = canEditAll && !hasParticipants;
   const canEditBoosting = canEditAll && !hasParticipants;
-  const canEditStartDateTime = !!(canEditAll || editable.startDateTime);
+  const canEditStartDateTime = canEditAll;
 
   const validate = () => {
     const errs: Record<string, string> = {};
