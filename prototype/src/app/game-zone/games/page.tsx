@@ -23,7 +23,7 @@ export default function GameListPage() {
     currentPage * ITEMS_PER_PAGE
   );
 
-  const columns = [
+  const pmColumns = [
     {
       key: 'title',
       label: '타이틀',
@@ -32,13 +32,6 @@ export default function GameListPage() {
           {item.title.ko}
         </span>
       ),
-    },
-    {
-      key: 'type',
-      label: '게임유형',
-      align: 'center' as const,
-      width: '120px',
-      render: (item: Game) => <Badge variant="gameType" value={item.type} />,
     },
     {
       key: 'status',
@@ -65,11 +58,9 @@ export default function GameListPage() {
     },
     {
       key: 'period',
-      label: '참여기간',
+      label: '참여 기간',
       width: '220px',
-      render: (item: Game) => item.type === 'SURVIVAL_TRIVIA'
-        ? formatDateTime(item.startDateTime || '')
-        : formatPeriod(item.publishedAt, item.endDate),
+      render: (item: Game) => formatPeriod(item.publishedAt, item.endDate),
     },
     {
       key: 'createdAt',
@@ -86,6 +77,88 @@ export default function GameListPage() {
       width: '120px',
     },
   ];
+
+  const stColumns = [
+    {
+      key: 'title',
+      label: '타이틀',
+      render: (item: Game) => (
+        <span className="text-gray-900 truncate block max-w-[300px]" title={item.title.ko}>
+          {item.title.ko}
+        </span>
+      ),
+    },
+    {
+      key: 'status',
+      label: '상태',
+      align: 'center' as const,
+      width: '100px',
+      render: (item: Game) => <Badge variant="gameStatus" value={item.status} />,
+    },
+    {
+      key: 'participantCount',
+      label: '참여자 / 정원',
+      align: 'right' as const,
+      width: '130px',
+      sortable: true,
+      render: (item: Game) => {
+        const count = formatNumber(item.participantCount);
+        const max = item.maxParticipants === 0 ? '∞' : formatNumber(item.maxParticipants);
+        return `${count} / ${max}`;
+      },
+    },
+    {
+      key: 'survivorCount',
+      label: '생존자 수',
+      align: 'right' as const,
+      width: '100px',
+      sortable: true,
+      render: (item: Game) => {
+        if (item.status === 'Active' || item.status === 'Ended') {
+          return formatNumber(item.survivorCount ?? 0);
+        }
+        return '-';
+      },
+    },
+    {
+      key: 'totalPrizeGP',
+      label: '총 상금 GP',
+      align: 'right' as const,
+      width: '130px',
+      sortable: true,
+      render: (item: Game) => formatGP(item.totalPrizeGP),
+    },
+    {
+      key: 'participationCost',
+      label: '참여 비용',
+      align: 'right' as const,
+      width: '100px',
+      render: (item: Game) => formatGP(item.participationCost),
+    },
+    {
+      key: 'startDateTime',
+      label: '시작일시',
+      width: '160px',
+      sortable: true,
+      render: (item: Game) => formatDateTime(item.startDateTime || ''),
+    },
+    {
+      key: 'createdAt',
+      label: '생성일',
+      width: '140px',
+      sortable: true,
+      render: (item: Game) => (
+        <span className="text-gray-500">{formatDateTime(item.createdAt)}</span>
+      ),
+    },
+    {
+      key: 'createdBy',
+      label: '관리자',
+      width: '100px',
+    },
+  ];
+
+  const columns = filters.type === 'SURVIVAL_TRIVIA' ? stColumns : pmColumns;
 
   const statusOptions = filters.type === 'SURVIVAL_TRIVIA'
     ? [
@@ -109,6 +182,7 @@ export default function GameListPage() {
       label: '게임유형',
       type: 'select' as const,
       value: filters.type,
+      hideAllOption: true,
       options: [
         { value: 'PREDICTION_MARKET', label: 'Prediction Market' },
         { value: 'SURVIVAL_TRIVIA', label: 'Survival Trivia' },

@@ -34,7 +34,7 @@ interface GameStore {
 }
 
 const DEFAULT_FILTERS: GameFilters = {
-  type: '',
+  type: 'PREDICTION_MARKET',
   status: '',
   dateFrom: '',
   dateTo: '',
