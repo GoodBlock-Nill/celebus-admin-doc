@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -206,20 +206,26 @@ p {
 │  └─────────────────────────────────────────────────────────────────┘ │
 │                                                                      │
 │  ┌─ 게임 성과 요약 ────────────────────────────────────────────────┐ │
-│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐             │ │
-│  │ │ 참여 게임 수  │ │    승률       │ │ 최근 참여일   │             │ │
-│  │ │    48회      │ │    75%       │ │ 2026.02.05   │             │ │
-│  │ └──────────────┘ └──────────────┘ └──────────────┘             │ │
+│  │ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────┐│ │
+│  │ │ PM 참여      │ │ PM 승률      │ │ ST 참여      │ │ ST 생존율 ││ │
+│  │ │    32회      │ │    75%       │ │    16회      │ │    50%   ││ │
+│  │ └──────────────┘ └──────────────┘ └──────────────┘ └──────────┘│ │
 │  └─────────────────────────────────────────────────────────────────┘ │
 │                                                                      │
 │  ┌─ 게임 참여 내역 ───────────────────────────────────────────────┐ │
+│  │ [Prediction Market●] [Survival Trivia]                         │ │
 │  │ [게임상태 ▼ 전체]  [기간 ▼ 전체]                                 │ │
 │  │                                                                │ │
-│  │ 게임타이틀 │참여일시│선택│참여GP│부스팅GP│게임결과│보상GP│환급GP│상태│ │
+│  │ (PM 선택 시)                                                    │ │
+│  │ 게임타이틀│참여일시│선택│참여GP│부스팅GP│게임결과│보상GP│환급GP│상태│ │
 │  │ ──────────────────────────────────────────────────────────── │ │
-│  │ BTS 컴백.. │02.05 14:30│YES│10 GP│5 GP│정답(YES)│120 GP│10 GP│종료│ │
-│  │ IVE 1위.. │02.03 09:15│ NO│10 GP│0 GP│오답(YES)│  0 GP│10 GP│종료│ │
-│  │ ...                                                            │ │
+│  │ BTS 컴백.. │02.05│YES│10 GP│5 GP│정답(YES)│120 GP│10 GP│종료 │ │
+│  │                                                                │ │
+│  │ (ST 선택 시)                                                    │ │
+│  │ 게임타이틀│참여일시│생존스테이지│참여GP│하트사용│게임결과│보상GP│상태│ │
+│  │ ──────────────────────────────────────────────────────────── │ │
+│  │ BTS 퀴즈.. │02.05│ 7/10 │10 GP│ 2개 │탈락(7)│  0 GP│종료  │ │
+│  │                                                                │ │
 │  │                      ◀ 1 2 3 4 5 ▶              총 {n}건     │ │
 │  └────────────────────────────────────────────────────────────────┘ │
 │                                                                      │
@@ -284,7 +290,7 @@ p {
   <li>랭킹 미참여 시 Card 4에 "-" 표시, 보조 텍스트 "랭킹 없음"</li>
 </ul>
 
-<h5>B. 게임 성과 요약 (Summary Cards, 3열)</h5>
+<h5>B. 게임 성과 요약 (Summary Cards, 4열)</h5>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
@@ -295,56 +301,91 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Card 1</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 게임 수</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM 참여</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}회</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상태 무관 전체 참여 게임 수 (게임 참여 내역 테이블의 총 건수와 동일)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market 참여 게임 수</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Card 2</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">승률</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM 승률</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}%</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM+ST 통합: (성공 게임 수 / 참여 완료 게임 수) x 100, 정수 반올림. PM 성공=정답, ST 성공=최종 생존</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM 정답률: (정답 수 / PM 결과 확정 게임 수) × 100, 정수 반올림</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Card 3</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 참여일</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">YYYY.MM.DD</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">마지막 게임 참여 날짜</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 참여</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}회</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 참여 게임 수</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Card 4</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 생존율</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}%</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 최종 생존률: (생존 수 / ST 종료 게임 수) × 100, 정수 반올림</td>
   </tr>
 </table>
 
 <ul>
-  <li>참여 이력 없을 시: 참여 게임 수 "0회", 승률 "-", 최근 참여일 "-"</li>
+  <li>각 게임유형별 참여 이력 없을 시: 참여 "0회", 승률/생존율 "-"</li>
 </ul>
 
 <h5>C. 게임 참여 내역</h5>
+
+<h6>게임유형 Segmented Control</h6>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">위치</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">필터 영역 상단</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">옵션</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market / Survival Trivia</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기본 선택</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">동작</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">변경 시 즉시 테이블 컬럼 + 데이터 교체, 게임상태 필터 옵션 변경, 페이지 1로 리셋</td>
+  </tr>
+</table>
 
 <h6>필터 영역</h6>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">필터</th>
-    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">옵션</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">PM 옵션</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">ST 옵션</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">기본값</th>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 상태</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전체 / 진행중 / 결과 대기 / 결과 확정 / 종료</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전체 / 진행중 / 종료</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전체</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기간</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전체 / 오늘 / 최근 7일 / 최근 30일 / 커스텀</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) 전체 / 오늘 / 최근 7일 / 최근 30일 / 커스텀</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전체</td>
   </tr>
 </table>
 
 <ul>
   <li>커스텀 기간: DateRangePicker (최대 90일)</li>
+  <li>게임유형 변경 시 게임상태 필터는 "전체"로 리셋, 기간 필터는 유지</li>
   <li>필터 변경 시 즉시 적용</li>
 </ul>
 
-<h6>테이블 컬럼</h6>
+<h6>PM 테이블 (Prediction Market 선택 시)</h6>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
@@ -409,64 +450,6 @@ p {
   </tr>
 </table>
 
-<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;"><strong>게임유형별 컬럼 차이</strong><br>
-게임 참여 내역 테이블은 게임유형에 따라 일부 컬럼의 내용이 변경됩니다.</blockquote>
-
-<h6>게임유형별 컬럼 매핑</h6>
-
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
-  <tr>
-    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">컬럼</th>
-    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Prediction Market</th>
-    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Survival Trivia</th>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 타이틀</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) 게임 타이틀</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) 게임 타이틀</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여일시</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) YYYY.MM.DD HH:mm</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) YYYY.MM.DD HH:mm</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택 / 생존 스테이지</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">YES 또는 NO (Badge)</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존 스테이지: "{N}/10" (예: "7/10")</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 GP</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) {숫자} GP</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) {숫자} GP</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 GP / 하트 사용</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}개 (하트 사용 횟수, 0일 경우 "0개")</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 결과</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답({결과}) / 오답({결과})</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존 / 탈락({N}스테이지)</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 GP</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) {숫자} GP</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) {숫자} GP</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환급 GP</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"-" (ST는 환급 없음)</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 상태</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) Badge</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">(공통) Badge</td>
-  </tr>
-</table>
-
 <h6>게임 결과 표시 규칙</h6>
 
 <p><strong>Prediction Market</strong>:</p>
@@ -494,7 +477,66 @@ p {
   </tr>
 </table>
 
-<p><strong>Survival Trivia</strong>:</p>
+<h6>ST 테이블 (Survival Trivia 선택 시)</h6>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">컬럼</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">정렬</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">너비</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 타이틀</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 타이틀 (KO), 텍스트 링크</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">200px</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여일시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">YYYY.MM.DD HH:mm</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가능 (기본 내림차순)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">140px</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존 스테이지</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"{N}/10" (예: "7/10")</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가능</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">100px</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가능</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">90px</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 사용</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}개 (0일 경우 "0개")</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가능</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">90px</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 결과</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존 / 탈락({N}스테이지) / "-"</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">120px</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP (0일 경우 "0 GP")</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가능</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">90px</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 상태</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Badge (진행중/종료)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">90px</td>
+  </tr>
+</table>
+
+<p><strong>ST 게임 결과 표시</strong>:</p>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
@@ -525,22 +567,27 @@ p {
   <tr>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상태</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Badge 색상</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">게임유형</th>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">진행중 (Active)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초록색</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM, ST</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 대기 (Pending)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">주황색</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM만</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확정 (Closed)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보라색</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM만</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">종료 (Ended)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">검정색</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM, ST</td>
   </tr>
 </table>
 
@@ -550,11 +597,12 @@ p {
 <ul>
   <li>페이지당 20건 고정</li>
   <li>페이지 번호 클릭 이동, ◀ ▶ 이전/다음 페이지</li>
-  <li>좌측에 "총 {n}건" 표시 (필터 적용 후 총 건수)</li>
+  <li>좌측에 "총 {n}건" 표시 (필터 적용 후 총 건수, 선택된 게임유형 기준)</li>
 </ul>
 
 <h6>Empty State</h6>
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">게임 참여 내역이 없습니다.</pre>
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">PM: 게임 참여 내역이 없습니다.
+ST: 게임 참여 내역이 없습니다.</pre>
 
 <h5>D. GP 변동 내역</h5>
 
@@ -710,7 +758,7 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"예측 성공 보상"</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"PM: 예측 성공 보상 / ST: 생존 보상"</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기</td>
@@ -759,6 +807,14 @@ p {
 
 <h3>3.2 게임 참여 내역 테이블</h3>
 
+<h5>게임유형 Segmented Control 동작</h5>
+<ul>
+  <li>Segmented Control 변경 시 즉시 적용</li>
+  <li>테이블 컬럼, 데이터, 게임상태 필터 옵션 모두 교체</li>
+  <li>페이지 1로 리셋, 기간 필터는 유지</li>
+  <li>게임상태 필터는 "전체"로 리셋</li>
+</ul>
+
 <h5>게임 타이틀 클릭</h5>
 <ul>
   <li>클릭 시: CEB-BO-GZ-202 (게임 상세) 화면 새 탭 오픈</li>
@@ -806,9 +862,14 @@ p {
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">정렬 가능 컬럼</th>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 참여 내역</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM 게임 참여 내역</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여일시 내림차순</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여일시, 선택/생존 스테이지, 참여 GP, 부스팅 GP/하트 사용, 보상 GP, 환급 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여일시, 선택, 참여 GP, 부스팅 GP, 보상 GP, 환급 GP</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 게임 참여 내역</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여일시 내림차순</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여일시, 생존 스테이지, 참여 GP, 하트 사용, 보상 GP</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 변동 내역</td>
@@ -915,14 +976,22 @@ ST 게임은 참여 GP 환급이 없으므로 REFUND 항목은 PM 게임에서�
   <li>최소 참여 횟수 미달 시: "-" 표시</li>
 </ul>
 
-<h5>승률</h5>
+<h5>PM 승률</h5>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">승률 = (성공 게임 수 / 참여 완료 게임 수) × 100
-- PM 성공: 정답 (회원 선택 = 게임 결과)
-- ST 성공: 최종 생존 (10스테이지 모두 완료)</pre>
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">PM 승률 = (정답 수 / PM 결과 확정 게임 수) × 100
+- 정답: 회원 선택 = 게임 결과</pre>
 <ul>
-  <li>참여 완료 게임: 결과가 확정된 게임 (Closed 또는 Ended 상태)</li>
-  <li>참여 완료 게임 0건 시: "-" 표시</li>
+  <li>결과 확정 게임: Closed 또는 Ended 상태의 PM 게임</li>
+  <li>PM 결과 확정 게임 0건 시: "-" 표시</li>
+</ul>
+
+<h5>ST 생존율</h5>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, &#x27;Liberation Mono&#x27;, Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">ST 생존율 = (최종 생존 수 / ST 종료 게임 수) × 100
+- 최종 생존: 10스테이지 모두 완료</pre>
+<ul>
+  <li>ST 종료 게임: Ended 상태의 ST 게임</li>
+  <li>ST 종료 게임 0건 시: "-" 표시</li>
 </ul>
 
 <h3>권한 구분</h3>
@@ -1137,6 +1206,12 @@ ST 게임은 참여 GP 환급이 없으므로 REFUND 항목은 PM 게임에서�
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">일자</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임유형별 테이블 분리: Segmented Control 추가, PM/ST 별도 테이블 컬럼 정의, 게임 성과 요약 카드 PM/ST 분리, 게임상태 필터 게임유형별 옵션 변경</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
