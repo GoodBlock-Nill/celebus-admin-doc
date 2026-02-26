@@ -108,19 +108,6 @@ export default function GameListPage() {
       },
     },
     {
-      key: 'survivorCount',
-      label: '생존자 수',
-      align: 'right' as const,
-      width: '100px',
-      sortable: true,
-      render: (item: Game) => {
-        if (item.status === 'Active' || item.status === 'Ended') {
-          return formatNumber(item.survivorCount ?? 0);
-        }
-        return '-';
-      },
-    },
-    {
       key: 'totalPrizeGP',
       label: '총 상금 GP',
       align: 'right' as const,
@@ -141,15 +128,6 @@ export default function GameListPage() {
       width: '160px',
       sortable: true,
       render: (item: Game) => formatDateTime(item.startDateTime || ''),
-    },
-    {
-      key: 'createdAt',
-      label: '생성일',
-      width: '140px',
-      sortable: true,
-      render: (item: Game) => (
-        <span className="text-gray-500">{formatDateTime(item.createdAt)}</span>
-      ),
     },
     {
       key: 'createdBy',
