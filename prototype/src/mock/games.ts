@@ -298,6 +298,29 @@ function createSTGame(index: number, status: GameStatus): Game {
   const isDraft = status === 'Draft';
   const draftVariant = index % 2; // 0: 초기 작성, 1: 거의 완성
 
+  // ST 동적 상금풀 계산
+  const maxPrizePool = isDraft && draftVariant === 0 ? 0 : [5_000_000, 10_000_000, 20_000_000, 50_000_000][index % 4];
+  const maxRecruitment = isDraft && draftVariant === 0 ? 0 : [5_000, 10_000, 20_000, 50_000][index % 4];
+  const stMul = 1.25;
+  const calculatedEntryFee = maxRecruitment > 0 ? Math.floor(maxPrizePool / maxRecruitment * stMul) : 0;
+  const recruitmentRate = participantCount > 0 && maxRecruitment > 0 ? participantCount / maxRecruitment : 0;
+  const stPrizeTiers = [
+    { recruitmentRate: 100, prizeRate: 100 },
+    { recruitmentRate: 80, prizeRate: 80 },
+    { recruitmentRate: 50, prizeRate: 50 },
+    { recruitmentRate: 20, prizeRate: 20 },
+  ];
+  const appliedPrizeRate = (() => {
+    const sorted = [...stPrizeTiers].sort((a, b) => b.recruitmentRate - a.recruitmentRate);
+    let rate = sorted[sorted.length - 1]?.prizeRate ?? 0;
+    for (const tier of sorted) {
+      if (recruitmentRate >= tier.recruitmentRate / 100) { rate = tier.prizeRate; break; }
+    }
+    return rate;
+  })();
+  const appliedPrizePool = (status === 'Active' || status === 'Ended') ? Math.floor(maxPrizePool * appliedPrizeRate / 100) : undefined;
+  const stActualParticipants = (status === 'Active' || status === 'Ended') ? participantCount : undefined;
+
   return {
     id: `st-game-${String(index + 1).padStart(3, '0')}`,
     type: 'SURVIVAL_TRIVIA' as GameType,
@@ -314,11 +337,19 @@ function createSTGame(index: number, status: GameStatus): Game {
     hintLinkEnabled: false,
     hintLink: '',
     status,
-    totalPrizeGP: isDraft && draftVariant === 0 ? 0 : [10000, 50000, 100000, 200000][Math.floor(Math.random() * 4)],
-    maxParticipants: isDraft && draftVariant === 0 ? 0 : [100, 200, 300, 500][Math.floor(Math.random() * 4)],
-    participationCost: [1, 5, 10][Math.floor(Math.random() * 3)],
+    totalPrizeGP: 0, // ST는 사용 안 함 (PM 전용)
+    maxParticipants: 0, // ST는 maxRecruitment 사용
+    participationCost: 0, // ST는 calculatedEntryFee 사용
     boostingCost: 0,
     boostingMultiplier: 0,
+    maxPrizePool,
+    maxRecruitment,
+    stMultiplier: stMul,
+    prizeTiers: stPrizeTiers,
+    eliminationTickets: 1,
+    calculatedEntryFee,
+    appliedPrizePool,
+    actualParticipants: stActualParticipants,
     endDate: '',
     resultDate: '',
     resultBasis: { ko: '', en: '', jp: '' },

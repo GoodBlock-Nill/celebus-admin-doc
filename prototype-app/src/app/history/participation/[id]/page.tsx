@@ -97,6 +97,8 @@ export default function ParticipationDetailPage({ params }: Props) {
   const mockResult = 'YES';
   const mockBoostingGP = 1;
   const mockParticipationGP = 10;
+  const mockHeartsUsed = 2;
+  const mockHeartsGained = 1;
 
   const dateLabel = DATETIME_LABEL[item.type];
   const gameStatus = getGameStatusForType(item.type);
@@ -165,14 +167,10 @@ export default function ParticipationDetailPage({ params }: Props) {
           <DetailRow label="게임 상태">
             <div className="flex items-center gap-2 justify-end">
               <span className="text-sm text-gray-900">{gameStatus}</span>
-              {isReward && (
+              {isReward && !isSurvivalTrivia && (
                 <button
                   onClick={() => {
-                    if (isSurvivalTrivia) {
-                      router.push('/trivia/result');
-                    } else {
-                      item.relatedGameId && router.push(`/prediction/${item.relatedGameId}/result`);
-                    }
+                    item.relatedGameId && router.push(`/prediction/${item.relatedGameId}/result`);
                   }}
                   className="text-sm text-blue-600 font-medium"
                 >
@@ -181,6 +179,14 @@ export default function ParticipationDetailPage({ params }: Props) {
               )}
             </div>
           </DetailRow>
+
+          {isSurvivalTrivia && gameStatus !== '진행중' && item.type !== 'REFUND_CANCEL' && (
+            <DetailRow label="하트 변동">
+              <span className="text-sm text-gray-900">
+                ❤️ -{mockHeartsUsed} / ❤️ +{mockHeartsGained}
+              </span>
+            </DetailRow>
+          )}
 
           <DetailRow label={dateLabel}>
             <div>

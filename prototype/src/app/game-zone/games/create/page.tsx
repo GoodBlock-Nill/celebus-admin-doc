@@ -10,7 +10,7 @@ import ConfirmModal from '@/components/modals/ConfirmModal';
 import { useGameStore } from '@/stores/useGameStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { generateId } from '@/lib/utils';
-import type { Game, MultiLangText, GameStatus, GameType, Quiz, QuizChoice } from '@/lib/types';
+import type { Game, MultiLangText, GameStatus, GameType, Quiz, QuizChoice, PrizeTier } from '@/lib/types';
 import PMCreateFields from './PMCreateFields';
 import STCreateFields from './STCreateFields';
 
@@ -31,6 +31,13 @@ function createEmptyQuizzes(): Quiz[] {
     timeLimit: 10,
   }));
 }
+
+const DEFAULT_PRIZE_TIERS: PrizeTier[] = [
+  { recruitmentRate: 100, prizeRate: 100 },
+  { recruitmentRate: 80, prizeRate: 80 },
+  { recruitmentRate: 50, prizeRate: 50 },
+  { recruitmentRate: 20, prizeRate: 20 },
+];
 
 export default function CreateGamePage() {
   const router = useRouter();
@@ -60,18 +67,19 @@ export default function CreateGamePage() {
   // ST-specific state
   const [quizzes, setQuizzes] = useState<Quiz[]>(createEmptyQuizzes());
   const [startDateTime, setStartDateTime] = useState('');
-  const [stMaxParticipants, setStMaxParticipants] = useState(100);
+  const [stMaxPrizePool, setStMaxPrizePool] = useState(10_000_000);
+  const [stMaxRecruitment, setStMaxRecruitment] = useState(10_000);
+  const [stMultiplier, setStMultiplier] = useState(1.25);
+  const [stPrizeTiers, setStPrizeTiers] = useState<PrizeTier[]>(DEFAULT_PRIZE_TIERS);
+  const [stEliminationTickets, setStEliminationTickets] = useState(1);
 
   const handleTypeChange = (type: GameType) => {
     setGameType(type);
     setErrors({});
     setBoostingCost(1); setBoostingMultiplier(2); setEndDate(''); setResultDate(''); setResultBasis({ ...EMPTY_LANG });
-    setQuizzes(createEmptyQuizzes()); setStartDateTime(''); setStMaxParticipants(100);
-    if (type === 'SURVIVAL_TRIVIA') {
-      setParticipationCost(10);
-    } else {
-      setParticipationCost(1);
-    }
+    setQuizzes(createEmptyQuizzes()); setStartDateTime('');
+    setStMaxPrizePool(10_000_000); setStMaxRecruitment(10_000); setStMultiplier(1.25);
+    setStPrizeTiers(DEFAULT_PRIZE_TIERS); setStEliminationTickets(1);
   };
 
   const validateForReady = () => {
@@ -82,7 +90,7 @@ export default function CreateGamePage() {
     if (!description.ko.trim()) errs.descKo = '상세설명(KO)은 필수입니다.';
     if (!description.en.trim()) errs.descEn = '상세설명(EN)은 필수입니다.';
     if (!description.jp.trim()) errs.descJp = '상세설명(JP)은 필수입니다.';
-    if (totalPrizeGP <= 0) errs.totalPrizeGP = '총 상금 GP를 입력하세요.';
+    if (!isST && totalPrizeGP <= 0) errs.totalPrizeGP = '총 상금 GP를 입력하세요.';
 
     if (gameType === 'PREDICTION_MARKET') {
       if (!endDate) errs.endDate = '투표 종료일시를 입력하세요.';
@@ -93,7 +101,8 @@ export default function CreateGamePage() {
     }
 
     if (gameType === 'SURVIVAL_TRIVIA') {
-      if (stMaxParticipants <= 0 || stMaxParticipants > 500) errs.maxParticipants = '참여 정원은 1~500명 사이로 설정하세요.';
+      if (stMaxPrizePool <= 0) errs.maxPrizePool = '최대 상금풀을 입력하세요.';
+      if (stMaxRecruitment <= 0) errs.maxRecruitment = '최대 모집인원을 입력하세요.';
       if (!startDateTime) errs.startDateTime = '게임 시작일시를 입력하세요.';
       const hasEmptyQuiz = quizzes.some((q) => !q.text.ko.trim() || q.choices.some((c) => !c.ko.trim()));
       if (hasEmptyQuiz) errs.quizzes = '모든 퀴즈의 문제와 선택지(KO)를 입력하세요.';
@@ -107,11 +116,11 @@ export default function CreateGamePage() {
 
   const isReadyEnabled = () => {
     const base = title.ko.trim() && title.en.trim() && title.jp.trim() &&
-      description.ko.trim() && description.en.trim() && description.jp.trim() && totalPrizeGP > 0;
+      description.ko.trim() && description.en.trim() && description.jp.trim();
     if (gameType === 'PREDICTION_MARKET') {
-      return base && endDate && resultDate && resultBasis.ko.trim() && resultBasis.en.trim() && resultBasis.jp.trim();
+      return base && totalPrizeGP > 0 && endDate && resultDate && resultBasis.ko.trim() && resultBasis.en.trim() && resultBasis.jp.trim();
     }
-    return base && startDateTime && stMaxParticipants > 0 && stMaxParticipants <= 500;
+    return base && startDateTime && stMaxPrizePool > 0 && stMaxRecruitment > 0;
   };
 
   const handleSave = (status: GameStatus) => {
@@ -126,14 +135,14 @@ export default function CreateGamePage() {
       hintLinkEnabled: isST ? false : hintLinkEnabled,
       hintLink: isST ? '' : (hintLinkEnabled ? hintLink : ''),
       status,
-      totalPrizeGP,
-      maxParticipants: gameType === 'SURVIVAL_TRIVIA' ? stMaxParticipants : (useLimit ? maxParticipants : 0),
-      participationCost,
-      boostingCost: gameType === 'SURVIVAL_TRIVIA' ? 0 : boostingCost,
-      boostingMultiplier: gameType === 'SURVIVAL_TRIVIA' ? 0 : boostingMultiplier,
-      endDate: gameType === 'SURVIVAL_TRIVIA' ? '' : endDate,
-      resultDate: gameType === 'SURVIVAL_TRIVIA' ? '' : resultDate,
-      resultBasis: gameType === 'SURVIVAL_TRIVIA' ? { ko: '', en: '', jp: '' } : resultBasis,
+      totalPrizeGP: isST ? 0 : totalPrizeGP,
+      maxParticipants: 0,
+      participationCost: isST ? 0 : participationCost,
+      boostingCost: isST ? 0 : boostingCost,
+      boostingMultiplier: isST ? 0 : boostingMultiplier,
+      endDate: isST ? '' : endDate,
+      resultDate: isST ? '' : resultDate,
+      resultBasis: isST ? { ko: '', en: '', jp: '' } : resultBasis,
       result: null,
       resultTitle: { ko: '', en: '', jp: '' },
       resultDescription: { ko: '', en: '', jp: '' },
@@ -146,11 +155,20 @@ export default function CreateGamePage() {
       createdBy: 'admin.user',
       updatedAt: new Date().toISOString(),
       publishedAt: null,
-      ...(gameType === 'SURVIVAL_TRIVIA' ? {
+      ...(isST ? {
         quizzes,
         timePerQuestion: 10,
         startDateTime,
-      } : {}),
+        maxPrizePool: stMaxPrizePool,
+        maxRecruitment: stMaxRecruitment,
+        stMultiplier,
+        calculatedEntryFee: stMaxRecruitment > 0 ? Math.floor(stMaxPrizePool / stMaxRecruitment * stMultiplier) : 0,
+        prizeTiers: stPrizeTiers,
+        eliminationTickets: stEliminationTickets,
+      } : {
+        maxParticipants: useLimit ? maxParticipants : 0,
+        participationCost,
+      }),
     };
 
     addGame(game);
@@ -172,80 +190,20 @@ export default function CreateGamePage() {
       <div className="max-w-[800px] space-y-8">
         <Section title="기본정보">
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-medium text-gray-700 w-[100px]">게임유형</span>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="gameType"
-                    value="PREDICTION_MARKET"
-                    checked={gameType === 'PREDICTION_MARKET'}
-                    onChange={() => handleTypeChange('PREDICTION_MARKET')}
-                    className="text-blue-600"
-                  />
-                  <span className="text-sm">Prediction Market</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="gameType"
-                    value="SURVIVAL_TRIVIA"
-                    checked={gameType === 'SURVIVAL_TRIVIA'}
-                    onChange={() => handleTypeChange('SURVIVAL_TRIVIA')}
-                    className="text-purple-600"
-                  />
-                  <span className="text-sm">Survival Trivia</span>
-                </label>
-              </div>
-            </div>
+            <GameTypeSelector gameType={gameType} onChange={handleTypeChange} />
             <MultiLangInput label="타이틀" values={title} onChange={setTitle} maxLength={50} required error={errors.titleKo || errors.titleEn || errors.titleJp} />
             <MultiLangEditor label="상세설명" values={description} onChange={setDescription} required error={errors.descKo || errors.descEn || errors.descJp} />
             {!isST && (
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-sm font-medium text-gray-700 w-[100px]">힌트 링크</span>
-                  <div className="flex rounded-lg border border-gray-200 overflow-hidden">
-                    <button
-                      type="button"
-                      onClick={() => setHintLinkEnabled(true)}
-                      className={`px-4 py-1.5 text-sm font-medium transition-colors ${
-                        hintLinkEnabled ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
-                      }`}
-                    >
-                      사용
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setHintLinkEnabled(false)}
-                      className={`px-4 py-1.5 text-sm font-medium transition-colors ${
-                        !hintLinkEnabled ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
-                      }`}
-                    >
-                      미사용
-                    </button>
-                  </div>
-                </div>
-                {hintLinkEnabled && (
-                  <div>
-                    <input
-                      type="url"
-                      value={hintLink}
-                      onChange={(e) => setHintLink(e.target.value)}
-                      placeholder="https://example.com/hint"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <p className="text-xs text-gray-400 mt-1">게임 관련 힌트 페이지 URL을 입력하세요.</p>
-                  </div>
-                )}
-              </div>
+              <HintLinkField enabled={hintLinkEnabled} onToggle={setHintLinkEnabled} value={hintLink} onChange={setHintLink} />
             )}
           </div>
         </Section>
 
-        <Section title="보상설정">
-          <NumberInput label="총 상금 GP" value={totalPrizeGP} onChange={setTotalPrizeGP} min={1} unit="GP" required error={errors.totalPrizeGP} />
-        </Section>
+        {!isST && (
+          <Section title="보상설정">
+            <NumberInput label="총 상금 GP" value={totalPrizeGP} onChange={setTotalPrizeGP} min={1} unit="GP" required error={errors.totalPrizeGP} />
+          </Section>
+        )}
 
         {gameType === 'PREDICTION_MARKET' ? (
           <PMCreateFields
@@ -256,8 +214,13 @@ export default function CreateGamePage() {
           />
         ) : (
           <STCreateFields
-            quizzes={quizzes} setQuizzes={setQuizzes} maxParticipants={stMaxParticipants} setMaxParticipants={setStMaxParticipants}
-            participationCost={participationCost} setParticipationCost={setParticipationCost} startDateTime={startDateTime} setStartDateTime={setStartDateTime}
+            quizzes={quizzes} setQuizzes={setQuizzes}
+            maxPrizePool={stMaxPrizePool} setMaxPrizePool={setStMaxPrizePool}
+            maxRecruitment={stMaxRecruitment} setMaxRecruitment={setStMaxRecruitment}
+            stMultiplier={stMultiplier} setStMultiplier={setStMultiplier}
+            prizeTiers={stPrizeTiers} setPrizeTiers={setStPrizeTiers}
+            eliminationTickets={stEliminationTickets} setEliminationTickets={setStEliminationTickets}
+            startDateTime={startDateTime} setStartDateTime={setStartDateTime}
             errors={errors}
           />
         )}
@@ -303,6 +266,44 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <h3 className="text-base font-semibold text-gray-900 mb-4">{title}</h3>
       {children}
+    </div>
+  );
+}
+
+function HintLinkField({ enabled, onToggle, value, onChange }: { enabled: boolean; onToggle: (v: boolean) => void; value: string; onChange: (v: string) => void }) {
+  const btnCls = (active: boolean) => `px-4 py-1.5 text-sm font-medium transition-colors ${active ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`;
+  return (
+    <div>
+      <div className="flex items-center gap-3 mb-2">
+        <span className="text-sm font-medium text-gray-700 w-[100px]">힌트 링크</span>
+        <div className="flex rounded-lg border border-gray-200 overflow-hidden">
+          <button type="button" onClick={() => onToggle(true)} className={btnCls(enabled)}>사용</button>
+          <button type="button" onClick={() => onToggle(false)} className={btnCls(!enabled)}>미사용</button>
+        </div>
+      </div>
+      {enabled && (
+        <div>
+          <input type="url" value={value} onChange={(e) => onChange(e.target.value)} placeholder="https://example.com/hint"
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <p className="text-xs text-gray-400 mt-1">게임 관련 힌트 페이지 URL을 입력하세요.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function GameTypeSelector({ gameType, onChange }: { gameType: GameType; onChange: (t: GameType) => void }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span className="text-sm font-medium text-gray-700 w-[100px]">게임유형</span>
+      <div className="flex gap-4">
+        {([['PREDICTION_MARKET', 'Prediction Market', 'text-blue-600'], ['SURVIVAL_TRIVIA', 'Survival Trivia', 'text-purple-600']] as const).map(([value, label, cls]) => (
+          <label key={value} className="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="gameType" value={value} checked={gameType === value} onChange={() => onChange(value)} className={cls} />
+            <span className="text-sm">{label}</span>
+          </label>
+        ))}
+      </div>
     </div>
   );
 }

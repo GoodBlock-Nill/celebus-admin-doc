@@ -29,15 +29,49 @@ export default function BasicInfoTab({ game }: BasicInfoTabProps) {
         { label: '생성자', value: game.createdBy },
       ]} />
 
-      <DetailSection title="보상설정" fields={[
-        { label: '총 상금 GP', value: formatGP(game.totalPrizeGP) },
-      ]} />
+      {isST ? (
+        <DetailSection title="보상설정" fields={[
+          { label: '최대 상금풀', value: formatGP(game.maxPrizePool ?? 0) },
+          { label: '배수', value: `${game.stMultiplier ?? 1.25}배` },
+          { label: '참여비', value: `${formatGP(game.calculatedEntryFee ?? 0)} (자동 계산)` },
+          { label: '탈락자 응모권', value: `${game.eliminationTickets ?? 0}장` },
+        ]} />
+      ) : (
+        <DetailSection title="보상설정" fields={[
+          { label: '총 상금 GP', value: formatGP(game.totalPrizeGP) },
+        ]} />
+      )}
+
+      {isST && game.prizeTiers && game.prizeTiers.length > 0 && (
+        <div className="bg-white border border-gray-200 rounded-lg p-6">
+          <h3 className="text-base font-semibold text-gray-900 mb-4">모집인원별 상금 단계</h3>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-gray-500 border-b border-gray-100">
+                <th className="text-left py-2 font-medium">모집률</th>
+                <th className="text-left py-2 font-medium">상금 비율</th>
+                <th className="text-right py-2 font-medium">책정 상금</th>
+              </tr>
+            </thead>
+            <tbody>
+              {game.prizeTiers.map((tier, i) => (
+                <tr key={i} className="border-b border-gray-50">
+                  <td className="py-2">{tier.recruitmentRate}%</td>
+                  <td className="py-2">{tier.prizeRate}%</td>
+                  <td className="py-2 text-right">{formatGP(Math.floor((game.maxPrizePool ?? 0) * tier.prizeRate / 100))}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {isST ? (
         <>
           <DetailSection title="참여설정" fields={[
-            { label: '참여 정원', value: `${formatNumber(game.maxParticipants)}명 (최대 500명)` },
-            { label: '참여 비용', value: formatGP(game.participationCost) },
+            { label: '최대 모집인원', value: `${formatNumber(game.maxRecruitment ?? 0)}명` },
+            ...(game.actualParticipants !== undefined ? [{ label: '실제 모집인원', value: `${formatNumber(game.actualParticipants)}명` }] : []),
+            ...(game.appliedPrizePool !== undefined ? [{ label: '적용 상금풀', value: formatGP(game.appliedPrizePool) }] : []),
           ]} />
           <DetailSection title="일정설정" fields={[
             { label: '게임 시작일시', value: formatDateTime(game.startDateTime || '') },

@@ -173,7 +173,7 @@ export default function HomePage() {
             </div>
             <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
               <span>총 상금</span>
-              <span className="text-amber-400 font-semibold">{formatGP(trivia.totalPrizeGP)}</span>
+              <span className="text-amber-400 font-semibold">{formatGP(trivia.maxPrizePool)}</span>
             </div>
           </div>
         ) : (
@@ -191,7 +191,7 @@ export default function HomePage() {
             <div className="mt-3">{renderTriviaContent()}</div>
             <div className="mt-2 flex items-center gap-1 text-xs text-gray-500">
               <span>총 상금</span>
-              <span className="text-amber-400 font-semibold">{formatGP(trivia.totalPrizeGP)}</span>
+              <span className="text-amber-400 font-semibold">{formatGP(trivia.maxPrizePool)}</span>
             </div>
           </button>
         )}

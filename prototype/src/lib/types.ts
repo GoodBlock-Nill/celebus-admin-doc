@@ -19,6 +19,11 @@ export interface Quiz {
   timeLimit: number; // seconds (default 10)
 }
 
+export interface PrizeTier {
+  recruitmentRate: number; // 모집률 (%)
+  prizeRate: number; // 상금 비율 (%)
+}
+
 export type GameStatus = 'Draft' | 'Ready' | 'Active' | 'Pending' | 'Closed' | 'Ended';
 export type GameType = 'PREDICTION_MARKET' | 'SURVIVAL_TRIVIA';
 export type GPChangeType = 'PARTICIPATION' | 'BOOSTING' | 'REFUND' | 'REWARD' | 'EXCHANGE_IN' | 'EXCHANGE_OUT' | 'REFUND_CANCEL';
@@ -59,6 +64,15 @@ export interface Game {
   timePerQuestion?: number; // seconds (default 10)
   startDateTime?: string; // ST 게임 시작일시
   survivorCount?: number; // ST 최종 생존자 수
+  // ST 동적 상금풀 필드
+  maxPrizePool?: number; // 최대 상금풀
+  maxRecruitment?: number; // 최대 모집인원
+  stMultiplier?: number; // 배수 (기본 1.25)
+  calculatedEntryFee?: number; // 참여비 (자동 계산)
+  prizeTiers?: PrizeTier[]; // 모집인원별 상금 단계
+  eliminationTickets?: number; // 탈락자 응모권 수량
+  appliedPrizePool?: number; // 적용 상금풀 (게임 시작 후)
+  actualParticipants?: number; // 실제 모집인원 (게임 시작 후)
 }
 
 export interface Participant {

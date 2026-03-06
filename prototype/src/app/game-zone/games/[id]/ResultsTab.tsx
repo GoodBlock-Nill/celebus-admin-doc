@@ -46,7 +46,8 @@ function STResultsContent({ game, participants, rewardPage, setRewardPage }: Con
   const survivors = participants.filter(p => p.survivedStage === 10);
   const survivorCount = game.survivorCount ?? survivors.length;
   const isAllEliminated = game.status !== 'Active' && survivorCount === 0 && participants.length > 0;
-  const perPerson = survivorCount > 0 ? Math.floor(game.totalPrizeGP / survivorCount) : 0;
+  const stAppliedPool = game.appliedPrizePool ?? game.maxPrizePool ?? 0;
+  const perPerson = survivorCount > 0 ? Math.floor(stAppliedPool / survivorCount) : 0;
   const isGameEnded = game.status === 'Closed' || game.status === 'Ended';
 
   const gameEndTime = game.startDateTime
@@ -68,9 +69,11 @@ function STResultsContent({ game, participants, rewardPage, setRewardPage }: Con
       ]} />
 
       <DetailSection title="보상 현황" fields={[
-        { label: '총 상금 GP', value: formatGP(game.totalPrizeGP) },
+        { label: '최대 상금풀', value: formatGP(game.maxPrizePool ?? 0) },
+        { label: '적용 상금풀', value: game.appliedPrizePool !== undefined ? formatGP(game.appliedPrizePool) : '-' },
         { label: '최종 생존자 수', value: isGameEnded ? `${survivorCount}명` : '-' },
         { label: '1인당 보상 GP', value: isGameEnded ? formatGP(perPerson) : '-' },
+        { label: '탈락자 응모권', value: `${game.eliminationTickets ?? 0}장 / 탈락자 1인당` },
         { label: '보상 지급 상태', value: (
           <Badge variant="custom" value={game.rewardDistributed ? 'done' : 'pending'}
             customBg={game.rewardDistributed ? 'bg-green-100' : 'bg-gray-100'}
@@ -87,7 +90,8 @@ function STResultsContent({ game, participants, rewardPage, setRewardPage }: Con
 
       {isAllEliminated && (
         <div className="bg-white border border-gray-200 rounded-lg p-12 text-center">
-          <p className="text-gray-500">전원 탈락으로 보상이 지급되지 않았습니다.</p>
+          <p className="text-gray-500">전원 탈락으로 GP 보상이 지급되지 않았습니다. 적용 상금풀은 시스템에 귀속됩니다.</p>
+          <p className="text-gray-500 text-sm mt-1">탈락자 응모권 ({game.eliminationTickets ?? 0}장/인)은 모든 참여자에게 지급되었습니다.</p>
         </div>
       )}
 
@@ -110,6 +114,12 @@ function STResultsContent({ game, participants, rewardPage, setRewardPage }: Con
                 return isSurvivor
                   ? <span className="font-semibold">{formatGP(perPerson)}</span>
                   : <span className="text-gray-400">0 GP</span>;
+              }},
+              { key: 'tickets', label: '응모권', align: 'center' as const, render: (p: Participant) => {
+                const isSurvivor = p.survivedStage === 10;
+                return isSurvivor
+                  ? <span className="text-gray-400">-</span>
+                  : <span className="text-purple-600">{game.eliminationTickets ?? 0}장</span>;
               }},
             ]}
             data={paginated as (Participant & Record<string, unknown>)[]}

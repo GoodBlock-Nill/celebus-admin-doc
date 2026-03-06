@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.0</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.2</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.06</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -342,8 +342,24 @@ Ended(종료):         (버튼 없음)
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최대 상금풀</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP (천 단위 콤마)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">배수</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}배</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여비</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP (자동 계산: floor(최대 상금풀 / 최대 모집인원 × 배수))</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모집인원별 상금 단계</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">테이블 형태 (모집률% → 상금비율%)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락자 응모권</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}장 (팬퀘스트 응모권)</td>
   </tr>
 </table>
 
@@ -355,18 +371,35 @@ Ended(종료):         (버튼 없음)
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}명 (최대 500명)</td>
-  </tr>
-  <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최대 모집인원</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}명</td>
   </tr>
 </table>
 
 <blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
-<p>ST는 부스팅 항목 없음.</p>
+<p>ST는 부스팅 항목 없음. 참여비는 보상설정에서 자동 계산.</p>
 </blockquote>
+
+<h6>ST 게임 시작 후 확정 정보</h6>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
+<p>게임이 시작(Active)되면 아래 항목이 추가로 표시됩니다.</p>
+</blockquote>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">실제 모집인원</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}명</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">적용 상금풀</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP (모집률 기반 확정값)</td>
+  </tr>
+</table>
 
 <h6>ST 일정설정 섹션</h6>
 
@@ -727,8 +760,12 @@ Ended(종료):         (버튼 없음)
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최대 상금풀</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">적용 상금풀</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP (모집률 기반 확정값)</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최종 생존자 수</td>
@@ -736,7 +773,11 @@ Ended(종료):         (버튼 없음)
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1인당 보상 GP</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP (= 총 상금 ÷ 생존자 수, 소수점 절삭)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP (= 적용 상금풀 ÷ 생존자 수, 소수점 절삭)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락자 응모권</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}장/인</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 지급 상태</td>
@@ -751,13 +792,13 @@ Ended(종료):         (버튼 없음)
 <h6>ST 보상 상세 테이블</h6>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
-+---------------------------------------------------------------+
-| No | 닉네임   | 참여 GP | 결과             | 보상 GP  |
-| -- | -------- | ------- | ---------------- | -------- |
-|  1 | user123  | 10 GP   | 생존 (10/10)     | 294 GP   |
-|  2 | player99 | 10 GP   | 탈락(7스테이지)  | 0 GP     |
++------------------------------------------------------------------------------------+
+| No | 닉네임   | 참여 GP | 결과             | 보상 GP  | 응모권  |
+| -- | -------- | ------- | ---------------- | -------- | ------- |
+|  1 | user123  | 1,250 GP| 생존 (10/10)     | 4,000 GP | -       |
+|  2 | player99 | 1,250 GP| 탈락(7스테이지)  | 0 GP     | 1장     |
 | ...|
-+---------------------------------------------------------------+
++------------------------------------------------------------------------------------+
 </pre>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
@@ -791,10 +832,15 @@ Ended(종료):         (버튼 없음)
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP (탈락자는 0 GP)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가능 (기본 내림차순)</td>
   </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">응모권</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}장 (탈락자만 표시, 생존자는 "-")</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">가능</td>
+  </tr>
 </table>
 
 <blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
-<p>ST는 환급 GP, 부스팅 GP, 배분 값 컬럼 없음. 상세 스타일은 피그마 참조</p>
+<p>ST는 환급 GP, 부스팅 GP, 배분 값 컬럼 없음. 탈락자에게는 팬퀘스트 응모권이 지급됨. 상세 스타일은 피그마 참조</p>
 </blockquote>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
@@ -934,11 +980,20 @@ Ended(종료):         (버튼 없음)
 
 <h6>보상 계산 로직 (ST)</h6>
 <ul>
-  <li>생존자 개인 보상 = floor(총 상금 GP / 최종 생존자 수)</li>
-  <li>총 상금 GP를 최종 생존자에게 균등 분배</li>
+  <li>적용 상금풀 결정: 게임 시작 시 실제 모집인원 기준 모집률 계산 → 해당 단계의 상금 비율 적용
+    <ul>
+      <li>모집률 = 실제 모집인원 / 최대 모집인원</li>
+      <li>단계 사이 모집률은 하위 단계 적용 (보수적)</li>
+      <li>적용 상금풀 = 최대 상금풀 × 해당 단계의 상금 비율</li>
+    </ul>
+  </li>
+  <li>생존자 개인 보상 = floor(적용 상금풀 / 최종 생존자 수)</li>
+  <li>적용 상금풀을 최종 생존자에게 균등 분배</li>
   <li>소수점 이하 절삭 (나머지는 플랫폼 귀속)</li>
-  <li>참여 GP 환급 없음 (입장 비용으로 소진)</li>
-  <li>전원 탈락 시 총 상금 GP 전액 플랫폼 보유</li>
+  <li>참여비 환급 없음 (입장 비용으로 소진)</li>
+  <li>전원 탈락 시 적용 상금풀 전액 플랫폼 보유</li>
+  <li>탈락자 보상: 모든 탈락자에게 팬퀘스트 응모권 지급 (관전 여부 무관)</li>
+  <li>관전 완료 탈락자: 하트 1개 + 응모권 병행 지급</li>
   <li>보상 지급 시점: 게임 종료 즉시 서버에서 자동 지급</li>
 </ul>
 
@@ -1123,6 +1178,18 @@ Ended(종료):         (버튼 없음)
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">일자</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.06</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모집인원별 상금 단계에 책정 상금(GP) 컬럼 추가</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.1</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.05</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 보상설정 체계 변경: 최대 상금풀/배수/참여비(자동 계산)/모집인원별 상금 단계/탈락자 응모권 표시 추가, 참여설정 최대 모집인원으로 변경, 적용 상금풀 기반 보상 계산, 보상 상세 테이블 응모권 컬럼 추가</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.0</td>

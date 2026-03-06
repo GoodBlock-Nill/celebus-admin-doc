@@ -22,10 +22,18 @@ const mockTrivia: TriviaGame = {
   },
   status: 'SCHEDULED',
   scheduledAt: '2026-02-24T19:00:00+09:00',
-  totalPrizeGP: 50000,
-  participationCost: 10,
-  maxParticipants: 500,
-  participantCount: 312,
+  maxPrizePool: 10_000_000,
+  maxRecruitment: 10_000,
+  multiplier: 1.25,
+  calculatedEntryFee: 1_250,
+  prizeTiers: [
+    { recruitmentRate: 100, prizeRate: 100 },
+    { recruitmentRate: 80, prizeRate: 80 },
+    { recruitmentRate: 50, prizeRate: 50 },
+    { recruitmentRate: 20, prizeRate: 20 },
+  ],
+  eliminationTickets: 1,
+  participantCount: 3_120,
   questionCount: 10,
   timePerQuestion: 10,
   currentQuestion: 0,
@@ -133,6 +141,20 @@ export default function TriviaHomePage() {
 
   const statusConfig = TRIVIA_STATUS_CONFIG[mockTrivia.status];
 
+  // 현재 상금풀 계산 (모집률 기반)
+  function getCurrentPrizePool(): number {
+    const recruitmentRate = mockTrivia.participantCount / mockTrivia.maxRecruitment;
+    const sortedTiers = [...mockTrivia.prizeTiers].sort((a, b) => b.recruitmentRate - a.recruitmentRate);
+    let appliedRate = sortedTiers[sortedTiers.length - 1]?.prizeRate ?? 0;
+    for (const tier of sortedTiers) {
+      if (recruitmentRate >= tier.recruitmentRate / 100) {
+        appliedRate = tier.prizeRate;
+        break;
+      }
+    }
+    return Math.floor(mockTrivia.maxPrizePool * appliedRate / 100);
+  }
+
   return (
     <div className="min-h-screen bg-gray-950 text-white flex flex-col max-w-md mx-auto">
       {/* Error toast */}
@@ -217,12 +239,10 @@ export default function TriviaHomePage() {
             <div className="flex items-start gap-3">
               <span className="text-lg">🏆</span>
               <div>
-                <span className="text-white font-semibold text-sm">총 상금 GP </span>
-                <span className="text-blue-400 font-bold">{formatGP(mockTrivia.totalPrizeGP)}</span>
+                <span className="text-white font-semibold text-sm">최대 상금 </span>
+                <span className="text-blue-400 font-bold">{formatGP(mockTrivia.maxPrizePool)}</span>
                 <p className="text-gray-400 text-xs mt-0.5">
-                  {isEnterable
-                    ? `생존자 수에 따라 ${formatNumber(mockTrivia.survivorCount || 1)}분의 1로 분배`
-                    : '생존자 수에 따라 분배돼요'}
+                  현재 상금풀 {formatGP(getCurrentPrizePool())} / 생존자 수에 따라 분배
                 </p>
               </div>
             </div>
@@ -241,7 +261,7 @@ export default function TriviaHomePage() {
             <div className="flex items-center gap-3">
               <span className="text-lg">💰</span>
               <span className="text-gray-300 text-sm">
-                참여 비용: <span className="text-white font-semibold">{formatGP(mockTrivia.participationCost)}</span>
+                참여비: <span className="text-white font-semibold">{formatGP(mockTrivia.calculatedEntryFee)}</span>
               </span>
             </div>
           </div>
@@ -268,6 +288,7 @@ export default function TriviaHomePage() {
               <li>• 오답 시 하트가 자동으로 소진돼요</li>
               <li>• 하트가 없으면 탈락해요</li>
               <li>• 탈락 후에도 관전 가능</li>
+              <li>• 탈락 시 팬퀘스트 응모권 {mockTrivia.eliminationTickets}장 지급</li>
             </ul>
           </div>
 
@@ -331,7 +352,7 @@ export default function TriviaHomePage() {
             ) : hasStarted ? (
               '입장 마감'
             ) : (
-              `${formatGP(mockTrivia.participationCost)}로 입장하기`
+              `${formatGP(mockTrivia.calculatedEntryFee)}로 입장하기`
             )}
           </button>
         )}

@@ -40,11 +40,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.8</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.27</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -69,7 +69,7 @@
 
 <h2>1. 화면 목적</h2>
 
-<p>모든 스테이지 종료 후 표시되는 최종 결과 화면입니다. 생존자의 상금 GP는 서버에서 자동 지급되며, 탈락 관전자에게는 하트 보상이 자동 지급됩니다. 마지막 스테이지(10/10)에서 탈락한 사용자도 탈락 모달 없이 이 화면으로 직행합니다. 탈락 후 나가기를 선택한 사용자(미관전)에게도 게임 종료 후 결과를 제공합니다.</p>
+<p>모든 스테이지 종료 후 표시되는 최종 결과 화면입니다. 생존자의 상금 GP는 서버에서 자동 지급되며, 모든 탈락자에게는 팬퀘스트 응모권이 자동 지급됩니다. 탈락 관전자에게는 하트 + 응모권이 병행 지급됩니다. 마지막 스테이지(10/10)에서 탈락한 사용자도 탈락 모달 없이 이 화면으로 직행합니다.</p>
 
 <blockquote><p>이 문서는 게임 종료 후 결과 화면을 다룹니다. 게임 진행 화면(CEB-GAM-206), 탈락 모달(CEB-GAM-206-MD-ELIMINATE), 관전 모드(CEB-GAM-206-SPECTATE)는 별도 문서입니다.</p></blockquote>
 
@@ -99,7 +99,7 @@
 │                                                                   │
 │      ┌──────────────────────────────────────┐                    │
 │      │ 이번 회차 결과                         │                    │
-│      │ 총 상금 GP         {N} GP              │                    │
+│      │ 적용 상금풀         {N} GP              │                    │
 │      │ 최종 생존자         {N} 명              │                    │
 │      └──────────────────────────────────────┘                    │
 │                                                                   │
@@ -131,7 +131,7 @@
 │                                                                   │
 │      ┌──────────────────────────────────────┐                    │
 │      │ 이번 회차 결과                         │                    │
-│      │ 총 상금 GP         {N} GP              │                    │
+│      │ 적용 상금풀         {N} GP              │                    │
 │      │ 최종 생존자         {N} 명              │                    │
 │      └──────────────────────────────────────┘                    │
 │                                                                   │
@@ -159,11 +159,12 @@
 │                                                                   │
 │      ┌──────────────────────────────────────┐                    │
 │      │ 이번 회차 결과                         │                    │
-│      │ 총 상금 GP         {N} GP              │                    │
+│      │ 적용 상금풀         {N} GP              │                    │
 │      │ 최종 생존자         {N} 명              │                    │
 │      └──────────────────────────────────────┘                    │
 │                                                                   │
 │      ❤️ 하트 1개를 받았어요!                                       │
+│      🎟️ 응모권 {N}장을 받았어요!                                   │
 │                                                                   │
 │ ┌─────────────────────────────────────────────────────────────┐ │
 │ │                       확인                                   │ │
@@ -171,7 +172,7 @@
 └─────────────────────────────────────────────────────────────────┘
 </pre>
 
-<h4>D. 탈락자 결과 (미관전)</h4>
+<h4>D. 탈락자 결과 (마지막 문제에서 탈락시)</h4>
 
 <pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
 ┌─────────────────────────────────────────────────────────────────┐
@@ -187,9 +188,11 @@
 │                                                                   │
 │      ┌──────────────────────────────────────┐                    │
 │      │ 이번 회차 결과                         │                    │
-│      │ 총 상금 GP         {N} GP              │                    │
+│      │ 적용 상금풀         {N} GP              │                    │
 │      │ 최종 생존자         {N} 명              │                    │
 │      └──────────────────────────────────────┘                    │
+│                                                                   │
+│      🎟️ 응모권 {N}장을 받았어요!                                   │
 │                                                                   │
 │ ┌─────────────────────────────────────────────────────────────┐ │
 │ │                       확인                                   │ │
@@ -233,7 +236,7 @@
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서브 메시지</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">완주(100%): "정말 대단해요! 모든 문제를 맞혔어요!" / 완주(하트사용): "끝까지 살아남았습니다!" / 탈락(관전): "끝까지 관전해 주셔서 감사합니다!" / 탈락(미관전): "다음에는 꼭 완주해 보세요!"</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">완주(100%): "정말 대단해요! 모든 문제를 맞혔어요!" / 완주(하트사용): "끝까지 살아남았습니다!" / 탈락(관전): "끝까지 관전해 주셔서 감사합니다!" / 탈락(마지막 문제 탈락): "다음에는 꼭 완주해 보세요!"</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 표시</td>
@@ -243,12 +246,17 @@
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 안내</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 관전자만 표시: "❤️ 하트 1개를 받았어요!" (미관전 탈락자에게는 미표시)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 관전자만 표시: "❤️ 하트 1개를 받았어요!" (마지막 문제 탈락자에게는 미표시)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">응모권 안내</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모든 탈락자에게 표시: "🎟️ 응모권 {N}장을 받았어요!" (관전 완료 + 마지막 문제 탈락 모두)</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">회차 결과 카드</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"{N} GP" (천 단위 콤마)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">적용 상금풀</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"{N} GP" (천 단위 콤마, 게임 시작 시 확정된 상금풀)</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
@@ -296,7 +304,7 @@
 <h5>동작</h5>
 <ol>
 <li>CEB-GAM-204(트리비아 홈)으로 이동</li>
-<li>하트 1개는 서버에서 관전 완료 시점에 이미 자동 지급 완료 상태</li>
+<li>하트 1개 + 응모권은 서버에서 관전 완료 시점에 이미 자동 지급 완료 상태</li>
 </ol>
 
 <h3>3.3 뒤로가기</h3>
@@ -312,7 +320,7 @@
 <li>보상은 게임 종료 시점에 서버에서 자동 지급되므로 별도 수령 필요 없음</li>
 </ul>
 
-<h3>3.4 확인 버튼 (탈락 미관전자)</h3>
+<h3>3.4 확인 버튼 (마지막 문제 탈락자)</h3>
 
 <h5>트리거</h5>
 <ul>
@@ -322,7 +330,7 @@
 <h5>동작</h5>
 <ol>
 <li>CEB-GAM-204(트리비아 홈)으로 이동</li>
-<li>보상 없음 (GP, 하트 모두 미지급)</li>
+<li>응모권은 서버에서 탈락 시점에 이미 자동 지급 완료 상태 (GP, 하트는 미지급)</li>
 </ol>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
@@ -340,8 +348,12 @@
 </thead>
 <tbody>
 <tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">적용 상금풀</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 시작 시 모집률 기반으로 확정된 상금풀 (최대 상금풀 × 해당 단계의 상금 비율)</td>
+</tr>
+<tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1인당 보상</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP ÷ 최종 생존자 수 (균등 분배)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">적용 상금풀 ÷ 최종 생존자 수 (균등 분배)</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">소수점 처리</td>
@@ -353,15 +365,19 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전원 탈락</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존자 0명인 경우 총 상금 GP 전액 플랫폼 보유</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존자 0명인 경우 적용 상금풀 전액 플랫폼 보유</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여비 환급</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">없음 (참여비 10 GP는 환급되지 않음)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">없음 (참여비는 환급되지 않음)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락자 응모권</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모든 탈락자에게 팬퀘스트 응모권 {N}장 자동 지급 (관전 여부 무관)</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 지급 시점</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 종료 시점에 서버에서 자동 지급 완료</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 종료 시점에 서버에서 자동 지급 완료 (GP + 하트 + 응모권)</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">RESULT 화면 역할</td>
@@ -385,10 +401,17 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">소멸 후 재조회</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확인 완료 또는 자동 소멸된 게임 결과는 RESULT 화면에서 재조회 불가. GP 변동 금액은 GP 변동 내역(CEB-BO-GZ-601)에서 확인 가능</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확인 완료된 게임 결과는 RESULT 화면에서 재조회 불가. GP 변동 금액은 GP 변동 내역(CEB-BO-GZ-601)에서 확인 가능</td>
 </tr>
 </tbody>
 </table>
+
+<h3>나가기 선택 탈락자</h3>
+
+<ul>
+<li>탈락 후 나가기를 선택한 사용자는 결과 화면 미표시 (v1.6 변경사항 유지)</li>
+<li>응모권은 서버에서 탈락 시점에 자동 지급 (팬퀘스트에서 확인 가능)</li>
+</ul>
 
 <h3>업적 배지</h3>
 
@@ -444,22 +467,12 @@
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-SPECTATE 게임 종료 (관전 완료)</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">C (탈락 관전 완료)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 1개 (자동 지급)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 1개 + 응모권 {N}장 (자동 지급)</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206 마지막 스테이지 탈락 (10/10 오답/미응답)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">D (탈락 미관전)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 없음 (탈락 모달 없이 직행)</td>
-</tr>
-<tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-204 게임 종료 이벤트 수신 (탈락 후 나가기)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">D (탈락 미관전)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 없음 (자동 전환)</td>
-</tr>
-<tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-204 재방문 시 미확인 결과 존재</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">D (탈락 미관전)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 없음 (자동 전환)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">D (마지막 문제 탈락)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">응모권 {N}장 (탈락 모달 없이 직행)</td>
 </tr>
 </tbody>
 </table>
@@ -507,13 +520,13 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 완료 (C)</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 후 끝까지 관전</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"끝까지 관전해 주셔서 감사합니다!"</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">❤️ 하트 1개를 받았어요!</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">❤️ 하트 1개를 받았어요! + 🎟️ 응모권 {N}장을 받았어요!</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미관전 (D)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 후 나가기 또는 10/10 탈락</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">마지막 문제 탈락 (D)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">마지막 스테이지(10/10) 탈락</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"다음에는 꼭 완주해 보세요!"</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">없음</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">🎟️ 응모권 {N}장을 받았어요!</td>
 </tr>
 </tbody>
 </table>
@@ -561,7 +574,7 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">最後まで観戦いただきありがとうございます！</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 서브 (미관전)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 서브 (마지막 문제 탈락)</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다음에는 꼭 완주해 보세요!</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Try to complete it next time!</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">次こそクリアを目指しましょう！</td>
@@ -577,6 +590,12 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">❤️ 하트 1개를 받았어요!</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">❤️ You earned 1 heart!</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">❤️ ハート1個を獲得しました！</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">응모권 안내</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">🎟️ 응모권 {N}장을 받았어요!</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">🎟️ You earned {N} raffle ticket(s)!</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">🎟️ 応募券{N}枚を獲得しました！</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">확인 (완주자)</td>
@@ -708,7 +727,7 @@
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-204</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">트리비아 홈</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">확인 버튼 탭 후 이동, 뒤로가기 시 이동, 미관전 탈락자 자동 전환 출발점</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">확인 버튼 탭 후 이동, 뒤로가기 시 이동</td>
 </tr>
 </tbody>
 </table>
@@ -762,6 +781,24 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3차 최종 검증: 디자이너/개발자 질문 최소화를 위한 36건 명확화</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.6</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.27</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 후 나가기(미관전) 사용자 결과 화면 미표시로 변경 (204 자동 전환 제거)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.7</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.27</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">D타입 용어 변경: "미관전" → "마지막 문제에서 탈락시" (D타입 조건 명확화)</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.8</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.27</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">동적 상금풀 시스템 반영: 총 상금 GP → 적용 상금풀, 보상 계산 기준 변경, 탈락자 응모권(C/D타입) 추가, 나가기 선택 탈락자 응모권 자동 지급 명시</td>
 </tr>
 </tbody>
 </table>

@@ -12,7 +12,7 @@ import { GAME_TYPE_LABELS } from '@/lib/constants';
 import PMEditFields from './PMEditFields';
 import STEditFields from './STEditFields';
 import { Section, HintLinkField } from './editHelpers';
-import type { MultiLangText, GameStatus, Quiz } from '@/lib/types';
+import type { MultiLangText, GameStatus, Quiz, PrizeTier } from '@/lib/types';
 
 export default function EditGamePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -28,6 +28,12 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
   const [useLimit, setUseLimit] = useState(false);
   const [participationCost, setParticipationCost] = useState(1);
   const [boostingCost, setBoostingCost] = useState(1);
+  // ST-specific reward state
+  const [stMaxPrizePool, setStMaxPrizePool] = useState(0);
+  const [stMaxRecruitment, setStMaxRecruitment] = useState(0);
+  const [stMultiplierVal, setStMultiplierVal] = useState(1.25);
+  const [stPrizeTiers, setStPrizeTiers] = useState<PrizeTier[]>([]);
+  const [stEliminationTickets, setStEliminationTickets] = useState(1);
   const [boostingMultiplier, setBoostingMultiplier] = useState(2);
   const [hintLinkEnabled, setHintLinkEnabled] = useState(false);
   const [hintLink, setHintLink] = useState('');
@@ -57,6 +63,11 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
       if (game.type === 'SURVIVAL_TRIVIA') {
         setQuizzes(game.quizzes ? [...game.quizzes] : []);
         setStartDateTime(game.startDateTime || '');
+        setStMaxPrizePool(game.maxPrizePool ?? 0);
+        setStMaxRecruitment(game.maxRecruitment ?? 0);
+        setStMultiplierVal(game.stMultiplier ?? 1.25);
+        setStPrizeTiers(game.prizeTiers ? [...game.prizeTiers] : []);
+        setStEliminationTickets(game.eliminationTickets ?? 1);
       }
     }
   }, [game]);
@@ -113,9 +124,10 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
   const validate = () => {
     const errs: Record<string, string> = {};
     if (canEditTitle && !title.ko.trim()) errs.titleKo = '타이틀(KO)은 필수입니다.';
-    if (canEditReward && totalPrizeGP <= 0) errs.totalPrizeGP = '총 상금 GP를 입력하세요.';
+    if (!isST && canEditReward && totalPrizeGP <= 0) errs.totalPrizeGP = '총 상금 GP를 입력하세요.';
     if (isST) {
-      if (canEditAll && (maxParticipants <= 0 || maxParticipants > 500)) errs.maxParticipants = '1~500명';
+      if (canEditReward && stMaxPrizePool <= 0) errs.maxPrizePool = '최대 상금풀을 입력하세요.';
+      if (canEditAll && stMaxRecruitment <= 0) errs.maxRecruitment = '최대 모집인원을 입력하세요.';
       if (canEditStartDateTime && !startDateTime) errs.startDateTime = '게임 시작일시를 입력하세요.';
     } else {
       if (canEditEndDate && !endDate) errs.endDate = '투표 종료일시를 입력하세요.';
@@ -137,12 +149,20 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
       updateData.hintLinkEnabled = hintLinkEnabled;
       updateData.hintLink = hintLinkEnabled ? hintLink : '';
     }
-    if (canEditReward) updateData.totalPrizeGP = totalPrizeGP;
+    if (!isST && canEditReward) updateData.totalPrizeGP = totalPrizeGP;
 
     if (isST) {
+      if (canEditReward) {
+        updateData.maxPrizePool = stMaxPrizePool;
+        updateData.stMultiplier = stMultiplierVal;
+        updateData.prizeTiers = stPrizeTiers;
+        updateData.eliminationTickets = stEliminationTickets;
+        updateData.calculatedEntryFee = stMaxRecruitment > 0
+          ? Math.floor(stMaxPrizePool / stMaxRecruitment * stMultiplierVal)
+          : 0;
+      }
       if (canEditAll) {
-        updateData.maxParticipants = maxParticipants;
-        updateData.participationCost = participationCost;
+        updateData.maxRecruitment = stMaxRecruitment;
         updateData.quizzes = quizzes;
         updateData.startDateTime = startDateTime;
       } else if (canEditStartDateTime) {
@@ -163,7 +183,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
     }
 
     const isAllFilled = isST
-      ? !!(isAllLangFilled(title) && isAllLangFilled(description) && totalPrizeGP > 0 && startDateTime && maxParticipants > 0 && quizzes.length > 0)
+      ? !!(isAllLangFilled(title) && isAllLangFilled(description) && stMaxPrizePool > 0 && stMaxRecruitment > 0 && startDateTime && quizzes.length > 0)
       : !!(isAllLangFilled(title) && isAllLangFilled(description) && totalPrizeGP > 0 && endDate && resultDate && isAllLangFilled(resultBasis));
     if (status === 'Draft' && isAllFilled) {
       updateData.status = 'Ready';
@@ -237,9 +257,13 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
 
         {isST ? (
           <STEditFields
-            totalPrizeGP={totalPrizeGP} setTotalPrizeGP={setTotalPrizeGP} canEditReward={canEditReward}
-            maxParticipants={maxParticipants} setMaxParticipants={setMaxParticipants}
-            participationCost={participationCost} setParticipationCost={setParticipationCost} canEditAll={canEditAll}
+            maxPrizePool={stMaxPrizePool} setMaxPrizePool={setStMaxPrizePool}
+            stMultiplier={stMultiplierVal} setStMultiplier={setStMultiplierVal}
+            maxRecruitment={stMaxRecruitment} setMaxRecruitment={setStMaxRecruitment}
+            prizeTiers={stPrizeTiers} setPrizeTiers={setStPrizeTiers}
+            eliminationTickets={stEliminationTickets} setEliminationTickets={setStEliminationTickets}
+            canEditReward={canEditReward}
+            canEditAll={canEditAll}
             startDateTime={startDateTime} setStartDateTime={setStartDateTime} canEditStartDateTime={canEditStartDateTime}
             quizzes={quizzes} setQuizzes={setQuizzes} quizzesDisabled={status === 'Active'}
             errors={errors}

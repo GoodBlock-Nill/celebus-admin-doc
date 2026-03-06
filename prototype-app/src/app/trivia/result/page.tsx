@@ -7,9 +7,10 @@ import { TRIVIA_RESULT_CONFIG } from '@/lib/constants';
 import { formatGP, formatNumber } from '@/lib/utils';
 import type { TriviaResultType } from '@/lib/types';
 
-const MOCK_TOTAL_PRIZE_GP = 50000;
-const MOCK_SURVIVOR_COUNT = 42;
-const MOCK_REWARD_GP = Math.floor(MOCK_TOTAL_PRIZE_GP / MOCK_SURVIVOR_COUNT);
+const MOCK_APPLIED_PRIZE_POOL = 8_000_000;
+const MOCK_SURVIVOR_COUNT = 1_600;
+const MOCK_REWARD_GP = Math.floor(MOCK_APPLIED_PRIZE_POOL / MOCK_SURVIVOR_COUNT);
+const MOCK_ELIMINATION_TICKETS = 1;
 
 const LOADING_TIMEOUT_MS = 10000;
 const MOCK_LOAD_DELAY_MS = 1200;
@@ -209,11 +210,23 @@ function ResultContent() {
           </div>
         )}
 
-        {/* Heart reward (spectator complete) */}
+        {/* Heart + Raffle reward (spectator complete) */}
         {isSpectatorComplete && (
-          <div className="text-center mb-6">
+          <div className="text-center mb-6 space-y-3">
             <div className="bg-red-900/20 border border-red-800/50 rounded-2xl px-6 py-4 inline-block">
               <p className="text-red-300 text-base font-semibold">&#10084;&#65039; 하트 1개를 받았어요!</p>
+            </div>
+            <div className="bg-purple-900/20 border border-purple-800/50 rounded-2xl px-6 py-4 inline-block">
+              <p className="text-purple-300 text-base font-semibold">🎟️ 응모권 {MOCK_ELIMINATION_TICKETS}장을 받았어요!</p>
+            </div>
+          </div>
+        )}
+
+        {/* Raffle reward (last question eliminated - D type) */}
+        {type === 'D' && (
+          <div className="text-center mb-6">
+            <div className="bg-purple-900/20 border border-purple-800/50 rounded-2xl px-6 py-4 inline-block">
+              <p className="text-purple-300 text-base font-semibold">🎟️ 응모권 {MOCK_ELIMINATION_TICKETS}장을 받았어요!</p>
             </div>
           </div>
         )}
@@ -223,8 +236,8 @@ function ResultContent() {
           <h3 className="text-white font-semibold text-sm mb-4">이번 회차 결과</h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-gray-400 text-sm">총 상금 GP</span>
-              <span className="text-white font-semibold text-sm">{formatGP(MOCK_TOTAL_PRIZE_GP)}</span>
+              <span className="text-gray-400 text-sm">적용 상금풀</span>
+              <span className="text-white font-semibold text-sm">{formatGP(MOCK_APPLIED_PRIZE_POOL)}</span>
             </div>
             <div className="border-t border-gray-700" />
             <div className="flex items-center justify-between">

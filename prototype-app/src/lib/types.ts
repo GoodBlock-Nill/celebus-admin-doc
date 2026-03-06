@@ -108,15 +108,25 @@ export interface RankingUser {
 // Trivia
 export type TriviaStatus = 'SCHEDULED' | 'ONBOARDING' | 'LIVE' | 'ENDED' | 'NO_SCHEDULE';
 
+export interface PrizeTier {
+  recruitmentRate: number;
+  prizeRate: number;
+}
+
 export interface TriviaGame {
   id: string;
   title: MultiLangText;
   description: MultiLangText;
   status: TriviaStatus;
   scheduledAt: string;
-  totalPrizeGP: number;
-  participationCost: number;
-  maxParticipants: number;
+  maxPrizePool: number;
+  maxRecruitment: number;
+  multiplier: number;
+  calculatedEntryFee: number;
+  prizeTiers: PrizeTier[];
+  eliminationTickets: number;
+  appliedPrizePool?: number;
+  actualParticipants?: number;
   participantCount: number;
   questionCount: number;
   timePerQuestion: number;
@@ -138,6 +148,7 @@ export type TriviaResultType = 'A' | 'B' | 'C' | 'D';
 export interface TriviaResult {
   type: TriviaResultType;
   rewardGP: number;
+  raffleTickets?: number;
   correctCount: number;
   totalQuestions: number;
   finalRank: number;

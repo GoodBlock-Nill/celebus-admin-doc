@@ -6,13 +6,14 @@ interface NumberInputProps {
   onChange: (value: number) => void;
   min?: number;
   max?: number;
+  step?: number;
   unit?: string;
   required?: boolean;
   disabled?: boolean;
   error?: string;
 }
 
-export default function NumberInput({ label, value, onChange, min = 0, max, unit, required, disabled, error }: NumberInputProps) {
+export default function NumberInput({ label, value, onChange, min = 0, max, step, unit, required, disabled, error }: NumberInputProps) {
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -26,6 +27,7 @@ export default function NumberInput({ label, value, onChange, min = 0, max, unit
           onChange={(e) => onChange(Number(e.target.value))}
           min={min}
           max={max}
+          step={step}
           disabled={disabled}
           className={`w-full h-10 px-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
             disabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : ''
