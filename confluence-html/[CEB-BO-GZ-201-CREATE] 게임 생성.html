@@ -116,7 +116,7 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.3</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
@@ -224,6 +224,10 @@ p {
 │ │ [ ______________ ] GP  (readonly, 실시간 계산)               │ │
 │ │ = floor(최대 상금풀 / 최대 모집인원 × 배수)                  │ │
 │ │                                                              │ │
+│ │ 보상 유형 *                                                   │ │
+│ │ [ 단계별 보상 | 비율별 보상 ]  ← Segmented Button             │ │
+│ │                                                              │ │
+│ │ [단계별 보상 선택 시]                                          │ │
 │ │ 모집인원별 상금 단계 *                                       │ │
 │ │ ┌──────────┬──────────┬──────┐                              │ │
 │ │ │ 모집률(%)│ 상금비율(%)│ 삭제 │                              │ │
@@ -234,6 +238,10 @@ p {
 │ │ │ [  20 ]  │ [  20 ]  │ [X]  │                              │ │
 │ │ └──────────┴──────────┴──────┘                              │ │
 │ │ [+ 단계 추가]                                                │ │
+│ │                                                              │ │
+│ │ [비율별 보상 선택 시]                                          │ │
+│ │ 적용 상금풀 = 실제 모집인원 / 최대 모집인원 × 최대 상금풀     │ │
+│ │ (게임 시작 시 실제 모집인원에 비례하여 상금풀이 자동 결정)     │ │
 │ │                                                              │ │
 │ │ 탈락자 응모권 수량 *                                         │ │
 │ │ [ ______________ ] 장  (기본값: 1)                           │ │
@@ -384,7 +392,12 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모집인원별 상금 단계 (필수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 유형 (필수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Segmented Button: 단계별 보상 (기본) / 비율별 보상</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모집인원별 상금 단계 (필수, 단계별 보상 선택 시)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">동적 테이블 (모집률% / 상금비율%), 행 추가/삭제 가능, 기본 4단계</td>
   </tr>
   <tr>
@@ -588,7 +601,21 @@ p {
   <li>천 단위 콤마 자동 표시, GP 단위</li>
 </ul>
 
-<h5>모집인원별 상금 단계 (Survival Trivia)</h5>
+<h5>보상 유형 (Survival Trivia)</h5>
+
+<ul>
+  <li>Segmented Button: 단계별 보상 (기본) / 비율별 보상</li>
+  <li>기본값: 단계별 보상</li>
+  <li>"단계별 보상" 선택 시: 모집인원별 상금 단계 테이블 표시</li>
+  <li>"비율별 보상" 선택 시: 테이블 숨기고 공식 안내 표시
+  <ul>
+    <li>적용 상금풀 = 실제 모집인원 / 최대 모집인원 × 최대 상금풀</li>
+    <li>안내 텍스트: "게임 시작 시 실제 모집인원에 비례하여 상금풀이 자동 결정됩니다."</li>
+  </ul>
+  </li>
+</ul>
+
+<h5>모집인원별 상금 단계 (Survival Trivia, 단계별 보상 선택 시에만 표시)</h5>
 
 <ul>
   <li>테이블 형태: 모집률(%) | 상금 비율(%) | 삭제 버튼</li>
@@ -1288,6 +1315,12 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.05</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 보상설정 체계 변경: 동적 상금풀 시스템 도입 (최대 상금풀, 배수, 참여비 자동 계산, 모집인원별 상금 단계), 참여설정에서 참여 비용 제거 (보상설정 자동 계산으로 이동), 최대 모집인원 제한 완화, 탈락자 응모권 수량 추가</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.3</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.06</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 참여설정 섹션 순서 변경 (보상설정 위로), 보상 유형 선택 추가 (단계별 보상 / 비율별 보상)</td>
   </tr>
 </table>
 

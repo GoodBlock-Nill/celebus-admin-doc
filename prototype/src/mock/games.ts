@@ -345,6 +345,7 @@ function createSTGame(index: number, status: GameStatus): Game {
     maxPrizePool,
     maxRecruitment,
     stMultiplier: stMul,
+    stRewardType: index % 4 === 0 ? 'PROPORTIONAL' as const : 'TIERED' as const,
     prizeTiers: stPrizeTiers,
     eliminationTickets: 1,
     calculatedEntryFee,

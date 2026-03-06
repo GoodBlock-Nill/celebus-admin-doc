@@ -10,7 +10,7 @@ import ConfirmModal from '@/components/modals/ConfirmModal';
 import { useGameStore } from '@/stores/useGameStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { generateId } from '@/lib/utils';
-import type { Game, MultiLangText, GameStatus, GameType, Quiz, QuizChoice, PrizeTier } from '@/lib/types';
+import type { Game, MultiLangText, GameStatus, GameType, Quiz, QuizChoice, PrizeTier, STRewardType } from '@/lib/types';
 import PMCreateFields from './PMCreateFields';
 import STCreateFields from './STCreateFields';
 
@@ -71,6 +71,7 @@ export default function CreateGamePage() {
   const [stMaxRecruitment, setStMaxRecruitment] = useState(10_000);
   const [stMultiplier, setStMultiplier] = useState(1.25);
   const [stPrizeTiers, setStPrizeTiers] = useState<PrizeTier[]>(DEFAULT_PRIZE_TIERS);
+  const [stRewardType, setStRewardType] = useState<STRewardType>('TIERED');
   const [stEliminationTickets, setStEliminationTickets] = useState(1);
 
   const handleTypeChange = (type: GameType) => {
@@ -79,7 +80,7 @@ export default function CreateGamePage() {
     setBoostingCost(1); setBoostingMultiplier(2); setEndDate(''); setResultDate(''); setResultBasis({ ...EMPTY_LANG });
     setQuizzes(createEmptyQuizzes()); setStartDateTime('');
     setStMaxPrizePool(10_000_000); setStMaxRecruitment(10_000); setStMultiplier(1.25);
-    setStPrizeTiers(DEFAULT_PRIZE_TIERS); setStEliminationTickets(1);
+    setStRewardType('TIERED'); setStPrizeTiers(DEFAULT_PRIZE_TIERS); setStEliminationTickets(1);
   };
 
   const validateForReady = () => {
@@ -162,8 +163,9 @@ export default function CreateGamePage() {
         maxPrizePool: stMaxPrizePool,
         maxRecruitment: stMaxRecruitment,
         stMultiplier,
+        stRewardType,
         calculatedEntryFee: stMaxRecruitment > 0 ? Math.floor(stMaxPrizePool / stMaxRecruitment * stMultiplier) : 0,
-        prizeTiers: stPrizeTiers,
+        prizeTiers: stRewardType === 'TIERED' ? stPrizeTiers : [],
         eliminationTickets: stEliminationTickets,
       } : {
         maxParticipants: useLimit ? maxParticipants : 0,
@@ -218,6 +220,7 @@ export default function CreateGamePage() {
             maxPrizePool={stMaxPrizePool} setMaxPrizePool={setStMaxPrizePool}
             maxRecruitment={stMaxRecruitment} setMaxRecruitment={setStMaxRecruitment}
             stMultiplier={stMultiplier} setStMultiplier={setStMultiplier}
+            stRewardType={stRewardType} setStRewardType={setStRewardType}
             prizeTiers={stPrizeTiers} setPrizeTiers={setStPrizeTiers}
             eliminationTickets={stEliminationTickets} setEliminationTickets={setStEliminationTickets}
             startDateTime={startDateTime} setStartDateTime={setStartDateTime}

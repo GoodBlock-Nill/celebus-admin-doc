@@ -34,6 +34,7 @@ export default function BasicInfoTab({ game }: BasicInfoTabProps) {
           { label: '최대 상금풀', value: formatGP(game.maxPrizePool ?? 0) },
           { label: '배수', value: `${game.stMultiplier ?? 1.25}배` },
           { label: '참여비', value: `${formatGP(game.calculatedEntryFee ?? 0)} (자동 계산)` },
+          { label: '보상 유형', value: game.stRewardType === 'PROPORTIONAL' ? '비율별 보상' : '단계별 보상' },
           { label: '탈락자 응모권', value: `${game.eliminationTickets ?? 0}장` },
         ]} />
       ) : (
@@ -42,7 +43,7 @@ export default function BasicInfoTab({ game }: BasicInfoTabProps) {
         ]} />
       )}
 
-      {isST && game.prizeTiers && game.prizeTiers.length > 0 && (
+      {isST && game.stRewardType !== 'PROPORTIONAL' && game.prizeTiers && game.prizeTiers.length > 0 && (
         <div className="bg-white border border-gray-200 rounded-lg p-6">
           <h3 className="text-base font-semibold text-gray-900 mb-4">모집인원별 상금 단계</h3>
           <table className="w-full text-sm">
@@ -63,6 +64,17 @@ export default function BasicInfoTab({ game }: BasicInfoTabProps) {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {isST && game.stRewardType === 'PROPORTIONAL' && (
+        <div className="bg-white border border-gray-200 rounded-lg p-6">
+          <h3 className="text-base font-semibold text-gray-900 mb-4">적용 상금풀 계산</h3>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p className="text-sm font-medium text-blue-800 mb-1">적용 상금풀 계산 공식</p>
+            <p className="text-sm text-blue-700">적용 상금풀 = 실제 모집인원 / 최대 모집인원 × 최대 상금풀</p>
+            <p className="text-xs text-blue-500 mt-2">게임 시작 시 실제 모집인원에 비례하여 상금풀이 자동 결정됩니다.</p>
+          </div>
         </div>
       )}
 

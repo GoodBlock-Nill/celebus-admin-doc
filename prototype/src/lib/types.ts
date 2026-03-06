@@ -30,6 +30,7 @@ export type GPChangeType = 'PARTICIPATION' | 'BOOSTING' | 'REFUND' | 'REWARD' | 
 export type ExchangeDirection = 'CHARGE' | 'WITHDRAW';
 export type ExchangeStatus = 'SUCCESS' | 'FAILED';
 export type GameResult = 'YES' | 'NO' | null;
+export type STRewardType = 'TIERED' | 'PROPORTIONAL';
 
 export interface Game {
   id: string;
@@ -69,6 +70,7 @@ export interface Game {
   maxRecruitment?: number; // 최대 모집인원
   stMultiplier?: number; // 배수 (기본 1.25)
   calculatedEntryFee?: number; // 참여비 (자동 계산)
+  stRewardType?: STRewardType; // 보상 유형 (단계별/비율별)
   prizeTiers?: PrizeTier[]; // 모집인원별 상금 단계
   eliminationTickets?: number; // 탈락자 응모권 수량
   appliedPrizePool?: number; // 적용 상금풀 (게임 시작 후)

@@ -12,7 +12,7 @@ import { GAME_TYPE_LABELS } from '@/lib/constants';
 import PMEditFields from './PMEditFields';
 import STEditFields from './STEditFields';
 import { Section, HintLinkField } from './editHelpers';
-import type { MultiLangText, GameStatus, Quiz, PrizeTier } from '@/lib/types';
+import type { MultiLangText, GameStatus, Quiz, PrizeTier, STRewardType } from '@/lib/types';
 
 export default function EditGamePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -33,6 +33,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
   const [stMaxRecruitment, setStMaxRecruitment] = useState(0);
   const [stMultiplierVal, setStMultiplierVal] = useState(1.25);
   const [stPrizeTiers, setStPrizeTiers] = useState<PrizeTier[]>([]);
+  const [stRewardType, setStRewardType] = useState<STRewardType>('TIERED');
   const [stEliminationTickets, setStEliminationTickets] = useState(1);
   const [boostingMultiplier, setBoostingMultiplier] = useState(2);
   const [hintLinkEnabled, setHintLinkEnabled] = useState(false);
@@ -67,6 +68,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
         setStMaxRecruitment(game.maxRecruitment ?? 0);
         setStMultiplierVal(game.stMultiplier ?? 1.25);
         setStPrizeTiers(game.prizeTiers ? [...game.prizeTiers] : []);
+        setStRewardType(game.stRewardType ?? 'TIERED');
         setStEliminationTickets(game.eliminationTickets ?? 1);
       }
     }
@@ -155,7 +157,8 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
       if (canEditReward) {
         updateData.maxPrizePool = stMaxPrizePool;
         updateData.stMultiplier = stMultiplierVal;
-        updateData.prizeTiers = stPrizeTiers;
+        updateData.stRewardType = stRewardType;
+        updateData.prizeTiers = stRewardType === 'TIERED' ? stPrizeTiers : [];
         updateData.eliminationTickets = stEliminationTickets;
         updateData.calculatedEntryFee = stMaxRecruitment > 0
           ? Math.floor(stMaxPrizePool / stMaxRecruitment * stMultiplierVal)
@@ -259,6 +262,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
           <STEditFields
             maxPrizePool={stMaxPrizePool} setMaxPrizePool={setStMaxPrizePool}
             stMultiplier={stMultiplierVal} setStMultiplier={setStMultiplierVal}
+            stRewardType={stRewardType} setStRewardType={setStRewardType}
             maxRecruitment={stMaxRecruitment} setMaxRecruitment={setStMaxRecruitment}
             prizeTiers={stPrizeTiers} setPrizeTiers={setStPrizeTiers}
             eliminationTickets={stEliminationTickets} setEliminationTickets={setStEliminationTickets}
