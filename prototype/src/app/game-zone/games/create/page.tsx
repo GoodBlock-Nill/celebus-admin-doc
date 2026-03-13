@@ -29,6 +29,7 @@ function createEmptyQuizzes(): Quiz[] {
     ] as [QuizChoice, QuizChoice, QuizChoice, QuizChoice],
     correctIndex: 0,
     timeLimit: 10,
+    resultDisplayTime: 5,
   }));
 }
 

@@ -57,6 +57,7 @@ export default function STCreateFields(props: STCreateFieldsProps) {
       ] as [QuizChoice, QuizChoice, QuizChoice, QuizChoice],
       correctIndex: 0,
       timeLimit: 10,
+      resultDisplayTime: 5,
     };
     setQuizzes([...quizzes, newQuiz]);
   };

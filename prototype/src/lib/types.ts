@@ -14,9 +14,10 @@ export interface Quiz {
   id: string;
   questionNumber: number;
   text: MultiLangText;
-  choices: [QuizChoice, QuizChoice, QuizChoice, QuizChoice];
-  correctIndex: number; // 0-3
+  choices: [QuizChoice, QuizChoice, ...QuizChoice[]]; // min 2, max 4
+  correctIndex: number; // 0 to choices.length-1
   timeLimit: number; // seconds (default 10)
+  resultDisplayTime: number; // seconds (default 5, 1~10)
 }
 
 export interface PrizeTier {

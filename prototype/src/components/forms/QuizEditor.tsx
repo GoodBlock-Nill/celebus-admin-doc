@@ -34,9 +34,24 @@ export default function QuizEditor({ quizzes, onChange, disabled = false, onAdd,
 
   const updateChoice = (quizIndex: number, choiceIndex: number, lang: 'ko' | 'en' | 'jp', value: string) => {
     const quiz = quizzes[quizIndex];
-    const newChoices = [...quiz.choices] as [QuizChoice, QuizChoice, QuizChoice, QuizChoice];
+    const newChoices = [...quiz.choices] as [QuizChoice, QuizChoice, ...QuizChoice[]];
     newChoices[choiceIndex] = { ...newChoices[choiceIndex], [lang]: value };
     updateQuiz(quizIndex, { choices: newChoices });
+  };
+
+  const addChoice = (qi: number) => {
+    const quiz = quizzes[qi];
+    if (quiz.choices.length >= 4) return;
+    const newChoices = [...quiz.choices, { ko: '', en: '', jp: '' }] as [QuizChoice, QuizChoice, ...QuizChoice[]];
+    updateQuiz(qi, { choices: newChoices });
+  };
+
+  const deleteChoice = (qi: number, ci: number) => {
+    const quiz = quizzes[qi];
+    if (quiz.choices.length <= 2) return;
+    const newChoices = quiz.choices.filter((_, i) => i !== ci) as [QuizChoice, QuizChoice, ...QuizChoice[]];
+    const newCorrectIndex = quiz.correctIndex >= ci ? Math.max(0, quiz.correctIndex - (quiz.correctIndex === ci ? 1 : 0)) : quiz.correctIndex;
+    updateQuiz(qi, { choices: newChoices, correctIndex: quiz.correctIndex === ci ? 0 : newCorrectIndex });
   };
 
   return (
@@ -164,9 +179,29 @@ export default function QuizEditor({ quizzes, onChange, disabled = false, onAdd,
                         {quiz.correctIndex === ci && (
                           <span className="text-xs text-green-600 font-medium flex-shrink-0">정답</span>
                         )}
+                        {!disabled && (
+                          <button
+                            type="button"
+                            onClick={() => deleteChoice(qi, ci)}
+                            disabled={quiz.choices.length <= 2}
+                            className="text-xs text-red-400 hover:text-red-600 disabled:text-gray-300 disabled:cursor-not-allowed flex-shrink-0"
+                          >
+                            삭제
+                          </button>
+                        )}
                       </div>
                     ))}
                   </div>
+                  {!disabled && (
+                    <button
+                      type="button"
+                      onClick={() => addChoice(qi)}
+                      disabled={quiz.choices.length >= 4}
+                      className="mt-2 text-xs font-medium text-purple-600 hover:text-purple-700 disabled:text-gray-300 disabled:cursor-not-allowed"
+                    >
+                      + 선택지 추가
+                    </button>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -183,6 +218,21 @@ export default function QuizEditor({ quizzes, onChange, disabled = false, onAdd,
                     className="w-16 px-2 py-1 border border-gray-200 rounded text-sm text-center focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:bg-gray-50"
                   />
                   <span className="text-xs text-gray-500">초 (5~60)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-xs font-medium text-gray-500">정답결과 노출시간:</label>
+                  <input
+                    type="number"
+                    value={quiz.resultDisplayTime}
+                    onChange={(e) =>
+                      updateQuiz(qi, { resultDisplayTime: Math.max(1, Math.min(10, Number(e.target.value))) })
+                    }
+                    disabled={disabled}
+                    min={1}
+                    max={10}
+                    className="w-16 px-2 py-1 border border-gray-200 rounded text-sm text-center focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:bg-gray-50"
+                  />
+                  <span className="text-xs text-gray-500">초 (1~10)</span>
                 </div>
               </div>
             )}
