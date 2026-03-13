@@ -40,11 +40,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.11</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -264,7 +264,7 @@
 
 <h3>탈락 처리 기준</h3>
 
-<p>놓친 스테이지에 대해 "미응답 = 즉시 탈락" 규칙이 동일하게 적용됩니다. 네트워크 끊김 여부와 관계없이 미응답은 즉시 탈락입니다.</p>
+<p>네트워크 끊김으로 인한 탈락은 일반 미응답 하트 규칙(하트 있음→소진→계속, 하트 없음→탈락)과 별개입니다. 재연결 시 놓친 스테이지가 존재하면 하트 보유 여부와 관계없이 즉시 탈락 처리됩니다.</p>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
 <thead>
@@ -412,6 +412,12 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최초 작성: 네트워크 끊김 후 재연결 시 탈락 안내 모달</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.11</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 처리 기준 명확화: 네트워크 끊김 탈락은 일반 미응답 하트 규칙과 별개, 하트 보유 여부 무관 즉시 탈락</td>
 </tr>
 </tbody>
 </table>

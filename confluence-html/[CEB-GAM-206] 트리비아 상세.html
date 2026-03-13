@@ -40,11 +40,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.7</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.8</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.11</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -408,9 +408,13 @@
 <h5>미응답(시간 초과) 시</h5>
 <ul>
 <li>타이머 만료 시 키보드가 열려 있다면 자동 닫힘</li>
-<li>미응답(시간 초과) → 정답 공개 5초 표시 → (5초 종료) → 탈락 모달(CEB-GAM-206-MD-ELIMINATE) 표시 → 5초 유예 → 미선택 시 CEB-GAM-204 이동 (오답 탈락과 동일 플로우, 동일 타이밍)</li>
-<li>하트 여부 무관하게 즉시 탈락</li>
-<li>단, 마지막 스테이지(10/10)에서 미응답 시 → 정답 공개 5초 표시 후 탈락 모달 생략 → CEB-GAM-206-RESULT 직행 (D타입: 탈락 미관전)</li>
+<li>미응답(시간 초과) 시 하트 분기:
+  <ul>
+    <li>하트 있음: 하트 1개 소진 → 다음 스테이지 진행 (탈락 모달 미표시)</li>
+    <li>하트 없음: 정답 공개 5초 표시 → (5초 종료) → 탈락 모달(CEB-GAM-206-MD-ELIMINATE) 표시 → 5초 유예 → 미선택 시 CEB-GAM-204 이동 (오답 탈락과 동일 플로우, 동일 타이밍)</li>
+  </ul>
+</li>
+<li>단, 마지막 스테이지(10/10)에서 미응답 시 → 하트 소진 후 정답 공개 5초 표시 후 탈락 모달 생략 → CEB-GAM-206-RESULT 직행 (D타입: 탈락 미관전)</li>
 </ul>
 
 <h5>미응답(시간 초과) 후 정답 공개</h5>
@@ -562,8 +566,12 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">불가 (선택 즉시 확정)</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미응답 (시간 초과)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">즉시 탈락 (하트 여부 무관)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미응답 (시간 초과) + 하트 있음</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 1개 소진 → 다음 스테이지 진행</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미응답 (시간 초과) + 하트 없음</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">즉시 탈락</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">오답</td>
@@ -596,7 +604,7 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보너스 획득</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">친구 초대 완료 시 +1, 게임 끝까지 관전 시 +1, 게임 완주 성공 시 +1</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 끝까지 관전 시 +1, 게임 완주 성공 시 +1</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최대 보유</td>
@@ -612,11 +620,11 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미응답</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">즉시 탈락 (하트 소진 아님)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 있음: 하트 1개 소진 → 다음 스테이지 진행 / 하트 없음: 즉시 탈락</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">재획득</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보너스 조건 달성으로 재획득 (친구 초대, 관전 완료, 완주 성공)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보너스 조건 달성으로 재획득 (관전 완료 시 +1, 완주 성공 시 +1)</td>
 </tr>
 </tbody>
 </table>
@@ -752,7 +760,7 @@
 <ol>
 <li>자동 재전송 시도 (최대 3회)</li>
 <li>성공 시: 정상 진행</li>
-<li>실패 시: 미응답 처리 → 즉시 탈락</li>
+<li>실패 시: 미응답 처리 → 하트 있음: 하트 1개 소진 → 다음 스테이지 / 하트 없음: 즉시 탈락</li>
 </ol>
 
 <h5>응답 전송 사용자 피드백 UI</h5>
@@ -872,7 +880,7 @@
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">놓친 스테이지 존재</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서버에서 미응답 = 즉시 탈락 처리 완료 (일반 미응답 규칙 동일 적용) → CEB-GAM-205-MD-RECONNECT 모달 표시 (나가기/관전 선택)</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">네트워크 끊김으로 인한 별도 탈락 처리 완료 (일반 미응답 하트 규칙과 무관) → CEB-GAM-205-MD-RECONNECT 모달 표시 (나가기/관전 선택)</td>
 </tr>
 <tr>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 종료된 경우</td>
@@ -890,7 +898,7 @@
 
 <h5>처리</h5>
 <ul>
-<li>beforeunload 이벤트로 경고 표시. 닫힘 시 서버에서 WebSocket 끊김 감지 → 30초 타임아웃 후 이탈 처리 (미응답 = 즉시 탈락)</li>
+<li>beforeunload 이벤트로 경고 표시. 닫힘 시 서버에서 WebSocket 끊김 감지 → 30초 타임아웃 후 이탈 처리 (네트워크 끊김으로 인한 별도 탈락 처리)</li>
 </ul>
 
 <h3>페이지 새로고침 처리</h3>
@@ -1025,6 +1033,12 @@
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.26</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
 <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">§5 탭 비활성화 복귀 규칙 수정: 놓친 스테이지 존재 시 하트 차감+합류 → 즉시 탈락+CEB-GAM-205-MD-RECONNECT 모달로 변경, 미응답=즉시 탈락 규칙 일관 적용</td>
+</tr>
+<tr>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.8</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.11</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미응답 탈락 조건 수정: 하트 있음→소진 후 다음 스테이지, 하트 없음→즉시 탈락. 하트 시스템 친구 초대 보너스 삭제. RECONNECT/브라우저 닫기 케이스를 별도 탈락 처리로 명확화</td>
 </tr>
 </tbody>
 </table>

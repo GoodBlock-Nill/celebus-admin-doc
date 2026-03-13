@@ -4,7 +4,8 @@ import NumberInput from '@/components/forms/NumberInput';
 import DateTimePicker from '@/components/forms/DateTimePicker';
 import QuizEditor from '@/components/forms/QuizEditor';
 import { Section } from './editHelpers';
-import type { Quiz, PrizeTier, STRewardType } from '@/lib/types';
+import { generateId } from '@/lib/utils';
+import type { Quiz, QuizChoice, PrizeTier, STRewardType } from '@/lib/types';
 
 interface STEditFieldsProps {
   maxPrizePool: number;
@@ -48,6 +49,32 @@ export default function STEditFields(props: STEditFieldsProps) {
   const calculatedEntryFee = maxRecruitment > 0
     ? Math.floor(maxPrizePool / maxRecruitment * stMultiplier).toLocaleString() + ' GP'
     : '-';
+
+  const addQuiz = () => {
+    if (quizzes.length >= 10) return;
+    const newQuiz: Quiz = {
+      id: generateId(),
+      questionNumber: quizzes.length + 1,
+      text: { ko: '', en: '', jp: '' },
+      choices: [
+        { ko: '', en: '', jp: '' },
+        { ko: '', en: '', jp: '' },
+        { ko: '', en: '', jp: '' },
+        { ko: '', en: '', jp: '' },
+      ] as [QuizChoice, QuizChoice, QuizChoice, QuizChoice],
+      correctIndex: 0,
+      timeLimit: 10,
+    };
+    setQuizzes([...quizzes, newQuiz]);
+  };
+
+  const deleteQuiz = (index: number) => {
+    if (quizzes.length <= 1) return;
+    const updated = quizzes
+      .filter((_, i) => i !== index)
+      .map((q, i) => ({ ...q, questionNumber: i + 1 }));
+    setQuizzes(updated);
+  };
 
   return (
     <>
@@ -228,6 +255,8 @@ export default function STEditFields(props: STEditFieldsProps) {
           quizzes={quizzes}
           onChange={setQuizzes}
           disabled={quizzesDisabled}
+          onAdd={quizzesDisabled ? undefined : addQuiz}
+          onDelete={quizzesDisabled ? undefined : deleteQuiz}
         />
         {errors.quizzes && <p className="text-sm text-red-500 mt-2">{errors.quizzes}</p>}
       </Section>

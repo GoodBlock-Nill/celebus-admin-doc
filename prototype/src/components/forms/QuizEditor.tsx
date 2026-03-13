@@ -13,9 +13,11 @@ interface QuizEditorProps {
   quizzes: Quiz[];
   onChange: (quizzes: Quiz[]) => void;
   disabled?: boolean;
+  onAdd?: () => void;
+  onDelete?: (index: number) => void;
 }
 
-export default function QuizEditor({ quizzes, onChange, disabled = false }: QuizEditorProps) {
+export default function QuizEditor({ quizzes, onChange, disabled = false, onAdd, onDelete }: QuizEditorProps) {
   const [activeLang, setActiveLang] = useState<'ko' | 'en' | 'jp'>('ko');
   const [expandedQuiz, setExpandedQuiz] = useState<number>(0);
 
@@ -40,7 +42,7 @@ export default function QuizEditor({ quizzes, onChange, disabled = false }: Quiz
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-gray-900">퀴즈 목록 ({quizzes.length}문제)</h3>
+        <h3 className="text-sm font-semibold text-gray-900">퀴즈 목록 ({quizzes.length}/10문제)</h3>
         <div className="flex gap-1">
           {LANG_TABS.map((tab) => (
             <button
@@ -68,30 +70,43 @@ export default function QuizEditor({ quizzes, onChange, disabled = false }: Quiz
       <div className="space-y-3">
         {quizzes.map((quiz, qi) => (
           <div key={quiz.id} className="border border-gray-200 rounded-lg overflow-hidden">
-            <button
-              type="button"
-              onClick={() => setExpandedQuiz(expandedQuiz === qi ? -1 : qi)}
-              className={`w-full flex items-center justify-between px-4 py-3 text-left ${
-                expandedQuiz === qi ? 'bg-purple-50 border-b border-gray-200' : 'bg-white hover:bg-gray-50'
-              }`}
-            >
-              <div className="flex items-center gap-3">
+            <div className={`flex items-center justify-between px-4 py-3 ${
+              expandedQuiz === qi ? 'bg-purple-50 border-b border-gray-200' : 'bg-white hover:bg-gray-50'
+            }`}>
+              <button
+                type="button"
+                onClick={() => setExpandedQuiz(expandedQuiz === qi ? -1 : qi)}
+                className="flex items-center gap-3 flex-1 text-left"
+              >
                 <span className="flex items-center justify-center w-7 h-7 rounded-full bg-purple-100 text-purple-700 text-xs font-bold">
                   Q{quiz.questionNumber}
                 </span>
                 <span className="text-sm text-gray-700 truncate max-w-[400px]">
                   {quiz.text[activeLang] || '(미입력)'}
                 </span>
+              </button>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {!disabled && (
+                  <button
+                    type="button"
+                    onClick={() => onDelete?.(qi)}
+                    disabled={quizzes.length <= 1}
+                    className="text-xs text-red-500 hover:text-red-700 disabled:text-gray-300 disabled:cursor-not-allowed px-2 py-1"
+                  >
+                    삭제
+                  </button>
+                )}
+                <svg
+                  className={`w-5 h-5 text-gray-400 transition-transform ${expandedQuiz === qi ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  onClick={() => setExpandedQuiz(expandedQuiz === qi ? -1 : qi)}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </div>
-              <svg
-                className={`w-5 h-5 text-gray-400 transition-transform ${expandedQuiz === qi ? 'rotate-180' : ''}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+            </div>
 
             {expandedQuiz === qi && (
               <div className="px-4 py-4 space-y-4">
@@ -160,20 +175,31 @@ export default function QuizEditor({ quizzes, onChange, disabled = false }: Quiz
                     type="number"
                     value={quiz.timeLimit}
                     onChange={(e) =>
-                      updateQuiz(qi, { timeLimit: Math.max(5, Math.min(30, Number(e.target.value))) })
+                      updateQuiz(qi, { timeLimit: Math.max(5, Math.min(60, Number(e.target.value))) })
                     }
                     disabled={disabled}
                     min={5}
-                    max={30}
+                    max={60}
                     className="w-16 px-2 py-1 border border-gray-200 rounded text-sm text-center focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:bg-gray-50"
                   />
-                  <span className="text-xs text-gray-500">초 (5~30)</span>
+                  <span className="text-xs text-gray-500">초 (5~60)</span>
                 </div>
               </div>
             )}
           </div>
         ))}
       </div>
+
+      {!disabled && (
+        <button
+          type="button"
+          onClick={() => onAdd?.()}
+          disabled={quizzes.length >= 10}
+          className="mt-2 text-sm font-medium text-purple-600 hover:text-purple-700 disabled:text-gray-300 disabled:cursor-not-allowed"
+        >
+          + 문제 추가
+        </button>
+      )}
     </div>
   );
 }

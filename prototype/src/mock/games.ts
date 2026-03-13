@@ -318,7 +318,12 @@ function createSTGame(index: number, status: GameStatus): Game {
     }
     return rate;
   })();
-  const appliedPrizePool = (status === 'Active' || status === 'Ended') ? Math.floor(maxPrizePool * appliedPrizeRate / 100) : undefined;
+  const isProportional = index % 2 !== 0;
+  const appliedPrizePool = (status === 'Active' || status === 'Ended')
+    ? (isProportional
+      ? Math.floor(recruitmentRate * maxPrizePool)
+      : Math.floor(maxPrizePool * appliedPrizeRate / 100))
+    : undefined;
   const stActualParticipants = (status === 'Active' || status === 'Ended') ? participantCount : undefined;
 
   return {
@@ -345,8 +350,8 @@ function createSTGame(index: number, status: GameStatus): Game {
     maxPrizePool,
     maxRecruitment,
     stMultiplier: stMul,
-    stRewardType: index % 4 === 0 ? 'PROPORTIONAL' as const : 'TIERED' as const,
-    prizeTiers: stPrizeTiers,
+    stRewardType: index % 2 === 0 ? 'TIERED' as const : 'PROPORTIONAL' as const,
+    prizeTiers: index % 2 === 0 ? stPrizeTiers : [],
     eliminationTickets: 1,
     calculatedEntryFee,
     appliedPrizePool,

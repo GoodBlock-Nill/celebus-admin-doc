@@ -3,7 +3,8 @@
 import NumberInput from '@/components/forms/NumberInput';
 import DateTimePicker from '@/components/forms/DateTimePicker';
 import QuizEditor from '@/components/forms/QuizEditor';
-import type { Quiz, PrizeTier, STRewardType } from '@/lib/types';
+import { generateId } from '@/lib/utils';
+import type { Quiz, QuizChoice, PrizeTier, STRewardType } from '@/lib/types';
 
 interface STCreateFieldsProps {
   quizzes: Quiz[];
@@ -42,6 +43,32 @@ export default function STCreateFields(props: STCreateFieldsProps) {
     ? Math.floor(maxPrizePool / maxRecruitment * stMultiplier)
     : null;
 
+  const addQuiz = () => {
+    if (quizzes.length >= 10) return;
+    const newQuiz: Quiz = {
+      id: generateId(),
+      questionNumber: quizzes.length + 1,
+      text: { ko: '', en: '', jp: '' },
+      choices: [
+        { ko: '', en: '', jp: '' },
+        { ko: '', en: '', jp: '' },
+        { ko: '', en: '', jp: '' },
+        { ko: '', en: '', jp: '' },
+      ] as [QuizChoice, QuizChoice, QuizChoice, QuizChoice],
+      correctIndex: 0,
+      timeLimit: 10,
+    };
+    setQuizzes([...quizzes, newQuiz]);
+  };
+
+  const deleteQuiz = (index: number) => {
+    if (quizzes.length <= 1) return;
+    const updated = quizzes
+      .filter((_, i) => i !== index)
+      .map((q, i) => ({ ...q, questionNumber: i + 1 }));
+    setQuizzes(updated);
+  };
+
   const updateTier = (idx: number, field: keyof PrizeTier, value: number) => {
     const updated = prizeTiers.map((t, i) => i === idx ? { ...t, [field]: value } : t);
     setPrizeTiers(updated);
@@ -58,7 +85,7 @@ export default function STCreateFields(props: STCreateFieldsProps) {
   return (
     <>
       <Section title="퀴즈설정">
-        <QuizEditor quizzes={quizzes} onChange={setQuizzes} />
+        <QuizEditor quizzes={quizzes} onChange={setQuizzes} onAdd={addQuiz} onDelete={deleteQuiz} />
         {errors.quizzes && <p className="text-sm text-red-500 mt-2">{errors.quizzes}</p>}
       </Section>
 

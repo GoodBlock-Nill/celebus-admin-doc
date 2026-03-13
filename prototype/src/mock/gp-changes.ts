@@ -85,6 +85,54 @@ export const mockGPChanges: GPChange[] = Array.from({ length: 160 }, (_, i) => {
         : 'BTS 컴백 날짜 예측')
     : null;
 
+  // 게임 관련 상세 데이터 생성
+  const isST = relatedGameType === 'SURVIVAL_TRIVIA';
+  const isPM = relatedGameType === 'PREDICTION_MARKET';
+
+  // PM: 사용자 선택 (Yes/No)
+  const userChoice = isPM ? (rand() > 0.5 ? 'YES' as const : 'NO' as const) : null;
+
+  // 게임 결과 (환급/보상 유형에서만)
+  const gameResult = (type === 'REFUND' || type === 'REWARD')
+    ? (rand() > 0.5 ? 'YES' as const : 'NO' as const)
+    : null;
+
+  // PM: 부스팅 배수
+  const boostingMultiplier = (isPM && (type === 'BOOSTING' || type === 'REWARD'))
+    ? [2, 3, 5, 10][Math.floor(rand() * 4)]
+    : undefined;
+
+  // ST: 하트 변동 (종료된 게임만)
+  const stHeartsLost = isST && hasGame ? Math.floor(rand() * 3) : undefined;
+  const stSurvivedStage = isST ? Math.floor(rand() * 10) + 1 : undefined;
+  const stEliminatedAt = isST
+    ? (stSurvivedStage && stSurvivedStage < 10 ? stSurvivedStage : null)
+    : undefined;
+  const stHeartsGained = isST && hasGame
+    ? (stEliminatedAt === null ? 1 : (rand() > 0.5 ? 1 : 0)) // 생존=+1, 탈락+관전완료=+1
+    : undefined;
+
+  // ST 환불: 하트 복구
+  const heartsRecovered = (isST && type === 'REFUND_CANCEL' && stHeartsLost && stHeartsLost > 0)
+    ? stHeartsLost
+    : undefined;
+
+  // 환불 GP 내역
+  const refundParticipationGP = type === 'REFUND_CANCEL'
+    ? Math.abs(Math.floor(baseAmount * (isPM ? 0.9 : 1)))
+    : undefined;
+  const refundBoostingGP = (type === 'REFUND_CANCEL' && isPM)
+    ? Math.abs(baseAmount) - (refundParticipationGP ?? 0)
+    : undefined;
+
+  // 게임 상태
+  const gameStatuses = ['Active', 'Pending', 'Closed', 'Ended'];
+  const relatedGameStatus = hasGame
+    ? (type === 'REFUND_CANCEL' ? 'Cancelled'
+      : (type === 'REWARD' || type === 'REFUND') ? 'Ended'
+      : gameStatuses[Math.floor(rand() * gameStatuses.length)])
+    : undefined;
+
   return {
     id: `GPC${String(i + 1).padStart(6, '0')}`,
     datetime: new Date(REFERENCE_DATE - rand() * 60 * 24 * 60 * 60 * 1000).toISOString(),
@@ -96,8 +144,19 @@ export const mockGPChanges: GPChange[] = Array.from({ length: 160 }, (_, i) => {
     relatedGameId: hasGame ? `game-${String(Math.floor(rand() * 50) + 1).padStart(3, '0')}` : null,
     relatedGameTitle,
     relatedGameType,
+    relatedGameStatus,
     relatedExchangeId: hasExchange ? `EX${String(Math.floor(rand() * 60) + 1).padStart(6, '0')}` : null,
     txid: hasExchange ? `0x${randomHex(64)}` : null,
     notes,
+    userChoice: hasGame ? userChoice : undefined,
+    gameResult,
+    boostingMultiplier,
+    heartsLost: stHeartsLost,
+    heartsGained: stHeartsGained,
+    heartsRecovered,
+    survivedStage: isST ? stSurvivedStage : undefined,
+    eliminatedAtStage: stEliminatedAt,
+    refundParticipationGP,
+    refundBoostingGP,
   };
 }).sort((a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime());

@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.3</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.4</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.06</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.11</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -191,7 +191,7 @@ p {
 ├─────────────────────────────────────────────────────────────────┤
 │ [퀴즈설정] (Survival Trivia 선택 시에만 표시)                        │
 │ ┌─────────────────────────────────────────────────────────────┐ │
-│ │ 문제 수: 10문제 (고정)                                        │ │
+│ │ 문제 수: {N}/10문제                                           │ │
 │ │ 문제당 제한시간: [ 10 ] 초 (기본값: 10)                        │ │
 │ │                                                              │ │
 │ │ ── 문제 1 ────────────────────────────────────────────────   │ │
@@ -204,7 +204,10 @@ p {
 │ │ 선택지 3 * [ KO / EN / JP ] ○                                 │ │
 │ │ 선택지 4 * [ KO / EN / JP ] ○                                 │ │
 │ │                                                              │ │
-│ │ ── 문제 2 ── ... (문제 10까지 반복)                             │ │
+│ │ ── 문제 1 헤더에 [삭제] 버튼 (문제 1개일 때 Disabled) ──        │ │
+│ │ ── 문제 2 ~ N 반복 (각 헤더에 [삭제] 버튼) ──                  │ │
+│ │                                                              │ │
+│ │ [+ 문제 추가]  (10개 시 비활성화)                              │ │
 │ └─────────────────────────────────────────────────────────────┘ │
 ├─────────────────────────────────────────────────────────────────┤
 │ [보상설정]                                                         │
@@ -348,7 +351,17 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">퀴즈설정 (ST 전용)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 수</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">10문제 고정, 변경 불가</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최소 1문제, 최대 10문제 (기본 10문제). 추가/삭제 가능</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[+ 문제 추가] 버튼</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">10문제 미만일 때 활성화, 10문제일 때 Disabled</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[삭제] 버튼</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">각 문제 헤더에 위치. 문제가 1개일 때 Disabled</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
@@ -559,7 +572,15 @@ p {
 
 <ul>
   <li>드래그앤드롭으로 문제 순서 변경 가능</li>
-  <li>문제 수 10개 고정 (추가/삭제 불가)</li>
+</ul>
+
+<h5>문제 추가 및 삭제</h5>
+
+<ul>
+  <li>기본 10문제로 시작</li>
+  <li>[+ 문제 추가] 버튼으로 문제 추가 가능 (최대 10문제, 초과 시 버튼 Disabled)</li>
+  <li>각 문제 헤더의 [삭제] 버튼으로 문제 삭제 가능 (최소 1문제, 1개 남으면 버튼 Disabled)</li>
+  <li>문제 삭제 후 문제 번호 자동 재정렬 (Q1~QN 순서 유지)</li>
 </ul>
 
 <h3>보상설정 입력</h3>
@@ -908,15 +929,15 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">5 ~ 60초</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 텍스트 (10개)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 텍스트 (등록된 문제 수 기준, 최소 1문제)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모든 문제 모든 언어 입력 필수 (KO/EN/JP), 각 200자 이내</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지 텍스트 (4개×10문제)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지 텍스트 (4개×등록된 문제 수)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모든 선택지 모든 언어 입력 필수 (KO/EN/JP), 각 100자 이내</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답 지정 (10문제)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답 지정 (등록된 모든 문제)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">각 문제별 정답 1개 지정 필수</td>
   </tr>
   <tr>
@@ -1321,6 +1342,12 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.06</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 참여설정 섹션 순서 변경 (보상설정 위로), 보상 유형 선택 추가 (단계별 보상 / 비율별 보상)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.4</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.11</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 퀴즈 문제 추가/삭제 기능 추가 (최대 10개, 최소 1개). 기본 10문제, 문제 번호 자동 재정렬</td>
   </tr>
 </table>
 

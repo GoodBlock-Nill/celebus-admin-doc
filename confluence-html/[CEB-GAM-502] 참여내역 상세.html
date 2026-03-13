@@ -104,11 +104,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.06</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.09</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다국어 영향</td>
@@ -272,6 +272,36 @@ p {
 │  게임정보         Prediction Market        │
 │                                            │
 └────────────────────────────────────────────┘</pre>
+
+<h3>ASCII Layout (ST 환불 상세)</h3>
+
+<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">┌────────────────────────────────────────────┐
+│  &lt;  환불 상세                               │
+├────────────────────────────────────────────┤
+│                                            │
+│  ┌──────────────────────────────────────┐ │
+│  │  서바이벌 트리비아 퀴즈 #5           │ │
+│  │                                      │ │
+│  │  + 1 GP                             │ │
+│  │  참가비 1GP                          │ │
+│  └──────────────────────────────────────┘ │
+│                                            │
+│  ─────────────────────────────────────────│
+│                                            │
+│  게임상태         취소                     │
+│                                            │
+│  하트 복구        ❤️ +2                    │
+│                                            │
+│  환불일시         2026.02.15. 20:30:00    │
+│                  (UTC+9)                   │
+│                                            │
+│  게임정보         Survival Trivia          │
+│                                            │
+└────────────────────────────────────────────┘</pre>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">Survival Trivia 환불 시 부스팅이 없으므로 참가비만 표시됩니다.</blockquote>
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">게임 중 소진된 하트가 있을 경우 복구되며, "하트 복구" 필드에 복구된 수량을 표시합니다.</blockquote>
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">소진된 하트가 없으면 "하트 복구" 행은 미표시합니다.</blockquote>
 
 <h3>ASCII Layout (ST 참여 상세)</h3>
 
@@ -611,6 +641,12 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">취소</td>
   </tr>
   <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 복구</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">❤️ +{복구 수}</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 전용. 게임 중 소진된 하트 복구 수량</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">❤️ +2</td>
+  </tr>
+  <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불일시</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">YYYY.MM.DD. HH:mm:ss (UTC+9)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불 처리 시각</td>
@@ -625,6 +661,7 @@ p {
 </table>
 
 <blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">환불은 게임 취소 시 참가비(참여 GP) + 부스팅 GP를 합산하여 돌려주는 것으로, GP 내역에 각 금액의 내역을 표시한다.</blockquote>
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">ST 환불 시: 참가비만 환불되며 (부스팅 없음), 게임 중 소진된 하트가 있으면 복구됩니다. 소진된 하트가 없으면 "하트 복구" 행은 미표시합니다.</blockquote>
 
 <h4>게임유형별 표시 분기</h4>
 
@@ -667,7 +704,12 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 변동</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미표시</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">표시 (❤️ -{소진} / ❤️ +{획득}, 게임 종료 후만)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여/보상: ❤️ -{소진} / ❤️ +{획득} (종료 후만)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 복구</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미표시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불: ❤️ +{복구 수} (소진 하트 있을 때만 표시)</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과보기 링크</td>
@@ -779,6 +821,16 @@ p {
   <li>소진 0이면 "❤️ -0", 획득 0이면 "❤️ +0"</li>
   <li><strong>게임 진행중(Active)일 때는 하트 변동 행 미표시</strong> (종료 후에만 확정값 표시)</li>
   <li>Prediction Market은 하트 변동 미표시</li>
+</ul>
+
+<h4>하트 복구 표시 (ST 환불 전용)</h4>
+
+<ul>
+  <li>위치: "게임상태" 행 아래</li>
+  <li>표시: <code>❤️ +{복구 수}</code></li>
+  <li>복구 수: 게임 취소로 인해 복구되는 하트 개수 (게임 중 소진된 하트 전량 복구)</li>
+  <li>소진된 하트가 없으면 (복구 수 = 0) "하트 복구" 행 자체를 미표시</li>
+  <li>Prediction Market은 하트 복구 미표시 (하트 시스템 미사용)</li>
 </ul>
 
 <h3>3.5 날짜/시간 필드명</h3>
@@ -902,6 +954,36 @@ p {
   <li>게임 정보, 참여 현황, 결과 등 확인</li>
 </ol>
 
+<h4>시나리오 7: ST 탈락 후 관전완료 → 참여 상세 확인</h4>
+
+<ol>
+  <li>GP 히스토리 &gt; 참여내역 탭에서 ST "[참여]" 내역 탭</li>
+  <li>참여 상세 화면 진입</li>
+  <li>Header: "참여 상세"</li>
+  <li>상단 카드: 게임 타이틀 + "- 1 GP" (빨간색)</li>
+  <li>게임 상태: 종료</li>
+  <li>하트 변동: ❤️ -1 / ❤️ +1 (오답 1회 소진 + 관전완료 1회 획득)</li>
+  <li>참여일시: 2026.02.15. 20:00:00 (UTC+9)</li>
+  <li>게임 정보: Survival Trivia</li>
+</ol>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">탈락자가 관전을 완료하면 하트 1개를 획득하며, 참여 상세의 하트 변동에 획득(+1)으로 반영됩니다.</blockquote>
+
+<h4>시나리오 8: ST 게임 취소 → 환불 상세 확인</h4>
+
+<ol>
+  <li>GP 히스토리 &gt; 참여내역 탭에서 ST "[환불]" 내역 탭</li>
+  <li>환불 상세 화면 진입</li>
+  <li>Header: "환불 상세"</li>
+  <li>상단 카드: 게임 타이틀 + "+ 1 GP" (파란색) + "참가비 1GP"</li>
+  <li>게임상태: 취소</li>
+  <li>하트 복구: ❤️ +2 (게임 중 소진된 하트 2개 복구)</li>
+  <li>환불일시: 2026.02.15. 20:30:00 (UTC+9)</li>
+  <li>게임정보: Survival Trivia</li>
+</ol>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">게임 취소 시 참가비가 환불되며, 게임 중 소진된 하트가 있으면 전량 복구됩니다.</blockquote>
+
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
 
 <h2>4. 규칙/로직</h2>
@@ -991,7 +1073,7 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불 유형 (REFUND_CANCEL)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참가비 + 부스팅 내역</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참가비만 표시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참가비만 표시 + 하트 복구</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">내 선택 필드</td>
@@ -1004,9 +1086,14 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">생존 (N라운드) / 탈락 (N라운드)</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 변동</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 변동 (참여/보상)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미표시</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">❤️ -{N} / ❤️ +{N} (종료 후만)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 복구 (환불)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미표시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">❤️ +{N} (소진 하트 있을 때만)</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과보기 링크</td>
@@ -1096,6 +1183,8 @@ p {
   <li>부스팅은 보상 배분 가중치로만 사용되며 환급되지 않습니다</li>
   <li>결과보기 링크는 PM 보상 유형에서만 표시됩니다 (ST는 미표시)</li>
   <li>ST 하트 변동은 게임 종료 후에만 표시됩니다 (진행중일 때 미표시)</li>
+  <li>ST 게임 취소(환불) 시 게임 중 소진된 하트는 전량 복구되며, 환불 상세에 복구 수량을 표시합니다</li>
+  <li>ST 탈락자가 관전을 완료하면 하트 1개를 획득하며, 참여 상세의 하트 변동에 반영됩니다</li>
 </ol>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
@@ -1266,10 +1355,10 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불 상세(REFUND_CANCEL) 유형 추가, 게임상태 "취소"(Cancelled) 매핑 추가, GP 내역(참가비+부스팅 breakdown) 표시, 게임유형 다국어 X(영문 고정)</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.06</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 하트 변동(소진/획득) 표시 추가, ST 결과보기 버튼 제거</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 계산 로직 변경: "보상 가중치" → "배분 값" 용어 변경</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
@@ -1278,10 +1367,16 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 반영: ST용 ASCII Layout 추가, 게임유형별 표시 분기 규칙 추가 (내 선택 미표시, 결과=생존/탈락, 부스팅 미표시), 게임 타이틀 탭 ST→CEB-GAM-206 분기, 연관화면 CEB-GAM-206 추가</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.06</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상 계산 로직 변경: "보상 가중치" → "배분 값" 용어 변경</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 하트 변동(소진/획득) 표시 추가, ST 결과보기 버튼 제거</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.5</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.09</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 환불 상세 레이아웃 추가 (하트 복구 표시), 탈락+관전완료 시나리오 추가, 게임유형별 하트 복구 규칙 보완</td>
   </tr>
 </table>
 

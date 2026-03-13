@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.09</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -280,7 +280,7 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">변동 유형</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Badge</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">6가지 유형 중 1개</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">7가지 유형 중 1개</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[보상]</td>
   </tr>
   <tr>
@@ -345,6 +345,10 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보라색</td>
   </tr>
   <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">회색</td>
+  </tr>
+  <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GP 가져오기</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">주황색</td>
   </tr>
@@ -385,7 +389,7 @@ p {
 
 <h3>3.5 관련 게임/교환 표시</h3>
 
-<h4>게임 관련 변동 (참여, 부스팅, 환급, 보상)</h4>
+<h4>게임 관련 변동 (참여, 부스팅, 환급, 보상, 환불)</h4>
 
 <ul>
   <li>관련 게임: 게임 타이틀 (링크)</li>
@@ -394,7 +398,7 @@ p {
 </ul>
 
 <blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
-<p><strong>ST 게임 관련 변동</strong>: 참여(PARTICIPATION)와 보상(REWARD)만 발생합니다. 부스팅(BOOSTING)과 환급(REFUND)은 PM 게임에서만 발생합니다.</p>
+<p><strong>ST 게임 관련 변동</strong>: 참여(PARTICIPATION), 보상(REWARD), 환불(REFUND_CANCEL)이 발생합니다. 부스팅(BOOSTING)과 환급(REFUND)은 PM 게임에서만 발생합니다.</p>
 </blockquote>
 
 <h4>교환 관련 변동 (GP 가져오기, CELB으로 보내기)</h4>
@@ -656,7 +660,7 @@ p {
   <li>관련 게임과 관련 교환은 동시에 존재할 수 없습니다 (둘 중 하나만)</li>
   <li>지갑주소는 BSC 메인넷 주소이며, mono 폰트로 표시됩니다</li>
   <li>관련 교환 필드는 교환 관련 변동(GP 가져오기/CELB으로 보내기)에만 표시되며, Txid가 BSCScan 링크로 제공됩니다</li>
-  <li>게임 관련 변동(참여/부스팅/환급/보상)의 경우 관련 교환 필드가 표시되지 않습니다</li>
+  <li>게임 관련 변동(참여/부스팅/환급/보상/환불)의 경우 관련 교환 필드가 표시되지 않습니다</li>
 </ol>
 
 <h3>계산 예시</h3>
@@ -785,7 +789,7 @@ GP 변동량: -1,000 GP
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">변동 유형</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">6가지 유형 중 1개</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">7가지 유형 중 1개</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기본값: "-"</td>
   </tr>
   <tr>
@@ -918,6 +922,7 @@ GP 변동량: -1,000 GP
 
 <h2>변경 이력</h2>
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;"><thead><tr><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">일자</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th><th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th></tr></thead><tbody>
+<tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.09</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">환불(REFUND_CANCEL) Badge 추가, 게임 관련 변동에 환불 포함, ST 환불 발생 명시</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.25</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Survival Trivia 게임유형별 비고 내용 분기 추가, ST 변동 유형 안내</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">교환 방향 용어 통일: GP 충전→GP 가져오기, GP 출금→CELB으로 보내기</td></tr>
 <tr><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2025.02.03</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td><td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초안 작성</td></tr>

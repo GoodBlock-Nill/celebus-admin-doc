@@ -123,8 +123,22 @@ export interface GPChange {
   relatedGameId: string | null;
   relatedGameTitle: string | null;
   relatedGameType?: GameType;
+  relatedGameStatus?: string;
   relatedExchangeId: string | null;
   notes: string;
+  // 참여내역 상세 (CEB-GAM-502) 필드
+  userChoice?: 'YES' | 'NO' | null;
+  gameResult?: 'YES' | 'NO' | null;
+  boostingMultiplier?: number;
+  // ST 전용 필드
+  heartsLost?: number;
+  heartsGained?: number;
+  heartsRecovered?: number;
+  survivedStage?: number;
+  eliminatedAtStage?: number | null;
+  // 환불 GP 내역
+  refundParticipationGP?: number;
+  refundBoostingGP?: number;
 }
 
 export interface RankingUser {
