@@ -151,7 +151,7 @@ const ST_QUIZ_TEMPLATES: Quiz[] = [
       { ko: 'Boy In Luv', en: 'Boy In Luv', jp: 'Boy In Luv' },
       { ko: 'DNA', en: 'DNA', jp: 'DNA' },
     ],
-    correctIndex: 0, timeLimit: 10,
+    correctIndex: 0, timeLimit: 10, resultDisplayTime: 5,
   },
   {
     id: 'q-002', questionNumber: 2,
@@ -162,7 +162,7 @@ const ST_QUIZ_TEMPLATES: Quiz[] = [
       { ko: '카리나', en: 'Karina', jp: 'カリナ' },
       { ko: '로제', en: 'Rosé', jp: 'ロゼ' },
     ],
-    correctIndex: 2, timeLimit: 10,
+    correctIndex: 2, timeLimit: 10, resultDisplayTime: 5,
   },
   {
     id: 'q-003', questionNumber: 3,
@@ -173,7 +173,7 @@ const ST_QUIZ_TEMPLATES: Quiz[] = [
       { ko: 'meta-aespa', en: 'meta-aespa', jp: 'meta-aespa' },
       { ko: 'SM-aespa', en: 'SM-aespa', jp: 'SM-aespa' },
     ],
-    correctIndex: 1, timeLimit: 10,
+    correctIndex: 1, timeLimit: 10, resultDisplayTime: 5,
   },
   {
     id: 'q-004', questionNumber: 4,
@@ -184,7 +184,7 @@ const ST_QUIZ_TEMPLATES: Quiz[] = [
       { ko: '2023년', en: '2023', jp: '2023年' },
       { ko: '2020년', en: '2020', jp: '2020年' },
     ],
-    correctIndex: 1, timeLimit: 10,
+    correctIndex: 1, timeLimit: 10, resultDisplayTime: 5,
   },
   {
     id: 'q-005', questionNumber: 5,
@@ -195,7 +195,7 @@ const ST_QUIZ_TEMPLATES: Quiz[] = [
       { ko: 'JYP엔터테인먼트', en: 'JYP Entertainment', jp: 'JYPエンターテインメント' },
       { ko: 'HYBE', en: 'HYBE', jp: 'HYBE' },
     ],
-    correctIndex: 2, timeLimit: 10,
+    correctIndex: 2, timeLimit: 10, resultDisplayTime: 5,
   },
   {
     id: 'q-006', questionNumber: 6,
@@ -206,7 +206,7 @@ const ST_QUIZ_TEMPLATES: Quiz[] = [
       { ko: '장', en: 'Jang', jp: 'チャン' },
       { ko: '박', en: 'Park', jp: 'パク' },
     ],
-    correctIndex: 2, timeLimit: 10,
+    correctIndex: 2, timeLimit: 10, resultDisplayTime: 5,
   },
   {
     id: 'q-007', questionNumber: 7,
@@ -217,7 +217,7 @@ const ST_QUIZ_TEMPLATES: Quiz[] = [
       { ko: '리노', en: 'Lee Know', jp: 'リノ' },
       { ko: '창빈', en: 'Changbin', jp: 'チャンビン' },
     ],
-    correctIndex: 1, timeLimit: 10,
+    correctIndex: 1, timeLimit: 10, resultDisplayTime: 5,
   },
   {
     id: 'q-008', questionNumber: 8,
@@ -228,7 +228,7 @@ const ST_QUIZ_TEMPLATES: Quiz[] = [
       { ko: '14명', en: '14', jp: '14人' },
       { ko: '15명', en: '15', jp: '15人' },
     ],
-    correctIndex: 1, timeLimit: 10,
+    correctIndex: 1, timeLimit: 10, resultDisplayTime: 5,
   },
   {
     id: 'q-009', questionNumber: 9,
@@ -239,7 +239,7 @@ const ST_QUIZ_TEMPLATES: Quiz[] = [
       { ko: 'FLAMING', en: 'FLAMING', jp: 'FLAMING' },
       { ko: 'FEATHER', en: 'FEATHER', jp: 'FEATHER' },
     ],
-    correctIndex: 0, timeLimit: 10,
+    correctIndex: 0, timeLimit: 10, resultDisplayTime: 5,
   },
   {
     id: 'q-010', questionNumber: 10,
@@ -250,7 +250,7 @@ const ST_QUIZ_TEMPLATES: Quiz[] = [
       { ko: '2013년', en: '2013', jp: '2013年' },
       { ko: '2010년', en: '2010', jp: '2010年' },
     ],
-    correctIndex: 1, timeLimit: 10,
+    correctIndex: 1, timeLimit: 10, resultDisplayTime: 5,
   },
 ];
 
