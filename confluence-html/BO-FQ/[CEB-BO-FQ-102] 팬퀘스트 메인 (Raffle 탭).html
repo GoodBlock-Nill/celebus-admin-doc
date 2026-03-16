@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-102] 팬퀘스트 메인 (Raffle 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-102] 팬퀘스트 메인 (Raffle 탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Screen ID</td>
+<td>CEB-BO-FQ-102</td>
+</tr>
+<tr>
+<td>기획담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>디자인담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>개발담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>기능영역(Epic)</td>
+<td>FQ(팬퀘스트)</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>버전</td>
+<td>v1.0</td>
+</tr>
+<tr>
+<td>최근 업데이트</td>
+<td>2026.03.11</td>
+</tr>
+<tr>
+<td>Breadcrumb</td>
+<td>홈 > 팬퀘스트 > Fan Quest 관리</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>1. 화면 목적</h2>
+<p>등록된 전체 Raffle(래플)의 현황을 목록 형태로 조회하고 관리합니다.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>상태별(Active, Draft, Closed, Ended) 필터링 및 검색 기능을 통해 원하는 래플을 빠르게 검색</li>
+<li>신규 래플을 등록하기 위한 생성 화면(Create)으로 진입</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-101] 팬퀘스트 메인 (Quest 탭) > Raffle 탭 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 영역 (Top Area)</h3>
+<ul>
+<li>Breadcrumb: Home > 팬퀘스트 > Fan Quest 관리</li>
+<li>Tab Menu:
+<ul>
+<li><strong>Quest</strong>: 팬 퀘스트 목록 (형제 화면)</li>
+<li><strong>Raffle (Active)</strong>: 현재 화면 (래플 목록)</li>
+</ul>
+</li>
+</ul>
+<h3>2.2 검색 및 필터 영역</h3>
+<ul>
+<li>상태 필터 (Select Box)
+<ul>
+<li>옵션: 전체(Default), Active(진행 중), Draft(작성 중), Closed(추첨 대기), Ended(종료)</li>
+</ul>
+</li>
+<li>검색 조건 (Select Box): 검색 기준(타이틀, 아티스트) 선택 (Default: 타이틀)</li>
+<li>검색어 입력 (Input)
+<ul>
+<li>Placeholder: 타이틀 선택 시 "타이틀 입력", 아티스트 선택 시 "아티스트 입력"</li>
+</ul>
+</li>
+<li>[조회] 버튼: 설정된 조건으로 목록을 새로고침합니다.</li>
+<li>[생성하기] 버튼 (우측 상단): 신규 래플 등록 화면(CEB-BO-FQ-102-CREATE)으로 이동합니다.</li>
+</ul>
+<h3>2.3 목록 영역 (List Table)</h3>
+<p>데이터는 테이블 형태로 노출되며, 주요 컬럼은 다음과 같습니다.</p>
+<table>
+<thead>
+<tr>
+<th>컬럼명</th>
+<th>설명</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>상태 (Status)</td>
+<td>래플의 현재 진행 상태를 배지(Badge) 형태로 표시</td>
+<td>Active / Draft / Closed / Ended</td>
+</tr>
+<tr>
+<td>타이틀</td>
+<td>래플의 제목</td>
+<td></td>
+</tr>
+<tr>
+<td>아티스트</td>
+<td>해당 래플이 속한 아티스트명</td>
+<td></td>
+</tr>
+<tr>
+<td>기간</td>
+<td>YYYY.MM.DD ~ YYYY.MM.DD 형태의 게시 기간</td>
+<td>시작(게시)일 ~ 마감(종료)일. Draft 상태일 경우 마감(종료)일만 표시 됨</td>
+</tr>
+<tr>
+<td>누적 참여자</td>
+<td>현재 응모한 총 참여자 수</td>
+<td></td>
+</tr>
+<tr>
+<td>누적 응모권</td>
+<td>현재 응모한 총 응모권 수</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>ROW 클릭 시 상세화면으로 이동</li>
+<li>페이지네이션: 목록 하단에 페이지 이동 컨트롤(이전, 다음, 페이지 번호) 제공</li>
+</ul>
+<blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 버튼 동작</h3>
+<ul>
+<li><strong>[조회]</strong>: 설정된 조건으로 목록을 새로고침합니다.</li>
+<li><strong>[생성하기]</strong>: 클릭 시 신규 생성 화면(CEB-BO-FQ-102-CREATE)으로 이동합니다.</li>
+</ul>
+<h3>3.2 네비게이션</h3>
+<ul>
+<li>리스트 Row 클릭: 선택한 래플의 상세 화면(CEB-BO-FQ-204) 기본정보 탭으로 이동합니다.</li>
+<li>Quest 탭 클릭: [CEB-BO-FQ-101] 팬퀘스트 메인 (Quest 탭) 화면으로 이동합니다.</li>
+</ul>
+<hr>
+<h2>4. 규칙/로직</h2>
+<h3>4.1 권한별 기능 분기</h3>
+<table>
+<thead>
+<tr>
+<th>권한</th>
+<th>화면 접근</th>
+<th>조회</th>
+<th>[생성하기]</th>
+<th>ROW 클릭 (상세 이동)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Super Admin</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Admin (팬퀘스트 쓰기 권한 有)</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Admin (팬퀘스트 읽기 권한만)</td>
+<td>✅</td>
+<td>✅</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>권한 없음</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>권한은 [CEB-BO-ADST-202] 권한관리에서 설정된 팬퀘스트 대메뉴의 읽기/쓰기 권한에 따라 분기됩니다.</li>
+</ul>
+<h3>4.2 정렬 기준</h3>
+<table>
+<thead>
+<tr>
+<th>정렬 기준</th>
+<th>정렬 방식</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>마감일 (End Date)</td>
+<td>오름차순 (임박순)</td>
+<td>기본 정렬</td>
+</tr>
+</tbody>
+</table>
+
+<h3>4.3 상태 정의</h3>
+<table>
+<thead>
+<tr>
+<th>상태</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Draft</td>
+<td>작성 중이며 아직 유저에게 공개되지 않은 상태</td>
+</tr>
+<tr>
+<td>Active</td>
+<td>게시되어 유저가 응모 가능한 상태</td>
+</tr>
+<tr>
+<td>Closed</td>
+<td>모집 기간이 끝났으나 아직 추첨이 확정되지 않은 상태 (이 상태에서만 추첨 가능)</td>
+</tr>
+<tr>
+<td>Ended</td>
+<td>추첨이 완료되고 결과가 확정된 종료 상태</td>
+</tr>
+</tbody>
+</table>
+
+<h3>4.4 상태별 데이터 노출</h3>
+<ul>
+<li>Draft 상태의 래플은 관리자 화면에만 노출되며, 앱(유저 화면)에는 노출되지 않습니다.</li>
+<li>Closed 상태는 모집 기간이 지났거나 관리자가 강제 종료한 경우 진입하며, 추첨(Draw) 프로세스 대기 중임을 의미합니다.</li>
+</ul>
+<hr>
+<h2>5. 에러 및 예외상황</h2>
+<h3>5.1 데이터 없음</h3>
+<ul>
+<li>검색 결과 없음: 리스트 영역 중앙에 "검색 결과가 없습니다." 안내 문구를 노출합니다.</li>
+<li>등록된 데이터 없음: 초기 진입 시 데이터가 없을 경우 "등록된 래플이 없습니다. 신규 래플을 생성해보세요." 등의 안내를 노출합니다.</li>
+</ul>
+<h3>5.2 시스템 오류</h3>
+<ul>
+<li>네트워크 지연/오류: 데이터 로딩 실패 시 "데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요." 문구와 함께 [새로고침] 버튼을 제공합니다.</li>
+<li>권한 없음: 해당 메뉴 접근 권한이 없는 관리자가 접근 시, "접근 권한이 없습니다." Toast 팝업을 띄우고 대시보드 또는 이전 화면으로 리다이렉트합니다.</li>
+</ul>
+<hr>
+<h2>6. 연관화면ID</h2>
+<table>
+<thead>
+<tr>
+<th>화면 ID</th>
+<th>화면명</th>
+<th>관계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEB-BO-FQ-101</td>
+<td>팬퀘스트 메인 (Quest)</td>
+<td>형제 화면 (탭 메뉴를 통해 이동 가능한 퀘스트 목록 화면)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-102-CREATE</td>
+<td>Raffle 생성</td>
+<td>하위 화면 ([생성하기] 버튼 클릭 시 이동)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-204</td>
+<td>Raffle 상세</td>
+<td>하위 화면 (리스트 항목 클릭 시 이동)</td>
+</tr>
+<tr>
+<td>CEB-BO-GAM-101</td>
+<td>게임존 메인</td>
+<td>상위 화면 (Fan Quest 메뉴 진입 전 상위 대시보드)</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>변경 이력</h2>
+<table>
+<thead>
+<tr>
+<th>버전</th>
+<th>일자</th>
+<th>작성자</th>
+<th>변경 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2026.03.11</td>
+<td></td>
+<td>초안 작성</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-203] 퀘스트 상세 (처리내역 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-203] 퀘스트 상세 (처리내역 탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Screen ID</td>
+<td>CEB-BO-FQ-203</td>
+</tr>
+<tr>
+<td>기획담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>디자인담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>개발담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>기능영역(Epic)</td>
+<td>FQ(팬퀘스트)</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>버전</td>
+<td>v1.0</td>
+</tr>
+<tr>
+<td>최근 업데이트</td>
+<td>2026.03.11</td>
+</tr>
+<tr>
+<td>Breadcrumb</td>
+<td>홈 > 팬퀘스트 > Fan Quest 관리 > Quest > {Quest 타이틀}</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>1. 화면 목적</h2>
+<p>해당 퀘스트에서 관리자가 검수 완료(승인 또는 반려)한 모든 제출 건들의 처리 이력(History)을 조회합니다.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>승인/반려 처리된 제출 건의 상태, 처리 일시, 처리자(관리자) 정보 확인</li>
+<li>필요 시 상세 모달을 통해 사유나 원본 이미지 재확인</li>
+<li>상태별 필터링 및 검색 기능</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-201] 퀘스트 상세 (기본정보 탭) > 처리내역 탭 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 영역</h3>
+<ul>
+<li>탭 메뉴: 기본정보, 대기내역, <strong>처리내역 (Selected)</strong></li>
+<li>검색 및 필터:
+<ul>
+<li>상태 필터 (Select Box): 상태(전체), Approved, Rejected</li>
+<li>검색 조건 (Select Box): 닉네임, 제출ID</li>
+<li>검색어 입력창 (Input): 검색 키워드 입력</li>
+<li>[조회] 버튼: 필터 및 검색 조건 적용</li>
+</ul>
+</li>
+</ul>
+<h3>2.2 목록 영역 (List Table)</h3>
+<p>데이터는 리스트(Table) 형태로 노출되며, 주요 컬럼은 다음과 같습니다.</p>
+<table>
+<thead>
+<tr>
+<th>컬럼명</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>상태</td>
+<td>Approved(Badge) 또는 Rejected(Badge)</td>
+</tr>
+<tr>
+<td>제출ID</td>
+<td>유일한 제출 식별 코드 (예: Q00000003A)</td>
+</tr>
+<tr>
+<td>유저닉네임</td>
+<td>제출한 유저의 닉네임</td>
+</tr>
+<tr>
+<td>반려사유</td>
+<td>반려된 경우 선택된 사유명 노출 (승인 시 -)</td>
+</tr>
+<tr>
+<td>이미지보기</td>
+<td>이미지 썸네일 또는 파일명 (클릭 시 확대 가능)</td>
+</tr>
+<tr>
+<td>제출일시</td>
+<td>유저가 제출한 시간 (YYYY.MM.DD hh:mm)</td>
+</tr>
+<tr>
+<td>처리일시</td>
+<td>관리자가 처리 완료한 시간 (YYYY.MM.DD hh:mm)</td>
+</tr>
+<tr>
+<td>처리자</td>
+<td>처리를 수행한 관리자명</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>데이터 없음: 테이블 중앙에 "처리내역이 없습니다." 문구 노출</li>
+<li>페이지네이션: 하단 중앙 10페이지 단위 이동</li>
+</ul>
+<blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 상세 정보 확인 (Row Click)</h3>
+<ul>
+<li>Row Click: 리스트의 특정 행(Row)을 클릭하면, 해당 건의 상태에 따라 상세 모달이 호출됩니다.
+<ul>
+<li>Approved 상태 클릭 시: [CEB-BO-FQ-203-MD-APPROVED] 승인 상세 모달 호출</li>
+<li>Rejected 상태 클릭 시: [CEB-BO-FQ-203-MD-REJECT] 반려 상세 모달 호출</li>
+</ul>
+</li>
+</ul>
+<h3>3.2 네비게이션</h3>
+<ul>
+<li>기본정보 탭 클릭: [CEB-BO-FQ-201] 퀘스트 상세 (기본정보 탭) 화면으로 이동</li>
+<li>대기내역 탭 클릭: [CEB-BO-FQ-202] 퀘스트 상세 (대기내역 탭) 화면으로 이동</li>
+</ul>
+<hr>
+<h2>4. 규칙/로직</h2>
+<h3>4.1 정렬 및 필터링</h3>
+<ul>
+<li>정렬: 기본적으로 최신 처리일시 순(Desc)으로 정렬하여 최근 작업 내역을 상단에 보여줍니다.</li>
+</ul>
+<hr>
+<h2>5. 에러 및 예외상황</h2>
+<ul>
+<li>검색 결과 없음: 조건에 맞는 데이터가 없을 경우 리스트 영역에 "검색 결과가 없습니다." 안내 문구를 노출합니다.</li>
+</ul>
+<hr>
+<h2>6. 연관화면ID</h2>
+<table>
+<thead>
+<tr>
+<th>화면 ID</th>
+<th>화면명</th>
+<th>관계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEB-BO-FQ-201</td>
+<td>Quest 상세 (기본정보 탭)</td>
+<td>형제 화면 (상위 화면)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-202</td>
+<td>대기내역 (Pending)</td>
+<td>형제 화면 (처리 전 데이터가 위치하는 곳)</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>변경 이력</h2>
+<table>
+<thead>
+<tr>
+<th>버전</th>
+<th>일자</th>
+<th>작성자</th>
+<th>변경 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2026.03.11</td>
+<td></td>
+<td>초안 작성</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

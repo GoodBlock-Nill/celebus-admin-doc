@@ -381,9 +381,25 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 
 ## 문서 동기화 규칙
 
-- `BO-GAM/` 폴더의 Markdown 문서를 수정할 때, 반드시 `confluence-html/` 폴더의 대응하는 HTML 문서도 동일하게 수정해야 한다
-- 파일명 매핑: `BO-GAM/[화면ID] 제목.md` ↔ `confluence-html/[화면ID] 제목.html`
+- MD 문서를 수정할 때, 반드시 대응하는 HTML 문서도 동일하게 수정해야 한다
 - MD 문서가 원본이며, HTML은 Confluence 업로드용 변환본이다
+
+### 폴더 매핑
+
+| MD 폴더 | HTML 폴더 | 파일 종류 |
+| ------- | --------- | --------- |
+| `BO-GAM/` | `confluence-html/BO-GAM/` | CEB-BO-GZ-*, CEB-BO-USR-* |
+| `APP-GAM/` | `confluence-html/APP-GAM/` | CEB-GAM-* |
+| `BO-FQ/` | `confluence-html/BO-FQ/` | CEB-BO-FQ-* |
+
+- 파일명 매핑: `{MD폴더}/[화면ID] 제목.md` ↔ `confluence-html/{HTML폴더}/[화면ID] 제목.html`
+
+## 정책 중앙화 규칙
+
+- **공통 정책 정의서**: `BO-GAM/[CEB-BO-GZ-000] 공통 정책.md` (게임 상태, 액션, 보상 계산, GP 변동 유형, 권한, UI 상태, 토스트/포맷 규격 등)
+- **공통 정책 변경 시**: `[CEB-BO-GZ-000]` MD + HTML만 수정 (개별 화면 스펙 문서 수정 불필요)
+- **개별 스펙 문서**: 해당 화면 고유 로직만 기술. 공통 정책은 `[CEB-BO-GZ-000]` 참조로 대체
+- **신규 스펙 작성 시**: 공통 정책에 해당하는 내용은 직접 기술하지 말고 `[CEB-BO-GZ-000]` 참조를 사용
 
 ---
 

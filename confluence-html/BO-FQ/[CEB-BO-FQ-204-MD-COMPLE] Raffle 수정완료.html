@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-204-MD-COMPLE] Raffle 수정완료</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-204-MD-COMPLE] Raffle 수정완료</h1>
+<h2>Page Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Screen ID</td>
+<td>CEB-BO-FQ-204-MD-COMPLE</td>
+</tr>
+<tr>
+<td>기획담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>디자인담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>개발담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>기능영역(Epic)</td>
+<td>FQ(팬퀘스트)</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>버전</td>
+<td>v1.0</td>
+</tr>
+<tr>
+<td>최근 업데이트</td>
+<td>2026.03.11</td>
+</tr>
+<tr>
+<td>Breadcrumb</td>
+<td>(해당 없음 - 모달)</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>1. 화면 목적</h2>
+<p>관리자가 수정한 Raffle 정보를 최종적으로 시스템에 반영하기 전, 저장 의사를 다시 한번 확인합니다.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>Raffle 수정사항 최종 저장 확인</li>
+<li>서버 데이터 업데이트 요청</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>Raffle 수정 화면(CEB-BO-FQ-204-EDIT)에서 [수정하기] 버튼 클릭 시 호출</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>모달 구조</h3>
+<ul>
+<li>아이콘: 상단 중앙에 번개 모양 아이콘 배치</li>
+<li>타이틀: "Raffle 수정"</li>
+<li>안내 메시지:
+<ul>
+<li>"확인 버튼을 누르면 수정사항이 적용됩니다"</li>
+<li>"계속 진행하시겠습니까?"</li>
+</ul>
+</li>
+</ul>
+<p><strong>하단 액션 버튼</strong></p>
+<ul>
+<li>[다시 돌아가기]: 저장 프로세스를 잠시 보류하고, 수정 화면으로 돌아가 내용을 재검토</li>
+<li>[확인]: 변경된 데이터를 서버로 전송하여 최종 저장(Update)</li>
+</ul>
+<blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 버튼 동작</h3>
+<table>
+<thead>
+<tr>
+<th>버튼</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[다시 돌아가기]</td>
+<td>저장 프로세스를 보류하고 수정 화면으로 복귀</td>
+</tr>
+<tr>
+<td>[확인]</td>
+<td>변경된 데이터를 서버로 전송하여 최종 저장(Update)</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>4. 규칙/로직</h2>
+<h3>4.1 저장 프로세스</h3>
+<ul>
+<li><strong>진입</strong>: 수정 화면([CEB-BO-FQ-204-EDIT])에서 [저장하기] 버튼 클릭 시 호출</li>
+<li><strong>확인(Confirm)</strong>: [확인] 버튼 클릭 시 서버로 데이터 업데이트 요청을 전송합니다. 성공 시, 수정 성공 토스트(Toast) 메시지를 노출하고 상세 화면으로 이동합니다.</li>
+</ul>
+<hr>
+<h2>5. 에러 및 예외상황</h2>
+<h3>5.1 시스템 응답 처리 (Toast Message)</h3>
+<p><strong>성공 (Success)</strong></p>
+<ul>
+<li>메시지: "요청성공 - Raffle 수정이 완료되었습니다."</li>
+<li>토스트 타입: Success</li>
+<li>후행 동작: 모달 닫힘 → 상세 화면(CEB-BO-FQ-204)으로 이동</li>
+</ul>
+<p><strong>실패 (Failure)</strong></p>
+<ul>
+<li>메시지: "요청실패 - Raffle 수정에 실패하였습니다. 다시 시도하세요"</li>
+<li>토스트 타입: Error</li>
+<li>후행 동작: 모달 닫힘 → 수정 화면 유지 (재시도 가능)</li>
+</ul>
+<hr>
+<h2>6. 연관화면ID</h2>
+<table>
+<thead>
+<tr>
+<th>화면 ID</th>
+<th>화면명</th>
+<th>관계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEB-BO-FQ-204-EDIT</td>
+<td>Raffle 수정</td>
+<td>상위 화면 (모달 호출처)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-204</td>
+<td>Raffle 상세</td>
+<td>저장 성공 시 이동할 화면</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>변경 이력</h2>
+<table>
+<thead>
+<tr>
+<th>버전</th>
+<th>일자</th>
+<th>작성자</th>
+<th>변경 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2026.03.11</td>
+<td></td>
+<td>초안 작성</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

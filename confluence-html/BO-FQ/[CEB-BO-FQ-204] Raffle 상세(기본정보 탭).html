@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-204] Raffle 상세 (기본정보 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-204] Raffle 상세 (기본정보 탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Screen ID</td>
+<td>CEB-BO-FQ-204</td>
+</tr>
+<tr>
+<td>기획담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>디자인담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>개발담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>기능영역(Epic)</td>
+<td>FQ(팬퀘스트)</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>버전</td>
+<td>v1.0</td>
+</tr>
+<tr>
+<td>최근 업데이트</td>
+<td>2026.03.11</td>
+</tr>
+<tr>
+<td>Breadcrumb</td>
+<td>홈 > 팬퀘스트 > Fan Quest 관리 > Raffle > {Raffle 타이틀}</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>1. 화면 목적</h2>
+<p>등록된 Raffle(추첨형 퀘스트)의 전체적인 설정 정보(기본 정보, 규칙, 설명, 보상 등)를 한눈에 파악하고 관리합니다.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>Raffle의 생애 주기(Lifecycle) 모니터링 및 상태 변경 액션 수행 (Draft -> Active -> Closed -> Ended)</li>
+<li>실제 응모자 관리나 추첨 실행을 위한 하위 탭(응모내역, 추첨내역)으로 진입하는 관문 역할</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-102] 팬퀘스트 메인 (Raffle 탭) > Raffle 리스트 ROW 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 네비게이션 및 헤더</h3>
+<ul>
+<li>Breadcrumb: 홈 > 게임존 > Fan Quest 관리 > Raffle > {Raffle Title}</li>
+<li>현재 위치를 계층적으로 표시하며, 상위 메뉴 클릭 시 이동 가능합니다.</li>
+<li>타이틀: 현재 보고 있는 Raffle의 제목을 대제목으로 표시합니다. (예: {Raffle Title})</li>
+<li>탭 메뉴 (Tab Menu):
+<ul>
+<li><strong>기본정보 (Selected)</strong>: 현재 화면. Raffle의 설정값 및 상태 정보를 보여줍니다.</li>
+<li><strong>응모내역</strong>: 유저들의 응모 리스트 표시합니다.</li>
+<li><strong>추첨내역</strong>: 추첨(Draw) 및 추첨 완료 후 당첨자 명단을 확인하는 화면으로 이동합니다.</li>
+</ul>
+</li>
+</ul>
+<h3>2.2 상태별 액션 버튼</h3>
+<p>화면 우측 상단에 위치하며, 현재 Raffle의 상태(Status)에 따라 노출되는 버튼과 기능이 동적으로 변경됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>현재 상태</th>
+<th>버튼명</th>
+<th>기능 설명</th>
+<th>호출 화면 ID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Draft (작성 중)</td>
+<td>[삭제하기]</td>
+<td>해당 Raffle 데이터를 영구적으로 삭제합니다. (복구 불가)</td>
+<td>CEB-BO-FQ-204-MD-DELETE</td>
+</tr>
+<tr>
+<td></td>
+<td>[수정하기]</td>
+<td>정보 수정 화면으로 이동합니다.</td>
+<td>CEB-BO-FQ-204-EDIT</td>
+</tr>
+<tr>
+<td></td>
+<td>[게시하기]</td>
+<td>유저에게 Raffle을 공개하고 응모를 시작(Active)합니다.</td>
+<td>CEB-BO-FQ-204-MD-OPEN</td>
+</tr>
+<tr>
+<td>Active (진행 중)</td>
+<td>[수정하기]</td>
+<td>일부 정보(오타 등)를 수정합니다. (핵심 규칙 수정 제한될 수 있음)</td>
+<td>CEB-BO-FQ-204-EDIT</td>
+</tr>
+<tr>
+<td></td>
+<td>[종료하기]</td>
+<td>응모를 조기 마감하고 Closed 상태로 전환합니다. (추첨 대기 상태가 됨)</td>
+<td>CEB-BO-FQ-204-MD-CLOSE</td>
+</tr>
+<tr>
+<td>Closed (마감)</td>
+<td>(버튼 없음)</td>
+<td>응모가 마감되어 더 이상 수정이나 상태 변경이 불가능합니다. (추첨은 추첨내역 탭에서 진행)</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Ended (종료)</td>
+<td>(버튼 없음)</td>
+<td>추첨 및 당첨자 발표가 완료된 최종 종료 상태입니다.</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+
+<h3>2.3 상세 정보 그리드 (Info Grid)</h3>
+<p>화면 중앙 영역을 4분할(2x2) 카드 형태로 구성하여 정보를 그룹화해 보여줍니다.</p>
+<h4>A. Raffle 정보 (좌상단)</h4>
+<p>Raffle의 핵심 식별 정보와 규칙 설정값을 표시합니다.</p>
+<ul>
+<li>대표이미지: 썸네일 파일명 노출. 우측에 대표 이미지 보기 텍스트 링크를 제공하여 클릭 시 원본 이미지를 새 창으로 띄웁니다.</li>
+<li>아티스트: 연결된 아티스트명</li>
+<li>당첨 추첨 수: 최종적으로 선발할 당첨자 인원 (예: 2)</li>
+<li>보상지급 타입: 당첨자에게 보상을 전달하는 방식 (예: 온라인 수령, 현장 수령)</li>
+<li>시작(게시)일시: Active 상태가 된 시점의 타임스탬프 (YYYY.MM.DD hh:mm). Draft 상태에서는 미노출.</li>
+<li>마감(종료)일시: 응모가 마감되는(된) 예정 시점 (YYYY.MM.DD hh:mm)</li>
+</ul>
+<h4>B. 관리 정보 (우상단)</h4>
+<p>시스템 관리 차원의 메타 데이터를 표시합니다.</p>
+<ul>
+<li>상태 (Status Badge): Draft / Active / Closed / Ended</li>
+<li>생성 정보: 생성 관리자 (이름/ID), 생성 일시</li>
+<li>수정 정보: 최근 수정자, 최근 수정 일시</li>
+</ul>
+<h4>C. Raffle 타이틀 (하단)</h4>
+<ul>
+<li>유저 앱(App)에 노출되는 타이틀 텍스트</li>
+<li>각 언어별 타이틀 입력값이 표시됩니다.</li>
+</ul>
+<h4>D. Raffle 설명 (하단)</h4>
+<ul>
+<li>유저 앱(App) 상세 화면에 노출되는 설명 텍스트</li>
+<li>각 언어별 설명 입력값이 표시됩니다.</li>
+</ul>
+<h4>E. Raffle 보상 상세정보 (하단)</h4>
+<ul>
+<li>보상에 대한 구체적인 스펙이나 주의사항 텍스트</li>
+<li>각 언어별 보상 상세정보 입력값이 표시됩니다.</li>
+</ul>
+<blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 버튼 동작</h3>
+<ul>
+<li><strong>[삭제하기]</strong> (Draft): 해당 Raffle 데이터를 영구 삭제합니다. 삭제 확인 모달(CEB-BO-FQ-204-MD-DELETE)을 호출합니다.</li>
+<li><strong>[수정하기]</strong> (Draft/Active): 정보 수정 화면(CEB-BO-FQ-204-EDIT)으로 이동합니다.</li>
+<li><strong>[게시하기]</strong> (Draft): 유저에게 Raffle을 공개합니다. 게시 확인 모달(CEB-BO-FQ-204-MD-OPEN)을 호출합니다.</li>
+<li><strong>[종료하기]</strong> (Active): 응모를 조기 마감합니다. 종료 확인 모달(CEB-BO-FQ-204-MD-CLOSE)을 호출합니다.</li>
+</ul>
+<h3>3.2 네비게이션</h3>
+<ul>
+<li>응모내역 탭 클릭: [CEB-BO-FQ-205] 응모내역 화면으로 이동</li>
+<li>추첨내역 탭 클릭: [CEB-BO-FQ-206] 추첨내역 화면으로 이동</li>
+</ul>
+<hr>
+<h2>4. 규칙/로직</h2>
+<h3>4.1 상태 전환 및 생애 주기 (Lifecycle)</h3>
+<table>
+<thead>
+<tr>
+<th>상태</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Draft (초기)</td>
+<td>최초 생성 시 상태. 유저에게 보이지 않으며 자유롭게 수정/삭제 가능</td>
+</tr>
+<tr>
+<td>Active (게시)</td>
+<td>[게시하기] 수행 시 전환. 응모 시작. 시작일시가 기록됨</td>
+</tr>
+<tr>
+<td>Closed (마감)</td>
+<td>설정된 마감일시 경과 시 자동 전환, 또는 관리자가 [종료하기]로 강제 전환. 이 상태에서만 응모자 추첨(Draw)이 가능</td>
+</tr>
+<tr>
+<td>Ended (종료)</td>
+<td>추첨이 실행되어 당첨자가 확정되면 시스템이 자동으로 전환. 모든 프로세스 종료</td>
+</tr>
+</tbody>
+</table>
+
+<h3>4.2 정보 수정 정책</h3>
+<ul>
+<li>Active 상태 수정: 이미 응모자가 있을 수 있으므로, 마감일시를 앞당기거나 당첨 수를 줄이는 등 유저에게 불리한 변경은 신중해야 합니다. (시스템상으로는 허용하되 경고 모달 등을 통해 주의를 줄 수 있음)</li>
+<li>Closed/Ended 상태 수정 불가: 이미 마감된 이벤트의 정보는 데이터 무결성을 위해 수정할 수 없습니다.</li>
+</ul>
+<hr>
+<h2>6. 연관화면ID</h2>
+<table>
+<thead>
+<tr>
+<th>화면 ID</th>
+<th>화면명</th>
+<th>관계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEB-BO-FQ-102</td>
+<td>Raffle 목록</td>
+<td>상위 화면 (목록으로 돌아가기)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-204-EDIT</td>
+<td>Raffle 수정</td>
+<td>하위 화면 ([수정하기] 버튼 클릭 시 이동)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-204-MD-OPEN</td>
+<td>Raffle 게시 (모달)</td>
+<td>하위 화면 (Draft 상태에서 [게시하기] 클릭 시 호출)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-204-MD-CLOSE</td>
+<td>Raffle 종료 (모달)</td>
+<td>하위 화면 (Active 상태에서 [종료하기] 클릭 시 호출)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-204-MD-DELETE</td>
+<td>Raffle 삭제 (모달)</td>
+<td>하위 화면 (Draft 상태에서 [삭제하기] 클릭 시 호출)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-205</td>
+<td>응모내역</td>
+<td>형제 화면 ('응모내역' 탭 클릭 시 이동)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-206</td>
+<td>추첨내역</td>
+<td>형제 화면 ('추첨내역' 탭 클릭 시 이동)</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>변경 이력</h2>
+<table>
+<thead>
+<tr>
+<th>버전</th>
+<th>일자</th>
+<th>작성자</th>
+<th>변경 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2026.03.11</td>
+<td></td>
+<td>초안 작성</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>
