@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-201-EDIT] Quest 수정</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-201-EDIT] Quest 수정</h1>
+<h2>Page Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Screen ID</td>
+<td>CEB-BO-FQ-201-EDIT</td>
+</tr>
+<tr>
+<td>기획담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>디자인담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>개발담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>기능영역(Epic)</td>
+<td>FQ(팬퀘스트)</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>버전</td>
+<td>v1.1</td>
+</tr>
+<tr>
+<td>최근 업데이트</td>
+<td>2026.03.25</td>
+</tr>
+<tr>
+<td>Breadcrumb</td>
+<td>홈 &gt; 팬퀘스트 &gt; Quest 수정</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>1. 화면 목적</h2>
+<p>이미 생성된 Quest의 정보를 변경합니다. Quest의 현재 진행 상태(임시저장(Draft) 또는 진행중(Active))에 따라 수정 가능한 항목의 범위를 엄격히 제어하여 운영의 유연성과 데이터 무결성을 동시에 확보합니다.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>Quest의 현재 진행 상태(임시저장(Draft) 또는 진행중(Active))에 따라 수정 가능한 항목 범위를 제어</li>
+<li>임시저장(Draft) 상태: 기본 정보, 퀘스트 설정, 보상 설정 전체 수정 가능</li>
+<li>진행중(Active) 상태: 기본 정보(타이틀, 설명, 유저 가이드)만 수정 가능, 나머지 항목은 비활성화</li>
+<li>다국어(한국어/영어/일본어) 입력 패널을 통한 다국어 콘텐츠 수정 지원</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-201] 퀘스트 상세 (기본정보 탭) &gt; [수정하기] 버튼 클릭</li>
+</ul>
+
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 헤더 (Header)</h3>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>요소명</th>
+<th>타입</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>뱃지</td>
+<td>상태 Badge</td>
+<td>Status Badge</td>
+<td>타이틀 좌측에 현재 Quest의 상태를 시각적으로 표시 (임시저장(Draft) / 진행중(Active))</td>
+</tr>
+<tr>
+<td>텍스트</td>
+<td>Quest 수정</td>
+<td>Title</td>
+<td>화면 타이틀</td>
+</tr>
+<tr>
+<td>버튼</td>
+<td>취소하기</td>
+<td>Secondary Button</td>
+<td>수정 취소 확인 모달 호출</td>
+</tr>
+<tr>
+<td>버튼</td>
+<td>수정하기</td>
+<td>Primary Button</td>
+<td>수정 완료 확인 모달 호출</td>
+</tr>
+</tbody>
+</table>
+
+<h3>2.2 화면 레이아웃</h3>
+<p>화면은 3개 섹션이 좌→중→우 순서로 배치된 3-column 레이아웃입니다.</p>
+<pre>
++----------------------------+----------------------------+----------------------------+
+|        기본 정보           |        퀘스트 설정          |        보상 설정            |
+|                            |                            |                            |
+|  타이틀  *      [입력완료]  |  아티스트  *    [Dropdown]  |  보상 종류  *   [Dropdown]  |
+|  설명    *      [입력완료]  |  퀘스트 타입 * [Dropdown]  |  응모권 수량    [Dropdown]  |
+|  유저 가이드 * [입력완료]  |  마감 일시  *  [DatePicker] |  NFT 이벤트    [Dropdown]  |
+|  대표 이미지 *  [썸네일]   |  연관 링크     [+ 링크 추가]|                            |
+|              [변경] [제거] |                            |                            |
+|                            |  * 시작 일시는 게시 시점에  |                            |
+|                            |    자동으로 설정됩니다.     |                            |
++----------------------------+----------------------------+----------------------------+
+</pre>
+<blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
+
+<h3>2.3 기본 정보 섹션 (좌측)</h3>
+<p>Quest의 콘텐츠 정보를 표시하고 수정하는 영역입니다. 진행중(Active) 상태에서도 수정 가능합니다.</p>
+<table>
+<thead>
+<tr>
+<th>요소명</th>
+<th>타입</th>
+<th>필수</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>타이틀</td>
+<td>Expandable Button (다국어 입력 패널)</td>
+<td>Y</td>
+<td>입력 상태 버튼 클릭 시 다국어 입력 패널 전개. 최대 100자</td>
+</tr>
+<tr>
+<td>설명</td>
+<td>Expandable Button (다국어 입력 패널)</td>
+<td>Y</td>
+<td>입력 상태 버튼 클릭 시 다국어 입력 패널 전개. 최대 200자</td>
+</tr>
+<tr>
+<td>유저 가이드</td>
+<td>Expandable Button (다국어 입력 패널)</td>
+<td>Y</td>
+<td>입력 상태 버튼 클릭 시 다국어 입력 패널 전개. 최대 500자</td>
+</tr>
+<tr>
+<td>대표 이미지</td>
+<td>Image Uploader</td>
+<td>Y</td>
+<td>현재 등록된 이미지 썸네일 표시. [변경] 버튼으로 이미지 교체, [제거] 버튼으로 이미지 삭제</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>각 입력 항목(타이틀, 설명, 유저 가이드) 우측에 입력 상태 버튼이 표시됩니다.
+<ul>
+<li>입력완료: 기존 데이터가 존재하거나 수정이 완료된 상태</li>
+<li>입력중...: 현재 입력 패널이 열려 편집 중인 상태</li>
+</ul>
+</li>
+</ul>
+
+<h3>2.4 퀘스트 설정 섹션 (중앙)</h3>
+<p>Quest의 운영 규칙을 설정하는 영역입니다. 진행중(Active) 상태에서는 비활성화됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>요소명</th>
+<th>타입</th>
+<th>필수</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아티스트</td>
+<td>Dropdown</td>
+<td>Y</td>
+<td>등록된 아티스트 목록에서 선택</td>
+</tr>
+<tr>
+<td>퀘스트 타입</td>
+<td>Dropdown</td>
+<td>Y</td>
+<td>Quest 참여 타입 선택 (이미지 촬영 및 업로드)</td>
+</tr>
+<tr>
+<td>마감 일시</td>
+<td>Date Picker + Time Picker</td>
+<td>Y</td>
+<td>Quest 마감 날짜 및 시간 설정</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>마감 일시 하단에 안내 문구를 표시합니다: "* 시작 일시는 게시 시점에 자동으로 설정됩니다."</li>
+</ul>
+
+<h4>연관 링크 (선택)</h4>
+<p>유저가 퀘스트를 수행할 때 참고할 수 있는 외부 링크를 등록합니다. 등록된 링크는 앱에서 라벨 버튼 형태로 노출됩니다. 최대 2개까지 등록 가능하며, 미입력 시 앱에 링크 버튼이 노출되지 않습니다.</p>
+<table>
+<thead>
+<tr>
+<th>요소명</th>
+<th>타입</th>
+<th>필수</th>
+<th>글자수 제한</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>링크 라벨</td>
+<td>Text Input + 언어 탭(KO/EN/JA)</td>
+<td>조건부</td>
+<td>각 20자</td>
+<td>앱에서 버튼 텍스트로 표시되는 라벨. URL 입력 시 3개 언어 모두 필수</td>
+</tr>
+<tr>
+<td>링크 URL</td>
+<td>Text Input</td>
+<td>조건부</td>
+<td>500자</td>
+<td>연결할 외부 URL. 라벨 입력 시 필수. https:// 또는 http:// 형식</td>
+</tr>
+<tr>
+<td>[+ 링크 추가]</td>
+<td>Text Button</td>
+<td>-</td>
+<td>-</td>
+<td>새 링크 입력 행 추가 (최대 2개까지, 2개 도달 시 버튼 비활성화)</td>
+</tr>
+<tr>
+<td>[삭제]</td>
+<td>Icon Button (X)</td>
+<td>-</td>
+<td>-</td>
+<td>해당 링크 행 삭제</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>초기 상태: 링크 입력 행 없음, [+ 링크 추가] 버튼만 표시</li>
+<li>링크 추가 시: 라벨(KO/EN/JA) + URL 입력 필드가 한 세트로 추가됨</li>
+</ul>
+
+<h3>2.5 보상 설정 섹션 (우측)</h3>
+<p>Quest 참여 시 지급되는 보상을 설정하는 영역입니다. 진행중(Active) 상태에서는 비활성화됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>요소명</th>
+<th>타입</th>
+<th>필수</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>보상 종류</td>
+<td>Dropdown</td>
+<td>Y</td>
+<td>보상 타입 선택 (응모권 + NFT / 응모권 / NFT)</td>
+</tr>
+<tr>
+<td>응모권 수량</td>
+<td>Dropdown</td>
+<td>조건부</td>
+<td>보상 종류가 '응모권 + NFT' 또는 '응모권'일 때 노출. 기본값: 1장</td>
+</tr>
+<tr>
+<td>NFT 이벤트</td>
+<td>Dropdown</td>
+<td>조건부</td>
+<td>보상 종류가 '응모권 + NFT' 또는 'NFT'일 때 노출. 연결할 NFT 민팅 이벤트 선택</td>
+</tr>
+</tbody>
+</table>
+
+<h3>2.6 진행중(Active) 상태 안내 배너</h3>
+<p>진행중(Active) 상태에서 화면 상단(헤더 하단)에 노란색 배경의 안내 배너를 표시합니다.</p>
+<ul>
+<li>안내 메시지: "진행중 상태에서는 기본 정보(타이틀, 설명, 가이드)와 연관 링크만 수정 가능합니다."</li>
+</ul>
+
+<h3>2.7 다국어 입력 패널 (타이틀)</h3>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>요소명</th>
+<th>타입</th>
+<th>글자 수 제한</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>헤더</td>
+<td>Quest 타이틀 입력 (n/3)</td>
+<td>Title</td>
+<td>-</td>
+<td>입력 완료된 언어 수 표시</td>
+</tr>
+<tr>
+<td>입력</td>
+<td>한국어</td>
+<td>Textarea</td>
+<td>0/100</td>
+<td>한국어 타이틀</td>
+</tr>
+<tr>
+<td>입력</td>
+<td>영어</td>
+<td>Textarea</td>
+<td>0/100</td>
+<td>영어 타이틀</td>
+</tr>
+<tr>
+<td>입력</td>
+<td>일본어</td>
+<td>Textarea</td>
+<td>0/100</td>
+<td>일본어 타이틀</td>
+</tr>
+<tr>
+<td>버튼</td>
+<td>저장하기</td>
+<td>Primary Button</td>
+<td>-</td>
+<td>입력 내용 저장</td>
+</tr>
+<tr>
+<td>안내</td>
+<td>유효성 메시지</td>
+<td>Text</td>
+<td>-</td>
+<td>입력 상태 안내 문구</td>
+</tr>
+</tbody>
+</table>
+
+<h3>2.8 다국어 입력 패널 (설명)</h3>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>요소명</th>
+<th>타입</th>
+<th>글자 수 제한</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>헤더</td>
+<td>Quest 설명 입력 (n/3)</td>
+<td>Title</td>
+<td>-</td>
+<td>입력 완료된 언어 수 표시</td>
+</tr>
+<tr>
+<td>입력</td>
+<td>한국어</td>
+<td>Textarea</td>
+<td>0/200</td>
+<td>한국어 설명</td>
+</tr>
+<tr>
+<td>입력</td>
+<td>영어</td>
+<td>Textarea</td>
+<td>0/200</td>
+<td>영어 설명</td>
+</tr>
+<tr>
+<td>입력</td>
+<td>일본어</td>
+<td>Textarea</td>
+<td>0/200</td>
+<td>일본어 설명</td>
+</tr>
+<tr>
+<td>버튼</td>
+<td>저장하기</td>
+<td>Primary Button</td>
+<td>-</td>
+<td>입력 내용 저장</td>
+</tr>
+<tr>
+<td>안내</td>
+<td>유효성 메시지</td>
+<td>Text</td>
+<td>-</td>
+<td>입력 상태 안내 문구</td>
+</tr>
+</tbody>
+</table>
+
+<h3>2.9 다국어 입력 패널 (유저 가이드)</h3>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>요소명</th>
+<th>타입</th>
+<th>글자 수 제한</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>헤더</td>
+<td>Quest 유저가이드 입력 (n/3)</td>
+<td>Title</td>
+<td>-</td>
+<td>입력 완료된 언어 수 표시</td>
+</tr>
+<tr>
+<td>입력</td>
+<td>한국어</td>
+<td>Textarea</td>
+<td>0/500</td>
+<td>한국어 유저 가이드</td>
+</tr>
+<tr>
+<td>입력</td>
+<td>영어</td>
+<td>Textarea</td>
+<td>0/500</td>
+<td>영어 유저 가이드</td>
+</tr>
+<tr>
+<td>입력</td>
+<td>일본어</td>
+<td>Textarea</td>
+<td>0/500</td>
+<td>일본어 유저 가이드</td>
+</tr>
+<tr>
+<td>버튼</td>
+<td>저장하기</td>
+<td>Primary Button</td>
+<td>-</td>
+<td>입력 내용 저장</td>
+</tr>
+<tr>
+<td>안내</td>
+<td>유효성 메시지</td>
+<td>Text</td>
+<td>-</td>
+<td>입력 상태 안내 문구</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 버튼 동작</h3>
+<ul>
+<li><strong>[취소하기]</strong>: 수정 작업을 중단하고 이전 화면으로 돌아갑니다. 클릭 시 [CEB-BO-FQ-201-MD-CANCEL] Quest 수정취소 확인 모달을 호출합니다.</li>
+<li><strong>[수정하기]</strong>: 변경된 내용을 서버에 반영합니다. 수정 가능한 필수 항목이 모두 유효한 상태일 때만 활성화됩니다. 클릭 시 [CEB-BO-FQ-201-MD-COMPLE] Quest 수정완료 확인 모달을 호출합니다.</li>
+</ul>
+<h3>3.2 네비게이션</h3>
+<ul>
+<li>취소 시: [CEB-BO-FQ-201] 퀘스트 상세 (기본정보 탭)으로 복귀</li>
+<li>수정 완료 시: [CEB-BO-FQ-201] 퀘스트 상세 (기본정보 탭)으로 복귀</li>
+</ul>
+
+<hr>
+<h2>4. 규칙/로직</h2>
+<h3>4.1 상태별 수정 권한 (Permission Logic)</h3>
+<p>시스템은 화면 진입 시 Quest의 상태 코드를 확인하여 각 섹션 및 필드의 활성/비활성 여부를 결정합니다.</p>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>임시저장(Draft)</th>
+<th>진행중(Active)</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>타이틀</td>
+<td>수정 가능</td>
+<td>수정 가능</td>
+<td>오타 수정, 추가 안내 등 운영 대응 필요</td>
+</tr>
+<tr>
+<td>설명</td>
+<td>수정 가능</td>
+<td>수정 가능</td>
+<td>오타 수정, 추가 안내 등 운영 대응 필요</td>
+</tr>
+<tr>
+<td>유저 가이드</td>
+<td>수정 가능</td>
+<td>수정 가능</td>
+<td>오타 수정, 추가 안내 등 운영 대응 필요</td>
+</tr>
+<tr>
+<td>대표 이미지</td>
+<td>수정 가능</td>
+<td>수정 불가</td>
+<td>진행 중 이미지 변경 시 혼란 방지</td>
+</tr>
+<tr>
+<td>아티스트</td>
+<td>수정 가능</td>
+<td>수정 불가</td>
+<td>진행 주체 변경 불가</td>
+</tr>
+<tr>
+<td>퀘스트 타입</td>
+<td>수정 가능</td>
+<td>수정 불가</td>
+<td>진행 중 참여 방식 변경 불가</td>
+</tr>
+<tr>
+<td>마감 일시</td>
+<td>수정 가능</td>
+<td>수정 불가</td>
+<td>참여 기간 임의 변경 방지 (공정성)</td>
+</tr>
+<tr>
+<td>보상 종류</td>
+<td>수정 가능</td>
+<td>수정 불가</td>
+<td>참여 후 보상 조건 변경 불가</td>
+</tr>
+<tr>
+<td>응모권 수량</td>
+<td>수정 가능</td>
+<td>수정 불가</td>
+<td>참여 후 보상 수량 변경 불가</td>
+</tr>
+<tr>
+<td>NFT 이벤트</td>
+<td>수정 가능</td>
+<td>수정 불가</td>
+<td>참여 후 보상 이벤트 변경 불가</td>
+</tr>
+<tr>
+<td>연관 링크</td>
+<td>수정 가능</td>
+<td>수정 가능</td>
+<td>운영 중 링크 변경/추가 필요 가능</td>
+</tr>
+</tbody>
+</table>
+
+<h3>4.2 다국어 입력 버튼 상태</h3>
+<table>
+<thead>
+<tr>
+<th>상태</th>
+<th>버튼 텍스트</th>
+<th>조건</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>미입력</td>
+<td>입력하기</td>
+<td>해당 항목 입력을 시작하지 않은 상태</td>
+</tr>
+<tr>
+<td>입력중</td>
+<td>입력중...</td>
+<td>입력 패널이 열려있고 입력 진행 중인 상태</td>
+</tr>
+<tr>
+<td>입력완료</td>
+<td>입력완료</td>
+<td>3개 언어 모두 입력 및 저장 완료된 상태</td>
+</tr>
+</tbody>
+</table>
+
+<h3>4.3 다국어 입력 패널 진행률 표시</h3>
+<table>
+<thead>
+<tr>
+<th>표시</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(0/3)</td>
+<td>아무 언어도 입력되지 않음</td>
+</tr>
+<tr>
+<td>(1/3)</td>
+<td>1개 언어 입력 완료</td>
+</tr>
+<tr>
+<td>(2/3)</td>
+<td>2개 언어 입력 완료</td>
+</tr>
+<tr>
+<td>(3/3)</td>
+<td>3개 언어 모두 입력 완료</td>
+</tr>
+</tbody>
+</table>
+
+<h3>4.4 다국어 입력 저장 시 유효성 검사</h3>
+<table>
+<thead>
+<tr>
+<th>상태</th>
+<th>메시지</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>미입력 언어 존재</td>
+<td>*모든 언어를 빠짐 없이 입력해주세요</td>
+</tr>
+<tr>
+<td>모든 언어 입력 완료</td>
+<td>*모든 언어가 성공적으로 저장되었습니다</td>
+</tr>
+</tbody>
+</table>
+
+<h3>4.5 보상 설정 동적 UI 로직</h3>
+<p>선택한 보상 종류에 따라 하위 항목이 동적으로 노출됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>보상 종류 선택</th>
+<th>응모권 수량 노출</th>
+<th>NFT 이벤트 노출</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>응모권 + NFT</td>
+<td>O</td>
+<td>O</td>
+</tr>
+<tr>
+<td>응모권</td>
+<td>O</td>
+<td>X</td>
+</tr>
+<tr>
+<td>NFT</td>
+<td>X</td>
+<td>O</td>
+</tr>
+</tbody>
+</table>
+
+<h3>4.6 마감 일시 수정 로직 (임시저장(Draft) 한정)</h3>
+<ul>
+<li>마감 일시는 현재 시간(수정 시점)보다 미래의 시간으로만 설정 가능합니다.
+<ul>
+<li>현재일자 +1일 부터 선택 가능</li>
+<li>시간: 00~23, 분: 00~59</li>
+</ul>
+</li>
+</ul>
+
+<h3>4.7 연관 링크 유효성 검사</h3>
+<ul>
+<li>링크는 0~2개 입력 가능 (선택 사항)</li>
+<li>링크 입력 시 라벨(3개 언어 모두) + URL 쌍으로 입력 필수
+<ul>
+<li>라벨만 입력하고 URL 미입력 시: "URL을 입력해주세요" 인라인 에러</li>
+<li>URL만 입력하고 라벨 미입력 시: "라벨을 입력해주세요" 인라인 에러</li>
+</ul>
+</li>
+<li>URL 형식 검증: https:// 또는 http:// 로 시작해야 함
+<ul>
+<li>형식 불일치 시: "올바른 URL 형식을 입력해주세요 (예: https://example.com)" 인라인 에러</li>
+</ul>
+</li>
+<li>연관 링크 미입력 시에도 [수정하기] 버튼 활성화에 영향 없음</li>
+</ul>
+
+<h3>4.8 수정하기 버튼 활성화 조건</h3>
+<p>수정 가능한 필수 항목이 모두 유효한 값을 가져야 [수정하기] 버튼이 활성화됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>상태</th>
+<th>활성화 조건</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>임시저장(Draft)</td>
+<td>타이틀/설명/유저 가이드(3개 언어 모두), 대표 이미지, 아티스트, 퀘스트 타입, 마감 일시, 보상 종류 및 관련 항목 모두 입력 완료</td>
+</tr>
+<tr>
+<td>진행중(Active)</td>
+<td>타이틀/설명/유저 가이드(3개 언어 모두) 입력 완료</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>연관 링크: 선택 항목이므로 활성화 조건에 포함되지 않음. 단, 입력한 경우 유효성 검사를 통과해야 함</li>
+</ul>
+
+<h3>4.9 데이터 연동</h3>
+<ul>
+<li>NFT 민팅 이벤트 리스트: NFT 관련 옵션 선택 시, 연동된 BIVE 시스템의 '진행 가능한 NFT 민팅 이벤트' 목록을 API로 조회하여 바인딩합니다.</li>
+</ul>
+
+<hr>
+<h2>5. 에러 및 예외상황</h2>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>메시지 유형</th>
+<th>메시지 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quest 수정 성공</td>
+<td>Toast (성공)</td>
+<td>"Quest가 성공적으로 수정되었습니다."</td>
+</tr>
+<tr>
+<td>Quest 수정 실패</td>
+<td>Toast (실패)</td>
+<td>"Quest 수정에 실패하였습니다. 다시 시도하세요."</td>
+</tr>
+<tr>
+<td>다국어 일부 미입력 시 저장 시도</td>
+<td>패널 내 안내</td>
+<td>"*모든 언어를 빠짐 없이 입력해주세요"</td>
+</tr>
+<tr>
+<td>마감 일시 과거 시간 설정 시도</td>
+<td>인라인 에러</td>
+<td>"마감 일시는 현재 시간 이후로 설정해주세요."</td>
+</tr>
+<tr>
+<td>네트워크 오류</td>
+<td>Toast (실패)</td>
+<td>공통 에러 처리 로직 적용</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>6. 연관화면ID</h2>
+<table>
+<thead>
+<tr>
+<th>화면 ID</th>
+<th>화면명</th>
+<th>관계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEB-BO-FQ-201</td>
+<td>퀘스트 상세 (기본정보 탭)</td>
+<td>상위 화면 (취소/수정 완료 후 복귀)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-201-MD-CANCEL</td>
+<td>Quest 수정취소 (모달)</td>
+<td>하위 화면 ([취소하기] 클릭 시 호출)</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-201-MD-COMPLE</td>
+<td>Quest 수정완료 (모달)</td>
+<td>하위 화면 ([수정하기] 클릭 시 호출)</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>변경 이력</h2>
+<table>
+<thead>
+<tr>
+<th>버전</th>
+<th>일자</th>
+<th>작성자</th>
+<th>변경 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2025.12.09</td>
+<td>@Nill Yoo</td>
+<td>초안 작성</td>
+</tr>
+<tr>
+<td>v1.1</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>연관 링크 필드 추가</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

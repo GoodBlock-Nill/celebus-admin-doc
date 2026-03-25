@@ -1,7 +1,12 @@
-import { GAME_STATUS_CONFIG, GP_TYPE_CONFIG, EXCHANGE_DIRECTION_CONFIG, EXCHANGE_STATUS_CONFIG, GAME_TYPE_BADGE_CONFIG } from '@/lib/constants';
+import {
+  GAME_STATUS_CONFIG, GP_TYPE_CONFIG, EXCHANGE_DIRECTION_CONFIG, EXCHANGE_STATUS_CONFIG, GAME_TYPE_BADGE_CONFIG,
+  QUEST_STATUS_CONFIG, RAFFLE_STATUS_CONFIG, SUBMISSION_STATUS_CONFIG, REWARD_TYPE_CONFIG, DELIVERY_TYPE_CONFIG,
+} from '@/lib/constants';
 
 interface BadgeProps {
-  variant: 'gameStatus' | 'gpType' | 'exchangeDir' | 'exchangeStatus' | 'gameType' | 'custom';
+  variant: 'gameStatus' | 'gpType' | 'exchangeDir' | 'exchangeStatus' | 'gameType'
+    | 'questStatus' | 'raffleStatus' | 'submissionStatus' | 'rewardType' | 'deliveryType'
+    | 'custom';
   value: string;
   customBg?: string;
   customText?: string;
@@ -14,6 +19,11 @@ const CONFIG_MAP = {
   exchangeDir: EXCHANGE_DIRECTION_CONFIG,
   exchangeStatus: EXCHANGE_STATUS_CONFIG,
   gameType: GAME_TYPE_BADGE_CONFIG,
+  questStatus: QUEST_STATUS_CONFIG,
+  raffleStatus: RAFFLE_STATUS_CONFIG,
+  submissionStatus: SUBMISSION_STATUS_CONFIG,
+  rewardType: REWARD_TYPE_CONFIG,
+  deliveryType: DELIVERY_TYPE_CONFIG,
 };
 
 export default function Badge({ variant, value, customBg, customText, customLabel }: BadgeProps) {

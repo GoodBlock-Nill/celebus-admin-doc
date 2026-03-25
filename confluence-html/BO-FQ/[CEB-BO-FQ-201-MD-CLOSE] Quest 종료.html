@@ -112,11 +112,11 @@ p {
 </tr>
 <tr>
 <td>버전</td>
-<td>v1.0</td>
+<td>v1.1</td>
 </tr>
 <tr>
 <td>최근 업데이트</td>
-<td>2026.03.11</td>
+<td>2026.03.24</td>
 </tr>
 <tr>
 <td>Breadcrumb</td>
@@ -127,15 +127,15 @@ p {
 
 <hr>
 <h2>1. 화면 목적</h2>
-<p>진행 중인(Active) 퀘스트를 관리자가 수동으로 조기 종료(Early Termination)하고자 할 때, 실수로 인한 종료를 방지하기 위해 최종 확인을 수행합니다.</p>
+<p>진행중(Active) 상태인 퀘스트를 관리자가 수동으로 조기 종료(Early Termination)하고자 할 때, 실수로 인한 종료를 방지하기 위해 최종 확인을 수행합니다.</p>
 <h3>주요 기능</h3>
 <ul>
 <li>퀘스트 조기 종료 최종 확인</li>
-<li>상태 변경 (Active → Ended)</li>
+<li>상태 변경 (진행중(Active) → 종료(Ended))</li>
 </ul>
 <h3>진입 경로</h3>
 <ul>
-<li>Quest 상세 화면(CEB-BO-FQ-201)에서 Active 상태일 때 [종료하기] 버튼 클릭 시 호출</li>
+<li>Quest 상세 화면(CEB-BO-FQ-201)에서 진행중(Active) 상태일 때 [종료하기] 버튼 클릭 시 호출</li>
 </ul>
 <hr>
 <h2>2. UI 설명</h2>
@@ -153,7 +153,7 @@ p {
 <p><strong>하단 액션 버튼</strong></p>
 <ul>
 <li>[다시 돌아가기]: 종료 프로세스를 취소하고 모달을 닫음</li>
-<li>[확인]: 퀘스트를 즉시 종료 상태(Ended)로 변경</li>
+<li>[확인]: 퀘스트를 즉시 종료(Ended) 상태로 변경</li>
 </ul>
 <blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
 <hr>
@@ -173,7 +173,7 @@ p {
 </tr>
 <tr>
 <td>[확인]</td>
-<td>서버로 종료 요청 전송, 퀘스트 상태를 Active → Ended로 변경</td>
+<td>서버로 종료 요청 전송, 퀘스트 상태를 진행중(Active) → 종료(Ended)로 변경</td>
 </tr>
 </tbody>
 </table>
@@ -182,11 +182,11 @@ p {
 <h2>4. 규칙/로직</h2>
 <h3>4.1 종료 프로세스</h3>
 <ul>
-<li><strong>진입</strong>: Active 상태의 퀘스트 상세 화면에서 [종료하기] 버튼 클릭 시 호출</li>
+<li><strong>진입</strong>: 진행중(Active) 상태의 퀘스트 상세 화면에서 [종료하기] 버튼 클릭 시 호출</li>
 <li><strong>확인(Confirm)</strong>:
 <ul>
 <li>[확인] 버튼 클릭 시 서버로 종료 요청을 전송</li>
-<li>서버에서는 해당 퀘스트의 상태를 Active → Ended로 업데이트</li>
+<li>서버에서는 해당 퀘스트의 상태를 진행중(Active) → 종료(Ended)로 업데이트</li>
 <li>종료 시점(Timestamp)이 마감(종료)일시로 기록됩니다 (기존 예정일보다 앞당겨짐)</li>
 <li>더 이상 유저가 해당 퀘스트에 참여(제출)할 수 없게 됩니다</li>
 </ul>
@@ -200,7 +200,7 @@ p {
 <ul>
 <li>메시지: "요청성공 - Quest가 종료 되었습니다."</li>
 <li>토스트 타입: Success</li>
-<li>후행 동작: 모달이 닫히고, 상세 화면이 새로고침되어 상태가 Ended로 변경되고 [종료하기] 버튼이 사라집니다.</li>
+<li>후행 동작: 모달이 닫히고, 상세 화면이 새로고침되어 상태가 종료(Ended)로 변경되고 [종료하기] 버튼이 사라집니다.</li>
 </ul>
 <p><strong>실패 (Failure)</strong></p>
 <ul>
@@ -242,9 +242,15 @@ p {
 <tbody>
 <tr>
 <td>v1.0</td>
-<td>2026.03.11</td>
-<td></td>
+<td>2025.12.09</td>
+<td>@Nill Yoo</td>
 <td>초안 작성</td>
+</tr>
+<tr>
+<td>v1.1</td>
+<td>2026.03.24</td>
+<td>@Nill Yoo</td>
+<td>상태 표기 한글화</td>
 </tr>
 </tbody>
 </table>

@@ -112,11 +112,11 @@ p {
 </tr>
 <tr>
 <td>버전</td>
-<td>v1.0</td>
+<td>v1.1</td>
 </tr>
 <tr>
 <td>최근 업데이트</td>
-<td>2026.03.11</td>
+<td>2026.03.24</td>
 </tr>
 <tr>
 <td>Breadcrumb</td>
@@ -127,16 +127,16 @@ p {
 
 <hr>
 <h2>1. 화면 목적</h2>
-<p>작성 완료된 Draft(작성 중) 상태의 퀘스트를 유저에게 공개(Active)하기 전, 관리자의 최종 확인을 수행합니다.</p>
+<p>작성 완료된 임시저장(Draft) 상태의 퀘스트를 유저에게 공개(진행중(Active))하기 전, 관리자의 최종 확인을 수행합니다.</p>
 <p>게시 시점부터 퀘스트가 즉시 시작됨을 인지시킵니다.</p>
 <h3>주요 기능</h3>
 <ul>
 <li>퀘스트 게시 최종 확인</li>
-<li>상태 변경 (Draft → Active)</li>
+<li>상태 변경 (임시저장(Draft) → 진행중(Active))</li>
 </ul>
 <h3>진입 경로</h3>
 <ul>
-<li>Quest 상세 화면(CEB-BO-FQ-201)에서 Draft 상태일 때 [게시하기] 버튼 클릭 시 호출</li>
+<li>Quest 상세 화면(CEB-BO-FQ-201)에서 임시저장(Draft) 상태일 때 [게시하기] 버튼 클릭 시 호출</li>
 </ul>
 <hr>
 <h2>2. UI 설명</h2>
@@ -154,7 +154,7 @@ p {
 <p><strong>하단 액션 버튼</strong></p>
 <ul>
 <li>[다시 돌아가기]: 게시 프로세스를 취소하고 모달을 닫음</li>
-<li>[확인]: 퀘스트 상태를 Active로 변경하고 유저에게 공개</li>
+<li>[확인]: 퀘스트 상태를 진행중(Active)으로 변경하고 유저에게 공개</li>
 </ul>
 <blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
 <hr>
@@ -174,7 +174,7 @@ p {
 </tr>
 <tr>
 <td>[확인]</td>
-<td>서버로 상태 변경 요청 전송, 퀘스트 상태를 Draft → Active로 변경</td>
+<td>서버로 상태 변경 요청 전송, 퀘스트 상태를 임시저장(Draft) → 진행중(Active)로 변경</td>
 </tr>
 </tbody>
 </table>
@@ -183,12 +183,12 @@ p {
 <h2>4. 규칙/로직</h2>
 <h3>4.1 게시 프로세스</h3>
 <ul>
-<li><strong>진입</strong>: Draft 상태의 퀘스트 상세 화면에서 [게시하기] 버튼 클릭 시 호출</li>
+<li><strong>진입</strong>: 임시저장(Draft) 상태의 퀘스트 상세 화면에서 [게시하기] 버튼 클릭 시 호출</li>
 <li><strong>확인(Confirm)</strong>:
 <ul>
 <li>[확인] 버튼 클릭 시 서버로 상태 변경 요청을 전송</li>
 <li>시작 일시 설정: 게시가 완료되는 시점의 서버 시간(Timestamp)이 해당 퀘스트의 시작(게시) 일시로 자동 기록</li>
-<li>상태가 Draft → Active로 변경되어 유저 앱(App)에 즉시 노출</li>
+<li>상태가 임시저장(Draft) → 진행중(Active)로 변경되어 유저 앱(App)에 즉시 노출</li>
 </ul>
 </li>
 </ul>
@@ -200,7 +200,7 @@ p {
 <ul>
 <li>메시지: "요청성공 - Quest가 게시 되었습니다."</li>
 <li>토스트 타입: Success</li>
-<li>후행 동작: 모달이 닫히고, 상세 화면이 새로고침되어 상태 뱃지가 Active로 변경됩니다. (버튼은 [종료하기]로 변경됨)</li>
+<li>후행 동작: 모달이 닫히고, 상세 화면이 새로고침되어 상태 뱃지가 진행중(Active)로 변경됩니다. (버튼은 [종료하기]로 변경됨)</li>
 </ul>
 <p><strong>실패 (Failure)</strong></p>
 <ul>
@@ -242,9 +242,15 @@ p {
 <tbody>
 <tr>
 <td>v1.0</td>
-<td>2026.03.11</td>
-<td></td>
+<td>2025.12.09</td>
+<td>@Nill Yoo</td>
 <td>초안 작성</td>
+</tr>
+<tr>
+<td>v1.1</td>
+<td>2026.03.24</td>
+<td>@Nill Yoo</td>
+<td>상태 표기 한글화</td>
 </tr>
 </tbody>
 </table>

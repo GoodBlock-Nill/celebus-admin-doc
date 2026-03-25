@@ -1,4 +1,5 @@
 import type { GameStatus, GameType, GPChangeType, ExchangeDirection, ExchangeStatus } from './types';
+import type { QuestStatus, RaffleStatus, SubmissionStatus, RewardType, DeliveryType } from './fq-types';
 
 export const GAME_STATUS_CONFIG: Record<GameStatus, { label: string; bg: string; text: string }> = {
   Draft: { label: '임시저장', bg: 'bg-gray-100', text: 'text-gray-600' },
@@ -60,6 +61,45 @@ export const ST_STATUSES: GameStatus[] = ['Draft', 'Ready', 'Active', 'Ended'];
 
 export const ST_REVEAL_DURATION_SEC = 5;
 
+// --- Fan Quest constants ---
+
+export const QUEST_STATUS_CONFIG: Record<QuestStatus, { label: string; bg: string; text: string }> = {
+  Draft: { label: '임시저장', bg: 'bg-gray-100', text: 'text-gray-600' },
+  Active: { label: '진행중', bg: 'bg-green-100', text: 'text-green-600' },
+  Ended: { label: '종료', bg: 'bg-gray-800', text: 'text-white' },
+};
+
+export const RAFFLE_STATUS_CONFIG: Record<RaffleStatus, { label: string; bg: string; text: string }> = {
+  Draft: { label: '임시저장', bg: 'bg-gray-100', text: 'text-gray-600' },
+  Active: { label: '진행중', bg: 'bg-green-100', text: 'text-green-600' },
+  Closed: { label: '마감', bg: 'bg-purple-100', text: 'text-purple-600' },
+  Ended: { label: '종료', bg: 'bg-gray-800', text: 'text-white' },
+};
+
+export const SUBMISSION_STATUS_CONFIG: Record<SubmissionStatus, { label: string; bg: string; text: string }> = {
+  Pending: { label: '대기', bg: 'bg-orange-100', text: 'text-orange-600' },
+  Approved: { label: '승인', bg: 'bg-green-100', text: 'text-green-600' },
+  Rejected: { label: '반려', bg: 'bg-red-100', text: 'text-red-600' },
+};
+
+export const REWARD_TYPE_CONFIG: Record<RewardType, { label: string; bg: string; text: string }> = {
+  TICKET: { label: '응모권', bg: 'bg-blue-100', text: 'text-blue-600' },
+  TICKET_NFT: { label: '응모권+NFT', bg: 'bg-indigo-100', text: 'text-indigo-600' },
+  NFT: { label: 'NFT', bg: 'bg-purple-100', text: 'text-purple-600' },
+};
+
+export const DELIVERY_TYPE_CONFIG: Record<DeliveryType, { label: string; bg: string; text: string }> = {
+  DELIVERY: { label: '배송', bg: 'bg-blue-100', text: 'text-blue-600' },
+  ONSITE: { label: '현장 수령', bg: 'bg-amber-100', text: 'text-amber-700' },
+  ONLINE: { label: '온라인', bg: 'bg-cyan-100', text: 'text-cyan-600' },
+};
+
+export const QUEST_STATUS_ACTIONS: Record<QuestStatus, string[]> = {
+  Draft: ['delete', 'edit', 'publish'],
+  Active: ['edit', 'close'],
+  Ended: [],
+};
+
 export const ITEMS_PER_PAGE = 20;
 export const RANKING_ITEMS_PER_PAGE = 50;
 
@@ -73,4 +113,10 @@ export const BREADCRUMB_MAP: Record<string, string> = {
   '/game-zone/exchange/settings': '교환 설정',
   '/game-zone/exchange/wallets': '지갑 관리',
   '/game-zone/gp-history': 'GP 변동 내역',
+  '/fan-quest': '팬퀘스트',
+  '/fan-quest/quests': '퀘스트 관리',
+  '/fan-quest/quests/create': '퀘스트 생성',
+  '/fan-quest/raffles': '래플 관리',
+  '/fan-quest/raffles/create': '래플 생성',
+  '/fan-quest/rejection-reasons': '반려 사유 관리',
 };

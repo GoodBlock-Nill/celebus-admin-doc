@@ -81,7 +81,12 @@ const MENU_ITEMS: MenuItem[] = [
       { label: 'GP 변동 내역', href: '/game-zone/gp-history' },
     ],
   },
-  { label: '팬퀘스트', href: '#', icon: 'sparkles' },
+  {
+    label: '팬퀘스트', icon: 'sparkles',
+    children: [
+      { label: 'Fan Quest 관리', href: '/fan-quest' },
+    ],
+  },
   { label: '재무', href: '#', icon: 'banknotes' },
   {
     label: '관리자', icon: 'cog',
@@ -95,7 +100,7 @@ const MENU_ITEMS: MenuItem[] = [
 export default function AdminSidebar() {
   const pathname = usePathname();
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
-    new Set(['게임존'])
+    new Set(['게임존', '팬퀘스트'])
   );
 
   const toggleGroup = (label: string) => {

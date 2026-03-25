@@ -112,11 +112,11 @@ p {
 </tr>
 <tr>
 <td>버전</td>
-<td>v1.0</td>
+<td>v1.1</td>
 </tr>
 <tr>
 <td>최근 업데이트</td>
-<td>2026.03.11</td>
+<td>2026.03.24</td>
 </tr>
 <tr>
 <td>Breadcrumb</td>
@@ -131,7 +131,7 @@ p {
 <h3>주요 기능</h3>
 <ul>
 <li>Quest 생성 최종 확인</li>
-<li>서버 데이터 생성 요청 (Draft 상태)</li>
+<li>서버 데이터 생성 요청 (임시저장(Draft) 상태)</li>
 </ul>
 <h3>진입 경로</h3>
 <ul>
@@ -153,7 +153,7 @@ p {
 <p><strong>하단 액션 버튼</strong></p>
 <ul>
 <li>[다시 돌아가기]: 생성 프로세스를 보류하고, 작성 화면으로 돌아가 내용을 재검토하거나 수정</li>
-<li>[확인]: 입력된 모든 데이터를 서버로 전송하여 새로운 Quest를 생성(Draft 상태)</li>
+<li>[확인]: 입력된 모든 데이터를 서버로 전송하여 새로운 Quest를 생성(임시저장(Draft) 상태)</li>
 </ul>
 <blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
 <hr>
@@ -173,7 +173,7 @@ p {
 </tr>
 <tr>
 <td>[확인]</td>
-<td>입력된 모든 데이터를 서버로 전송하여 Quest 생성 (Draft 상태)</td>
+<td>입력된 모든 데이터를 서버로 전송하여 Quest 생성 (임시저장(Draft) 상태)</td>
 </tr>
 </tbody>
 </table>
@@ -183,7 +183,7 @@ p {
 <h3>4.1 생성 프로세스</h3>
 <ul>
 <li><strong>진입</strong>: Quest 생성 화면([CEB-BO-FQ-101-Create])에서 모든 필수값이 입력된 상태(입력완료) 및 하단 규칙 설정 완료 후 [생성하기] 버튼 클릭 시 호출</li>
-<li><strong>확인(Confirm)</strong>: [확인] 버튼 클릭 시 서버로 생성 요청을 전송합니다. 생성된 Quest는 초기 상태인 Draft(작성 중) 상태로 저장됩니다. (즉시 게시되지 않음)</li>
+<li><strong>확인(Confirm)</strong>: [확인] 버튼 클릭 시 서버로 생성 요청을 전송합니다. 생성된 Quest는 초기 상태인 임시저장(Draft) 상태로 저장됩니다. (즉시 게시되지 않음)</li>
 </ul>
 <hr>
 <h2>5. 에러 및 예외상황</h2>
@@ -240,9 +240,15 @@ p {
 <tbody>
 <tr>
 <td>v1.0</td>
-<td>2026.03.11</td>
-<td></td>
+<td>2025.12.09</td>
+<td>@Nill Yoo</td>
 <td>초안 작성</td>
+</tr>
+<tr>
+<td>v1.1</td>
+<td>2026.03.24</td>
+<td>@Nill Yoo</td>
+<td>상태 표기 한글화</td>
 </tr>
 </tbody>
 </table>
