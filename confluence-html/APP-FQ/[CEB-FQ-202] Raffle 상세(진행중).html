@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-FQ-202] Raffle 상세(진행중)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-FQ-202] Raffle 상세(진행중)</h1>
+<h2>Page Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Screen ID</td>
+<td>CEB-FQ-202</td>
+</tr>
+<tr>
+<td>기획담당자</td>
+<td>@Nill Yoo</td>
+</tr>
+<tr>
+<td>디자인담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>개발담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>API</td>
+<td></td>
+</tr>
+<tr>
+<td>기능영역(Epic)</td>
+<td>FQ(팬퀘스트)</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>버전</td>
+<td>v1.3</td>
+</tr>
+<tr>
+<td>최근 업데이트</td>
+<td>2026.03.25</td>
+</tr>
+<tr>
+<td>Jira 링크</td>
+<td></td>
+</tr>
+<tr>
+<td>Figma 링크</td>
+<td></td>
+</tr>
+<tr>
+<td>다국어 영향</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Breadcrumb</td>
+<td>홈 > 팬퀘스트 > Event > Raffle 상세</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>1. 화면 목적</h2>
+<p>진행 중인(Active) 래플 이벤트의 상세 정보와 혜택을 유저에게 매력적으로 전달하고, 보유한 티켓을 사용하여 원하는 수량만큼 응모하도록 유도하는 화면입니다.</p>
+<h5>주요 기능</h5>
+<ul>
+<li>래플 기본정보 조회 (아티스트, 타이틀, D-day, 설명, 보상 내역)</li>
+<li>참여 통계 제공 (누적 참여 유저 수, 누적 응모권)</li>
+<li>내 참여 현황 조회 (내 누적 응모권)</li>
+<li>응모권 수량 입력 및 응모하기 플로우</li>
+<li>래플 상태별 분기 처리 (Active / Closed / Ended)</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>홈 메인(CEB-HOM-501-FQ) > Event > 래플 카드 탭 시 이동</li>
+<li>딥링크를 통한 직접 진입</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 공통 레이아웃</h3>
+<pre>+------------------------------------------------------------------+
+| Status Bar                                                        |
++------------------------------------------------------------------+
+| [<] RAFFLE                                                        |
++------------------------------------------------------------------+
+| 기본 정보 영역                                                    |
+|   아티스트명                                                      |
+|   타이틀                                                          |
+|   D-n  YYYY.MM.DD ~ MM.DD                                        |
+|   설명 (2줄 초과 시 더보기/접기)                                   |
++------------------------------------------------------------------+
+| 보상 정보 영역                                                    |
+|   보상 내역 (예: 팬싸인회 입장권 1장)                              |
++------------------------------------------------------------------+
+| 참여 통계 영역                                                    |
+|   누적 참여 유저 수         누적 응모권                            |
++------------------------------------------------------------------+
+| 내 참여 현황 영역                                                 |
+|   내 누적 응모권: {n}장                                           |
++------------------------------------------------------------------+
+| 응모 영역 (하단 고정)                                             |
+|   사용 가능한 응모권: {n}장                                       |
+|   [-] {수량} [+]                                                  |
+|   [응모하기]                                                      |
++------------------------------------------------------------------+</pre>
+<h3>2.2 영역별 구성요소</h3>
+<h5>Header 영역</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>좌측</td>
+<td>[<] 뒤로가기 버튼 (이전 화면으로 이동)</td>
+</tr>
+<tr>
+<td>타이틀</td>
+<td>"RAFFLE"</td>
+</tr>
+</tbody>
+</table>
+
+<h5>기본 정보 영역</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아티스트명</td>
+<td>어드민 [CEB-BO-FQ-102-CREATE] 아티스트</td>
+</tr>
+<tr>
+<td>타이틀</td>
+<td>어드민 [CEB-BO-FQ-102-CREATE] 타이틀</td>
+</tr>
+<tr>
+<td>D-day / 기간</td>
+<td>D-n YYYY.MM.DD ~ MM.DD (어드민 마감일시 연동)</td>
+</tr>
+<tr>
+<td>설명</td>
+<td>어드민 [CEB-BO-FQ-102-CREATE] 설명 (2줄 초과 시 더보기/접기 버튼 제공)</td>
+</tr>
+</tbody>
+</table>
+
+<h5>보상 정보 영역</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>보상 내역</td>
+<td>어드민 보상상세 (예: 팬싸인회 입장권 1장)</td>
+</tr>
+</tbody>
+</table>
+
+<h5>참여 통계 영역</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>누적 참여 유저 수</td>
+<td>현재까지 응모한 순수 유저 수 (중복 제외)</td>
+</tr>
+<tr>
+<td>누적 응모권</td>
+<td>전체 유저가 사용한 총 응모권 수</td>
+</tr>
+</tbody>
+</table>
+
+<h5>내 참여 현황 영역</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>내 누적 응모권</td>
+<td>유저 본인이 해당 Raffle에 사용한 총 응모권 수 (없으면 0장)</td>
+</tr>
+</tbody>
+</table>
+
+<h5>응모 영역 (하단 고정)</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>사용 가능한 응모권</td>
+<td>현재 유저가 보유한 잔여 응모권 수량</td>
+</tr>
+<tr>
+<td>수량 입력 (Stepper)</td>
+<td>숫자(Input) + [-]/[+] 컨트롤 (디폴트값: 1, 최소: 1). 사용 가능 응모권이 0장인 경우: 값 0, disabled 상태 (회색 처리)</td>
+</tr>
+<tr>
+<td>[응모하기] 버튼</td>
+<td>응모 API 호출. 보유량 부족 시 비활성화 또는 경고</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 초기 진입 시 상태 체크</h3>
+<p>서버에서 해당 래플의 상태(status)를 확인하여 분기 처리합니다.</p>
+<table>
+<thead>
+<tr>
+<th>래플 상태</th>
+<th>처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active (진행중)</td>
+<td>본 화면 유지</td>
+</tr>
+<tr>
+<td>Closed (마감, 집계중)</td>
+<td>MyTicket 리스트에서 "현재 집계 진행중입니다" 토스트 표시</td>
+</tr>
+<tr>
+<td>Ended (발표완료, 당첨)</td>
+<td>[CEB-FQ-203] Raffle 상세(당첨) 화면 표시</td>
+</tr>
+<tr>
+<td>Ended (발표완료, 미당첨)</td>
+<td>[CEB-FQ-204] Raffle 상세(미당첨) 화면 표시</td>
+</tr>
+</tbody>
+</table>
+
+<h5>데이터 바인딩</h5>
+<ul>
+<li>유저의 <code>current_entry_count</code> (내 응모 수)를 불러와 [내 참여 현황] 영역에 표시</li>
+<li>유저의 <code>available_ticket_balance</code> (보유 티켓)를 불러와 [응모 영역] 하단에 표시</li>
+</ul>
+<h3>3.2 응모 수량 입력 (Input)</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>규칙</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기본값</td>
+<td>1 (유저가 보유한 티켓이 1장 이상일 때)</td>
+</tr>
+<tr>
+<td>최소값</td>
+<td>1 (0 입력 시 자동으로 1로 보정)</td>
+</tr>
+<tr>
+<td>최대값</td>
+<td>유저의 사용 가능한 응모권 수량</td>
+</tr>
+<tr>
+<td>입력 방식</td>
+<td>[+]/[-] 버튼 터치로 증감 / 숫자 영역 터치 시 키패드 활성화되어 직접 입력 가능</td>
+</tr>
+<tr>
+<td>비활성 조건</td>
+<td>사용 가능한 응모권이 0장일 경우, Input은 0으로 고정 + Disabled 처리, [응모하기] 버튼도 비활성화</td>
+</tr>
+<tr>
+<td>1인당 최대 응모 한도</td>
+<td>없음 (Max Cap 정책 없음)</td>
+</tr>
+</tbody>
+</table>
+
+<h5>유효성 검사 (Validation)</h5>
+<ul>
+<li>보유 티켓이 0장이거나, 입력값이 보유량을 초과하면 [응모하기] 버튼을 비활성화</li>
+</ul>
+<h3>3.3 응모하기 버튼 동작</h3>
+<ul>
+<li>조건: 입력된 수량이 유효할 때 활성화</li>
+<li>클릭 시: [CEB-FQ-202-MD] Raffle 응모 모달을 호출</li>
+<li>파라미터로 입력된 수량(n)을 전달</li>
+</ul>
+<hr>
+<h2>4. 규칙/로직</h2>
+<h3>4.1 데이터 노출 조건</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>노출 조건</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>설명 더보기/접기</td>
+<td>설명 텍스트가 2줄을 초과할 경우에만 더보기 버튼 표시</td>
+</tr>
+<tr>
+<td>내 참여 현황</td>
+<td>로그인 유저에게만 표시</td>
+</tr>
+<tr>
+<td>응모 영역</td>
+<td>Active 상태에서만 활성화</td>
+</tr>
+</tbody>
+</table>
+
+<h3>4.2 상세 화면 체류 중 이벤트 마감 처리</h3>
+<p>유저가 상세 화면에 머무는 동안 서버에서 Raffle 상태가 진행중(Active) → 추첨대기(Closed)로 변경된 경우:</p>
+<ul>
+<li>유저가 [응모하기] 버튼 클릭 시 서버에서 EVENT_CLOSED 응답 반환</li>
+<li>알림 모달 표시: "이벤트가 종료되었습니다"</li>
+<li>[확인] 버튼 클릭 시 이전 탭(Event)으로 복귀</li>
+<li>예시: 상세화면 진입했는데 D-day 에서 다음날 00시로 넘어갔을 때</li>
+</ul>
+<h3>4.3 반응형 고려사항</h3>
+<ul>
+<li>최대 화면 너비: 768px</li>
+<li>768px 초과 시 중앙 정렬, 좌우 여백 자동 조절</li>
+</ul>
+<h3>4.4 다국어 처리</h3>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>다국어 범위</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아티스트명</td>
+<td>서버 데이터 (다국어 지원 여부 어드민 설정에 따름)</td>
+</tr>
+<tr>
+<td>타이틀</td>
+<td>서버 데이터 (다국어 지원 여부 어드민 설정에 따름)</td>
+</tr>
+<tr>
+<td>설명</td>
+<td>서버 데이터 (다국어 지원 여부 어드민 설정에 따름)</td>
+</tr>
+<tr>
+<td>시스템 UI 텍스트</td>
+<td>KO / EN / JP (앱 다국어 리소스)</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>5. 에러 및 예외상황</h2>
+<h5>티켓 부족</h5>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>보유 티켓보다 많은 수량 입력 또는 보유 티켓 0장</td>
+<td>입력창 하단에 "보유 티켓이 부족합니다." 에러 메시지 노출 (Red Color)</td>
+</tr>
+</tbody>
+</table>
+
+<h5>마감된 이벤트 접근</h5>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>상세 화면에 머무르던 중 이벤트 시간이 종료된 경우</td>
+<td>응모 시도 시 서버 에러(EVENT_CLOSED) 반환 → "이벤트가 마감되었습니다." 알림 후 새로고침하여 마감 UI로 전환</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>6. 연관화면ID</h2>
+<table>
+<thead>
+<tr>
+<th>화면ID</th>
+<th>화면명</th>
+<th>관계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEB-HOM-501-FQ</td>
+<td>홈 메인</td>
+<td>진입 경로</td>
+</tr>
+<tr>
+<td>CEB-FQ-201</td>
+<td>Event</td>
+<td>진입 경로 (RAFFLE 탭 > 진행중 항목 탭)</td>
+</tr>
+<tr>
+<td>CEB-FQ-202-MD</td>
+<td>Raffle 응모 모달</td>
+<td>[응모하기] 클릭 시 호출</td>
+</tr>
+<tr>
+<td>CEB-FQ-203</td>
+<td>Raffle 상세(당첨)</td>
+<td>Ended + 당첨 시 전환</td>
+</tr>
+<tr>
+<td>CEB-FQ-204</td>
+<td>Raffle 상세(미당첨)</td>
+<td>Ended + 미당첨 시 전환</td>
+</tr>
+<tr>
+<td>CEB-BO-FQ-205</td>
+<td>Raffle 상세(응모내역 탭)</td>
+<td>응모 데이터 적재 위치</td>
+</tr>
+</tbody>
+</table>
+
+<h5>참조 문서</h5>
+<ul>
+<li>[CEB-BO-FQ-102] 래플 관리 (백오피스)</li>
+</ul>
+<hr>
+<h2>변경 이력</h2>
+<table>
+<thead>
+<tr>
+<th>버전</th>
+<th>작성일</th>
+<th>작성자</th>
+<th>변경 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2025.12.24</td>
+<td>@Nill Yoo</td>
+<td>초안 작성</td>
+</tr>
+<tr>
+<td>v1.1</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>APP-GAM 양식 재작성</td>
+</tr>
+<tr>
+<td>v1.2</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>이벤트 마감 처리, 반응형 고려사항, 응모 인풋 디폴트값 추가 (Figma/BO-FQ 동기화)</td>
+</tr>
+<tr>
+<td>v1.3</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>BO 참조 ID 수정, CEB-FQ-101→CEB-HOM-501-FQ 통일, 연관화면 보완</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

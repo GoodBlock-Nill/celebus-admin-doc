@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-FQ-201-MD] 반려 사유 모달</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-FQ-201-MD] 반려 사유 모달</h1>
+<h2>Page Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Screen ID</td>
+<td>CEB-FQ-201-MD</td>
+</tr>
+<tr>
+<td>기획담당자</td>
+<td>@Nill Yoo</td>
+</tr>
+<tr>
+<td>디자인담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>개발담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>API</td>
+<td></td>
+</tr>
+<tr>
+<td>기능영역(Epic)</td>
+<td>FQ(팬퀘스트)</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>버전</td>
+<td>v1.2</td>
+</tr>
+<tr>
+<td>최근 업데이트</td>
+<td>2026.03.25</td>
+</tr>
+<tr>
+<td>Jira 링크</td>
+<td></td>
+</tr>
+<tr>
+<td>Figma 링크</td>
+<td></td>
+</tr>
+<tr>
+<td>다국어 영향</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Breadcrumb</td>
+<td>(해당 없음 - 모달)</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>1. 화면 목적</h2>
+<p>퀘스트 심사 결과가 '반려(Rejected)'된 구체적인 이유를 유저에게 전달합니다. 단순 실패 통보에 그치지 않고, 반려 사유를 개선하여 다시 참여(재도전)하도록 유도하는 모달입니다.</p>
+<h5>주요 기능</h5>
+<ul>
+<li>반려 사유 텍스트 표시 (Admin에서 선택/입력한 사유)</li>
+<li>[확인] 버튼으로 모달 닫기</li>
+<li>[재도전] 버튼으로 퀘스트 제출 화면 이동 유도</li>
+</ul>
+<h5>호출 경로</h5>
+<ul>
+<li>[CEB-FQ-201] Event > QUEST 탭 > 상태가 반려(Rejected)인 항목 탭 시 호출</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 공통 레이아웃</h3>
+<pre>+------------------------------------------------------------------+
+| (Dimmed 배경)                                                     |
+|                                                                   |
+|   +--------------------------------------------+                  |
+|   | 심사 결과 안내                               |                  |
+|   +--------------------------------------------+                  |
+|   |                                            |                  |
+|   | {반려 사유 메시지 텍스트}                     |                  |
+|   |                                            |                  |
+|   +--------------------------------------------+                  |
+|   | [재도전]                          [확인]     |                  |
+|   +--------------------------------------------+                  |
+|                                                                   |
++------------------------------------------------------------------+</pre>
+<h3>2.2 영역별 구성요소</h3>
+<h5>Container</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>유형</td>
+<td>화면 중앙 레이어 팝업 (모달)</td>
+</tr>
+<tr>
+<td>배경</td>
+<td>Dimmed 처리</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Title 영역</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>타이틀</td>
+<td>"심사 결과 안내"</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Content 영역</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>사유 메시지</td>
+<td>Admin에서 선택/입력한 반려 사유 텍스트 표시</td>
+</tr>
+<tr>
+<td>스타일</td>
+<td>줄바꿈 지원, 가독성 높은 폰트</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
+<h5>Action 영역</h5>
+<table>
+<thead>
+<tr>
+<th>버튼</th>
+<th>위치</th>
+<th>동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[재도전]</td>
+<td>하단 좌측</td>
+<td>모달 닫기 + 퀘스트 제출 화면(CEB-FQ-205)으로 이동</td>
+</tr>
+<tr>
+<td>[확인]</td>
+<td>하단 우측</td>
+<td>모달 닫기 (Quest 내역 화면 유지)</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 호출 조건</h3>
+<ul>
+<li>호출처: [CEB-FQ-201] Event > QUEST 탭</li>
+<li>조건: 리스트에서 상태가 Rejected(반려)인 항목을 탭(Tap)했을 때</li>
+</ul>
+<h3>3.2 데이터 바인딩</h3>
+<p>서버에서 내려준 reject_reason_code에 매핑된 메시지를 표시합니다.</p>
+<table>
+<thead>
+<tr>
+<th>코드명 (Code)</th>
+<th>운영자 노출명 (Admin Label)</th>
+<th>유저 노출 메시지 (Client Message)</th>
+<th>설명 및 가이드</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IMG_BLUR</td>
+<td>식별 불가 (흐림/어두움)</td>
+<td>이미지가 흐릿하거나 너무 어두워서 내용을 확인할 수 없습니다. 선명한 사진으로 다시 올려주세요!</td>
+<td>초점이 나갔거나 조명이 부족해 검증이 어려운 경우</td>
+</tr>
+<tr>
+<td>WRONG_OBJ</td>
+<td>대상 불일치 (다른 사물)</td>
+<td>퀘스트와 관련 없는 사진입니다. 미션 가이드를 다시 확인하고 올바른 대상을 촬영해 주세요.</td>
+<td>영수증 미션에 풍경 사진을 올리는 등 엉뚱한 이미지인 경우</td>
+</tr>
+<tr>
+<td>DUP_ENTRY</td>
+<td>중복 참여 의심</td>
+<td>이미 제출되었거나 다른 유저가 사용한 이미지와 동일한 것으로 확인됩니다. 직접 촬영한 새로운 사진으로 참여해 주세요.</td>
+<td>어뷰징(도용, 재사용) 방지용</td>
+</tr>
+<tr>
+<td>DATE_EXP</td>
+<td>날짜/조건 미달</td>
+<td>인증 기준(날짜, 시간, 필수 정보 등)이 충족되지 않았습니다. 유효 기간 내의 사진인지 확인해 주세요.</td>
+<td>영수증 날짜가 지났거나 스트리밍 시간이 부족한 경우</td>
+</tr>
+<tr>
+<td>ETC_INPUT</td>
+<td>기타 (직접 입력)</td>
+<td>{운영자가 입력한 사유 텍스트 노출}</td>
+<td>위 4가지 프리셋에 해당하지 않는 특수 상황용</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote><p>반려사유는 어드민 페이지에서 별도로 관리하며, 상단 내용은 참고용입니다.</p></blockquote>
+<h3>3.3 [재도전] 버튼 분기 처리</h3>
+<table>
+<thead>
+<tr>
+<th>퀘스트 상태</th>
+<th>[재도전] 버튼 동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>퀘스트 진행중</td>
+<td>모달 닫기 + 해당 퀘스트 제출화면(CEB-FQ-205)으로 이동</td>
+</tr>
+<tr>
+<td>퀘스트 마감</td>
+<td>버튼 비활성화 처리</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>4. 규칙/로직</h2>
+<h3>4.1 모달 닫기 규칙</h3>
+<ul>
+<li>[확인] 버튼 클릭 시 모달 닫힘</li>
+<li>[재도전] 버튼 클릭 시 모달 닫힘 + 화면 이동</li>
+<li>Dimmed 영역 탭 시 모달 닫힘 없음 (버튼으로만 닫기 가능)</li>
+</ul>
+<h3>4.2 다국어 UI 고려사항</h3>
+<ul>
+<li>기본 모달 너비: 기기 화면 기준 자동 조절</li>
+<li>일본어/영어 문구가 한국어보다 길 수 있으므로, 텍스트 줄바꿈이 발생할 경우 모달 너비를 최소 310px로 설정하여 가독성 확보</li>
+<li>반려사유 텍스트가 길 경우 최대 3줄까지 표시 후 말줄임(...) 처리</li>
+</ul>
+<hr>
+<h2>5. 에러 및 예외상황</h2>
+<h3>5.1 사유 데이터 누락</h3>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>서버 오류 등으로 사유 텍스트가 비어있는 경우</td>
+<td>기본 메시지 "운영 정책에 맞지 않아 반려되었습니다. 가이드를 다시 확인해주세요." 노출</td>
+</tr>
+</tbody>
+</table>
+
+<h3>5.2 퀘스트 종료 (Expired)</h3>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>처리</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>반려 확인 시점에 이미 해당 퀘스트 기간이 종료된 경우</td>
+<td>[재도전] 버튼 비활성화 처리</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>6. 연관화면ID</h2>
+<table>
+<thead>
+<tr>
+<th>화면ID</th>
+<th>화면명</th>
+<th>관계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEB-FQ-201</td>
+<td>Event</td>
+<td>호출 화면 (QUEST 탭 > 반려 항목 탭)</td>
+</tr>
+<tr>
+<td>CEB-FQ-205</td>
+<td>Quest 제출</td>
+<td>[재도전] 버튼 탭 시 이동</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>변경 이력</h2>
+<table>
+<thead>
+<tr>
+<th>버전</th>
+<th>일자</th>
+<th>작성자</th>
+<th>변경 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2025.12.24</td>
+<td>@Nill Yoo</td>
+<td>초안 작성</td>
+</tr>
+<tr>
+<td>v1.1</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>APP-GAM 양식 재작성</td>
+</tr>
+<tr>
+<td>v1.2</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>다국어 모달 너비 고려사항 추가 (Figma 동기화)</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-FQ-204] Raffle 상세(미당첨)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-FQ-204] Raffle 상세(미당첨)</h1>
+<h2>Page Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Screen ID</td>
+<td>CEB-FQ-204</td>
+</tr>
+<tr>
+<td>기획담당자</td>
+<td>@Nill Yoo</td>
+</tr>
+<tr>
+<td>디자인담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>개발담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>API</td>
+<td></td>
+</tr>
+<tr>
+<td>기능영역(Epic)</td>
+<td>FQ(팬퀘스트)</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>버전</td>
+<td>v1.3</td>
+</tr>
+<tr>
+<td>최근 업데이트</td>
+<td>2026.03.25</td>
+</tr>
+<tr>
+<td>Jira 링크</td>
+<td></td>
+</tr>
+<tr>
+<td>Figma 링크</td>
+<td></td>
+</tr>
+<tr>
+<td>다국어 영향</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Breadcrumb</td>
+<td>홈 > 팬퀘스트 > Event > Raffle 상세 (미당첨)</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>1. 화면 목적</h2>
+<p>Raffle 추첨 결과, 당첨되지 않은 유저(Loser)에게 결과를 정중하게 안내하는 화면입니다. 부정적인 감정을 최소화하기 위해 위로의 메시지를 전달하며, 서비스 이탈을 방지하고 Fan Quest 메인으로 돌아가 다른 활동을 이어가도록 유도합니다.</p>
+<h5>주요 기능</h5>
+<ul>
+<li>미당첨 결과 안내 (위로 이미지 + 메시지)</li>
+<li>위로 문구 랜덤 노출 (Variation)</li>
+<li>Event으로 복귀 유도</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>Event(CEB-FQ-201) > Raffle 탭 > '미당첨' 리스트 클릭</li>
+<li>결과 발표 Push 알림 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 레이아웃</h3>
+<pre>┌─────────────────────────────────────────────────────────────────┐
+│ Header                                                          │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │ [<] 당첨 결과                                               │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────────┤
+│ Content (세로 스크롤)                                           │
+│                                                                 │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │                                                             │ │
+│ │        [위로 일러스트 / 감성 이미지]                        │ │
+│ │        (채도 낮은 차분한 톤앤매너)                          │ │
+│ │                                                             │ │
+│ ├─────────────────────────────────────────────────────────────┤ │
+│ │                                                             │ │
+│ │     "아쉽게도 당첨되지 않았어요."                           │ │
+│ │      (H1, 중앙 정렬, 메인 문구)                            │ │
+│ │                                                             │ │
+│ │     "다음 기회에 다시 도전해주세요!                         │ │
+│ │      더 좋은 이벤트로 찾아올게요."                          │ │
+│ │      (Body, 중앙 정렬, 서브 문구)                          │ │
+│ │                                                             │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+├─────────────────────────────────────────────────────────────────┤
+│ Footer (Sticky)                                                 │
+│ ┌─────────────────────────────────────────────────────────────┐ │
+│ │             [        확인        ]                          │ │
+│ │             (Secondary / Line 스타일)                       │ │
+│ └─────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘</pre>
+<h3>영역별 구성요소</h3>
+<table>
+<thead>
+<tr>
+<th>영역</th>
+<th>구성요소</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Header</td>
+<td>[<] 뒤로가기 버튼</td>
+<td>이전 화면으로 복귀</td>
+</tr>
+<tr>
+<td></td>
+<td>타이틀</td>
+<td>"당첨 결과" (고정)</td>
+</tr>
+<tr>
+<td>Visual</td>
+<td>위로 이미지</td>
+<td>화면 중앙 상단, 아쉬움을 표현하는 감성적 일러스트 또는 아티스트 응원 이미지</td>
+</tr>
+<tr>
+<td></td>
+<td>스타일</td>
+<td>채도가 낮거나 차분한 톤앤매너 적용</td>
+</tr>
+<tr>
+<td>Message</td>
+<td>메인 문구</td>
+<td>"아쉽게도 당첨되지 않았어요." (H1, 중앙 정렬)</td>
+</tr>
+<tr>
+<td></td>
+<td>서브 문구</td>
+<td>"다음 기회에 다시 도전해주세요! 더 좋은 이벤트로 찾아올게요." (Body, 중앙 정렬)</td>
+</tr>
+<tr>
+<td>Footer</td>
+<td>확인 버튼</td>
+<td>하단 고정(Sticky), Secondary(Line) 또는 Text Button 스타일</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>뒤로가기</h3>
+<h5>트리거</h5>
+<ul>
+<li>Header 좌측 [<] 버튼 탭</li>
+</ul>
+<h5>동작</h5>
+<ol>
+<li>이전 화면으로 복귀</li>
+<li>네비게이션 스택에서 현재 화면 제거</li>
+</ol>
+<h3>위로 이미지</h3>
+<h5>표시 규칙</h5>
+<ul>
+<li>아쉬움을 표현하는 감성적인 일러스트 또는 아티스트의 응원 이미지</li>
+<li>채도가 낮거나 차분한 톤앤매너 적용</li>
+<li>당첨 화면(CEB-FQ-203)의 화려한 축하 이미지와 대비되는 차분한 분위기</li>
+</ul>
+<h3>위로 문구 (Variation)</h3>
+<h5>표시 규칙</h5>
+<ul>
+<li>단조로움을 피하기 위해 위로 문구를 랜덤하게 노출 (서버 또는 클라이언트 로직)</li>
+<li>매 진입 시 아래 문구 세트 중 하나를 랜덤 선택</li>
+</ul>
+<h5>문구 세트</h5>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>메인 문구</th>
+<th>서브 문구</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>아쉽게도 당첨되지 않았어요.</td>
+<td>다음 기회에 다시 도전해주세요! 더 좋은 이벤트로 찾아올게요.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>이번엔 아쉽지만, 다음엔 꼭 당첨될 거예요!</td>
+<td>(서브 문구 없음)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>다음 기회엔 꼭 좋은 소식 들려드릴게요 :)</td>
+<td>(서브 문구 없음)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>오늘의 운은 잠시 쉬는 중…</td>
+<td>내일은 다시 올라갈 거예요!</td>
+</tr>
+<tr>
+<td>5</td>
+<td>이번에는 놓쳤지만, 기회는 또 올 거예요!</td>
+<td>더 재미있는 이벤트로 다시 찾아올게요</td>
+</tr>
+<tr>
+<td>6</td>
+<td>헉! 아쉽게도 떨어졌어요.</td>
+<td>다음엔 우리 같이 꼭 잡아봐요</td>
+</tr>
+</tbody>
+</table>
+
+<h3>확인 버튼</h3>
+<h5>트리거</h5>
+<ul>
+<li>Footer 하단 고정 [확인] 버튼 탭</li>
+</ul>
+<h5>동작</h5>
+<ol>
+<li>Event(CEB-FQ-201) > Raffle 탭 화면으로 이동</li>
+<li>네비게이션 스택에서 현재 화면 제거</li>
+</ol>
+<h5>스타일</h5>
+<ul>
+<li>Secondary(Line) 또는 Text Button (너무 강조하지 않음)</li>
+<li>미당첨 화면의 차분한 톤에 맞춰 과도하게 눈에 띄지 않는 스타일 적용</li>
+</ul>
+<hr>
+<h2>4. 규칙/로직</h2>
+<h3>진입 조건 및 상태 체크</h3>
+<h5>유효성 검증</h5>
+<ol>
+<li>서버에서 해당 유저의 <code>is_winner</code> 값이 <code>false</code>인지 확인</li>
+<li>래플 상태가 <code>Ended</code>(종료)인지 확인</li>
+<li>두 조건이 모두 충족되어야 미당첨 화면 표시</li>
+</ol>
+<h3>화면 진입 시 동작</h3>
+<h5>데이터 로딩</h5>
+<ol>
+<li>Raffle ID를 파라미터로 전달받음</li>
+<li>서버에서 래플 결과 정보 조회 (<code>is_winner</code>, 래플 상태)</li>
+<li>Loading 상태 표시 (Skeleton UI)</li>
+<li>데이터 로딩 완료 후 화면 렌더링</li>
+<li>위로 문구 랜덤 선택 및 표시</li>
+</ol>
+<h3>다국어 처리</h3>
+<h5>지원 언어</h5>
+<ul>
+<li>한국어 (KO)</li>
+<li>영어 (EN)</li>
+<li>일본어 (JP)</li>
+</ul>
+<h5>적용 대상</h5>
+<ul>
+<li>메인 위로 문구</li>
+<li>서브 위로 문구</li>
+<li>버튼 텍스트</li>
+</ul>
+<h5>표시 규칙</h5>
+<ul>
+<li>사용자 앱 언어 설정에 따라 자동 선택</li>
+<li>해당 언어 데이터가 없는 경우 기본 언어(KO) 표시</li>
+</ul>
+<hr>
+<h2>5. 에러 및 예외상황</h2>
+<h3>당첨자 접근 오류</h3>
+<h5>상황</h5>
+<ul>
+<li>실제 당첨자가 시스템 오류로 미당첨 화면을 보게 되는 경우 (치명적)</li>
+</ul>
+<h5>처리</h5>
+<ol>
+<li>진입 시 <code>is_winner</code> API 재조회</li>
+<li><code>true</code>일 경우 즉시 당첨 화면(CEB-FQ-203)으로 강제 이동(Replace)</li>
+<li>에러 토스트 없음 (자연스러운 화면 전환)</li>
+</ol>
+<h3>데이터 로딩 실패</h3>
+<h5>상황</h5>
+<ul>
+<li>API 호출 실패 또는 네트워크 오류</li>
+</ul>
+<h5>처리</h5>
+<ol>
+<li>Error 상태 표시</li>
+<li>에러 메시지: "정보를 불러오는 데 실패했습니다."</li>
+<li>[다시 시도] 버튼 제공</li>
+<li>버튼 탭 시 데이터 재로딩</li>
+</ol>
+<h3>Loading 상태</h3>
+<h5>처리</h5>
+<ol>
+<li>Skeleton UI 표시
+<ul>
+<li>위로 이미지: 회색 사각형</li>
+<li>메인 문구: 회색 박스 (1줄)</li>
+<li>서브 문구: 회색 박스 (2줄)</li>
+</ul>
+</li>
+<li>로딩 완료 시 실제 데이터로 전환 (페이드인 애니메이션)</li>
+</ol>
+<h3>네트워크 연결 끊김</h3>
+<h5>상황</h5>
+<ul>
+<li>오프라인 상태에서 화면 진입 또는 데이터 로딩 시도</li>
+</ul>
+<h5>처리</h5>
+<ol>
+<li>Error 상태 표시</li>
+<li>에러 메시지: "네트워크 연결을 확인해주세요."</li>
+<li>[다시 시도] 버튼 제공</li>
+<li>온라인 복구 시 자동 재로딩</li>
+</ol>
+<hr>
+<h2>6. 연관화면ID</h2>
+<table>
+<thead>
+<tr>
+<th>화면ID</th>
+<th>화면명</th>
+<th>관계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEB-FQ-201</td>
+<td>Event (Raffle 탭)</td>
+<td>진입 화면, 확인 버튼 클릭 시 이동</td>
+</tr>
+<tr>
+<td>CEB-FQ-202</td>
+<td>Raffle 상세(진행중)</td>
+<td>상태 전환 시 진입 (Active→Ended, 미당첨)</td>
+</tr>
+<tr>
+<td>CEB-FQ-203</td>
+<td>Raffle 상세 (당첨)</td>
+<td>is_winner=true 시 이동</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>변경이력</h2>
+<table>
+<thead>
+<tr>
+<th>버전</th>
+<th>일자</th>
+<th>작성자</th>
+<th>변경 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2025.12.24</td>
+<td>@Nill Yoo</td>
+<td>초안 작성</td>
+</tr>
+<tr>
+<td>v1.1</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>APP-GAM 양식 재작성</td>
+</tr>
+<tr>
+<td>v1.2</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>BO-FQ 용어 통일</td>
+</tr>
+<tr>
+<td>v1.3</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>My Ticket→Event 통일, 양식 통일, 연관화면 보완</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

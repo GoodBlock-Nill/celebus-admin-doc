@@ -1,71 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-GAM-206-SPECTATE] 관전 모드</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
 <h1>[CEB-GAM-206-SPECTATE] 관전 모드</h1>
 
 <h2>Page Properties</h2>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Key</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">Value</th>
+<th>Key</th>
+<th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Screen ID</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-SPECTATE</td>
+<td>Screen ID</td>
+<td>CEB-GAM-206-SPECTATE</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기획담당자</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
+<td>기획담당자</td>
+<td>@Nill Yoo</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">디자인담당자</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+<td>디자인담당자</td>
+<td></td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">개발담당자</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+<td>개발담당자</td>
+<td></td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">API</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+<td>API</td>
+<td></td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기능영역(Epic)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">GAM(게임)</td>
+<td>기능영역(Epic)</td>
+<td>GAM(게임)</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상태</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Draft</td>
+<td>상태</td>
+<td>Draft</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
+<td>버전</td>
+<td>v1.4</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
+<td>최근 업데이트</td>
+<td>2026.02.24</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+<td>Jira 링크</td>
+<td></td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Figma 링크</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+<td>Figma 링크</td>
+<td></td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">다국어 영향</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Yes</td>
+<td>다국어 영향</td>
+<td>Yes</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Breadcrumb</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Game 탭 &gt; 게임존 메인 &gt; Survival Trivia &gt; {게임 타이틀} &gt; 관전</td>
+<td>Breadcrumb</td>
+<td>Game 탭 &gt; 게임존 메인 &gt; Survival Trivia &gt; {게임 타이틀} &gt; 관전</td>
 </tr>
 </tbody>
 </table>
 
-<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+<hr>
 
 <h2>1. 화면 목적</h2>
 
@@ -73,7 +151,7 @@
 
 <blockquote><p>이 문서는 탈락 후 관전 모드 진행 화면을 다룹니다. 게임 진행(CEB-GAM-206), 탈락 모달(CEB-GAM-206-MD-ELIMINATE), 나가기 모달(CEB-GAM-206-MD-LEAVE), 게임 결과(CEB-GAM-206-RESULT)는 별도 문서입니다.</p></blockquote>
 
-<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+<hr>
 
 <h2>2. UI 설명</h2>
 
@@ -81,7 +159,7 @@
 
 <h4>A. 문제 관전 (Stage N)</h4>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+<pre>
 ┌─────────────────────────────────────────────────────────────────┐
 │ Header                                                            │
 │ ┌─────────────────────────────────────────────────────────────┐ │
@@ -118,7 +196,7 @@
 
 <h4>B. 정답 공개 (관전 모드)</h4>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+<pre>
 ┌─────────────────────────────────────────────────────────────────┐
 │ [&lt;]                                                               │
 ├─────────────────────────────────────────────────────────────────┤
@@ -151,7 +229,7 @@
 
 <h4>C. 키보드 활성화 (채팅 입력 시)</h4>
 
-<pre style="background-color: #f4f5f7; border: 1px solid #dfe1e6; border-radius: 3px; padding: 12px; overflow-x: auto; font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.4; white-space: pre;">
+<pre>
 ┌─────────────────────────────────────────────────────────────────┐
 │ [&lt;]                                                               │
 ├─────────────────────────────────────────────────────────────────┤
@@ -173,69 +251,69 @@
 
 <h3>영역별 구성요소</h3>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">영역</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">구성요소</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+<th>영역</th>
+<th>구성요소</th>
+<th>설명</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Header</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[&lt;] 뒤로가기 버튼</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">나가기 확인 모달(CEB-GAM-206-MD-LEAVE) 표시</td>
+<td>Header</td>
+<td>[&lt;] 뒤로가기 버튼</td>
+<td>나가기 확인 모달(CEB-GAM-206-MD-LEAVE) 표시</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">상태 바</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[관전중] 배지</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보라색 또는 회색 배지 (피그마 참조), 하트 아이콘 영역 대신 표시</td>
+<td>상태 바</td>
+<td>[관전중] 배지</td>
+<td>보라색 또는 회색 배지 (피그마 참조), 하트 아이콘 영역 대신 표시</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{N}/{총문제수}</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 진행 중인 스테이지 / 전체 문제 수 (예: "3/10")</td>
+<td></td>
+<td>{N}/{총문제수}</td>
+<td>현재 진행 중인 스테이지 / 전체 문제 수 (예: "3/10")</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">👥 참여자 수</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 생존 참여자 수 (매 스테이지 정답 공개 이벤트 시 갱신)</td>
+<td></td>
+<td>👥 참여자 수</td>
+<td>현재 생존 참여자 수 (매 스테이지 정답 공개 이벤트 시 갱신)</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이머 바</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">프로그레스 바</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206과 동일, 좌→우 감소</td>
+<td>타이머 바</td>
+<td>프로그레스 바</td>
+<td>CEB-GAM-206과 동일, 좌→우 감소</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 영역</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 텍스트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 스테이지 문제</td>
+<td>문제 영역</td>
+<td>문제 텍스트</td>
+<td>현재 스테이지 문제</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지 영역</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지 4개</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">비활성화 상태 (회색 처리, 탭 불가)</td>
+<td>선택지 영역</td>
+<td>선택지 4개</td>
+<td>비활성화 상태 (회색 처리, 탭 불가)</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">채팅 영역</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">메시지 리스트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">닉네임 + 메시지, 실시간 스트림</td>
+<td>채팅 영역</td>
+<td>메시지 리스트</td>
+<td>닉네임 + 메시지, 실시간 스트림</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">💬 채팅 버튼</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">우측 하단, 탭 시 키보드 오픈 + 입력 필드 활성화</td>
+<td></td>
+<td>💬 채팅 버튼</td>
+<td>우측 하단, 탭 시 키보드 오픈 + 입력 필드 활성화</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">입력 필드</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">키보드 모드에서 텍스트 입력 + [▶] 전송 버튼</td>
+<td></td>
+<td>입력 필드</td>
+<td>키보드 모드에서 텍스트 입력 + [▶] 전송 버튼</td>
 </tr>
 </tbody>
 </table>
 
-<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+<hr>
 
 <h2>3. 화면 내 기능설명</h2>
 
@@ -286,25 +364,25 @@
 
 <h5>제한 규칙</h5>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">규칙</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+<th>규칙</th>
+<th>내용</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">욕설 필터링</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">금칙어 목록 기반 자동 마스킹 처리 ("***")</td>
+<td>욕설 필터링</td>
+<td>금칙어 목록 기반 자동 마스킹 처리 ("***")</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">발송 제한</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">초당 1회 (rate limit), 초과 시 발송 무시</td>
+<td>발송 제한</td>
+<td>초당 1회 (rate limit), 초과 시 발송 무시</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문자 수 제한</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최대 100자, 초과 입력 불가</td>
+<td>문자 수 제한</td>
+<td>최대 100자, 초과 입력 불가</td>
 </tr>
 </tbody>
 </table>
@@ -343,22 +421,22 @@
 <li>관전자 결과 화면: 탈락자 결과 표시 + 하트 1개 지급 안내</li>
 </ol>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+<th>항목</th>
+<th>설명</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">마지막 스테이지 RESULT 전환</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">마지막 스테이지 정답 공개 5초 표시 후 CEB-GAM-206-RESULT로 자동 전환 (다른 스테이지와 동일 패턴). 하트는 정답 공개 이벤트 수신 시점에 서버에서 지급 (화면 전환과 무관)</td>
+<td>마지막 스테이지 RESULT 전환</td>
+<td>마지막 스테이지 정답 공개 5초 표시 후 CEB-GAM-206-RESULT로 자동 전환 (다른 스테이지와 동일 패턴). 하트는 정답 공개 이벤트 수신 시점에 서버에서 지급 (화면 전환과 무관)</td>
 </tr>
 </tbody>
 </table>
 
-<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+<hr>
 
 <h2>4. 규칙/로직</h2>
 
@@ -370,55 +448,55 @@
 
 <h3>하트 보상 규칙</h3>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">하트 지급</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고</th>
+<th>조건</th>
+<th>하트 지급</th>
+<th>비고</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">끝까지 관전 완료</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">+1개</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">마지막 스테이지 정답 공개 이벤트를 서버로부터 수신한 시점에 자동 지급</td>
+<td>끝까지 관전 완료</td>
+<td>+1개</td>
+<td>마지막 스테이지 정답 공개 이벤트를 서버로부터 수신한 시점에 자동 지급</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">중도 이탈 (나가기)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미지급</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">나가기 모달에서 "나가기" 선택 시</td>
+<td>중도 이탈 (나가기)</td>
+<td>미지급</td>
+<td>나가기 모달에서 "나가기" 선택 시</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">네트워크 끊김 후 미복귀</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미지급</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">재연결 실패 시 이탈로 처리</td>
+<td>네트워크 끊김 후 미복귀</td>
+<td>미지급</td>
+<td>재연결 실패 시 이탈로 처리</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">이미 최대 보유(3개)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">미지급</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 보유 상한(3개) 초과 불가</td>
+<td>이미 최대 보유(3개)</td>
+<td>미지급</td>
+<td>하트 보유 상한(3개) 초과 불가</td>
 </tr>
 </tbody>
 </table>
 
 <blockquote><p><strong>관전 완료 판정 기준</strong>: 마지막 스테이지의 정답 공개 이벤트를 서버로부터 수신한 시점을 기준으로 합니다. 클라이언트 상태가 아닌 서버 이벤트 수신 여부로 판단합니다.</p></blockquote>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">설명</th>
+<th>항목</th>
+<th>설명</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">하트 지급 기준</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서버가 마지막 스테이지 정답 공개 이벤트 발생 시점에 관전 세션이 활성(WebSocket 연결 중)이면 하트 지급. 세션이 끊어져 있으면 미지급</td>
+<td>하트 지급 기준</td>
+<td>서버가 마지막 스테이지 정답 공개 이벤트 발생 시점에 관전 세션이 활성(WebSocket 연결 중)이면 하트 지급. 세션이 끊어져 있으면 미지급</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">재연결 후 게임 종료</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">재연결 성공 시 서버 로그 기준: 마지막 이벤트 시점에 세션이 활성이었으면 지급 완료 상태, 끊겨 있었으면 미지급</td>
+<td>재연결 후 게임 종료</td>
+<td>재연결 성공 시 서버 로그 기준: 마지막 이벤트 시점에 세션이 활성이었으면 지급 완료 상태, 끊겨 있었으면 미지급</td>
 </tr>
 </tbody>
 </table>
@@ -433,29 +511,29 @@
 
 <h4>관전 기회는 1회</h4>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">시나리오</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">관전 가능 여부</th>
+<th>시나리오</th>
+<th>관전 가능 여부</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ELIMINATE 모달에서 [관전하고 하트 받기] 선택</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 모드 진입</td>
+<td>ELIMINATE 모달에서 [관전하고 하트 받기] 선택</td>
+<td>관전 모드 진입</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ELIMINATE 모달에서 [나가기] 선택</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 불가, 영구 소멸</td>
+<td>ELIMINATE 모달에서 [나가기] 선택</td>
+<td>관전 불가, 영구 소멸</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ELIMINATE 모달 5초 유예 만료 (미선택)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-204로 자동 이동, 관전 불가, 영구 소멸</td>
+<td>ELIMINATE 모달 5초 유예 만료 (미선택)</td>
+<td>CEB-GAM-204로 자동 이동, 관전 불가, 영구 소멸</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 중 LEAVE 모달에서 [나가기] 선택</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 종료, 재진입 불가</td>
+<td>관전 중 LEAVE 모달에서 [나가기] 선택</td>
+<td>관전 종료, 재진입 불가</td>
 </tr>
 </tbody>
 </table>
@@ -471,30 +549,30 @@
 
 <h3>정답/오답 시각 표시 (관전 모드)</h3>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">상태</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">테두리 색상</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">아이콘</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">배지</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비율 표시</th>
+<th>상태</th>
+<th>테두리 색상</th>
+<th>아이콘</th>
+<th>배지</th>
+<th>비율 표시</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">정답 선택지</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">파란색</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">⭕</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">없음</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O</td>
+<td>정답 선택지</td>
+<td>파란색</td>
+<td>⭕</td>
+<td>없음</td>
+<td>O</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">일반 선택지</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기본 (회색)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">없음</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">없음</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O</td>
+<td>일반 선택지</td>
+<td>기본 (회색)</td>
+<td>없음</td>
+<td>없음</td>
+<td>O</td>
 </tr>
 </tbody>
 </table>
@@ -503,34 +581,34 @@
 
 <h3>다국어 적용</h3>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">요소</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">다국어 적용</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">비고</th>
+<th>요소</th>
+<th>다국어 적용</th>
+<th>비고</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">[관전중] 배지</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O (KO/EN/JP)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">KO: 관전중, EN: Spectating, JP: 観戦中</td>
+<td>[관전중] 배지</td>
+<td>O (KO/EN/JP)</td>
+<td>KO: 관전중, EN: Spectating, JP: 観戦中</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">문제 텍스트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서버에서 해당 언어로 제공</td>
+<td>문제 텍스트</td>
+<td>O</td>
+<td>서버에서 해당 언어로 제공</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">선택지 텍스트</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">O</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">서버에서 해당 언어로 제공</td>
+<td>선택지 텍스트</td>
+<td>O</td>
+<td>서버에서 해당 언어로 제공</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">채팅 메시지</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">X</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">사용자 입력 그대로</td>
+<td>채팅 메시지</td>
+<td>X</td>
+<td>사용자 입력 그대로</td>
 </tr>
 </tbody>
 </table>
@@ -542,156 +620,159 @@
 <li>시스템 설정 또는 앱 내 설정에 따라 자동 전환</li>
 </ul>
 
-<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+<hr>
 
 <h2>5. 에러 및 예외상황</h2>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">에러 상황</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">에러 메시지</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">처리 방법</th>
+<th>에러 상황</th>
+<th>에러 메시지</th>
+<th>처리 방법</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">실시간 스트림 끊김</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"연결이 끊어졌습니다."</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">자동 재연결 시도 (최대 3회), 실패 시 CEB-GAM-204 이동, 하트 미지급</td>
+<td>실시간 스트림 끊김</td>
+<td>"연결이 끊어졌습니다."</td>
+<td>자동 재연결 시도 (최대 3회), 실패 시 CEB-GAM-204 이동, 하트 미지급</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 비정상 종료 (서버)</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">"게임이 비정상 종료되었습니다. 참여 GP가 환불됩니다."</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">에러 안내 + CEB-GAM-204 이동. 하트 일괄 미지급. GP 전액 환불</td>
+<td>게임 비정상 종료 (서버)</td>
+<td>"게임이 비정상 종료되었습니다. 참여 GP가 환불됩니다."</td>
+<td>에러 안내 + CEB-GAM-204 이동. 하트 일괄 미지급. GP 전액 환불</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">비정상 종료 조건</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">운영자 강제 취소, 서버 장애 등으로 게임이 정상 진행되지 못한 경우</td>
+<td>비정상 종료 조건</td>
+<td>-</td>
+<td>운영자 강제 취소, 서버 장애 등으로 게임이 정상 진행되지 못한 경우</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">채팅 전송 실패</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">전송 실패 표시 (빨간색 느낌표), 재전송 없음 (다시 입력)</td>
+<td>채팅 전송 실패</td>
+<td>-</td>
+<td>전송 실패 표시 (빨간색 느낌표), 재전송 없음 (다시 입력)</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">브라우저 탭 비활성화 / 화면 잠금</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">WebSocket 끊김 감지 시 자동 재연결 최대 3회 (3초 간격). 성공 → 서버에서 현재 게임 상태 조회 후 관전 계속. 실패 → CEB-GAM-204 이동 (하트 미지급). 게임 종료 → RESULT(C) (하트는 서버 판단)</td>
+<td>브라우저 탭 비활성화 / 화면 잠금</td>
+<td>-</td>
+<td>WebSocket 끊김 감지 시 자동 재연결 최대 3회 (3초 간격). 성공 → 서버에서 현재 게임 상태 조회 후 관전 계속. 실패 → CEB-GAM-204 이동 (하트 미지급). 게임 종료 → RESULT(C) (하트는 서버 판단)</td>
 </tr>
 </tbody>
 </table>
 
 <h3>페이지 새로고침 처리</h3>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">처리</th>
+<th>항목</th>
+<th>처리</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">새로고침 방지</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CSS overscroll-behavior: none으로 pull-to-refresh 차단</td>
+<td>새로고침 방지</td>
+<td>CSS overscroll-behavior: none으로 pull-to-refresh 차단</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">beforeunload</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 중 새로고침/탭 닫기 시 브라우저 기본 경고 표시</td>
+<td>beforeunload</td>
+<td>관전 중 새로고침/탭 닫기 시 브라우저 기본 경고 표시</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">세션 복구</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">페이지 로드 시 서버 API로 활성 세션 확인. 있으면 관전 모드로 복귀 (WebSocket 재연결). 게임 종료 시 RESULT(C)로 이동</td>
+<td>세션 복구</td>
+<td>페이지 로드 시 서버 API로 활성 세션 확인. 있으면 관전 모드로 복귀 (WebSocket 재연결). 게임 종료 시 RESULT(C)로 이동</td>
 </tr>
 </tbody>
 </table>
 
-<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+<hr>
 
 <h2>6. 연관화면ID</h2>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면ID</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">화면명</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">관계</th>
+<th>화면ID</th>
+<th>화면명</th>
+<th>관계</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">트리비아 상세</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 전 게임 진행 화면</td>
+<td>CEB-GAM-206</td>
+<td>트리비아 상세</td>
+<td>탈락 전 게임 진행 화면</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-MD-ELIMINATE</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">탈락 모달</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 모드 진입 트리거</td>
+<td>CEB-GAM-206-MD-ELIMINATE</td>
+<td>탈락 모달</td>
+<td>관전 모드 진입 트리거</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-MD-LEAVE</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">나가기 확인</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 중 뒤로가기 시 모달 표시</td>
+<td>CEB-GAM-206-MD-LEAVE</td>
+<td>나가기 확인</td>
+<td>관전 중 뒤로가기 시 모달 표시</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-206-RESULT</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 결과</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 종료 시 자동 전환</td>
+<td>CEB-GAM-206-RESULT</td>
+<td>게임 결과</td>
+<td>게임 종료 시 자동 전환</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">CEB-GAM-204</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">트리비아 홈</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">나가기 또는 오류 시 이동</td>
+<td>CEB-GAM-204</td>
+<td>트리비아 홈</td>
+<td>나가기 또는 오류 시 이동</td>
 </tr>
 </tbody>
 </table>
 
-<hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
+<hr>
 
 <h2>변경 이력</h2>
 
-<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+<table>
 <thead>
 <tr>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">버전</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성일</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
-<th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+<th>버전</th>
+<th>작성일</th>
+<th>작성자</th>
+<th>변경 내용</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.0</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최초 작성</td>
+<td>v1.0</td>
+<td>2026.02.20</td>
+<td>@Nill Yoo</td>
+<td>최초 작성</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.1</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.20</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">관전 완료 기준 명확화(서버 이벤트 수신 시점), 관전 재진입 불가 명시, 정답 공개 5초 고정</td>
+<td>v1.1</td>
+<td>2026.02.20</td>
+<td>@Nill Yoo</td>
+<td>관전 완료 기준 명확화(서버 이벤트 수신 시점), 관전 재진입 불가 명시, 정답 공개 5초 고정</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.2</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">유저플로우 갭 분석 및 PWA 환경 고려사항 반영</td>
+<td>v1.2</td>
+<td>2026.02.24</td>
+<td>@Nill Yoo</td>
+<td>유저플로우 갭 분석 및 PWA 환경 고려사항 반영</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.3</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2차 플로우 검증: 탭 복귀 서버 동기화·비정상 종료 규칙·참여자 수 갱신·선택지 비활성 반영</td>
+<td>v1.3</td>
+<td>2026.02.24</td>
+<td>@Nill Yoo</td>
+<td>2차 플로우 검증: 탭 복귀 서버 동기화·비정상 종료 규칙·참여자 수 갱신·선택지 비활성 반영</td>
 </tr>
 <tr>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v1.4</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.02.24</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
-<td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">3차 최종 검증: 디자이너/개발자 질문 최소화를 위한 36건 명확화</td>
+<td>v1.4</td>
+<td>2026.02.24</td>
+<td>@Nill Yoo</td>
+<td>3차 최종 검증: 디자이너/개발자 질문 최소화를 위한 36건 명확화</td>
 </tr>
 </tbody>
 </table>
+
+</body>
+</html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-FQ-201] Event</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-FQ-201] Event</h1>
+<h2>Page Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Screen ID</td>
+<td>CEB-FQ-201</td>
+</tr>
+<tr>
+<td>기획담당자</td>
+<td>@Nill Yoo</td>
+</tr>
+<tr>
+<td>디자인담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>개발담당자</td>
+<td></td>
+</tr>
+<tr>
+<td>API</td>
+<td></td>
+</tr>
+<tr>
+<td>기능영역(Epic)</td>
+<td>FQ(팬퀘스트)</td>
+</tr>
+<tr>
+<td>상태</td>
+<td>Draft</td>
+</tr>
+<tr>
+<td>버전</td>
+<td>v1.4</td>
+</tr>
+<tr>
+<td>최근 업데이트</td>
+<td>2026.03.26</td>
+</tr>
+<tr>
+<td>Jira 링크</td>
+<td></td>
+</tr>
+<tr>
+<td>Figma 링크</td>
+<td></td>
+</tr>
+<tr>
+<td>다국어 영향</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Breadcrumb</td>
+<td>홈 > 팬퀘스트 > Event</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>1. 화면 목적</h2>
+<p>유저가 현재 보유한 사용 가능한 응모권(Ticket)의 총 수량을 명확하게 확인합니다. 응모권의 획득(In)과 사용(Out) 내역을 투명하게 제공하여 재화 관리에 대한 신뢰를 줍니다. 특히, 퀘스트 심사 현황(승인/반려/대기)과 래플 당첨 결과를 한곳에서 조회하고 관리하는 '마이페이지' 역할을 수행하는 화면입니다.</p>
+<h5>주요 기능</h5>
+<ul>
+<li>보유 응모권(Ticket) 잔액 실시간 확인</li>
+<li>QUEST 탭: 퀘스트 참여 이력 및 심사 현황 조회 (지급완료/검토중/반려)</li>
+<li>RAFFLE 탭: 래플 응모 이력 및 당첨 결과 조회 (진행중/집계중/당첨/미당첨)</li>
+<li>반려 항목 탭 시 반려 사유 모달(CEB-FQ-201-MD) 호출</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>홈 메인(CEB-HOM-501-FQ) > 헤더 티켓 아이콘 탭 시 이동</li>
+<li>홈 메인(CEB-HOM-501-FQ) > Event 진입</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 공통 레이아웃</h3>
+<pre>+------------------------------------------------------------------+
+| Status Bar                                                        |
++------------------------------------------------------------------+
+| [<] Event                                                         |
++------------------------------------------------------------------+
+| 사용 가능한 티켓                                                   |
+| {N} (Big Font, Primary Color)                                     |
++------------------------------------------------------------------+
+| [QUEST]  [RAFFLE]                    (Sticky 2단 탭)              |
++------------------------------------------------------------------+
+| [전체] [지급완료] [검토중] [반려]     (상태 필터 칩)                |
++------------------------------------------------------------------+
+| 날짜별 리스트                                                      |
+| ┌─────────────────────────────────┐                               |
+| │ [아티스트 뱃지]  타이틀           │                               |
+| │ 참여일  [상태 뱃지]  보상정보     │                               |
+| └─────────────────────────────────┘                               |
+| ┌─────────────────────────────────┐                               |
+| │ ...                             │                               |
+| └─────────────────────────────────┘                               |
++------------------------------------------------------------------+</pre>
+<h3>2.2 영역별 구성요소</h3>
+<h5>Header 영역</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>좌측</td>
+<td>[<] 뒤로가기 버튼 (이전 화면으로 복귀)</td>
+</tr>
+<tr>
+<td>타이틀</td>
+<td>"Event"</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Summary 영역 (Total Balance)</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>보유 수량</td>
+<td>서버에서 호출한 유저의 current_ticket_balance 값을 실시간 표시</td>
+</tr>
+<tr>
+<td>표시 형식</td>
+<td>화면 최상단 중앙에 강조된 숫자 (Big Font) + 레이블 "사용 가능한 티켓"</td>
+</tr>
+<tr>
+<td>단위</td>
+<td>숫자 뒤에 '장' 또는 'Tickets' 단위 표기</td>
+</tr>
+<tr>
+<td>스타일</td>
+<td>Primary Color 적용하여 시각적 주목도 높임</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Tab 영역</h5>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>구조</td>
+<td>Sticky(상단 고정) 2단 탭</td>
+</tr>
+<tr>
+<td>Tab 1</td>
+<td>QUEST (획득 내역)</td>
+</tr>
+<tr>
+<td>Tab 2</td>
+<td>RAFFLE (사용 내역)</td>
+</tr>
+<tr>
+<td>인디케이터</td>
+<td>선택된 탭 하단에 인디케이터(Bar) 표시</td>
+</tr>
+<tr>
+<td>초기 상태</td>
+<td>QUEST 탭이 기본 선택된 상태로 진입</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Filter 영역 (상태 필터)</h5>
+<table>
+<thead>
+<tr>
+<th>탭</th>
+<th>필터 옵션</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>QUEST</td>
+<td>전체, 지급완료, 검토중, 반려</td>
+</tr>
+<tr>
+<td>RAFFLE</td>
+<td>전체, 진행중, 집계중, 당첨, 미당첨</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote><p>탭 하단에 위치한 칩(Chip) 또는 드롭다운 형태. 상세 스타일은 피그마 참조</p></blockquote>
+<h5>List 영역 - Quest 아이템</h5>
+<table>
+<thead>
+<tr>
+<th>요소</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아티스트 뱃지</td>
+<td>해당 Quest의 아티스트 뱃지</td>
+</tr>
+<tr>
+<td>타이틀</td>
+<td>Quest 이벤트명</td>
+</tr>
+<tr>
+<td>참여일</td>
+<td>참여 일시</td>
+</tr>
+<tr>
+<td>처리상태 뱃지</td>
+<td>지급완료 (Green Badge) / 검토중 (Orange Badge) / 반려 (Red Badge)</td>
+</tr>
+<tr>
+<td>보상정보</td>
+<td>NFT 획득여부, 응모권 +N (획득수)</td>
+</tr>
+</tbody>
+</table>
+
+<h5>List 영역 - Raffle 아이템</h5>
+<table>
+<thead>
+<tr>
+<th>요소</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>아티스트 뱃지</td>
+<td>해당 Raffle의 아티스트 뱃지</td>
+</tr>
+<tr>
+<td>타이틀</td>
+<td>Raffle 이벤트명</td>
+</tr>
+<tr>
+<td>응모일</td>
+<td>응모 일시</td>
+</tr>
+<tr>
+<td>처리상태 뱃지</td>
+<td>진행중 / 집계중 / 당첨 / 미당첨</td>
+</tr>
+<tr>
+<td>참여정보</td>
+<td>사용한 티켓 수</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 QUEST 탭 상호작용</h3>
+<table>
+<thead>
+<tr>
+<th>상태</th>
+<th>탭 동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>반려</td>
+<td>탭 시 [CEB-FQ-201-MD] 반려 사유 모달 호출</td>
+</tr>
+<tr>
+<td>지급완료</td>
+<td>탭하여도 별도 동작 없음</td>
+</tr>
+<tr>
+<td>검토중</td>
+<td>"현재 검토 진행 중입니다." 토스트 노출</td>
+</tr>
+</tbody>
+</table>
+
+<h3>3.2 RAFFLE 탭 상호작용</h3>
+<table>
+<thead>
+<tr>
+<th>상태</th>
+<th>탭 동작</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>진행중</td>
+<td>탭 시 [CEB-FQ-202] Raffle 상세(진행중) 화면으로 이동</td>
+</tr>
+<tr>
+<td>집계중</td>
+<td>"현재 집계중입니다" 토스트 노출</td>
+</tr>
+<tr>
+<td>당첨</td>
+<td>탭 시 [CEB-FQ-203] Raffle 상세(당첨) 화면으로 이동</td>
+</tr>
+<tr>
+<td>미당첨</td>
+<td>탭 시 [CEB-FQ-204] Raffle 상세(미당첨) 화면으로 이동</td>
+</tr>
+</tbody>
+</table>
+
+<h3>3.3 반려 사유 코드 정의</h3>
+<table>
+<thead>
+<tr>
+<th>코드명 (Code)</th>
+<th>운영자 노출명 (Admin Label)</th>
+<th>유저 노출 메시지 (Client Message)</th>
+<th>설명 및 가이드</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IMG_BLUR</td>
+<td>식별 불가 (흐림/어두움)</td>
+<td>이미지가 흐릿하거나 너무 어두워서 내용을 확인할 수 없습니다. 선명한 사진으로 다시 올려주세요!</td>
+<td>초점이 나갔거나 조명이 부족해 검증이 어려운 경우</td>
+</tr>
+<tr>
+<td>WRONG_OBJ</td>
+<td>대상 불일치 (다른 사물)</td>
+<td>퀘스트와 관련 없는 사진입니다. 미션 가이드를 다시 확인하고 올바른 대상을 촬영해 주세요.</td>
+<td>영수증 미션에 풍경 사진을 올리는 등 엉뚱한 이미지인 경우</td>
+</tr>
+<tr>
+<td>DUP_ENTRY</td>
+<td>중복 참여 의심</td>
+<td>이미 제출되었거나 다른 유저가 사용한 이미지와 동일한 것으로 확인됩니다. 직접 촬영한 새로운 사진으로 참여해 주세요.</td>
+<td>어뷰징(도용, 재사용) 방지용</td>
+</tr>
+<tr>
+<td>DATE_EXP</td>
+<td>날짜/조건 미달</td>
+<td>인증 기준(날짜, 시간, 필수 정보 등)이 충족되지 않았습니다. 유효 기간 내의 사진인지 확인해 주세요.</td>
+<td>영수증 날짜가 지났거나 스트리밍 시간이 부족한 경우</td>
+</tr>
+<tr>
+<td>ETC_INPUT</td>
+<td>기타 (직접 입력)</td>
+<td>{운영자가 입력한 사유 텍스트 노출}</td>
+<td>위 4가지 프리셋에 해당하지 않는 특수 상황용</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>4. 규칙/로직</h2>
+<h3>4.1 정렬 기준</h3>
+<ul>
+<li>날짜별(최신순) 정렬</li>
+<li>동일 날짜 내에서는 최신 처리 시각 기준 내림차순</li>
+</ul>
+<h3>4.2 페이징(Paging) 처리</h3>
+<ul>
+<li>스크롤 바닥 도달 시 추가 로딩 (Infinite Scroll)</li>
+<li>1회 로딩 단위: 20개</li>
+</ul>
+<h3>4.3 연관 링크 참조</h3>
+<ul>
+<li>Quest 카드에서 연관 링크 정보는 직접 표시하지 않음. Quest 제출 화면(CEB-FQ-205)에서 라벨 버튼으로 표시됨.</li>
+</ul>
+<hr>
+<h2>5. 에러 및 예외상황</h2>
+<h3>5.1 내역 없음 (Empty Case)</h3>
+<table>
+<thead>
+<tr>
+<th>탭</th>
+<th>안내 문구</th>
+<th>액션</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>QUEST</td>
+<td>"참여한 퀘스트 내역이 없습니다."</td>
+<td>하단에 '퀘스트 하러 가기' 버튼 (메인 화면으로 유도)</td>
+</tr>
+<tr>
+<td>RAFFLE</td>
+<td>"응모한 래플 내역이 없습니다."</td>
+<td>하단에 '래플 보러 가기' 버튼 (메인 화면으로 유도)</td>
+</tr>
+</tbody>
+</table>
+
+<blockquote><p>각 탭 또는 필터 조건에 맞는 데이터가 0건일 경우, 리스트 영역 중앙에 아이콘 + 안내 문구 노출</p></blockquote>
+<hr>
+<h2>6. 연관화면ID</h2>
+<table>
+<thead>
+<tr>
+<th>화면ID</th>
+<th>화면명</th>
+<th>관계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEB-HOM-501-FQ</td>
+<td>홈 메인</td>
+<td>진입 경로 (헤더 응모권 아이콘 탭)</td>
+</tr>
+<tr>
+<td>CEB-FQ-201-MD</td>
+<td>반려 사유 모달</td>
+<td>Quest '반려' 항목 클릭 시 호출</td>
+</tr>
+<tr>
+<td>CEB-FQ-202</td>
+<td>Raffle 상세 (진행중)</td>
+<td>Raffle '진행중' 항목 클릭 시 이동</td>
+</tr>
+<tr>
+<td>CEB-FQ-203</td>
+<td>Raffle 상세 (당첨)</td>
+<td>Raffle '당첨' 항목 클릭 시 이동</td>
+</tr>
+<tr>
+<td>CEB-FQ-204</td>
+<td>Raffle 상세 (미당첨)</td>
+<td>Raffle '미당첨' 항목 클릭 시 이동</td>
+</tr>
+<tr>
+<td>CEB-FQ-205</td>
+<td>Quest 제출</td>
+<td>반려 모달 [재도전] 경유 이동</td>
+</tr>
+<tr>
+<td>CEB-FQ-301</td>
+<td>응모권</td>
+<td>형제 화면 (응모권 이력 조회)</td>
+</tr>
+</tbody>
+</table>
+
+<hr>
+<h2>변경 이력</h2>
+<table>
+<thead>
+<tr>
+<th>버전</th>
+<th>일자</th>
+<th>작성자</th>
+<th>변경 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.0</td>
+<td>2025.12.24</td>
+<td>@Nill Yoo</td>
+<td>초안 작성</td>
+</tr>
+<tr>
+<td>v1.1</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>APP-GAM 양식 재작성</td>
+</tr>
+<tr>
+<td>v1.2</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>연관 링크 참조 추가 (BO-FQ 동기화)</td>
+</tr>
+<tr>
+<td>v1.3</td>
+<td>2026.03.25</td>
+<td>@Nill Yoo</td>
+<td>CEB-FQ-101 참조를 CEB-HOM-501-FQ로 통일, 연관화면 양방향 참조 보완</td>
+</tr>
+<tr>
+<td>v1.4</td>
+<td>2026.03.26</td>
+<td>@Nill Yoo</td>
+<td>화면명 "Event" → "Event" 변경, 응모권 화면 연관 추가</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>

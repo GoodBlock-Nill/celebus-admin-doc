@@ -408,7 +408,7 @@ Ended(종료):         (버튼 없음)
 
 ##### 결과 수정
 - 조건: PM만 해당, 상태가 Closed
-- 동작: CEB-BO-GZ-202-MD-RESULT-EDIT 모달 표시
+- 동작: CEB-BO-GZ-202-MD-RESULT 모달 표시 (결과 수정 모드)
 
 ##### 게시하기
 - 조건: 상태가 Ready (PM, ST 공통)
@@ -477,9 +477,9 @@ Ended(종료):         (버튼 없음)
 | CEB-BO-GZ-202-MD-DELETE | 삭제 확인 모달 | 삭제하기 버튼 |
 | CEB-BO-GZ-202-MD-CLOSE | 강제 종료 확인 모달 | 강제 종료 버튼 |
 | CEB-BO-GZ-202-MD-RESULT | 결과 입력 모달 | 결과 입력 버튼 |
-| CEB-BO-GZ-202-MD-RESULT-EDIT | 결과 수정 모달 | 결과 수정 버튼 |
 | CEB-BO-GZ-202-MD-REWARD | 보상 지급 확인 모달 | 보상 지급 버튼 |
 | CEB-BO-USR-201 | 회원 상세 | 참여자 닉네임 클릭 |
+| CEB-BO-FQ-301 | 응모권 거래 내역 | 참조 (ST 탈락자 응모권 지급 내역 조회) |
 
 ##### 참조 문서
 - 게임 상태 정의서

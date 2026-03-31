@@ -108,6 +108,45 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 | 22 | CEB-BO-GZ-601-MD-DETAIL | 변동 상세 | Modal | 1, 2 | ✅ Phase 2 반영 |
 | 23 | CEB-BO-USR-203 | 회원상세 (게임존 탭) | Page (탭) | 1, 2 | ✅ Phase 2 반영 |
 
+#### 백오피스 화면 (Fan Quest)
+
+| 순서 | 화면ID | 화면명 | 유형 | 작성상태 |
+|------|--------|--------|------|---------|
+| 1 | CEB-BO-FQ-101 | 팬퀘스트 메인 (Quest 탭) | Page | ✅ 완료 |
+| 2 | CEB-BO-FQ-101-Create | Quest 생성 | Page | ✅ 완료 |
+| 3 | CEB-BO-FQ-101-MD-ADD | 팬퀘스트 반려사유 추가 | Modal | ✅ 완료 |
+| 4 | CEB-BO-FQ-101-MD-CANCEL | Quest 생성취소 | Modal | ✅ 완료 |
+| 5 | CEB-BO-FQ-101-MD-COMPLE | Quest 생성완료 | Modal | ✅ 완료 |
+| 6 | CEB-BO-FQ-101-MD-EDIT | 팬퀘스트 반려사유 수정 | Modal | ✅ 완료 |
+| 7 | CEB-BO-FQ-101-REJETSET | 팬퀘스트 반려사유 설정 | Page | ✅ 완료 |
+| 8 | CEB-BO-FQ-102 | 팬퀘스트 메인 (Raffle 탭) | Page | ✅ 완료 |
+| 9 | CEB-BO-FQ-102-CREATE | Raffle 생성 | Page | ✅ 완료 |
+| 10 | CEB-BO-FQ-102-MD-CANCEL | Raffle 생성 취소 | Modal | ✅ 완료 |
+| 11 | CEB-BO-FQ-102-MD-COMPLE | Raffle 생성 완료 | Modal | ✅ 완료 |
+| 12 | CEB-BO-FQ-201 | 퀘스트 상세 (기본정보 탭) | Page | ✅ 완료 |
+| 13 | CEB-BO-FQ-201-EDIT | Quest 수정 | Page | ✅ 완료 |
+| 14 | CEB-BO-FQ-201-MD-CANCEL | Quest 수정취소 | Modal | ✅ 완료 |
+| 15 | CEB-BO-FQ-201-MD-CLOSE | Quest 종료 | Modal | ✅ 완료 |
+| 16 | CEB-BO-FQ-201-MD-COMPLE | Quest 수정완료 | Modal | ✅ 완료 |
+| 17 | CEB-BO-FQ-201-MD-DELETE | Quest 삭제 | Modal | ✅ 완료 |
+| 18 | CEB-BO-FQ-201-MD-OPEN | Quest 게시 | Modal | ✅ 완료 |
+| 19 | CEB-BO-FQ-202 | 퀘스트 상세 (대기내역 탭) | Page | ✅ 완료 |
+| 20 | CEB-BO-FQ-202-MD-REJECT | Quest 반려사유 | Modal | ✅ 완료 |
+| 21 | CEB-BO-FQ-203 | 퀘스트 상세 (처리내역 탭) | Page | ✅ 완료 |
+| 22 | CEB-BO-FQ-204 | Raffle 상세 (기본정보 탭) | Page | ✅ 완료 |
+| 23 | CEB-BO-FQ-204-EDIT | Raffle 수정 | Page | ✅ 완료 |
+| 24 | CEB-BO-FQ-204-MD-CANCEL | Raffle 수정취소 | Modal | ✅ 완료 |
+| 25 | CEB-BO-FQ-204-MD-CLOSE | Raffle 종료 | Modal | ✅ 완료 |
+| 26 | CEB-BO-FQ-204-MD-COMPLE | Raffle 수정완료 | Modal | ✅ 완료 |
+| 27 | CEB-BO-FQ-204-MD-DELETE | Raffle 삭제 | Modal | ✅ 완료 |
+| 28 | CEB-BO-FQ-204-MD-OPEN | Raffle 게시 | Modal | ✅ 완료 |
+| 29 | CEB-BO-FQ-205 | Raffle 상세 (응모내역 탭) | Page | ✅ 완료 |
+| 30 | CEB-BO-FQ-205-MD-DETAIL | 응모내역 상세 | Modal | ✅ 완료 |
+| 31 | CEB-BO-FQ-206 | Raffle 상세 (추첨내역 탭) | Page | ✅ 완료 |
+| 32 | CEB-BO-FQ-206-MD-DETAIL | 당첨자 비고사항 | Modal | ✅ 완료 |
+| 33 | CEB-BO-FQ-206-MD-DRAW | Raffle 추첨하기 | Modal | ✅ 완료 |
+| 34 | CEB-BO-FQ-301 | 응모권 거래 내역 | Page | ✅ 완료 |
+
 #### 앱 화면 (Phase 1 - Prediction Market)
 
 | 순서 | 화면ID | 화면명 | 유형 | Phase | 작성상태 |
@@ -132,11 +171,26 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 |------|--------|--------|------|-------|---------|
 | 1 | CEB-GAM-204 | 트리비아 홈 | Page | 2 | ✅ 완료 |
 | 2 | CEB-GAM-205 | Pre-start (대기/카운트다운) | Page | 2 | ✅ 완료 |
-| 3 | CEB-GAM-206 | 트리비아 상세 (게임 진행) | Page | 2 | ✅ 완료 |
-| 4 | CEB-GAM-206-MD-ELIMINATE | 탈락 | Modal | 2 | ✅ 완료 |
-| 5 | CEB-GAM-206-MD-LEAVE | 나가기 확인 | Modal | 2 | ✅ 완료 |
-| 6 | CEB-GAM-206-SPECTATE | 관전 모드 | Page | 2 | ✅ 완료 |
-| 7 | CEB-GAM-206-RESULT | 게임 결과 | Page | 2 | ✅ 완료 |
+| 3 | CEB-GAM-205-MD-RECONNECT | 재연결 안내 | Modal | 2 | ✅ 완료 |
+| 4 | CEB-GAM-206 | 트리비아 상세 (게임 진행) | Page | 2 | ✅ 완료 |
+| 5 | CEB-GAM-206-MD-ELIMINATE | 탈락 | Modal | 2 | ✅ 완료 |
+| 6 | CEB-GAM-206-MD-LEAVE | 나가기 확인 | Modal | 2 | ✅ 완료 |
+| 7 | CEB-GAM-206-SPECTATE | 관전 모드 | Page | 2 | ✅ 완료 |
+| 8 | CEB-GAM-206-RESULT | 게임 결과 | Page | 2 | ✅ 완료 |
+
+#### 앱 화면 (Fan Quest)
+
+| 순서 | 화면ID | 화면명 | 유형 | 작성상태 |
+|------|--------|--------|------|---------|
+| 1 | CEB-HOM-501-FQ | 홈 메인 (Phase1) | Page | ✅ 완료 |
+| 2 | CEB-FQ-201 | Event | Page | ✅ 완료 |
+| 3 | CEB-FQ-201-MD | 반려 사유 모달 | Modal | ✅ 완료 |
+| 4 | CEB-FQ-202 | Raffle 상세(진행중) | Page | ✅ 완료 |
+| 5 | CEB-FQ-202-MD | Raffle 응모 모달 | Modal | ✅ 완료 |
+| 6 | CEB-FQ-203 | Raffle 상세(당첨) | Page | ✅ 완료 |
+| 7 | CEB-FQ-204 | Raffle 상세(미당첨) | Page | ✅ 완료 |
+| 8 | CEB-FQ-205 | Quest 제출 | Page | ✅ 완료 |
+| 9 | CEB-FQ-301 | 응모권 | Page | ✅ 완료 |
 
 ---
 
@@ -391,6 +445,7 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 | `BO-GAM/` | `confluence-html/BO-GAM/` | CEB-BO-GZ-*, CEB-BO-USR-* |
 | `APP-GAM/` | `confluence-html/APP-GAM/` | CEB-GAM-* |
 | `BO-FQ/` | `confluence-html/BO-FQ/` | CEB-BO-FQ-* |
+| `APP-FQ/` | `confluence-html/APP-FQ/` | CEB-FQ-*, CEB-HOM-501-FQ |
 
 - 파일명 매핑: `{MD폴더}/[화면ID] 제목.md` ↔ `confluence-html/{HTML폴더}/[화면ID] 제목.html`
 

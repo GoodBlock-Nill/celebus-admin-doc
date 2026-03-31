@@ -471,6 +471,7 @@ Survival Trivia 게임의 진입점 화면입니다. 사용자는 게임 정보(
 | CEB-GAM-205 | Pre-start (대기/카운트다운) | 입장 성공 시 이동 |
 | CEB-GAM-501 | GP 히스토리 | GP 잔액 탭 시 이동 |
 | CEB-GAM-202-MD-NOBALANCE | GP 잔고 부족 | GP 부족 시 모달 표시 |
+| CEB-FQ-301 | 응모권 | 탈락 보상 응모권 확인 화면 |
 
 ---
 
