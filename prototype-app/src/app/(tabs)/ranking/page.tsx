@@ -12,7 +12,7 @@ export default function RankingPage() {
   ));
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-8">
+    <div className="min-h-screen bg-gray-50 pb-20">
       {/* Header */}
       <div className="bg-gradient-to-br from-[#0F0A1A] via-violet-900 to-violet-700 px-5 pt-10 pb-6">
         <p className="text-violet-300 text-xs font-medium tracking-wider">🏆 덕력 시즌 랭킹</p>

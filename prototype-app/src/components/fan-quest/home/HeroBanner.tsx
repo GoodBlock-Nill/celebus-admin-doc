@@ -5,6 +5,9 @@ import TicketBalance from '@/components/fan-quest/ui/TicketBalance';
 export default function HeroBanner() {
   return (
     <div className="relative overflow-hidden bg-gradient-to-br from-[#0F0A1A] via-violet-900 to-violet-700 px-5 pt-12 pb-8">
+      {/* Background group photo */}
+      <img src="/v01d/group.jpg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+
       {/* Sparkle dots */}
       <div className="absolute inset-0 overflow-hidden">
         {Array.from({ length: 12 }).map((_, i) => (
@@ -34,12 +37,7 @@ export default function HeroBanner() {
         <p className="text-violet-300 text-xs font-medium tracking-[0.2em] mb-1 uppercase">
           CELEBUS × V01D
         </p>
-        <h1
-          className="text-5xl font-black text-white tracking-tight leading-none"
-          style={{ textShadow: '0 0 40px rgba(167, 139, 250, 0.6), 0 0 80px rgba(124, 58, 237, 0.3)' }}
-        >
-          V01D
-        </h1>
+        <img src="/v01d/logo.png" alt="V01D" className="h-10 object-contain" />
         <p className="text-violet-200/80 text-sm mt-2 font-light">
           덕질하면 V01D를 만날 수 있어
         </p>
@@ -54,7 +52,7 @@ export default function HeroBanner() {
       </div>
 
       {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-gray-50 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-3 bg-gradient-to-t from-gray-50 to-transparent" />
     </div>
   );
 }

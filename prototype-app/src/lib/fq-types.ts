@@ -129,3 +129,81 @@ export interface ActivityFeedItem {
   action: string;
   timestamp: string;
 }
+
+// ===== Raffle =====
+export type RaffleStatus = 'ACTIVE' | 'CLOSED' | 'ENDED';
+export type RaffleResultStatus = 'PENDING' | 'WON' | 'LOST';
+export type ReceiveType = 'ONSITE' | 'DELIVERY' | 'ONLINE';
+
+export interface Raffle {
+  id: string;
+  artistName: string;
+  title: string;
+  description: string;
+  reward: string;
+  receiveType: ReceiveType;
+  thumbnailEmoji: string;
+  thumbnailUrl: string;
+  startDate: string;
+  endDate: string;
+  totalUsers: number;
+  totalTickets: number;
+  myTickets: number;
+  status: RaffleStatus;
+  resultStatus: RaffleResultStatus | null;
+}
+
+// ===== Active Quest (for submission) =====
+export type QuestSubmissionStatus = 'AVAILABLE' | 'PENDING' | 'COMPLETED' | 'REJECTED';
+
+export interface ActiveQuest {
+  id: string;
+  artistName: string;
+  title: string;
+  description: string;
+  rewardTickets: number;
+  relatedLinks: { label: string; url: string }[];
+  submissionStatus: QuestSubmissionStatus;
+  rejectionCode: string | null;
+  uploadGuide: string | null;
+  submittedAt: string | null;
+  dDay: number;
+  startDate: string;
+  endDate: string;
+}
+
+// ===== NFT Collection =====
+export type NFTType = 'PHOTOCARD' | 'BADGE' | 'SPECIAL';
+export type NFTRarity = 'COMMON' | 'RARE' | 'EPIC' | 'LEGENDARY';
+
+export interface NFTItem {
+  id: string;
+  name: string;
+  description: string;
+  imageEmoji: string;
+  imageUrl: string;
+  artistName: string;
+  type: NFTType;
+  rarity: NFTRarity;
+  acquiredAt: string;
+  source: string;
+}
+
+// ===== Event History (Quest/Raffle combined) =====
+export type EventType = 'QUEST' | 'RAFFLE';
+export type EventQuestStatus = 'COMPLETED' | 'PENDING' | 'REJECTED';
+export type EventRaffleStatus = 'ACTIVE' | 'CLOSED' | 'WON' | 'LOST';
+
+export interface EventHistoryItem {
+  id: string;
+  type: EventType;
+  artistName: string;
+  title: string;
+  datetime: string;
+  questStatus?: EventQuestStatus;
+  raffleStatus?: EventRaffleStatus;
+  ticketsUsed?: number;
+  rewardTickets?: number;
+  rejectionCode?: string;
+  raffleId?: string;
+}

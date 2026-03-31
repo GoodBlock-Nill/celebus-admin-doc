@@ -2,23 +2,20 @@
 
 import { create } from 'zustand';
 import type {
-  Chapter,
-  SeasonRanking,
-  MySeasonStats,
-  LeaderboardEntry,
-  FandomProgress,
-  MyContribution,
-  TopContributor,
-  RewardItem,
-  RewardCategory,
-  TicketHistoryItem,
-  ActivityFeedItem,
+  Chapter, SeasonRanking, MySeasonStats, LeaderboardEntry,
+  FandomProgress, MyContribution, TopContributor,
+  RewardItem, RewardCategory, TicketHistoryItem, ActivityFeedItem,
+  Raffle, ActiveQuest, NFTItem, EventHistoryItem,
 } from '@/lib/fq-types';
 import { mockChapters } from '@/mock/fq-chapters';
 import { mockSeason, mockMyStats, mockLeaderboard } from '@/mock/fq-ranking';
 import { mockFandomProgress, mockMyContribution, mockTopContributors } from '@/mock/fq-fandom';
 import { mockRewards } from '@/mock/fq-rewards';
 import { mockTicketHistory } from '@/mock/fq-tickets';
+import { mockRaffles } from '@/mock/fq-raffle';
+import { mockActiveQuests } from '@/mock/fq-quests-active';
+import { mockNFTCollection } from '@/mock/fq-collection';
+import { mockEventHistory } from '@/mock/fq-events';
 
 interface FQState {
   // Chapters
@@ -47,6 +44,20 @@ interface FQState {
 
   // Activity Feed
   activityFeed: ActivityFeedItem[];
+
+  // Raffle
+  raffles: Raffle[];
+  enterRaffle: (raffleId: string, ticketCount: number) => void;
+
+  // Active Quests
+  activeQuests: ActiveQuest[];
+  submitQuest: (questId: string) => void;
+
+  // NFT Collection
+  nftCollection: NFTItem[];
+
+  // Event History
+  eventHistory: EventHistoryItem[];
 
   // UI
   activeRewardTab: RewardCategory;
@@ -146,6 +157,33 @@ export const useFQStore = create<FQState>((set) => ({
 
   // Activity Feed
   activityFeed: initialActivityFeed,
+
+  // Raffle
+  raffles: mockRaffles,
+  enterRaffle: (raffleId, ticketCount) =>
+    set((state) => ({
+      raffles: state.raffles.map((r) =>
+        r.id === raffleId
+          ? { ...r, myTickets: r.myTickets + ticketCount, totalTickets: r.totalTickets + ticketCount, totalUsers: r.myTickets === 0 ? r.totalUsers + 1 : r.totalUsers }
+          : r
+      ),
+      ticketBalance: state.ticketBalance - ticketCount,
+    })),
+
+  // Active Quests
+  activeQuests: mockActiveQuests,
+  submitQuest: (questId) =>
+    set((state) => ({
+      activeQuests: state.activeQuests.map((q) =>
+        q.id === questId ? { ...q, submissionStatus: 'PENDING' as const, submittedAt: new Date().toISOString() } : q
+      ),
+    })),
+
+  // NFT Collection
+  nftCollection: mockNFTCollection,
+
+  // Event History
+  eventHistory: mockEventHistory,
 
   // UI
   activeRewardTab: 'TICKET',

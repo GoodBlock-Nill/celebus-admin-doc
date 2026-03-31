@@ -4,22 +4,25 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   HomeIcon,
-  SparklesIcon,
-  TrophyIcon,
-  GiftIcon,
+  Squares2X2Icon,
+  StarIcon,
+  PuzzlePieceIcon,
+  UserIcon,
 } from '@heroicons/react/24/outline';
 import {
   HomeIcon as HomeIconSolid,
-  SparklesIcon as SparklesIconSolid,
-  TrophyIcon as TrophyIconSolid,
-  GiftIcon as GiftIconSolid,
+  Squares2X2Icon as Squares2X2IconSolid,
+  StarIcon as StarIconSolid,
+  PuzzlePieceIcon as PuzzlePieceIconSolid,
+  UserIcon as UserIconSolid,
 } from '@heroicons/react/24/solid';
 
 const TAB_ITEMS = [
   { key: 'home', label: '홈', href: '/home', Icon: HomeIcon, ActiveIcon: HomeIconSolid },
-  { key: 'quest', label: '퀘스트', href: '/quest', Icon: SparklesIcon, ActiveIcon: SparklesIconSolid },
-  { key: 'ranking', label: '랭킹', href: '/ranking', Icon: TrophyIcon, ActiveIcon: TrophyIconSolid },
-  { key: 'rewards', label: '보상', href: '/rewards', Icon: GiftIcon, ActiveIcon: GiftIconSolid },
+  { key: 'collection', label: '컬렉션', href: '/collection', Icon: Squares2X2Icon, ActiveIcon: Squares2X2IconSolid },
+  { key: 'celebus', label: 'CELEBUS', href: '/celebus', Icon: StarIcon, ActiveIcon: StarIconSolid },
+  { key: 'game', label: '게임존', href: '/game', Icon: PuzzlePieceIcon, ActiveIcon: PuzzlePieceIconSolid },
+  { key: 'my', label: 'MY', href: '/my', Icon: UserIcon, ActiveIcon: UserIconSolid },
 ] as const;
 
 export default function BottomTabBar() {
@@ -38,19 +41,16 @@ export default function BottomTabBar() {
             <Link
               key={key}
               href={href}
-              className="flex-1 flex flex-col items-center justify-center gap-0.5"
+              className="flex-1 flex flex-col items-center justify-center gap-0.5 relative"
             >
               <TabIcon
-                className={`w-6 h-6 transition-colors ${isActive ? 'text-violet-600' : 'text-gray-400'}`}
+                className={`w-5 h-5 transition-colors ${isActive ? 'text-violet-600' : 'text-gray-400'}`}
               />
               <span
-                className={`text-[10px] font-medium transition-colors ${isActive ? 'text-violet-600' : 'text-gray-400'}`}
+                className={`text-[9px] font-medium transition-colors ${isActive ? 'text-violet-600' : 'text-gray-400'}`}
               >
                 {label}
               </span>
-              {isActive && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-violet-600 rounded-full" />
-              )}
             </Link>
           );
         })}

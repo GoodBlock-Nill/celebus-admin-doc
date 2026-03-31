@@ -28,7 +28,7 @@ export default function QuestPage() {
       </div>
 
       {/* Chapter Timeline */}
-      <div className="-mt-2 pt-4 pb-8">
+      <div className="-mt-2 pt-4 pb-20">
         <ChapterTimeline />
       </div>
     </div>
