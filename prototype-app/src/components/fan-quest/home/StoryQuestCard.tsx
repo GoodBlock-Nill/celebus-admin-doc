@@ -55,7 +55,7 @@ export default function StoryQuestCard() {
         {/* Info */}
         <div className="flex-1 min-w-0">
           <p className="text-[10px] text-violet-500 font-semibold tracking-wide mb-0.5">
-            ✨ V01D 팬싸 퀘스트
+            ✨ V01D 챌린지
           </p>
           {currentChapter ? (
             <>

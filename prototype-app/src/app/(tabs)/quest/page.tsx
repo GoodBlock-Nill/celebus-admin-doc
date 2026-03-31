@@ -11,7 +11,7 @@ export default function QuestPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-gradient-to-br from-[#0F0A1A] via-violet-900 to-violet-700 px-5 pt-10 pb-6">
-        <p className="text-violet-300 text-xs font-medium tracking-wider">V01D 팬싸 퀘스트</p>
+        <p className="text-violet-300 text-xs font-medium tracking-wider">V01D 챌린지</p>
         <h1 className="text-2xl font-black text-white mt-1">V01D 탐험</h1>
         <p className="text-violet-200/70 text-xs mt-1">
           5장을 모두 클리어하면 팬싸 응모 자격이 열려요
