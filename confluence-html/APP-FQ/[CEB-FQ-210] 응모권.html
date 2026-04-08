@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>[CEB-FQ-301] 응모권</title>
+  <title>[CEB-FQ-210] 응모권</title>
   <style>
     body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -76,7 +76,7 @@ p {
   </style>
 </head>
 <body>
-<h1>[CEB-FQ-301] 응모권</h1>
+<h1>[CEB-FQ-210] 응모권</h1>
 <h2>Page Properties</h2>
 <table>
 <thead>
@@ -88,11 +88,11 @@ p {
 <tbody>
 <tr>
 <td>Screen ID</td>
-<td>CEB-FQ-301</td>
+<td>CEB-FQ-210</td>
 </tr>
 <tr>
 <td>기획담당자</td>
-<td>@Nill Yoo</td>
+<td>@Carl Lee</td>
 </tr>
 <tr>
 <td>디자인담당자</td>
@@ -108,7 +108,7 @@ p {
 </tr>
 <tr>
 <td>기능영역(Epic)</td>
-<td>FQ(팬퀘스트)</td>
+<td>GAM(게임존)</td>
 </tr>
 <tr>
 <td>상태</td>
@@ -116,11 +116,11 @@ p {
 </tr>
 <tr>
 <td>버전</td>
-<td>v1.0</td>
+<td>v2.0</td>
 </tr>
 <tr>
 <td>최근 업데이트</td>
-<td>2026.03.26</td>
+<td>2026.04.07</td>
 </tr>
 <tr>
 <td>Jira 링크</td>
@@ -143,17 +143,17 @@ p {
 
 <hr>
 <h2>1. 화면 목적</h2>
-<p>유저가 보유한 응모권(티켓) 잔액을 확인하고, 적립/사용 거래 이력을 조회하는 화면입니다.</p>
+<p>유저가 보유한 응모권(티켓) 수량을 확인하고, 적립/사용 거래 이력을 조회하는 화면입니다.</p>
 <h5>주요 기능</h5>
 <ul>
-<li>보유 응모권 잔액 실시간 확인</li>
-<li>적립 이력 조회 (Fan Quest 보상, Survival Trivia 탈락 보상, Prediction Market 보상)</li>
+<li>보유 응모권 수량 실시간 확인</li>
+<li>응모권 구매 기능 (GP 사용)</li>
+<li>적립 이력 조회 (Fan Quest 보상, Survival Trivia 탈락 보상, Prediction Market 보상, 응모권 구매)</li>
 <li>사용 이력 조회 (Raffle 응모)</li>
-<li>반환 이력 조회 (Raffle 취소 시 반환)</li>
 </ul>
 <h5>접근 경로</h5>
 <ul>
-<li>홈 메인(CEB-HOM-501-FQ) > 헤더 🎫 응모권 아이콘 탭 시 이동</li>
+<li>홈 메인(CEB-HOM-501-FQ) &gt; 환영 배너 영역에서 진입</li>
 </ul>
 <hr>
 <h2>2. UI 설명</h2>
@@ -163,24 +163,24 @@ p {
 ├──────────────────────────────────┤
 │ [<] 응모권                       │
 ├──────────────────────────────────┤
-│ 🎫 보유 응모권  {N}              │
-│ (강조 카드, 보라색 배경)           │
+│ 🎫 보유 응모권  {N}  [구매하기]  │
+│ (강조 카드)                       │
 ├──────────────────────────────────┤
-│ [전체] [적립] [사용]             │
+│ [적립] [사용]                    │
 ├──────────────────────────────────┤
 │ 이력 리스트 (무한 스크롤)         │
 │                                  │
 │ [{아티스트}] QUEST               │
-│ {타이틀}                    +{N} │
-│ {일시}                 잔여 {N}장│
-│──────────────────────────────────│
-│ [{아티스트}] RAFFLE              │
-│ {타이틀}                    -{N} │
-│ {일시}                 잔여 {N}장│
+│ {Quest title}               +{N} │
+│ YYYY.MM.DD hh:mm:ss              │
 │──────────────────────────────────│
 │ Survival Trivia                  │
-│ {타이틀}                    +{N} │
-│ {일시}                 잔여 {N}장│
+│ {Game title}                +{N} │
+│ YYYY.MM.DD hh:mm:ss              │
+│──────────────────────────────────│
+│ {N} Game point 사용              │
+│ 응모권 구매                  +{N} │
+│ YYYY.MM.DD hh:mm:ss              │
 └──────────────────────────────────┘</pre>
 <h3>2.2 영역별 구성요소</h3>
 <h5>Header 영역</h5>
@@ -213,23 +213,25 @@ p {
 </thead>
 <tbody>
 <tr>
-<td>배경</td>
-<td>보라색 강조 카드</td>
-</tr>
-<tr>
 <td>아이콘</td>
 <td>🎫 응모권 아이콘</td>
 </tr>
 <tr>
 <td>수량</td>
-<td>서버에서 호출한 유저의 보유 응모권 잔액 (실시간 표시)</td>
+<td>서버에서 호출한 유저의 보유 응모권 수량 (실시간 표시)</td>
 </tr>
 <tr>
 <td>표시 형식</td>
-<td>"보유 응모권" 레이블 + 잔액 수량 (Big Font)</td>
+<td>"보유 응모권" 레이블 + 수량 (Big Font)</td>
+</tr>
+<tr>
+<td>구매하기 버튼</td>
+<td>카드 우측에 위치. 탭 시 응모권 구매 화면(Buy_RF_Ticket)으로 이동</td>
 </tr>
 </tbody>
 </table>
+
+<blockquote><p>상세 스타일은 피그마 참조</p></blockquote>
 
 <h5>탭 메뉴</h5>
 <table>
@@ -242,23 +244,19 @@ p {
 <tbody>
 <tr>
 <td>구조</td>
-<td>상단 고정 탭 (3개)</td>
+<td>상단 고정 탭 (2개)</td>
 </tr>
 <tr>
 <td>Tab 1</td>
-<td>전체 (적립 + 사용 전체)</td>
-</tr>
-<tr>
-<td>Tab 2</td>
 <td>적립 (+ 변동만)</td>
 </tr>
 <tr>
-<td>Tab 3</td>
+<td>Tab 2</td>
 <td>사용 (- 변동만)</td>
 </tr>
 <tr>
 <td>초기 상태</td>
-<td>전체 탭이 기본 선택된 상태로 진입</td>
+<td>적립 탭이 기본 선택된 상태로 진입</td>
 </tr>
 </tbody>
 </table>
@@ -273,16 +271,28 @@ p {
 </thead>
 <tbody>
 <tr>
-<td>1행: 출처 라벨</td>
-<td>아티스트/게임유형 표시 (예: [{아티스트}] QUEST, Survival Trivia, Prediction Market, [{아티스트}] RAFFLE)</td>
+<td>서브 타이틀</td>
+<td>출처/유형 정보 (예: [{아티스트}] QUEST, Survival Trivia, Prediction Market, {N} Game point 사용, [{아티스트}] RAFFLE). 회색, 소문자</td>
 </tr>
 <tr>
-<td>2행: 이벤트 타이틀 + 변동 수량</td>
-<td>좌측 타이틀, 우측 +{N} (초록) 또는 -{N} (빨강)</td>
+<td>메인 타이틀</td>
+<td>콘텐츠명 또는 이벤트명. 흰색, 굵게</td>
 </tr>
 <tr>
-<td>3행: 일시 + 잔여 수량</td>
-<td>좌측 YYYY.MM.DD HH:MM:SS, 우측 "잔여 {N}장"</td>
+<td>날짜/시간</td>
+<td>YYYY.MM.DD hh:mm:ss 형식</td>
+</tr>
+<tr>
+<td>우측 수량</td>
+<td>적립 +{N} / 사용 -{N} (보라색)</td>
+</tr>
+<tr>
+<td>구분선</td>
+<td>아이템 간 얇은 수평 구분선</td>
+</tr>
+<tr>
+<td>탭 이벤트</td>
+<td>없음 (상세 페이지 없음)</td>
 </tr>
 </tbody>
 </table>
@@ -294,12 +304,17 @@ p {
 <ul>
 <li>이전 화면(홈 메인)으로 복귀</li>
 </ul>
-<h3>3.2 탭 전환</h3>
+<h3>3.2 구매하기 버튼</h3>
 <ul>
-<li>전체 / 적립 / 사용 탭 전환 시 해당 조건에 맞는 이력만 필터링하여 표시</li>
+<li>보유 응모권 카드 내 [구매하기] 버튼 탭 시 응모권 구매 화면(Buy_RF_Ticket)으로 이동</li>
+<li>GP를 사용하여 응모권 구매 (교환 비율은 추후 결정)</li>
+</ul>
+<h3>3.3 탭 전환</h3>
+<ul>
+<li>적립 / 사용 탭 전환 시 해당 조건에 맞는 이력만 필터링하여 표시</li>
 <li>탭 전환 시 리스트 최상단으로 스크롤 초기화</li>
 </ul>
-<h3>3.3 리스트 스크롤</h3>
+<h3>3.4 리스트 스크롤</h3>
 <ul>
 <li>무한 스크롤 (20건씩 추가 로드)</li>
 <li>스크롤 바닥 도달 시 추가 데이터 로딩</li>
@@ -316,12 +331,8 @@ p {
 </thead>
 <tbody>
 <tr>
-<td>전체</td>
-<td>적립 + 사용 전체 (최신 일시순)</td>
-</tr>
-<tr>
 <td>적립</td>
-<td>+ 변동만 (Quest 보상, ST 탈락 보상, PM 보상, Raffle 반환)</td>
+<td>+ 변동만 (Quest 보상, ST 탈락 보상, PM 보상, 응모권 구매)</td>
 </tr>
 <tr>
 <td>사용</td>
@@ -330,77 +341,75 @@ p {
 </tbody>
 </table>
 
-<h3>4.2 이력 항목 유형</h3>
+<h3>4.2 적립 탭 이력 항목 유형</h3>
 <table>
 <thead>
 <tr>
-<th>출처</th>
-<th>라벨 형식</th>
-<th>수량 표시</th>
-<th>탭 분류</th>
+<th>유형</th>
+<th>서브 타이틀</th>
+<th>메인 타이틀</th>
+<th>날짜/시간</th>
+<th>금액</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Fan Quest 참여 보상</td>
-<td>[{아티스트}] QUEST + {Quest 타이틀}</td>
-<td>+{N} (초록)</td>
-<td>적립</td>
+<td>Quest</td>
+<td>[{아티스트}] QUEST</td>
+<td>{Quest title}</td>
+<td>YYYY.MM.DD hh:mm:ss</td>
+<td>+{N} (보라색)</td>
 </tr>
 <tr>
-<td>Survival Trivia 탈락 보상</td>
-<td>Survival Trivia + {게임 타이틀}</td>
-<td>+{N} (초록)</td>
-<td>적립</td>
+<td>Survival Trivia</td>
+<td>Survival Trivia</td>
+<td>{Game title}</td>
+<td>YYYY.MM.DD hh:mm:ss</td>
+<td>+{N} (보라색)</td>
 </tr>
 <tr>
-<td>Prediction Market 보상</td>
-<td>Prediction Market + {게임 타이틀}</td>
-<td>+{N} (초록)</td>
-<td>적립</td>
+<td>Prediction Market</td>
+<td>Prediction Market</td>
+<td>{Game title}</td>
+<td>YYYY.MM.DD hh:mm:ss</td>
+<td>+{N} (보라색)</td>
 </tr>
 <tr>
-<td>Raffle 응모</td>
-<td>[{아티스트}] RAFFLE + {Raffle 타이틀}</td>
-<td>-{N} (빨강)</td>
-<td>사용</td>
-</tr>
-<tr>
-<td>Raffle 취소/반환</td>
-<td>[{아티스트}] RAFFLE + {Raffle 타이틀}</td>
-<td>+{N} (초록)</td>
-<td>적립</td>
+<td>응모권 구매</td>
+<td>{N} Game point 사용</td>
+<td>응모권 구매</td>
+<td>YYYY.MM.DD hh:mm:ss</td>
+<td>+{N} (보라색)</td>
 </tr>
 </tbody>
 </table>
 
-<h3>4.3 각 항목 표시 필드</h3>
+<p>- Quest 유형의 서브 타이틀에는 아티스트명 포함<br>
+- 응모권 구매 유형: GP를 사용하여 응모권을 구매한 경우. 서브 타이틀에 사용된 GP 수량 표시</p>
+
+<h3>4.3 사용 탭 이력 항목 유형</h3>
 <table>
 <thead>
 <tr>
-<th>행</th>
-<th>좌측</th>
-<th>우측</th>
+<th>유형</th>
+<th>서브 타이틀</th>
+<th>메인 타이틀</th>
+<th>날짜/시간</th>
+<th>금액</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1행</td>
-<td>출처 라벨 (아티스트/게임유형)</td>
-<td>-</td>
-</tr>
-<tr>
-<td>2행</td>
-<td>이벤트 타이틀</td>
-<td>변동 수량 (+{N} 또는 -{N})</td>
-</tr>
-<tr>
-<td>3행</td>
-<td>일시 (YYYY.MM.DD HH:MM:SS)</td>
-<td>잔여 {N}장</td>
+<td>Raffle 응모</td>
+<td>[{아티스트}] RAFFLE</td>
+<td>{Raffle title}</td>
+<td>YYYY.MM.DD hh:mm:ss</td>
+<td>-{N} (보라색)</td>
 </tr>
 </tbody>
 </table>
+
+<p>- 현재 Raffle 응모 시 차감되는 케이스만 존재</p>
 
 <h3>4.4 정렬 기준</h3>
 <ul>
@@ -429,8 +438,12 @@ p {
 <td>스켈레톤 UI</td>
 </tr>
 <tr>
-<td>Empty</td>
-<td>"응모권 이력이 없습니다." (리스트 영역 중앙에 안내 문구 노출)</td>
+<td>Empty (적립)</td>
+<td>안내 일러스트 + "응모권 적립 내역이 없어요"</td>
+</tr>
+<tr>
+<td>Empty (사용)</td>
+<td>안내 일러스트 + "응모권 사용 내역이 없어요"</td>
 </tr>
 <tr>
 <td>Network Error</td>
@@ -453,12 +466,17 @@ p {
 <tr>
 <td>CEB-HOM-501-FQ</td>
 <td>홈 메인</td>
-<td>진입 경로 (헤더 🎫 아이콘 탭)</td>
+<td>진입 경로 (환영 배너 영역)</td>
 </tr>
 <tr>
 <td>CEB-FQ-201</td>
 <td>Event</td>
 <td>형제 화면</td>
+</tr>
+<tr>
+<td>Buy_RF_Ticket</td>
+<td>응모권 구매</td>
+<td>구매하기 버튼 탭 시 이동 (화면ID 미정)</td>
 </tr>
 </tbody>
 </table>
@@ -480,6 +498,12 @@ p {
 <td>2026.03.26</td>
 <td>@Nill Yoo</td>
 <td>초안 작성</td>
+</tr>
+<tr>
+<td>v2.0</td>
+<td>2026.04.07</td>
+<td>@Carl Lee</td>
+<td>CEB-FQ-301→CEB-FQ-210 변경, 진입경로 변경, 탭 구조 2탭으로 변경, 응모권 구매 기능 추가, 리스트 UI 개편</td>
 </tr>
 </tbody>
 </table>
