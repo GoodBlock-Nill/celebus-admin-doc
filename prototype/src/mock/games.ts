@@ -408,7 +408,90 @@ if (stGames.length > 6) {
   };
 }
 
+// PM 타입2 (무료 참가) 샘플 게임
+const pmType2Games: Game[] = [
+  {
+    id: 'game-type2-001',
+    type: 'PREDICTION_MARKET',
+    pmType: 'type2',
+    title: { ko: 'BTS 신곡 1억뷰 달성 예측 (무료)', en: '[EN] BTS MV 100M Views Prediction (Free)', jp: '[JP] BTS新曲1億回再生予測（無料）' },
+    description: {
+      ko: '무료로 참여하여 BTS 신곡이 1억뷰를 달성할지 예측하세요!',
+      en: 'Participate for free and predict whether BTS new MV will reach 100M views!',
+      jp: '無料で参加してBTSの新曲が1億回再生を達成するか予測してください！',
+    },
+    hintLinkEnabled: true,
+    hintLink: 'https://example.com/hint/bts-mv',
+    status: 'Active',
+    totalPrizeGP: 200, // 2 GP × 100명
+    winRewardGP: 2,
+    maxParticipants: 100,
+    participationCost: 0,
+    boostingCost: 0,
+    boostingMultiplier: 0,
+    endDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+    resultDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toISOString(),
+    resultBasis: {
+      ko: 'YouTube 공식 조회수 기준으로 결과를 확인합니다.',
+      en: 'Results are confirmed based on official YouTube view count.',
+      jp: 'YouTube公式再生回数を基準に結果を確認します。',
+    },
+    result: null,
+    resultTitle: { ko: '', en: '', jp: '' },
+    resultDescription: { ko: '', en: '', jp: '' },
+    resultLinkText: { ko: '', en: '', jp: '' },
+    resultLinkUrl: { ko: '', en: '', jp: '' },
+    rewardDistributed: false,
+    rewardDistributedAt: null,
+    participantCount: 42,
+    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    createdBy: 'jihyun.lee',
+    updatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    publishedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: 'game-type2-002',
+    type: 'PREDICTION_MARKET',
+    pmType: 'type2',
+    title: { ko: 'BLACKPINK 리사 솔로 컴백 예측 (무료)', en: '[EN] BLACKPINK Lisa Solo Comeback Prediction (Free)', jp: '[JP] BLACKPINK リサソロカムバック予測（無料）' },
+    description: {
+      ko: '무료 참여! BLACKPINK 리사의 솔로 컴백이 이번 달 안에 발표될지 예측하세요.',
+      en: 'Free entry! Predict whether BLACKPINK Lisa solo comeback will be announced this month.',
+      jp: '無料参加！BLACKPINKリサのソロカムバックが今月中に発表されるか予測してください。',
+    },
+    hintLinkEnabled: false,
+    hintLink: '',
+    status: 'Ready',
+    totalPrizeGP: 500, // 5 GP × 100명
+    winRewardGP: 5,
+    maxParticipants: 100,
+    participationCost: 0,
+    boostingCost: 0,
+    boostingMultiplier: 0,
+    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+    resultDate: new Date(Date.now() + 35 * 24 * 60 * 60 * 1000).toISOString(),
+    resultBasis: {
+      ko: 'YG 엔터테인먼트 공식 발표 기준',
+      en: 'Based on official YG Entertainment announcement',
+      jp: 'YGエンターテインメント公式発表基準',
+    },
+    result: null,
+    resultTitle: { ko: '', en: '', jp: '' },
+    resultDescription: { ko: '', en: '', jp: '' },
+    resultLinkText: { ko: '', en: '', jp: '' },
+    resultLinkUrl: { ko: '', en: '', jp: '' },
+    rewardDistributed: false,
+    rewardDistributedAt: null,
+    participantCount: 0,
+    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    createdBy: 'sungho.park',
+    updatedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    publishedAt: null,
+  },
+];
+
 export const mockGames: Game[] = [
   ...statusDistribution.map((status, i) => createGame(i, status)),
+  ...pmType2Games,
   ...stGames,
 ];

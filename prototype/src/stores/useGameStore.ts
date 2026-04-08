@@ -103,9 +103,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   getGameById: (id) => get().games.find(g => g.id === id),
 
-  addGame: (game) => set((state) => ({
-    games: [game, ...state.games],
-  })),
+  addGame: (game) => set((state) => {
+    const finalGame = { ...game };
+    // 타입2 자동 계산: totalPrizeGP = winRewardGP × maxParticipants
+    if (game.type === 'PREDICTION_MARKET' && game.pmType === 'type2' && game.winRewardGP && game.maxParticipants > 0) {
+      finalGame.totalPrizeGP = game.winRewardGP * game.maxParticipants;
+    }
+    return { games: [finalGame, ...state.games] };
+  }),
 
   updateGame: (id, updates) => set((state) => ({
     games: state.games.map(g => g.id === id ? { ...g, ...updates, updatedAt: new Date().toISOString() } : g),

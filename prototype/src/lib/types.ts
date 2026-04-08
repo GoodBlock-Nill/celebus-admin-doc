@@ -27,6 +27,7 @@ export interface PrizeTier {
 
 export type GameStatus = 'Draft' | 'Ready' | 'Active' | 'Pending' | 'Closed' | 'Ended';
 export type GameType = 'PREDICTION_MARKET' | 'SURVIVAL_TRIVIA';
+export type PMSubType = 'type1' | 'type2';
 export type GPChangeType = 'PARTICIPATION' | 'BOOSTING' | 'REFUND' | 'REWARD' | 'EXCHANGE_IN' | 'EXCHANGE_OUT' | 'REFUND_CANCEL';
 export type ExchangeDirection = 'CHARGE' | 'WITHDRAW';
 export type ExchangeStatus = 'SUCCESS' | 'FAILED';
@@ -36,6 +37,7 @@ export type STRewardType = 'TIERED' | 'PROPORTIONAL';
 export interface Game {
   id: string;
   type: GameType;
+  pmType?: PMSubType; // PM 서브타입 (type1: 유료 참가, type2: 무료 참가)
   title: MultiLangText;
   description: MultiLangText;
   hintLinkEnabled: boolean;
@@ -61,6 +63,7 @@ export interface Game {
   createdBy: string;
   updatedAt: string;
   publishedAt: string | null; // 게시일시 (투표 시작일시로 사용)
+  winRewardGP?: number; // 승리 보상 GP (PM 타입2 전용)
   // Survival Trivia fields
   quizzes?: Quiz[];
   timePerQuestion?: number; // seconds (default 10)

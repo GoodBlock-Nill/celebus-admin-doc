@@ -4,9 +4,10 @@ import MultiLangTextarea from '@/components/forms/MultiLangTextarea';
 import NumberInput from '@/components/forms/NumberInput';
 import DateTimePicker from '@/components/forms/DateTimePicker';
 import DatePicker from '@/components/forms/DatePicker';
-import type { MultiLangText } from '@/lib/types';
+import type { MultiLangText, PMSubType } from '@/lib/types';
 
 interface PMCreateFieldsProps {
+  pmType: PMSubType;
   maxParticipants: number;
   setMaxParticipants: (v: number) => void;
   useLimit: boolean;
@@ -28,6 +29,7 @@ interface PMCreateFieldsProps {
 
 export default function PMCreateFields(props: PMCreateFieldsProps) {
   const {
+    pmType,
     maxParticipants, setMaxParticipants,
     useLimit, setUseLimit,
     participationCost, setParticipationCost,
@@ -39,33 +41,47 @@ export default function PMCreateFields(props: PMCreateFieldsProps) {
     errors,
   } = props;
 
+  const isType2 = pmType === 'type2';
+
   return (
     <>
       <Section title="참여설정">
         <div className="space-y-4">
-          <div>
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={useLimit}
-                onChange={(e) => setUseLimit(e.target.checked)}
-                className="rounded border-gray-300"
-              />
-              <span className="font-medium text-gray-700">참여 정원 제한</span>
-            </label>
-            {useLimit && (
-              <div className="mt-2">
-                <NumberInput label="참여 정원" value={maxParticipants} onChange={setMaxParticipants} min={1} unit="명" />
+          {isType2 ? (
+            <>
+              <NumberInput label="참여 정원" value={maxParticipants} onChange={setMaxParticipants} min={1} unit="명" required error={errors.maxParticipants} />
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-gray-700 w-[140px]">참여 비용</span>
+                <span className="text-sm text-gray-500">0 GP (무료)</span>
               </div>
-            )}
-            {!useLimit && <p className="text-sm text-gray-500 mt-1">무제한</p>}
-          </div>
-          <NumberInput label="참여 비용" value={participationCost} onChange={setParticipationCost} min={1} unit="GP" required />
-          <div className="space-y-4">
-            <NumberInput label="부스팅 비용" value={boostingCost} onChange={setBoostingCost} min={1} unit="GP" required />
-            <NumberInput label="부스팅 배수" value={boostingMultiplier} onChange={setBoostingMultiplier} min={1} max={10} unit="배" required />
-            <p className="text-xs text-gray-400">부스팅 GP는 보상 계산 시 해당 배수만큼 가중치가 적용됩니다.</p>
-          </div>
+            </>
+          ) : (
+            <>
+              <div>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={useLimit}
+                    onChange={(e) => setUseLimit(e.target.checked)}
+                    className="rounded border-gray-300"
+                  />
+                  <span className="font-medium text-gray-700">참여 정원 제한</span>
+                </label>
+                {useLimit && (
+                  <div className="mt-2">
+                    <NumberInput label="참여 정원" value={maxParticipants} onChange={setMaxParticipants} min={1} unit="명" />
+                  </div>
+                )}
+                {!useLimit && <p className="text-sm text-gray-500 mt-1">무제한</p>}
+              </div>
+              <NumberInput label="참여 비용" value={participationCost} onChange={setParticipationCost} min={1} unit="GP" required />
+              <div className="space-y-4">
+                <NumberInput label="부스팅 비용" value={boostingCost} onChange={setBoostingCost} min={1} unit="GP" required />
+                <NumberInput label="부스팅 배수" value={boostingMultiplier} onChange={setBoostingMultiplier} min={1} max={10} unit="배" required />
+                <p className="text-xs text-gray-400">부스팅 GP는 보상 계산 시 해당 배수만큼 가중치가 적용됩니다.</p>
+              </div>
+            </>
+          )}
         </div>
       </Section>
 

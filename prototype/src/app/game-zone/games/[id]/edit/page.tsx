@@ -8,11 +8,12 @@ import MultiLangEditor from '@/components/forms/MultiLangEditor';
 import ConfirmModal from '@/components/modals/ConfirmModal';
 import { useGameStore } from '@/stores/useGameStore';
 import { useUIStore } from '@/stores/useUIStore';
-import { GAME_TYPE_LABELS } from '@/lib/constants';
+import { GAME_TYPE_LABELS, PM_SUBTYPE_LABELS } from '@/lib/constants';
 import PMEditFields from './PMEditFields';
 import STEditFields from './STEditFields';
 import { Section, HintLinkField } from './editHelpers';
 import type { MultiLangText, GameStatus, Quiz, PrizeTier, STRewardType } from '@/lib/types';
+
 
 export default function EditGamePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -24,6 +25,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
   const [title, setTitle] = useState<MultiLangText>({ ko: '', en: '', jp: '' });
   const [description, setDescription] = useState<MultiLangText>({ ko: '', en: '', jp: '' });
   const [totalPrizeGP, setTotalPrizeGP] = useState(0);
+  const [winRewardGP, setWinRewardGP] = useState(0);
   const [maxParticipants, setMaxParticipants] = useState(0);
   const [useLimit, setUseLimit] = useState(false);
   const [participationCost, setParticipationCost] = useState(1);
@@ -51,6 +53,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
       setTitle({ ...game.title });
       setDescription({ ...game.description });
       setTotalPrizeGP(game.totalPrizeGP);
+      setWinRewardGP(game.winRewardGP ?? 0);
       setMaxParticipants(game.maxParticipants);
       setUseLimit(game.maxParticipants > 0);
       setParticipationCost(game.participationCost);
@@ -80,6 +83,7 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
 
   const status = game.status;
   const isST = game.type === 'SURVIVAL_TRIVIA';
+  const isPMType2 = game.type === 'PREDICTION_MARKET' && game.pmType === 'type2';
   const hasParticipants = game.participantCount > 0;
 
   const getEditableFields = (gameStatus: GameStatus) => {
@@ -126,7 +130,9 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
   const validate = () => {
     const errs: Record<string, string> = {};
     if (canEditTitle && !title.ko.trim()) errs.titleKo = '타이틀(KO)은 필수입니다.';
-    if (!isST && canEditReward && totalPrizeGP <= 0) errs.totalPrizeGP = '총 상금 GP를 입력하세요.';
+    if (!isST && !isPMType2 && canEditReward && totalPrizeGP <= 0) errs.totalPrizeGP = '총 상금 GP를 입력하세요.';
+    if (isPMType2 && canEditReward && winRewardGP < 1) errs.winRewardGP = '승리 보상 GP는 최소 1 이상이어야 합니다.';
+    if (isPMType2 && canEditAll && maxParticipants <= 0) errs.maxParticipants = '참여 정원은 필수입니다.';
     if (isST) {
       if (canEditReward && stMaxPrizePool <= 0) errs.maxPrizePool = '최대 상금풀을 입력하세요.';
       if (canEditAll && stMaxRecruitment <= 0) errs.maxRecruitment = '최대 모집인원을 입력하세요.';
@@ -151,7 +157,11 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
       updateData.hintLinkEnabled = hintLinkEnabled;
       updateData.hintLink = hintLinkEnabled ? hintLink : '';
     }
-    if (!isST && canEditReward) updateData.totalPrizeGP = totalPrizeGP;
+    if (!isST && !isPMType2 && canEditReward) updateData.totalPrizeGP = totalPrizeGP;
+    if (isPMType2 && canEditReward) {
+      updateData.winRewardGP = winRewardGP;
+      updateData.totalPrizeGP = winRewardGP * maxParticipants;
+    }
 
     if (isST) {
       if (canEditReward) {
@@ -171,6 +181,12 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
       } else if (canEditStartDateTime) {
         updateData.startDateTime = startDateTime;
       }
+    } else if (isPMType2) {
+      if (canEditParticipation) {
+        updateData.maxParticipants = maxParticipants;
+        updateData.participationCost = 0;
+        updateData.totalPrizeGP = winRewardGP * maxParticipants;
+      }
     } else {
       if (canEditParticipation) {
         updateData.maxParticipants = useLimit ? maxParticipants : 0;
@@ -185,9 +201,12 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
       if (canEditResultBasis) updateData.resultBasis = resultBasis;
     }
 
+    const pmAllFilled = isPMType2
+      ? !!(isAllLangFilled(title) && isAllLangFilled(description) && winRewardGP >= 1 && maxParticipants > 0 && endDate && resultDate && isAllLangFilled(resultBasis))
+      : !!(isAllLangFilled(title) && isAllLangFilled(description) && totalPrizeGP > 0 && endDate && resultDate && isAllLangFilled(resultBasis));
     const isAllFilled = isST
       ? !!(isAllLangFilled(title) && isAllLangFilled(description) && stMaxPrizePool > 0 && stMaxRecruitment > 0 && startDateTime && quizzes.length > 0)
-      : !!(isAllLangFilled(title) && isAllLangFilled(description) && totalPrizeGP > 0 && endDate && resultDate && isAllLangFilled(resultBasis));
+      : pmAllFilled;
     if (status === 'Draft' && isAllFilled) {
       updateData.status = 'Ready';
       updateGame(id, updateData);
@@ -229,7 +248,10 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium text-gray-700 w-[100px]">게임유형</span>
-              <span className="text-sm text-gray-500">{GAME_TYPE_LABELS[game.type]}</span>
+              <span className="text-sm text-gray-500">
+                {GAME_TYPE_LABELS[game.type]}
+                {game.pmType && ` (${PM_SUBTYPE_LABELS[game.pmType]})`}
+              </span>
             </div>
             <MultiLangInput
               label="타이틀"
@@ -274,7 +296,10 @@ export default function EditGamePage({ params }: { params: Promise<{ id: string 
           />
         ) : (
           <PMEditFields
-            totalPrizeGP={totalPrizeGP} setTotalPrizeGP={setTotalPrizeGP} canEditReward={canEditReward}
+            pmType={game.pmType}
+            totalPrizeGP={totalPrizeGP} setTotalPrizeGP={setTotalPrizeGP}
+            winRewardGP={winRewardGP} setWinRewardGP={setWinRewardGP}
+            canEditReward={canEditReward}
             maxParticipants={maxParticipants} setMaxParticipants={setMaxParticipants}
             useLimit={useLimit} setUseLimit={setUseLimit}
             participationCost={participationCost} setParticipationCost={setParticipationCost}

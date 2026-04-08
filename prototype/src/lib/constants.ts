@@ -1,4 +1,4 @@
-import type { GameStatus, GameType, GPChangeType, ExchangeDirection, ExchangeStatus } from './types';
+import type { GameStatus, GameType, GPChangeType, ExchangeDirection, ExchangeStatus, PMSubType } from './types';
 import type { QuestStatus, RaffleStatus, SubmissionStatus, RewardType, DeliveryType } from './fq-types';
 
 export const GAME_STATUS_CONFIG: Record<GameStatus, { label: string; bg: string; text: string }> = {
@@ -55,6 +55,11 @@ export const GAME_TYPE_LABELS: Record<string, string> = {
 export const GAME_TYPE_BADGE_CONFIG: Record<GameType, { label: string; bg: string; text: string }> = {
   PREDICTION_MARKET: { label: 'PM', bg: 'bg-indigo-100', text: 'text-indigo-600' },
   SURVIVAL_TRIVIA: { label: 'ST', bg: 'bg-purple-100', text: 'text-purple-600' },
+};
+
+export const PM_SUBTYPE_LABELS: Record<PMSubType, string> = {
+  type1: '타입 1 (유료 참가)',
+  type2: '타입 2 (무료 참가)',
 };
 
 export const ST_STATUSES: GameStatus[] = ['Draft', 'Ready', 'Active', 'Ended'];

@@ -1,7 +1,7 @@
 'use client';
 
 import { formatDate, formatDateTime, formatGP, formatNumber, calcSTEndTime } from '@/lib/utils';
-import { GAME_TYPE_LABELS, ST_REVEAL_DURATION_SEC } from '@/lib/constants';
+import { GAME_TYPE_LABELS, PM_SUBTYPE_LABELS, ST_REVEAL_DURATION_SEC } from '@/lib/constants';
 import QuizEditor from '@/components/forms/QuizEditor';
 import type { Game } from '@/lib/types';
 
@@ -11,11 +11,16 @@ interface BasicInfoTabProps {
 
 export default function BasicInfoTab({ game }: BasicInfoTabProps) {
   const isST = game.type === 'SURVIVAL_TRIVIA';
+  const isPMType2 = game.type === 'PREDICTION_MARKET' && game.pmType === 'type2';
+
+  const gameTypeDisplay = game.type === 'PREDICTION_MARKET' && game.pmType
+    ? `${GAME_TYPE_LABELS[game.type]} (${PM_SUBTYPE_LABELS[game.pmType]})`
+    : GAME_TYPE_LABELS[game.type];
 
   return (
     <div className="space-y-8">
       <DetailSection title="기본정보" fields={[
-        { label: '게임유형', value: GAME_TYPE_LABELS[game.type] },
+        { label: '게임유형', value: gameTypeDisplay },
         { label: '타이틀 (KO)', value: game.title.ko },
         { label: '타이틀 (EN)', value: game.title.en || '-' },
         { label: '타이틀 (JP)', value: game.title.jp || '-' },
@@ -36,6 +41,11 @@ export default function BasicInfoTab({ game }: BasicInfoTabProps) {
           { label: '참여비', value: `${formatGP(game.calculatedEntryFee ?? 0)} (자동 계산)` },
           { label: '보상 유형', value: game.stRewardType === 'PROPORTIONAL' ? '비율별 보상' : '단계별 보상' },
           { label: '탈락자 응모권', value: `${game.eliminationTickets ?? 0}장` },
+        ]} />
+      ) : isPMType2 ? (
+        <DetailSection title="보상설정" fields={[
+          { label: '승리 보상 GP', value: formatGP(game.winRewardGP ?? 0) },
+          { label: '총 상금 GP', value: `${formatGP(game.totalPrizeGP)} (자동 계산)` },
         ]} />
       ) : (
         <DetailSection title="보상설정" fields={[
@@ -100,12 +110,17 @@ export default function BasicInfoTab({ game }: BasicInfoTabProps) {
         </>
       ) : (
         <>
-          <DetailSection title="참여설정" fields={[
-            { label: '참여 정원', value: game.maxParticipants === 0 ? '무제한' : `${formatNumber(game.maxParticipants)}명` },
-            { label: '참여 비용', value: formatGP(game.participationCost) },
-            { label: '부스팅 비용', value: formatGP(game.boostingCost) },
-            { label: '부스팅 배수', value: `${game.boostingMultiplier}배` },
-          ]} />
+          <DetailSection title="참여설정" fields={
+            isPMType2 ? [
+              { label: '참여 정원', value: `${formatNumber(game.maxParticipants)}명` },
+              { label: '참여 비용', value: '0 GP (무료)' },
+            ] : [
+              { label: '참여 정원', value: game.maxParticipants === 0 ? '무제한' : `${formatNumber(game.maxParticipants)}명` },
+              { label: '참여 비용', value: formatGP(game.participationCost) },
+              { label: '부스팅 비용', value: formatGP(game.boostingCost) },
+              { label: '부스팅 배수', value: `${game.boostingMultiplier}배` },
+            ]
+          } />
           <DetailSection title="일정설정" fields={[
             { label: '투표 시작일시', value: game.publishedAt ? formatDateTime(game.publishedAt) : '(게시 시 설정)' },
             { label: '투표 종료일시', value: formatDateTime(game.endDate) },

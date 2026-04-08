@@ -10,7 +10,8 @@ import ConfirmModal from '@/components/modals/ConfirmModal';
 import { useGameStore } from '@/stores/useGameStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { generateId } from '@/lib/utils';
-import type { Game, MultiLangText, GameStatus, GameType, Quiz, QuizChoice, PrizeTier, STRewardType } from '@/lib/types';
+import type { Game, MultiLangText, GameStatus, GameType, PMSubType, Quiz, QuizChoice, PrizeTier, STRewardType } from '@/lib/types';
+import { PM_SUBTYPE_LABELS } from '@/lib/constants';
 import PMCreateFields from './PMCreateFields';
 import STCreateFields from './STCreateFields';
 
@@ -47,10 +48,13 @@ export default function CreateGamePage() {
 
   // Common state
   const [gameType, setGameType] = useState<GameType>('PREDICTION_MARKET');
+  const [pmType, setPmType] = useState<PMSubType>('type1');
   const isST = gameType === 'SURVIVAL_TRIVIA';
+  const isPMType2 = gameType === 'PREDICTION_MARKET' && pmType === 'type2';
   const [title, setTitle] = useState<MultiLangText>({ ...EMPTY_LANG });
   const [description, setDescription] = useState<MultiLangText>({ ...EMPTY_LANG });
   const [totalPrizeGP, setTotalPrizeGP] = useState(10000);
+  const [winRewardGP, setWinRewardGP] = useState(1);
   const [hintLinkEnabled, setHintLinkEnabled] = useState(false);
   const [hintLink, setHintLink] = useState('');
   const [participationCost, setParticipationCost] = useState(1);
@@ -77,11 +81,31 @@ export default function CreateGamePage() {
 
   const handleTypeChange = (type: GameType) => {
     setGameType(type);
+    setPmType('type1');
     setErrors({});
     setBoostingCost(1); setBoostingMultiplier(2); setEndDate(''); setResultDate(''); setResultBasis({ ...EMPTY_LANG });
     setQuizzes(createEmptyQuizzes()); setStartDateTime('');
     setStMaxPrizePool(10_000_000); setStMaxRecruitment(10_000); setStMultiplier(1.25);
     setStRewardType('TIERED'); setStPrizeTiers(DEFAULT_PRIZE_TIERS); setStEliminationTickets(1);
+    setWinRewardGP(1); setUseLimit(false); setMaxParticipants(0); setParticipationCost(1);
+  };
+
+  const handlePmTypeChange = (type: PMSubType) => {
+    setPmType(type);
+    setErrors({});
+    if (type === 'type2') {
+      setParticipationCost(0);
+      setBoostingCost(0);
+      setBoostingMultiplier(0);
+      setUseLimit(false);
+      setMaxParticipants(0);
+      setWinRewardGP(1);
+    } else {
+      setParticipationCost(1);
+      setBoostingCost(1);
+      setBoostingMultiplier(2);
+      setWinRewardGP(0);
+    }
   };
 
   const validateForReady = () => {
@@ -92,9 +116,13 @@ export default function CreateGamePage() {
     if (!description.ko.trim()) errs.descKo = '상세설명(KO)은 필수입니다.';
     if (!description.en.trim()) errs.descEn = '상세설명(EN)은 필수입니다.';
     if (!description.jp.trim()) errs.descJp = '상세설명(JP)은 필수입니다.';
-    if (!isST && totalPrizeGP <= 0) errs.totalPrizeGP = '총 상금 GP를 입력하세요.';
+    if (!isST && !isPMType2 && totalPrizeGP <= 0) errs.totalPrizeGP = '총 상금 GP를 입력하세요.';
 
     if (gameType === 'PREDICTION_MARKET') {
+      if (isPMType2) {
+        if (winRewardGP < 1) errs.winRewardGP = '승리 보상 GP는 최소 1 이상이어야 합니다.';
+        if (maxParticipants <= 0) errs.maxParticipants = '참여 정원은 필수입니다.';
+      }
       if (!endDate) errs.endDate = '투표 종료일시를 입력하세요.';
       if (!resultDate) errs.resultDate = '결과 발표일자를 입력하세요.';
       if (!resultBasis.ko.trim()) errs.resultBasisKo = '결과 확인 기준(KO)은 필수입니다.';
@@ -120,7 +148,11 @@ export default function CreateGamePage() {
     const base = title.ko.trim() && title.en.trim() && title.jp.trim() &&
       description.ko.trim() && description.en.trim() && description.jp.trim();
     if (gameType === 'PREDICTION_MARKET') {
-      return base && totalPrizeGP > 0 && endDate && resultDate && resultBasis.ko.trim() && resultBasis.en.trim() && resultBasis.jp.trim();
+      const pmBase = base && endDate && resultDate && resultBasis.ko.trim() && resultBasis.en.trim() && resultBasis.jp.trim();
+      if (isPMType2) {
+        return pmBase && winRewardGP >= 1 && maxParticipants > 0;
+      }
+      return pmBase && totalPrizeGP > 0;
     }
     return base && startDateTime && stMaxPrizePool > 0 && stMaxRecruitment > 0;
   };
@@ -129,19 +161,22 @@ export default function CreateGamePage() {
     if (status === 'Ready' && !validateForReady()) return;
     if (status === 'Draft' && !validateForDraft()) return;
 
+    const computedTotalPrizeGP = isPMType2 ? winRewardGP * maxParticipants : totalPrizeGP;
+
     const game: Game = {
       id: `game-${generateId()}`,
       type: gameType,
+      ...(gameType === 'PREDICTION_MARKET' ? { pmType } : {}),
       title,
       description,
       hintLinkEnabled: isST ? false : hintLinkEnabled,
       hintLink: isST ? '' : (hintLinkEnabled ? hintLink : ''),
       status,
-      totalPrizeGP: isST ? 0 : totalPrizeGP,
+      totalPrizeGP: isST ? 0 : computedTotalPrizeGP,
       maxParticipants: 0,
-      participationCost: isST ? 0 : participationCost,
-      boostingCost: isST ? 0 : boostingCost,
-      boostingMultiplier: isST ? 0 : boostingMultiplier,
+      participationCost: isST ? 0 : (isPMType2 ? 0 : participationCost),
+      boostingCost: isST ? 0 : (isPMType2 ? 0 : boostingCost),
+      boostingMultiplier: isST ? 0 : (isPMType2 ? 0 : boostingMultiplier),
       endDate: isST ? '' : endDate,
       resultDate: isST ? '' : resultDate,
       resultBasis: isST ? { ko: '', en: '', jp: '' } : resultBasis,
@@ -168,6 +203,10 @@ export default function CreateGamePage() {
         calculatedEntryFee: stMaxRecruitment > 0 ? Math.floor(stMaxPrizePool / stMaxRecruitment * stMultiplier) : 0,
         prizeTiers: stRewardType === 'TIERED' ? stPrizeTiers : [],
         eliminationTickets: stEliminationTickets,
+      } : isPMType2 ? {
+        maxParticipants,
+        participationCost: 0,
+        winRewardGP,
       } : {
         maxParticipants: useLimit ? maxParticipants : 0,
         participationCost,
@@ -193,7 +232,7 @@ export default function CreateGamePage() {
       <div className="max-w-[800px] space-y-8">
         <Section title="기본정보">
           <div className="space-y-4">
-            <GameTypeSelector gameType={gameType} onChange={handleTypeChange} />
+            <GameTypeSelector gameType={gameType} onChange={handleTypeChange} pmType={pmType} onPmTypeChange={handlePmTypeChange} />
             <MultiLangInput label="타이틀" values={title} onChange={setTitle} maxLength={50} required error={errors.titleKo || errors.titleEn || errors.titleJp} />
             <MultiLangEditor label="상세설명" values={description} onChange={setDescription} required error={errors.descKo || errors.descEn || errors.descJp} />
             {!isST && (
@@ -204,12 +243,28 @@ export default function CreateGamePage() {
 
         {!isST && (
           <Section title="보상설정">
-            <NumberInput label="총 상금 GP" value={totalPrizeGP} onChange={setTotalPrizeGP} min={1} unit="GP" required error={errors.totalPrizeGP} />
+            {isPMType2 ? (
+              <div className="space-y-4">
+                <NumberInput label="승리 보상 GP" value={winRewardGP} onChange={setWinRewardGP} min={1} unit="GP" required error={errors.winRewardGP} />
+                <div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-gray-700 w-[140px]">총 상금 GP</span>
+                    <span className="text-sm text-gray-900 font-semibold">
+                      {maxParticipants > 0 ? `${(winRewardGP * maxParticipants).toLocaleString()} GP` : '-'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1 ml-[152px]">승리 보상 GP x 참여 정원 (자동 계산)</p>
+                </div>
+              </div>
+            ) : (
+              <NumberInput label="총 상금 GP" value={totalPrizeGP} onChange={setTotalPrizeGP} min={1} unit="GP" required error={errors.totalPrizeGP} />
+            )}
           </Section>
         )}
 
         {gameType === 'PREDICTION_MARKET' ? (
           <PMCreateFields
+            pmType={pmType}
             maxParticipants={maxParticipants} setMaxParticipants={setMaxParticipants} useLimit={useLimit} setUseLimit={setUseLimit}
             participationCost={participationCost} setParticipationCost={setParticipationCost} boostingCost={boostingCost} setBoostingCost={setBoostingCost}
             boostingMultiplier={boostingMultiplier} setBoostingMultiplier={setBoostingMultiplier} endDate={endDate} setEndDate={setEndDate}
@@ -296,17 +351,29 @@ function HintLinkField({ enabled, onToggle, value, onChange }: { enabled: boolea
   );
 }
 
-function GameTypeSelector({ gameType, onChange }: { gameType: GameType; onChange: (t: GameType) => void }) {
+function GameTypeSelector({ gameType, onChange, pmType, onPmTypeChange }: { gameType: GameType; onChange: (t: GameType) => void; pmType: PMSubType; onPmTypeChange: (t: PMSubType) => void }) {
   return (
-    <div className="flex items-center gap-3">
-      <span className="text-sm font-medium text-gray-700 w-[100px]">게임유형</span>
-      <div className="flex gap-4">
-        {([['PREDICTION_MARKET', 'Prediction Market', 'text-blue-600'], ['SURVIVAL_TRIVIA', 'Survival Trivia', 'text-purple-600']] as const).map(([value, label, cls]) => (
-          <label key={value} className="flex items-center gap-2 cursor-pointer">
-            <input type="radio" name="gameType" value={value} checked={gameType === value} onChange={() => onChange(value)} className={cls} />
-            <span className="text-sm">{label}</span>
-          </label>
-        ))}
+    <div className="flex items-start gap-3">
+      <span className="text-sm font-medium text-gray-700 w-[100px] pt-0.5">게임유형</span>
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-4">
+          {([['PREDICTION_MARKET', 'Prediction Market', 'text-blue-600'], ['SURVIVAL_TRIVIA', 'Survival Trivia', 'text-purple-600']] as const).map(([value, label, cls]) => (
+            <label key={value} className="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="gameType" value={value} checked={gameType === value} onChange={() => onChange(value)} className={cls} />
+              <span className="text-sm">{label}</span>
+            </label>
+          ))}
+        </div>
+        {gameType === 'PREDICTION_MARKET' && (
+          <div className="ml-6 flex gap-4 pt-1 pb-1 pl-2 border-l-2 border-blue-200">
+            {(['type1', 'type2'] as const).map((type) => (
+              <label key={type} className="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="pmType" value={type} checked={pmType === type} onChange={() => onPmTypeChange(type)} className="text-blue-600" />
+                <span className="text-sm text-gray-600">{PM_SUBTYPE_LABELS[type]}</span>
+              </label>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
