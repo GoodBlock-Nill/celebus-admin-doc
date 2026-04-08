@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.5</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v3.0</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.13</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.04.07</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -148,7 +148,7 @@ p {
 
 <h2>1. 화면 목적</h2>
 
-<p>새로운 게임을 생성하는 폼 화면입니다. 관리자는 게임 유형(Prediction Market 또는 Survival Trivia)을 선택하고, 기본 정보, 보상 설정, 참여 설정, 일정 설정, 결과 설정을 입력하여 게임을 임시저장하거나 즉시 게시할 수 있습니다. 선택한 게임 유형에 따라 폼 항목이 조건부로 표시됩니다.</p>
+<p>새로운 게임을 생성하는 폼 화면입니다. 관리자는 게임 유형(Prediction Market 또는 Survival Trivia)을 선택하고, 기본 정보, 보상 설정, 참여 설정, 일정 설정, 결과 설정을 입력하여 게임을 임시저장하거나 즉시 게시할 수 있습니다. 선택한 게임 유형에 따라 폼 항목이 조건부로 표시됩니다. Prediction Market은 유료 참가(타입 1)와 무료 참가(타입 2) 서브타입을 선택할 수 있으며, 서브타입에 따라 보상설정 및 참여설정 항목이 다르게 표시됩니다.</p>
 
 <hr style="border: none; border-top: 1px solid #dfe1e6; margin: 24px 0;">
 
@@ -165,6 +165,8 @@ p {
 │ 게임 유형 선택                                                     │
 │ ┌─────────────────────────────────────────────────────────────┐ │
 │ │ ● Prediction Market                                         │ │
+│ │    └ ● 타입 1 (유료 참가)   ← 서브타입 기본 선택             │ │
+│ │    └ ○ 타입 2 (무료 참가)                                   │ │
 │ │ ○ Survival Trivia                                           │ │
 │ │ (게임유형 선택 시 하단 폼이 선택한 유형에 맞게 변경됩니다.)    │ │
 │ └─────────────────────────────────────────────────────────────┘ │
@@ -217,9 +219,17 @@ p {
 ├─────────────────────────────────────────────────────────────────┤
 │ [보상설정]                                                         │
 │ ┌─────────────────────────────────────────────────────────────┐ │
-│ │ [Prediction Market 선택 시]                                  │ │
+│ │ [Prediction Market 타입 1 선택 시]                           │ │
 │ │ 총 상금 GP *                                                 │ │
 │ │ [ ______________ ] GP                                       │ │
+│ ├──────────────────────────────────────────────────────────────│ │
+│ │ [Prediction Market 타입 2 선택 시]                           │ │
+│ │ 승리 보상 GP *                                               │ │
+│ │ [ ______________ ] GP  (최소 1 GP)                          │ │
+│ │                                                              │ │
+│ │ 총 상금 GP (자동 계산)                                       │ │
+│ │ [ ______________ ] GP  (readonly, = 승리 보상 GP × 참여 정원)│ │
+│ │ (승리 보상 GP 또는 참여 정원 미입력 시: "-" 표시)             │ │
 │ ├──────────────────────────────────────────────────────────────│ │
 │ │ [Survival Trivia 선택 시]                                    │ │
 │ │ 최대 상금풀 *                                                │ │
@@ -257,7 +267,7 @@ p {
 ├─────────────────────────────────────────────────────────────────┤
 │ [참여설정]                                                         │
 │ ┌─────────────────────────────────────────────────────────────┐ │
-│ │ [Prediction Market 선택 시]                                  │ │
+│ │ [Prediction Market 타입 1 선택 시]                           │ │
 │ │ 참여 정원                                                     │ │
 │ │ ☐ 참여 정원 제한  ← 체크박스                                  │ │
 │ │ (체크 시에만 아래 입력 표시)                                   │ │
@@ -272,6 +282,14 @@ p {
 │ │                                                              │ │
 │ │ 부스팅 배수 *                                                 │ │
 │ │ [ ______________ ] 배  (기본값: 2, 최대: 10)                 │ │
+│ ├──────────────────────────────────────────────────────────────│ │
+│ │ [Prediction Market 타입 2 선택 시]                           │ │
+│ │ 참여 정원 *                                                   │ │
+│ │ [ ______________ ] 명  (필수 입력, 무제한 불가, 최소 1명)     │ │
+│ │                                                              │ │
+│ │ 참여 비용                                                     │ │
+│ │ [ 0 GP ]  (readonly, 무료 참가 고정)                         │ │
+│ │ (부스팅 없음)                                                 │ │
 │ ├──────────────────────────────────────────────────────────────│ │
 │ │ [Survival Trivia 선택 시]                                    │ │
 │ │ 최대 모집인원 *                                               │ │
@@ -335,8 +353,13 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임 유형</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Radio 버튼</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Radio 버튼 (메인)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market / Survival Trivia 선택 가능 (기본 선택: Prediction Market), 유형 변경 시 하단 폼 항목 변경됨</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Radio 버튼 (서브타입, PM 선택 시)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타입 1 (유료 참가) / 타입 2 (무료 참가) 선택 가능 (기본 선택: 타입 1), 서브타입 변경 시 보상설정·참여설정 항목 변경됨</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기본정보</td>
@@ -394,9 +417,19 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">드래그앤드롭으로 재정렬 가능</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상설정 (PM)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상설정 (PM 타입1)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP (필수)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, GP 단위 표시</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상설정 (PM 타입2)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">승리 보상 GP (필수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, 최소 1 GP</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP (자동 계산)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Readonly, = 승리 보상 GP × 참여 정원. 승리 보상 GP 또는 참여 정원 미입력 시 "-" 표시</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상설정 (ST)</td>
@@ -429,7 +462,7 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, 기본값: 1장, 팬퀘스트 응모권</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여설정 (PM)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여설정 (PM 타입1)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">체크박스 '참여 정원 제한' + Number Input (체크 시에만 표시, 미체크 시 무제한)</td>
   </tr>
@@ -447,6 +480,16 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 배수 (필수)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, 기본값: 2배, 최대 10배</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여설정 (PM 타입2)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원 (필수)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, 무제한 불가, 최소 1명</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Readonly: 0 GP, 무료 참가 고정, 편집 불가</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여설정 (ST)</td>
@@ -604,13 +647,34 @@ p {
 
 <h3>보상설정 입력</h3>
 
-<h5>총 상금 GP (Prediction Market)</h5>
+<h5>총 상금 GP (Prediction Market 타입1)</h5>
 
 <ul>
   <li>Number Input 사용</li>
   <li>양수만 입력 가능</li>
   <li>천 단위 콤마 자동 표시</li>
   <li>최소값: 1 GP</li>
+</ul>
+
+<h5>승리 보상 GP (Prediction Market 타입2)</h5>
+
+<ul>
+  <li>Number Input 사용</li>
+  <li>정답자 1인당 받는 GP</li>
+  <li>양수만 입력 가능</li>
+  <li>천 단위 콤마 자동 표시</li>
+  <li>최소값: 1 GP</li>
+</ul>
+
+<h5>총 상금 GP (Prediction Market 타입2, 자동 계산)</h5>
+
+<ul>
+  <li>Readonly 필드 (수동 편집 불가)</li>
+  <li>계산 공식: <code>승리 보상 GP × 참여 정원</code></li>
+  <li>승리 보상 GP 또는 참여 정원 변경 시 실시간 재계산</li>
+  <li>승리 보상 GP 또는 참여 정원 미입력 시 "-" 표시</li>
+  <li>참여설정의 참여 정원 값 변경 시 즉시 갱신</li>
+  <li>천 단위 콤마 자동 표시, GP 단위</li>
 </ul>
 
 <h5>최대 상금풀 (Survival Trivia)</h5>
@@ -680,7 +744,7 @@ p {
 
 <h3>참여설정 입력</h3>
 
-<h5>참여 정원 (Prediction Market)</h5>
+<h5>참여 정원 (Prediction Market 타입1)</h5>
 
 <ul>
   <li>체크박스 '참여 정원 제한' 표시</li>
@@ -689,7 +753,7 @@ p {
   <li>최소값: 1명</li>
 </ul>
 
-<h5>참여 비용 (Prediction Market)</h5>
+<h5>참여 비용 (Prediction Market 타입1)</h5>
 
 <ul>
   <li>Number Input 사용</li>
@@ -697,7 +761,7 @@ p {
   <li>최소값: 1 GP</li>
 </ul>
 
-<h5>부스팅 비용 (Prediction Market)</h5>
+<h5>부스팅 비용 (Prediction Market 타입1)</h5>
 
 <ul>
   <li>Number Input 사용</li>
@@ -705,13 +769,34 @@ p {
   <li>최소값: 1 GP</li>
 </ul>
 
-<h5>부스팅 배수 (Prediction Market)</h5>
+<h5>부스팅 배수 (Prediction Market 타입1)</h5>
 
 <ul>
   <li>Number Input 사용</li>
   <li>기본값: 2배</li>
   <li>최소값: 1배</li>
   <li>최대값: 10배</li>
+</ul>
+
+<h5>참여 정원 (Prediction Market 타입2)</h5>
+
+<ul>
+  <li>Number Input 사용 (필수)</li>
+  <li>무제한 불가 (체크박스 없이 바로 Number Input 표시)</li>
+  <li>최소값: 1명</li>
+</ul>
+
+<h5>참여 비용 (Prediction Market 타입2)</h5>
+
+<ul>
+  <li>Readonly 필드: 0 GP 고정 (무료 참가)</li>
+  <li>수동 편집 불가</li>
+</ul>
+
+<h5>부스팅 (Prediction Market 타입2)</h5>
+
+<ul>
+  <li>부스팅 비용/부스팅 배수 필드 미표시 (타입2에서 숨김)</li>
 </ul>
 
 <h5>최대 모집인원 (Survival Trivia)</h5>
@@ -878,12 +963,12 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">URL 형식 검증 (사용 선택 시)</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP (PM)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP (PM 타입1)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1 GP 이상</td>
   </tr>
 </table>
 
-<h5>Prediction Market 전용 필수 항목</h5>
+<h5>Prediction Market 타입1 전용 필수 항목</h5>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
@@ -901,6 +986,35 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 배수</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1 ~ 10배</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">투표 종료일시</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">현재 시간 이후</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 발표 예정일</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">투표 종료일 이후</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">결과 확인 기준</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">모든 언어 입력 필수 (KO/EN/JP), 각 500자 이내</td>
+  </tr>
+</table>
+
+<h5>Prediction Market 타입2 전용 필수 항목</h5>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">조건</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">승리 보상 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1 GP 이상</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1명 이상 (무제한 불가)</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">투표 종료일시</td>
@@ -1036,12 +1150,27 @@ p {
   </tr>
 </table>
 
-<h5>[생성하기] 활성화 필수 조건 - Prediction Market</h5>
+<h5>[생성하기] 활성화 필수 조건 - Prediction Market 타입1</h5>
 
 <ul>
   <li>타이틀: KO, EN, JP 모두 입력</li>
   <li>상세설명: KO, EN, JP 모두 입력</li>
   <li>총 상금 GP: 0보다 큰 값</li>
+  <li>참여 비용: 0보다 큰 값</li>
+  <li>부스팅 비용: 0보다 큰 값</li>
+  <li>부스팅 배수: 1 이상 10 이하</li>
+  <li>투표 종료일시: 선택 완료</li>
+  <li>결과 발표 예정일: 선택 완료</li>
+  <li>결과 확인 기준: KO, EN, JP 모두 입력</li>
+</ul>
+
+<h5>[생성하기] 활성화 필수 조건 - Prediction Market 타입2</h5>
+
+<ul>
+  <li>타이틀: KO, EN, JP 모두 입력</li>
+  <li>상세설명: KO, EN, JP 모두 입력</li>
+  <li>승리 보상 GP: 0보다 큰 값</li>
+  <li>참여 정원: 1 이상</li>
   <li>투표 종료일시: 선택 완료</li>
   <li>결과 발표 예정일: 선택 완료</li>
   <li>결과 확인 기준: KO, EN, JP 모두 입력</li>
@@ -1081,24 +1210,39 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Radio 버튼 기본 선택</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원 (PM)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM 서브타입</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타입 1 (유료 참가)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM 선택 시 서브타입 기본 선택</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원 (PM 타입1)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">무제한</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">체크박스 미체크</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용 (PM)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용 (PM 타입1)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1 GP</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 비용</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 비용 (PM 타입1)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">1 GP</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 배수</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">부스팅 배수 (PM 타입1)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2배</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원 (PM 타입2)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">-</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">필수 입력, 기본값 없음</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용 (PM 타입2)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">0 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">고정값, 수정 불가</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최대 모집인원 (ST)</td>
@@ -1387,6 +1531,12 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.11</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Nill Yoo</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">ST 퀴즈 문제 추가/삭제 기능 추가 (최대 10개, 최소 1개). 기본 10문제, 문제 번호 자동 재정렬</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v3.0</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.04.07</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Carl Lee</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM 타입2 (무료 참가) 추가: 게임유형 서브타입 선택, 보상설정 (승리 보상 GP + 자동 계산), 참여설정 (정원 필수, 참여비 0GP, 부스팅 제거)</td>
   </tr>
 </table>
 

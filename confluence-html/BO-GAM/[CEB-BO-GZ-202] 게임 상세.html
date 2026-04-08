@@ -116,11 +116,11 @@ p {
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">버전</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.5</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.6</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">최근 업데이트</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.03.13</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.04.07</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Jira 링크</td>
@@ -225,7 +225,7 @@ Ended(종료):         (버튼 없음)
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임유형</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market 또는 Survival Trivia</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Prediction Market (타입1), Prediction Market (타입2), 또는 Survival Trivia</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">타이틀</td>
@@ -264,6 +264,8 @@ Ended(종료):         (버튼 없음)
 
 <h6>보상설정 섹션</h6>
 
+<p><strong>PM 타입1:</strong></p>
+
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
@@ -275,7 +277,26 @@ Ended(종료):         (버튼 없음)
   </tr>
 </table>
 
+<p><strong>PM 타입2:</strong></p>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">승리 보상 GP</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP (천 단위 콤마)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">총 상금 GP (자동 계산)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자} GP (천 단위 콤마, 참여 정원 × 승리 보상 GP로 자동 계산)</td>
+  </tr>
+</table>
+
 <h6>참여설정 섹션</h6>
+
+<p><strong>PM 타입1:</strong></p>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
@@ -299,6 +320,27 @@ Ended(종료):         (버튼 없음)
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}배</td>
   </tr>
 </table>
+
+<p><strong>PM 타입2:</strong></p>
+
+<table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
+  <tr>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">항목</th>
+    <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{숫자}명 (무제한 없음)</td>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 비용</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">0 GP (무료)</td>
+  </tr>
+</table>
+
+<blockquote style="border-left: 3px solid #dfe1e6; margin: 12px 0; padding: 8px 16px; color: #6b778c; background-color: #f9fafb;">
+<p>PM 타입2는 부스팅 항목 미표시. 참여 비용은 항상 무료(0 GP).</p>
+</blockquote>
 
 <h6>일정설정 섹션</h6>
 
@@ -1161,6 +1203,12 @@ Ended(종료):         (버튼 없음)
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">일자</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경 내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.6</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.04.07</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Carl Lee</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM 타입2 (무료 참가) 표시/수정 지원 추가</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.5</td>

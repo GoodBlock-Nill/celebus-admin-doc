@@ -220,11 +220,11 @@ p {
 
 <table>
   <tr><th>유형</th><th>코드</th><th>설명</th><th>GP 변동</th><th>게임유형</th><th>비고</th></tr>
-  <tr><td>참여</td><td>PARTICIPATION</td><td>게임 참여 시</td><td>- (차감)</td><td>PM, ST</td><td>-</td></tr>
-  <tr><td>부스팅</td><td>BOOSTING</td><td>부스팅 사용 시</td><td>- (차감)</td><td>PM 전용</td><td>ST에는 부스팅 없음</td></tr>
-  <tr><td>환급</td><td>REFUND</td><td>결과 발표 후 참여 GP 반환</td><td>+ (증가)</td><td>PM 전용</td><td>ST는 참여GP 환급 없음</td></tr>
-  <tr><td>보상</td><td>REWARD</td><td>정답/생존 시 보상 지급</td><td>+ (증가)</td><td>PM, ST</td><td>PM: 비율배분, ST: 균등분배</td></tr>
-  <tr><td>환불</td><td>REFUND_CANCEL</td><td>게임 취소 시 환불</td><td>+ (증가)</td><td>PM, ST</td><td>PM: 부스팅+참여GP, ST: 참여GP만</td></tr>
+  <tr><td>참여</td><td>PARTICIPATION</td><td>게임 참여 시</td><td>- (차감)</td><td>PM 타입1, ST</td><td>PM 타입2는 0 GP이므로 변동 내역 미생성</td></tr>
+  <tr><td>부스팅</td><td>BOOSTING</td><td>부스팅 사용 시</td><td>- (차감)</td><td>PM 타입1 전용</td><td>ST·PM 타입2에는 부스팅 없음</td></tr>
+  <tr><td>환급</td><td>REFUND</td><td>결과 발표 후 참여 GP 반환</td><td>+ (증가)</td><td>PM 타입1 전용</td><td>ST는 참여GP 환급 없음. PM 타입2는 참여비 0이므로 해당 없음</td></tr>
+  <tr><td>보상</td><td>REWARD</td><td>정답/생존 시 보상 지급</td><td>+ (증가)</td><td>PM 타입1, 타입2, ST</td><td>PM 타입1: 비율배분 / PM 타입2: 고정 균등 보상 / ST: 균등분배</td></tr>
+  <tr><td>환불</td><td>REFUND_CANCEL</td><td>게임 취소 시 환불</td><td>+ (증가)</td><td>PM 타입1, 타입2, ST</td><td>PM 타입1: 부스팅+참여GP / PM 타입2: 해당 없음 (참여비 0) / ST: 참여GP만</td></tr>
   <tr><td>GP 가져오기</td><td>EXCHANGE_IN</td><td>CELB → GP 교환</td><td>+ (증가)</td><td>공통</td><td>게임유형 무관</td></tr>
   <tr><td>CELB으로 보내기</td><td>EXCHANGE_OUT</td><td>GP → CELB 교환</td><td>- (차감)</td><td>공통</td><td>게임유형 무관</td></tr>
 </table>
@@ -233,7 +233,7 @@ p {
 
 <h2>5. 보상 계산 로직</h2>
 
-<h3>Prediction Market (비율 배분)</h3>
+<h3>Prediction Market 타입1 (유료 참가 — 비율 배분)</h3>
 
 <ul>
   <li>정답자 보상 = 총 상금 GP × (개인 배분 값 / 전체 합)</li>
@@ -246,6 +246,18 @@ p {
   <li>참여 GP는 정답/오답 관계없이 전액 환급</li>
   <li>부스팅 GP는 환급 없음, 배분 가중치로만 사용</li>
   <li>소수점 8자리 이하 절삭, 단수는 시스템 귀속</li>
+</ul>
+
+<h3>Prediction Market 타입2 (무료 참가 — 균등 보상)</h3>
+
+<ul>
+  <li>참여비: 0 GP (무료)</li>
+  <li>부스팅: 없음</li>
+  <li>정답자 보상 = 승리 보상 GP (게임 생성 시 설정한 고정값, 정답자 전원 동일 금액)</li>
+  <li>총 상금 GP = 승리 보상 GP × 참여 정원 (게임 생성 시 자동 계산)</li>
+  <li>오답자 보상: 없음</li>
+  <li>참여 GP 환급: 해당 없음 (무료 참가이므로 차감된 GP 없음)</li>
+  <li>소수점 처리: 해당 없음 (고정 금액이므로 소수 발생 안 함)</li>
 </ul>
 
 <h3>Survival Trivia (동적 상금풀 + 균등 분배)</h3>
@@ -358,6 +370,7 @@ p {
 <table>
   <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
   <tr><td>v1.0</td><td>2026.03.13</td><td>@Nill Yoo</td><td>공통 정책서 최초 작성. 각 화면 스펙 문서에 분산된 공통 정책을 통합.</td></tr>
+  <tr><td>v2.0</td><td>2026.04.07</td><td>@Carl Lee</td><td>PM 타입2 (무료 참가 — 균등 보상) 보상 계산 로직 추가, 기존 PM을 타입1로 명칭 변경, GP 변동 유형 타입별 구분 추가</td></tr>
 </table>
 
 </body>
