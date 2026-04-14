@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'CELEBUS Game Zone',
-  description: 'CELEBUS K-pop Fan Entertainment - Game Zone',
+  title: 'CELEBUS',
+  description: 'CELEBUS - K-pop Fan Entertainment Platform',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,

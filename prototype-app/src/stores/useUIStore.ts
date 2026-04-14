@@ -1,52 +1,35 @@
 'use client';
 
 import { create } from 'zustand';
-import { generateId } from '@/lib/utils';
-
-export interface Toast {
-  id: string;
-  message: string;
-  type: 'success' | 'error';
-}
+import type { ToastMessage, ToastType } from '@/lib/types';
 
 interface UIState {
-  activeModal: string | null;
-  modalData: Record<string, unknown> | null;
-  toasts: Toast[];
-  openModal: (name: string, data?: Record<string, unknown>) => void;
-  closeModal: () => void;
-  addToast: (message: string, type: 'success' | 'error') => void;
+  toasts: ToastMessage[];
+  showOnboarding: boolean;
+  addToast: (type: ToastType, message: string) => void;
   removeToast: (id: string) => void;
+  setShowOnboarding: (show: boolean) => void;
 }
 
-const MAX_TOASTS = 3;
-const TOAST_DURATION_MS = 3000;
+let toastCounter = 0;
 
-export const useUIStore = create<UIState>((set) => ({
-  activeModal: null,
-  modalData: null,
+export const useUIStore = create<UIState>((set, get) => ({
   toasts: [],
-
-  openModal: (name, data = undefined) => set({ activeModal: name, modalData: data ?? null }),
-
-  closeModal: () => set({ activeModal: null, modalData: null }),
-
-  addToast: (message, type) => {
-    const id = generateId();
-    set((state) => {
-      const current = state.toasts;
-      const trimmed = current.length >= MAX_TOASTS ? current.slice(1) : current;
-      return { toasts: [...trimmed, { id, message, type }] };
-    });
+  showOnboarding: false,
+  addToast: (type, message) => {
+    const id = `toast-${++toastCounter}`;
+    const toast: ToastMessage = { id, type, message };
+    const current = get().toasts;
+    const updated = current.length >= 3
+      ? [...current.slice(1), toast]
+      : [...current, toast];
+    set({ toasts: updated });
     setTimeout(() => {
-      set((state) => ({
-        toasts: state.toasts.filter((t) => t.id !== id),
-      }));
-    }, TOAST_DURATION_MS);
+      set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) }));
+    }, 3000);
   },
-
-  removeToast: (id) =>
-    set((state) => ({
-      toasts: state.toasts.filter((t) => t.id !== id),
-    })),
+  removeToast: (id) => {
+    set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) }));
+  },
+  setShowOnboarding: (show) => set({ showOnboarding: show }),
 }));

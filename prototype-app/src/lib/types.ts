@@ -1,184 +1,220 @@
-export interface MultiLangText {
-  ko: string;
-  en: string;
-  jp: string;
-}
+// ============================================================
+// CELEBUS v2 고도화 타입 정의
+// ============================================================
 
-// Game
-export type GameStatus = 'Draft' | 'Ready' | 'Active' | 'Pending' | 'Closed' | 'Ended';
-export type GameType = 'PREDICTION_MARKET' | 'SURVIVAL_TRIVIA';
-export type GameResult = 'YES' | 'NO' | null;
+// --- 아티스트 ---
 
-export interface Game {
+export interface ArtistMember {
   id: string;
-  type: GameType;
-  title: MultiLangText;
-  description: MultiLangText;
-  hintLinkEnabled: boolean;
-  hintLink: string;
-  status: GameStatus;
-  totalPrizeGP: number;
-  maxParticipants: number;
-  participationCost: number;
-  boostingCost: number;
-  boostingMultiplier: number;
-  endDate: string;
-  resultDate: string;
-  resultBasis: MultiLangText;
-  result: GameResult;
-  resultTitle: MultiLangText;
-  resultDescription: MultiLangText;
-  resultLinkText: MultiLangText;
-  resultLinkUrl: MultiLangText;
-  rewardDistributed: boolean;
-  rewardDistributedAt: string | null;
-  participantCount: number;
-  yesCount: number;
-  noCount: number;
-  createdAt: string;
-  publishedAt: string | null;
+  name: string;
+  nameEn: string;
+  imageUrl: string;
 }
 
-// User participation
-export type UserParticipationStatus = 'NONE' | 'PARTICIPATED' | 'BOOSTED';
-
-export interface UserParticipation {
-  gameId: string;
-  choice: 'YES' | 'NO';
-  participationGP: number;
-  boostingGP: number;
-  status: UserParticipationStatus;
-  rewardGP: number;
-  refundGP: number;
-  participatedAt: string;
-}
-
-// GP
-export type GPChangeType = 'PARTICIPATION' | 'BOOSTING' | 'REFUND' | 'REWARD' | 'EXCHANGE_IN' | 'EXCHANGE_OUT' | 'REFUND_CANCEL';
-
-export interface GPChange {
+export interface Artist {
   id: string;
-  datetime: string;
-  type: GPChangeType;
-  amount: number;
-  balanceAfter: number;
-  relatedGameId: string | null;
-  relatedGameTitle: string | null;
-  relatedExchangeId: string | null;
-  notes: string;
-  gameType?: GameType;
+  name: string;
+  nameEn: string;
+  logoUrl: string;
+  backgroundUrl: string;
+  members: ArtistMember[];
 }
 
-// Exchange
-export type ExchangeDirection = 'CHARGE' | 'WITHDRAW';
-export type ExchangeStatus = 'PENDING' | 'SUCCESS' | 'FAILED';
+// --- 유저 ---
 
-export interface Exchange {
-  txid: string;
-  datetime: string;
-  direction: ExchangeDirection;
-  gpAmount: number;
-  celbAmount: number;
-  rate: number;
-  gpBefore: number;
-  gpAfter: number;
-  status: ExchangeStatus;
-  walletAddress: string;
-  failureReason: string | null;
+export interface UserCurrency {
+  virtue: number;        // 보유 덕력
+  virtueEarned: number;  // 획득 덕력 (누적)
+  tickets: number;       // 응모권
+  gp: number;            // GP
+  celebPoint: number;    // Celeb Point (Coming Soon)
 }
 
-// Ranking
+export interface UserStreak {
+  current: number;       // 현재 연속 출석일
+  lastCheckIn: string;   // 마지막 출석 날짜 (ISO)
+  todayCheckedIn: boolean;
+}
+
+export interface User {
+  id: string;
+  nickname: string;
+  profileImageUrl: string;
+  currency: UserCurrency;
+  streak: UserStreak;
+  followedArtistIds: string[];
+  isLoggedIn: boolean;
+}
+
+// --- 서비스 카드 (아티스트 탭) ---
+
+export type ServiceCardGroup = 'mission' | 'record' | 'more';
+
+export type ServiceCardId =
+  | 'challenge'
+  | 'daily-mission'
+  | 'support'
+  | 'virtue'
+  | 'collection'
+  | 'raffle'
+  | 'fandom-level'
+  | 'info'
+  | 'memory';
+
+export interface ServiceCardData {
+  id: ServiceCardId;
+  group: ServiceCardGroup;
+  icon: string;
+  title: string;
+  statusText: string;
+  href: string;
+  comingSoon: boolean;
+}
+
+// --- 그룹 라벨 ---
+
+export const SERVICE_GROUP_LABELS: Record<ServiceCardGroup, string> = {
+  mission: '미션',
+  record: '내기록',
+  more: '더보기',
+};
+
+// --- Quest 스토리 ---
+
+export type ChapterStatus = 'locked' | 'provisional' | 'active' | 'reviewing' | 'cleared';
+
+export type MissionStatus = 'INCOMPLETE' | 'SUBMITTED' | 'APPROVED' | 'REJECTED' | 'AUTO_COMPLETED';
+
+export type RejectReasonCode = 'IMG_BLUR' | 'WRONG_OBJ' | 'DUP_ENTRY' | 'DATE_EXP' | 'ETC_INPUT';
+
+export interface MissionRelatedLink {
+  label: string;
+  url: string;
+}
+
+export interface QuestMission {
+  id: string;
+  title: string;
+  type: 'capture' | 'trivia' | 'pm';
+  status: MissionStatus;
+  rewardText: string;
+  rejectReasonCode?: RejectReasonCode;
+  rejectReasonText?: string;
+  relatedLinks?: MissionRelatedLink[];
+  gameUnavailable?: boolean;
+}
+
+export interface QuestChapter {
+  id: string;
+  number: number;
+  title: string;
+  description: string;
+  status: ChapterStatus;
+  missions: QuestMission[];
+  goodsName: string;
+  goodsGrade: number;
+  goodsClaimed: boolean;
+  missionHint: string;
+}
+
+export interface RepeatingQuest {
+  id: string;
+  title: string;
+  period: string;
+  missionCount: number;
+  rewardText: string;
+  status: 'active' | 'ready' | 'ended';
+}
+
+// --- 덕력 랭킹 ---
+
 export interface RankingUser {
   rank: number;
   nickname: string;
-  uid: string;
-  profileImage: string;
-  accumulatedGP: number;
-  participationCount: number;
-  winRate: number;
-  lastParticipation: string;
-  pmAccumulatedGP: number;
-  pmParticipationCount: number;
-  pmWinRate: number;
-  stAccumulatedGP: number;
-  stParticipationCount: number;
-  stWinRate: number;
+  earnedPt: number;
+  isMe: boolean;
 }
 
-// Trivia
-export type TriviaStatus = 'SCHEDULED' | 'ONBOARDING' | 'LIVE' | 'ENDED' | 'NO_SCHEDULE';
-
-export interface PrizeTier {
-  recruitmentRate: number;
-  prizeRate: number;
+export interface VirtueRankingState {
+  myRank: number;
+  myEarnedPt: number;
+  myHeldPt: number;
+  seasonLabel: string;
+  seasonDaysLeft: number;
+  topUsers: RankingUser[];
 }
 
-export interface TriviaGame {
+// --- 서포트 이벤트 ---
+
+export type SupportEventStatus = 'active' | 'achieved' | 'executing' | 'completed' | 'expired' | 'cancelled';
+
+export interface SupportEvent {
   id: string;
-  title: MultiLangText;
-  description: MultiLangText;
-  status: TriviaStatus;
-  scheduledAt: string;
-  maxPrizePool: number;
-  maxRecruitment: number;
-  multiplier: number;
-  calculatedEntryFee: number;
-  prizeTiers: PrizeTier[];
-  eliminationTickets: number;
-  appliedPrizePool?: number;
-  actualParticipants?: number;
+  title: string;
+  icon: string;
+  status: SupportEventStatus;
+  targetPt: number;
+  currentPt: number;
+  myInvestPt: number;
+  participants: number;
+  daysLeft: number;
+  description: string;
+  resultMessage?: string;
+  resultImages?: string[];
+}
+
+// --- 팬덤 레벨 ---
+
+export interface FandomLevelReward {
+  level: number;
+  targetPt: number;
+  rewardName: string;
+  unlocked: boolean;
+}
+
+export interface FandomLevelState {
+  currentLevel: number;
+  currentPt: number;
+  targetPt: number;
+  myContributionPt: number;
   participantCount: number;
-  questionCount: number;
-  timePerQuestion: number;
-  currentQuestion: number;
-  survivorCount: number;
+  monthlyTotal: number;
+  topActivity: string;
+  rewards: FandomLevelReward[];
+  isMax: boolean;
 }
 
-export interface TriviaQuestion {
+// --- 일일 미션 ---
+
+export interface DailyMission {
   id: string;
-  questionNumber: number;
-  text: MultiLangText;
-  choices: MultiLangText[];
-  correctIndex: number;
-  timeLimit: number;
+  title: string;
+  description: string;
+  targetHref: string;
+  rewardPt: number;
+  completed: boolean;
 }
 
-export type TriviaResultType = 'A' | 'B' | 'C' | 'D';
-
-export interface TriviaResult {
-  type: TriviaResultType;
-  rewardGP: number;
-  raffleTickets?: number;
-  correctCount: number;
-  totalQuestions: number;
-  finalRank: number;
-  totalParticipants: number;
-  survivorCount: number;
+export interface StreakBonus {
+  days: number;
+  rewardPt: number;
+  claimed: boolean;
 }
 
-// User
-export interface User {
-  uid: string;
-  nickname: string;
-  profileImage: string;
-  gpBalance: number;
-  celbBalance: number;
-  hearts: number;
+export interface DailyState {
+  checkedIn: boolean;
+  mission: DailyMission;
+  streak: number;
+  weekRecord: boolean[]; // 월~일 7칸
+  bonuses: StreakBonus[];
 }
 
-// Exchange Settings (from backoffice)
-export interface ExchangeConfig {
-  gpToCelbRate: number;
-  celbToGpRate: number;
-  chargeMinCelb: number;
-  chargeMaxCelb: number;
-  chargeDailyLimitCelb: number;
-  chargeDailyLimitCount: number;
-  withdrawMinGP: number;
-  withdrawMaxGP: number;
-  withdrawDailyLimitGP: number;
-  withdrawDailyLimitCount: number;
-  chargeEnabled: boolean;
-  withdrawEnabled: boolean;
-  depositAddress: string;
+// --- 토스트 ---
+
+export type ToastType = 'success' | 'error' | 'info';
+
+export interface ToastMessage {
+  id: string;
+  type: ToastType;
+  message: string;
 }

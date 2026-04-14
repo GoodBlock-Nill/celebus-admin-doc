@@ -19,6 +19,17 @@
   --color-fq-ticket: #EC4899;
   --color-fq-green: #10B981;
   --color-fq-red: #EF4444;
+
+  /* v2 고도화 색상 토큰 */
+  --color-virtue: #7C3AED;
+  --color-virtue-light: #A78BFA;
+  --color-ticket: #EC4899;
+  --color-streak: #F59E0B;
+  --color-coming-soon: #9CA3AF;
+  --color-artist-bg: #0F0A1A;
+  --color-card-mission: #7C3AED;
+  --color-card-record: #3B82F6;
+  --color-card-more: #6B7280;
 }
 
 * {

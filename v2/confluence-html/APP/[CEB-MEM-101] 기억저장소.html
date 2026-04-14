@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-MEM-101] 기억저장소</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-MEM-101] 기억저장소</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-MEM-101</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>MEM(기억저장소)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026.04.15</td></tr>
+<tr><td>Jira 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td></td></tr>
+<tr><td>다국어 영향</td><td>Yes</td></tr>
+<tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 기억 저장소</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>아티스트 탭(CEB-ART-101)에서 "기억 저장소" 카드를 탭했을 때 진입하는 화면이다. 아티스트와의 기억(콘서트, 팬미팅, 일상 덕질)을 기록하고 되돌아볼 수 있는 개인 다이어리 역할을 한다.</p>
+<blockquote>
+<p>"시간이 흘러도 그날로 돌아갈 수 있어!"</p>
+</blockquote>
+<h5>주요 기능</h5>
+<ul>
+<li>캘린더 뷰(기본) / 그리드 뷰 / 지도 뷰 전환</li>
+<li>[+] FAB로 기억 작성 (사진 기록 / 편지 / 메모 3종)</li>
+<li>감정 이모지(6종) 필수 선택 (1~3개)</li>
+<li>날짜 탭 시 해당 날짜 기억 확장 (아코디언)</li>
+<li>기억 상세 보기 / 수정 / 삭제</li>
+<li>MVP: 개인 다이어리 전용 (소셜 기능 추후 도입)</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>CEB-ART-101 > 기억 저장소 카드 탭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 캘린더 뷰 (기본)</h3>
+<pre><code>┌──────────────────────────────────┐
+│ ← 기억저장소       [📅][🖼️][🗺️] │  ← 뷰 전환
+├──────────────────────────────────┤
+│                                  │
+│       ◀  2026년 4월  ▶          │  ← 월 네비게이션
+│  월  화  수  목  금  토  일      │
+│       1   2   3   4   5         │
+│   6   7   8   9  10  11  12     │
+│  13  14  15  16  17  18  19     │
+│      😍                         │  ← 14일에 이모지 도트
+│  20  21  22  23  24  25  26     │
+│  27  28  29  30                 │
+│                                  │
+│ ── 4월 14일 ──────────────────  │  ← 선택 날짜 확장
+│                                  │
+│ 😍 V01D 콘서트 다녀왔다!         │
+│ [사진 3장]                       │
+│                                  │
+│                              [+] │  ← FAB
+└──────────────────────────────────┘
+</code></pre>
+<h3>2.1-2 그리드 뷰</h3>
+<pre><code>┌──────────────────────────────────┐
+│ ← 기억저장소       [📅][🖼️][🗺️] │
+├──────────────────────────────────┤
+│ ┌──────┐ ┌──────┐ ┌──────┐     │
+│ │ 사진 │ │ 사진 │ │ 사진 │     │  ← 3열 그리드
+│ │ 😍   │ │ 🎉   │ │ 💜   │     │
+│ └──────┘ └──────┘ └──────┘     │
+│ ┌──────┐ ┌──────┐              │
+│ │ 사진 │ │ ✉️   │              │  ← 편지는 아이콘
+│ │ ✨   │ │ 메모 │              │
+│ └──────┘ └──────┘              │
+│                              [+] │
+└──────────────────────────────────┘
+</code></pre>
+<h3>2.1-3 지도 뷰</h3>
+<pre><code>┌──────────────────────────────────┐
+│ ← 기억저장소       [📅][🖼️][🗺️] │
+├──────────────────────────────────┤
+│ ┌──────────────────────────────┐ │
+│ │       지도                   │ │
+│ │    📍😍                      │ │  ← 위치+이모지 핀
+│ │         📍🎉                 │ │
+│ │                              │ │
+│ └──────────────────────────────┘ │
+│ 위치 없는 기억 3건               │  ← 하단 안내 배너
+│                              [+] │
+└──────────────────────────────────┘
+</code></pre>
+<h3>2.2 영역별 구성요소</h3>
+<h5>서브페이지 헤더</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>뒤로가기</td><td>← 탭 시 CEB-ART-101로 복귀</td></tr>
+<tr><td>타이틀</td><td>"기억저장소"</td></tr>
+<tr><td>뷰 전환 버튼</td><td>[📅] [🖼️] [🗺️] 3개 아이콘 버튼. 현재 선택 뷰 하이라이트 (피그마 참조)</td></tr>
+</table>
+<h5>캘린더 뷰 (기본)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>월 네비게이션</td><td>◀ / ▶ 버튼으로 월 전환. 중앙에 "YYYY년 M월" 텍스트</td></tr>
+<tr><td>날짜 셀</td><td>기억이 있는 날짜에 대표 감정 이모지 1개 도트 표시. 복수 게시물 시 이모지 옆 +N 표시 (예: 😍+2)</td></tr>
+<tr><td>오늘 하이라이트</td><td>오늘 날짜 보더 또는 배경색 강조 (피그마 참조)</td></tr>
+<tr><td>날짜 탭</td><td>기억 있는 날짜 탭 시 하단 확장 영역에 해당 날짜 기억 리스트 표시 (아코디언). 기억 없는 날짜 탭 시 확장 영역 미표시</td></tr>
+<tr><td>확장 항목 구성</td><td>감정 이모지 + 제목 또는 첫 줄 텍스트 + 미디어 썸네일</td></tr>
+<tr><td>확장 항목 탭</td><td>기억 상세 화면으로 이동</td></tr>
+</table>
+<h5>그리드 뷰</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>구성</td><td>3열 그리드</td></tr>
+<tr><td>사진 기록</td><td>첫 번째 이미지 썸네일 + 감정 이모지 뱃지 (피그마 참조)</td></tr>
+<tr><td>편지 / 메모</td><td>타입 아이콘(✉️ / 📝) + 감정 이모지 뱃지 + 배경색 (피그마 참조)</td></tr>
+<tr><td>정렬</td><td>최신순</td></tr>
+<tr><td>탭</td><td>기억 상세 화면으로 이동</td></tr>
+</table>
+<h5>지도 뷰</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>지도</td><td>위치가 등록된 기억을 핀(📍 + 감정 이모지)으로 표시 (피그마 참조)</td></tr>
+<tr><td>핀 탭</td><td>해당 위치의 기억 미리보기 카드 표시</td></tr>
+<tr><td>위치 없는 기억</td><td>하단에 "위치 없는 기억 {N}건" 안내 배너. 탭 시 그리드 뷰로 전환</td></tr>
+<tr><td>위치 등록 기억 없음</td><td>"위치가 등록된 기억이 없어요" 안내 텍스트 표시</td></tr>
+</table>
+<h5>[+] FAB (작성 버튼)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>위치</td><td>우하단 플로팅 (피그마 참조)</td></tr>
+<tr><td>탭 동작</td><td>기억 작성 화면으로 이동</td></tr>
+<tr><td>월간 한도 초과 시</td><td>탭 시 토스트(Info) "이번 달 업로드 한도에 도달했어요. 다음 달에 다시 기록해 주세요!" 노출. 화면 이동 없음</td></tr>
+</table>
+<h5>기억 작성 화면</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>접근</td><td>[+] FAB 탭 시 이동</td></tr>
+<tr><td>헤더</td><td>"← 기억 남기기"</td></tr>
+<tr><td>타입 선택</td><td>[📸 사진 기록] [✉️ 편지] [📝 메모] 3종. 기본: 사진 기록</td></tr>
+<tr><td>날짜</td><td>Date Picker. 기본: 오늘. 미래 날짜 선택 불가 (오늘 이하만)</td></tr>
+<tr><td>감정 이모지</td><td>6종 선택 UI (😍 😭 🎉 💜 🤩 ✨). 필수. 1~3개 탭 토글</td></tr>
+<tr><td>위치</td><td>자유 텍스트 입력 (선택)</td></tr>
+<tr><td>미디어</td><td>이미지 최대 10장(10MB, JPG/PNG/WebP/HEIC) + 영상 1개(15~60초, 100MB, MP4/MOV). 선택</td></tr>
+<tr><td>텍스트</td><td>최대 1,000자. 사진 기록: 선택. 편지 / 메모: 필수</td></tr>
+<tr><td>공개 설정</td><td>토글 (기본: 비공개). "공개 시 다른 팬도 볼 수 있어요" 안내 문구</td></tr>
+<tr><td>[저장하기]</td><td>필수 항목(감정 이모지 + 타입별 텍스트 조건) 충족 시 활성</td></tr>
+<tr><td>저장 성공</td><td>토스트(Success) "기억이 저장되었어요! 덕력 30pt 획득" → 캘린더로 복귀. 하단에 "오늘의 퀘스트도 해볼까요?" CTA 표시 (→ CEB-FQ-101)</td></tr>
+<tr><td>저장 후 CTA</td><td>"오늘의 퀘스트도 해볼까요?" → CEB-FQ-101 Quest 메인 (CEB-000 섹션 9 CTA 체인 참조)</td></tr>
+</table>
+<h5>기억 상세 화면</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>접근</td><td>캘린더 / 그리드 / 지도에서 기억 항목 탭</td></tr>
+<tr><td>구성</td><td>감정 이모지 + 날짜 + 타입 뱃지 + 미디어 갤러리 + 텍스트 + 위치 + 공개 상태 (피그마 참조)</td></tr>
+<tr><td>액션</td><td>우상단 메뉴 [수정] / [삭제]</td></tr>
+<tr><td>수정</td><td>기억 작성 화면과 동일 (기존 데이터 프리필)</td></tr>
+<tr><td>삭제</td><td>확인 모달 "삭제한 기억은 복구할 수 없어요. 삭제할까요?" + [삭제] / [취소]. 삭제 시 덕력 미회수</td></tr>
+</table>
+<h5>온보딩 가이드 (첫 진입 1회)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>표시 조건</td><td>기억 0건 + 첫 진입 시</td></tr>
+<tr><td>구성</td><td>캘린더 / 그리드 / 지도 뷰 소개 + "첫 기억 남기기" CTA (피그마 참조)</td></tr>
+<tr><td>CTA</td><td>[첫 기억 남기기] 탭 시 기억 작성 화면으로 이동</td></tr>
+<tr><td>이후</td><td>1회성. 해제 후 재진입 시 미표시 (localStorage 기준)</td></tr>
+</table>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 뷰 전환</h3>
+<ul>
+<li>[📅] [🖼️] [🗺️] 아이콘 탭으로 즉시 전환</li>
+<li>현재 뷰 아이콘 하이라이트 (보라색)</li>
+<li>뷰 전환 시 데이터 재조회 없음 (동일 데이터, 표시 방식만 변경)</li>
+</ul>
+<h3>3.2 캘린더 날짜 탭</h3>
+<ul>
+<li>기억이 있는 날짜 탭 → 하단 확장 영역에 해당 날짜 기억 리스트 표시</li>
+<li>기억이 없는 날짜 탭 → 확장 영역 미표시</li>
+<li>동시에 1개 날짜만 확장 가능. 다른 날짜 탭 시 이전 확장 영역 자동 축소</li>
+</ul>
+<h3>3.3 기억 작성</h3>
+<ul>
+<li>[+] FAB 탭 → 기억 작성 화면으로 이동</li>
+<li>작성 순서: 타입 선택 → 날짜 → 감정 이모지(필수 1~3개) → 위치(선택) → 미디어(선택) → 텍스트 → 공개 설정</li>
+<li>[저장하기] 탭 → 저장 처리 + 토스트(Success) + 덕력 30pt 즉시 지급 + 캘린더로 복귀. 하단에 "오늘의 퀘스트도 해볼까요?" CTA 표시 (→ CEB-FQ-101)</li>
+</ul>
+<h3>3.4 기억 수정 / 삭제</h3>
+<ul>
+<li>기억 상세에서 [수정] 탭 → 작성 화면(기존 데이터 프리필) → 저장 (덕력 중복 미지급)</li>
+<li>[삭제] 탭 → 확인 모달 → 삭제 처리 (덕력 미회수)</li>
+</ul>
+<h3>3.5 데이터 갱신</h3>
+<table>
+<tr><th>트리거</th><th>동작</th></tr>
+<tr><td>화면 진입</td><td>현재 월 캘린더 데이터 조회</td></tr>
+<tr><td>작성 / 수정 / 삭제 복귀</td><td>캘린더 데이터 재조회</td></tr>
+<tr><td>월 전환 (◀ / ▶)</td><td>해당 월 데이터 조회</td></tr>
+<tr><td>뷰 전환</td><td>재조회 없음 (동일 데이터 재표시)</td></tr>
+<tr><td>Pull-to-Refresh</td><td>전체 재조회 (공통정책 11.2 참조)</td></tr>
+</table>
+<h3>3.7 "1년 전 오늘" 푸시 진입</h3>
+<ul>
+<li>공통정책 17에 정의된 "1년 전 오늘 기억" 푸시 알림 탭 시 본 화면으로 진입</li>
+<li>진입 시 해당 날짜(1년 전 오늘)의 캘린더로 자동 이동 + 해당 날짜 자동 확장</li>
+<li>캘린더 뷰로 고정 (그리드/지도 뷰에서 진입해도 캘린더로 전환)</li>
+</ul>
+<hr>
+<h2>4. 규칙/로직</h2>
+<h3>4.1 기억 작성 규칙</h3>
+<table>
+<tr><th>규칙</th><th>설명</th></tr>
+<tr><td>타입</td><td>사진 기록(기본) / 편지 / 메모</td></tr>
+<tr><td>날짜</td><td>오늘 이하만 선택 가능. 미래 날짜 선택 불가</td></tr>
+<tr><td>감정 이모지</td><td>필수. 6종(😍 😭 🎉 💜 🤩 ✨) 중 1~3개 선택</td></tr>
+<tr><td>미디어</td><td>이미지 최대 10장(장당 10MB, JPG/PNG/WebP/HEIC) + 영상 1개(15~60초, 100MB, MP4/MOV). 선택</td></tr>
+<tr><td>텍스트</td><td>최대 1,000자. 사진 기록: 선택. 편지 / 메모: 필수</td></tr>
+<tr><td>위치</td><td>자유 텍스트. 선택</td></tr>
+<tr><td>공개 설정</td><td>기본 비공개. 공개 전환 시 다른 팬도 열람 가능 (MVP에서 소셜 기능 미노출)</td></tr>
+<tr><td>월간 제한</td><td>아티스트별 50건/월. 초과 시 FAB 탭 → 토스트(Info) 안내, 작성 불가</td></tr>
+<tr><td>덕력</td><td>저장 시 30pt 즉시 지급. 수정 시 중복 미지급. 삭제 시 미회수</td></tr>
+</table>
+<h3>4.2 캘린더 표시 규칙</h3>
+<table>
+<tr><th>규칙</th><th>설명</th></tr>
+<tr><td>이모지 도트</td><td>기억 있는 날짜에 대표 이모지 1개 (해당 날짜 첫 번째 게시물의 첫 번째 이모지)</td></tr>
+<tr><td>복수 게시물</td><td>이모지 도트 옆 +N 표시 (예: 😍+2)</td></tr>
+<tr><td>오늘 하이라이트</td><td>보더 또는 배경색으로 오늘 날짜 강조 (피그마 참조)</td></tr>
+</table>
+<h3>4.3 프라이버시 규칙 (공통정책 7.1 참조)</h3>
+<table>
+<tr><th>규칙</th><th>설명</th></tr>
+<tr><td>저장소 기본</td><td>비공개</td></tr>
+<tr><td>게시물 기본</td><td>비공개</td></tr>
+<tr><td>공개 노출 조건</td><td>저장소 공개 + 게시물 공개 모두 충족 시에만 타 유저에게 노출</td></tr>
+<tr><td>저장소 공개 전환 시</td><td>기존 게시물의 공개 설정 변경 없음. 게시물별 개별 변경 필요</td></tr>
+</table>
+<h3>4.4 멀티 아티스트 대응</h3>
+<ul>
+<li>기억저장소는 아티스트별 분리 (<code>artist_id</code> 기반)</li>
+<li>월간 50건 제한도 아티스트별 독립 적용</li>
+<li>아티스트 전환 시 CEB-ART-101 재진입 → 해당 아티스트 기억저장소 표시</li>
+</ul>
+<hr>
+<h2>5. 에러 및 예외상황</h2>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>Loading</td><td>캘린더 영역에 Skeleton UI 표시</td></tr>
+<tr><td>Default</td><td>캘린더 + 이모지 도트 정상 표시</td></tr>
+<tr><td>Error</td><td>"앗, 불러오지 못했어요" 안내 + [다시 불러오기] 버튼</td></tr>
+<tr><td>Empty (기억 0건)</td><td>온보딩 가이드 표시. "첫 기억을 남겨보세요!" 안내 + [첫 기억 남기기] CTA</td></tr>
+<tr><td>월간 한도 초과</td><td>[+] FAB 탭 시 토스트(Info) "이번 달 업로드 한도에 도달했어요. 다음 달에 다시 기록해 주세요!"</td></tr>
+<tr><td>미디어 업로드 실패</td><td>토스트(Error) "앗, 사진이 올라가지 않았어요. 다시 시도해 주세요"</td></tr>
+<tr><td>영상 용량 초과</td><td>토스트(Error) "100MB 이하의 영상만 올릴 수 있어요"</td></tr>
+<tr><td>비로그인</td><td>CEB-ART-101에서 카드 탭 시 로그인 유도 처리됨 (공통정책 10.5 참조). 본 화면은 로그인 상태에서만 접근 가능</td></tr>
+</table>
+<hr>
+<h2>6. 연관화면ID</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-ART-101</td><td>아티스트 메인</td><td>진입원. 기억 저장소 카드 탭 시 이동</td></tr>
+<tr><td>CEB-FQ-501</td><td>일일 미션</td><td>기억저장소 방문이 미션 대상으로 연동</td></tr>
+</table>
+<hr>
+<h2>변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.04.15</td><td>@Nill Yoo</td><td>초안 작성. 캘린더 / 그리드 / 지도 3뷰, [+] FAB, 감정 이모지 6종(필수 1~3개), 기억 상세 / 수정 / 삭제, 덕력 30pt(삭제 미회수), 월간 50건 제한, 프라이버시 2단계 공개 구조, 온보딩 가이드, MVP 개인 다이어리</td></tr>
+<tr><td>v1.1</td><td>2026.04.15</td><td>@Nill Yoo</td><td>크로스 검증 반영: 작성 후 Quest CTA 추가(3.3), 1년 전 오늘 푸시 진입 동작 추가(3.7)</td></tr>
+</table>
+
+</body>
+</html>

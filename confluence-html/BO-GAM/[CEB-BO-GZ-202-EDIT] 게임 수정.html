@@ -218,7 +218,7 @@ p {
 │ │ [Prediction Market 타입1일 때]                                 │ │
 │ │ 총 상금 GP *      [ ______________ ] GP                       │ │
 │ ├──────────────────────────────────────────────────────────────┤ │
-│ │ [Prediction Market 타입2일 때]                                 │ │
+│ │ [Prediction Market 타입2일 때] ※보류                          │ │
 │ │ 승리 보상 GP *    [ ______________ ] GP                       │ │
 │ │ 총 상금 GP (자동) [ ______________ ] GP  (readonly)            │ │
 │ ├──────────────────────────────────────────────────────────────┤ │
@@ -240,7 +240,7 @@ p {
 │ │ 부스팅 비용 *   [ ____ ] GP                                    │ │
 │ │ 부스팅 배수 *   [ ____ ] 배                                    │ │
 │ ├──────────────────────────────────────────────────────────────┤ │
-│ │ [Prediction Market 타입2일 때]                                 │ │
+│ │ [Prediction Market 타입2일 때] ※보류                          │ │
 │ │ 참여 정원 *     [ ____ ] 명                                    │ │
 │ │ 참여 비용       [0 GP (무료)] (readonly)                       │ │
 │ │ ※ 타입2는 부스팅을 지원하지 않습니다.                          │ │
@@ -293,7 +293,7 @@ p {
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">기본정보</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">게임유형 (읽기 전용)</td>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{현재 게임유형 + 타입} 표시 (예: "Prediction Market (타입1)", "Prediction Market (타입2)"), 회색 배경, "게임유형은 수정할 수 없습니다." 안내 텍스트</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">{현재 게임유형 + 타입} 표시 (예: "Prediction Market (타입1)", "Prediction Market (타입2)" ※보류), 회색 배경, "게임유형은 수정할 수 없습니다." 안내 텍스트</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;"></td>
@@ -361,7 +361,7 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, GP 단위 표시</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상설정 (PM 타입2)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">보상설정 (PM 타입2) ※보류</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">승리 보상 GP (필수)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, GP 단위 표시</td>
   </tr>
@@ -421,7 +421,7 @@ p {
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input, 기본값: 2배, 최대 10배</td>
   </tr>
   <tr>
-    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여설정 (PM 타입2)</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여설정 (PM 타입2) ※보류</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">참여 정원 (필수)</td>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">Number Input (무제한 없음, 1명 이상 필수)</td>
   </tr>
@@ -678,7 +678,7 @@ p {
   <li>Closed, Ended 상태에서는 수정 불가 (접근 시 상세 화면으로 리다이렉트)</li>
   <li>게임유형은 변경 불가 (읽기 전용, 회색 배경 표시)</li>
   <li>PM 타입1: 참여자가 1명 이상 있을 경우 참여 비용, 부스팅 비용/배수 수정 불가</li>
-  <li>PM 타입2: 참여 비용은 항상 0 GP 고정 (수정 불가). 부스팅 항목 미표시. 참여자가 1명 이상 있을 경우 참여 정원 수정 불가</li>
+  <li>PM 타입2 ※보류: 참여 비용은 항상 0 GP 고정 (수정 불가). 부스팅 항목 미표시. 참여자가 1명 이상 있을 경우 참여 정원 수정 불가</li>
   <li>ST: 참여자가 1명 이상 있을 경우 최대 모집인원, 최대 상금풀, 배수, 모집인원별 상금 단계 수정 불가</li>
   <li>ST: 진행중(Active) 상태에서 퀴즈 설정(문제/선택지/정답/제한시간/정답결과 노출시간) 수정 불가</li>
 </ul>
@@ -770,6 +770,8 @@ p {
 </blockquote>
 
 <h3>상태별 수정 가능 필드 (Prediction Market 타입2)</h3>
+
+<blockquote style="border-left: 4px solid #f79a24; background: #fffae6; padding: 8px 16px; margin: 12px 0;"><strong>⚠️ 보류</strong>: PM 타입2 (무료 참가)는 정책 변경으로 보류되었습니다. 이벤트 GP 지급(출석체크/가입보상)으로 타입1(유료) 참가를 유도하는 방식으로 변경되었습니다.</blockquote>
 
 <table style="border-collapse: collapse; width: 100%; margin: 12px 0;">
   <tr>
@@ -1144,8 +1146,8 @@ p {
 <h5>숫자 범위 검증</h5>
 <ul>
   <li>총 상금 GP가 0 이하 (PM 타입1): "총 상금 GP는 1 이상이어야 합니다."</li>
-  <li>승리 보상 GP가 0 이하 (PM 타입2): "승리 보상 GP는 1 이상이어야 합니다."</li>
-  <li>참여 정원이 0 이하 (PM 타입2): "참여 정원은 1명 이상이어야 합니다."</li>
+  <li>승리 보상 GP가 0 이하 (PM 타입2) ※보류: "승리 보상 GP는 1 이상이어야 합니다."</li>
+  <li>참여 정원이 0 이하 (PM 타입2) ※보류: "참여 정원은 1명 이상이어야 합니다."</li>
   <li>최대 상금풀이 0 이하 (ST): "최대 상금풀은 1 GP 이상이어야 합니다."</li>
   <li>배수가 1 이하 (ST): "배수는 1배를 초과해야 합니다."</li>
   <li>최대 모집인원이 0 이하 (ST): "최대 모집인원은 1명 이상이어야 합니다."</li>
@@ -1215,6 +1217,12 @@ p {
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경일</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">작성자</th>
     <th style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top; background-color: #f4f5f7; font-weight: 600;">변경내용</th>
+  </tr>
+  <tr>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.7</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">2026.04.10</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">@Carl Lee</td>
+    <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">PM 타입2 (무료 참가) 보류 처리 — 정책 변경으로 타입1만 운영</td>
   </tr>
   <tr>
     <td style="border: 1px solid #dfe1e6; padding: 8px 12px; text-align: left; vertical-align: top;">v2.6</td>

@@ -1,19 +1,16 @@
 'use client';
 
-import type { ReactNode } from 'react';
 import BottomTabBar from '@/components/layout/BottomTabBar';
-import ToastContainer from '@/components/ui/Toast';
-import CelebrationOverlay from '@/components/fan-quest/ui/CelebrationOverlay';
+import Toast from '@/components/ui/Toast';
 
-export default function TabsLayout({ children }: { children: ReactNode }) {
+export default function TabsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="min-h-dvh">
+      <Toast />
       <main className="pb-tab-bar">
         {children}
       </main>
       <BottomTabBar />
-      <ToastContainer />
-      <CelebrationOverlay />
-    </>
+    </div>
   );
 }

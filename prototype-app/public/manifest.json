@@ -1,7 +1,7 @@
 {
-  "name": "CELEBUS Game Zone",
+  "name": "CELEBUS",
   "short_name": "CELEBUS",
-  "description": "CELEBUS K-pop Fan Entertainment - Game Zone",
+  "description": "CELEBUS - K-pop Fan Entertainment Platform",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
