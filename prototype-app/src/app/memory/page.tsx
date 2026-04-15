@@ -155,7 +155,7 @@ export default function MemoryPage() {
               </div>
               <div className="space-y-2">
                 {dayMemories.map((mem) => (
-                  <button key={mem.id} onClick={() => addToast('info', `${mem.title} 상세 (준비 중)`)}
+                  <button key={mem.id} onClick={() => router.push('/memory-detail')}
                     className="w-full flex items-center gap-3 bg-gray-50 rounded-xl px-3 py-3 text-left active:scale-[0.98] transition-transform">
                     <span className="text-lg">{mem.emoji}</span>
                     <div className="flex-1 min-w-0">
@@ -183,7 +183,7 @@ export default function MemoryPage() {
           {memories.length > 0 ? (
             <div className="grid grid-cols-3 gap-2">
               {memories.map((mem) => (
-                <button key={mem.id} onClick={() => addToast('info', `${mem.title} 상세 (준비 중)`)}
+                <button key={mem.id} onClick={() => router.push('/memory-detail')}
                   className={cn('aspect-square rounded-xl flex flex-col items-center justify-center relative active:scale-[0.97] transition-transform',
                     mem.type === 'photo' ? 'bg-gray-100' : mem.type === 'letter' ? 'bg-pink-50' : 'bg-blue-50')}>
                   <span className="text-2xl">{mem.type === 'photo' ? '📸' : TYPE_ICON[mem.type]}</span>
@@ -223,7 +223,7 @@ export default function MemoryPage() {
       {/* [+] FAB */}
       {!showOnboarding && (
         <button
-          onClick={() => addToast('success', '기억이 저장되었어요! 덕력 30pt 획득')}
+          onClick={() => router.push('/memory-create')}
           className="fixed bottom-20 left-1/2 -translate-x-1/2 w-14 h-14 rounded-full bg-violet-600 text-white shadow-lg flex items-center justify-center text-2xl active:scale-95 transition-transform z-40"
         >
           +

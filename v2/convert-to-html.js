@@ -258,6 +258,8 @@ const files = [
   ['APP/[CEB-HOM-001] 홈 메인.md', 'confluence-html/APP/[CEB-HOM-001] 홈 메인.html'],
   ['APP/[CEB-HOM-101] 이벤트 전체.md', 'confluence-html/APP/[CEB-HOM-101] 이벤트 전체.html'],
   ['APP/[CEB-ART-201] 아티스트 탐색.md', 'confluence-html/APP/[CEB-ART-201] 아티스트 탐색.html'],
+  ['APP/[CEB-MEM-201] 기억 작성.md', 'confluence-html/APP/[CEB-MEM-201] 기억 작성.html'],
+  ['APP/[CEB-MEM-202] 기억 상세.md', 'confluence-html/APP/[CEB-MEM-202] 기억 상세.html'],
 ];
 
 for (const [md, html] of files) {
