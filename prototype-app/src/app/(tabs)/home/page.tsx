@@ -67,6 +67,9 @@ export default function HomePage() {
       {/* 2. 캐러셀 배너 */}
       <div className="px-4 mt-3">
         <div className="relative bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl overflow-hidden h-36">
+          <button onClick={() => router.push('/events')} className="absolute top-3 right-4 z-10 text-[11px] font-semibold text-white bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full hover:bg-white/30 transition-colors">
+            전체 보기 →
+          </button>
           <div className="absolute inset-0 flex items-end px-5 pb-4">
             <div>
               <p className="text-white text-sm font-bold">{filteredBanners[bannerIdx % filteredBanners.length]?.title || '이벤트 준비 중'}</p>
@@ -102,7 +105,7 @@ export default function HomePage() {
           </div>
           <span className="text-[9px] font-semibold text-violet-700">{artist.name}</span>
         </button>
-        <button onClick={() => addToast('info', '아티스트 추가 (준비 중)')} className="flex flex-col items-center gap-1">
+        <button onClick={() => router.push('/artist-discover')} className="flex flex-col items-center gap-1">
           <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
             <span className="text-xl text-gray-400">+</span>
           </div>
