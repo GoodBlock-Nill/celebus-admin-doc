@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import Toast from '@/components/ui/Toast';
 import { useUIStore } from '@/stores/useUIStore';
@@ -37,6 +38,7 @@ const STATUS_BADGE: Record<RaffleStatus, { label: string; style: string }> = {
 };
 
 export default function RafflePage() {
+  const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
   const [filter, setFilter] = useState<FilterTab>('active');
   const [raffles, setRaffles] = useState(MOCK_RAFFLES);
@@ -76,9 +78,9 @@ export default function RafflePage() {
       <Toast />
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
-          <a href="/artist" className="mr-3 -ml-1 p-1">
+          <button onClick={() => router.back()} className="mr-3 -ml-1 p-1">
             <span className="text-gray-900">←</span>
-          </a>
+          </button>
           <h1 className="text-base font-semibold text-gray-900 flex-1">Raffle</h1>
           <span className="text-xs font-medium text-violet-600 bg-violet-50 px-2.5 py-1 rounded-lg">
             응모권: {myTickets}장

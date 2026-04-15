@@ -255,6 +255,7 @@ const files = [
   ['APP/[CEB-COL-101] 컬렉션.md', 'confluence-html/APP/[CEB-COL-101] 컬렉션.html'],
   ['APP/[CEB-INF-101] 정보 피드.md', 'confluence-html/APP/[CEB-INF-101] 정보 피드.html'],
   ['APP/[CEB-MEM-101] 기억저장소.md', 'confluence-html/APP/[CEB-MEM-101] 기억저장소.html'],
+  ['APP/[CEB-HOM-001] 홈 메인.md', 'confluence-html/APP/[CEB-HOM-001] 홈 메인.html'],
 ];
 
 for (const [md, html] of files) {

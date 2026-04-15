@@ -26,7 +26,7 @@ function groupCards(cards: ServiceCardData[]) {
 export default function ArtistPage() {
   const [cards, setCards] = useState(MOCK_ARTIST_CARDS);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const { showOnboarding, setShowOnboarding } = useUIStore();
+  const { showOnboarding, setShowOnboarding, addToast } = useUIStore();
 
   // 온보딩: 첫 진입 시 1회
   useEffect(() => {
@@ -74,6 +74,20 @@ export default function ArtistPage() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
+      {/* 앱 헤더 (홈과 동일) */}
+      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
+        <div className="flex items-center h-12 px-4">
+          <span className="text-base font-bold text-violet-700 flex-1">CELEBUS</span>
+          <button className="relative mr-3" onClick={() => addToast('info', '알림 (준비 중)')}>
+            <span className="text-lg">🔔</span>
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[8px] rounded-full flex items-center justify-center font-bold">3</span>
+          </button>
+          <button onClick={() => addToast('info', '응모권 내역 (CEB-FQ-210)')} className="text-xs font-medium text-violet-600 bg-violet-50 px-2.5 py-1 rounded-lg">
+            응모 15
+          </button>
+        </div>
+      </div>
+
       {/* 아티스트 헤더 */}
       <ArtistHeader />
 

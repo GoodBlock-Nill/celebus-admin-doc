@@ -21,7 +21,7 @@ export default function VirtuePage() {
   return (
     <div className="min-h-dvh bg-white pb-8">
       <Toast />
-      <SubPageHeader title="덕력 랭킹" backHref="/artist" />
+      <SubPageHeader title="덕력 랭킹" />
 
       {/* 시즌 드롭다운 */}
       <div className="px-4 mt-3 flex justify-end">

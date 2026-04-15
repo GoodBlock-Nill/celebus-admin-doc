@@ -64,7 +64,7 @@ export default function SupportPage() {
   return (
     <div className="min-h-dvh bg-white pb-8">
       <Toast />
-      <SubPageHeader title={`${artistName} 응원하기`} backHref="/artist" />
+      <SubPageHeader title={`${artistName} 응원하기`} />
 
       <div className="px-4 mt-4 space-y-3">
         {events.map((event) => (

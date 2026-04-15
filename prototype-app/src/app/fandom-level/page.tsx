@@ -31,7 +31,7 @@ export default function FandomLevelPage() {
   return (
     <div className="min-h-dvh bg-white pb-8">
       <Toast />
-      <SubPageHeader title={`${artistName} 키우기`} backHref="/artist" />
+      <SubPageHeader title={`${artistName} 키우기`} />
 
       {/* 현재 레벨 카드 */}
       <div className="mx-4 mt-4 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl px-5 py-5">

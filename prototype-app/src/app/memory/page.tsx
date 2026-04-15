@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Toast from '@/components/ui/Toast';
 import { useArtistStore } from '@/stores/useArtistStore';
 import { useUIStore } from '@/stores/useUIStore';
@@ -32,6 +33,7 @@ const EMOJIS = ['😍', '😭', '🎉', '💜', '🤩', '✨'];
 const TYPE_ICON = { photo: '📸', letter: '✉️', memo: '📝' };
 
 export default function MemoryPage() {
+  const router = useRouter();
   const artistName = useArtistStore((s) => s.activeArtist.name);
   const addToast = useUIStore((s) => s.addToast);
   const [view, setView] = useState<ViewMode>('calendar');
@@ -70,7 +72,7 @@ export default function MemoryPage() {
       <Toast />
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
-          <a href="/artist" className="mr-3 -ml-1 p-1"><span className="text-gray-900">←</span></a>
+          <button onClick={() => router.back()} className="mr-3 -ml-1 p-1"><span className="text-gray-900">←</span></button>
           <h1 className="text-base font-semibold text-gray-900 flex-1">기억저장소</h1>
           <div className="flex gap-1">
             {[

@@ -48,7 +48,7 @@ export default function DailyMissionPage() {
   return (
     <div className="min-h-dvh bg-white pb-8">
       <Toast />
-      <SubPageHeader title="일일 미션" backHref="/artist" />
+      <SubPageHeader title="일일 미션" />
 
       {/* 스트릭 현황 */}
       <StreakHeader streak={streak} bonuses={bonuses} />

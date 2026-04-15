@@ -87,7 +87,7 @@ export default function QuestPage() {
       onTouchEnd={handleTouchEnd}
     >
       <Toast />
-      <SubPageHeader title={`${artistName} 챌린지`} backHref="/artist" />
+      <SubPageHeader title={`${artistName} 챌린지`} />
 
       {/* Pull-to-Refresh 인디케이터 */}
       {isRefreshing && (

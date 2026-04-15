@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Toast from '@/components/ui/Toast';
 import { useArtistStore } from '@/stores/useArtistStore';
 import { useUIStore } from '@/stores/useUIStore';
@@ -35,6 +36,7 @@ const MOCK_ITEMS: TimelineItem[] = [
 const MOCK_NOTICE = { title: '서버 점검 안내 04.15 02:00~06:00', date: '04.13' };
 
 export default function InfoPage() {
+  const router = useRouter();
   const artistName = useArtistStore((s) => s.activeArtist.name);
   const addToast = useUIStore((s) => s.addToast);
   const [items, setItems] = useState(MOCK_ITEMS);
@@ -74,7 +76,7 @@ export default function InfoPage() {
       <Toast />
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
-          <a href="/artist" className="mr-3 -ml-1 p-1"><span className="text-gray-900">←</span></a>
+          <button onClick={() => router.back()} className="mr-3 -ml-1 p-1"><span className="text-gray-900">←</span></button>
           <h1 className="text-base font-semibold text-gray-900">{artistName} 정보</h1>
         </div>
       </div>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-HOM-001] 홈 메인</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-HOM-001] 홈 메인</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-HOM-001</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>HOM(홈)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.04.15</td></tr>
+<tr><td>Jira 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td></td></tr>
+<tr><td>다국어 영향</td><td>Yes</td></tr>
+<tr><td>Breadcrumb</td><td>하단 탭 > 홈</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>앱을 열면 가장 먼저 보는 화면이다. "오늘 뭘 하면 되지?"를 즉시 알려주는 허브 역할을 한다.</p>
+<blockquote>
+<p>핵심 원칙: "다음에 뭘 해야 하지?"를 유저가 절대 고민하지 않아야 한다.</p>
+</blockquote>
+<h5>주요 기능</h5>
+<ul>
+<li>캐러셀 배너로 진행 중인 이벤트를 한눈에 파악</li>
+<li>아티스트 선택으로 콘텐츠 전환</li>
+<li>오늘의 할 일(출석+미션+퀘스트) 컴팩트 카드</li>
+<li>상태 기반 핵심 추천 1개</li>
+<li>바로가기 그리드로 주요 서비스 빠른 진입</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>하단 탭 > 홈 (기본 탭)</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 화면 레이아웃</h3>
+<blockquote>
+<p>화면 레이아웃은 프로토타입(localhost:3001)을 참조하세요. 플로팅 디버그 버튼으로 다양한 상태를 확인할 수 있습니다. 프로토타입은 구조/플로우 확인용이며, 시각적 스타일은 Figma 시안을 따릅니다.</p>
+</blockquote>
+<h3>2.1-2 화면 레이아웃 — 오늘의 할 일 모두 완료 시</h3>
+<blockquote>
+<p>화면 레이아웃은 프로토타입(localhost:3001)을 참조하세요. 플로팅 디버그 버튼으로 다양한 상태를 확인할 수 있습니다. 프로토타입은 구조/플로우 확인용이며, 시각적 스타일은 Figma 시안을 따릅니다.</p>
+</blockquote>
+<h3>2.2 영역별 구성요소</h3>
+<h5>1. 헤더</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>좌측</td><td>CELEBUS 로고</td></tr>
+<tr><td>우측 1</td><td>🔔 알림 아이콘. 미확인 N건 뱃지. 탭 시 CEB-NTF-101 알림 센터로 이동 (추후 작성)</td></tr>
+<tr><td>우측 2</td><td>"응모 {N}" 응모권 잔고. 탭 시 CEB-FQ-210 이동</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h5>2. 캐러셀 배너</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>위치</td><td>헤더 아래</td></tr>
+<tr><td>콘텐츠</td><td>래플/서포트/이벤트 등 아티스트 무관 통합</td></tr>
+<tr><td>필터</td><td>[진행중] / [마감됨] 2개 탭. 기본: 진행중</td></tr>
+<tr><td>자동 슬라이드</td><td>3~5초 간격. 수동 스와이프 가능</td></tr>
+<tr><td>인디케이터</td><td>하단 도트 (● ○ ○)</td></tr>
+<tr><td>배너 탭</td><td>딥링크 URL로 이동 (이벤트 상세)</td></tr>
+<tr><td>배너 수</td><td>BO 자유 등록 (권장 3~5개)</td></tr>
+<tr><td>BO 관리 항목</td><td>배너 이미지 + 타이틀 + 딥링크 URL + 상태(진행중/마감됨) + 노출 기간 + 순서</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h5>3. 아티스트 선택</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>위치</td><td>캐러셀 아래</td></tr>
+<tr><td>구성</td><td>팔로우한 아티스트 원형 로고 가로 나열 + [+] 추가 버튼</td></tr>
+<tr><td>선택 상태</td><td>선택 아티스트 하이라이트 (보더/배경). 스타일 피그마 참조</td></tr>
+<tr><td>탭 동작</td><td>아티스트 로고 탭 → 하단 탭명 변경 + 홈 아래 콘텐츠 전환</td></tr>
+<tr><td>[+] 추가</td><td>아티스트 탐색/추가 화면 이동</td></tr>
+<tr><td>초기 상태</td><td>가장 최근 활동한 아티스트 기본 선택</td></tr>
+<tr><td>1명만 팔로우</td><td>로고 1개 + [+] 표시. 전환 불필요</td></tr>
+</table>
+<h5>아티스트 선택 시 변경 항목</h5>
+<table>
+<tr><th>항목</th><th>변경 여부</th></tr>
+<tr><td>캐러셀 배너</td><td>변경 없음 (아티스트 무관 통합)</td></tr>
+<tr><td>하단 탭명</td><td>변경됨 (2번째 탭이 선택 아티스트명으로)</td></tr>
+<tr><td>오늘의 할 일</td><td>변경됨 (선택 아티스트 기준)</td></tr>
+<tr><td>핵심 추천</td><td>변경됨 (선택 아티스트 기준)</td></tr>
+<tr><td>바로가기</td><td>변경됨 (선택 아티스트 기준)</td></tr>
+</table>
+<h5>4. 오늘의 할 일 (컴팩트 카드)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>아티스트</td><td>선택된 아티스트 기준</td></tr>
+<tr><td>구성</td><td>2줄 컴팩트 카드</td></tr>
+<tr><td>1줄</td><td>"🔥 {N}일째 연속" + 출석 상태(☐/☑) + 미션 상태(☐/☑)</td></tr>
+<tr><td>2줄</td><td>"☐ 이번 주 퀘스트: {진행률}" + [이어서→] CTA</td></tr>
+<tr><td>출석 탭</td><td>☐ 아이콘 탭 → 즉시 출석 완료 + 토스트(Success) "출석 완료! 덕력 10pt 획득"</td></tr>
+<tr><td>미션 탭</td><td>☐ 미션 아이콘 또는 "미션" 텍스트 영역 탭 → CEB-FQ-501 일일 미션 화면으로 이동</td></tr>
+<tr><td>퀘스트 CTA</td><td>[이어서→] → CEB-FQ-101 이동</td></tr>
+<tr><td>모두 완료 시</td><td>"✅ 오늘 할 일 완료! 🔥{N}일째" 1줄로 접힘</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h5>5. 핵심 추천 (1개)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>아티스트</td><td>선택된 아티스트 기준</td></tr>
+<tr><td>표시 수</td><td>1개 (8단계 우선순위 중 최상위만)</td></tr>
+<tr><td>형태</td><td>풀 너비 카드 (아이콘 + 텍스트 + CTA 버튼)</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h5>추천 우선순위 (8단계)</h5>
+<table>
+<tr><th>순위</th><th>유저 상태</th><th>추천 카드</th><th>CTA</th></tr>
+<tr><td>1</td><td>Quest 5장 미완료 (cleared 아닌 장이 1개 이상)</td><td>"V01D 챌린지 {N}장 진행중"</td><td>[이어하기] → CEB-FQ-101</td></tr>
+<tr><td>2</td><td>1년 전 오늘 기억 존재</td><td>"💜 1년 전 오늘의 기억"</td><td>[다시 보기] → CEB-MEM-101</td></tr>
+<tr><td>3</td><td>디지털 굿즈 미수령</td><td>"새 BIVE를 받을 수 있어요!"</td><td>[받으러 가기] → CEB-COL-101</td></tr>
+<tr><td>4</td><td>래플 진행중 + 응모권 보유</td><td>"응모권 {N}장 — 래플 참여하기"</td><td>[응모하기] → CEB-EVT-101</td></tr>
+<tr><td>5</td><td>덕력 시즌 진행중</td><td>"이번 시즌 {순위}위 ({포인트}pt)"</td><td>[랭킹 보기] → CEB-DUK-101</td></tr>
+<tr><td>6</td><td>팬덤 레벨 80%+</td><td>"Lv.{N}까지 {남은}pt!"</td><td>[기여하기] → CEB-EVT-201</td></tr>
+<tr><td>7</td><td>게임존 신규 게임</td><td>"새 PM 오픈!"</td><td>[참여하기] → CEB-GAM-101</td></tr>
+<tr><td>8</td><td>기본 상태</td><td>"오늘의 퀘스트를 완료하세요"</td><td>[퀘스트 보기] → CEB-FQ-101</td></tr>
+</table>
+<blockquote>
+<p>해당 상태가 없으면 스킵. 남은 것 중 최상위 1개만 표시. 8번(기본)은 항상 존재하므로 추천 카드는 반드시 표시된다.</p>
+</blockquote>
+<h5>6. 바로가기</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>아티스트</td><td>선택된 아티스트 기준</td></tr>
+<tr><td>구성</td><td>1열(풀 너비) 카드 4개 세로 나열. 각 카드에 아이콘 + 타이틀 + 상태 정보 + 프로그레스(해당 시) + CTA</td></tr>
+<tr><td>탭 동작</td><td>해당 서브 화면 직접 이동</td></tr>
+</table>
+<h5>리치 카드 (프로그레스 포함)</h5>
+<table>
+<tr><th>카드</th><th>아이콘</th><th>타이틀</th><th>상태 정보</th><th>탭 액션</th></tr>
+<tr><td>키우기</td><td>🏆</td><td>{아티스트명} 키우기</td><td>"Lv.{N}" + 프로그레스 바 + "{현재}/{목표}pt · {달성률}%"</td><td>→ CEB-EVT-201</td></tr>
+<tr><td>응원</td><td>💜</td><td>달성 임박 서포트 이벤트명</td><td>"달성 임박!" 뱃지 + 프로그레스 바 + "{현재}/{목표}pt · {달성률}%"</td><td>→ CEB-DUK-201</td></tr>
+</table>
+<blockquote>
+<p>키우기 카드: 따뜻한 그라데이션(amber). 현재 레벨 + 다음 레벨까지 프로그레스를 직관적으로 표시.</p>
+<p>응원 카드: 바이올렛~핑크 그라데이션. 달성 임박(80%+) 서포트를 우선 표시하여 참여 유도. 서포트 없으면 "곧 열려요!" 표시.</p>
+</blockquote>
+<h5>콘텐츠 카드 (오늘의 일정/소식 + Raffle)</h5>
+<table>
+<tr><th>카드</th><th>아이콘</th><th>구성</th><th>탭 액션</th></tr>
+<tr><td>오늘의 일정/소식</td><td>📅</td><td>"오늘" 뱃지 + 오늘 첫 번째 일정 (시간+일정명) + 최신 소식 1줄 + "+N건 더보기 →". 오늘 일정 없으면 최신 소식 2줄 표시. 블루 그라데이션 배경</td><td>→ CEB-INF-101</td></tr>
+<tr><td>Raffle</td><td>🎁</td><td>"D-{N}" 뱃지(마감 임박 래플) + 래플명 + 참여자 수 + "응모하기 →". 래플 없으면 "새 래플 준비 중!" 표시. 핑크 그라데이션 배경</td><td>→ CEB-EVT-101</td></tr>
+</table>
+<blockquote>
+<p>기존 "정보" 라벨 → 팬에게 의미 있는 실제 콘텐츠(오늘의 일정/소식) 미리보기로 변경. 유저가 "어, 오늘 음악중심 나오네?" 하고 관심을 가지도록 유도.</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 캐러셀 배너 탭</h3>
+<ul>
+<li>배너 탭 → 딥링크 URL로 이동 (이벤트 상세)</li>
+<li>다른 아티스트 이벤트 탭 시: 아티스트 선택 유지 (자동 전환 안 함). 이벤트 상세만 이동. 뒤로가기 → 홈 복귀, 기존 아티스트 유지 (공통정책 10.4 참조)</li>
+<li>미팔로우 아티스트 이벤트 탭 시: 이벤트 상세 이동 + "이 아티스트를 팔로우하시겠습니까?" 안내</li>
+</ul>
+<h3>3.2 아티스트 선택</h3>
+<ul>
+<li>아티스트 로고 탭 → 하단 탭명 변경 + 홈 아래 콘텐츠(오늘의 할 일/추천/바로가기) 전환</li>
+<li>전환 시 서버 재조회</li>
+</ul>
+<h3>3.3 출석 체크 (홈에서 직접)</h3>
+<ul>
+<li>오늘의 할 일 카드에서 출석 ☐ 아이콘 탭 → 즉시 완료</li>
+<li>토스트(Success) "출석 완료! 덕력 10pt 획득"</li>
+<li>스트릭 +1 반영</li>
+<li>CEB-FQ-501에서도 동일하게 처리 가능 (이중 진입점. 공통정책 6.1 참조)</li>
+</ul>
+<h3>3.4 데이터 갱신</h3>
+<table>
+<tr><th>트리거</th><th>동작</th></tr>
+<tr><td>화면 진입</td><td>전체 영역 데이터 조회</td></tr>
+<tr><td>아티스트 전환</td><td>아티스트별 데이터 재조회</td></tr>
+<tr><td>Pull-to-Refresh</td><td>전체 재조회 (공통정책 11.2 참조)</td></tr>
+<tr><td>서브 화면 복귀</td><td>변경 가능성 있는 데이터 재조회</td></tr>
+</table>
+<h3>3.5 Pull-to-Refresh</h3>
+<ul>
+<li>공통정책 11.2 규격 적용</li>
+</ul>
+<hr>
+<h2>4. 규칙/로직</h2>
+<h3>4.1 캐러셀 배너 정렬</h3>
+<table>
+<tr><th>규칙</th><th>설명</th></tr>
+<tr><td>필터 기본</td><td>진행중</td></tr>
+<tr><td>진행중 정렬</td><td>BO 설정 순서</td></tr>
+<tr><td>마감됨 정렬</td><td>마감일 최신순</td></tr>
+<tr><td>이벤트 0건</td><td>캐러셀 영역 축소 + "이벤트 준비 중" 플레이스홀더</td></tr>
+</table>
+<h3>4.2 추천 카드 선택</h3>
+<table>
+<tr><th>규칙</th><th>설명</th></tr>
+<tr><td>우선순위</td><td>8단계 (2.2 추천 우선순위 표 참조)</td></tr>
+<tr><td>표시 수</td><td>1개 (최상위만)</td></tr>
+<tr><td>해당 상태 없음</td><td>스킵 → 다음 순위 확인</td></tr>
+<tr><td>전부 없음</td><td>8번(기본) 표시 (항상 해당됨)</td></tr>
+</table>
+<h3>4.3 비로그인 정책 (공통정책 10.5)</h3>
+<table>
+<tr><th>상태</th><th>정책</th></tr>
+<tr><td>비로그인 홈 열람</td><td>전체 열람 가능 (캐러셀, 아티스트 선택, 오늘의 할 일, 추천, 바로가기 모두 노출)</td></tr>
+<tr><td>출석/미션/래플 등 CTA 탭</td><td>로그인 화면 이동</td></tr>
+<tr><td>아티스트 로고 탭</td><td>로그인 화면 이동 (섹션은 노출, 탭 시 로그인)</td></tr>
+<tr><td>캐러셀 배너 탭</td><td>이벤트 상세 열람 가능 (응모 CTA 탭 시 로그인)</td></tr>
+<tr><td>오늘의 할 일 카드</td><td>비로그인 시 "로그인하고 시작하기" CTA 표시</td></tr>
+</table>
+<h3>4.4 멀티 아티스트 대응</h3>
+<ul>
+<li>아티스트 선택 시 홈 아래 콘텐츠 전환 (캐러셀 제외)</li>
+<li><code>artist_id</code> 기반으로 오늘의 할 일 / 추천 카드 / 바로가기 데이터 조회</li>
+</ul>
+<hr>
+<h2>5. 에러 및 예외상황</h2>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>Loading</td><td>각 영역 Skeleton UI</td></tr>
+<tr><td>Default</td><td>전체 영역 정상 표시</td></tr>
+<tr><td>Error</td><td>"앗, 불러오지 못했어요" + [다시 불러오기] 버튼</td></tr>
+<tr><td>캐러셀 0건</td><td>캐러셀 영역 축소 + "이벤트 준비 중" 플레이스홀더</td></tr>
+<tr><td>비로그인</td><td>전체 열람 가능. CTA 탭 시 로그인 이동 (공통정책 10.5 참조). 오늘의 할 일 카드에 "로그인하고 시작하기" CTA 표시</td></tr>
+<tr><td>아티스트 0명</td><td>아티스트 선택 섹션에 "아티스트를 추가해보세요!" + [+] 버튼만 표시</td></tr>
+<tr><td>오늘의 할 일 모두 완료</td><td>"✅ 오늘 할 일 완료! 🔥{N}일째" 1줄로 접힘</td></tr>
+<tr><td>추천 조회 실패</td><td>추천 카드 영역에 8번(기본) 표시: "오늘의 퀘스트를 완료하세요"</td></tr>
+<tr><td>비로그인 출석 후 복귀</td><td>로그인 완료 후 홈으로 자동 복귀. 출석은 유저가 다시 탭 필요 (자동 처리 아님)</td></tr>
+</table>
+<hr>
+<h2>6. 연관화면ID</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-ART-101</td><td>아티스트 메인</td><td>아티스트 선택 시 하단 탭명 변경</td></tr>
+<tr><td>CEB-FQ-101</td><td>Quest 메인</td><td>오늘의 할 일 퀘스트 CTA + 추천 카드 이동</td></tr>
+<tr><td>CEB-FQ-501</td><td>일일 미션</td><td>오늘의 할 일 미션 CTA 이동</td></tr>
+<tr><td>CEB-FQ-210</td><td>응모권 내역</td><td>헤더 응모권 탭 시 이동</td></tr>
+<tr><td>CEB-DUK-101</td><td>덕력 랭킹</td><td>추천 카드 이동</td></tr>
+<tr><td>CEB-DUK-201</td><td>서포트 이벤트</td><td>바로가기 + 추천 카드 이동</td></tr>
+<tr><td>CEB-EVT-101</td><td>Raffle</td><td>바로가기 + 추천 카드 이동</td></tr>
+<tr><td>CEB-EVT-201</td><td>팬덤 레벨</td><td>바로가기 + 추천 카드 이동</td></tr>
+<tr><td>CEB-COL-101</td><td>컬렉션</td><td>추천 카드 이동</td></tr>
+<tr><td>CEB-INF-101</td><td>정보 피드</td><td>바로가기 이동</td></tr>
+<tr><td>CEB-MEM-101</td><td>기억저장소</td><td>추천 카드 (1년 전 오늘) 이동</td></tr>
+<tr><td>CEB-GAM-101</td><td>게임존 메인</td><td>추천 카드 이동</td></tr>
+<tr><td>CEB-NTF-101</td><td>알림 센터</td><td>헤더 알림 아이콘 탭 시 이동 (추후 작성)</td></tr>
+</table>
+<hr>
+<h2>변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.04.15</td><td>@Nill Yoo</td><td>초안 작성. 팬 검토 반영: 6영역 구성(헤더/캐러셀/아티스트 고정) + 오늘의 할 일 컴팩트(2줄), 추천 1개로 축소, 고정 정보→바로가기 1열 4카드 대체. 폴드 안에 핵심 정보 배치</td></tr>
+</table>
+
+</body>
+</html>
