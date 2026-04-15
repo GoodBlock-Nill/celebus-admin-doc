@@ -317,6 +317,49 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* 7. BIVE 컬렉션 프리뷰 */}
+      <div className="px-4 mt-6 mb-4">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">🃏 이런 BIVE를 모을 수 있어요</span>
+          <div className="flex-1 h-px bg-gray-100" />
+        </div>
+
+        {hasContent ? (
+          <>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { name: 'V01D 데뷔 포토', grade: 'Grade 1', emoji: '📸', owned: isLoggedIn },
+                { name: 'V01D 콘서트 메모리', grade: 'Grade 2', emoji: '🎤', owned: false },
+                { name: 'V01D 음방 1위', grade: 'Grade 3', emoji: '🏆', owned: false },
+                { name: 'V01D 스페셜 에디션', grade: '스페셜', emoji: '✨', owned: false },
+              ].map((bive) => (
+                <button key={bive.name}
+                  onClick={() => addToast('info', `${bive.name} 미리보기 (바텀시트)`)}
+                  className="bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-200 rounded-xl p-3 text-left active:scale-[0.97] transition-transform relative">
+                  <div className="w-full aspect-square rounded-lg bg-violet-100 flex items-center justify-center mb-2">
+                    <span className="text-3xl">{bive.emoji}</span>
+                  </div>
+                  <p className="text-[10px] font-bold text-gray-900 truncate">{bive.name}</p>
+                  <span className="text-[8px] text-violet-500 font-medium">{bive.grade}</span>
+                  {bive.owned && (
+                    <span className="absolute top-2 right-2 text-[8px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full">보유 중</span>
+                  )}
+                </button>
+              ))}
+            </div>
+            <button onClick={() => isLoggedIn ? router.push('/collection') : addToast('info', '로그인 후 컬렉션을 확인할 수 있어요')}
+              className="w-full mt-3 py-2.5 text-center text-xs font-semibold text-violet-600 bg-violet-50 rounded-xl active:bg-violet-100 transition-colors">
+              전체 컬렉션 보기 →
+            </button>
+          </>
+        ) : (
+          <div className="text-center py-8">
+            <span className="text-2xl">🃏</span>
+            <p className="text-xs text-gray-400 mt-2">곧 첫 BIVE가 등록될 거예요!</p>
+          </div>
+        )}
+      </div>
+
       {/* 플로팅 디버그 */}
       <div className="fixed bottom-20 right-4 z-50">
         {debugOpen && (
