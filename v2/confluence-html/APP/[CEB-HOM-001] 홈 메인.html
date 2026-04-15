@@ -87,7 +87,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>HOM(홈)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.5</td></tr>
+<tr><td>버전</td><td>v1.6</td></tr>
 <tr><td>최근 업데이트</td><td>2026.04.15</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td></td></tr>
@@ -228,6 +228,27 @@ p {
 <blockquote>
 <p>기존 "정보" 라벨 → 팬에게 의미 있는 실제 콘텐츠(오늘의 일정/소식) 미리보기로 변경. 유저가 "어, 오늘 음악중심 나오네?" 하고 관심을 가지도록 유도.</p>
 </blockquote>
+<h5>7. BIVE 컬렉션 프리뷰</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>위치</td><td>바로가기 섹션 아래</td></tr>
+<tr><td>의도</td><td>"활동하면 이런 디지털 굿즈를 얻을 수 있다" — 유저의 수집 욕구와 소유욕을 자극하여 서비스 참여 유도</td></tr>
+<tr><td>로그인/비로그인</td><td><strong>동일하게 표시</strong> (비로그인 유저에게도 BIVE 매력을 보여줘 가입 전환 유도)</td></tr>
+<tr><td>아티스트</td><td>선택된 아티스트 기준</td></tr>
+<tr><td>섹션 타이틀</td><td>"🃏 이런 BIVE를 모을 수 있어요"</td></tr>
+<tr><td>구성</td><td>2열 그리드. BIVE 카드 4~6개 표시</td></tr>
+<tr><td>카드 구성</td><td>BIVE 이미지 + 등급 뱃지(Grade 1~5 / 스페셜) + BIVE 이름</td></tr>
+<tr><td>보유 상태 (로그인)</td><td>보유 BIVE: "보유 중" 뱃지 (성취감). 미보유 BIVE: 뱃지 없음 (소유욕 자극)</td></tr>
+<tr><td>보유 상태 (비로그인)</td><td>전체 뱃지 없음 (보유 여부 판별 불가)</td></tr>
+<tr><td>카드 탭</td><td>BIVE 상세 미리보기 바텀시트 표시 (3.6 참조)</td></tr>
+<tr><td>하단 CTA</td><td>"전체 컬렉션 보기 →" 탭 → CEB-COL-101 이동 (비로그인 시 로그인 유도)</td></tr>
+<tr><td>Empty (BIVE 0건)</td><td>"곧 첫 BIVE가 등록될 거예요!" 안내. 섹션은 표시하되 카드 없음</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<blockquote>
+<p>BIVE 이미지는 실제 이미지를 보여줘야 소유욕이 발생한다. 실루엣/잠금 처리 아님. 미보유 BIVE도 풀 이미지 노출.</p>
+<p>BO에서 홈 노출 BIVE를 선택 가능 (추천 BIVE 플래그). 미설정 시 등급순으로 자동 선택.</p>
+</blockquote>
 <hr>
 <h2>3. 화면 내 기능설명</h2>
 <h3>3.1 캐러셀 배너 탭</h3>
@@ -260,6 +281,18 @@ p {
 <h3>3.5 Pull-to-Refresh</h3>
 <ul>
 <li>공통정책 11.2 규격 적용</li>
+</ul>
+<h3>3.6 BIVE 카드 탭 (미리보기 바텀시트)</h3>
+<ul>
+<li>BIVE 카드 탭 → 바텀시트 미리보기 표시:</li>
+<li>BIVE 이미지 (대형)</li>
+<li>등급 뱃지 (Grade 1~5 / 스페셜)</li>
+<li>BIVE 이름</li>
+<li>획득 방법 안내 (예: "Quest 1장 완료 시 획득", "합성으로 획득")</li>
+<li>보유 상태 (로그인 시): "보유 중" 또는 미보유</li>
+<li>CTA: [컬렉션에서 보기] → CEB-COL-101 이동 (비로그인 시 로그인 유도)</li>
+<li>바텀시트 Dimmed 영역 탭 시 닫기</li>
+<li>비로그인 유저도 바텀시트 열람 가능 (CTA 탭 시만 로그인 유도)</li>
 </ul>
 <hr>
 <h2>4. 규칙/로직</h2>
@@ -296,7 +329,7 @@ p {
 <h3>4.4 멀티 아티스트 대응</h3>
 <ul>
 <li>아티스트 선택 시 홈 아래 콘텐츠 전환 (캐러셀 제외)</li>
-<li><code>artist_id</code> 기반으로 오늘의 할 일 / 추천 카드 / 바로가기 데이터 조회</li>
+<li><code>artist_id</code> 기반으로 오늘의 할 일 / 추천 카드 / 바로가기 / BIVE 프리뷰 데이터 조회</li>
 </ul>
 <hr>
 <h2>5. 에러 및 예외상황</h2>
@@ -311,6 +344,7 @@ p {
 <tr><td>오늘의 할 일 모두 완료</td><td>"✅ 오늘 할 일 완료! 🔥{N}일째" 1줄로 접힘</td></tr>
 <tr><td>추천 조회 실패</td><td>추천 카드 영역에 8번(기본) 표시: "오늘의 퀘스트를 완료하세요"</td></tr>
 <tr><td>비로그인 출석 후 복귀</td><td>로그인 완료 후 홈으로 자동 복귀. 출석은 유저가 다시 탭 필요 (자동 처리 아님)</td></tr>
+<tr><td>BIVE 0건</td><td>"곧 첫 BIVE가 등록될 거예요!" 안내. 섹션 표시, 카드 없음</td></tr>
 </table>
 <hr>
 <h2>6. 연관화면ID</h2>
@@ -324,7 +358,7 @@ p {
 <tr><td>CEB-DUK-201</td><td>서포트 이벤트</td><td>바로가기 + 추천 카드 이동</td></tr>
 <tr><td>CEB-EVT-101</td><td>Raffle</td><td>바로가기 + 추천 카드 이동</td></tr>
 <tr><td>CEB-EVT-201</td><td>팬덤 레벨</td><td>바로가기 + 추천 카드 이동</td></tr>
-<tr><td>CEB-COL-101</td><td>컬렉션</td><td>추천 카드 이동</td></tr>
+<tr><td>CEB-COL-101</td><td>컬렉션</td><td>추천 카드 이동 + BIVE 프리뷰 "전체 컬렉션 보기" + BIVE 바텀시트 [컬렉션에서 보기]</td></tr>
 <tr><td>CEB-INF-101</td><td>정보 피드</td><td>바로가기 이동</td></tr>
 <tr><td>CEB-MEM-101</td><td>기억저장소</td><td>추천 카드 (1년 전 오늘) 이동</td></tr>
 <tr><td>CEB-GAM-101</td><td>게임존 메인</td><td>추천 카드 이동</td></tr>
@@ -342,6 +376,7 @@ p {
 <tr><td>v1.3</td><td>2026.04.15</td><td>@Nill Yoo</td><td>아티스트 [+] 버튼 동작 CEB-ART-201 명시. 연관화면 추가</td></tr>
 <tr><td>v1.4</td><td>2026.04.15</td><td>@Nill Yoo</td><td>크로스 검증: ART-201 복귀 플로우 연관화면에 명시, 아티스트 셀렉터 정렬 순서 추가, 비로그인 [+] 추가 정책 보강</td></tr>
 <tr><td>v1.5</td><td>2026.04.15</td><td>@Nill Yoo</td><td>크로스 검증: BIVE→디지털 굿즈 용어 통일, 비로그인 CTA 복귀 규칙 추가, FQ-210 v1 재활용 표기, 미팔로우 아티스트 팔로우 안내 UI 정의, 바로가기 일정/소식 Empty 상태 추가</td></tr>
+<tr><td>v1.6</td><td>2026.04.15</td><td>@Nill Yoo</td><td>BIVE 컬렉션 프리뷰 섹션 추가(영역 7): 2열 그리드 BIVE 카드 + 상세 미리보기 바텀시트 + 로그인/비로그인 동일 표시. 수집 욕구 자극 및 가입 전환 유도</td></tr>
 </table>
 
 </body>

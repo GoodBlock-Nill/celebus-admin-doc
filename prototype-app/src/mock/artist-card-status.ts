@@ -70,7 +70,7 @@ export const MOCK_ARTIST_CARDS: ServiceCardData[] = [
   {
     id: 'info',
     group: 'more',
-    icon: '📋',
+    icon: '📰',
     title: '정보',
     statusText: '새소식 3',
     href: '/info',
