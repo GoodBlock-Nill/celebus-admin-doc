@@ -156,20 +156,20 @@ export default function CollectionPage() {
         {debugOpen && (
           <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
             {[
-              { key: 'has-items' as const, icon: '🃏', label: '일부보유' },
-              { key: 'empty' as const, icon: '🔒', label: '전체잠금' },
-              { key: 'all-unlocked' as const, icon: '✅', label: '전체해금' },
+              { key: 'has-items' as const, label: '일부 보유' },
+              { key: 'empty' as const, label: '전체 잠금' },
+              { key: 'all-unlocked' as const, label: '전체 해금' },
             ].map((p) => (
               <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('w-12 h-10 rounded-xl shadow-md flex items-center justify-center text-sm', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200')}>
-                {p.icon}
+                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
+                {p.label}
               </button>
             ))}
           </div>
         )}
-        <button onClick={() => setDebugOpen(!debugOpen)} className="w-12 h-12 rounded-full bg-gray-900 text-white shadow-lg flex flex-col items-center justify-center active:scale-95 transition-transform">
-          <span className="text-base">{preset === 'has-items' ? '🃏' : preset === 'empty' ? '🔒' : '✅'}</span>
-          <span className="text-[8px] leading-none">{preset === 'has-items' ? '일부' : preset === 'empty' ? '잠금' : '해금'}</span>
+        <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
+          <span className="text-[10px] font-semibold">{preset === 'has-items' ? '일부 보유' : preset === 'empty' ? '전체 잠금' : '전체 해금'}</span>
+          <span className="text-[8px]">▲</span>
         </button>
       </div>
     </div>

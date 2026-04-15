@@ -165,20 +165,20 @@ export default function InfoPage() {
         {debugOpen && (
           <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
             {[
-              { key: 'normal' as const, icon: '📋', label: '일반' },
-              { key: 'empty' as const, icon: '🔕', label: '빈상태' },
-              { key: 'busy' as const, icon: '🔥', label: '컴백' },
+              { key: 'normal' as const, label: '일반' },
+              { key: 'empty' as const, label: '빈 상태' },
+              { key: 'busy' as const, label: '컴백 시즌' },
             ].map((p) => (
               <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('w-12 h-10 rounded-xl shadow-md flex items-center justify-center text-sm', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200')}>
-                {p.icon}
+                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
+                {p.label}
               </button>
             ))}
           </div>
         )}
-        <button onClick={() => setDebugOpen(!debugOpen)} className="w-12 h-12 rounded-full bg-gray-900 text-white shadow-lg flex flex-col items-center justify-center active:scale-95 transition-transform">
-          <span className="text-base">{preset === 'normal' ? '📋' : preset === 'empty' ? '🔕' : '🔥'}</span>
-          <span className="text-[8px] leading-none">{preset === 'normal' ? '일반' : preset === 'empty' ? '빈' : '컴백'}</span>
+        <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
+          <span className="text-[10px] font-semibold">{preset === 'normal' ? '일반' : preset === 'empty' ? '빈 상태' : '컴백 시즌'}</span>
+          <span className="text-[8px]">▲</span>
         </button>
       </div>
     </div>

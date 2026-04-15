@@ -171,11 +171,10 @@ export default function DailyMissionPage() {
             reset();
             addToast('info', '일일 미션 상태가 초기화되었습니다');
           }}
-          className="w-12 h-12 rounded-full bg-gray-900 text-white shadow-lg flex flex-col items-center justify-center active:scale-95 transition-transform"
+          className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform"
           title="상태 초기화"
         >
-          <span className="text-base">🔄</span>
-          <span className="text-[8px] leading-none">리셋</span>
+          <span className="text-[10px] font-semibold">상태 초기화</span>
         </button>
       </div>
     </div>

@@ -6,8 +6,7 @@ import Toast from '@/components/ui/Toast';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 
-type TabFilter = 'active' | 'ended';
-type DebugPreset = 'normal' | 'empty';
+type DebugPreset = 'login-content' | 'login-empty' | 'guest-content' | 'guest-empty';
 
 interface EventItem {
   id: string;
@@ -31,11 +30,14 @@ const MOCK_EVENTS: EventItem[] = [
 
 export default function EventsPage() {
   const addToast = useUIStore((s) => s.addToast);
-  const [tab, setTab] = useState<TabFilter>('active');
-  const [preset, setPreset] = useState<DebugPreset>('normal');
+  const [tab, setTab] = useState<'active' | 'ended'>('active');
+  const [preset, setPreset] = useState<DebugPreset>('login-content');
   const [debugOpen, setDebugOpen] = useState(false);
 
-  const events = preset === 'empty' ? [] : MOCK_EVENTS;
+  const isLoggedIn = preset === 'login-content' || preset === 'login-empty';
+  const hasContent = preset === 'login-content' || preset === 'guest-content';
+
+  const events = hasContent ? MOCK_EVENTS : [];
   const filtered = events.filter((e) => tab === 'active' ? e.active : !e.active);
 
   const switchPreset = (p: DebugPreset) => {
@@ -47,6 +49,13 @@ export default function EventsPage() {
     <div className="min-h-dvh bg-white pb-8">
       <Toast />
       <SubPageHeader title="이벤트" />
+
+      {/* 비로그인 배너 */}
+      {!isLoggedIn && (
+        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
+          👀 비로그인 미리보기 — 이벤트 열람 가능, 응모 시 로그인 필요
+        </div>
+      )}
 
       {/* 필터 탭 */}
       <div className="px-4 pt-3 pb-2 flex gap-2 border-b border-gray-100">
@@ -69,7 +78,10 @@ export default function EventsPage() {
         {filtered.length > 0 ? (
           filtered.map((event) => (
             <button key={event.id}
-              onClick={() => addToast('info', `${event.title} 상세 (딥링크 이동)`)}
+              onClick={() => {
+                if (!isLoggedIn) addToast('info', '이벤트 상세는 열람 가능, 응모 시 로그인 필요');
+                else addToast('info', `${event.title} 상세 (딥링크 이동)`);
+              }}
               className="w-full flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3.5 text-left active:scale-[0.98] transition-transform">
               <div className="w-12 h-12 rounded-xl bg-violet-100 flex items-center justify-center shrink-0">
                 <span className="text-xl">{event.emoji}</span>
@@ -93,7 +105,7 @@ export default function EventsPage() {
           <div className="text-center py-16">
             <span className="text-3xl">{tab === 'active' ? '📭' : '📋'}</span>
             <p className="text-sm text-gray-400 mt-3">
-              {tab === 'active' ? '진행중인 이벤트가 없어요' : '마감된 이벤트가 없어요'}
+              {tab === 'active' ? '곧 새로운 이벤트가 찾아올 거예요!' : '마감된 이벤트가 없어요'}
             </p>
           </div>
         )}
@@ -104,21 +116,21 @@ export default function EventsPage() {
         {debugOpen && (
           <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
             {[
-              { key: 'normal' as const, icon: '📋', label: '일반' },
-              { key: 'empty' as const, icon: '🔒', label: '빈목록' },
+              { key: 'login-content' as const, label: '로그인+콘텐츠' },
+              { key: 'login-empty' as const, label: '로그인+Empty' },
+              { key: 'guest-content' as const, label: '비로그인+콘텐츠' },
+              { key: 'guest-empty' as const, label: '비로그인+Empty' },
             ].map((p) => (
               <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('w-12 h-10 rounded-xl shadow-md flex items-center justify-center text-sm',
-                  p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200')}>
-                {p.icon}
+                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
+                {p.label}
               </button>
             ))}
           </div>
         )}
-        <button onClick={() => setDebugOpen(!debugOpen)}
-          className="w-12 h-12 rounded-full bg-gray-900 text-white shadow-lg flex flex-col items-center justify-center active:scale-95 transition-transform">
-          <span className="text-base">{preset === 'normal' ? '📋' : '🔒'}</span>
-          <span className="text-[8px] leading-none">{preset === 'normal' ? '일반' : '빈목록'}</span>
+        <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
+          <span className="text-[10px] font-semibold">{preset === 'login-content' ? '로그인+콘텐츠' : preset === 'login-empty' ? '로그인+Empty' : preset === 'guest-content' ? '비로그인+콘텐츠' : '비로그인+Empty'}</span>
+          <span className="text-[8px]">▲</span>
         </button>
       </div>
     </div>

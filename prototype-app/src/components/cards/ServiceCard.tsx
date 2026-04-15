@@ -8,9 +8,10 @@ import type { ServiceCardData } from '@/lib/types';
 interface ServiceCardProps {
   card: ServiceCardData;
   fullWidth?: boolean;
+  disabled?: boolean;
 }
 
-export default function ServiceCard({ card, fullWidth = false }: ServiceCardProps) {
+export default function ServiceCard({ card, fullWidth = false, disabled = false }: ServiceCardProps) {
   const addToast = useUIStore((s) => s.addToast);
 
   const handleComingSoon = (e: React.MouseEvent) => {
@@ -41,6 +42,14 @@ export default function ServiceCard({ card, fullWidth = false }: ServiceCardProp
       </div>
     </div>
   );
+
+  if (disabled) {
+    return (
+      <div className={cn('cursor-default opacity-90', fullWidth ? 'col-span-2' : '')}>
+        {content}
+      </div>
+    );
+  }
 
   if (card.comingSoon) {
     return (

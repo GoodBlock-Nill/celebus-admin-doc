@@ -8,7 +8,7 @@ import { useArtistStore } from '@/stores/useArtistStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 
-type DebugPreset = 'normal' | 'empty' | 'all-followed';
+type DebugPreset = 'login-content' | 'login-empty' | 'login-all' | 'guest-content' | 'guest-empty';
 
 interface DiscoverArtist {
   id: string;
@@ -37,10 +37,11 @@ export default function ArtistDiscoverPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [unfollowTarget, setUnfollowTarget] = useState<DiscoverArtist | null>(null);
-  const [preset, setPreset] = useState<DebugPreset>('normal');
+  const [preset, setPreset] = useState<DebugPreset>('login-content');
   const [debugOpen, setDebugOpen] = useState(false);
 
-  const artists = preset === 'empty' ? [] : ALL_ARTISTS;
+  const isLoggedIn = preset.startsWith('login');
+  const artists = (preset === 'login-empty' || preset === 'guest-empty') ? [] : ALL_ARTISTS;
   const followedArtists = artists.filter((a) => followed.has(a.id));
   const recommendedArtists = artists.filter((a) => a.recommended);
 
@@ -54,6 +55,10 @@ export default function ArtistDiscoverPage() {
   const allFollowed = artists.length > 0 && artists.every((a) => followed.has(a.id));
 
   const handleFollow = (artist: DiscoverArtist) => {
+    if (!isLoggedIn) {
+      addToast('info', '로그인 후 팔로우할 수 있습니다');
+      return;
+    }
     setFollowed((prev) => new Set([...prev, artist.id]));
     addToast('success', `'${artist.name}'을 팔로우했어요!`);
     setTimeout(() => router.push('/'), 500);
@@ -78,8 +83,8 @@ export default function ArtistDiscoverPage() {
   const switchPreset = (p: DebugPreset) => {
     setPreset(p);
     setDebugOpen(false);
-    if (p === 'normal') setFollowed(new Set(['v01d']));
-    else if (p === 'all-followed') setFollowed(new Set(ALL_ARTISTS.map((a) => a.id)));
+    if (p === 'login-content' || p === 'guest-content') setFollowed(new Set(['v01d']));
+    else if (p === 'login-all') setFollowed(new Set(ALL_ARTISTS.map((a) => a.id)));
     else setFollowed(new Set());
   };
 
@@ -87,6 +92,13 @@ export default function ArtistDiscoverPage() {
     <div className="min-h-dvh bg-white pb-8">
       <Toast />
       <SubPageHeader title="아티스트" />
+
+      {/* 비로그인 배너 */}
+      {!isLoggedIn && (
+        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
+          👀 비로그인 미리보기 — 검색/열람 가능, 팔로우 시 로그인 필요
+        </div>
+      )}
 
       {/* 검색 토글 */}
       <div className="px-4 pt-2 flex justify-end">
@@ -259,22 +271,26 @@ export default function ArtistDiscoverPage() {
         {debugOpen && (
           <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
             {[
-              { key: 'normal' as const, icon: '📋', label: '일반' },
-              { key: 'empty' as const, icon: '🔒', label: '빈목록' },
-              { key: 'all-followed' as const, icon: '✅', label: '전체팔로우' },
+              { key: 'login-content' as const, label: '로그인+콘텐츠' },
+              { key: 'login-empty' as const, label: '로그인+Empty' },
+              { key: 'login-all' as const, label: '로그인+전체팔로우' },
+              { key: 'guest-content' as const, label: '비로그인+콘텐츠' },
+              { key: 'guest-empty' as const, label: '비로그인+Empty' },
             ].map((p) => (
               <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('w-12 h-10 rounded-xl shadow-md flex items-center justify-center text-sm',
-                  p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200')}>
-                {p.icon}
+                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap',
+                  p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
+                {p.label}
               </button>
             ))}
           </div>
         )}
         <button onClick={() => setDebugOpen(!debugOpen)}
-          className="w-12 h-12 rounded-full bg-gray-900 text-white shadow-lg flex flex-col items-center justify-center active:scale-95 transition-transform">
-          <span className="text-base">{preset === 'normal' ? '📋' : preset === 'empty' ? '🔒' : '✅'}</span>
-          <span className="text-[8px] leading-none">{preset === 'normal' ? '일반' : preset === 'empty' ? '빈목록' : '전체'}</span>
+          className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
+          <span className="text-[10px] font-semibold">
+            {preset === 'login-content' ? '로그인+콘텐츠' : preset === 'login-empty' ? '로그인+Empty' : preset === 'login-all' ? '로그인+전체팔로우' : preset === 'guest-content' ? '비로그인+콘텐츠' : '비로그인+Empty'}
+          </span>
+          <span className="text-[8px]">▲</span>
         </button>
       </div>
     </div>
