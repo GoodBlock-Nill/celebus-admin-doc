@@ -9,6 +9,21 @@ import { cn } from '@/lib/utils';
 
 type DebugPreset = 'login-content' | 'login-empty' | 'guest-content' | 'guest-empty';
 
+interface BiveItem {
+  name: string;
+  grade: string;
+  emoji: string;
+  owned: boolean;
+  howToGet: string;
+}
+
+const BIVE_LIST: Omit<BiveItem, 'owned'>[] = [
+  { name: 'V01D 데뷔 포토', grade: 'Grade 1', emoji: '📸', howToGet: 'Quest 1장 완료 시 획득' },
+  { name: 'V01D 콘서트 메모리', grade: 'Grade 2', emoji: '🎤', howToGet: 'Quest 2장 완료 시 획득' },
+  { name: 'V01D 음방 1위', grade: 'Grade 3', emoji: '🏆', howToGet: 'Quest 3장 완료 시 획득' },
+  { name: 'V01D 스페셜 에디션', grade: '스페셜', emoji: '✨', howToGet: 'Grade 1~5 전체 합성으로 획득' },
+];
+
 const BANNERS = [
   { id: 'b1', title: 'V01D 사인앨범 래플', subtitle: 'D-5 | 참여하기', active: true },
   { id: 'b2', title: 'V01D 커피차 서포트', subtitle: '목표 70% 달성중', active: true },
@@ -27,6 +42,7 @@ export default function HomePage() {
   const [streak, setStreak] = useState(12);
   const [preset, setPreset] = useState<DebugPreset>('login-content');
   const [debugOpen, setDebugOpen] = useState(false);
+  const [selectedBive, setSelectedBive] = useState<(typeof BIVE_LIST)[number] | null>(null);
 
   const isLoggedIn = preset === 'login-content' || preset === 'login-empty';
   const hasContent = preset === 'login-content' || preset === 'guest-content';
@@ -327,25 +343,23 @@ export default function HomePage() {
         {hasContent ? (
           <>
             <div className="grid grid-cols-2 gap-2">
-              {[
-                { name: 'V01D 데뷔 포토', grade: 'Grade 1', emoji: '📸', owned: isLoggedIn },
-                { name: 'V01D 콘서트 메모리', grade: 'Grade 2', emoji: '🎤', owned: false },
-                { name: 'V01D 음방 1위', grade: 'Grade 3', emoji: '🏆', owned: false },
-                { name: 'V01D 스페셜 에디션', grade: '스페셜', emoji: '✨', owned: false },
-              ].map((bive) => (
-                <button key={bive.name}
-                  onClick={() => addToast('info', `${bive.name} 미리보기 (바텀시트)`)}
-                  className="bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-200 rounded-xl p-3 text-left active:scale-[0.97] transition-transform relative">
-                  <div className="w-full aspect-square rounded-lg bg-violet-100 flex items-center justify-center mb-2">
-                    <span className="text-3xl">{bive.emoji}</span>
-                  </div>
-                  <p className="text-[10px] font-bold text-gray-900 truncate">{bive.name}</p>
-                  <span className="text-[8px] text-violet-500 font-medium">{bive.grade}</span>
-                  {bive.owned && (
-                    <span className="absolute top-2 right-2 text-[8px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full">보유 중</span>
-                  )}
-                </button>
-              ))}
+              {BIVE_LIST.map((bive, i) => {
+                const owned = isLoggedIn && i === 0;
+                return (
+                  <button key={bive.name}
+                    onClick={() => setSelectedBive(bive)}
+                    className="bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-200 rounded-xl p-3 text-left active:scale-[0.97] transition-transform relative">
+                    <div className="w-full aspect-square rounded-lg bg-violet-100 flex items-center justify-center mb-2">
+                      <span className="text-3xl">{bive.emoji}</span>
+                    </div>
+                    <p className="text-[10px] font-bold text-gray-900 truncate">{bive.name}</p>
+                    <span className="text-[8px] text-violet-500 font-medium">{bive.grade}</span>
+                    {owned && (
+                      <span className="absolute top-2 right-2 text-[8px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full">보유 중</span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
             <button onClick={() => isLoggedIn ? router.push('/collection') : addToast('info', '로그인 후 컬렉션을 확인할 수 있어요')}
               className="w-full mt-3 py-2.5 text-center text-xs font-semibold text-violet-600 bg-violet-50 rounded-xl active:bg-violet-100 transition-colors">
@@ -359,6 +373,39 @@ export default function HomePage() {
           </div>
         )}
       </div>
+
+      {/* BIVE 미리보기 바텀시트 */}
+      {selectedBive && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={() => setSelectedBive(null)}>
+          <div className="bg-white rounded-t-2xl w-full max-w-lg p-5 pb-8 safe-bottom animate-slideInUp" onClick={(e) => e.stopPropagation()}>
+            <div className="flex flex-col items-center">
+              <div className="w-32 h-32 rounded-2xl bg-violet-100 flex items-center justify-center mb-4">
+                <span className="text-5xl">{selectedBive.emoji}</span>
+              </div>
+              <span className="text-[10px] font-semibold text-violet-600 bg-violet-50 px-2.5 py-1 rounded-full mb-2">{selectedBive.grade}</span>
+              <p className="text-base font-bold text-gray-900">{selectedBive.name}</p>
+              <p className="text-xs text-gray-500 mt-1">📋 {selectedBive.howToGet}</p>
+              {isLoggedIn && (
+                <span className={cn(
+                  'mt-2 text-[10px] font-semibold px-2.5 py-1 rounded-full',
+                  BIVE_LIST.indexOf(selectedBive) === 0 ? 'text-green-600 bg-green-50' : 'text-gray-400 bg-gray-100'
+                )}>
+                  {BIVE_LIST.indexOf(selectedBive) === 0 ? '✅ 보유 중' : '미보유'}
+                </span>
+              )}
+            </div>
+            <button
+              onClick={() => {
+                setSelectedBive(null);
+                if (isLoggedIn) router.push('/collection');
+                else addToast('info', '로그인 후 컬렉션을 확인할 수 있어요');
+              }}
+              className="w-full mt-5 py-3 rounded-xl bg-violet-600 text-white text-sm font-bold active:bg-violet-700 transition-colors">
+              컬렉션에서 보기
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* 플로팅 디버그 */}
       <div className="fixed bottom-20 right-4 z-50">
