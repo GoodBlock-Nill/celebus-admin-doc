@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>ALL (전체)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.4</td></tr>
+<tr><td>버전</td><td>v2.5</td></tr>
 <tr><td>최근 업데이트</td><td>2026.04.15</td></tr>
 <tr><td>비고</td><td>고도화 서비스 전체 공통 정책 정의서. 각 화면 스펙 문서는 이 문서를 참조.</td></tr>
 </table>
@@ -981,27 +981,6 @@ p {
 <tr><td>Fallback</td><td>해당 없음 (3개 모두 필수이므로 빈 언어 발생 안 함)</td></tr>
 </table>
 <hr>
-<h2>15. 문서 동기화 규칙</h2>
-<h3>15.1 MD ↔ HTML 동기화</h3>
-<ul>
-<li>MD 문서가 원본이며, HTML은 Confluence 업로드용 변환본이다</li>
-<li>MD 문서를 수정할 때, 반드시 대응하는 HTML 문서도 동일하게 수정해야 한다</li>
-</ul>
-<h3>15.2 폴더 매핑</h3>
-<table>
-<tr><th>MD 폴더</th><th>HTML 폴더</th><th>파일 종류</th></tr>
-<tr><td><code>BO-GAM/</code></td><td><code>confluence-html/BO-GAM/</code></td><td>CEB-BO-GZ-<em>, CEB-BO-USR-</em></td></tr>
-<tr><td><code>APP-GAM/</code></td><td><code>confluence-html/APP-GAM/</code></td><td>CEB-GAM-*</td></tr>
-<tr><td><code>BO-FQ/</code></td><td><code>confluence-html/BO-FQ/</code></td><td>CEB-BO-FQ-*</td></tr>
-<tr><td><code>APP-FQ/</code></td><td><code>confluence-html/APP-FQ/</code></td><td>CEB-FQ-*, CEB-HOM-501-FQ</td></tr>
-<tr><td><code>APP-V01D/</code></td><td><code>confluence-html/APP-V01D/</code></td><td>고도화 앱 화면</td></tr>
-<tr><td><code>BO-V01D/</code></td><td><code>confluence-html/BO-V01D/</code></td><td>고도화 BO 화면</td></tr>
-</table>
-<h3>15.3 파일명 규칙</h3>
-<ul>
-<li><code>{MD폴더}/[화면ID] 제목.md</code> ↔ <code>confluence-html/{HTML폴더}/[화면ID] 제목.html</code></li>
-</ul>
-<hr>
 <h2>16. BO 권한 매트릭스 (고도화 추가분)</h2>
 <table>
 <tr><th>대메뉴</th><th>중메뉴</th><th>읽기</th><th>쓰기</th><th>삭제</th></tr>
@@ -1057,6 +1036,7 @@ p {
 <tr><td>v2.2</td><td>2026.04.14</td><td>@Nill Yoo</td><td>크로스 검증 반영: 팬덤 레벨업 기여 기준 '획득 덕력' 명확화(5.5)</td></tr>
 <tr><td>v2.3</td><td>2026.04.15</td><td>@Nill Yoo</td><td>기억저장소 감정 이모지 규격 추가(7.5), 월간 업로드 제한 '아티스트별' 명확화(13.3)</td></tr>
 <tr><td>v2.4</td><td>2026.04.15</td><td>@Nill Yoo</td><td>홈 화면 배치 순서 개선(4.3): 오늘의 할 일 컴팩트화, 추천 1개로 축소, 고정 정보→바로가기 1열 4카드 대체. CEB-HOM-001 스펙 신규 작성에 따른 동기화</td></tr>
+<tr><td>v2.5</td><td>2026.04.15</td><td>@Nill Yoo</td><td>디자인 핸드오프 개선: 네트워크 에러 공통 처리(11.3), 서버 상태 반영 방식(11.4) 추가. 바로가기 1열 통일(4.3). 문서 동기화 규칙(15) 제거</td></tr>
 </table>
 
 </body>
