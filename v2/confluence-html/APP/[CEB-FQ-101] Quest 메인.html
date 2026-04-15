@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.4</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.14</td></tr>
+<tr><td>버전</td><td>v1.5</td></tr>
+<tr><td>최근 업데이트</td><td>2026.04.15</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td></td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -212,6 +212,9 @@ p {
 <tr><td>정렬</td><td>진행중 > 신규 > 종료 (최신순)</td></tr>
 <tr><td>카드 탭</td><td>해당 퀘스트 미션 리스트 인라인 확장</td></tr>
 </table>
+<blockquote>
+<p>반복 퀘스트의 미션 타입은 BO에서 설정 (캡처 제출형 기본). 인라인 미션 UI는 스토리 모드와 동일 규격 적용.</p>
+</blockquote>
 <h5>잠금 장 프리뷰 바텀시트</h5>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
@@ -260,7 +263,7 @@ p {
 <tr><th>동작</th><th>설명</th></tr>
 <tr><td>[참여하기] 탭</td><td>→ CEB-GAM-202 PM 상세 딥링크 이동. 각 미션 = PM 게임 1회 참여</td></tr>
 <tr><td>참여 완료</td><td>→ 해당 미션 AUTO_COMPLETED (서버 자동 연동)</td></tr>
-<tr><td>PM 게임 미가용 시</td><td>→ 토스트(Info) "현재 진행중인 PM 게임이 없습니다". 미션 항목에 "게임 준비중" 상태 표시 + [알림 설정] CTA (PM 게임 등록 시 푸시 알림)</td></tr>
+<tr><td>PM 게임 미가용 시</td><td>→ 토스트(Info) "현재 진행중인 PM 게임이 없습니다". 미션 항목에 "게임 준비중" 상태 표시 + [알림 설정] CTA. [알림 설정] 탭 시 토스트(Success) '새 PM 게임이 등록되면 알려드릴게요'. 서버에서 PM 게임 등록 시 푸시 알림 발송 (공통정책 15 참조)</td></tr>
 <tr><td>복귀 시</td><td>미션 상태 자동 재조회 (3.4 데이터 갱신 참조)</td></tr>
 </table>
 <h3>3.3 디지털 굿즈 수령</h3>
@@ -415,6 +418,7 @@ p {
 <tr><td>v1.2</td><td>2026.04.14</td><td>@Nill Yoo</td><td>최종 검증 반영: 반려 CTA 모달 경유로 통일(2.2), 자동검증 장 reviewing 생략 규칙(4.2), provisional→active 트리거 명확화(4.2), 축하 모달 인라인 상세(4.4), 비로그인 정책 삭제(5), 전 장 심사중 안내(5), 임시 해금 토스트 피드백(4.2)</td></tr>
 <tr><td>v1.3</td><td>2026.04.14</td><td>@Nill Yoo</td><td>크로스 검증 반영: 반려 CTA 라벨 통일([사유 확인]), WebP 포맷 추가(4.8), 축하 모달 1회성 규칙 명확화(4.4), 비로그인 정책 명시(5)</td></tr>
 <tr><td>v1.4</td><td>2026.04.15</td><td>@Nill Yoo</td><td>핸드오프 개선: 홈 접근 경로 추가(HOM-001 추천/오늘의 할 일), 프로토타입 참조 안내</td></tr>
+<tr><td>v1.5</td><td>2026.04.15</td><td>@Nill Yoo</td><td>크로스 검증: 반복 퀘스트 미션 타입 BO 설정 명시, PM 미가용 알림 설정 CTA 동작 정의</td></tr>
 </table>
 
 </body>

@@ -61,6 +61,11 @@ export default function ArtistDiscoverPage() {
 
   const handleUnfollow = () => {
     if (!unfollowTarget) return;
+    if (followed.size <= 1) {
+      addToast('error', '최소 1명의 아티스트를 팔로우해야 해요');
+      setUnfollowTarget(null);
+      return;
+    }
     setFollowed((prev) => {
       const next = new Set(prev);
       next.delete(unfollowTarget.id);
@@ -135,7 +140,13 @@ export default function ArtistDiscoverPage() {
               </div>
               <div className="px-4 flex gap-3 overflow-x-auto scrollbar-hide pb-1">
                 {followedArtists.map((artist) => (
-                  <button key={artist.id} onClick={() => setUnfollowTarget(artist)}
+                  <button key={artist.id} onClick={() => {
+                      if (followedArtists.length <= 1) {
+                        addToast('error', '최소 1명의 아티스트를 팔로우해야 해요');
+                        return;
+                      }
+                      setUnfollowTarget(artist);
+                    }}
                     className="flex flex-col items-center gap-1 shrink-0">
                     <div className="relative w-14 h-14 rounded-full bg-violet-100 border-2 border-violet-400 flex items-center justify-center">
                       <span className="text-xl">{artist.emoji}</span>

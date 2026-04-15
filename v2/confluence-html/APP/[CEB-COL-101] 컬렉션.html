@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>COL(컬렉션)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.1</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.14</td></tr>
+<tr><td>버전</td><td>v1.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.04.15</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td></td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -126,7 +126,7 @@ p {
 <h5>서브페이지 헤더</h5>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
-<tr><td>뒤로가기</td><td>← 탭 시 CEB-ART-101로 복귀</td></tr>
+<tr><td>뒤로가기</td><td>← 탭 → 이전 화면으로 복귀 (네비게이션 스택 기반)</td></tr>
 <tr><td>타이틀</td><td>"컬렉션"</td></tr>
 <tr><td>보유 수</td><td>"보유 {N}종" (우측 표시). 현재 선택된 카테고리 기준이 아닌 전체 보유 BIVE 수 표시</td></tr>
 <tr><td>스타일</td><td>피그마 참조</td></tr>
@@ -173,7 +173,7 @@ p {
 </ul>
 <h3>3.2 BIVE 상세 보기</h3>
 <blockquote>
-<p>BIVE 상세(CEB-COL-201), 보내기, Pick, 히스토리(CEB-COL-301), 혜택(CEB-COL-401) 화면은 별도 화면 스펙으로 추후 작성합니다.</p>
+<p>BIVE 상세(CEB-COL-201), 보내기(CEB-COL-101-MD-SEND), Pick(CEB-COL-101-MD-PICK), 히스토리(CEB-COL-301), 혜택(CEB-COL-401) 화면은 별도 화면 스펙으로 추후 작성합니다.</p>
 </blockquote>
 <ul>
 <li>보유 BIVE 카드 탭 시 상세 화면으로 이동</li>
@@ -183,7 +183,7 @@ p {
 <h3>3.3 BIVE 보내기</h3>
 <ul>
 <li>보유 BIVE를 다른 유저에게 전송하는 기능</li>
-<li>진행 순서: 상세 화면 [보내기] 탭 → 수신자 검색/선택 → 전송 확인 모달 → 전송 완료 토스트(Success)</li>
+<li>진행 순서: 상세 화면 [보내기] 탭 → 수신자 검색/선택 → 전송 확인 모달(CEB-COL-101-MD-SEND) → 전송 완료 토스트(Success)</li>
 <li>전송 완료 후 해당 BIVE가 내 컬렉션에서 제거됨</li>
 </ul>
 <h3>3.4 합성</h3>
@@ -196,7 +196,7 @@ p {
 <h3>3.5 Pick</h3>
 <ul>
 <li>보유 BIVE 1장을 소진하여 랜덤으로 새 BIVE 1장을 획득하는 가챠 기능</li>
-<li>진행 순서: [Pick] 탭 → 소진할 BIVE 선택 → 확인 모달 → 뽑기 애니메이션 → 획득 결과 화면</li>
+<li>진행 순서: [Pick] 탭 → 소진할 BIVE 선택 → 확인 모달(CEB-COL-101-MD-PICK) → 뽑기 애니메이션 → 획득 결과 화면</li>
 <li>보유 BIVE 0장 시 [Pick] 버튼 비활성</li>
 </ul>
 <h3>3.6 BIVE 히스토리</h3>
@@ -211,7 +211,7 @@ p {
 </ul>
 <h3>3.8 BIVE 삭제</h3>
 <ul>
-<li>상세 화면에서 [삭제] 탭 → 확인 모달 ("삭제한 BIVE는 복구할 수 없습니다") → 삭제 완료 토스트(Success)</li>
+<li>상세 화면에서 [삭제] 탭 → 확인 모달(CEB-COL-101-MD-DELETE, "삭제한 BIVE는 복구할 수 없습니다") → 삭제 완료 토스트(Success)</li>
 <li>삭제 완료 후 해당 BIVE가 컬렉션에서 제거됨</li>
 </ul>
 <h3>3.9 데이터 갱신</h3>
@@ -279,6 +279,7 @@ p {
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td>v1.0</td><td>2026.04.14</td><td>@Nill Yoo</td><td>초안 작성. v1 기능 반영: 카테고리 필터(아티스트/이벤트/스페셜) + 2열 그리드, BIVE 상세/보내기/합성/Pick/히스토리/혜택/삭제, BIVE 등급 체계(Grade 1~5 + Special), 합성 규칙, 그리드 정렬 기준</td></tr>
 <tr><td>v1.1</td><td>2026.04.15</td><td>@Nill Yoo</td><td>핸드오프 개선: 서브 화면 ID 정의(COL-201 추후 작성), 합성 미충족 에러 케이스, 홈 접근 경로 추가, 프로토타입 참조 안내</td></tr>
+<tr><td>v1.2</td><td>2026.04.15</td><td>@Nill Yoo</td><td>크로스 검증: 뒤로가기 네비게이션 스택 기반, Pick/보내기/삭제 모달 ID 부여(CEB-COL-101-MD-PICK/SEND/DELETE)</td></tr>
 </table>
 
 </body>
