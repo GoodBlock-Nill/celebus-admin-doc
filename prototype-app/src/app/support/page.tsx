@@ -88,19 +88,21 @@ export default function SupportPage() {
         )}
       </div>
 
-      {/* 확인 모달 */}
+      {/* 확인 모달 (Dimmed 탭 시 닫히지 않음 — CTA로만 닫기 가능) */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
           <div className="relative z-10 w-full max-w-[340px] bg-white rounded-2xl px-6 py-6 animate-scaleIn">
             <h3 className="text-base font-bold text-gray-900 mb-3">덕력 응원</h3>
-            <p className="text-sm text-gray-600 leading-relaxed mb-1">덕력 {showConfirmModal.amount}pt를 응원합니다.</p>
-            <p className="text-xs text-gray-500 mb-1">응원 후 취소할 수 없습니다.</p>
-            <p className="text-xs text-gray-500 mb-4">달성 시: 서포트 집행에 사용 / 미달성 시: 전액 반환</p>
-            <p className="text-xs text-gray-400 mb-4">응원 후 잔액: {formatNumber(myHeldPt - showConfirmModal.amount)}pt</p>
+            <p className="text-sm text-gray-700 leading-relaxed mb-2">덕력 {formatNumber(showConfirmModal.amount)}pt를 응원합니다.</p>
+            <p className="text-sm text-gray-900 font-semibold mb-3">한번 응원하면 돌이킬 수 없어요.<br />그래도 응원할까요?</p>
+            <div className="text-xs text-gray-500 space-y-1 mb-5">
+              <p>달성 시: 서포트 집행에 사용됩니다</p>
+              <p>미달성 시: 전액 반환됩니다</p>
+            </div>
             <div className="flex gap-2">
+              <button onClick={() => setShowConfirmModal(null)} className="flex-1 py-3 bg-gray-100 text-gray-600 rounded-xl text-sm font-medium">취소</button>
               <button onClick={confirmInvest} className="flex-1 py-3 bg-violet-600 text-white rounded-xl text-sm font-semibold">응원</button>
-              <button onClick={() => setShowConfirmModal(null)} className="px-4 py-3 bg-gray-100 text-gray-600 rounded-xl text-sm font-medium">취소</button>
             </div>
           </div>
         </div>
