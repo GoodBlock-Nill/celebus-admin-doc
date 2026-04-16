@@ -1,6 +1,7 @@
 # V01D 래플 당첨자 편지
 
 > 용도: 싸인 앨범 경품 동봉 편지 (A5 편지지)
+> 대상: 한국 / 영어권 / 일본 / 대만 / 멕시코 / 프랑스
 
 ---
 
@@ -32,50 +33,128 @@ CELEBUS에서 저희를 만나주시고,
 
 ## English (EN)
 
-Hi, this is V01D.
+Hey, it's V01D!
 
-If this letter has reached you,
-it must mean we share a special connection.
+The fact that this letter found its way to you —
+that's gotta mean something special, right?
 
-Thank you for finding us on CELEBUS
-and for being part of this journey with us.
+Thank you for discovering us on CELEBUS
+and for choosing to walk this path with us.
 
-Every bit of your support
-is the reason we shine on stage.
+Every single cheer you send our way
+gives us a reason to shine brighter on stage.
 
-We wish we could thank you in person,
-but we've put each member's heart into this album.
+We really wish we could say this to you in person,
+but for now, we've poured our hearts into this album — all of us.
 
-On tough days, play our music.
-We want to be right there beside you, comforting you.
+Whenever you're having a rough day, put on our music.
+We want to be the voice that says, "It's okay, we're right here."
 
-Next time, let's meet face to face.
-Until then, stay healthy and happy.
+Let's meet for real next time — promise.
+Until that day, take care of yourself and keep smiling.
 
-Yours, V01D 💜
+Yours always, V01D 💜
 
 ---
 
 ## 日本語 (JP)
 
-こんにちは、V01Dです。
+こんにちは、V01Dです！
 
-この手紙があなたに届いたということは、
-私たちと特別なご縁があるということですよね。
+この手紙があなたのもとに届いたということは、
+きっと私たちには特別なご縁があるんですね。
 
-CELEBUSで私たちに出会ってくださり、
-こうして一緒にいてくださって本当にありがとうございます。
+CELEBUSで私たちを見つけてくれて、
+こうして応援してくれて、本当にありがとうございます。
 
-皆さんが送ってくださる一つひとつの応援が、
-私たちがステージの上で輝く理由になっています。
+みなさんからの一つひとつの応援が、
+ステージで輝くための大切な力になっています。
 
-直接お会いしてご挨拶できないのが残念ですが、
-このアルバムにメンバー一人ひとりの真心を込めました。
+直接会ってお礼を言えないのがとても残念ですが、
+このアルバムにメンバー全員の想いを込めました。
 
-つらい日には、私たちの曲を聴いてください。
-そばで寄り添うように、あなたの力になりたいです。
+つらい日があったら、私たちの曲を聴いてください。
+「大丈夫、そばにいるよ」って伝えたいから。
 
-次は必ず、近くでお会いしましょう。
-その日まで、健康で幸せでいてください。
+今度は絶対、会いに行きますね。
+その日まで、元気で楽しく過ごしてください。
 
 あなたのV01Dより 💜
+
+---
+
+## 繁體中文 (ZH-TW) — 台灣
+
+嗨，我們是V01D！
+
+這封信能到你手上，
+是不是代表我們之間有一段特別的緣分呢？
+
+謝謝你在CELEBUS上找到我們，
+謝謝你一路陪伴著我們走到這裡。
+
+你們送來的每一份應援，
+都是我們在舞台上發光的理由。
+
+沒能親自跟你說聲謝謝，真的很可惜，
+但這張專輯裡，裝滿了每一位成員的真心。
+
+累了的時候，就聽聽我們的歌吧。
+希望能像在你身邊一樣，給你一點溫暖和力量。
+
+下次一定要見面哦。
+在那之前，要好好照顧自己、每天都開心！
+
+你的V01D 💜
+
+---
+
+## Español (ES) — México
+
+¡Hola, somos V01D!
+
+Que esta carta haya llegado a tus manos
+significa que hay algo muy especial entre nosotros, ¿no crees?
+
+Gracias por encontrarnos en CELEBUS
+y por ser parte de este camino con nosotros.
+
+Cada muestra de apoyo que nos envías
+es la razón por la que brillamos en el escenario.
+
+Nos encantaría poder decirte esto en persona,
+pero por ahora, hemos puesto todo nuestro corazón en este álbum — los cinco.
+
+Cuando tengas un día difícil, pon nuestra música.
+Queremos ser esa voz que te diga: "Todo va a estar bien, aquí estamos."
+
+La próxima vez, vamos a vernos en persona — es una promesa.
+Hasta ese día, cuídate mucho y no dejes de sonreír.
+
+Con todo nuestro cariño, V01D 💜
+
+---
+
+## Français (FR) — France
+
+Salut, c'est V01D !
+
+Si cette lettre est arrivée jusqu'à toi,
+c'est que quelque chose de spécial nous lie, non ?
+
+Merci de nous avoir trouvés sur CELEBUS
+et d'avoir choisi de faire ce chemin avec nous.
+
+Chacun de tes encouragements
+est une raison de plus pour nous de briller sur scène.
+
+On aurait tellement aimé te dire tout ça en personne,
+mais en attendant, on a mis tout notre cœur dans cet album — chacun d'entre nous.
+
+Les jours où ça ne va pas, écoute notre musique.
+On veut être cette voix qui te dit : « Ça va aller, on est là. »
+
+La prochaine fois, on se voit pour de vrai — c'est promis.
+D'ici là, prends soin de toi et garde le sourire.
+
+À toi, V01D 💜
