@@ -2,6 +2,7 @@
 
 > 용도: 싸인 앨범 경품 동봉 편지 (A5 편지지)
 > 대상: 한국 / 영어권 / 일본 / 대만 / 멕시코 / 프랑스
+> 메시지 의도: CELEBUS에 관심 가져줘서 감사 → 주변에 많이 알려주면 → 더 큰 선물을 준비할 수 있다
 
 ---
 
@@ -23,6 +24,11 @@ CELEBUS에서 저희를 만나주시고,
 
 힘든 날에는 저희 노래를 틀어주세요.
 옆에서 "괜찮아, 우리가 여기 있어"라고 말해주고 싶습니다.
+
+그리고 한 가지 부탁이 있어요.
+CELEBUS를 주변 팬들에게도 많이 알려주세요.
+저희를 응원해주시는 분들이 많아질수록,
+더 크고 특별한 선물을 준비할 수 있거든요.
 
 다음에는 꼭, 가까이에서 만나요.
 그날까지 건강하고 행복하세요.
@@ -50,6 +56,11 @@ but for now, we've poured our hearts into this album — all of us.
 Whenever you're having a rough day, put on our music.
 We want to be the voice that says, "It's okay, we're right here."
 
+And hey, we have a little favor to ask.
+Spread the word about CELEBUS to other fans!
+The more people who join us here,
+the bigger and better surprises we can prepare for you.
+
 Let's meet for real next time — promise.
 Until that day, take care of yourself and keep smiling.
 
@@ -76,6 +87,11 @@ CELEBUSで私たちを見つけてくれて、
 つらい日があったら、私たちの曲を聴いてください。
 「大丈夫、そばにいるよ」って伝えたいから。
 
+それから、ひとつお願いがあります。
+CELEBUSのこと、周りのファンにもたくさん教えてください。
+応援してくれる人が増えるほど、
+もっと大きくて特別なプレゼントを届けられるから。
+
 今度は絶対、会いに行きますね。
 その日まで、元気で楽しく過ごしてください。
 
@@ -100,7 +116,12 @@ CELEBUSで私たちを見つけてくれて、
 但這張專輯裡，裝滿了每一位成員的真心。
 
 累了的時候，就聽聽我們的歌吧。
-希望能像在你身邊一樣，給你一點溫暖和力量。
+希望能像在你身邊一樣，告訴你「沒關係，我們在這裡」。
+
+還有一個小小的請求——
+請把CELEBUS分享給身邊的粉絲朋友們！
+支持我們的人越多，
+我們就能準備更大、更特別的驚喜給大家。
 
 下次一定要見面哦。
 在那之前，要好好照顧自己、每天都開心！
@@ -128,6 +149,11 @@ pero por ahora, hemos puesto todo nuestro corazón en este álbum — los cinco.
 Cuando tengas un día difícil, pon nuestra música.
 Queremos ser esa voz que te diga: "Todo va a estar bien, aquí estamos."
 
+Y oye, tenemos un pequeño favor que pedirte.
+¡Comparte CELEBUS con otros fans!
+Entre más personas se unan a apoyarnos,
+más grandes y especiales serán las sorpresas que podremos preparar.
+
 La próxima vez, vamos a vernos en persona — es una promesa.
 Hasta ese día, cuídate mucho y no dejes de sonreír.
 
@@ -153,6 +179,11 @@ mais en attendant, on a mis tout notre cœur dans cet album — chacun d'entre n
 
 Les jours où ça ne va pas, écoute notre musique.
 On veut être cette voix qui te dit : « Ça va aller, on est là. »
+
+Et on a une petite faveur à te demander.
+Parle de CELEBUS autour de toi, à d'autres fans !
+Plus on sera nombreux ici,
+plus on pourra préparer des surprises encore plus grandes et spéciales.
 
 La prochaine fois, on se voit pour de vrai — c'est promis.
 D'ici là, prends soin de toi et garde le sourire.
