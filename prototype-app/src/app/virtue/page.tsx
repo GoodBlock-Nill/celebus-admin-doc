@@ -58,7 +58,7 @@ export default function VirtuePage() {
         <div className="flex items-center justify-between">
           <span className="text-xs text-gray-500">{data.seasonLabel} (D-{data.seasonDaysLeft})</span>
           <button onClick={() => setShowHistory(true)} className="text-xs text-violet-600 font-medium">
-            획득 이력 보기 →
+            덕력 이력 보기 →
           </button>
         </div>
       </div>
@@ -136,31 +136,34 @@ export default function VirtuePage() {
         </p>
       </div>
 
-      {/* 획득 이력 바텀시트 */}
+      {/* 덕력 이력 바텀시트 */}
       {showHistory && (
         <div className="fixed inset-0 z-[100] flex items-end" onClick={() => setShowHistory(false)}>
           <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
           <div className="relative z-10 w-full max-w-[430px] mx-auto bg-white rounded-t-2xl px-5 py-6 animate-slideInUp" onClick={(e) => e.stopPropagation()}>
             <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
-            <h3 className="text-base font-bold text-gray-900 mb-4">획득 이력</h3>
+            <h3 className="text-base font-bold text-gray-900 mb-4">덕력 이력</h3>
             <div className="space-y-3 max-h-[50vh] overflow-y-auto">
               {[
-                { activity: '퀘스트 미션 완료', pt: 50, date: '04.14' },
-                { activity: '출석 체크', pt: 10, date: '04.14' },
-                { activity: '일일 미션 완료', pt: 20, date: '04.14' },
-                { activity: 'Trivia 정답', pt: 30, date: '04.13' },
-                { activity: 'PM 참여', pt: 20, date: '04.13' },
-                { activity: '출석 체크', pt: 10, date: '04.13' },
-                { activity: '기억저장소 업로드', pt: 30, date: '04.12' },
-                { activity: 'SNS 공유', pt: 50, date: '04.12' },
+                { activity: '퀘스트 미션 완료 (1장 미션3)', pt: 50, date: '04.14', type: 'earn' as const },
+                { activity: '출석 체크', pt: 10, date: '04.14', type: 'earn' as const },
+                { activity: '일일 미션 완료', pt: 20, date: '04.14', type: 'earn' as const },
+                { activity: '서포트 응원: ☕ 커피차 서포트', pt: -500, date: '04.13', type: 'use' as const },
+                { activity: '출석 체크', pt: 10, date: '04.13', type: 'earn' as const },
+                { activity: '독점 콘텐츠 해금: 비하인드 사진', pt: -100, date: '04.12', type: 'use' as const },
+                { activity: '기억 저장', pt: 30, date: '04.12', type: 'earn' as const },
+                { activity: '7일 연속 출석 보너스', pt: 50, date: '04.11', type: 'earn' as const },
+                { activity: '서포트 덕력 반환: 생일카페', pt: 300, date: '04.10', type: 'refund' as const },
               ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-700">{item.activity}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-green-600">+{item.pt}pt</span>
+                <button key={i} className="w-full flex items-center justify-between py-0.5 active:bg-gray-50 rounded-lg transition-colors"
+                  onClick={(e) => { e.stopPropagation(); if (item.type === 'use' || item.type === 'refund') addToast('info', `${item.activity} 상세 이동`); }}>
+                  <span className="text-sm text-gray-700 text-left">{item.activity}</span>
+                  <div className="flex items-center gap-2 shrink-0 ml-2">
+                    <span className={cn('text-sm font-semibold', item.pt > 0 ? 'text-green-600' : 'text-red-500')}>{item.pt > 0 ? '+' : ''}{item.pt}pt</span>
                     <span className="text-[10px] text-gray-400">{item.date}</span>
+                    {(item.type === 'use' || item.type === 'refund') && <span className="text-[10px] text-gray-300">→</span>}
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
