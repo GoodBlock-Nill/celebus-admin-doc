@@ -87,7 +87,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>MEM(기억저장소)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
 <tr><td>최근 업데이트</td><td>2026.04.15</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td></td></tr>
@@ -107,11 +107,13 @@ p {
 <li>영상 인라인/풀스크린 재생</li>
 <li>내 기억: 수정/삭제</li>
 <li>타인 공개 기억: 신고</li>
+<li>공개 기억 외부 공유 (Web Share API / 클립보드 복사)</li>
 </ul>
 <h5>접근 경로</h5>
 <ul>
 <li>CEB-MEM-101 > 기억 항목 탭 (캘린더/그리드/지도 뷰에서)</li>
 <li>푸시 알림 "1년 전 오늘 기억" 탭 시 진입</li>
+<li>외부 공유 링크 접속 (app.celebus.xyz/memory/{memoryId}) — 비로그인도 공개 기억 읽기 전용 열람 가능</li>
 </ul>
 <hr>
 <h2>2. UI 설명</h2>
@@ -183,6 +185,17 @@ p {
 <tr><td>위치</td><td>화면 하단</td></tr>
 <tr><td>스타일</td><td>피그마 참조 (회색 소형 텍스트)</td></tr>
 </table>
+<h5>8. 공유 버튼 (공개 기억에만)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>노출 조건</td><td>기억이 공개(🌐) 상태일 때만 표시. 비공개 기억에는 미노출</td></tr>
+<tr><td>구성</td><td>[공유하기] 버튼 (공유 아이콘 + 텍스트)</td></tr>
+<tr><td>위치</td><td>작성 시각 아래</td></tr>
+<tr><td>내 기억</td><td>공개 상태면 공유 가능</td></tr>
+<tr><td>타인의 공개 기억</td><td>공유 가능</td></tr>
+<tr><td>비로그인 (공유 링크 접속)</td><td>공유 가능 (재공유)</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
 <hr>
 <h2>3. 화면 내 기능설명</h2>
 <h3>3.1 ⋯ 메뉴 (바텀시트)</h3>
@@ -197,6 +210,11 @@ p {
 <table>
 <tr><th>메뉴 항목</th><th>동작</th></tr>
 <tr><td>신고하기</td><td>신고 사유 선택 바텀시트 표시</td></tr>
+</table>
+<h5>공유 링크 접속 (비로그인)</h5>
+<table>
+<tr><th>메뉴 항목</th><th>동작</th></tr>
+<tr><td>(메뉴 미노출)</td><td>⋯ 아이콘 자체가 표시되지 않음</td></tr>
 </table>
 <h3>3.2 수정하기</h3>
 <ul>
@@ -252,6 +270,44 @@ p {
 <tr><td>수정 완료 복귀</td><td>수정된 데이터 재조회</td></tr>
 <tr><td>Pull-to-Refresh</td><td>상세 데이터 재조회 (공통정책 11.2 참조)</td></tr>
 </table>
+<h3>3.7 공유하기 (공개 기억만)</h3>
+<ul>
+<li>[공유하기] 탭 → OS 네이티브 공유 시트 (Web Share API) 호출</li>
+<li>공유 데이터:</li>
+<li>URL: <code>https://app.celebus.xyz/memory/{memoryId}</code></li>
+<li>Title: "{닉네임}의 기억 💜"</li>
+<li>Text: 텍스트 앞 100자 + "..."</li>
+<li>Web Share API 미지원 브라우저: 클립보드에 URL 복사 + 토스트(Success) "링크가 복사되었어요!"</li>
+<li>비공개 기억에서는 공유 버튼 미노출</li>
+</ul>
+<h3>3.8 공유 링크 접속 (외부 유입)</h3>
+<p>외부 공유 링크(<code>app.celebus.xyz/memory/{memoryId}</code>)를 통해 접속한 유저의 화면.</p>
+<table>
+<tr><th>접속 상태</th><th>화면</th></tr>
+<tr><td>로그인 유저</td><td>기존 CEB-MEM-202 동일 (⋯ 메뉴 포함)</td></tr>
+<tr><td>비로그인 유저</td><td>읽기 전용 상세 화면 (⋯ 메뉴 미노출) + 하단 가입 유도 배너</td></tr>
+<tr><td>공개 기억</td><td>정상 표시</td></tr>
+<tr><td>비공개 기억</td><td>"이 기억은 비공개예요" 안내 + [CELEBUS 홈으로] CTA</td></tr>
+<tr><td>삭제된 기억</td><td>"삭제된 기억이에요" 안내 + [CELEBUS 홈으로] CTA</td></tr>
+</table>
+<h4>비로그인 읽기 전용 화면 구성</h4>
+<table>
+<tr><th>영역</th><th>내용</th></tr>
+<tr><td>상단</td><td>CELEBUS 로고 (홈으로 이동)</td></tr>
+<tr><td>본문</td><td>기억 상세 전체 표시 (이모지, 유형, 미디어, 텍스트, 위치)</td></tr>
+<tr><td>⋯ 메뉴</td><td>미노출 (수정/삭제/신고 불가)</td></tr>
+<tr><td>공유 버튼</td><td>표시 (비로그인도 재공유 가능)</td></tr>
+<tr><td>하단 고정 배너</td><td>"CELEBUS에서 나만의 기억을 남겨보세요 💜" + [시작하기] CTA → app.celebus.xyz/home</td></tr>
+</table>
+<h4>OG 메타 태그 (SNS 미리보기)</h4>
+<table>
+<tr><th>태그</th><th>값</th></tr>
+<tr><td>og:title</td><td>"{닉네임}의 기억 💜"</td></tr>
+<tr><td>og:description</td><td>텍스트 앞 100자 (텍스트 없으면 "CELEBUS에서 기억을 공유했어요")</td></tr>
+<tr><td>og:image</td><td>CELEBUS 로고 이미지 (사진 미포함 — 개인정보 보호)</td></tr>
+<tr><td>og:url</td><td><code>https://app.celebus.xyz/memory/{memoryId}</code></td></tr>
+<tr><td>og:type</td><td>article</td></tr>
+</table>
 <hr>
 <h2>4. 규칙/로직</h2>
 <h3>4.1 메뉴 분기 규칙</h3>
@@ -260,6 +316,7 @@ p {
 <tr><td>내 기억</td><td>[수정하기] / [삭제하기]</td></tr>
 <tr><td>타인의 공개 기억</td><td>[신고하기]</td></tr>
 <tr><td>타인의 비공개 기억</td><td>접근 불가 (리스트에 미노출)</td></tr>
+<tr><td>공유 링크 접속 (비로그인)</td><td>⋯ 메뉴 미노출</td></tr>
 </table>
 <h3>4.2 공개/비공개 접근 규칙</h3>
 <table>
@@ -271,7 +328,9 @@ p {
 <h3>4.3 비로그인 정책</h3>
 <table>
 <tr><th>상태</th><th>정책</th></tr>
-<tr><td>비로그인</td><td>본 화면은 로그인 상태에서만 접근 가능. CEB-ART-101 카드 탭 시 로그인 유도 (공통정책 10.5 참조)</td></tr>
+<tr><td>앱 내 접근 (MEM-101 → MEM-202)</td><td>로그인 상태에서만 접근 가능 (기존 유지). CEB-ART-101 카드 탭 시 로그인 유도 (공통정책 10.5 참조)</td></tr>
+<tr><td>공유 링크 접근 (외부 URL)</td><td>비로그인도 공개 기억 읽기 전용 열람 가능. ⋯ 메뉴 미노출. 하단 가입 유도 배너 표시</td></tr>
+<tr><td>비로그인 CTA</td><td>[시작하기] → app.celebus.xyz/home 이동</td></tr>
 </table>
 <hr>
 <h2>5. 에러 및 예외상황</h2>
@@ -287,7 +346,11 @@ p {
 <tr><td>삭제 실패</td><td>토스트(Error) "삭제에 실패했어요. 다시 시도해주세요"</td></tr>
 <tr><td>신고 실패</td><td>토스트(Error) "신고 접수에 실패했어요. 다시 시도해주세요"</td></tr>
 <tr><td>중복 신고</td><td>토스트(Info) "이미 신고한 기억이에요"</td></tr>
-<tr><td>비로그인</td><td>CEB-MEM-101에서 로그인 유도 처리됨 (공통정책 10.5 참조). 본 화면은 로그인 상태에서만 접근 가능</td></tr>
+<tr><td>공유 링크 → 비공개 기억</td><td>"이 기억은 비공개예요" 안내 + [CELEBUS 홈으로] CTA</td></tr>
+<tr><td>공유 링크 → 삭제된 기억</td><td>"삭제된 기억이에요" 안내 + [CELEBUS 홈으로] CTA</td></tr>
+<tr><td>공유 실패 (Web Share API 미지원)</td><td>클립보드에 URL 복사 + 토스트(Success) "링크가 복사되었어요!"</td></tr>
+<tr><td>비로그인 (앱 내)</td><td>CEB-MEM-101에서 로그인 유도 처리됨 (공통정책 10.5 참조). 본 화면은 앱 내에서는 로그인 상태에서만 접근 가능</td></tr>
+<tr><td>비로그인 (공유 링크)</td><td>공개 기억 읽기 전용 열람 가능. ⋯ 메뉴 미노출. 하단 가입 유도 배너 표시</td></tr>
 </table>
 <hr>
 <h2>6. 연관화면ID</h2>
@@ -301,6 +364,7 @@ p {
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td>v1.0</td><td>2026.04.15</td><td>@Nill Yoo</td><td>초안 작성. 기억 상세 화면: 감정 이모지+유형+미디어 갤러리+텍스트+위치+공개 상태, 풀스크린 뷰어(이미지 스와이프/핀치줌 + 영상 플레이어), 내 기억 수정/삭제, 타인 공개 기억 신고(5개 사유), 삭제 확인 모달</td></tr>
+<tr><td>v1.1</td><td>2026.04.16</td><td>@Nill Yoo</td><td>공유 기능 추가: [공유하기] 버튼(공개 기억만), Web Share API + 클립보드 복사 fallback, 공유 링크 접속 화면(비로그인 읽기 전용 + 가입 유도), OG 메타 태그, 비로그인 정책 변경(공유 링크 열람 가능)</td></tr>
 </table>
 
 </body>
