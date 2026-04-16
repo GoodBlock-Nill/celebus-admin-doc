@@ -18,7 +18,7 @@ const STATUS_CONFIG: Record<SupportEventStatus, { badge: string; color: string }
   cancelled: { badge: '취소', color: 'bg-gray-200 text-gray-500' },
 };
 
-type DebugPreset = 'mixed' | 'all-active' | 'all-done';
+type DebugPreset = 'mixed' | 'all-active' | 'all-done' | 'guest';
 
 export default function SupportPage() {
   const artistName = useArtistStore((s) => s.activeArtist.name);
@@ -30,6 +30,8 @@ export default function SupportPage() {
   const [preset, setPreset] = useState<DebugPreset>('mixed');
   const [debugOpen, setDebugOpen] = useState(false);
 
+  const isLoggedIn = preset !== 'guest';
+
   const myHeldPt = 1200;
 
   const toggleExpand = (id: string) => {
@@ -37,9 +39,10 @@ export default function SupportPage() {
   };
 
   const handleInvest = useCallback((eventId: string) => {
+    if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
     const amount = investAmounts[eventId] || 100;
     setShowConfirmModal({ eventId, amount });
-  }, [investAmounts]);
+  }, [isLoggedIn, investAmounts, addToast]);
 
   const confirmInvest = useCallback(() => {
     if (!showConfirmModal) return;
@@ -54,7 +57,7 @@ export default function SupportPage() {
 
   const switchPreset = (p: DebugPreset) => {
     setPreset(p);
-    if (p === 'mixed') setEvents(MOCK_SUPPORT_EVENTS);
+    if (p === 'mixed' || p === 'guest') setEvents(MOCK_SUPPORT_EVENTS);
     else if (p === 'all-active') setEvents(MOCK_SUPPORT_EVENTS.map((e) => ({ ...e, status: 'active' as const, currentPt: Math.floor(e.targetPt * 0.6), daysLeft: 7 })));
     else setEvents(MOCK_SUPPORT_EVENTS.map((e) => ({ ...e, status: 'completed' as const, currentPt: e.targetPt, resultMessage: '집행 완료! 감사합니다 💜' })));
     setExpandedId(null);
@@ -64,6 +67,11 @@ export default function SupportPage() {
   return (
     <div className="min-h-dvh bg-white pb-8">
       <Toast />
+      {!isLoggedIn && (
+        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
+          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
+        </div>
+      )}
       <SubPageHeader title={`${artistName} 응원하기`} />
 
       <div className="px-4 mt-4 space-y-3">
@@ -77,6 +85,7 @@ export default function SupportPage() {
             onAmountChange={(v) => setInvestAmounts((prev) => ({ ...prev, [event.id]: v }))}
             onInvest={() => handleInvest(event.id)}
             myHeldPt={myHeldPt}
+            isLoggedIn={isLoggedIn}
           />
         ))}
 
@@ -116,6 +125,7 @@ export default function SupportPage() {
               { key: 'mixed' as const, label: '혼합' },
               { key: 'all-active' as const, label: '전체 모집중' },
               { key: 'all-done' as const, label: '전체 완료' },
+              { key: 'guest' as const, label: '비로그인' },
             ].map((p) => (
               <button key={p.key} onClick={() => switchPreset(p.key)}
                 className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
@@ -125,7 +135,7 @@ export default function SupportPage() {
           </div>
         )}
         <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'mixed' ? '혼합' : preset === 'all-active' ? '전체 모집중' : '전체 완료'}</span>
+          <span className="text-[10px] font-semibold">{preset === 'mixed' ? '혼합' : preset === 'all-active' ? '전체 모집중' : preset === 'all-done' ? '전체 완료' : '비로그인'}</span>
           <span className="text-[8px]">▲</span>
         </button>
       </div>
@@ -133,9 +143,9 @@ export default function SupportPage() {
   );
 }
 
-function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, onInvest, myHeldPt }: {
+function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, onInvest, myHeldPt, isLoggedIn }: {
   event: SupportEvent; isExpanded: boolean; onToggle: () => void;
-  investAmount: number; onAmountChange: (v: number) => void; onInvest: () => void; myHeldPt: number;
+  investAmount: number; onAmountChange: (v: number) => void; onInvest: () => void; myHeldPt: number; isLoggedIn: boolean;
 }) {
   const config = STATUS_CONFIG[event.status];
   const progress = Math.min((event.currentPt / event.targetPt) * 100, 100);
@@ -169,7 +179,7 @@ function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, 
         <div className="px-4 pb-4 animate-slideInUp">
           <p className="text-xs text-gray-600 mb-3">{event.description}</p>
 
-          {event.myInvestPt > 0 && <p className="text-xs text-violet-600 mb-1">내 응원: {formatNumber(event.myInvestPt)}pt</p>}
+          {isLoggedIn && event.myInvestPt > 0 && <p className="text-xs text-violet-600 mb-1">내 응원: {formatNumber(event.myInvestPt)}pt</p>}
           <p className="text-xs text-gray-500 mb-3">참여자: {event.participants}명</p>
 
           {event.status === 'active' && (

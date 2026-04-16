@@ -14,6 +14,8 @@ type DebugPreset = 'login-content' | 'login-empty' | 'guest-content' | 'guest-em
 
 const GROUP_ORDER: ServiceCardGroup[] = ['mission', 'record', 'more'];
 
+const GUEST_OPEN_CARDS = ['virtue', 'support', 'fandom-level', 'raffle', 'info'];
+
 const EMPTY_CARDS: ServiceCardData[] = [
   { id: 'challenge', group: 'mission', icon: '🎯', title: 'V01D 챌린지', statusText: '0/5장', href: '/quest', comingSoon: false },
   { id: 'daily-mission', group: 'mission', icon: '📋', title: '일일 미션', statusText: '시작하기', href: '/daily-mission', comingSoon: false },
@@ -94,8 +96,8 @@ export default function ArtistPage() {
     else setCards(EMPTY_CARDS);
   };
 
-  const handleCardTap = (href: string, title: string) => {
-    if (!isLoggedIn) {
+  const handleCardTap = (cardId: string, href: string, title: string) => {
+    if (!isLoggedIn && !GUEST_OPEN_CARDS.includes(cardId)) {
       addToast('info', `로그인 후 이용 가능합니다 (${title})`);
       return;
     }
@@ -168,12 +170,13 @@ export default function ArtistPage() {
               <div className="grid grid-cols-2 gap-3">
                 {groupCards.map((card, idx) => {
                   const isLastOdd = groupCards.length % 2 === 1 && idx === groupCards.length - 1;
+                  const isGuestBlocked = !isLoggedIn && !GUEST_OPEN_CARDS.includes(card.id);
                   return (
-                    <div key={card.id} onClick={() => !isLoggedIn && handleCardTap(card.href, card.title)}>
+                    <div key={card.id} onClick={() => isGuestBlocked && handleCardTap(card.id, card.href, card.title)}>
                       <ServiceCard
                         card={isLoggedIn ? card : { ...card, statusText: card.statusText === '참여하기' || card.statusText === '시작하기' ? card.statusText : (hasContent ? card.statusText : '-') }}
                         fullWidth={isLastOdd}
-                        disabled={!isLoggedIn}
+                        disabled={isGuestBlocked}
                       />
                     </div>
                   );

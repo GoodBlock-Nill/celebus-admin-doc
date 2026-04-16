@@ -8,7 +8,7 @@ import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 
 type ItemType = 'schedule' | 'news';
-type DebugPreset = 'normal' | 'empty' | 'busy';
+type DebugPreset = 'normal' | 'empty' | 'busy' | 'guest';
 
 interface TimelineItem {
   id: string;
@@ -44,9 +44,12 @@ export default function InfoPage() {
   const [preset, setPreset] = useState<DebugPreset>('normal');
   const [debugOpen, setDebugOpen] = useState(false);
 
+  const isLoggedIn = preset !== 'guest';
+
   const groups = ['오늘', '이번 주', '지난 주'];
 
   const toggleAlarm = (id: string) => {
+    if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
     setItems((prev) => prev.map((item) =>
       item.id === id ? { ...item, alarmOn: !item.alarmOn } : item
     ));
@@ -58,7 +61,7 @@ export default function InfoPage() {
   const switchPreset = (p: DebugPreset) => {
     setPreset(p);
     setDebugOpen(false);
-    if (p === 'normal') { setItems(MOCK_ITEMS); setNotice(MOCK_NOTICE); }
+    if (p === 'normal' || p === 'guest') { setItems(MOCK_ITEMS); setNotice(MOCK_NOTICE); }
     else if (p === 'empty') { setItems([]); setNotice(null); }
     else {
       setItems([
@@ -74,6 +77,11 @@ export default function InfoPage() {
   return (
     <div className="min-h-dvh bg-white pb-8">
       <Toast />
+      {!isLoggedIn && (
+        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
+          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
+        </div>
+      )}
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
           <button onClick={() => router.back()} className="mr-3 -ml-1 p-1"><span className="text-gray-900">←</span></button>
@@ -97,7 +105,15 @@ export default function InfoPage() {
             <span className="text-3xl">📋</span>
             <p className="text-sm font-semibold text-gray-900 mt-3">아직 등록된 소식이 없습니다</p>
             <p className="text-xs text-gray-500 mt-1">새 소식이 올 때 알려드릴게요!</p>
-            <button className="mt-4 text-xs font-medium text-violet-600 bg-violet-50 px-4 py-2 rounded-lg">알림 설정하기</button>
+            <button
+              onClick={() => {
+                if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
+                addToast('success', '알림이 설정되었습니다');
+              }}
+              className="mt-4 text-xs font-medium text-violet-600 bg-violet-50 px-4 py-2 rounded-lg"
+            >
+              알림 설정하기
+            </button>
           </div>
         ) : (
           groups.map((group) => {
@@ -168,6 +184,7 @@ export default function InfoPage() {
               { key: 'normal' as const, label: '일반' },
               { key: 'empty' as const, label: '빈 상태' },
               { key: 'busy' as const, label: '컴백 시즌' },
+              { key: 'guest' as const, label: '비로그인' },
             ].map((p) => (
               <button key={p.key} onClick={() => switchPreset(p.key)}
                 className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
@@ -177,7 +194,7 @@ export default function InfoPage() {
           </div>
         )}
         <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'normal' ? '일반' : preset === 'empty' ? '빈 상태' : '컴백 시즌'}</span>
+          <span className="text-[10px] font-semibold">{preset === 'normal' ? '일반' : preset === 'empty' ? '빈 상태' : preset === 'busy' ? '컴백 시즌' : '비로그인'}</span>
           <span className="text-[8px]">▲</span>
         </button>
       </div>

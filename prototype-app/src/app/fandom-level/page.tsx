@@ -9,7 +9,7 @@ import { MOCK_FANDOM_LEVEL, MOCK_FANDOM_LEVEL_MAX } from '@/mock/fandom-level';
 import { cn, formatNumber } from '@/lib/utils';
 import type { FandomLevelState } from '@/lib/types';
 
-type DebugPreset = 'progress' | 'max';
+type DebugPreset = 'progress' | 'max' | 'guest';
 
 export default function FandomLevelPage() {
   const artistName = useArtistStore((s) => s.activeArtist.name);
@@ -17,6 +17,8 @@ export default function FandomLevelPage() {
   const [preset, setPreset] = useState<DebugPreset>('progress');
   const [debugOpen, setDebugOpen] = useState(false);
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
+
+  const isLoggedIn = preset !== 'guest';
 
   const data: FandomLevelState = preset === 'max' ? MOCK_FANDOM_LEVEL_MAX : MOCK_FANDOM_LEVEL;
   const progress = Math.min((data.currentPt / data.targetPt) * 100, 100);
@@ -31,6 +33,11 @@ export default function FandomLevelPage() {
   return (
     <div className="min-h-dvh bg-white pb-8">
       <Toast />
+      {!isLoggedIn && (
+        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
+          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
+        </div>
+      )}
       <SubPageHeader title={`${artistName} 키우기`} />
 
       {/* 현재 레벨 카드 */}
@@ -38,7 +45,7 @@ export default function FandomLevelPage() {
         <div className="flex items-center gap-2 mb-3">
           <span className="text-2xl">🏆</span>
           <span className="text-base font-bold text-gray-900">
-            {artistName} Lv.{data.currentLevel} {data.isMax && <span className="text-amber-600">MAX!</span>}
+            {artistName} Lv.{data.currentLevel} (누적) {data.isMax && <span className="text-amber-600">MAX!</span>}
           </span>
         </div>
 
@@ -105,6 +112,7 @@ export default function FandomLevelPage() {
       <div className="px-4 mt-5">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">팬덤 활동 요약</span>
+          <span className="text-[9px] text-gray-400">(이번 달, 매월 초기화)</span>
           <div className="flex-1 h-px bg-gray-100" />
         </div>
         <div className="grid grid-cols-3 gap-2">
@@ -138,10 +146,17 @@ export default function FandomLevelPage() {
             { icon: '🎯', label: '퀘스트', href: '/quest' },
             { icon: '⭐', label: '랭킹', href: '/virtue' },
           ].map((cta) => (
-            <a key={cta.label} href={cta.href} className="flex-1 bg-violet-50 rounded-xl px-3 py-3 text-center active:scale-[0.97] transition-transform">
+            <button
+              key={cta.label}
+              onClick={() => {
+                if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
+                addToast('info', `${cta.label} 화면으로 이동합니다`);
+              }}
+              className="flex-1 bg-violet-50 rounded-xl px-3 py-3 text-center active:scale-[0.97] transition-transform"
+            >
               <span className="text-lg">{cta.icon}</span>
               <p className="text-[10px] font-semibold text-violet-700 mt-1">{cta.label}</p>
-            </a>
+            </button>
           ))}
         </div>
         <p className="text-[10px] text-gray-400 text-center mt-2">활동하면 팬덤 레벨에 기여됩니다</p>
@@ -169,6 +184,7 @@ export default function FandomLevelPage() {
             {[
               { key: 'progress' as const, label: '진행중' },
               { key: 'max' as const, label: 'MAX 달성' },
+              { key: 'guest' as const, label: '비로그인' },
             ].map((p) => (
               <button key={p.key} onClick={() => switchPreset(p.key)}
                 className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
@@ -178,7 +194,7 @@ export default function FandomLevelPage() {
           </div>
         )}
         <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'progress' ? '진행중' : 'MAX 달성'}</span>
+          <span className="text-[10px] font-semibold">{preset === 'progress' ? '진행중' : preset === 'max' ? 'MAX 달성' : '비로그인'}</span>
           <span className="text-[8px]">▲</span>
         </button>
       </div>
