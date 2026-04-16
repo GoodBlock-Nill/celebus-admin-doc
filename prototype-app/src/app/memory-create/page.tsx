@@ -176,11 +176,11 @@ export default function MemoryCreatePage() {
                   className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center">✕</button>
               </div>
             ))}
-            {imageCount < 10 && (
+            {imageCount < 3 && (
               <button onClick={() => { setImageCount((c) => c + 1); addToast('info', '이미지 추가됨 (시뮬레이션)'); }}
                 className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center shrink-0 text-gray-400">
                 <span className="text-xl">+</span>
-                <span className="text-[9px]">{imageCount}/10</span>
+                <span className="text-[9px]">{imageCount}/3</span>
               </button>
             )}
           </div>
