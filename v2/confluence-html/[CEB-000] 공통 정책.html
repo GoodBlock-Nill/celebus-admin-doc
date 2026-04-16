@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>ALL (전체)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.2</td></tr>
+<tr><td>버전</td><td>v3.3</td></tr>
 <tr><td>최근 업데이트</td><td>2026.04.16</td></tr>
 <tr><td>비고</td><td>고도화 서비스 전체 공통 정책 정의서. 각 화면 스펙 문서는 이 문서를 참조.</td></tr>
 </table>
@@ -803,6 +803,31 @@ p {
 <tr><td>로그인 유도 방식</td><td><strong>별도 로그인 페이지로 전체 이동</strong> (모달/토스트 아님)</td></tr>
 <tr><td>로그인 후 복귀</td><td>로그인 완료 후 이전 화면으로 자동 복귀 (딥링크 보존)</td></tr>
 </table>
+<h4>비로그인 화면 접근 매트릭스</h4>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>비로그인 접근</th><th>열람 범위</th><th>로그인 벽 시점</th><th>비고</th></tr>
+<tr><td>CEB-HOM-001</td><td>홈</td><td>O</td><td>전체 열람</td><td>CTA 탭 시</td><td>캐러셀, 아티스트 선택, 할 일, 추천, 바로가기, BIVE 프리뷰</td></tr>
+<tr><td>CEB-HOM-101</td><td>이벤트 전체</td><td>O</td><td>전체 열람</td><td>응모 CTA 시</td><td>캐러셀 전체 보기</td></tr>
+<tr><td>CEB-ART-101</td><td>아티스트 메인</td><td>O</td><td>카드 목록 열람</td><td>비개방 카드 탭 시</td><td>개인 데이터 "-". 개방 5개 카드는 이동 가능</td></tr>
+<tr><td>CEB-ART-201</td><td>아티스트 탐색</td><td>O</td><td>검색/열람</td><td>[팔로우] 탭 시</td><td></td></tr>
+<tr><td>CEB-DUK-101</td><td>덕력 랭킹</td><td>O</td><td>TOP 100 리더보드 열람</td><td>참여 CTA 시</td><td>내 정보 "-". [덕력 이력 보기] 미노출</td></tr>
+<tr><td>CEB-DUK-201</td><td>서포트 이벤트</td><td>O</td><td>이벤트 목록/상세 열람</td><td>[응원하기] 탭 시</td><td>내 응원 "-"</td></tr>
+<tr><td>CEB-EVT-201</td><td>팬덤 레벨</td><td>O</td><td>레벨/보상/활동 요약 열람</td><td>활동 CTA 시</td><td></td></tr>
+<tr><td>CEB-EVT-101</td><td>Raffle</td><td>O</td><td>래플 목록 열람</td><td>응모 CTA 시</td><td>내 응모 "-", 응모권 "-"</td></tr>
+<tr><td>CEB-INF-101</td><td>정보 피드</td><td>O</td><td>타임라인 열람</td><td>알림 설정 CTA 시</td><td></td></tr>
+<tr><td>CEB-MEM-202</td><td>기억 상세</td><td>O (공유 링크만)</td><td>읽기 전용</td><td>[시작하기] 탭 시</td><td>공유 링크 접속 시만</td></tr>
+<tr><td>CELEBUS 탭</td><td>Coming Soon</td><td>O</td><td>안내 화면</td><td>-</td><td></td></tr>
+<tr><td>CEB-FQ-101</td><td>Quest 메인</td><td>X</td><td>-</td><td>ART-101 카드 탭</td><td></td></tr>
+<tr><td>CEB-FQ-205</td><td>Quest 제출</td><td>X</td><td>-</td><td>ART-101 카드 탭</td><td></td></tr>
+<tr><td>CEB-FQ-501</td><td>일일 미션</td><td>X</td><td>-</td><td>ART-101 카드 탭</td><td></td></tr>
+<tr><td>CEB-COL-101</td><td>컬렉션</td><td>X</td><td>-</td><td>ART-101 카드 탭</td><td></td></tr>
+<tr><td>CEB-MEM-101</td><td>기억저장소</td><td>X</td><td>-</td><td>ART-101 카드 탭</td><td></td></tr>
+<tr><td>Game 탭</td><td>게임존</td><td>X</td><td>-</td><td>탭 탭 시</td><td></td></tr>
+<tr><td>My 탭</td><td>마이페이지</td><td>X</td><td>-</td><td>탭 탭 시</td><td></td></tr>
+</table>
+<blockquote>
+<p>O = 비로그인 열람 가능 / X = 로그인 필수 / "-" = 개인화 데이터 기본값 (공통정책 11.1 참조)</p>
+</blockquote>
 <h4>비로그인 시 CTA 동작</h4>
 <table>
 <tr><th>화면</th><th>CTA</th><th>비로그인 동작</th></tr>
@@ -815,6 +840,11 @@ p {
 <tr><td>아티스트 탐색 (CEB-ART-201)</td><td>[팔로우] 탭</td><td>→ 로그인 화면 이동</td></tr>
 <tr><td>기억 상세 (CEB-MEM-202, 공유 링크)</td><td>읽기 전용 열람</td><td>→ 공개 기억 열람 가능. ⋯ 메뉴 미노출. 하단 [시작하기] CTA → 홈 이동</td></tr>
 <tr><td>{아티스트} 탭</td><td>화면 열람</td><td>→ <strong>전체 열람 가능</strong> (카드 그리드, 상태 정보 모두 노출). 카드 탭 시 → 로그인 화면 이동</td></tr>
+<tr><td>덕력 랭킹 (CEB-DUK-101)</td><td>화면 열람</td><td>→ 비로그인 열람 가능. 내 정보 "-". 참여 CTA 시 로그인</td></tr>
+<tr><td>서포트 이벤트 (CEB-DUK-201)</td><td>화면 열람</td><td>→ 비로그인 열람 가능. 내 응원 "-". [응원하기] 시 로그인</td></tr>
+<tr><td>팬덤 레벨 (CEB-EVT-201)</td><td>화면 열람</td><td>→ 비로그인 열람 가능. 활동 CTA 시 로그인</td></tr>
+<tr><td>Raffle (CEB-EVT-101)</td><td>화면 열람</td><td>→ 비로그인 열람 가능. 내 응모 "-". 응모 CTA 시 로그인</td></tr>
+<tr><td>정보 피드 (CEB-INF-101)</td><td>화면 열람</td><td>→ 비로그인 열람 가능. [알림 설정] 시 로그인</td></tr>
 <tr><td>CELEBUS 탭</td><td>Coming Soon 확인</td><td>→ 로그인 없이 열람 가능 (Coming Soon 안내 화면)</td></tr>
 <tr><td>Game 탭</td><td>전체</td><td>→ 로그인 화면 이동</td></tr>
 <tr><td>My 탭</td><td>전체</td><td>→ 로그인 화면 이동</td></tr>
@@ -1044,6 +1074,7 @@ p {
 <tr><td>v3.0</td><td>2026.04.15</td><td>@Nill Yoo</td><td>최소 팔로우 1명 필수 정책 추가(10.3.1): 마지막 아티스트 언팔로우 차단, 아티스트 0개 케이스 제거</td></tr>
 <tr><td>v3.1</td><td>2026.04.15</td><td>@Nill Yoo</td><td>크로스 검증 35건 반영: 푸시 알림 섹션 번호 15로 조정, SLA 안내 문구 유저 친화적 통일, '고정 정보'→'바로가기' 용어 통일, 추후 작성 화면 목록(16) 추가</td></tr>
 <tr><td>v3.2</td><td>2026.04.16</td><td>@Nill Yoo</td><td>비로그인 CTA에 기억 상세 공유 링크 추가(10.5), 미디어 업로드 규격 이미지 3장/영상 미지원으로 변경(13.3)</td></tr>
+<tr><td>v3.3</td><td>2026.04.16</td><td>@Nill Yoo</td><td>비로그인 화면 접근 매트릭스 테이블 추가(10.5). DUK-101, DUK-201, EVT-201, EVT-101, INF-101 비로그인 읽기 개방</td></tr>
 </table>
 
 </body>
