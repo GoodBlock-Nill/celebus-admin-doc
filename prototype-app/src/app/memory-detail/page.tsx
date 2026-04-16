@@ -17,7 +17,6 @@ interface MemoryDetail {
   typeIcon: string;
   date: string;
   images: number;
-  hasVideo: boolean;
   text: string;
   location?: string;
   isPublic: boolean;
@@ -29,48 +28,42 @@ const PRESETS: Record<DebugPreset, MemoryDetail> = {
   photo: {
     emojis: ['😍', '🤩'], emojiLabels: ['설렘', '어마'],
     type: 'photo', typeLabel: '사진 기록', typeIcon: '📸',
-    date: '2026.04.14', images: 5, hasVideo: true,
-    text: 'V01D 콘서트 다녀왔다! 무대 위의 V01D는 정말 빛나고 있었어. 앵콜에서 우리 쪽을 봐줬을 때 심장이 멈추는 줄 알았다 💜 다음에 또 꼭 가고 싶다!',
+    date: '2026.04.14', images: 3,    text: 'V01D 콘서트 다녀왔다! 무대 위의 V01D는 정말 빛나고 있었어. 앵콜에서 우리 쪽을 봐줬을 때 심장이 멈추는 줄 알았다 💜 다음에 또 꼭 가고 싶다!',
     location: '잠실 올림픽홀', isPublic: false, isMine: true,
     createdAt: '2026.04.14 23:30 작성',
   },
   letter: {
     emojis: ['💜'], emojiLabels: ['사랑'],
     type: 'letter', typeLabel: '편지', typeIcon: '✉️',
-    date: '2026.04.07', images: 0, hasVideo: false,
-    text: '사랑하는 V01D에게,\n\n오늘도 너희 음악을 들으며 하루를 보냈어. 힘든 날이었는데 너희 노래가 위로가 됐어. 항상 곁에 있어줘서 고마워.\n\n너희의 팬이',
+    date: '2026.04.07', images: 0,    text: '사랑하는 V01D에게,\n\n오늘도 너희 음악을 들으며 하루를 보냈어. 힘든 날이었는데 너희 노래가 위로가 됐어. 항상 곁에 있어줘서 고마워.\n\n너희의 팬이',
     isPublic: true, isMine: true,
     createdAt: '2026.04.07 21:15 작성',
   },
   memo: {
     emojis: ['✨', '🎉', '😭'], emojiLabels: ['행복', '신남', '감동'],
     type: 'memo', typeLabel: '메모', typeIcon: '📝',
-    date: '2026.04.03', images: 0, hasVideo: false,
-    text: '오늘 V01D 노래 들으며 산책했다. 봄바람이 불어서 기분이 너무 좋았어. 이런 평범한 순간이 행복하다.',
+    date: '2026.04.03', images: 0,    text: '오늘 V01D 노래 들으며 산책했다. 봄바람이 불어서 기분이 너무 좋았어. 이런 평범한 순간이 행복하다.',
     isPublic: false, isMine: true,
     createdAt: '2026.04.03 18:42 작성',
   },
   'public-other': {
     emojis: ['🎉', '😍'], emojiLabels: ['신남', '설렘'],
     type: 'photo', typeLabel: '사진 기록', typeIcon: '📸',
-    date: '2026.04.10', images: 3, hasVideo: false,
-    text: 'V01D 음방 1위 축하! 🎉 정말 감격스러웠어요. 팬들 다 같이 울었다 ㅠㅠ',
+    date: '2026.04.10', images: 3,    text: 'V01D 음방 1위 축하! 🎉 정말 감격스러웠어요. 팬들 다 같이 울었다 ㅠㅠ',
     location: '상암 MBC', isPublic: true, isMine: false,
     createdAt: '2026.04.10 20:00 작성',
   },
   'shared-guest': {
     emojis: ['🎉', '😍'], emojiLabels: ['신남', '설렘'],
     type: 'photo', typeLabel: '사진 기록', typeIcon: '📸',
-    date: '2026.04.10', images: 3, hasVideo: false,
-    text: 'V01D 음방 1위 축하! 🎉 정말 감격스러웠어요. 팬들 다 같이 울었다 ㅠㅠ',
+    date: '2026.04.10', images: 3,    text: 'V01D 음방 1위 축하! 🎉 정말 감격스러웠어요. 팬들 다 같이 울었다 ㅠㅠ',
     location: '상암 MBC', isPublic: true, isMine: false,
     createdAt: '2026.04.10 20:00 작성',
   },
   'shared-private': {
     emojis: ['💜'], emojiLabels: ['사랑'],
     type: 'memo', typeLabel: '메모', typeIcon: '📝',
-    date: '2026.04.03', images: 0, hasVideo: false,
-    text: '',
+    date: '2026.04.03', images: 0,    text: '',
     isPublic: false, isMine: false,
     createdAt: '',
   },
@@ -187,7 +180,7 @@ export default function MemoryDetailPage() {
             </div>
 
             {/* 3. 미디어 갤러리 */}
-            {(memory.images > 0 || memory.hasVideo) && (
+            {memory.images > 0 && (
               <div>
                 <div className="flex gap-2 overflow-x-auto pb-2">
                   {Array.from({ length: memory.images }).map((_, i) => (
@@ -196,17 +189,10 @@ export default function MemoryDetailPage() {
                       <span className="text-3xl">📷</span>
                     </button>
                   ))}
-                  {memory.hasVideo && (
-                    <button onClick={() => addToast('info', '영상 재생 (시뮬레이션)')}
-                      className="w-56 h-40 rounded-xl bg-gray-900 flex items-center justify-center shrink-0 relative">
-                      <span className="text-4xl text-white">▶</span>
-                      <span className="absolute bottom-2 right-2 text-[10px] text-white/70 bg-black/50 px-1.5 py-0.5 rounded">0:45</span>
-                    </button>
-                  )}
                 </div>
                 {memory.images > 1 && (
                   <div className="flex justify-center gap-1 mt-1">
-                    {Array.from({ length: memory.images + (memory.hasVideo ? 1 : 0) }).map((_, i) => (
+                    {Array.from({ length: memory.images }).map((_, i) => (
                       <div key={i} className={cn('w-1.5 h-1.5 rounded-full', i === 0 ? 'bg-violet-500' : 'bg-gray-300')} />
                     ))}
                   </div>
