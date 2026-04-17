@@ -2,11 +2,11 @@
 
 > 용도: 싸인 앨범 경품 동봉 편지 (A5 편지지)
 > 대상: 한국 / 영어권 / 일본 / 대만 / 멕시코 / 프랑스
-> 메시지 의도: CELEBUS에 관심 가져줘서 감사 → 주변에 많이 알려주면 → 더 큰 선물을 준비할 수 있다
+> 상태: V01D 측 컨펌 완료
 
 ---
 
-## 한국어 (KO)
+## 한국어 (KO) — 컨펌 완료
 
 안녕하세요, V01D입니다.
 
@@ -16,35 +16,32 @@
 CELEBUS에서 저희를 만나주시고,
 이렇게 함께해주셔서 정말 감사합니다.
 
-당신이 보내주시는 하나하나의 응원이
+여러분이 보내주시는 하나하나의 응원이
 저희에게는 무대 위에서 빛나는 이유가 됩니다.
 
 직접 만나 인사드리지 못하는 게 아쉽지만,
 이 앨범에 멤버 한 명 한 명의 진심을 담았습니다.
 
-힘든 날에는 저희 노래를 틀어주세요.
-옆에서 "괜찮아, 우리가 여기 있어"라고 말해주고 싶습니다.
-
 그리고 한 가지 부탁이 있어요.
-CELEBUS를 주변 팬들에게도 많이 알려주세요.
+CELEBUS를 SNS등을 통해서 주변 팬들에게도 많이 알려주세요.
 저희를 응원해주시는 분들이 많아질수록,
 더 크고 특별한 선물을 준비할 수 있거든요.
 
 다음에는 꼭, 가까이에서 만나요.
 그날까지 건강하고 행복하세요.
 
-당신의 V01D 드림 💜
+당신의 V01D 드림
 
 ---
 
 ## English (EN)
 
-Hey, it's V01D!
+Hi, this is V01D.
 
-The fact that this letter found its way to you —
-that's gotta mean something special, right?
+If this letter has reached you,
+it must mean we share a special connection.
 
-Thank you for discovering us on CELEBUS
+Thank you for finding us on CELEBUS
 and for choosing to walk this path with us.
 
 Every single cheer you send our way
@@ -53,24 +50,21 @@ gives us a reason to shine brighter on stage.
 We really wish we could say this to you in person,
 but for now, we've poured our hearts into this album — all of us.
 
-Whenever you're having a rough day, put on our music.
-We want to be the voice that says, "It's okay, we're right here."
-
-And hey, we have a little favor to ask.
-Spread the word about CELEBUS to other fans!
+And we have a little favor to ask.
+Please spread the word about CELEBUS to other fans through SNS!
 The more people who join us here,
 the bigger and better surprises we can prepare for you.
 
 Let's meet for real next time — promise.
 Until that day, take care of yourself and keep smiling.
 
-Yours always, V01D 💜
+Yours always, V01D
 
 ---
 
 ## 日本語 (JP)
 
-こんにちは、V01Dです！
+こんにちは、V01Dです。
 
 この手紙があなたのもとに届いたということは、
 きっと私たちには特別なご縁があるんですね。
@@ -84,24 +78,21 @@ CELEBUSで私たちを見つけてくれて、
 直接会ってお礼を言えないのがとても残念ですが、
 このアルバムにメンバー全員の想いを込めました。
 
-つらい日があったら、私たちの曲を聴いてください。
-「大丈夫、そばにいるよ」って伝えたいから。
-
 それから、ひとつお願いがあります。
-CELEBUSのこと、周りのファンにもたくさん教えてください。
+CELEBUSのこと、SNSなどを通じて周りのファンにもたくさん教えてください。
 応援してくれる人が増えるほど、
 もっと大きくて特別なプレゼントを届けられるから。
 
 今度は絶対、会いに行きますね。
 その日まで、元気で楽しく過ごしてください。
 
-あなたのV01Dより 💜
+あなたのV01Dより
 
 ---
 
 ## 繁體中文 (ZH-TW) — 台灣
 
-嗨，我們是V01D！
+嗨，我們是V01D。
 
 這封信能到你手上，
 是不是代表我們之間有一段特別的緣分呢？
@@ -115,24 +106,21 @@ CELEBUSのこと、周りのファンにもたくさん教えてください。
 沒能親自跟你說聲謝謝，真的很可惜，
 但這張專輯裡，裝滿了每一位成員的真心。
 
-累了的時候，就聽聽我們的歌吧。
-希望能像在你身邊一樣，告訴你「沒關係，我們在這裡」。
-
 還有一個小小的請求——
-請把CELEBUS分享給身邊的粉絲朋友們！
+請透過SNS等方式，把CELEBUS分享給身邊的粉絲朋友們！
 支持我們的人越多，
 我們就能準備更大、更特別的驚喜給大家。
 
 下次一定要見面哦。
 在那之前，要好好照顧自己、每天都開心！
 
-你的V01D 💜
+你的V01D
 
 ---
 
 ## Español (ES) — México
 
-¡Hola, somos V01D!
+Hola, somos V01D.
 
 Que esta carta haya llegado a tus manos
 significa que hay algo muy especial entre nosotros, ¿no crees?
@@ -146,24 +134,21 @@ es la razón por la que brillamos en el escenario.
 Nos encantaría poder decirte esto en persona,
 pero por ahora, hemos puesto todo nuestro corazón en este álbum — los cinco.
 
-Cuando tengas un día difícil, pon nuestra música.
-Queremos ser esa voz que te diga: "Todo va a estar bien, aquí estamos."
-
-Y oye, tenemos un pequeño favor que pedirte.
-¡Comparte CELEBUS con otros fans!
+Y tenemos un pequeño favor que pedirte.
+¡Comparte CELEBUS con otros fans a través de tus redes sociales!
 Entre más personas se unan a apoyarnos,
 más grandes y especiales serán las sorpresas que podremos preparar.
 
 La próxima vez, vamos a vernos en persona — es una promesa.
 Hasta ese día, cuídate mucho y no dejes de sonreír.
 
-Con todo nuestro cariño, V01D 💜
+Con todo nuestro cariño, V01D
 
 ---
 
 ## Français (FR) — France
 
-Salut, c'est V01D !
+Salut, c'est V01D.
 
 Si cette lettre est arrivée jusqu'à toi,
 c'est que quelque chose de spécial nous lie, non ?
@@ -177,15 +162,12 @@ est une raison de plus pour nous de briller sur scène.
 On aurait tellement aimé te dire tout ça en personne,
 mais en attendant, on a mis tout notre cœur dans cet album — chacun d'entre nous.
 
-Les jours où ça ne va pas, écoute notre musique.
-On veut être cette voix qui te dit : « Ça va aller, on est là. »
-
 Et on a une petite faveur à te demander.
-Parle de CELEBUS autour de toi, à d'autres fans !
+Parle de CELEBUS autour de toi sur les réseaux sociaux, à d'autres fans !
 Plus on sera nombreux ici,
 plus on pourra préparer des surprises encore plus grandes et spéciales.
 
 La prochaine fois, on se voit pour de vrai — c'est promis.
 D'ici là, prends soin de toi et garde le sourire.
 
-À toi, V01D 💜
+À toi, V01D
