@@ -118,25 +118,25 @@ p {
 <hr>
 <h2>2. 영역별 상세</h2>
 <h3>2.1 서브페이지 헤더</h3>
-<h5>UI 구성</h5>
+<h4>UI 구성</h4>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>좌측</td><td>[<] 뒤로가기 버튼 (CEB-FQ-101 Quest 메인으로 복귀)</td></tr>
 <tr><td>타이틀</td><td>"Quest"</td></tr>
 </table>
-<h5>동작</h5>
+<h4>동작</h4>
 <ul>
 <li>[<] 탭 → CEB-FQ-101 Quest 메인으로 복귀</li>
 </ul>
 <h3>2.2 미션 가이드</h3>
-<h5>UI 구성</h5>
+<h4>UI 구성</h4>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>타이틀</td><td>백오피스 [CEB-BO-FQ-101-Create] 타이틀 (유저 언어 기준)</td></tr>
 <tr><td>설명</td><td>백오피스 [CEB-BO-FQ-101-Create] 설명 (유저 언어 기준)</td></tr>
 <tr><td>보상 정보</td><td>승인 시 즉시 지급될 보상 아이콘 및 수량 (예: 응모권 1개, 덕력 {N}pt). 보상 지급 정책은 공통정책 8.5 참조</td></tr>
 </table>
-<h5>연관 링크</h5>
+<h4>연관 링크</h4>
 <table>
 <tr><th>항목</th><th>설명</th></tr>
 <tr><td>링크 버튼 (최대 2개)</td><td>백오피스(BO)에서 등록한 연관 링크를 라벨 버튼 형태로 표시. 클릭 시 인앱 브라우저 또는 외부 브라우저로 해당 URL 이동</td></tr>
@@ -146,7 +146,7 @@ p {
 <li>라벨 텍스트는 유저의 언어 설정(KO/EN/JA)에 맞춰 표시</li>
 <li>연관 링크 데이터 출처: [CEB-BO-FQ-101-Create] Quest 생성 시 등록</li>
 </ul>
-<h5>가이드 아코디언</h5>
+<h4>가이드 아코디언</h4>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>타이틀</td><td>"업로드 사진 가이드" + 펼치기/접기 화살표</td></tr>
@@ -154,13 +154,13 @@ p {
 <tr><td>내용</td><td>어드민 [CEB-BO-FQ-101] 유저 가이드 텍스트 (예: 흐린 사진 반려 등)</td></tr>
 <tr><td>노출 조건</td><td>어드민에서 유저 가이드를 설정한 경우에만 가이드 영역 표시</td></tr>
 </table>
-<h5>상태별 표시</h5>
+<h4>상태별 표시</h4>
 <table>
 <tr><th>상태</th><th>처리</th></tr>
 <tr><td>Loading</td><td>Quest 정보 영역 Skeleton UI</td></tr>
 <tr><td>Default</td><td>Quest 정보 + 업로드 영역 + 가이드 정상 표시</td></tr>
 </table>
-<h5>진입 조건</h5>
+<h4>진입 조건</h4>
 <table>
 <tr><th>미션 상태</th><th>처리</th></tr>
 <tr><td>INCOMPLETE (미완료)</td><td>본 화면 진입 가능</td></tr>
@@ -170,31 +170,31 @@ p {
 <tr><td>AUTO_COMPLETED (자동완료)</td><td>진입 불가 (타임라인에서 완료 상태 표시)</td></tr>
 </table>
 <h3>2.3 이미지 업로드</h3>
-<h5>UI 구성</h5>
+<h4>UI 구성</h4>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>초기 상태</td><td>갤러리 아이콘, 사진 촬영하기 아이콘 노출</td></tr>
 <tr><td>업로드 후</td><td>선택한 이미지 미리보기 노출. 우측 상단 [X] (삭제) 버튼 제공</td></tr>
 </table>
-<h5>동작</h5>
+<h4>동작</h4>
 <ul>
 <li>업로드 영역 클릭 시 OS 기본 피커(카메라/갤러리)를 호출</li>
 </ul>
-<h5>파일 제한</h5>
+<h4>파일 제한</h4>
 <table>
 <tr><th>항목</th><th>규칙</th></tr>
 <tr><td>형식</td><td>JPG, PNG, WebP, HEIC</td></tr>
 <tr><td>매수</td><td>1장 (공통정책 13.3의 10장 규격 대신 Quest 제출 화면 고유 규칙 적용)</td></tr>
 <tr><td>용량</td><td>최대 10MB (초과 시 에러 처리)</td></tr>
 </table>
-<h5>상태별 표시</h5>
+<h4>상태별 표시</h4>
 <table>
 <tr><th>상태</th><th>표시</th></tr>
 <tr><td>이미지 선택 전</td><td>Placeholder 노출, [제출하기] 버튼 Disabled</td></tr>
 <tr><td>이미지 선택 후</td><td>Preview 노출, [제출하기] 버튼 Active</td></tr>
 <tr><td>이미지 삭제 시</td><td>다시 초기 상태(Placeholder)로 복귀</td></tr>
 </table>
-<h5>에러/예외</h5>
+<h4>에러/예외</h4>
 <table>
 <tr><th>상황</th><th>처리</th></tr>
 <tr><td>네트워크 불안정 또는 파일 손상으로 업로드 실패</td><td>"앗, 사진이 올라가지 않았어요. 다시 시도해 주세요" Error 토스트</td></tr>
@@ -203,7 +203,7 @@ p {
 <tr><td>파일 형식 불일치</td><td>"JPG, PNG, WebP, HEIC 형식만 올릴 수 있어요" Error 토스트</td></tr>
 </table>
 <h3>2.4 제출 버튼</h3>
-<h5>UI 구성</h5>
+<h4>UI 구성</h4>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>위치</td><td>하단 고정 바</td></tr>
@@ -212,7 +212,7 @@ p {
 <blockquote>
 <p>상세 스타일은 피그마 참조</p>
 </blockquote>
-<h5>동작</h5>
+<h4>동작</h4>
 <ul>
 <li>클릭 시: 중복 제출 방지를 위해 버튼을 로딩 상태(Spinner)로 변경하고 클릭을 막음</li>
 <li>이미지를 서버로 전송</li>
@@ -225,7 +225,7 @@ p {
 <blockquote>
 <p>제출 즉시 해당 건은 Admin의 검토 대기 목록([CEB-BO-FQ-202])에 등록된다.</p>
 </blockquote>
-<h5>에러/예외</h5>
+<h4>에러/예외</h4>
 <table>
 <tr><th>상황</th><th>처리</th></tr>
 <tr><td>제출 실패 (네트워크 에러)</td><td>Error 토스트 + 버튼 활성 상태로 복구 (재시도 가능)</td></tr>
@@ -233,23 +233,23 @@ p {
 </table>
 <hr>
 <h2>3. 공통 규칙</h2>
-<h5>반려 후 재진입</h5>
+<h3>3.1 반려 후 재진입</h3>
 <ul>
 <li>기존에 반려된 이미지는 초기화(삭제)된 상태로 진입</li>
 <li>유저는 새 이미지를 업로드하여 다시 제출 가능</li>
 <li>진입 경로: CEB-FQ-101 타임라인 > 반려 미션 [재도전] 탭 (CEB-FQ-101 3.2 참조)</li>
 </ul>
-<h5>보상 지급 정책</h5>
+<h3>3.2 보상 지급 정책</h3>
 <ul>
 <li>보상(덕력, 응모권 등)은 심사 승인 시 즉시 지급</li>
 <li>보상 지급 상세 정책은 공통정책 8.5 참조</li>
 </ul>
-<h5>심사 SLA</h5>
+<h3>3.3 심사 SLA</h3>
 <ul>
 <li>제출 완료 토스트에 "결과는 빠르면 하루 안에 알려드릴게요" 심사 완료 기준 안내</li>
 <li>심사 SLA 상세 기준은 CEB-FQ-101 4.6 참조</li>
 </ul>
-<h5>다국어 처리</h5>
+<h3>3.4 다국어 처리</h3>
 <table>
 <tr><th>항목</th><th>다국어 범위</th></tr>
 <tr><td>퀘스트 타이틀</td><td>서버 데이터 (다국어 지원 여부 어드민 설정에 따름)</td></tr>
