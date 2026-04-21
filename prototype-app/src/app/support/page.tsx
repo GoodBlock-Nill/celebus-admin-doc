@@ -18,7 +18,7 @@ const STATUS_CONFIG: Record<SupportEventStatus, { badge: string; color: string }
   cancelled: { badge: '취소', color: 'bg-gray-200 text-gray-500' },
 };
 
-type DebugPreset = 'mixed' | 'all-active' | 'all-done' | 'guest';
+type DebugPreset = 'mixed' | 'all-active' | 'all-done' | 'cancelled' | 'guest';
 
 export default function SupportPage() {
   const artistName = useArtistStore((s) => s.activeArtist.name);
@@ -59,7 +59,8 @@ export default function SupportPage() {
     setPreset(p);
     if (p === 'mixed' || p === 'guest') setEvents(MOCK_SUPPORT_EVENTS);
     else if (p === 'all-active') setEvents(MOCK_SUPPORT_EVENTS.map((e) => ({ ...e, status: 'active' as const, currentPt: Math.floor(e.targetPt * 0.6), daysLeft: 7 })));
-    else setEvents(MOCK_SUPPORT_EVENTS.map((e) => ({ ...e, status: 'completed' as const, currentPt: e.targetPt, resultMessage: '집행 완료! 감사합니다 💜' })));
+    else if (p === 'all-done') setEvents(MOCK_SUPPORT_EVENTS.map((e) => ({ ...e, status: 'completed' as const, currentPt: e.targetPt, resultMessage: '집행 완료! 감사합니다 💜' })));
+    else if (p === 'cancelled') setEvents(MOCK_SUPPORT_EVENTS.map((e) => ({ ...e, status: 'cancelled' as const, currentPt: Math.floor(e.targetPt * 0.4), myInvestPt: 200 })));
     setExpandedId(null);
     setDebugOpen(false);
   };
@@ -125,6 +126,7 @@ export default function SupportPage() {
               { key: 'mixed' as const, label: '혼합' },
               { key: 'all-active' as const, label: '전체 모집중' },
               { key: 'all-done' as const, label: '전체 완료' },
+              { key: 'cancelled' as const, label: '집행취소' },
               { key: 'guest' as const, label: '비로그인' },
             ].map((p) => (
               <button key={p.key} onClick={() => switchPreset(p.key)}
@@ -135,7 +137,7 @@ export default function SupportPage() {
           </div>
         )}
         <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'mixed' ? '혼합' : preset === 'all-active' ? '전체 모집중' : preset === 'all-done' ? '전체 완료' : '비로그인'}</span>
+          <span className="text-[10px] font-semibold">{preset === 'mixed' ? '혼합' : preset === 'all-active' ? '전체 모집중' : preset === 'all-done' ? '전체 완료' : preset === 'cancelled' ? '집행취소' : '비로그인'}</span>
           <span className="text-[8px]">▲</span>
         </button>
       </div>
