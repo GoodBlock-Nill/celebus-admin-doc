@@ -2,9 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
+import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
+import { COLLECTION_PRESET_OPTIONS, applyCollectionPreset } from '@/lib/presets/collection';
 
 type Category = 'artist' | 'event' | 'special';
 
@@ -38,8 +41,15 @@ const CATEGORIES: { key: Category; label: string }[] = [
 export default function CollectionPage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
+  const queryClient = useQueryClient();
   const [category, setCategory] = useState<Category>('artist');
   const [bives] = useState(MOCK_BIVES);
+  const [preset, setPreset] = useState('partial');
+
+  const handlePreset = async (key: string) => {
+    setPreset(key);
+    await applyCollectionPreset(key, queryClient);
+  };
 
   const ownedCount = bives.filter((b) => b.owned).length;
   const filtered = bives.filter((b) => b.category === category);
@@ -137,6 +147,8 @@ export default function CollectionPage() {
           ))}
         </div>
       </div>
+
+      <PresetSelector presets={COLLECTION_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
     </div>
   );
 }

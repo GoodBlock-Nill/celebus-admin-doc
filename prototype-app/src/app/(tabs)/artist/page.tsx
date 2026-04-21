@@ -4,7 +4,9 @@ import { useState, useCallback, useEffect } from 'react';
 import ArtistHeader from '@/components/artist/ArtistHeader';
 import OnboardingOverlay from '@/components/artist/OnboardingOverlay';
 import ServiceCard from '@/components/cards/ServiceCard';
+import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
+import { ARTIST_PRESET_OPTIONS, getArtistPresetState } from '@/lib/presets/artist';
 import { SERVICE_GROUP_LABELS } from '@/lib/types';
 import type { ServiceCardData, ServiceCardGroup } from '@/lib/types';
 
@@ -40,7 +42,14 @@ function groupCards(cards: ServiceCardData[]) {
 export default function ArtistPage() {
   const [cards, setCards] = useState(ARTIST_CARDS);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [preset, setPreset] = useState('loginContent');
   const { showOnboarding, setShowOnboarding, addToast } = useUIStore();
+  const presetState = getArtistPresetState(preset);
+
+  const handlePreset = (key: string) => {
+    setPreset(key);
+    if (key === 'onboarding') setShowOnboarding(true);
+  };
 
   // 온보딩: 첫 진입 시 1회
   useEffect(() => {
@@ -150,6 +159,8 @@ export default function ArtistPage() {
 
       {/* 온보딩 오버레이 */}
       <OnboardingOverlay onDismiss={dismissOnboarding} />
+
+      <PresetSelector presets={ARTIST_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
     </div>
   );
 }

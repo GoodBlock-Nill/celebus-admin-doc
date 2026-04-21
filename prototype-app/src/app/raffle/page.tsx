@@ -2,9 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
+import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn, formatNumber } from '@/lib/utils';
+import { RAFFLE_PRESET_OPTIONS, applyRafflePreset } from '@/lib/presets/raffle';
 
 type RaffleStatus = 'active' | 'drawing' | 'winner' | 'loser' | 'closed';
 type FilterTab = 'active' | 'ended';
@@ -38,8 +41,15 @@ const STATUS_BADGE: Record<RaffleStatus, { label: string; style: string }> = {
 export default function RafflePage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
+  const queryClient = useQueryClient();
   const [filter, setFilter] = useState<FilterTab>('active');
   const [raffles] = useState(MOCK_RAFFLES);
+  const [preset, setPreset] = useState('mixed');
+
+  const handlePreset = async (key: string) => {
+    setPreset(key);
+    await applyRafflePreset(key, queryClient);
+  };
 
   const myTickets = 15;
 
@@ -148,6 +158,8 @@ export default function RafflePage() {
           </div>
         )}
       </div>
+
+      <PresetSelector presets={RAFFLE_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
     </div>
   );
 }

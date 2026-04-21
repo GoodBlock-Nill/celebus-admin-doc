@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
+import PresetSelector from '@/components/dev/PresetSelector';
 import StreakHeader from '@/components/daily/StreakHeader';
 import WeekDots from '@/components/daily/WeekDots';
 import StreakBonuses from '@/components/daily/StreakBonuses';
@@ -10,10 +12,18 @@ import { useDailyState, useCheckin, useCompleteMission, useClaimStreakBonus } fr
 import { useUIStore } from '@/stores/useUIStore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
+import { DAILY_PRESET_OPTIONS, applyDailyPreset } from '@/lib/presets/daily';
 
 export default function DailyMissionPage() {
   const { activeArtistId } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
+  const queryClient = useQueryClient();
+  const [preset, setPreset] = useState('default');
+
+  const handlePreset = async (key: string) => {
+    setPreset(key);
+    await applyDailyPreset(key, queryClient);
+  };
 
   const { data, isLoading } = useDailyState(activeArtistId);
   const checkinMutation = useCheckin(activeArtistId);
@@ -171,6 +181,8 @@ export default function DailyMissionPage() {
           </button>
         </div>
       )}
+
+      <PresetSelector presets={DAILY_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
 
       {/* 보너스 축하 모달 */}
       {showBonusModal && (

@@ -1,17 +1,34 @@
 'use client';
 
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
+import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useFandomLevel } from '@/lib/hooks/useFandom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn, formatNumber } from '@/lib/utils';
+import { FANDOM_PRESET_OPTIONS, applyFandomPreset } from '@/lib/presets/fandom';
 
 export default function FandomLevelPage() {
   const { activeArtistId, artistName } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
+  const queryClient = useQueryClient();
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
+  const [preset, setPreset] = useState('progress');
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const handlePreset = async (key: string) => {
+    if (key === 'guest') {
+      setIsLoggedIn(false);
+      setPreset(key);
+      return;
+    }
+    setIsLoggedIn(true);
+    setPreset(key);
+    await applyFandomPreset(key, queryClient);
+  };
 
   const { data, isLoading } = useFandomLevel(activeArtistId);
 
@@ -35,6 +52,11 @@ export default function FandomLevelPage() {
 
   return (
     <div className="min-h-dvh bg-white pb-8">
+      {!isLoggedIn && (
+        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
+          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
+        </div>
+      )}
       <SubPageHeader title={`${artistName} 키우기`} />
 
       {/* 현재 레벨 카드 */}
@@ -155,6 +177,8 @@ export default function FandomLevelPage() {
         </div>
         <p className="text-[10px] text-gray-400 text-center mt-2">활동하면 팬덤 레벨에 기여됩니다</p>
       </div>
+
+      <PresetSelector presets={FANDOM_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
 
       {/* 레벨업 축하 모달 */}
       {showLevelUpModal && (

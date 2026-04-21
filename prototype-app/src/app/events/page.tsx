@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import SubPageHeader from '@/components/layout/SubPageHeader';
+import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
+import { EVENTS_PRESET_OPTIONS, getEventsPresetState } from '@/lib/presets/events';
 
 interface EventItem {
   id: string;
@@ -28,8 +30,19 @@ const MOCK_EVENTS: EventItem[] = [
 export default function EventsPage() {
   const addToast = useUIStore((s) => s.addToast);
   const [tab, setTab] = useState<'active' | 'ended'>('active');
+  const [preset, setPreset] = useState('content');
 
-  const filtered = MOCK_EVENTS.filter((e) => tab === 'active' ? e.active : !e.active);
+  const handlePreset = (key: string) => {
+    setPreset(key);
+    const state = getEventsPresetState(key);
+    if (state.emptyTab === 'active') setTab('active');
+    else if (state.emptyTab === 'closed') setTab('ended');
+  };
+
+  const presetState = getEventsPresetState(preset);
+  const filtered = presetState.forceEmpty
+    ? []
+    : MOCK_EVENTS.filter((e) => tab === 'active' ? e.active : !e.active);
 
   return (
     <div className="min-h-dvh bg-white pb-8">
@@ -85,6 +98,8 @@ export default function EventsPage() {
           </div>
         )}
       </div>
+
+      <PresetSelector presets={EVENTS_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
     </div>
   );
 }

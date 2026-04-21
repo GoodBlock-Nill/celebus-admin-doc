@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
+import PresetSelector from '@/components/dev/PresetSelector';
 import TimelineNode from '@/components/quest/TimelineNode';
 import ChapterPreview from '@/components/quest/ChapterPreview';
 import StoryIntroBanner from '@/components/quest/StoryIntroBanner';
@@ -12,12 +14,20 @@ import { useQuestChapters, useRepeatingQuests } from '@/lib/hooks/useQuests';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useUIStore } from '@/stores/useUIStore';
 import { Skeleton } from '@/components/ui/skeleton';
+import { QUEST_PRESET_OPTIONS, applyQuestPreset } from '@/lib/presets/quest';
 import type { QuestChapter } from '@/lib/types';
 
 export default function QuestPage() {
   const { activeArtistId, artistName } = useActiveArtist();
   const { expandedChapterId, toggleChapter } = useQuestStore();
   const addToast = useUIStore((s) => s.addToast);
+  const queryClient = useQueryClient();
+  const [preset, setPreset] = useState('ch1');
+
+  const handlePreset = async (key: string) => {
+    setPreset(key);
+    await applyQuestPreset(key, queryClient);
+  };
 
   const { data: chapters = [], isLoading: chaptersLoading, refetch: refetchChapters } = useQuestChapters(activeArtistId);
   const { data: repeatingQuests = [], isLoading: repeatingLoading } = useRepeatingQuests(activeArtistId);
@@ -223,6 +233,8 @@ export default function QuestPage() {
       {previewChapter && (
         <ChapterPreview chapter={previewChapter} onClose={() => setPreviewChapter(null)} />
       )}
+
+      <PresetSelector presets={QUEST_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
 
       {/* 5장 완료 축하 모달 (A-1) */}
       {showCompleteModal && (

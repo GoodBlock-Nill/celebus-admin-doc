@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SubPageHeader from '@/components/layout/SubPageHeader';
+import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
+import { ARTIST_DISCOVER_PRESET_OPTIONS } from '@/lib/presets/artistDiscover';
 import { cn } from '@/lib/utils';
 
 interface DiscoverArtist {
@@ -27,7 +29,16 @@ const ALL_ARTISTS: DiscoverArtist[] = [
 export default function ArtistDiscoverPage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
+  const [preset, setPreset] = useState('default');
   const [followed, setFollowed] = useState<Set<string>>(new Set(['v01d']));
+
+  const handlePreset = (key: string) => {
+    setPreset(key);
+    if (key === 'allFollowed') setFollowed(new Set(ALL_ARTISTS.map((a) => a.id)));
+    else if (key === 'default') setFollowed(new Set(['v01d']));
+    else if (key === 'searchEmpty') { setSearchOpen(true); setSearchQuery('zzzznotfound'); }
+    else setFollowed(new Set(['v01d']));
+  };
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [unfollowTarget, setUnfollowTarget] = useState<DiscoverArtist | null>(null);
@@ -227,6 +238,8 @@ export default function ArtistDiscoverPage() {
           </div>
         </div>
       )}
+
+      <PresetSelector presets={ARTIST_DISCOVER_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
     </div>
   );
 }

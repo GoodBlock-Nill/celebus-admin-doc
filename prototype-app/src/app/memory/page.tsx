@@ -2,9 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
+import PresetSelector from '@/components/dev/PresetSelector';
+import { MEMORY_PRESET_OPTIONS, applyMemoryPreset } from '@/lib/presets/memory';
 
 type ViewMode = 'calendar' | 'grid' | 'map';
 
@@ -33,10 +36,17 @@ export default function MemoryPage() {
   const router = useRouter();
   const { artistName } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
+  const queryClient = useQueryClient();
   const [view, setView] = useState<ViewMode>('calendar');
   const [memories] = useState(MOCK_MEMORIES);
   const [selectedDay, setSelectedDay] = useState<number | null>(14);
   const [showOnboarding] = useState(false);
+  const [preset, setPreset] = useState('many');
+
+  const handlePreset = async (key: string) => {
+    setPreset(key);
+    await applyMemoryPreset(key, queryClient);
+  };
 
   const daysInMonth = 30;
   const firstDayOffset = 2; // 4월 1일 = 수요일 (offset 2)
@@ -206,6 +216,8 @@ export default function MemoryPage() {
           +
         </button>
       )}
+
+      <PresetSelector presets={MEMORY_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
     </div>
   );
 }

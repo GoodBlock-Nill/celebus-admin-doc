@@ -1,18 +1,38 @@
 'use client';
 
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
+import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useSeasons, useRanking, useVirtueHistory } from '@/lib/hooks/useRanking';
 import { useUserCurrency } from '@/lib/hooks/useUser';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn, formatNumber } from '@/lib/utils';
+import { RANKING_PRESET_OPTIONS, applyRankingPreset } from '@/lib/presets/ranking';
 
 export default function VirtuePage() {
   const { activeArtistId } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
+  const queryClient = useQueryClient();
   const [showHistory, setShowHistory] = useState(false);
+  const [preset, setPreset] = useState('current');
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const handlePreset = async (key: string) => {
+    if (key === 'guest') {
+      setIsLoggedIn(false);
+      setPreset(key);
+      return;
+    }
+    setIsLoggedIn(true);
+    setPreset(key);
+    if (key === 'prevSeason') {
+      setSelectedSeasonId(null);
+    }
+    await applyRankingPreset(key, queryClient);
+  };
 
   const { data: seasons, isLoading: seasonsLoading } = useSeasons(activeArtistId);
   const [selectedSeasonId, setSelectedSeasonId] = useState<string | null>(null);
@@ -46,6 +66,11 @@ export default function VirtuePage() {
 
   return (
     <div className="min-h-dvh bg-white pb-8">
+      {!isLoggedIn && (
+        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
+          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
+        </div>
+      )}
       <SubPageHeader title="덕력 랭킹" />
 
       {/* 시즌 드롭다운 */}
@@ -166,6 +191,8 @@ export default function VirtuePage() {
           ℹ️ 랭킹은 획득 덕력 기준입니다. 서포트에 응원한 덕력은 랭킹에 영향을 주지 않습니다.
         </p>
       </div>
+
+      <PresetSelector presets={RANKING_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
 
       {/* 덕력 이력 바텀시트 */}
       {showHistory && (

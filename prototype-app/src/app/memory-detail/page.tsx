@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
+import PresetSelector from '@/components/dev/PresetSelector';
+import { MEMORY_DETAIL_PRESET_OPTIONS, getMemoryDetailPresetState } from '@/lib/presets/memoryDetail';
 
 type PresetKey = 'photo' | 'letter' | 'memo' | 'public-other' | 'shared-guest' | 'shared-private';
 
@@ -71,15 +73,20 @@ export default function MemoryDetailPage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
 
-  const preset: PresetKey = 'photo';
+  const [presetKey, setPresetKey] = useState<PresetKey>('photo');
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showReportSheet, setShowReportSheet] = useState(false);
   const [fullscreenImg, setFullscreenImg] = useState<number | null>(null);
 
-  const memory = PRESETS[preset];
-  const isSharedGuest = false;
-  const isSharedPrivate = false;
+  const handlePreset = (key: string) => {
+    setPresetKey(key as PresetKey);
+  };
+
+  const presetState = getMemoryDetailPresetState(presetKey);
+  const memory = PRESETS[presetKey];
+  const isSharedGuest = presetState.isGuest;
+  const isSharedPrivate = presetState.isLocked;
 
   const handleDelete = () => {
     setShowDeleteModal(false);
@@ -278,6 +285,8 @@ export default function MemoryDetailPage() {
           )}
         </>
       )}
+
+      <PresetSelector presets={MEMORY_DETAIL_PRESET_OPTIONS} current={presetKey} onSelect={handlePreset} />
     </div>
   );
 }

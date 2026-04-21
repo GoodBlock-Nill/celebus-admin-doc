@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
+import PresetSelector from '@/components/dev/PresetSelector';
+import { INFO_PRESET_OPTIONS, getInfoPresetFilter } from '@/lib/presets/info';
 
 type ItemType = 'schedule' | 'news';
 
@@ -39,6 +41,19 @@ export default function InfoPage() {
   const addToast = useUIStore((s) => s.addToast);
   const [items, setItems] = useState(MOCK_ITEMS);
   const [notice] = useState<typeof MOCK_NOTICE | null>(MOCK_NOTICE);
+  const [preset, setPreset] = useState('rich');
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+  const handlePreset = (key: string) => {
+    if (key === 'guest') {
+      setIsLoggedIn(false);
+    } else {
+      setIsLoggedIn(true);
+    }
+    setPreset(key);
+  };
+
+  const presetFilter = getInfoPresetFilter(preset);
 
   const groups = ['오늘', '이번 주', '지난 주'];
 
@@ -53,6 +68,11 @@ export default function InfoPage() {
 
   return (
     <div className="min-h-dvh bg-white pb-8">
+      {!isLoggedIn && (
+        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
+          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
+        </div>
+      )}
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
           <button onClick={() => router.back()} className="mr-3 -ml-1 p-1"><span className="text-gray-900">←</span></button>
@@ -61,7 +81,7 @@ export default function InfoPage() {
       </div>
 
       {/* 공지 배너 */}
-      {notice && (
+      {notice && presetFilter.showNotice && (
         <div className="mx-4 mt-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-center gap-2">
           <span className="text-sm">⚠️</span>
           <span className="text-xs text-amber-800 flex-1 truncate">{notice.title}</span>
@@ -71,7 +91,7 @@ export default function InfoPage() {
 
       {/* 타임라인 */}
       <div className="px-4 mt-4">
-        {items.length === 0 ? (
+        {!presetFilter.showTimeline || items.length === 0 ? (
           <div className="text-center py-16">
             <span className="text-3xl">📋</span>
             <p className="text-sm font-semibold text-gray-900 mt-3">아직 등록된 소식이 없습니다</p>
@@ -143,6 +163,8 @@ export default function InfoPage() {
           })
         )}
       </div>
+
+      <PresetSelector presets={INFO_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
     </div>
   );
 }

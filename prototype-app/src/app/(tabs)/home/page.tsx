@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
+import PresetSelector from '@/components/dev/PresetSelector';
+import { HOME_PRESET_OPTIONS, getHomePresetState } from '@/lib/presets/home';
 
 interface BiveItem {
   name: string;
@@ -38,8 +40,24 @@ export default function HomePage() {
   const [missionDone, setMissionDone] = useState(false);
   const [streak, setStreak] = useState(12);
   const [selectedBive, setSelectedBive] = useState<(typeof BIVE_LIST)[number] | null>(null);
+  const [preset, setPreset] = useState('loginContent');
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-  const hasContent = true;
+  const handlePreset = (key: string) => {
+    const state = getHomePresetState(key);
+    setIsLoggedIn(state.isLoggedIn);
+    if (state.isAllDone) {
+      setCheckedIn(true);
+      setMissionDone(true);
+    } else {
+      setCheckedIn(false);
+      setMissionDone(false);
+    }
+    setPreset(key);
+  };
+
+  const homePresetState = getHomePresetState(preset);
+  const hasContent = homePresetState.hasContent;
   const allDone = checkedIn && missionDone;
 
   const banners = hasContent ? BANNERS : [];
@@ -54,6 +72,11 @@ export default function HomePage() {
 
   return (
     <div className="min-h-dvh bg-white pb-20">
+      {!isLoggedIn && (
+        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
+          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
+        </div>
+      )}
       {/* 1. 헤더 */}
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
@@ -310,6 +333,8 @@ export default function HomePage() {
           </button>
         </>
       </div>
+
+      <PresetSelector presets={HOME_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
 
       {/* BIVE 미리보기 바텀시트 */}
       {selectedBive && (
