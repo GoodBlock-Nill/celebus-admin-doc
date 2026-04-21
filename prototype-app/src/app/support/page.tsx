@@ -4,7 +4,9 @@ import { useState, useCallback } from 'react';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import { useUIStore } from '@/stores/useUIStore';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
-import { MOCK_SUPPORT_EVENTS } from '@/mock/support';
+import { useSupportEvents, useInvestSupport } from '@/lib/hooks/useSupport';
+import { useUserCurrency } from '@/lib/hooks/useUser';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn, formatNumber } from '@/lib/utils';
 import type { SupportEvent, SupportEventStatus } from '@/lib/types';
 
@@ -18,57 +20,72 @@ const STATUS_CONFIG: Record<SupportEventStatus, { badge: string; color: string }
 };
 
 export default function SupportPage() {
-  const { artistName } = useActiveArtist();
+  const { artistName, activeArtistId } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
-  const [events, setEvents] = useState(MOCK_SUPPORT_EVENTS);
-  const [expandedId, setExpandedId] = useState<string | null>(events.find((e) => e.status === 'active')?.id || null);
+  const { data: events, isLoading } = useSupportEvents(activeArtistId);
+  const { data: currency } = useUserCurrency(activeArtistId);
+  const investMutation = useInvestSupport(activeArtistId);
+
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState<{ eventId: string; amount: number } | null>(null);
   const [investAmounts, setInvestAmounts] = useState<Record<string, number>>({});
 
-  const isLoggedIn = true;
+  const myHeldPt = currency?.virtueHeld ?? 0;
 
-  const myHeldPt = 1200;
-
-  const toggleExpand = (id: string) => {
-    setExpandedId(expandedId === id ? null : id);
-  };
+  // Auto-expand first active event
+  const firstActiveId = events?.find((e) => e.status === 'active')?.id;
+  if (expandedId === null && firstActiveId) {
+    setExpandedId(firstActiveId);
+  }
 
   const handleInvest = useCallback((eventId: string) => {
     const amount = investAmounts[eventId] || 100;
     setShowConfirmModal({ eventId, amount });
   }, [investAmounts]);
 
-  const confirmInvest = useCallback(() => {
+  const confirmInvest = useCallback(async () => {
     if (!showConfirmModal) return;
-    setEvents((prev) => prev.map((e) =>
-      e.id === showConfirmModal.eventId
-        ? { ...e, currentPt: e.currentPt + showConfirmModal.amount, myInvestPt: e.myInvestPt + showConfirmModal.amount, participants: e.participants + (e.myInvestPt === 0 ? 1 : 0) }
-        : e
-    ));
-    addToast('success', `덕력 ${showConfirmModal.amount}pt 응원 완료!`);
+    try {
+      await investMutation.mutateAsync({ eventId: showConfirmModal.eventId, amount: showConfirmModal.amount });
+      addToast('success', `덕력 ${showConfirmModal.amount}pt 응원 완료!`);
+    } catch {
+      addToast('error', '앗, 응원이 전달되지 않았어요. 다시 시도해 주세요');
+    }
     setShowConfirmModal(null);
-  }, [showConfirmModal, addToast]);
+  }, [showConfirmModal, investMutation, addToast]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-dvh bg-white pb-8">
+        <SubPageHeader title={`${artistName} 응원하기`} />
+        <div className="px-4 mt-4 space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-24 w-full rounded-2xl" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-dvh bg-white pb-8">
       <SubPageHeader title={`${artistName} 응원하기`} />
 
       <div className="px-4 mt-4 space-y-3">
-        {events.map((event) => (
+        {(events ?? []).map((event) => (
           <EventCard
             key={event.id}
             event={event}
             isExpanded={expandedId === event.id}
-            onToggle={() => toggleExpand(event.id)}
+            onToggle={() => setExpandedId(expandedId === event.id ? null : event.id)}
             investAmount={investAmounts[event.id] || 100}
             onAmountChange={(v) => setInvestAmounts((prev) => ({ ...prev, [event.id]: v }))}
             onInvest={() => handleInvest(event.id)}
             myHeldPt={myHeldPt}
-            isLoggedIn={isLoggedIn}
           />
         ))}
 
-        {events.length === 0 && (
+        {(events ?? []).length === 0 && (
           <div className="text-center py-12">
             <span className="text-3xl">💜</span>
             <p className="text-sm font-semibold text-gray-900 mt-3">현재 진행 중인 서포트 이벤트가 없습니다</p>
@@ -76,7 +93,6 @@ export default function SupportPage() {
         )}
       </div>
 
-      {/* 확인 모달 (Dimmed 탭 시 닫히지 않음 — CTA로만 닫기 가능) */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
@@ -99,9 +115,9 @@ export default function SupportPage() {
   );
 }
 
-function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, onInvest, myHeldPt, isLoggedIn }: {
+function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, onInvest, myHeldPt }: {
   event: SupportEvent; isExpanded: boolean; onToggle: () => void;
-  investAmount: number; onAmountChange: (v: number) => void; onInvest: () => void; myHeldPt: number; isLoggedIn: boolean;
+  investAmount: number; onAmountChange: (v: number) => void; onInvest: () => void; myHeldPt: number;
 }) {
   const config = STATUS_CONFIG[event.status];
   const progress = Math.min((event.currentPt / event.targetPt) * 100, 100);
@@ -134,8 +150,7 @@ function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, 
       {isExpanded && (
         <div className="px-4 pb-4 animate-slideInUp">
           <p className="text-xs text-gray-600 mb-3">{event.description}</p>
-
-          {isLoggedIn && event.myInvestPt > 0 && <p className="text-xs text-violet-600 mb-1">내 응원: {formatNumber(event.myInvestPt)}pt</p>}
+          {event.myInvestPt > 0 && <p className="text-xs text-violet-600 mb-1">내 응원: {formatNumber(event.myInvestPt)}pt</p>}
           <p className="text-xs text-gray-500 mb-3">참여자: {event.participants}명</p>
 
           {event.status === 'active' && (

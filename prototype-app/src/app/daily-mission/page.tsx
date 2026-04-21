@@ -1,48 +1,76 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import StreakHeader from '@/components/daily/StreakHeader';
 import WeekDots from '@/components/daily/WeekDots';
 import StreakBonuses from '@/components/daily/StreakBonuses';
-import { useDailyStore } from '@/stores/useDailyStore';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
+import { useDailyState, useCheckin, useCompleteMission, useClaimStreakBonus } from '@/lib/hooks/useDaily';
 import { useUIStore } from '@/stores/useUIStore';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 
 export default function DailyMissionPage() {
-  const router = useRouter();
+  const { activeArtistId } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
-  const {
-    checkedIn, mission, streak, weekRecord, bonuses,
-    checkIn, completeMission, claimBonus,
-  } = useDailyStore();
+
+  const { data, isLoading } = useDailyState(activeArtistId);
+  const checkinMutation = useCheckin(activeArtistId);
+  const completeMissionMutation = useCompleteMission(activeArtistId);
+  const claimBonusMutation = useClaimStreakBonus(activeArtistId);
 
   const [showBonusModal, setShowBonusModal] = useState<{ days: number; pt: number } | null>(null);
 
-  const allDone = checkedIn && mission.completed;
+  const checkedIn = data?.checkedIn ?? false;
+  const mission = data?.mission ?? null;
+  const streak = data?.streak ?? 0;
+  const weekRecord = data?.weekRecord ?? Array(7).fill(false);
+  const bonuses = data?.bonuses ?? [];
+
+  const allDone = checkedIn && (mission?.completed ?? false);
 
   const handleCheckIn = useCallback(() => {
     if (checkedIn) return;
-    checkIn();
-    addToast('success', '출석 완료! 덕력 10pt 획득');
-  }, [checkedIn, checkIn, addToast]);
+    checkinMutation.mutate(undefined, {
+      onSuccess: () => addToast('success', '출석 완료! 덕력 10pt 획득'),
+      onError: () => addToast('error', '출석 처리 중 오류가 발생했습니다'),
+    });
+  }, [checkedIn, checkinMutation, addToast]);
 
   const handleGoMission = useCallback(() => {
-    if (mission.completed) return;
-    // 미션 대상 화면으로 이동 (복귀 시 자동 완료 시뮬레이션)
-    completeMission();
-    addToast('success', `미션 완료! 덕력 ${mission.rewardPt}pt 획득`);
-  }, [mission, completeMission, addToast]);
+    if (!mission || mission.completed) return;
+    completeMissionMutation.mutate(mission.id, {
+      onSuccess: () => addToast('success', `미션 완료! 덕력 ${mission.rewardPt}pt 획득`),
+      onError: () => addToast('error', '미션 처리 중 오류가 발생했습니다'),
+    });
+  }, [mission, completeMissionMutation, addToast]);
 
   const handleClaimBonus = useCallback((days: number, pt: number) => {
-    claimBonus(days);
-    setShowBonusModal(null);
-    addToast('success', `🔥 ${days}일 연속 보너스! ${pt}pt 획득!`);
-  }, [claimBonus, addToast]);
+    claimBonusMutation.mutate(days, {
+      onSuccess: () => {
+        setShowBonusModal(null);
+        addToast('success', `🔥 ${days}일 연속 보너스! ${pt}pt 획득!`);
+      },
+      onError: () => addToast('error', '보너스 수령 중 오류가 발생했습니다'),
+    });
+  }, [claimBonusMutation, addToast]);
 
   // 보너스 달성 체크
   const pendingBonus = bonuses.find((b) => streak >= b.days && !b.claimed);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-dvh bg-white pb-8">
+        <SubPageHeader title="일일 미션" />
+        <div className="px-4 mt-4 space-y-3">
+          <Skeleton className="h-24 rounded-2xl" />
+          <Skeleton className="h-16 rounded-xl" />
+          <Skeleton className="h-32 rounded-2xl" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-dvh bg-white pb-8">
@@ -78,7 +106,8 @@ export default function DailyMissionPage() {
               {!checkedIn && (
                 <button
                   onClick={handleCheckIn}
-                  className="text-xs font-semibold text-white bg-violet-600 px-3 py-1.5 rounded-lg hover:bg-violet-700 transition-colors"
+                  disabled={checkinMutation.isPending}
+                  className="text-xs font-semibold text-white bg-violet-600 px-3 py-1.5 rounded-lg hover:bg-violet-700 transition-colors disabled:opacity-50"
                 >
                   출석하기
                 </button>
@@ -88,34 +117,37 @@ export default function DailyMissionPage() {
         </div>
 
         {/* 일일 미션 */}
-        <div className={cn(
-          'rounded-2xl border px-4 py-4 transition-all',
-          mission.completed ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'
-        )}>
-          <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">{mission.completed ? '✅' : '☐'}</span>
-              <span className={cn('text-sm font-semibold', mission.completed ? 'text-green-700' : 'text-gray-900')}>
-                {mission.title}
-              </span>
+        {mission && (
+          <div className={cn(
+            'rounded-2xl border px-4 py-4 transition-all',
+            mission.completed ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'
+          )}>
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <span className="text-sm">{mission.completed ? '✅' : '☐'}</span>
+                <span className={cn('text-sm font-semibold', mission.completed ? 'text-green-700' : 'text-gray-900')}>
+                  {mission.title}
+                </span>
+              </div>
+              <span className="text-xs text-gray-400">+{mission.rewardPt}pt</span>
             </div>
-            <span className="text-xs text-gray-400">+{mission.rewardPt}pt</span>
+            <p className="text-xs text-gray-500 ml-6 mb-2">{mission.description}</p>
+            {!mission.completed && (
+              <div className="ml-6">
+                <button
+                  onClick={handleGoMission}
+                  disabled={completeMissionMutation.isPending}
+                  className="text-xs font-semibold text-violet-600 hover:text-violet-700 transition-colors disabled:opacity-50"
+                >
+                  하러가기 →
+                </button>
+              </div>
+            )}
+            {mission.completed && (
+              <p className="text-[10px] text-green-600 ml-6">덕력 {mission.rewardPt}pt 획득!</p>
+            )}
           </div>
-          <p className="text-xs text-gray-500 ml-6 mb-2">{mission.description}</p>
-          {!mission.completed && (
-            <div className="ml-6">
-              <button
-                onClick={handleGoMission}
-                className="text-xs font-semibold text-violet-600 hover:text-violet-700 transition-colors"
-              >
-                하러가기 →
-              </button>
-            </div>
-          )}
-          {mission.completed && (
-            <p className="text-[10px] text-green-600 ml-6">덕력 {mission.rewardPt}pt 획득!</p>
-          )}
-        </div>
+        )}
 
         {/* 모두 완료 */}
         {allDone && (
@@ -154,7 +186,8 @@ export default function DailyMissionPage() {
             </p>
             <button
               onClick={() => handleClaimBonus(showBonusModal.days, showBonusModal.pt)}
-              className="w-full py-3 bg-amber-500 text-white rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors"
+              disabled={claimBonusMutation.isPending}
+              className="w-full py-3 bg-amber-500 text-white rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors disabled:opacity-50"
             >
               받기 🎁
             </button>

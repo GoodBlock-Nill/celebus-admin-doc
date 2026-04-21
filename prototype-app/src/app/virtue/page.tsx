@@ -4,51 +4,45 @@ import { useState } from 'react';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import { useUIStore } from '@/stores/useUIStore';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
-import { MOCK_RANKING } from '@/mock/ranking';
+import { useSeasons, useRanking, useVirtueHistory } from '@/lib/hooks/useRanking';
+import { useUserCurrency } from '@/lib/hooks/useUser';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn, formatNumber } from '@/lib/utils';
 
-const MOCK_RANKING_PREV = {
-  ...MOCK_RANKING,
-  myRank: 12,
-  myEarnedPt: 890,
-  myHeldPt: 450,
-  seasonLabel: '3월 시즌',
-  seasonDaysLeft: 0,
-  topUsers: [
-    { rank: 1, nickname: 'dream_fan', earnedPt: 4200, isMe: false },
-    { rank: 2, nickname: 'v01d_lover', earnedPt: 3900, isMe: false },
-    { rank: 3, nickname: 'music_soul', earnedPt: 3400, isMe: false },
-    { rank: 4, nickname: 'star_chaser', earnedPt: 3100, isMe: false },
-    { rank: 5, nickname: 'fan_forever', earnedPt: 2800, isMe: false },
-    { rank: 6, nickname: 'bright_day', earnedPt: 2500, isMe: false },
-    { rank: 7, nickname: 'cool_breeze', earnedPt: 2300, isMe: false },
-    { rank: 8, nickname: 'sweet_melody', earnedPt: 2100, isMe: false },
-    { rank: 9, nickname: 'happy_voice', earnedPt: 1900, isMe: false },
-    { rank: 10, nickname: 'shining_star', earnedPt: 1700, isMe: false },
-    { rank: 11, nickname: 'fan_11', earnedPt: 1000, isMe: false },
-    { rank: 12, nickname: '나', earnedPt: 890, isMe: true },
-    ...Array.from({ length: 88 }, (_, i) => ({
-      rank: 13 + i,
-      nickname: `fan_${13 + i}`,
-      earnedPt: 880 - i * 8,
-      isMe: false,
-    })),
-  ],
-};
-
-type SeasonView = 'current' | 'prev';
-
 export default function VirtuePage() {
-  const { artistName } = useActiveArtist();
+  const { activeArtistId } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
-  const [seasonView, setSeasonView] = useState<SeasonView>('current');
   const [showHistory, setShowHistory] = useState(false);
-  const data = seasonView === 'prev' ? MOCK_RANKING_PREV : MOCK_RANKING;
 
-  const isLoggedIn = true;
+  const { data: seasons, isLoading: seasonsLoading } = useSeasons(activeArtistId);
+  const [selectedSeasonId, setSelectedSeasonId] = useState<string | null>(null);
 
-  const myEntry = data.topUsers.find((u) => u.isMe);
-  const isInTop100 = myEntry && data.topUsers.indexOf(myEntry) < 100;
+  const currentSeason = seasons?.find((s) => s.isCurrent);
+  const seasonId = selectedSeasonId ?? currentSeason?.id ?? '';
+
+  const { data: ranking, isLoading: rankingLoading } = useRanking(activeArtistId, seasonId);
+  const { data: currency } = useUserCurrency(activeArtistId);
+  const { data: history } = useVirtueHistory(activeArtistId);
+
+  const isLoading = seasonsLoading || rankingLoading;
+
+  const myEntry = ranking?.topUsers.find((u) => u.isMe);
+  const isInTop100 = myEntry && ranking?.topUsers.indexOf(myEntry)! < 100;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-dvh bg-white pb-8">
+        <SubPageHeader title="덕력 랭킹" />
+        <div className="px-4 mt-4 space-y-4">
+          <Skeleton className="h-32 w-full rounded-2xl" />
+          <Skeleton className="h-8 w-full" />
+          {Array.from({ length: 10 }).map((_, i) => (
+            <Skeleton key={i} className="h-10 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-dvh bg-white pb-8">
@@ -57,12 +51,15 @@ export default function VirtuePage() {
       {/* 시즌 드롭다운 */}
       <div className="px-4 mt-3 flex justify-end">
         <select
-          value={seasonView}
-          onChange={(e) => setSeasonView(e.target.value as SeasonView)}
+          value={seasonId}
+          onChange={(e) => setSelectedSeasonId(e.target.value)}
           className="text-xs bg-gray-100 rounded-lg px-3 py-1.5 text-gray-700 font-medium"
         >
-          <option value="current">{MOCK_RANKING.seasonLabel} (현재)</option>
-          <option value="prev">{MOCK_RANKING_PREV.seasonLabel}</option>
+          {(seasons ?? []).map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.label}{s.isCurrent ? ' (현재)' : ''}
+            </option>
+          ))}
         </select>
       </div>
 
@@ -71,26 +68,26 @@ export default function VirtuePage() {
         <div className="flex items-center gap-2 mb-3">
           <span className="text-2xl">⭐</span>
           <span className="text-base font-bold text-gray-900">내 랭킹</span>
-          {seasonView === 'prev' && (
-            <span className="text-[9px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">이 시즌 보상: 슈퍼팬 뱃지</span>
+          {!currentSeason?.isCurrent && selectedSeasonId && (
+            <span className="text-[9px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">이전 시즌</span>
           )}
         </div>
         <div className="grid grid-cols-3 gap-3 mb-3">
           <div>
             <p className="text-[10px] text-gray-500">순위</p>
-            <p className="text-lg font-bold text-violet-700">{`${data.myRank}위`}</p>
+            <p className="text-lg font-bold text-violet-700">{ranking?.myRank ? `${ranking.myRank}위` : '-'}</p>
           </div>
           <div>
             <p className="text-[10px] text-gray-500">획득 덕력</p>
-            <p className="text-lg font-bold text-gray-900">{`${formatNumber(data.myEarnedPt)}pt`}</p>
+            <p className="text-lg font-bold text-gray-900">{`${formatNumber(ranking?.myEarnedPt ?? 0)}pt`}</p>
           </div>
           <div>
             <p className="text-[10px] text-gray-500">보유 덕력</p>
-            <p className="text-lg font-bold text-gray-600">{`${formatNumber(data.myHeldPt)}pt`}</p>
+            <p className="text-lg font-bold text-gray-600">{`${formatNumber(currency?.virtueHeld ?? 0)}pt`}</p>
           </div>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-500">{data.seasonLabel} (D-{data.seasonDaysLeft})</span>
+          <span className="text-xs text-gray-500">{ranking?.seasonLabel} {ranking?.seasonDaysLeft ? `(D-${ranking.seasonDaysLeft})` : ''}</span>
           <button onClick={() => setShowHistory(true)} className="text-xs text-violet-600 font-medium">
             덕력 이력 보기 →
           </button>
@@ -105,7 +102,7 @@ export default function VirtuePage() {
         </div>
 
         <div className="space-y-1">
-          {data.topUsers.slice(0, 100).map((user) => {
+          {(ranking?.topUsers ?? []).slice(0, 100).map((user) => {
             const rankIcon = user.rank === 1 ? '🏆' : user.rank === 2 ? '🥇' : user.rank === 3 ? '🥈' : null;
             return (
               <div
@@ -127,16 +124,16 @@ export default function VirtuePage() {
         </div>
 
         {/* TOP 100 밖 내 순위 */}
-        {isLoggedIn && !isInTop100 && (
+        {!isInTop100 && ranking?.myRank && (
           <div className="mt-4">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-xs text-gray-400">── 내 순위 ──</span>
             </div>
             <div className="flex items-center px-3 py-2.5 rounded-xl bg-violet-50 border border-violet-200">
-              <span className="w-8 text-xs font-semibold text-gray-500">{data.myRank}</span>
+              <span className="w-8 text-xs font-semibold text-gray-500">{ranking.myRank}</span>
               <span className="w-6 text-center">⭐</span>
               <span className="flex-1 text-sm font-bold text-violet-700">나 ★</span>
-              <span className="text-xs text-gray-500">{formatNumber(data.myEarnedPt)}pt</span>
+              <span className="text-xs text-gray-500">{formatNumber(ranking.myEarnedPt)}pt</span>
             </div>
           </div>
         )}
@@ -178,27 +175,22 @@ export default function VirtuePage() {
             <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
             <h3 className="text-base font-bold text-gray-900 mb-4">덕력 이력</h3>
             <div className="space-y-3 max-h-[50vh] overflow-y-auto">
-              {[
-                { activity: '퀘스트 미션 완료 (1장 미션3)', pt: 50, date: '04.14', type: 'earn' as const },
-                { activity: '출석 체크', pt: 10, date: '04.14', type: 'earn' as const },
-                { activity: '일일 미션 완료', pt: 20, date: '04.14', type: 'earn' as const },
-                { activity: '서포트 응원: ☕ 커피차 서포트', pt: -500, date: '04.13', type: 'use' as const },
-                { activity: '출석 체크', pt: 10, date: '04.13', type: 'earn' as const },
-                { activity: '독점 콘텐츠 해금: 비하인드 사진', pt: -100, date: '04.12', type: 'use' as const },
-                { activity: '기억 저장', pt: 30, date: '04.12', type: 'earn' as const },
-                { activity: '7일 연속 출석 보너스', pt: 50, date: '04.11', type: 'earn' as const },
-                { activity: '서포트 덕력 반환: 생일카페', pt: 300, date: '04.10', type: 'refund' as const },
-              ].map((item, i) => (
+              {(history ?? []).map((item, i) => (
                 <button key={i} className="w-full flex items-center justify-between py-0.5 active:bg-gray-50 rounded-lg transition-colors"
-                  onClick={(e) => { e.stopPropagation(); if (item.type === 'use' || item.type === 'refund') addToast('info', `${item.activity} 상세 이동`); }}>
-                  <span className="text-sm text-gray-700 text-left">{item.activity}</span>
+                  onClick={(e) => { e.stopPropagation(); if (item.type !== 'earn') addToast('info', `${item.description} 상세 이동`); }}>
+                  <span className="text-sm text-gray-700 text-left">{item.description}</span>
                   <div className="flex items-center gap-2 shrink-0 ml-2">
-                    <span className={cn('text-sm font-semibold', item.pt > 0 ? 'text-green-600' : 'text-red-500')}>{item.pt > 0 ? '+' : ''}{item.pt}pt</span>
-                    <span className="text-[10px] text-gray-400">{item.date}</span>
-                    {(item.type === 'use' || item.type === 'refund') && <span className="text-[10px] text-gray-300">→</span>}
+                    <span className={cn('text-sm font-semibold', item.amount > 0 ? 'text-green-600' : 'text-red-500')}>
+                      {item.amount > 0 ? '+' : ''}{item.amount}pt
+                    </span>
+                    <span className="text-[10px] text-gray-400">{item.createdAt?.slice(5, 10).replace('-', '.')}</span>
+                    {item.type !== 'earn' && <span className="text-[10px] text-gray-300">→</span>}
                   </div>
                 </button>
               ))}
+              {(!history || history.length === 0) && (
+                <p className="text-sm text-gray-400 text-center py-4">아직 덕력 이력이 없어요</p>
+              )}
             </div>
           </div>
         </div>

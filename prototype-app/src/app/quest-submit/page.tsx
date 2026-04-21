@@ -5,22 +5,24 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import { useUIStore } from '@/stores/useUIStore';
-import { useQuestStore } from '@/stores/useQuestStore';
+import { useSubmitMission, useQuestChapters } from '@/lib/hooks/useQuests';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { CameraIcon, PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 function QuestSubmitContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const addToast = useUIStore((s) => s.addToast);
-  const updateMissionStatus = useQuestStore((s) => s.updateMissionStatus);
-  const chapters = useQuestStore((s) => s.chapters);
+  const { activeArtistId } = useActiveArtist();
+  const submitMissionMutation = useSubmitMission(activeArtistId);
+  const { data: chapters = [] } = useQuestChapters(activeArtistId);
 
   const missionTitle = searchParams.get('title') || 'Quest 미션';
   const rewardText = searchParams.get('reward') || '';
   const chapterId = searchParams.get('chapterId') || '';
   const missionId = searchParams.get('missionId') || '';
 
-  // 스토어에서 미션의 연관 링크 직접 조회
+  // 챕터 데이터에서 미션의 연관 링크 직접 조회
   const mission = chapters
     .find((ch) => ch.id === chapterId)
     ?.missions.find((m) => m.id === missionId);
@@ -42,15 +44,21 @@ function QuestSubmitContent() {
   const handleSubmit = useCallback(() => {
     if (!uploadedImage || isSubmitting) return;
     setIsSubmitting(true);
-    setTimeout(() => {
-      if (chapterId && missionId) {
-        updateMissionStatus(chapterId, missionId, 'SUBMITTED');
+    submitMissionMutation.mutate(
+      { missionId, imageUrl: uploadedImage },
+      {
+        onSuccess: () => {
+          addToast('success', '제출 완료! 결과는 빠르면 하루 안에 알려드릴게요');
+          setIsSubmitting(false);
+          router.back();
+        },
+        onError: () => {
+          addToast('error', '제출 중 오류가 발생했습니다');
+          setIsSubmitting(false);
+        },
       }
-      addToast('success', '제출 완료! 결과는 빠르면 하루 안에 알려드릴게요');
-      setIsSubmitting(false);
-      router.back();
-    }, 1000);
-  }, [uploadedImage, isSubmitting, addToast, router, chapterId, missionId, updateMissionStatus]);
+    );
+  }, [uploadedImage, isSubmitting, addToast, router, missionId, submitMissionMutation]);
 
   return (
     <div className="min-h-dvh bg-white flex flex-col">

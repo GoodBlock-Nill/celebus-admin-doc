@@ -5,9 +5,23 @@ import ArtistHeader from '@/components/artist/ArtistHeader';
 import OnboardingOverlay from '@/components/artist/OnboardingOverlay';
 import ServiceCard from '@/components/cards/ServiceCard';
 import { useUIStore } from '@/stores/useUIStore';
-import { MOCK_ARTIST_CARDS } from '@/mock/artist-card-status';
 import { SERVICE_GROUP_LABELS } from '@/lib/types';
 import type { ServiceCardData, ServiceCardGroup } from '@/lib/types';
+
+const ARTIST_CARDS: ServiceCardData[] = [
+  // 미션 그룹
+  { id: 'challenge', group: 'mission', icon: '🎯', title: 'V01D 챌린지', statusText: '2/5장', href: '/quest', comingSoon: false },
+  { id: 'daily-mission', group: 'mission', icon: '📋', title: '일일 미션', statusText: '도전 중', href: '/daily-mission', comingSoon: false },
+  { id: 'support', group: 'mission', icon: '💜', title: 'V01D 응원하기', statusText: '진행중 70%', href: '/support', comingSoon: false },
+  // 내기록 그룹
+  { id: 'virtue', group: 'record', icon: '⭐', title: '덕력', statusText: '시즌 38위', href: '/virtue', comingSoon: false },
+  { id: 'collection', group: 'record', icon: '🃏', title: '컬렉션', statusText: '12종', href: '/collection', comingSoon: false },
+  { id: 'raffle', group: 'record', icon: '🎁', title: 'Raffle', statusText: '래플 2건 진행중', href: '/raffle', comingSoon: false },
+  { id: 'fandom-level', group: 'record', icon: '🏆', title: 'V01D 키우기', statusText: 'Lv.3 (1,200/2,000pt)', href: '/fandom-level', comingSoon: false },
+  // 더보기 그룹
+  { id: 'info', group: 'more', icon: '📰', title: '정보', statusText: '새소식 3', href: '/info', comingSoon: false },
+  { id: 'memory', group: 'more', icon: '📸', title: '기억 저장소', statusText: '기억 8개', href: '/memory', comingSoon: false },
+];
 
 const GROUP_ORDER: ServiceCardGroup[] = ['mission', 'record', 'more'];
 
@@ -24,7 +38,7 @@ function groupCards(cards: ServiceCardData[]) {
 }
 
 export default function ArtistPage() {
-  const [cards, setCards] = useState(MOCK_ARTIST_CARDS);
+  const [cards, setCards] = useState(ARTIST_CARDS);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { showOnboarding, setShowOnboarding, addToast } = useUIStore();
 
@@ -45,7 +59,7 @@ export default function ArtistPage() {
   const handleRefresh = useCallback(() => {
     setIsRefreshing(true);
     setTimeout(() => {
-      setCards([...MOCK_ARTIST_CARDS]);
+      setCards([...ARTIST_CARDS]);
       setIsRefreshing(false);
     }, 800);
   }, []);

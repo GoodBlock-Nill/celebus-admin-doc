@@ -4,16 +4,32 @@ import { useState } from 'react';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import { useUIStore } from '@/stores/useUIStore';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
-import { MOCK_FANDOM_LEVEL } from '@/mock/fandom-level';
+import { useFandomLevel } from '@/lib/hooks/useFandom';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn, formatNumber } from '@/lib/utils';
-import type { FandomLevelState } from '@/lib/types';
 
 export default function FandomLevelPage() {
-  const { artistName } = useActiveArtist();
+  const { activeArtistId, artistName } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
 
-  const data: FandomLevelState = MOCK_FANDOM_LEVEL;
+  const { data, isLoading } = useFandomLevel(activeArtistId);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-dvh bg-white pb-8">
+        <SubPageHeader title={`${artistName} 키우기`} />
+        <div className="mx-4 mt-4 space-y-3">
+          <Skeleton className="h-32 rounded-2xl" />
+          <Skeleton className="h-48 rounded-2xl" />
+          <Skeleton className="h-24 rounded-2xl" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) return null;
+
   const progress = Math.min((data.currentPt / data.targetPt) * 100, 100);
   const contributionPct = data.currentPt > 0 ? ((data.myContributionPt / data.currentPt) * 100).toFixed(1) : '0';
 

@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/stores/useUIStore';
-import { useQuestStore } from '@/stores/useQuestStore';
+import { useClaimGoods } from '@/lib/hooks/useQuests';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import RejectReasonModal from '@/components/quest/RejectReasonModal';
 import type { QuestChapter, QuestMission } from '@/lib/types';
 
@@ -51,11 +52,14 @@ export default function TimelineNode({ chapter, isExpanded, isLast, readOnly = f
   const statusText = getStatusText(chapter);
   const hasRejected = chapter.missions.some((m) => m.status === 'REJECTED');
   const addToast = useUIStore((s) => s.addToast);
-  const claimGoods = useQuestStore((s) => s.claimGoods);
+  const { activeArtistId } = useActiveArtist();
+  const claimGoodsMutation = useClaimGoods(activeArtistId);
 
   const handleClaimGoods = () => {
-    claimGoods(chapter.id);
-    addToast('success', `Grade ${chapter.goodsGrade} '${chapter.goodsName}' 획득!`);
+    claimGoodsMutation.mutate(chapter.id, {
+      onSuccess: () => addToast('success', `Grade ${chapter.goodsGrade} '${chapter.goodsName}' 획득!`),
+      onError: () => addToast('error', '굿즈 수령 중 오류가 발생했습니다'),
+    });
   };
 
   return (
@@ -130,7 +134,6 @@ const TYPE_ICON = { capture: '📸', trivia: '🧠', pm: '🎯' };
 function MissionItem({ mission, chapterId, readOnly }: { mission: QuestMission; chapterId: string; readOnly: boolean }) {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
-  const updateMissionStatus = useQuestStore((s) => s.updateMissionStatus);
   const [showReject, setShowReject] = useState(false);
 
   const isGameUnavailable = mission.type === 'pm' && mission.gameUnavailable;

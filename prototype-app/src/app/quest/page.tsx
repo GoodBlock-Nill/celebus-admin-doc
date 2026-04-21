@@ -8,20 +8,27 @@ import StoryIntroBanner from '@/components/quest/StoryIntroBanner';
 import CompleteBanner from '@/components/quest/CompleteBanner';
 import RepeatingQuestCard from '@/components/quest/RepeatingQuestCard';
 import { useQuestStore } from '@/stores/useQuestStore';
+import { useQuestChapters, useRepeatingQuests } from '@/lib/hooks/useQuests';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useUIStore } from '@/stores/useUIStore';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { QuestChapter } from '@/lib/types';
 
 export default function QuestPage() {
-  const { artistName } = useActiveArtist();
-  const { chapters, repeatingQuests, isStoryComplete, expandedChapterId, toggleChapter, refresh } = useQuestStore();
+  const { activeArtistId, artistName } = useActiveArtist();
+  const { expandedChapterId, toggleChapter } = useQuestStore();
   const addToast = useUIStore((s) => s.addToast);
-  const [storyRewardClaimed, setStoryRewardClaimed] = useState(false);
 
+  const { data: chapters = [], isLoading: chaptersLoading, refetch: refetchChapters } = useQuestChapters(activeArtistId);
+  const { data: repeatingQuests = [], isLoading: repeatingLoading } = useRepeatingQuests(activeArtistId);
+
+  const [storyRewardClaimed, setStoryRewardClaimed] = useState(false);
   const [previewChapter, setPreviewChapter] = useState<QuestChapter | null>(null);
   const [showStoryView, setShowStoryView] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
+
+  const isStoryComplete = chapters.length > 0 && chapters.every((ch) => ch.status === 'cleared');
 
   const handleNodeTap = useCallback(
     (chapter: QuestChapter) => {
@@ -37,11 +44,8 @@ export default function QuestPage() {
   // Pull-to-Refresh
   const handleRefresh = useCallback(() => {
     setIsRefreshing(true);
-    setTimeout(() => {
-      refresh();
-      setIsRefreshing(false);
-    }, 800);
-  }, [refresh]);
+    refetchChapters().finally(() => setIsRefreshing(false));
+  }, [refetchChapters]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     if (typeof window !== 'undefined' && window.scrollY === 0) {
@@ -77,6 +81,21 @@ export default function QuestPage() {
   }
 
   const showTimeline = !isStoryComplete || showStoryView;
+
+  const isLoading = chaptersLoading || repeatingLoading;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-dvh bg-white pb-8">
+        <SubPageHeader title={`${artistName} 챌린지`} />
+        <div className="px-4 mt-5 space-y-3">
+          <Skeleton className="h-16 rounded-xl" />
+          <Skeleton className="h-16 rounded-xl" />
+          <Skeleton className="h-16 rounded-xl" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
