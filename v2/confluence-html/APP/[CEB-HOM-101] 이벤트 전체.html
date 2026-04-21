@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>HOM(홈)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.3</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.17</td></tr>
+<tr><td>버전</td><td>v1.4</td></tr>
+<tr><td>최근 업데이트</td><td>2026.04.21</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td></td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -130,7 +130,7 @@ p {
 <h4>UI 구성</h4>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
-<tr><td>구성</td><td>[진행중] / [마감됨] 2개 탭</td></tr>
+<tr><td>구성</td><td>[진행중] / [마감중] / [마감됨] 3개 탭</td></tr>
 <tr><td>기본 선택</td><td>진행중</td></tr>
 <tr><td>위치</td><td>헤더 바로 아래</td></tr>
 <tr><td>스타일</td><td>피그마 참조</td></tr>
@@ -138,6 +138,7 @@ p {
 <h4>동작</h4>
 <ul>
 <li>[진행중] 탭: 현재 진행중인 이벤트만 표시</li>
+<li>[마감중] 탭: 마감 임박 이벤트만 표시 (마감 D-3 이내, BO에서 마감중 기준일 설정)</li>
 <li>[마감됨] 탭: 마감된 이벤트만 표시</li>
 <li>탭 전환 시 리스트 재조회</li>
 </ul>
@@ -145,6 +146,7 @@ p {
 <table>
 <tr><th>필터</th><th>정렬</th></tr>
 <tr><td>진행중</td><td>BO 설정 순서 (캐러셀과 동일)</td></tr>
+<tr><td>마감중</td><td>마감일 임박순</td></tr>
 <tr><td>마감됨</td><td>마감일 최신순</td></tr>
 </table>
 <h3>2.3 이벤트 리스트</h3>
@@ -215,6 +217,7 @@ p {
 <tr><td>v1.1</td><td>2026.04.15</td><td>@Nill Yoo</td><td>크로스 검증 14건 반영: [종료]→[마감됨] 용어 통일, Page Properties 표준화, 이벤트 탭 정책 인라인화, 페이지네이션 정의, 연관화면 표기 개선</td></tr>
 <tr><td>v1.2</td><td>2026.04.16</td><td>@Nill Yoo</td><td>미팔로우 안내 UI HOM-001과 동일 패턴으로 통일 (인라인 배너 + [팔로우하기]/[닫기])</td></tr>
 <tr><td>v1.3</td><td>2026.04.17</td><td>@Nill Yoo</td><td>문서 구조 개선: 영역별(컴포넌트) 그룹핑으로 재구성. 정보 변경 없음</td></tr>
+<tr><td>v1.4</td><td>2026.04.21</td><td>@Nill Yoo</td><td>고도화 PDF 검토 반영: 필터 탭 [마감중] 추가(3탭), 마감중 동작 정의(D-3 이내, BO 설정), 마감중 정렬 규칙(마감일 임박순) 추가</td></tr>
 </table>
 
 </body>
