@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import QueryProvider from '@/components/providers/QueryProvider';
 import { Toaster } from '@/components/ui/sonner';
+import OfflineIndicator from '@/components/pwa/OfflineIndicator';
+import InstallPrompt from '@/components/pwa/InstallPrompt';
 import './globals.css';
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
@@ -37,6 +39,8 @@ export default function RootLayout({
       <body className="antialiased">
         <QueryProvider>
           {children}
+          <OfflineIndicator />
+          <InstallPrompt />
           <Toaster position="top-center" richColors closeButton />
         </QueryProvider>
       </body>

@@ -1,12 +1,13 @@
 {
-  "name": "CELEBUS",
+  "name": "CELEBUS - K-pop Fan Entertainment",
   "short_name": "CELEBUS",
-  "description": "CELEBUS - K-pop Fan Entertainment Platform",
+  "description": "K-pop 팬 엔터테인먼트 플랫폼. 퀘스트, 래플, 서포트, 컬렉션을 한곳에서.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#2563EB",
+  "theme_color": "#7C3AED",
   "orientation": "portrait",
+  "categories": ["entertainment", "social"],
   "icons": [
     {
       "src": "/icons/icon-192.png",
@@ -17,6 +18,32 @@
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "퀘스트",
+      "short_name": "Quest",
+      "url": "/quest",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "덕력 랭킹",
+      "short_name": "Ranking",
+      "url": "/virtue",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "기억저장소",
+      "short_name": "Memory",
+      "url": "/memory",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

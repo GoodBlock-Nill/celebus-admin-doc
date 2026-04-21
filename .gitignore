@@ -6,4 +6,8 @@ node_modules/
 *.tsbuildinfo
 next-env.d.ts
 .vercel
+public/sw.js
+public/sw.js.map
+public/swe-worker-*.js
+public/workbox-*.js
 idol/ComfyUI
