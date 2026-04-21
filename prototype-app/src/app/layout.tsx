@@ -1,5 +1,11 @@
 import type { Metadata, Viewport } from 'next';
+import QueryProvider from '@/components/providers/QueryProvider';
+import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: 'CELEBUS',
@@ -27,9 +33,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
+    <html lang="ko" className={cn("font-sans", geist.variable)}>
       <body className="antialiased">
-        {children}
+        <QueryProvider>
+          {children}
+          <Toaster position="top-center" richColors closeButton />
+        </QueryProvider>
       </body>
     </html>
   );

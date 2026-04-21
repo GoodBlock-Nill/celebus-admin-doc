@@ -2,13 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Toast from '@/components/ui/Toast';
-import { useArtistStore } from '@/stores/useArtistStore';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 
 type ViewMode = 'calendar' | 'grid' | 'map';
-type DebugPreset = 'has-memories' | 'empty' | 'many';
 
 interface Memory {
   id: string;
@@ -29,47 +27,26 @@ const MOCK_MEMORIES: Memory[] = [
   { id: 'm5', date: '04.14', day: 14, emoji: '🤩', title: '콘서트 포카 교환 성공!', type: 'photo', images: 2, location: '잠실 올림픽홀' },
 ];
 
-const EMOJIS = ['😍', '😭', '🎉', '💜', '🤩', '✨'];
 const TYPE_ICON = { photo: '📸', letter: '✉️', memo: '📝' };
 
 export default function MemoryPage() {
   const router = useRouter();
-  const artistName = useArtistStore((s) => s.activeArtist.name);
+  const { artistName } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
   const [view, setView] = useState<ViewMode>('calendar');
-  const [memories, setMemories] = useState(MOCK_MEMORIES);
+  const [memories] = useState(MOCK_MEMORIES);
   const [selectedDay, setSelectedDay] = useState<number | null>(14);
-  const [preset, setPreset] = useState<DebugPreset>('has-memories');
-  const [debugOpen, setDebugOpen] = useState(false);
-  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showOnboarding] = useState(false);
 
   const daysInMonth = 30;
   const firstDayOffset = 2; // 4월 1일 = 수요일 (offset 2)
 
   const getMemoriesForDay = (day: number) => memories.filter((m) => m.day === day);
 
-  const switchPreset = (p: DebugPreset) => {
-    setPreset(p);
-    setDebugOpen(false);
-    if (p === 'has-memories') { setMemories(MOCK_MEMORIES); setSelectedDay(14); setShowOnboarding(false); }
-    else if (p === 'empty') { setMemories([]); setSelectedDay(null); setShowOnboarding(true); }
-    else {
-      const many = Array.from({ length: 20 }, (_, i) => ({
-        id: `mx${i}`, date: `04.${String(i + 1).padStart(2, '0')}`, day: i + 1,
-        emoji: EMOJIS[i % 6], title: `기억 ${i + 1}`, type: 'photo' as const, images: i % 4 + 1,
-        location: i % 3 === 0 ? '서울' : undefined,
-      }));
-      setMemories(many);
-      setSelectedDay(null);
-      setShowOnboarding(false);
-    }
-  };
-
   const dayMemories = selectedDay ? getMemoriesForDay(selectedDay) : [];
 
   return (
     <div className="min-h-dvh bg-white pb-8">
-      <Toast />
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
           <button onClick={() => router.back()} className="mr-3 -ml-1 p-1"><span className="text-gray-900">←</span></button>
@@ -100,7 +77,7 @@ export default function MemoryPage() {
           <div className="flex justify-center gap-4 mt-4 text-xs text-gray-400">
             <span>📅 캘린더</span><span>🖼️ 갤러리</span><span>🗺️ 지도</span>
           </div>
-          <button onClick={() => { setShowOnboarding(false); addToast('success', '기억이 저장되었어요! 덕력 30pt 획득'); }}
+          <button onClick={() => addToast('success', '기억이 저장되었어요! 덕력 30pt 획득')}
             className="mt-6 px-6 py-3 bg-violet-600 text-white rounded-xl text-sm font-semibold">
             첫 기억 남기기
           </button>
@@ -229,28 +206,6 @@ export default function MemoryPage() {
           +
         </button>
       )}
-
-      {/* 플로팅 디버그 */}
-      <div className="fixed bottom-20 right-4 z-50">
-        {debugOpen && (
-          <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
-            {[
-              { key: 'has-memories' as const, label: '기억 있음' },
-              { key: 'empty' as const, label: '첫 진입' },
-              { key: 'many' as const, label: '기억 많음' },
-            ].map((p) => (
-              <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
-                {p.label}
-              </button>
-            ))}
-          </div>
-        )}
-        <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'has-memories' ? '기억 있음' : preset === 'empty' ? '첫 진입' : '기억 많음'}</span>
-          <span className="text-[8px]">▲</span>
-        </button>
-      </div>
     </div>
   );
 }

@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import SubPageHeader from '@/components/layout/SubPageHeader';
-import Toast from '@/components/ui/Toast';
 import { useUIStore } from '@/stores/useUIStore';
-import { useArtistStore } from '@/stores/useArtistStore';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { MOCK_RANKING } from '@/mock/ranking';
 import { cn, formatNumber } from '@/lib/utils';
 
@@ -38,35 +37,21 @@ const MOCK_RANKING_PREV = {
 };
 
 type SeasonView = 'current' | 'prev';
-type DebugPreset = 'default' | 'guest';
 
 export default function VirtuePage() {
-  const artistName = useArtistStore((s) => s.activeArtist.name);
+  const { artistName } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
   const [seasonView, setSeasonView] = useState<SeasonView>('current');
   const [showHistory, setShowHistory] = useState(false);
-  const [preset, setPreset] = useState<DebugPreset>('default');
-  const [debugOpen, setDebugOpen] = useState(false);
   const data = seasonView === 'prev' ? MOCK_RANKING_PREV : MOCK_RANKING;
 
-  const isLoggedIn = preset !== 'guest';
+  const isLoggedIn = true;
 
   const myEntry = data.topUsers.find((u) => u.isMe);
   const isInTop100 = myEntry && data.topUsers.indexOf(myEntry) < 100;
 
-  const switchPreset = (p: DebugPreset) => {
-    setPreset(p);
-    setDebugOpen(false);
-  };
-
   return (
     <div className="min-h-dvh bg-white pb-8">
-      <Toast />
-      {!isLoggedIn && (
-        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
-          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
-        </div>
-      )}
       <SubPageHeader title="덕력 랭킹" />
 
       {/* 시즌 드롭다운 */}
@@ -93,24 +78,22 @@ export default function VirtuePage() {
         <div className="grid grid-cols-3 gap-3 mb-3">
           <div>
             <p className="text-[10px] text-gray-500">순위</p>
-            <p className="text-lg font-bold text-violet-700">{isLoggedIn ? `${data.myRank}위` : '-'}</p>
+            <p className="text-lg font-bold text-violet-700">{`${data.myRank}위`}</p>
           </div>
           <div>
             <p className="text-[10px] text-gray-500">획득 덕력</p>
-            <p className="text-lg font-bold text-gray-900">{isLoggedIn ? `${formatNumber(data.myEarnedPt)}pt` : '-'}</p>
+            <p className="text-lg font-bold text-gray-900">{`${formatNumber(data.myEarnedPt)}pt`}</p>
           </div>
           <div>
             <p className="text-[10px] text-gray-500">보유 덕력</p>
-            <p className="text-lg font-bold text-gray-600">{isLoggedIn ? `${formatNumber(data.myHeldPt)}pt` : '-'}</p>
+            <p className="text-lg font-bold text-gray-600">{`${formatNumber(data.myHeldPt)}pt`}</p>
           </div>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-xs text-gray-500">{data.seasonLabel} (D-{data.seasonDaysLeft})</span>
-          {isLoggedIn && (
-            <button onClick={() => setShowHistory(true)} className="text-xs text-violet-600 font-medium">
-              덕력 이력 보기 →
-            </button>
-          )}
+          <button onClick={() => setShowHistory(true)} className="text-xs text-violet-600 font-medium">
+            덕력 이력 보기 →
+          </button>
         </div>
       </div>
 
@@ -220,27 +203,6 @@ export default function VirtuePage() {
           </div>
         </div>
       )}
-
-      {/* 플로팅 디버그 */}
-      <div className="fixed bottom-20 right-4 z-50">
-        {debugOpen && (
-          <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
-            {[
-              { key: 'default' as const, label: '로그인' },
-              { key: 'guest' as const, label: '비로그인' },
-            ].map((p) => (
-              <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
-                {p.label}
-              </button>
-            ))}
-          </div>
-        )}
-        <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'guest' ? '비로그인' : '로그인'}</span>
-          <span className="text-[8px]">▲</span>
-        </button>
-      </div>
     </div>
   );
 }

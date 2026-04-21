@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useArtistStore } from '@/stores/useArtistStore';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import {
   HomeIcon,
   SparklesIcon,
@@ -20,7 +20,7 @@ import {
 
 export default function BottomTabBar() {
   const pathname = usePathname();
-  const artistName = useArtistStore((s) => s.activeArtist.name);
+  const { artistName } = useActiveArtist();
 
   const tabs = [
     { key: 'home', label: '홈', href: '/home', Icon: HomeIcon, ActiveIcon: HomeIconSolid },

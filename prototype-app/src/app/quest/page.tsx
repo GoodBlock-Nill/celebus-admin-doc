@@ -7,16 +7,14 @@ import ChapterPreview from '@/components/quest/ChapterPreview';
 import StoryIntroBanner from '@/components/quest/StoryIntroBanner';
 import CompleteBanner from '@/components/quest/CompleteBanner';
 import RepeatingQuestCard from '@/components/quest/RepeatingQuestCard';
-import Toast from '@/components/ui/Toast';
 import { useQuestStore } from '@/stores/useQuestStore';
-import { useArtistStore } from '@/stores/useArtistStore';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useUIStore } from '@/stores/useUIStore';
 import type { QuestChapter } from '@/lib/types';
-import type { PresetKey } from '@/mock/quests';
 
 export default function QuestPage() {
-  const artistName = useArtistStore((s) => s.activeArtist.name);
-  const { chapters, repeatingQuests, isStoryComplete, expandedChapterId, toggleChapter, refresh, currentPreset, setPreset } = useQuestStore();
+  const { artistName } = useActiveArtist();
+  const { chapters, repeatingQuests, isStoryComplete, expandedChapterId, toggleChapter, refresh } = useQuestStore();
   const addToast = useUIStore((s) => s.addToast);
   const [storyRewardClaimed, setStoryRewardClaimed] = useState(false);
 
@@ -86,7 +84,6 @@ export default function QuestPage() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <Toast />
       <SubPageHeader title={`${artistName} 챌린지`} />
 
       {/* Pull-to-Refresh 인디케이터 */}
@@ -243,52 +240,6 @@ export default function QuestPage() {
           </div>
         </div>
       )}
-
-      {/* 디버그 플로팅 버튼 */}
-      <DebugPresetSwitcher currentPreset={currentPreset} onSwitch={setPreset} />
-    </div>
-  );
-}
-
-const PRESET_LIST: { key: PresetKey; label: string; icon: string }[] = [
-  { key: 'ch1', label: '1장', icon: '1️⃣' },
-  { key: 'ch2', label: '2장', icon: '2️⃣' },
-  { key: 'ch3', label: '3장', icon: '3️⃣' },
-  { key: 'ch4', label: '4장', icon: '4️⃣' },
-  { key: 'ch5', label: '5장', icon: '5️⃣' },
-  { key: 'complete', label: '완료', icon: '✅' },
-];
-
-function DebugPresetSwitcher({ currentPreset, onSwitch }: { currentPreset: PresetKey; onSwitch: (p: PresetKey) => void }) {
-  const [open, setOpen] = useState(false);
-  const current = PRESET_LIST.find((p) => p.key === currentPreset);
-
-  return (
-    <div className="fixed bottom-20 right-4 z-50">
-      {open && (
-        <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
-          {PRESET_LIST.map((p) => (
-            <button
-              key={p.key}
-              onClick={() => { onSwitch(p.key); setOpen(false); }}
-              className={`w-12 h-10 rounded-xl shadow-md flex items-center justify-center text-sm transition-all ${
-                p.key === currentPreset
-                  ? 'bg-violet-600 text-white'
-                  : 'bg-white text-gray-700 border border-gray-200'
-              }`}
-            >
-              {p.icon}
-            </button>
-          ))}
-        </div>
-      )}
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-12 h-12 rounded-full bg-gray-900 text-white shadow-lg flex flex-col items-center justify-center active:scale-95 transition-transform"
-      >
-        <span className="text-base">{current?.icon}</span>
-        <span className="text-[8px] leading-none">{current?.label}</span>
-      </button>
     </div>
   );
 }

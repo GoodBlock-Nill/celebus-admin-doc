@@ -2,12 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import SubPageHeader from '@/components/layout/SubPageHeader';
-import Toast from '@/components/ui/Toast';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 
-type DebugPreset = 'photo' | 'letter' | 'memo' | 'public-other' | 'shared-guest' | 'shared-private';
+type PresetKey = 'photo' | 'letter' | 'memo' | 'public-other' | 'shared-guest' | 'shared-private';
 
 interface MemoryDetail {
   emojis: string[];
@@ -24,7 +22,7 @@ interface MemoryDetail {
   createdAt: string;
 }
 
-const PRESETS: Record<DebugPreset, MemoryDetail> = {
+const PRESETS: Record<PresetKey, MemoryDetail> = {
   photo: {
     emojis: ['😍', '🤩'], emojiLabels: ['설렘', '어마'],
     type: 'photo', typeLabel: '사진 기록', typeIcon: '📸',
@@ -73,16 +71,15 @@ export default function MemoryDetailPage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
 
-  const [preset, setPreset] = useState<DebugPreset>('photo');
-  const [debugOpen, setDebugOpen] = useState(false);
+  const preset: PresetKey = 'photo';
   const [showMenu, setShowMenu] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showReportSheet, setShowReportSheet] = useState(false);
   const [fullscreenImg, setFullscreenImg] = useState<number | null>(null);
 
   const memory = PRESETS[preset];
-  const isSharedGuest = preset === 'shared-guest';
-  const isSharedPrivate = preset === 'shared-private';
+  const isSharedGuest = false;
+  const isSharedPrivate = false;
 
   const handleDelete = () => {
     setShowDeleteModal(false);
@@ -95,18 +92,8 @@ export default function MemoryDetailPage() {
     addToast('success', '신고가 접수되었어요');
   };
 
-  const switchPreset = (p: DebugPreset) => {
-    setPreset(p);
-    setDebugOpen(false);
-    setShowMenu(false);
-    setShowDeleteModal(false);
-    setShowReportSheet(false);
-    setFullscreenImg(null);
-  };
-
   return (
     <div className="min-h-dvh bg-white pb-8">
-      <Toast />
 
       {/* 공유 링크 → 비공개 기억 차단 */}
       {isSharedPrivate && (
@@ -115,32 +102,6 @@ export default function MemoryDetailPage() {
           <p className="text-base font-bold text-gray-900">이 기억은 비공개예요</p>
           <p className="text-xs text-gray-400 mt-1">작성자만 볼 수 있는 기억이에요</p>
           <button onClick={() => addToast('info', 'CELEBUS 홈으로 이동')} className="mt-6 px-6 py-3 bg-violet-600 text-white rounded-xl text-sm font-semibold">CELEBUS 홈으로</button>
-          {/* 플로팅 디버그 for this state */}
-          <div className="fixed bottom-20 right-4 z-40">
-            {debugOpen && (
-              <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
-                {[
-                  { key: 'photo' as const, label: '사진 기억' },
-                  { key: 'letter' as const, label: '편지 기억' },
-                  { key: 'memo' as const, label: '메모 기억' },
-                  { key: 'public-other' as const, label: '타인 공개 기억' },
-                  { key: 'shared-guest' as const, label: '공유링크 (비로그인)' },
-                  { key: 'shared-private' as const, label: '공유링크 (비공개)' },
-                ].map((p) => (
-                  <button key={p.key} onClick={() => switchPreset(p.key)}
-                    className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap',
-                      p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
-                    {p.label}
-                  </button>
-                ))}
-              </div>
-            )}
-            <button onClick={() => setDebugOpen(!debugOpen)}
-              className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-              <span className="text-[10px] font-semibold">공유링크 (비공개)</span>
-              <span className="text-[8px]">▲</span>
-            </button>
-          </div>
         </div>
       )}
 
@@ -317,33 +278,6 @@ export default function MemoryDetailPage() {
           )}
         </>
       )}
-
-      {/* 플로팅 디버그 */}
-      <div className="fixed bottom-20 right-4 z-40">
-        {debugOpen && (
-          <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
-            {[
-              { key: 'photo' as const, label: '사진 기억' },
-              { key: 'letter' as const, label: '편지 기억' },
-              { key: 'memo' as const, label: '메모 기억' },
-              { key: 'public-other' as const, label: '타인 공개 기억' },
-              { key: 'shared-guest' as const, label: '공유링크 (비로그인)' },
-              { key: 'shared-private' as const, label: '공유링크 (비공개)' },
-            ].map((p) => (
-              <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap',
-                  p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
-                {p.label}
-              </button>
-            ))}
-          </div>
-        )}
-        <button onClick={() => setDebugOpen(!debugOpen)}
-          className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'photo' ? '사진 기억' : preset === 'letter' ? '편지 기억' : preset === 'memo' ? '메모 기억' : preset === 'public-other' ? '타인 공개 기억' : preset === 'shared-guest' ? '공유링크 (비로그인)' : '공유링크 (비공개)'}</span>
-          <span className="text-[8px]">▲</span>
-        </button>
-      </div>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 'use client';
 
-import { useArtistStore } from '@/stores/useArtistStore';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 
 export default function ArtistHeader() {
-  const artist = useArtistStore((s) => s.activeArtist);
+  const { activeArtist: artist } = useActiveArtist();
 
   return (
     <div className="relative h-40 bg-gradient-to-b from-fq-dark to-gray-900 overflow-hidden">

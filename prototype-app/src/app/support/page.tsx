@@ -2,9 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import SubPageHeader from '@/components/layout/SubPageHeader';
-import Toast from '@/components/ui/Toast';
 import { useUIStore } from '@/stores/useUIStore';
-import { useArtistStore } from '@/stores/useArtistStore';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { MOCK_SUPPORT_EVENTS } from '@/mock/support';
 import { cn, formatNumber } from '@/lib/utils';
 import type { SupportEvent, SupportEventStatus } from '@/lib/types';
@@ -18,19 +17,15 @@ const STATUS_CONFIG: Record<SupportEventStatus, { badge: string; color: string }
   cancelled: { badge: '취소', color: 'bg-gray-200 text-gray-500' },
 };
 
-type DebugPreset = 'mixed' | 'all-active' | 'all-done' | 'cancelled' | 'guest';
-
 export default function SupportPage() {
-  const artistName = useArtistStore((s) => s.activeArtist.name);
+  const { artistName } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
   const [events, setEvents] = useState(MOCK_SUPPORT_EVENTS);
   const [expandedId, setExpandedId] = useState<string | null>(events.find((e) => e.status === 'active')?.id || null);
   const [showConfirmModal, setShowConfirmModal] = useState<{ eventId: string; amount: number } | null>(null);
   const [investAmounts, setInvestAmounts] = useState<Record<string, number>>({});
-  const [preset, setPreset] = useState<DebugPreset>('mixed');
-  const [debugOpen, setDebugOpen] = useState(false);
 
-  const isLoggedIn = preset !== 'guest';
+  const isLoggedIn = true;
 
   const myHeldPt = 1200;
 
@@ -39,10 +34,9 @@ export default function SupportPage() {
   };
 
   const handleInvest = useCallback((eventId: string) => {
-    if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
     const amount = investAmounts[eventId] || 100;
     setShowConfirmModal({ eventId, amount });
-  }, [isLoggedIn, investAmounts, addToast]);
+  }, [investAmounts]);
 
   const confirmInvest = useCallback(() => {
     if (!showConfirmModal) return;
@@ -55,24 +49,8 @@ export default function SupportPage() {
     setShowConfirmModal(null);
   }, [showConfirmModal, addToast]);
 
-  const switchPreset = (p: DebugPreset) => {
-    setPreset(p);
-    if (p === 'mixed' || p === 'guest') setEvents(MOCK_SUPPORT_EVENTS);
-    else if (p === 'all-active') setEvents(MOCK_SUPPORT_EVENTS.map((e) => ({ ...e, status: 'active' as const, currentPt: Math.floor(e.targetPt * 0.6), daysLeft: 7 })));
-    else if (p === 'all-done') setEvents(MOCK_SUPPORT_EVENTS.map((e) => ({ ...e, status: 'completed' as const, currentPt: e.targetPt, resultMessage: '집행 완료! 감사합니다 💜' })));
-    else if (p === 'cancelled') setEvents(MOCK_SUPPORT_EVENTS.map((e) => ({ ...e, status: 'cancelled' as const, currentPt: Math.floor(e.targetPt * 0.4), myInvestPt: 200 })));
-    setExpandedId(null);
-    setDebugOpen(false);
-  };
-
   return (
     <div className="min-h-dvh bg-white pb-8">
-      <Toast />
-      {!isLoggedIn && (
-        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
-          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
-        </div>
-      )}
       <SubPageHeader title={`${artistName} 응원하기`} />
 
       <div className="px-4 mt-4 space-y-3">
@@ -117,30 +95,6 @@ export default function SupportPage() {
           </div>
         </div>
       )}
-
-      {/* 플로팅 디버그 */}
-      <div className="fixed bottom-20 right-4 z-50">
-        {debugOpen && (
-          <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
-            {[
-              { key: 'mixed' as const, label: '혼합' },
-              { key: 'all-active' as const, label: '전체 모집중' },
-              { key: 'all-done' as const, label: '전체 완료' },
-              { key: 'cancelled' as const, label: '집행취소' },
-              { key: 'guest' as const, label: '비로그인' },
-            ].map((p) => (
-              <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
-                {p.label}
-              </button>
-            ))}
-          </div>
-        )}
-        <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'mixed' ? '혼합' : preset === 'all-active' ? '전체 모집중' : preset === 'all-done' ? '전체 완료' : preset === 'cancelled' ? '집행취소' : '비로그인'}</span>
-          <span className="text-[8px]">▲</span>
-        </button>
-      </div>
     </div>
   );
 }

@@ -1,4 +1,10 @@
 import { format, parseISO } from 'date-fns';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
+}
 
 export function formatDate(dateStr: string): string {
   if (!dateStr) return '-';
@@ -63,10 +69,6 @@ export function truncateText(text: string, maxLength: number): string {
 export function truncateHash(hash: string, front = 6, back = 4): string {
   if (!hash || hash.length <= front + back + 3) return hash;
   return `${hash.slice(0, front)}...${hash.slice(-back)}`;
-}
-
-export function cn(...classes: (string | boolean | undefined | null)[]): string {
-  return classes.filter(Boolean).join(' ');
 }
 
 export function getRemainingTime(targetDate: string): { days: number; hours: number; minutes: number; seconds: number } {

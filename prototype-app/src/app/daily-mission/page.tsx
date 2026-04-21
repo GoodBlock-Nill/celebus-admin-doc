@@ -6,7 +6,6 @@ import SubPageHeader from '@/components/layout/SubPageHeader';
 import StreakHeader from '@/components/daily/StreakHeader';
 import WeekDots from '@/components/daily/WeekDots';
 import StreakBonuses from '@/components/daily/StreakBonuses';
-import Toast from '@/components/ui/Toast';
 import { useDailyStore } from '@/stores/useDailyStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
@@ -16,7 +15,7 @@ export default function DailyMissionPage() {
   const addToast = useUIStore((s) => s.addToast);
   const {
     checkedIn, mission, streak, weekRecord, bonuses,
-    checkIn, completeMission, claimBonus, reset,
+    checkIn, completeMission, claimBonus,
   } = useDailyStore();
 
   const [showBonusModal, setShowBonusModal] = useState<{ days: number; pt: number } | null>(null);
@@ -47,7 +46,6 @@ export default function DailyMissionPage() {
 
   return (
     <div className="min-h-dvh bg-white pb-8">
-      <Toast />
       <SubPageHeader title="일일 미션" />
 
       {/* 스트릭 현황 */}
@@ -164,19 +162,6 @@ export default function DailyMissionPage() {
         </div>
       )}
 
-      {/* 플로팅 디버그 */}
-      <div className="fixed bottom-20 right-4 z-50">
-        <button
-          onClick={() => {
-            reset();
-            addToast('info', '일일 미션 상태가 초기화되었습니다');
-          }}
-          className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform"
-          title="상태 초기화"
-        >
-          <span className="text-[10px] font-semibold">상태 초기화</span>
-        </button>
-      </div>
     </div>
   );
 }

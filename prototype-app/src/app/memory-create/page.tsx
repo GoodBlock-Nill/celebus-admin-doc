@@ -3,11 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SubPageHeader from '@/components/layout/SubPageHeader';
-import Toast from '@/components/ui/Toast';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 
-type DebugPreset = 'create' | 'edit';
 type MemoryType = 'photo' | 'letter' | 'memo';
 
 const EMOJIS = [
@@ -19,31 +17,16 @@ const EMOJIS = [
   { emoji: '✨', label: '행복' },
 ];
 
-const EDIT_DATA = {
-  type: 'photo' as MemoryType,
-  date: '2026-04-14',
-  emojis: new Set(['😍', '🤩']),
-  location: '잠실 올림픽홀',
-  text: 'V01D 콘서트 다녀왔다! 최고의 무대였어 💜',
-  images: 3,
-  isPublic: false,
-};
-
 export default function MemoryCreatePage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
 
-  const [preset, setPreset] = useState<DebugPreset>('create');
-  const [debugOpen, setDebugOpen] = useState(false);
-
-  const isEdit = preset === 'edit';
-
-  const [memoryType, setMemoryType] = useState<MemoryType>(isEdit ? EDIT_DATA.type : 'photo');
-  const [selectedEmojis, setSelectedEmojis] = useState<Set<string>>(isEdit ? new Set(EDIT_DATA.emojis) : new Set());
-  const [location, setLocation] = useState(isEdit ? EDIT_DATA.location : '');
-  const [text, setText] = useState(isEdit ? EDIT_DATA.text : '');
-  const [imageCount, setImageCount] = useState(isEdit ? EDIT_DATA.images : 0);
-  const [isPublic, setIsPublic] = useState(isEdit ? EDIT_DATA.isPublic : false);
+  const [memoryType, setMemoryType] = useState<MemoryType>('photo');
+  const [selectedEmojis, setSelectedEmojis] = useState<Set<string>>(new Set());
+  const [location, setLocation] = useState('');
+  const [text, setText] = useState('');
+  const [imageCount, setImageCount] = useState(0);
+  const [isPublic, setIsPublic] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
 
   const hasInput = selectedEmojis.size > 0 || text.length > 0 || location.length > 0 || imageCount > 0;
@@ -61,11 +44,7 @@ export default function MemoryCreatePage() {
   };
 
   const handleSave = () => {
-    if (isEdit) {
-      addToast('success', '기억이 수정되었어요');
-    } else {
-      addToast('success', '기억이 저장되었어요! 덕력 30pt 획득');
-    }
+    addToast('success', '기억이 저장되었어요! 덕력 30pt 획득');
     setTimeout(() => router.back(), 500);
   };
 
@@ -74,35 +53,14 @@ export default function MemoryCreatePage() {
     else { router.back(); }
   };
 
-  const switchPreset = (p: DebugPreset) => {
-    setPreset(p);
-    setDebugOpen(false);
-    if (p === 'edit') {
-      setMemoryType(EDIT_DATA.type);
-      setSelectedEmojis(new Set(EDIT_DATA.emojis));
-      setLocation(EDIT_DATA.location);
-      setText(EDIT_DATA.text);
-      setImageCount(EDIT_DATA.images);
-      setIsPublic(EDIT_DATA.isPublic);
-    } else {
-      setMemoryType('photo');
-      setSelectedEmojis(new Set());
-      setLocation('');
-      setText('');
-      setImageCount(0);
-      setIsPublic(false);
-    }
-  };
-
   return (
     <div className="min-h-dvh bg-white pb-24">
-      <Toast />
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
           <button onClick={handleBack} className="mr-3 -ml-1 p-1">
             <span className="text-gray-900">←</span>
           </button>
-          <h1 className="text-base font-semibold text-gray-900">{isEdit ? '기억 수정하기' : '기억 남기기'}</h1>
+          <h1 className="text-base font-semibold text-gray-900">기억 남기기</h1>
         </div>
       </header>
 
@@ -117,12 +75,10 @@ export default function MemoryCreatePage() {
               { key: 'memo' as MemoryType, icon: '📝', label: '메모' },
             ].map((t) => (
               <button key={t.key}
-                onClick={() => !isEdit && setMemoryType(t.key)}
-                disabled={isEdit}
+                onClick={() => setMemoryType(t.key)}
                 className={cn(
                   'flex-1 py-2.5 rounded-xl text-xs font-semibold transition-colors',
-                  memoryType === t.key ? 'bg-violet-600 text-white' : 'bg-gray-100 text-gray-500',
-                  isEdit && memoryType !== t.key && 'opacity-30'
+                  memoryType === t.key ? 'bg-violet-600 text-white' : 'bg-gray-100 text-gray-500'
                 )}>
                 {t.icon} {t.label}
               </button>
@@ -133,7 +89,7 @@ export default function MemoryCreatePage() {
         {/* 2. 날짜 선택 */}
         <div>
           <label className="text-xs font-semibold text-gray-500 mb-2 block">날짜</label>
-          <input type="date" defaultValue={isEdit ? EDIT_DATA.date : new Date().toISOString().split('T')[0]}
+          <input type="date" defaultValue={new Date().toISOString().split('T')[0]}
             max={new Date().toISOString().split('T')[0]}
             className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900" />
         </div>
@@ -236,29 +192,6 @@ export default function MemoryCreatePage() {
           </div>
         </div>
       )}
-
-      {/* 플로팅 디버그 */}
-      <div className="fixed bottom-16 right-4 z-40">
-        {debugOpen && (
-          <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
-            {[
-              { key: 'create' as const, label: '작성 모드' },
-              { key: 'edit' as const, label: '수정 모드' },
-            ].map((p) => (
-              <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap',
-                  p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
-                {p.label}
-              </button>
-            ))}
-          </div>
-        )}
-        <button onClick={() => setDebugOpen(!debugOpen)}
-          className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'create' ? '작성 모드' : '수정 모드'}</span>
-          <span className="text-[8px]">▲</span>
-        </button>
-      </div>
     </div>
   );
 }

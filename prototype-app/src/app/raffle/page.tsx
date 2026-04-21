@@ -3,13 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SubPageHeader from '@/components/layout/SubPageHeader';
-import Toast from '@/components/ui/Toast';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn, formatNumber } from '@/lib/utils';
 
 type RaffleStatus = 'active' | 'drawing' | 'winner' | 'loser' | 'closed';
 type FilterTab = 'active' | 'ended';
-type DebugPreset = 'mixed' | 'all-active' | 'all-ended' | 'guest';
 
 interface RaffleItem {
   id: string;
@@ -41,11 +39,7 @@ export default function RafflePage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
   const [filter, setFilter] = useState<FilterTab>('active');
-  const [raffles, setRaffles] = useState(MOCK_RAFFLES);
-  const [preset, setPreset] = useState<DebugPreset>('mixed');
-  const [debugOpen, setDebugOpen] = useState(false);
-
-  const isLoggedIn = preset !== 'guest';
+  const [raffles] = useState(MOCK_RAFFLES);
 
   const myTickets = 15;
 
@@ -58,7 +52,6 @@ export default function RafflePage() {
   });
 
   const handleCardTap = (raffle: RaffleItem) => {
-    if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
     if (raffle.status === 'drawing') {
       addToast('info', '추첨 결과를 기다려주세요');
       return;
@@ -68,22 +61,8 @@ export default function RafflePage() {
     else if (raffle.status === 'loser') addToast('info', '미당첨 결과 화면 (CEB-FQ-204)');
   };
 
-  const switchPreset = (p: DebugPreset) => {
-    setPreset(p);
-    setDebugOpen(false);
-    if (p === 'mixed' || p === 'guest') setRaffles(MOCK_RAFFLES);
-    else if (p === 'all-active') setRaffles(MOCK_RAFFLES.map((r) => ({ ...r, status: 'active' as const, daysLeft: Math.floor(Math.random() * 14) + 1, myEntries: Math.floor(Math.random() * 5) })));
-    else setRaffles(MOCK_RAFFLES.map((r, i) => ({ ...r, status: (i % 2 === 0 ? 'winner' : 'loser') as RaffleStatus, daysLeft: 0 })));
-  };
-
   return (
     <div className="min-h-dvh bg-white pb-8">
-      <Toast />
-      {!isLoggedIn && (
-        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
-          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
-        </div>
-      )}
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
           <button onClick={() => router.back()} className="mr-3 -ml-1 p-1">
@@ -91,7 +70,7 @@ export default function RafflePage() {
           </button>
           <h1 className="text-base font-semibold text-gray-900 flex-1">Raffle</h1>
           <span className="text-xs font-medium text-violet-600 bg-violet-50 px-2.5 py-1 rounded-lg">
-            응모권: {isLoggedIn ? `${myTickets}장` : '-'}
+            응모권: {myTickets}장
           </span>
         </div>
       </div>
@@ -145,9 +124,7 @@ export default function RafflePage() {
                     <span>참여 {formatNumber(raffle.participants)}명</span>
                   </div>
                   <div className="mt-1">
-                    {!isLoggedIn ? (
-                      <span className="text-[10px] text-gray-400">내 응모: -</span>
-                    ) : raffle.myEntries > 0 ? (
+                    {raffle.myEntries > 0 ? (
                       <span className="text-[10px] text-violet-600 font-medium">내 응모: {raffle.myEntries}장</span>
                     ) : (
                       <span className="text-[10px] text-gray-400">미응모</span>
@@ -170,29 +147,6 @@ export default function RafflePage() {
             </p>
           </div>
         )}
-      </div>
-
-      {/* 플로팅 디버그 */}
-      <div className="fixed bottom-20 right-4 z-50">
-        {debugOpen && (
-          <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
-            {[
-              { key: 'mixed' as const, label: '혼합' },
-              { key: 'all-active' as const, label: '전체 진행중' },
-              { key: 'all-ended' as const, label: '전체 마감' },
-              { key: 'guest' as const, label: '비로그인' },
-            ].map((p) => (
-              <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
-                {p.label}
-              </button>
-            ))}
-          </div>
-        )}
-        <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'mixed' ? '혼합' : preset === 'all-active' ? '전체 진행중' : preset === 'all-ended' ? '전체 마감' : '비로그인'}</span>
-          <span className="text-[8px]">▲</span>
-        </button>
       </div>
     </div>
   );

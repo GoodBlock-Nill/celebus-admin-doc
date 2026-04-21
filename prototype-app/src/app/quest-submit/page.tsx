@@ -4,7 +4,6 @@ import { useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import SubPageHeader from '@/components/layout/SubPageHeader';
-import Toast from '@/components/ui/Toast';
 import { useUIStore } from '@/stores/useUIStore';
 import { useQuestStore } from '@/stores/useQuestStore';
 import { CameraIcon, PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline';
@@ -55,7 +54,6 @@ function QuestSubmitContent() {
 
   return (
     <div className="min-h-dvh bg-white flex flex-col">
-      <Toast />
       <SubPageHeader title="Quest" backHref="/quest" />
 
       <div className="flex-1 px-4 py-5">

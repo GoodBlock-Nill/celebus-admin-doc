@@ -2,42 +2,23 @@
 
 import { useState } from 'react';
 import SubPageHeader from '@/components/layout/SubPageHeader';
-import Toast from '@/components/ui/Toast';
 import { useUIStore } from '@/stores/useUIStore';
-import { useArtistStore } from '@/stores/useArtistStore';
-import { MOCK_FANDOM_LEVEL, MOCK_FANDOM_LEVEL_MAX } from '@/mock/fandom-level';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
+import { MOCK_FANDOM_LEVEL } from '@/mock/fandom-level';
 import { cn, formatNumber } from '@/lib/utils';
 import type { FandomLevelState } from '@/lib/types';
 
-type DebugPreset = 'progress' | 'max' | 'guest';
-
 export default function FandomLevelPage() {
-  const artistName = useArtistStore((s) => s.activeArtist.name);
+  const { artistName } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
-  const [preset, setPreset] = useState<DebugPreset>('progress');
-  const [debugOpen, setDebugOpen] = useState(false);
   const [showLevelUpModal, setShowLevelUpModal] = useState(false);
 
-  const isLoggedIn = preset !== 'guest';
-
-  const data: FandomLevelState = preset === 'max' ? MOCK_FANDOM_LEVEL_MAX : MOCK_FANDOM_LEVEL;
+  const data: FandomLevelState = MOCK_FANDOM_LEVEL;
   const progress = Math.min((data.currentPt / data.targetPt) * 100, 100);
   const contributionPct = data.currentPt > 0 ? ((data.myContributionPt / data.currentPt) * 100).toFixed(1) : '0';
 
-  const switchPreset = (p: DebugPreset) => {
-    setPreset(p);
-    setDebugOpen(false);
-    if (p === 'max') setShowLevelUpModal(true);
-  };
-
   return (
     <div className="min-h-dvh bg-white pb-8">
-      <Toast />
-      {!isLoggedIn && (
-        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
-          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
-        </div>
-      )}
       <SubPageHeader title={`${artistName} 키우기`} />
 
       {/* 현재 레벨 카드 */}
@@ -148,10 +129,7 @@ export default function FandomLevelPage() {
           ].map((cta) => (
             <button
               key={cta.label}
-              onClick={() => {
-                if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
-                addToast('info', `${cta.label} 화면으로 이동합니다`);
-              }}
+              onClick={() => addToast('info', `${cta.label} 화면으로 이동합니다`)}
               className="flex-1 bg-violet-50 rounded-xl px-3 py-3 text-center active:scale-[0.97] transition-transform"
             >
               <span className="text-lg">{cta.icon}</span>
@@ -176,28 +154,6 @@ export default function FandomLevelPage() {
           </div>
         </div>
       )}
-
-      {/* 플로팅 디버그 */}
-      <div className="fixed bottom-20 right-4 z-50">
-        {debugOpen && (
-          <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
-            {[
-              { key: 'progress' as const, label: '진행중' },
-              { key: 'max' as const, label: 'MAX 달성' },
-              { key: 'guest' as const, label: '비로그인' },
-            ].map((p) => (
-              <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
-                {p.label}
-              </button>
-            ))}
-          </div>
-        )}
-        <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'progress' ? '진행중' : preset === 'max' ? 'MAX 달성' : '비로그인'}</span>
-          <span className="text-[8px]">▲</span>
-        </button>
-      </div>
     </div>
   );
 }

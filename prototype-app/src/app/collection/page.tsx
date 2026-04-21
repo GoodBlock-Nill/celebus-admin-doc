@@ -3,12 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SubPageHeader from '@/components/layout/SubPageHeader';
-import Toast from '@/components/ui/Toast';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 
 type Category = 'artist' | 'event' | 'special';
-type DebugPreset = 'has-items' | 'empty' | 'all-unlocked';
 
 interface BiveItem {
   id: string;
@@ -41,9 +39,7 @@ export default function CollectionPage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
   const [category, setCategory] = useState<Category>('artist');
-  const [bives, setBives] = useState(MOCK_BIVES);
-  const [preset, setPreset] = useState<DebugPreset>('has-items');
-  const [debugOpen, setDebugOpen] = useState(false);
+  const [bives] = useState(MOCK_BIVES);
 
   const ownedCount = bives.filter((b) => b.owned).length;
   const filtered = bives.filter((b) => b.category === category);
@@ -56,17 +52,8 @@ export default function CollectionPage() {
     addToast('info', `${bive.name} 상세 보기 (준비 중)`);
   };
 
-  const switchPreset = (p: DebugPreset) => {
-    setPreset(p);
-    setDebugOpen(false);
-    if (p === 'has-items') setBives(MOCK_BIVES);
-    else if (p === 'empty') setBives(MOCK_BIVES.map((b) => ({ ...b, owned: false })));
-    else setBives(MOCK_BIVES.map((b) => ({ ...b, owned: true })));
-  };
-
   return (
     <div className="min-h-dvh bg-white pb-8">
-      <Toast />
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
           <button onClick={() => router.back()} className="mr-3 -ml-1 p-1"><span className="text-gray-900">←</span></button>
@@ -149,28 +136,6 @@ export default function CollectionPage() {
             </button>
           ))}
         </div>
-      </div>
-
-      {/* 플로팅 디버그 */}
-      <div className="fixed bottom-20 right-4 z-50">
-        {debugOpen && (
-          <div className="mb-2 flex flex-col gap-1.5 animate-slideInUp">
-            {[
-              { key: 'has-items' as const, label: '일부 보유' },
-              { key: 'empty' as const, label: '전체 잠금' },
-              { key: 'all-unlocked' as const, label: '전체 해금' },
-            ].map((p) => (
-              <button key={p.key} onClick={() => switchPreset(p.key)}
-                className={cn('px-3 py-2 rounded-xl shadow-md text-[10px] font-semibold whitespace-nowrap', p.key === preset ? 'bg-violet-600 text-white' : 'bg-white border border-gray-200 text-gray-700')}>
-                {p.label}
-              </button>
-            ))}
-          </div>
-        )}
-        <button onClick={() => setDebugOpen(!debugOpen)} className="px-3 py-2.5 rounded-full bg-gray-900 text-white shadow-lg flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="text-[10px] font-semibold">{preset === 'has-items' ? '일부 보유' : preset === 'empty' ? '전체 잠금' : '전체 해금'}</span>
-          <span className="text-[8px]">▲</span>
-        </button>
       </div>
     </div>
   );
