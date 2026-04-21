@@ -1,12 +1,15 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
+import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useSupportEvents, useInvestSupport } from '@/lib/hooks/useSupport';
 import { useUserCurrency } from '@/lib/hooks/useUser';
 import { Skeleton } from '@/components/ui/skeleton';
+import { SUPPORT_PRESET_OPTIONS, applySupportPreset, type SupportPreset } from '@/lib/presets/support';
 import { cn, formatNumber } from '@/lib/utils';
 import type { SupportEvent, SupportEventStatus } from '@/lib/types';
 
@@ -22,15 +25,30 @@ const STATUS_CONFIG: Record<SupportEventStatus, { badge: string; color: string }
 export default function SupportPage() {
   const { artistName, activeArtistId } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
+  const queryClient = useQueryClient();
   const { data: events, isLoading } = useSupportEvents(activeArtistId);
   const { data: currency } = useUserCurrency(activeArtistId);
   const investMutation = useInvestSupport(activeArtistId);
 
+  const [preset, setPreset] = useState('mixed');
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState<{ eventId: string; amount: number } | null>(null);
   const [investAmounts, setInvestAmounts] = useState<Record<string, number>>({});
 
   const myHeldPt = currency?.virtueHeld ?? 0;
+
+  const handlePreset = async (key: string) => {
+    if (key === 'guest') {
+      setIsLoggedIn(false);
+      setPreset(key);
+      return;
+    }
+    setIsLoggedIn(true);
+    setPreset(key);
+    await applySupportPreset(key as SupportPreset, queryClient);
+    setExpandedId(null);
+  };
 
   // Auto-expand first active event
   const firstActiveId = events?.find((e) => e.status === 'active')?.id;
@@ -39,9 +57,10 @@ export default function SupportPage() {
   }
 
   const handleInvest = useCallback((eventId: string) => {
+    if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
     const amount = investAmounts[eventId] || 100;
     setShowConfirmModal({ eventId, amount });
-  }, [investAmounts]);
+  }, [isLoggedIn, investAmounts, addToast]);
 
   const confirmInvest = useCallback(async () => {
     if (!showConfirmModal) return;
@@ -69,6 +88,11 @@ export default function SupportPage() {
 
   return (
     <div className="min-h-dvh bg-white pb-8">
+      {!isLoggedIn && (
+        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
+          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
+        </div>
+      )}
       <SubPageHeader title={`${artistName} 응원하기`} />
 
       <div className="px-4 mt-4 space-y-3">
@@ -111,6 +135,8 @@ export default function SupportPage() {
           </div>
         </div>
       )}
+
+      <PresetSelector presets={SUPPORT_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
     </div>
   );
 }
