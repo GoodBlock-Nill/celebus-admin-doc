@@ -7,6 +7,7 @@ import { useArtistStore } from '@/stores/useArtistStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
+import ArtistAvatar from '@/components/artist/ArtistAvatar';
 import { HOME_PRESET_OPTIONS, getHomePresetState } from '@/lib/presets/home';
 
 interface BiveItem {
@@ -150,13 +151,7 @@ export default function HomePage() {
           const isActive = a.id === artist.id;
           return (
             <button key={a.id} onClick={() => setActiveArtist(a.id)} className="flex flex-col items-center gap-1 shrink-0">
-              <div className={cn(
-                'w-12 h-12 rounded-full border-2 flex items-center justify-center overflow-hidden',
-                isActive ? 'bg-violet-100 border-violet-500' : 'bg-gray-100 border-gray-200'
-              )}>
-                <img src={a.logoUrl} alt={a.name} className="w-full h-full object-cover"
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-              </div>
+              <ArtistAvatar artistId={a.id} size="md" active={isActive} />
               <span className={cn('text-[9px] font-semibold max-w-[48px] truncate', isActive ? 'text-violet-700' : 'text-gray-400')}>{a.nameEn}</span>
             </button>
           );

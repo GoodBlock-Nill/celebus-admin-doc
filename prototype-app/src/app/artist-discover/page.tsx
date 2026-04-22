@@ -10,17 +10,8 @@ import { useArtistStore } from '@/stores/useArtistStore';
 import { useArtists, useFollowedArtists, useFollowArtist, useUnfollowArtist } from '@/lib/hooks/useArtists';
 import { ARTIST_DISCOVER_PRESET_OPTIONS } from '@/lib/presets/artistDiscover';
 import { cn } from '@/lib/utils';
+import ArtistAvatar, { getArtistEmoji } from '@/components/artist/ArtistAvatar';
 import type { Artist } from '@/lib/types';
-
-// 아티스트별 이모지 (DB에 없으므로 클라이언트에서 매핑)
-const ARTIST_EMOJI: Record<string, string> = {
-  v01d: '💜',
-  ikon: '🔥',
-  newjeans: '🐰',
-  ateez: '⚓',
-  txt: '💙',
-  stayc: '🌟',
-};
 
 export default function ArtistDiscoverPage() {
   const router = useRouter();
@@ -94,7 +85,6 @@ export default function ArtistDiscoverPage() {
     setUnfollowTarget(null);
   };
 
-  const getEmoji = (id: string) => ARTIST_EMOJI[id] ?? '🎵';
 
   if (isLoading) {
     return (
@@ -166,11 +156,8 @@ export default function ArtistDiscoverPage() {
                       setUnfollowTarget(artist);
                     }}
                     className="flex flex-col items-center gap-1 shrink-0">
-                    <div className={cn(
-                      'relative w-14 h-14 rounded-full border-2 flex items-center justify-center',
-                      artist.id === activeArtistId ? 'bg-violet-100 border-violet-400' : 'bg-gray-100 border-gray-300'
-                    )}>
-                      <span className="text-xl">{getEmoji(artist.id)}</span>
+                    <div className="relative">
+                      <ArtistAvatar artistId={artist.id} size="lg" active={artist.id === activeArtistId} />
                       <span className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-violet-500 text-white text-[9px] rounded-full flex items-center justify-center font-bold">✓</span>
                     </div>
                     <span className="text-[10px] font-medium text-gray-700 max-w-[56px] truncate">{artist.name}</span>
@@ -190,8 +177,8 @@ export default function ArtistDiscoverPage() {
               <div className="px-4 flex gap-3 overflow-x-auto no-scrollbar pb-1">
                 {artists.filter((a) => !followedSet.has(a.id)).map((artist) => (
                   <div key={artist.id} className="shrink-0 w-36 bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-200 rounded-xl p-3">
-                    <div className="w-12 h-12 rounded-full bg-violet-100 flex items-center justify-center mx-auto">
-                      <span className="text-2xl">{getEmoji(artist.id)}</span>
+                    <div className="mx-auto">
+                      <ArtistAvatar artistId={artist.id} size="md" />
                     </div>
                     <p className="text-xs font-bold text-gray-900 text-center mt-2 truncate">{artist.name}</p>
                     <p className="text-[10px] text-gray-400 text-center">{artist.members.length}명</p>
@@ -224,9 +211,7 @@ export default function ArtistDiscoverPage() {
               const isFollowed = followedSet.has(artist.id);
               return (
                 <div key={artist.id} className="flex items-center gap-3 py-2.5">
-                  <div className="w-11 h-11 rounded-full bg-violet-100 flex items-center justify-center shrink-0">
-                    <span className="text-lg">{getEmoji(artist.id)}</span>
-                  </div>
+                  <ArtistAvatar artistId={artist.id} size="sm" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-900 truncate">{artist.name}</p>
                     <p className="text-[10px] text-gray-400">{artist.nameEn} · {artist.members.length}명</p>
@@ -260,7 +245,7 @@ export default function ArtistDiscoverPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
           <div className="relative z-10 bg-white rounded-2xl w-72 p-5 text-center shadow-xl animate-scaleIn">
-            <span className="text-3xl">{getEmoji(unfollowTarget.id)}</span>
+            <ArtistAvatar artistId={unfollowTarget.id} size="xl" className="mx-auto" />
             <p className="text-sm font-bold text-gray-900 mt-3">'{unfollowTarget.name}'을 언팔로우할까요?</p>
             <p className="text-xs text-gray-400 mt-1">기존 활동 데이터는 보존됩니다.</p>
             <div className="flex gap-2 mt-4">
