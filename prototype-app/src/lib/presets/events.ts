@@ -3,11 +3,12 @@ export const EVENTS_PRESET_OPTIONS = [
   { key: 'emptyActive', label: 'Empty (진행중)' },
   { key: 'emptyClosed', label: 'Empty (마감)' },
   { key: 'guest', label: '비로그인' },
+  { key: 'guestEmpty', label: '비로그인+Empty' },
 ];
 
 export function getEventsPresetState(preset: string) {
   return {
-    forceEmpty: preset === 'emptyActive' || preset === 'emptyClosed',
-    emptyTab: preset === 'emptyActive' ? 'active' : preset === 'emptyClosed' ? 'closed' : null,
+    forceEmpty: preset === 'emptyActive' || preset === 'emptyClosed' || preset === 'guestEmpty',
+    emptyTab: preset === 'emptyActive' || preset === 'guestEmpty' ? 'active' : preset === 'emptyClosed' ? 'closed' : null,
   };
 }

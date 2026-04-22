@@ -5,12 +5,13 @@ export const ARTIST_DISCOVER_PRESET_OPTIONS = [
   { key: 'allFollowed', label: '전체 팔로우' },
   { key: 'searchEmpty', label: '검색결과 없음' },
   { key: 'guest', label: '비로그인' },
+  { key: 'guestEmpty', label: '비로그인+Empty' },
 ];
 
 export function getArtistDiscoverPresetState(preset: string) {
   return {
-    isLoggedIn: preset !== 'guest',
+    isLoggedIn: preset !== 'guest' && preset !== 'guestEmpty',
     allFollowed: preset === 'allFollowed',
-    forceSearchEmpty: preset === 'searchEmpty',
+    forceSearchEmpty: preset === 'searchEmpty' || preset === 'guestEmpty',
   };
 }

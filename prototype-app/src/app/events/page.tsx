@@ -44,7 +44,7 @@ export default function EventsPage() {
 
   const handlePreset = (key: string) => {
     setPreset(key);
-    if (key === 'guest') {
+    if (key === 'guest' || key === 'guestEmpty') {
       setIsLoggedIn(false);
     } else {
       setIsLoggedIn(true);

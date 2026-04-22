@@ -43,6 +43,7 @@ export const SUPPORT_PRESET_OPTIONS = [
   { key: 'allCompleted', label: '전체 완료' },
   { key: 'expiredCancelled', label: '미달성+취소' },
   { key: 'guest', label: '비로그인' },
+  { key: 'guestEmpty', label: '비로그인+Empty' },
 ];
 
 export async function applySupportPreset(preset: SupportPreset, queryClient: QueryClient) {

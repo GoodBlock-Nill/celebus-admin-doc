@@ -30,6 +30,13 @@ export default function FandomLevelPage() {
       prevPresetRef.current = key;
       return;
     }
+    if (key === 'guestEmpty') {
+      setIsLoggedIn(false);
+      setPreset(key);
+      prevPresetRef.current = key;
+      await applyFandomPreset('progress', queryClient);
+      return;
+    }
     setIsLoggedIn(true);
     const prev = prevPresetRef.current;
     prevPresetRef.current = key;

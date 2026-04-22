@@ -26,6 +26,7 @@ export default function SupportPage() {
 
   const [preset, setPreset] = useState('mixed');
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [forceEmpty, setForceEmpty] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState<{ eventId: string; amount: number } | null>(null);
   const [investAmounts, setInvestAmounts] = useState<Record<string, number>>({});
@@ -37,10 +38,18 @@ export default function SupportPage() {
   const handlePreset = async (key: string) => {
     if (key === 'guest') {
       setIsLoggedIn(false);
+      setForceEmpty(false);
+      setPreset(key);
+      return;
+    }
+    if (key === 'guestEmpty') {
+      setIsLoggedIn(false);
+      setForceEmpty(true);
       setPreset(key);
       return;
     }
     setIsLoggedIn(true);
+    setForceEmpty(false);
     setPreset(key);
     await applySupportPreset(key as SupportPreset, queryClient);
     setExpandedId(null);
@@ -90,7 +99,7 @@ export default function SupportPage() {
       <SubPageHeader title={`${artistName} 응원하기`} />
 
       <div className="px-4 mt-4 space-y-3">
-        {(events ?? []).map((event) => (
+        {!forceEmpty && (events ?? []).map((event) => (
           <EventCard
             key={event.id}
             event={event}
@@ -104,7 +113,7 @@ export default function SupportPage() {
           />
         ))}
 
-        {(events ?? []).length === 0 && (
+        {(forceEmpty || (events ?? []).length === 0) && (
           <EmptyState
             emoji="💜"
             title="현재 진행 중인 서포트 이벤트가 없습니다"

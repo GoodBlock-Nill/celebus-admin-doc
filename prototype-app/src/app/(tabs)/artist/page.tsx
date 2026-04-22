@@ -64,7 +64,7 @@ export default function ArtistPage() {
 
   const handlePreset = (key: string) => {
     setPreset(key);
-    setIsGuest(key === 'guest');
+    setIsGuest(key === 'guest' || key === 'guestEmpty');
     if (key === 'onboarding') setShowOnboarding(true);
   };
 

@@ -29,6 +29,11 @@ export default function VirtuePage() {
       setPreset(key);
       return;
     }
+    if (key === 'guestEmpty') {
+      setIsLoggedIn(false);
+      setPreset(key);
+      return;
+    }
     setIsLoggedIn(true);
     setPreset(key);
     if (key === 'prevSeason') {

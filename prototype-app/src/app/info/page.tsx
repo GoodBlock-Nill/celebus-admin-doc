@@ -66,7 +66,7 @@ export default function InfoPage() {
   }));
 
   const handlePreset = (key: string) => {
-    setIsLoggedIn(key !== 'guest');
+    setIsLoggedIn(key !== 'guest' && key !== 'guestEmpty');
     setPreset(key);
   };
 

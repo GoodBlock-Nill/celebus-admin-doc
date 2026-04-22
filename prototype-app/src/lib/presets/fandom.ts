@@ -6,6 +6,7 @@ export const FANDOM_PRESET_OPTIONS = [
   { key: 'progress', label: '진행중 (Lv.3)' },
   { key: 'max', label: 'MAX (Lv.10)' },
   { key: 'guest', label: '비로그인' },
+  { key: 'guestEmpty', label: '비로그인+Empty' },
 ];
 
 export async function applyFandomPreset(preset: string, queryClient: QueryClient) {

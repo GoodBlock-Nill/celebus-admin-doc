@@ -46,12 +46,16 @@ export default function RafflePage() {
 
   const handlePreset = async (key: string) => {
     setPreset(key);
-    if (key === 'guest') {
+    if (key === 'guest' || key === 'guestEmpty') {
       setIsLoggedIn(false);
     } else {
       setIsLoggedIn(true);
     }
-    await applyRafflePreset(key, queryClient);
+    if (key === 'guestEmpty') {
+      await applyRafflePreset('empty', queryClient);
+    } else {
+      await applyRafflePreset(key, queryClient);
+    }
   };
 
   const myTickets: number = 15;

@@ -38,6 +38,7 @@ export default function ArtistDiscoverPage() {
     const state = getArtistDiscoverPresetState(key);
     setIsLoggedIn(state.isLoggedIn);
     if (key === 'searchEmpty') { setSearchOpen(true); setSearchQuery('zzzznotfound'); }
+    if (key === 'guestEmpty') { setSearchOpen(true); setSearchQuery('zzzznotfound'); }
   };
 
   const isLoading = artistsLoading || followsLoading;

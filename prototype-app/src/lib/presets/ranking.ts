@@ -7,6 +7,7 @@ export const RANKING_PRESET_OPTIONS = [
   { key: 'outside100', label: 'TOP100 밖' },
   { key: 'prevSeason', label: '이전 시즌' },
   { key: 'guest', label: '비로그인' },
+  { key: 'guestEmpty', label: '비로그인+Empty' },
 ];
 
 export async function applyRankingPreset(preset: string, queryClient: QueryClient) {
