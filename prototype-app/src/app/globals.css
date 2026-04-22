@@ -106,6 +106,7 @@ body {
     max-height: calc(100vh - 40px);
     overflow-y: auto;
     border-radius: 2rem;
+    background: #ffffff;
     box-shadow:
       0 0 0 8px #1f1f1f,
       0 0 0 10px #333,
