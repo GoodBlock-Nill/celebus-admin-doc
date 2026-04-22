@@ -100,7 +100,7 @@ export default function ArtistDiscoverPage() {
   if (isLoading) {
     return (
       <div className="min-h-dvh bg-white pb-20">
-        <SubPageHeader title="아티스트" />
+        <SubPageHeader title="아티스트" backHref="/home" />
         <div className="px-4 mt-4 space-y-4">
           <Skeleton className="h-20 w-full rounded-2xl" />
           <Skeleton className="h-32 w-full rounded-2xl" />
@@ -115,7 +115,7 @@ export default function ArtistDiscoverPage() {
   return (
     <div className="min-h-dvh bg-white pb-20">
       {!isLoggedIn && <GuestBanner />}
-      <SubPageHeader title="아티스트" />
+      <SubPageHeader title="아티스트" backHref="/home" />
 
       {/* 검색 토글 */}
       <div className="px-4 pt-2 flex justify-end">

@@ -141,7 +141,7 @@ function NewsDetailContent() {
   if (isDeleted) {
     return (
       <div className="min-h-dvh bg-white pb-20">
-        <SubPageHeader title="소식" />
+        <SubPageHeader title="소식" backHref="/info" />
         <div className="flex flex-col items-center justify-center py-24 px-6">
           <span className="text-4xl">📰</span>
           <p className="text-sm font-semibold text-gray-900 mt-4">삭제된 소식이에요</p>

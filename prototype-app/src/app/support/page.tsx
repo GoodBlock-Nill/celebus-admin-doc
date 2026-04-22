@@ -83,7 +83,7 @@ export default function SupportPage() {
   if (isLoading) {
     return (
       <div className="min-h-dvh bg-white pb-20">
-        <SubPageHeader title={`${artistName} 응원하기`} />
+        <SubPageHeader title={`${artistName} 응원하기`} backHref="/artist" />
         <div className="px-4 mt-4 space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-24 w-full rounded-2xl" />
@@ -96,7 +96,7 @@ export default function SupportPage() {
   return (
     <div className="min-h-dvh bg-white pb-20">
       {!isLoggedIn && <GuestBanner />}
-      <SubPageHeader title={`${artistName} 응원하기`} />
+      <SubPageHeader title={`${artistName} 응원하기`} backHref="/artist" />
 
       <div className="px-4 mt-4 space-y-3">
         {!forceEmpty && (events ?? []).map((event) => (

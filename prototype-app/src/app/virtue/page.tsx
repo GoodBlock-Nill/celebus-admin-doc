@@ -58,7 +58,7 @@ export default function VirtuePage() {
   if (isLoading) {
     return (
       <div className="min-h-dvh bg-white pb-20">
-        <SubPageHeader title="덕력 랭킹" />
+        <SubPageHeader title="덕력 랭킹" backHref="/artist" />
         <div className="px-4 mt-4 space-y-4">
           <Skeleton className="h-32 w-full rounded-2xl" />
           <Skeleton className="h-8 w-full" />
@@ -73,7 +73,7 @@ export default function VirtuePage() {
   return (
     <div className="min-h-dvh bg-white pb-20">
       {!isLoggedIn && <GuestBanner />}
-      <SubPageHeader title="덕력 랭킹" />
+      <SubPageHeader title="덕력 랭킹" backHref="/artist" />
 
       {/* 시즌 드롭다운 */}
       <div className="px-4 mt-3 flex justify-end">

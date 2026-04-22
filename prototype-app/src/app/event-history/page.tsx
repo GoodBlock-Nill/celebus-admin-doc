@@ -99,7 +99,7 @@ export default function EventHistoryPage() {
 
   return (
     <div className="min-h-dvh bg-white pb-20">
-      <SubPageHeader title="Event" />
+      <SubPageHeader title="Event" backHref="/home" />
 
       {/* 2단 탭 (Sticky) */}
       <div className="sticky top-12 z-30 bg-white border-b border-gray-100">

@@ -74,7 +74,7 @@ export default function DailyMissionPage() {
   if (isLoading) {
     return (
       <div className="min-h-dvh bg-white pb-20">
-        <SubPageHeader title="일일 미션" />
+        <SubPageHeader title="일일 미션" backHref="/artist" />
         <div className="px-4 mt-4 space-y-3">
           <Skeleton className="h-24 rounded-2xl" />
           <Skeleton className="h-16 rounded-xl" />
@@ -86,7 +86,7 @@ export default function DailyMissionPage() {
 
   return (
     <div className="min-h-dvh bg-white pb-20">
-      <SubPageHeader title="일일 미션" />
+      <SubPageHeader title="일일 미션" backHref="/artist" />
 
       {/* 스트릭 현황 */}
       <StreakHeader streak={streak} bonuses={bonuses} />

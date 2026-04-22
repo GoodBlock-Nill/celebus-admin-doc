@@ -72,7 +72,7 @@ export default function EventsPage() {
   return (
     <div className="min-h-dvh bg-white pb-20">
       {!isLoggedIn && <GuestBanner />}
-      <SubPageHeader title="이벤트" />
+      <SubPageHeader title="이벤트" backHref="/home" />
 
       {/* 필터 탭 */}
       <div className="px-4 pt-3 pb-2 flex gap-2 border-b border-gray-100">

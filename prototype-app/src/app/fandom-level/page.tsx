@@ -52,7 +52,7 @@ export default function FandomLevelPage() {
   if (isLoading) {
     return (
       <div className="min-h-dvh bg-white pb-20">
-        <SubPageHeader title={`${artistName} 키우기`} />
+        <SubPageHeader title={`${artistName} 키우기`} backHref="/artist" />
         <div className="mx-4 mt-4 space-y-3">
           <Skeleton className="h-32 rounded-2xl" />
           <Skeleton className="h-48 rounded-2xl" />
@@ -70,7 +70,7 @@ export default function FandomLevelPage() {
   return (
     <div className="min-h-dvh bg-white pb-20">
       {!isLoggedIn && <GuestBanner />}
-      <SubPageHeader title={`${artistName} 키우기`} />
+      <SubPageHeader title={`${artistName} 키우기`} backHref="/artist" />
 
       {/* 현재 레벨 카드 */}
       <div className="mx-4 mt-4 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl px-5 py-5">
