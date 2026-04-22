@@ -32,10 +32,10 @@ const MOCK_BIVES: BiveItem[] = [
   { id: 'b9', name: '스페셜 에디션', grade: 'Special', image: '/v01d/logo.png', owned: false, category: 'special' },
 ];
 
-const CATEGORIES: { key: Category; label: string }[] = [
-  { key: 'artist', label: '아티스트' },
-  { key: 'event', label: '이벤트' },
-  { key: 'special', label: '스페셜' },
+const CATEGORIES: { key: Category; label: string; desc: string }[] = [
+  { key: 'artist', label: '아티스트', desc: 'V01D 챌린지 완료 시 획득하는 스토리 BIVE' },
+  { key: 'event', label: '이벤트', desc: '특별 이벤트·래플 참여 시 지급되는 한정 BIVE' },
+  { key: 'special', label: '스페셜', desc: 'Gr.1~5 합성으로 획득하는 희귀 BIVE' },
 ];
 
 export default function CollectionPage() {
@@ -52,7 +52,15 @@ export default function CollectionPage() {
   };
 
   const ownedCount = bives.filter((b) => b.owned).length;
-  const filtered = bives.filter((b) => b.category === category);
+
+  // Fix #22: 보유 먼저 → 등급 순 (Gr.1 → Gr.5 → Event → Special)
+  const GRADE_ORDER: Record<string, number> = { 'Gr.1': 1, 'Gr.2': 2, 'Gr.3': 3, 'Gr.4': 4, 'Gr.5': 5, 'Event': 6, 'Special': 7 };
+  const filtered = bives
+    .filter((b) => b.category === category)
+    .sort((a, b) => {
+      if (a.owned !== b.owned) return a.owned ? -1 : 1;
+      return (GRADE_ORDER[a.grade] ?? 99) - (GRADE_ORDER[b.grade] ?? 99);
+    });
 
   const ARTIST_GRADES = ['Gr.1', 'Gr.2', 'Gr.3', 'Gr.4', 'Gr.5'];
   const hasAllGrades = ARTIST_GRADES.every((grade) =>
@@ -92,6 +100,13 @@ export default function CollectionPage() {
           </button>
         ))}
       </div>
+
+      {/* Fix #23: 카테고리 설명 */}
+      {CATEGORIES.find((c) => c.key === category) && (
+        <p className="px-4 mt-2 text-[10px] text-gray-400">
+          {CATEGORIES.find((c) => c.key === category)!.desc}
+        </p>
+      )}
 
       {/* BIVE 그리드 */}
       <div className="px-4 mt-4 grid grid-cols-2 gap-3">

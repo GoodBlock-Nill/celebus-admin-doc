@@ -104,6 +104,12 @@ export default function VirtuePage() {
           {!currentSeason?.isCurrent && selectedSeasonId && (
             <span className="text-[9px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">이전 시즌</span>
           )}
+          {/* Fix #10: 이전 시즌 보상 뱃지 */}
+          {selectedSeasonId && selectedSeasonId !== currentSeason?.id && (
+            <span className="text-[9px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">
+              이 시즌 보상: 슈퍼팬 뱃지
+            </span>
+          )}
         </div>
         <div className="grid grid-cols-3 gap-3 mb-3">
           <div>
@@ -136,9 +142,17 @@ export default function VirtuePage() {
           <div className="flex-1 h-px bg-gray-100" />
         </div>
 
+        {/* Fix #9: 신규 유저 Empty 안내 */}
+        {!rankingLoading && ranking && !ranking.myRank && (
+          <div className="text-center py-4 mb-3">
+            <p className="text-xs text-gray-400">활동을 시작하면 랭킹에 참여할 수 있어요!</p>
+          </div>
+        )}
+
         <div className="space-y-1">
           {(ranking?.topUsers ?? []).slice(0, 100).map((user) => {
-            const rankIcon = user.rank === 1 ? '🏆' : user.rank === 2 ? '🥇' : user.rank === 3 ? '🥈' : null;
+            // Fix #8: 1위 🥇, 2위 🥈, 3위 🥉
+            const rankIcon = user.rank === 1 ? '🥇' : user.rank === 2 ? '🥈' : user.rank === 3 ? '🥉' : null;
             return (
               <div
                 key={`${user.rank}-${user.nickname}`}

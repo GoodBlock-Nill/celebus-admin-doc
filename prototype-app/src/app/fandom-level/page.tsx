@@ -93,7 +93,10 @@ export default function FandomLevelPage() {
           </div>
         )}
 
-        <p className="text-xs text-gray-500">내 기여: {formatNumber(data.myContributionPt)}pt ({contributionPct}%)</p>
+        {/* Fix #19: 비로그인 시 내 기여도 "-" 표시 */}
+        <p className="text-xs text-gray-500">
+          내 기여: {isLoggedIn ? `${formatNumber(data.myContributionPt)}pt (${contributionPct}%)` : '-'}
+        </p>
       </div>
 
       {/* 레벨 보상 리스트 */}
@@ -183,7 +186,12 @@ export default function FandomLevelPage() {
             </button>
           ))}
         </div>
-        <p className="text-[10px] text-gray-400 text-center mt-2">활동하면 팬덤 레벨에 기여됩니다</p>
+        {/* Fix #18: MAX 상태 시 CTA 텍스트 변형 */}
+        <p className="text-[10px] text-gray-400 text-center mt-2">
+          {data.isMax
+            ? '활동하면 덕력이 쌓여요! 새 레벨이 열리면 바로 기여돼요'
+            : '활동하면 팬덤 레벨에 기여됩니다'}
+        </p>
       </div>
 
       {process.env.NODE_ENV !== 'production' && (

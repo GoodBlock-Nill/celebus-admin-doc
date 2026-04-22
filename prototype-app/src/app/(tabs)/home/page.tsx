@@ -26,7 +26,8 @@ const BIVE_LIST: Omit<BiveItem, 'owned'>[] = [
 const BANNERS = [
   { id: 'b1', title: 'V01D 사인앨범 래플', subtitle: 'D-5 | 참여하기', active: true, dDay: 5 },
   { id: 'b2', title: 'V01D 커피차 서포트', subtitle: '목표 70% 달성중', active: true, dDay: 12 },
-  { id: 'b3', title: '봄맞이 스트리밍 이벤트', subtitle: '마감', active: false, dDay: undefined },
+  { id: 'b3', title: '팬미팅 포토카드 래플', subtitle: 'D-3 | 마감 임박!', active: true, dDay: 3 },
+  { id: 'b4', title: '봄맞이 스트리밍 이벤트', subtitle: '마감', active: false, dDay: undefined },
 ];
 
 export default function HomePage() {
@@ -97,6 +98,8 @@ export default function HomePage() {
       </div>
 
       {/* 2. 캐러셀 배너 */}
+      {/* TODO (HOM-001): 다른 아티스트 이벤트 배너 탭 시 "이 아티스트를 팔로우하시겠습니까?" 인라인 배너 표시.
+          현재 프로토타입은 V01D 단일 아티스트만 지원하므로 해당 분기 생략. */}
       <div className="px-4 mt-3">
         <div className="relative bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl overflow-hidden h-36">
           <button onClick={() => router.push('/events')} className="absolute top-3 right-4 z-10 text-[11px] font-semibold text-white bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full hover:bg-white/30 transition-colors">

@@ -10,6 +10,7 @@ import { ARTIST_PRESET_OPTIONS, getArtistPresetState } from '@/lib/presets/artis
 import { SERVICE_GROUP_LABELS } from '@/lib/types';
 import type { ServiceCardData, ServiceCardGroup } from '@/lib/types';
 
+// TODO: DB에서 동적 계산 (퀘스트 진행률, 시즌 순위, 래플 건수 등)
 const ARTIST_CARDS: ServiceCardData[] = [
   // 미션 그룹
   { id: 'challenge', group: 'mission', icon: '🎯', title: 'V01D 챌린지', statusText: '2/5장', href: '/quest', comingSoon: false },
@@ -24,6 +25,10 @@ const ARTIST_CARDS: ServiceCardData[] = [
   { id: 'info', group: 'more', icon: '📰', title: '정보', statusText: '새소식 3', href: '/info', comingSoon: false },
   { id: 'memory', group: 'more', icon: '📸', title: '기억 저장소', statusText: '기억 8개', href: '/memory', comingSoon: false },
 ];
+
+// Fix #6: 비로그인(guest) 시 로그인 없이 열람 가능한 카드 (읽기 전용)
+// 나머지 카드(challenge, daily-mission, collection, memory)는 로그인 필요 → 토스트 표시
+const GUEST_OPEN_CARDS = new Set(['virtue', 'support', 'fandom-level', 'raffle', 'info']);
 
 const GROUP_ORDER: ServiceCardGroup[] = ['mission', 'record', 'more'];
 
@@ -43,11 +48,13 @@ export default function ArtistPage() {
   const [cards, setCards] = useState(ARTIST_CARDS);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [preset, setPreset] = useState('loginContent');
+  const [isGuest, setIsGuest] = useState(false);
   const { showOnboarding, setShowOnboarding, addToast } = useUIStore();
   const presetState = getArtistPresetState(preset);
 
   const handlePreset = (key: string) => {
     setPreset(key);
+    setIsGuest(key === 'guest');
     if (key === 'onboarding') setShowOnboarding(true);
   };
 
@@ -141,8 +148,10 @@ export default function ArtistPage() {
               <div className="grid grid-cols-2 gap-3">
                 {groupCards.map((card, idx) => {
                   const isLastOdd = groupCards.length % 2 === 1 && idx === groupCards.length - 1;
+                  // Fix #6: 비로그인 시 GUEST_OPEN_CARDS 외 카드는 클릭 시 로그인 토스트
+                  const isGuestBlocked = isGuest && !GUEST_OPEN_CARDS.has(card.id);
                   return (
-                    <div key={card.id}>
+                    <div key={card.id} onClick={isGuestBlocked ? (e) => { e.preventDefault(); addToast('info', '로그인 후 이용 가능합니다'); } : undefined}>
                       <ServiceCard
                         card={card}
                         fullWidth={isLastOdd}

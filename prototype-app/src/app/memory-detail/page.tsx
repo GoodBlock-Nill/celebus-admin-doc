@@ -22,6 +22,7 @@ interface MemoryDetail {
   isPublic: boolean;
   isMine: boolean;
   createdAt: string;
+  updatedAt?: string; // Fix #30: 수정됨 뱃지 표시용
 }
 
 const PRESETS: Record<PresetKey, MemoryDetail> = {
@@ -31,6 +32,7 @@ const PRESETS: Record<PresetKey, MemoryDetail> = {
     date: '2026.04.14', images: 3,    text: 'V01D 콘서트 다녀왔다! 무대 위의 V01D는 정말 빛나고 있었어. 앵콜에서 우리 쪽을 봐줬을 때 심장이 멈추는 줄 알았다 💜 다음에 또 꼭 가고 싶다!',
     location: '잠실 올림픽홀', isPublic: false, isMine: true,
     createdAt: '2026.04.14 23:30 작성',
+    updatedAt: '2026.04.15 10:12 수정', // Fix #30: 수정 이력 있는 기억
   },
   letter: {
     emojis: ['💜'], emojiLabels: ['사랑'],
@@ -208,10 +210,23 @@ export default function MemoryDetailPage() {
               )}
             </div>
 
-            {/* 7. 작성 시각 */}
-            <p className="text-[10px] text-gray-400">{memory.createdAt}</p>
+            {/* 7. 작성/수정 시각 */}
+            {/* Fix #30: updatedAt > createdAt 이면 "수정됨" 뱃지 표시 */}
+            <div className="flex items-center gap-2">
+              <p className="text-[10px] text-gray-400">{memory.createdAt}</p>
+              {memory.updatedAt && (
+                <span className="text-[10px] font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+                  수정됨
+                </span>
+              )}
+            </div>
+            {memory.updatedAt && (
+              <p className="text-[10px] text-gray-400">{memory.updatedAt}</p>
+            )}
 
             {/* 공유 버튼 (공개 기억만) */}
+            {/* Fix #32: TODO — 공유 링크 OG 메타는 서버사이드 렌더링 필요 */}
+            {/* TODO: Server-side OG meta tags needed for share links (og:title, og:image, og:description) */}
             {memory.isPublic && (
               <button onClick={() => addToast('success', '링크가 복사되었어요!')}
                 className="w-full py-3 bg-gray-100 rounded-xl text-sm font-semibold text-gray-700 flex items-center justify-center gap-2 active:bg-gray-200 transition-colors">

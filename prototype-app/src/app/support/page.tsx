@@ -35,6 +35,8 @@ export default function SupportPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState<{ eventId: string; amount: number } | null>(null);
   const [investAmounts, setInvestAmounts] = useState<Record<string, number>>({});
+  // Fix #12: 완료 이벤트 결과 이미지 전체화면
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
   const myHeldPt = currency?.virtueHeld ?? 0;
 
@@ -106,6 +108,7 @@ export default function SupportPage() {
             onAmountChange={(v) => setInvestAmounts((prev) => ({ ...prev, [event.id]: v }))}
             onInvest={() => handleInvest(event.id)}
             myHeldPt={myHeldPt}
+            onImageFullscreen={setFullscreenImage}
           />
         ))}
 
@@ -138,13 +141,22 @@ export default function SupportPage() {
       )}
 
       <PresetSelector presets={SUPPORT_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
+
+      {/* Fix #12: 결과 이미지 전체화면 오버레이 */}
+      {fullscreenImage && (
+        <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center" onClick={() => setFullscreenImage(null)}>
+          <button className="absolute top-4 right-4 text-white text-2xl z-10">✕</button>
+          <img src={fullscreenImage} alt="" className="max-w-full max-h-full object-contain" />
+        </div>
+      )}
     </div>
   );
 }
 
-function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, onInvest, myHeldPt }: {
+function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, onInvest, myHeldPt, onImageFullscreen }: {
   event: SupportEvent; isExpanded: boolean; onToggle: () => void;
   investAmount: number; onAmountChange: (v: number) => void; onInvest: () => void; myHeldPt: number;
+  onImageFullscreen: (src: string) => void;
 }) {
   const config = STATUS_CONFIG[event.status];
   const progress = Math.min((event.currentPt / event.targetPt) * 100, 100);
@@ -206,12 +218,14 @@ function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, 
             <div className="bg-green-50 rounded-xl px-4 py-3">
               <p className="text-sm font-semibold text-green-800 mb-2">🎉 집행 완료!</p>
               <p className="text-xs text-green-700">{event.resultMessage}</p>
+              {/* Fix #12: 결과 이미지 탭으로 전체화면 확대 */}
               {event.resultImages && (
                 <div className="flex gap-2 mt-2">
                   {event.resultImages.map((img, i) => (
-                    <div key={i} className="w-16 h-16 bg-green-100 rounded-lg overflow-hidden">
+                    <button key={i} onClick={() => onImageFullscreen(img)}
+                      className="w-16 h-16 bg-green-100 rounded-lg overflow-hidden active:scale-95 transition-transform shrink-0">
                       <img src={img} alt="" className="w-full h-full object-cover" />
-                    </div>
+                    </button>
                   ))}
                 </div>
               )}

@@ -93,7 +93,7 @@ export default function RafflePage() {
       <div className="px-4 mt-3 flex gap-2">
         {[
           { key: 'active' as FilterTab, label: '진행중' },
-          { key: 'ended' as FilterTab, label: '마감' },
+          { key: 'ended' as FilterTab, label: '마감됨' },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -132,8 +132,11 @@ export default function RafflePage() {
                     )}
                   </div>
                   <div className="flex items-center gap-3 text-xs text-gray-500">
-                    {raffle.status === 'active' && (
-                      <span className="text-violet-600 font-semibold">D-{raffle.daysLeft}</span>
+                    {/* Fix #15: D-0 → "오늘 마감" */}
+                  {raffle.status === 'active' && (
+                      <span className="text-violet-600 font-semibold">
+                        {raffle.daysLeft === 0 ? '오늘 마감' : `D-${raffle.daysLeft}`}
+                      </span>
                     )}
                     <span>참여 {formatNumber(raffle.participants)}명</span>
                   </div>

@@ -46,7 +46,32 @@ export default function MemoryPage() {
   //  the day from the yearAgo param when present.)
   // const yearAgoParam = false; // TODO: URL 파라미터 ?yearAgo=true 처리 (Suspense 필요)
   const [selectedDay, setSelectedDay] = useState<number | null>(14);
-  const [showOnboarding] = useState(false);
+
+  // Fix #24: 월 네비게이션 (baseYear/baseMonth 기준으로 캘린더 렌더)
+  const [calendarYear, setCalendarYear] = useState(2026);
+  const [calendarMonth, setCalendarMonth] = useState(4); // 1-indexed
+
+  const goToPrevMonth = () => {
+    if (calendarMonth === 1) { setCalendarYear((y) => y - 1); setCalendarMonth(12); }
+    else { setCalendarMonth((m) => m - 1); }
+    setSelectedDay(null);
+  };
+  const goToNextMonth = () => {
+    if (calendarMonth === 12) { setCalendarYear((y) => y + 1); setCalendarMonth(1); }
+    else { setCalendarMonth((m) => m + 1); }
+    setSelectedDay(null);
+  };
+
+  // Fix #26: 온보딩 트리거 — 기억 0건 + 첫 방문
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return memories.length === 0 && !localStorage.getItem('celebus-memory-onboarding-done');
+  });
+  const dismissOnboarding = () => {
+    if (typeof window !== 'undefined') localStorage.setItem('celebus-memory-onboarding-done', 'true');
+    setShowOnboarding(false);
+  };
+
   const [preset, setPreset] = useState('many');
 
   // Fix 1: monthly count for FAB gate
@@ -96,7 +121,7 @@ export default function MemoryPage() {
           <div className="flex justify-center gap-4 mt-4 text-xs text-gray-400">
             <span>📅 캘린더</span><span>🖼️ 갤러리</span><span>🗺️ 지도</span>
           </div>
-          <button onClick={() => addToast('success', '기억이 저장되었어요! 덕력 30pt 획득')}
+          <button onClick={() => { dismissOnboarding(); router.push('/memory-create'); }}
             className="mt-6 px-6 py-3 bg-violet-600 text-white rounded-xl text-sm font-semibold">
             첫 기억 남기기
           </button>
@@ -106,10 +131,11 @@ export default function MemoryPage() {
       {/* 캘린더 뷰 */}
       {view === 'calendar' && !showOnboarding && (
         <div className="px-4 mt-4">
+          {/* Fix #24: 월 네비게이션 */}
           <div className="flex items-center justify-center gap-4 mb-4">
-            <button className="text-gray-400">◀</button>
-            <span className="text-sm font-bold text-gray-900">2026년 4월</span>
-            <button className="text-gray-400">▶</button>
+            <button onClick={goToPrevMonth} className="text-gray-400 px-1">◀</button>
+            <span className="text-sm font-bold text-gray-900">{calendarYear}년 {calendarMonth}월</span>
+            <button onClick={goToNextMonth} className="text-gray-400 px-1">▶</button>
           </div>
 
           <div className="grid grid-cols-7 gap-1 text-center mb-2">
@@ -146,7 +172,7 @@ export default function MemoryPage() {
           {selectedDay && dayMemories.length > 0 && (
             <div className="mt-4 animate-slideInUp">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-xs font-semibold text-gray-400">4월 {selectedDay}일</span>
+                <span className="text-xs font-semibold text-gray-400">{calendarMonth}월 {selectedDay}일</span>
                 <div className="flex-1 h-px bg-gray-100" />
               </div>
               <div className="space-y-2">
