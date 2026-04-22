@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
 import { INFO_PRESET_OPTIONS, getInfoPresetFilter } from '@/lib/presets/info';
 import GuestBanner from '@/components/ui/GuestBanner';
+import BottomSheet from '@/components/ui/BottomSheet';
 
 type ItemType = 'schedule' | 'news';
 
@@ -221,38 +222,30 @@ export default function InfoPage() {
       </div>
 
       {/* 공지 상세 바텀시트 */}
-      {showNoticeSheet && (
-        <div className="fixed inset-0 z-[100] flex items-end" onClick={() => setShowNoticeSheet(false)}>
-          <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[430px] mx-auto bg-white rounded-t-2xl px-5 py-6 animate-slideInUp" role="dialog" aria-modal="true" aria-label="공지 상세" onClick={(e) => e.stopPropagation()}>
-            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
-            <h3 className="text-base font-bold text-gray-900 mb-1">{latestNotice?.title}</h3>
-            <p className="text-[10px] text-gray-400 mb-4">{latestNotice?.date}</p>
-            <p className="text-sm text-gray-700 leading-relaxed">{latestNotice?.body}</p>
+      <BottomSheet open={showNoticeSheet} onClose={() => setShowNoticeSheet(false)} title="공지 상세">
+        <h3 className="text-base font-bold text-gray-900 mb-1">{latestNotice?.title}</h3>
+        <p className="text-[10px] text-gray-400 mb-4">{latestNotice?.date}</p>
+        <p className="text-sm text-gray-700 leading-relaxed">{latestNotice?.body}</p>
 
-            {notices.length > 1 && !showPrevNotices && (
-              <button onClick={(e) => { e.stopPropagation(); setShowPrevNotices(true); }} className="mt-4 text-xs text-violet-600 font-medium">
-                이전 공지 보기 ({notices.length - 1}건) →
-              </button>
-            )}
+        {notices.length > 1 && !showPrevNotices && (
+          <button onClick={() => setShowPrevNotices(true)} className="mt-4 text-xs text-violet-600 font-medium">
+            이전 공지 보기 ({notices.length - 1}건) →
+          </button>
+        )}
 
-            {showPrevNotices && notices.slice(1).map((n, i) => (
-              <div key={i} className="mt-4 pt-4 border-t border-gray-100">
-                <p className="text-sm font-semibold text-gray-900">{n.title}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5">{n.date}</p>
-                {n.body && <p className="text-xs text-gray-600 mt-2">{n.body}</p>}
-              </div>
-            ))}
+        {showPrevNotices && notices.slice(1).map((n, i) => (
+          <div key={i} className="mt-4 pt-4 border-t border-gray-100">
+            <p className="text-sm font-semibold text-gray-900">{n.title}</p>
+            <p className="text-[10px] text-gray-400 mt-0.5">{n.date}</p>
+            {n.body && <p className="text-xs text-gray-600 mt-2">{n.body}</p>}
           </div>
-        </div>
-      )}
+        ))}
+      </BottomSheet>
 
       {/* 일정 상세 바텀시트 + [기억 남기기] CTA */}
-      {showScheduleSheet && (
-        <div className="fixed inset-0 z-[100] flex items-end" onClick={() => setShowScheduleSheet(null)}>
-          <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[430px] mx-auto bg-white rounded-t-2xl px-5 py-6 animate-slideInUp" role="dialog" aria-modal="true" aria-label="일정 상세" onClick={(e) => e.stopPropagation()}>
-            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
+      <BottomSheet open={!!showScheduleSheet} onClose={() => setShowScheduleSheet(null)} title="일정 상세">
+        {showScheduleSheet && (
+          <>
             {showScheduleSheet.exclusive && (
               <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold mb-2 inline-block">
                 ⭐ CELEBUS 단독
@@ -267,18 +260,18 @@ export default function InfoPage() {
               <p className="text-sm text-gray-700 mt-4 leading-relaxed">{showScheduleSheet.description}</p>
             )}
             <button
-              onClick={(e) => {
-                e.stopPropagation();
+              onClick={() => {
+                const item = showScheduleSheet;
                 setShowScheduleSheet(null);
-                router.push(`/memory-create?date=${showScheduleSheet.date}&location=${encodeURIComponent(showScheduleSheet.location ?? '')}`);
+                router.push(`/memory-create?date=${item.date}&location=${encodeURIComponent(item.location ?? '')}`);
               }}
               className="w-full mt-5 py-3 bg-violet-600 text-white rounded-xl text-sm font-semibold"
             >
               기억 남기기 💜
             </button>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </BottomSheet>
 
       <PresetSelector presets={INFO_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
     </div>

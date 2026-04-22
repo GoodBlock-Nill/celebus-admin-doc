@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 interface BottomSheetProps {
   open: boolean;
   onClose: () => void;
@@ -8,6 +10,13 @@ interface BottomSheetProps {
 }
 
 export default function BottomSheet({ open, onClose, title, children }: BottomSheetProps) {
+  useEffect(() => {
+    if (!open) return;
+    const handleEscape = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [open, onClose]);
+
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-end" onClick={onClose}>

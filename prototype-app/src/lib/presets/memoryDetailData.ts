@@ -1,4 +1,4 @@
-export type PresetKey = 'photo' | 'letter' | 'memo' | 'public-other' | 'shared-guest' | 'shared-private' | 'privateLocked' | 'sharedGuest' | 'publicOther';
+export type PresetKey = 'photo' | 'letter' | 'memo' | 'privateLocked' | 'sharedGuest' | 'publicOther';
 
 interface MemoryDetail {
   emojis: string[];
@@ -38,27 +38,6 @@ export const PRESETS: Record<PresetKey, MemoryDetail> = {
     date: '2026.04.03', images: 0,    text: '오늘 V01D 노래 들으며 산책했다. 봄바람이 불어서 기분이 너무 좋았어. 이런 평범한 순간이 행복하다.',
     isPublic: false, isMine: true,
     createdAt: '2026.04.03 18:42 작성',
-  },
-  'public-other': {
-    emojis: ['🎉', '😍'], emojiLabels: ['신남', '설렘'],
-    type: 'photo', typeLabel: '사진 기록', typeIcon: '📸',
-    date: '2026.04.10', images: 3,    text: 'V01D 음방 1위 축하! 🎉 정말 감격스러웠어요. 팬들 다 같이 울었다 ㅠㅠ',
-    location: '상암 MBC', isPublic: true, isMine: false,
-    createdAt: '2026.04.10 20:00 작성',
-  },
-  'shared-guest': {
-    emojis: ['🎉', '😍'], emojiLabels: ['신남', '설렘'],
-    type: 'photo', typeLabel: '사진 기록', typeIcon: '📸',
-    date: '2026.04.10', images: 3,    text: 'V01D 음방 1위 축하! 🎉 정말 감격스러웠어요. 팬들 다 같이 울었다 ㅠㅠ',
-    location: '상암 MBC', isPublic: true, isMine: false,
-    createdAt: '2026.04.10 20:00 작성',
-  },
-  'shared-private': {
-    emojis: ['💜'], emojiLabels: ['사랑'],
-    type: 'memo', typeLabel: '메모', typeIcon: '📝',
-    date: '2026.04.03', images: 0,    text: '',
-    isPublic: false, isMine: false,
-    createdAt: '',
   },
   privateLocked: {
     emojis: ['💜'], emojiLabels: ['사랑'],

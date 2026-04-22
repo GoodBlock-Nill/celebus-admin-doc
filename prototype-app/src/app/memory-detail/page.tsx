@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
 import { MEMORY_DETAIL_PRESET_OPTIONS, getMemoryDetailPresetState } from '@/lib/presets/memoryDetail';
 import { PRESETS, type PresetKey } from '@/lib/presets/memoryDetailData';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 
 export default function MemoryDetailPage() {
   const router = useRouter();
@@ -217,20 +218,18 @@ export default function MemoryDetailPage() {
           )}
 
           {/* 삭제 확인 모달 */}
-          {showDeleteModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowDeleteModal(false)}>
-              <div className="bg-white rounded-2xl w-72 p-5 text-center shadow-xl" role="dialog" aria-modal="true" aria-label="기억 삭제 확인" onClick={(e) => e.stopPropagation()}>
-                <p className="text-sm font-bold text-gray-900">삭제한 기억은 복구할 수 없어요.</p>
-                <p className="text-xs text-gray-400 mt-1">삭제할까요?</p>
-                <div className="flex gap-2 mt-4">
-                  <button onClick={() => setShowDeleteModal(false)}
-                    className="flex-1 py-2.5 rounded-xl bg-gray-100 text-sm font-semibold text-gray-600">취소</button>
-                  <button onClick={handleDelete}
-                    className="flex-1 py-2.5 rounded-xl bg-red-500 text-sm font-semibold text-white">삭제</button>
-                </div>
-              </div>
-            </div>
-          )}
+          <ConfirmModal
+            open={showDeleteModal}
+            title="기억 삭제 확인"
+            confirmLabel="삭제"
+            cancelLabel="취소"
+            confirmVariant="danger"
+            onConfirm={handleDelete}
+            onCancel={() => setShowDeleteModal(false)}
+          >
+            <p className="text-sm font-bold text-gray-900">삭제한 기억은 복구할 수 없어요.</p>
+            <p className="text-xs text-gray-400 mt-1">삭제할까요?</p>
+          </ConfirmModal>
 
           {/* 신고 사유 바텀시트 */}
           {showReportSheet && (

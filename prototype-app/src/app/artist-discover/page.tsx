@@ -11,6 +11,7 @@ import { useArtists, useFollowedArtists, useFollowArtist, useUnfollowArtist } fr
 import { ARTIST_DISCOVER_PRESET_OPTIONS } from '@/lib/presets/artistDiscover';
 import { cn } from '@/lib/utils';
 import ArtistAvatar, { getArtistEmoji } from '@/components/artist/ArtistAvatar';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 import type { Artist } from '@/lib/types';
 
 export default function ArtistDiscoverPage() {
@@ -245,25 +246,25 @@ export default function ArtistDiscoverPage() {
       )}
 
       {/* 언팔로우 확인 모달 */}
-      {unfollowTarget && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
-          <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 bg-white rounded-2xl w-72 p-5 text-center shadow-xl animate-scaleIn" role="dialog" aria-modal="true" aria-label="아티스트 언팔로우 확인">
-            <ArtistAvatar artistId={unfollowTarget.id} size="xl" className="mx-auto" />
-            <p className="text-sm font-bold text-gray-900 mt-3">'{unfollowTarget.name}'을 언팔로우할까요?</p>
-            <p className="text-xs text-gray-400 mt-1">기존 활동 데이터는 보존됩니다.</p>
-            <div className="flex gap-2 mt-4">
-              <button onClick={() => setUnfollowTarget(null)}
-                className="flex-1 py-2.5 rounded-xl bg-gray-100 text-sm font-semibold text-gray-600">취소</button>
-              <button onClick={handleUnfollow}
-                disabled={unfollowMutation.isPending}
-                className="flex-1 py-2.5 rounded-xl bg-red-500 text-sm font-semibold text-white disabled:bg-red-300">
-                {unfollowMutation.isPending ? '처리중...' : '언팔로우'}
-              </button>
+      <ConfirmModal
+        open={!!unfollowTarget}
+        title={unfollowTarget ? `'${unfollowTarget.name}'을 언팔로우할까요?` : '언팔로우'}
+        confirmLabel="언팔로우"
+        cancelLabel="취소"
+        confirmVariant="danger"
+        onConfirm={handleUnfollow}
+        onCancel={() => setUnfollowTarget(null)}
+        disabled={unfollowMutation.isPending}
+      >
+        {unfollowTarget && (
+          <>
+            <div className="flex justify-center mb-3">
+              <ArtistAvatar artistId={unfollowTarget.id} size="xl" className="mx-auto" />
             </div>
-          </div>
-        </div>
-      )}
+            <p className="text-xs text-gray-400">기존 활동 데이터는 보존됩니다.</p>
+          </>
+        )}
+      </ConfirmModal>
 
       <PresetSelector presets={ARTIST_DISCOVER_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
     </div>

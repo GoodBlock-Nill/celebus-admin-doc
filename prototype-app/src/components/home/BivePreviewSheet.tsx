@@ -2,23 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-
-interface BiveItem {
-  name: string;
-  grade: string;
-  emoji: string;
-  howToGet: string;
-}
-
-const BIVE_LIST_FOR_INDEX: BiveItem[] = [
-  { name: 'V01D 데뷔 포토', grade: 'Grade 1', emoji: '📸', howToGet: 'Quest 1장 완료 시 획득' },
-  { name: 'V01D 콘서트 메모리', grade: 'Grade 2', emoji: '🎤', howToGet: 'Quest 2장 완료 시 획득' },
-  { name: 'V01D 음방 1위', grade: 'Grade 3', emoji: '🏆', howToGet: 'Quest 3장 완료 시 획득' },
-  { name: 'V01D 스페셜 에디션', grade: '스페셜', emoji: '✨', howToGet: 'Grade 1~5 전체 합성으로 획득' },
-];
+import { BIVE_PREVIEW_LIST } from '@/lib/data/bive';
+import type { BivePreviewItem } from '@/lib/data/bive';
 
 interface BivePreviewSheetProps {
-  bive: BiveItem | null;
+  bive: BivePreviewItem | null;
   onClose: () => void;
 }
 
@@ -27,7 +15,7 @@ export default function BivePreviewSheet({ bive, onClose }: BivePreviewSheetProp
 
   if (!bive) return null;
 
-  const isOwned = BIVE_LIST_FOR_INDEX.indexOf(bive) === 0;
+  const isOwned = BIVE_PREVIEW_LIST.indexOf(bive) === 0;
 
   return (
     <div

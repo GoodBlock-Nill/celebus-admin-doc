@@ -13,21 +13,9 @@ import AppHeader from '@/components/layout/AppHeader';
 import GuestBanner from '@/components/ui/GuestBanner';
 import { HOME_PRESET_OPTIONS, getHomePresetState } from '@/lib/presets/home';
 import BivePreviewSheet from '@/components/home/BivePreviewSheet';
-
-interface BiveItem {
-  name: string;
-  grade: string;
-  emoji: string;
-  owned: boolean;
-  howToGet: string;
-}
-
-const BIVE_LIST: Omit<BiveItem, 'owned'>[] = [
-  { name: 'V01D 데뷔 포토', grade: 'Grade 1', emoji: '📸', howToGet: 'Quest 1장 완료 시 획득' },
-  { name: 'V01D 콘서트 메모리', grade: 'Grade 2', emoji: '🎤', howToGet: 'Quest 2장 완료 시 획득' },
-  { name: 'V01D 음방 1위', grade: 'Grade 3', emoji: '🏆', howToGet: 'Quest 3장 완료 시 획득' },
-  { name: 'V01D 스페셜 에디션', grade: '스페셜', emoji: '✨', howToGet: 'Grade 1~5 전체 합성으로 획득' },
-];
+import ShortcutCards from '@/components/home/ShortcutCards';
+import { BIVE_PREVIEW_LIST } from '@/lib/data/bive';
+import type { BivePreviewItem } from '@/lib/data/bive';
 
 
 export default function HomePage() {
@@ -43,7 +31,7 @@ export default function HomePage() {
   const [checkedIn, setCheckedIn] = useState(false);
   const [missionDone, setMissionDone] = useState(false);
   const [streak, setStreak] = useState(12);
-  const [selectedBive, setSelectedBive] = useState<(typeof BIVE_LIST)[number] | null>(null);
+  const [selectedBive, setSelectedBive] = useState<BivePreviewItem | null>(null);
   const [preset, setPreset] = useState('loginContent');
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
@@ -222,92 +210,7 @@ export default function HomePage() {
             <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">바로가기</span>
             <div className="flex-1 h-px bg-gray-100" />
           </div>
-
-          <div className="space-y-2">
-
-            {/* 키우기 */}
-            <button onClick={() => router.push('/fandom-level')}
-              className="w-full bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-xl px-4 py-3.5 text-left active:scale-[0.98] transition-transform">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
-                  <span className="text-lg">🏆</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[9px] font-bold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded-full">Lv.3</span>
-                    <p className="text-xs font-semibold text-gray-900 truncate">{artist.name} 키우기</p>
-                  </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <div className="flex-1 h-1.5 bg-amber-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-amber-400 rounded-full" style={{ width: '60%' }} />
-                    </div>
-                    <span className="text-[9px] text-amber-600 shrink-0">60%</span>
-                  </div>
-                </div>
-                <span className="text-xs text-amber-600 font-medium shrink-0">→</span>
-              </div>
-            </button>
-
-            {/* 응원하기 */}
-            <button onClick={() => router.push('/support')}
-              className="w-full bg-gradient-to-r from-violet-50 to-pink-50 border border-violet-200 rounded-xl px-4 py-3.5 text-left active:scale-[0.98] transition-transform">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center shrink-0">
-                  <span className="text-lg">💜</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[9px] font-semibold text-pink-600 bg-pink-100 px-1.5 py-0.5 rounded-full">달성 임박!</span>
-                    <p className="text-xs font-semibold text-gray-900 truncate">☕ 커피차 서포트</p>
-                  </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <div className="flex-1 h-1.5 bg-violet-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-violet-500 rounded-full" style={{ width: '85%' }} />
-                    </div>
-                    <span className="text-[9px] text-violet-600 shrink-0">85%</span>
-                  </div>
-                </div>
-                <span className="text-xs text-violet-600 font-medium shrink-0">→</span>
-              </div>
-            </button>
-
-            {/* 오늘의 일정/소식 */}
-            <button onClick={() => router.push('/info')}
-              className="w-full bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl px-4 py-3.5 text-left active:scale-[0.98] transition-transform">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
-                  <span className="text-lg">📅</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[9px] font-semibold text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded-full">오늘</span>
-                    <p className="text-xs font-semibold text-gray-900 truncate">14:00 음악중심 출연</p>
-                  </div>
-                  <p className="text-[10px] text-gray-500 mt-0.5 truncate">📰 신곡 뮤비 티저 공개 · +2건</p>
-                </div>
-                <span className="text-xs text-blue-500 font-medium shrink-0">→</span>
-              </div>
-            </button>
-
-            {/* Raffle */}
-            <button onClick={() => router.push('/raffle')}
-              className="w-full bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-200 rounded-xl px-4 py-3.5 text-left active:scale-[0.98] transition-transform">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-pink-100 flex items-center justify-center shrink-0">
-                  <span className="text-lg">🎁</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[9px] font-semibold text-pink-600 bg-pink-100 px-1.5 py-0.5 rounded-full">D-5</span>
-                    <p className="text-xs font-semibold text-gray-900 truncate">사인앨범 래플</p>
-                  </div>
-                  <p className="text-[10px] text-gray-500 mt-0.5">128명 참여중 · 응모권 15장 보유</p>
-                </div>
-                <span className="text-xs text-pink-500 font-medium shrink-0">응모 →</span>
-              </div>
-            </button>
-
-          </div>
+          <ShortcutCards artistName={artist.name} />
         </div>
       )}
 
@@ -321,7 +224,7 @@ export default function HomePage() {
 
           <>
             <div className="grid grid-cols-2 gap-2">
-              {BIVE_LIST.map((bive, i) => {
+              {BIVE_PREVIEW_LIST.map((bive, i) => {
                 const owned = i === 0;
                 return (
                   <button key={bive.name}

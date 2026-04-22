@@ -11,6 +11,7 @@ import { useSeasons, useRanking, useVirtueHistory } from '@/lib/hooks/useRanking
 import { useUserCurrency } from '@/lib/hooks/useUser';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn, formatNumber } from '@/lib/utils';
+import BottomSheet from '@/components/ui/BottomSheet';
 import { RANKING_PRESET_OPTIONS, applyRankingPreset } from '@/lib/presets/ranking';
 
 export default function VirtuePage() {
@@ -224,33 +225,26 @@ export default function VirtuePage() {
       <PresetSelector presets={RANKING_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
 
       {/* 덕력 이력 바텀시트 */}
-      {showHistory && (
-        <div className="fixed inset-0 z-[100] flex items-end" onClick={() => setShowHistory(false)}>
-          <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[430px] mx-auto bg-white rounded-t-2xl px-5 py-6 animate-slideInUp" role="dialog" aria-modal="true" aria-label="덕력 이력" onClick={(e) => e.stopPropagation()}>
-            <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
-            <h3 className="text-base font-bold text-gray-900 mb-4">덕력 이력</h3>
-            <div className="space-y-3 max-h-[50vh] overflow-y-auto">
-              {(history ?? []).map((item, i) => (
-                <button key={i} className="w-full flex items-center justify-between py-0.5 active:bg-gray-50 rounded-lg transition-colors"
-                  onClick={(e) => { e.stopPropagation(); if (item.type !== 'earn') addToast('info', `${item.description} 상세 이동`); }}>
-                  <span className="text-sm text-gray-700 text-left">{item.description}</span>
-                  <div className="flex items-center gap-2 shrink-0 ml-2">
-                    <span className={cn('text-sm font-semibold', item.amount > 0 ? 'text-green-600' : 'text-red-500')}>
-                      {item.amount > 0 ? '+' : ''}{item.amount}pt
-                    </span>
-                    <span className="text-[10px] text-gray-400">{item.createdAt?.slice(5, 10).replace('-', '.')}</span>
-                    {item.type !== 'earn' && <span className="text-[10px] text-gray-300">→</span>}
-                  </div>
-                </button>
-              ))}
-              {(!history || history.length === 0) && (
-                <p className="text-sm text-gray-400 text-center py-4">아직 덕력 이력이 없어요</p>
-              )}
-            </div>
-          </div>
+      <BottomSheet open={showHistory} onClose={() => setShowHistory(false)} title="덕력 이력">
+        <div className="space-y-3 max-h-[50vh] overflow-y-auto">
+          {(history ?? []).map((item, i) => (
+            <button key={i} className="w-full flex items-center justify-between py-0.5 active:bg-gray-50 rounded-lg transition-colors"
+              onClick={() => { if (item.type !== 'earn') addToast('info', `${item.description} 상세 이동`); }}>
+              <span className="text-sm text-gray-700 text-left">{item.description}</span>
+              <div className="flex items-center gap-2 shrink-0 ml-2">
+                <span className={cn('text-sm font-semibold', item.amount > 0 ? 'text-green-600' : 'text-red-500')}>
+                  {item.amount > 0 ? '+' : ''}{item.amount}pt
+                </span>
+                <span className="text-[10px] text-gray-400">{item.createdAt?.slice(5, 10).replace('-', '.')}</span>
+                {item.type !== 'earn' && <span className="text-[10px] text-gray-300">→</span>}
+              </div>
+            </button>
+          ))}
+          {(!history || history.length === 0) && (
+            <p className="text-sm text-gray-400 text-center py-4">아직 덕력 이력이 없어요</p>
+          )}
         </div>
-      )}
+      </BottomSheet>
     </div>
   );
 }

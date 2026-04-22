@@ -16,6 +16,7 @@ import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useUIStore } from '@/stores/useUIStore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { QUEST_PRESET_OPTIONS, applyQuestPreset } from '@/lib/presets/quest';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 import type { QuestChapter } from '@/lib/types';
 
 export default function QuestPage() {
@@ -224,40 +225,30 @@ export default function QuestPage() {
       <PresetSelector presets={QUEST_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
 
       {/* 5장 완료 축하 모달 (A-1) */}
-      {showCompleteModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
-          <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[340px] bg-white rounded-2xl overflow-hidden animate-scaleIn text-center px-6 py-8" role="dialog" aria-modal="true" aria-label="챌린지 완주 축하">
-            <p className="text-4xl mb-3">🎉</p>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">{artistName} 챌린지 완주!</h3>
-            <p className="text-sm text-gray-500 mb-6">
-              5장의 스토리를 모두 완료했습니다!<br />특별한 보상이 준비되어 있어요.
-            </p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => {
-                  setShowCompleteModal(false);
-                  setCompleteModalShown(true);
-                  setStoryRewardClaimed(true);
-                  addToast('success', '🎉 5장 완료 보상을 수령했습니다! 서명 포카 래플 자격 + 독점 콘텐츠 해금');
-                }}
-                className="flex-1 py-3 bg-violet-600 text-white rounded-xl text-sm font-semibold hover:bg-violet-700 transition-colors"
-              >
-                보상 받기
-              </button>
-              <button
-                onClick={() => {
-                  setShowCompleteModal(false);
-                  setCompleteModalShown(true);
-                }}
-                className="px-4 py-3 bg-gray-100 text-gray-600 rounded-xl text-sm font-medium"
-              >
-                나중에
-              </button>
-            </div>
-          </div>
+      <ConfirmModal
+        open={showCompleteModal}
+        title="챌린지 완주 축하"
+        confirmLabel="보상 받기"
+        cancelLabel="나중에"
+        onConfirm={() => {
+          setShowCompleteModal(false);
+          setCompleteModalShown(true);
+          setStoryRewardClaimed(true);
+          addToast('success', '🎉 5장 완료 보상을 수령했습니다! 서명 포카 래플 자격 + 독점 콘텐츠 해금');
+        }}
+        onCancel={() => {
+          setShowCompleteModal(false);
+          setCompleteModalShown(true);
+        }}
+      >
+        <div className="text-center">
+          <p className="text-4xl mb-3">🎉</p>
+          <p className="text-lg font-bold text-gray-900 mb-2">{artistName} 챌린지 완주!</p>
+          <p className="text-sm text-gray-500">
+            5장의 스토리를 모두 완료했습니다!<br />특별한 보상이 준비되어 있어요.
+          </p>
         </div>
-      )}
+      </ConfirmModal>
     </div>
   );
 }

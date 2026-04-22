@@ -13,6 +13,7 @@ import { useUIStore } from '@/stores/useUIStore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { DAILY_PRESET_OPTIONS, applyDailyPreset } from '@/lib/presets/daily';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 
 export default function DailyMissionPage() {
   const { activeArtistId } = useActiveArtist();
@@ -193,27 +194,26 @@ export default function DailyMissionPage() {
       <PresetSelector presets={DAILY_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
 
       {/* 보너스 축하 모달 */}
-      {showBonusModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
-          <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[340px] bg-white rounded-2xl overflow-hidden animate-scaleIn text-center px-6 py-8" role="dialog" aria-modal="true" aria-label="스트릭 보너스 달성">
+      <ConfirmModal
+        open={!!showBonusModal}
+        title="스트릭 보너스 달성"
+        confirmLabel="받기 🎁"
+        onConfirm={() => showBonusModal && handleClaimBonus(showBonusModal.days, showBonusModal.pt)}
+        onCancel={() => setShowBonusModal(null)}
+        disabled={claimBonusMutation.isPending}
+      >
+        {showBonusModal && (
+          <div className="text-center">
             <p className="text-4xl mb-3">🔥</p>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
+            <p className="text-lg font-bold text-gray-900 mb-2">
               {showBonusModal.days}일 연속 달성!
-            </h3>
-            <p className="text-sm text-gray-500 mb-6">
+            </p>
+            <p className="text-sm text-gray-500">
               {showBonusModal.pt}pt 보너스가 준비되어 있어요!
             </p>
-            <button
-              onClick={() => handleClaimBonus(showBonusModal.days, showBonusModal.pt)}
-              disabled={claimBonusMutation.isPending}
-              className="w-full py-3 bg-amber-500 text-white rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors disabled:opacity-50"
-            >
-              받기 🎁
-            </button>
           </div>
-        </div>
-      )}
+        )}
+      </ConfirmModal>
 
     </div>
   );

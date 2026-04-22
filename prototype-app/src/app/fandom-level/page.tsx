@@ -11,6 +11,7 @@ import { useFandomLevel } from '@/lib/hooks/useFandom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn, formatNumber } from '@/lib/utils';
 import { FANDOM_PRESET_OPTIONS, applyFandomPreset } from '@/lib/presets/fandom';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 
 export default function FandomLevelPage() {
   const { activeArtistId, artistName } = useActiveArtist();
@@ -205,19 +206,19 @@ export default function FandomLevelPage() {
       <PresetSelector presets={FANDOM_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
 
       {/* 레벨업 축하 모달 */}
-      {showLevelUpModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
-          <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[340px] bg-white rounded-2xl px-6 py-8 animate-scaleIn text-center" role="dialog" aria-modal="true" aria-label="레벨 달성">
-            <p className="text-4xl mb-3">🎉</p>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">{artistName} Lv.{data.currentLevel} 달성!</h3>
-            <p className="text-sm text-gray-500 mb-6">우리 팬덤이 함께 달성했어요!</p>
-            <button onClick={() => setShowLevelUpModal(false)} className="w-full py-3 bg-amber-500 text-white rounded-xl text-sm font-semibold">
-              보상 확인하기
-            </button>
-          </div>
+      <ConfirmModal
+        open={showLevelUpModal}
+        title="레벨 달성"
+        confirmLabel="보상 확인하기"
+        onConfirm={() => setShowLevelUpModal(false)}
+        onCancel={() => setShowLevelUpModal(false)}
+      >
+        <div className="text-center">
+          <p className="text-4xl mb-3">🎉</p>
+          <p className="text-lg font-bold text-gray-900 mb-2">{artistName} Lv.{data.currentLevel} 달성!</p>
+          <p className="text-sm text-gray-500">우리 팬덤이 함께 달성했어요!</p>
         </div>
-      )}
+      </ConfirmModal>
     </div>
   );
 }

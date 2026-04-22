@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 interface ConfirmModalProps {
   open: boolean;
   title: string;
@@ -23,6 +25,13 @@ export default function ConfirmModal({
   confirmVariant = 'primary',
   disabled,
 }: ConfirmModalProps) {
+  useEffect(() => {
+    if (!open) return;
+    const handleEscape = (e: KeyboardEvent) => { if (e.key === 'Escape') onCancel(); };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [open, onCancel]);
+
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
