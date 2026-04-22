@@ -224,7 +224,7 @@ export default function InfoPage() {
       {showNoticeSheet && (
         <div className="fixed inset-0 z-[100] flex items-end" onClick={() => setShowNoticeSheet(false)}>
           <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[430px] mx-auto bg-white rounded-t-2xl px-5 py-6 animate-slideInUp" onClick={(e) => e.stopPropagation()}>
+          <div className="relative z-10 w-full max-w-[430px] mx-auto bg-white rounded-t-2xl px-5 py-6 animate-slideInUp" role="dialog" aria-modal="true" aria-label="공지 상세" onClick={(e) => e.stopPropagation()}>
             <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
             <h3 className="text-base font-bold text-gray-900 mb-1">{latestNotice?.title}</h3>
             <p className="text-[10px] text-gray-400 mb-4">{latestNotice?.date}</p>
@@ -251,7 +251,7 @@ export default function InfoPage() {
       {showScheduleSheet && (
         <div className="fixed inset-0 z-[100] flex items-end" onClick={() => setShowScheduleSheet(null)}>
           <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[430px] mx-auto bg-white rounded-t-2xl px-5 py-6 animate-slideInUp" onClick={(e) => e.stopPropagation()}>
+          <div className="relative z-10 w-full max-w-[430px] mx-auto bg-white rounded-t-2xl px-5 py-6 animate-slideInUp" role="dialog" aria-modal="true" aria-label="일정 상세" onClick={(e) => e.stopPropagation()}>
             <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
             {showScheduleSheet.exclusive && (
               <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold mb-2 inline-block">

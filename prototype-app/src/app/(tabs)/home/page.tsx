@@ -38,6 +38,7 @@ export default function HomePage() {
 
   const [bannerFilter, setBannerFilter] = useState<'active' | 'closing' | 'ended'>('active');
   const [bannerIdx, setBannerIdx] = useState(0);
+  const [carouselTouchX, setCarouselTouchX] = useState(0);
   const [checkedIn, setCheckedIn] = useState(false);
   const [missionDone, setMissionDone] = useState(false);
   const [streak, setStreak] = useState(12);
@@ -67,6 +68,12 @@ export default function HomePage() {
   const banners = hasContent ? allBanners : [];
   const filteredBanners = banners.filter(() => bannerFilter === 'active');
 
+  const handleCarouselSwipe = useCallback((direction: 'left' | 'right') => {
+    const maxIdx = filteredBanners.length - 1;
+    if (direction === 'left') setBannerIdx((i) => Math.min(i + 1, maxIdx));
+    else setBannerIdx((i) => Math.max(i - 1, 0));
+  }, [filteredBanners.length]);
+
   const handleCheckIn = useCallback(() => {
     if (checkedIn) return;
     setCheckedIn(true);
@@ -84,7 +91,14 @@ export default function HomePage() {
       {/* TODO (HOM-001): 다른 아티스트 이벤트 배너 탭 시 "이 아티스트를 팔로우하시겠습니까?" 인라인 배너 표시.
           현재 프로토타입은 V01D 단일 아티스트만 지원하므로 해당 분기 생략. */}
       <div className="px-4 mt-3">
-        <div className="relative bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl overflow-hidden h-36">
+        <div
+          className="relative bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl overflow-hidden h-36"
+          onTouchStart={(e) => setCarouselTouchX(e.touches[0].clientX)}
+          onTouchEnd={(e) => {
+            const diff = e.changedTouches[0].clientX - carouselTouchX;
+            if (Math.abs(diff) > 50) handleCarouselSwipe(diff < 0 ? 'left' : 'right');
+          }}
+        >
           <button onClick={() => router.push('/events')} className="absolute top-3 right-4 z-10 text-[11px] font-semibold text-white bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full hover:bg-white/30 transition-colors">
             전체 보기 →
           </button>
@@ -333,7 +347,7 @@ export default function HomePage() {
       {/* BIVE 미리보기 바텀시트 */}
       {selectedBive && (
         <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40" onClick={() => setSelectedBive(null)}>
-          <div className="bg-white rounded-t-2xl w-full max-w-lg p-5 pb-28 animate-slideInUp" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-t-2xl w-full max-w-lg p-5 pb-28 animate-slideInUp" role="dialog" aria-modal="true" aria-label="BIVE 미리보기" onClick={(e) => e.stopPropagation()}>
             <div className="flex flex-col items-center">
               <div className="w-32 h-32 rounded-2xl bg-violet-100 flex items-center justify-center mb-4">
                 <span className="text-5xl">{selectedBive.emoji}</span>

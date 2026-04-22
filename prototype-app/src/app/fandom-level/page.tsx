@@ -208,7 +208,7 @@ export default function FandomLevelPage() {
       {showLevelUpModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[340px] bg-white rounded-2xl px-6 py-8 animate-scaleIn text-center">
+          <div className="relative z-10 w-full max-w-[340px] bg-white rounded-2xl px-6 py-8 animate-scaleIn text-center" role="dialog" aria-modal="true" aria-label="레벨 달성">
             <p className="text-4xl mb-3">🎉</p>
             <h3 className="text-lg font-bold text-gray-900 mb-2">{artistName} Lv.{data.currentLevel} 달성!</h3>
             <p className="text-sm text-gray-500 mb-6">우리 팬덤이 함께 달성했어요!</p>

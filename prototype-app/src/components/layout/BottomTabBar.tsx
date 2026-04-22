@@ -44,6 +44,8 @@ export default function BottomTabBar() {
               key={key}
               href={href}
               className="flex-1 flex flex-col items-center justify-center gap-0.5"
+              aria-label={label}
+              aria-current={isActive ? 'page' : undefined}
             >
               <TabIcon
                 className={`w-5 h-5 transition-colors ${isActive ? 'text-violet-600' : 'text-gray-400'}`}

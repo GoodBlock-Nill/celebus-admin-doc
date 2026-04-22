@@ -248,7 +248,7 @@ export default function ArtistDiscoverPage() {
       {unfollowTarget && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 bg-white rounded-2xl w-72 p-5 text-center shadow-xl animate-scaleIn">
+          <div className="relative z-10 bg-white rounded-2xl w-72 p-5 text-center shadow-xl animate-scaleIn" role="dialog" aria-modal="true" aria-label="아티스트 언팔로우 확인">
             <ArtistAvatar artistId={unfollowTarget.id} size="xl" className="mx-auto" />
             <p className="text-sm font-bold text-gray-900 mt-3">'{unfollowTarget.name}'을 언팔로우할까요?</p>
             <p className="text-xs text-gray-400 mt-1">기존 활동 데이터는 보존됩니다.</p>

@@ -242,7 +242,7 @@ export default function QuestPage() {
       {showCompleteModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[340px] bg-white rounded-2xl overflow-hidden animate-scaleIn text-center px-6 py-8">
+          <div className="relative z-10 w-full max-w-[340px] bg-white rounded-2xl overflow-hidden animate-scaleIn text-center px-6 py-8" role="dialog" aria-modal="true" aria-label="챌린지 완주 축하">
             <p className="text-4xl mb-3">🎉</p>
             <h3 className="text-lg font-bold text-gray-900 mb-2">{artistName} 챌린지 완주!</h3>
             <p className="text-sm text-gray-500 mb-6">

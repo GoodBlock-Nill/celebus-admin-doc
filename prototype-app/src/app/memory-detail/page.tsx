@@ -283,7 +283,7 @@ export default function MemoryDetailPage() {
           {/* ⋯ 메뉴 바텀시트 */}
           {showMenu && (
             <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={() => setShowMenu(false)}>
-              <div className="bg-white rounded-t-2xl w-full max-w-lg p-4 pb-8 safe-bottom" onClick={(e) => e.stopPropagation()}>
+              <div className="bg-white rounded-t-2xl w-full max-w-lg p-4 pb-8 safe-bottom" role="dialog" aria-modal="true" aria-label="기억 메뉴" onClick={(e) => e.stopPropagation()}>
                 {memory.isMine ? (
                   <div className="space-y-1">
                     <button onClick={() => { setShowMenu(false); router.push('/memory-create'); }}
@@ -304,7 +304,7 @@ export default function MemoryDetailPage() {
           {/* 삭제 확인 모달 */}
           {showDeleteModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowDeleteModal(false)}>
-              <div className="bg-white rounded-2xl w-72 p-5 text-center shadow-xl" onClick={(e) => e.stopPropagation()}>
+              <div className="bg-white rounded-2xl w-72 p-5 text-center shadow-xl" role="dialog" aria-modal="true" aria-label="기억 삭제 확인" onClick={(e) => e.stopPropagation()}>
                 <p className="text-sm font-bold text-gray-900">삭제한 기억은 복구할 수 없어요.</p>
                 <p className="text-xs text-gray-400 mt-1">삭제할까요?</p>
                 <div className="flex gap-2 mt-4">
@@ -320,7 +320,7 @@ export default function MemoryDetailPage() {
           {/* 신고 사유 바텀시트 */}
           {showReportSheet && (
             <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={() => setShowReportSheet(false)}>
-              <div className="bg-white rounded-t-2xl w-full max-w-lg p-4 pb-8 safe-bottom" onClick={(e) => e.stopPropagation()}>
+              <div className="bg-white rounded-t-2xl w-full max-w-lg p-4 pb-8 safe-bottom" role="dialog" aria-modal="true" aria-label="신고 사유 선택" onClick={(e) => e.stopPropagation()}>
                 <p className="text-sm font-bold text-gray-900 text-center mb-3">신고 사유를 선택해주세요</p>
                 {['부적절한 콘텐츠', '스팸', '욕설·혐오', '개인정보 노출', '기타'].map((reason) => (
                   <button key={reason} onClick={() => handleReport(reason)}
@@ -336,7 +336,7 @@ export default function MemoryDetailPage() {
 
           {/* 풀스크린 이미지 뷰어 */}
           {fullscreenImg !== null && (
-            <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+            <div className="fixed inset-0 z-50 bg-black flex items-center justify-center" role="dialog" aria-modal="true" aria-label="사진 전체화면">
               <button onClick={() => setFullscreenImg(null)} className="absolute top-4 right-4 text-white text-2xl z-10">✕</button>
               {/* Fix 9: 핀치 줌 — touch-action: pinch-zoom 적용
                   Full pinch-to-zoom with gesture tracking requires a library (e.g. react-use-gesture).

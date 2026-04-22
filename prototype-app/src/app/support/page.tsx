@@ -122,7 +122,7 @@ export default function SupportPage() {
       {showConfirmModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
           <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[340px] bg-white rounded-2xl px-6 py-6 animate-scaleIn">
+          <div className="relative z-10 w-full max-w-[340px] bg-white rounded-2xl px-6 py-6 animate-scaleIn" role="dialog" aria-modal="true" aria-label="덕력 응원">
             <h3 className="text-base font-bold text-gray-900 mb-3">덕력 응원</h3>
             <p className="text-sm text-gray-700 leading-relaxed mb-2">덕력 {formatNumber(showConfirmModal.amount)}pt를 응원합니다.</p>
             <p className="text-xs text-violet-600 font-medium mb-2">응원 후 잔액: {formatNumber(Math.max(0, myHeldPt - showConfirmModal.amount))}pt</p>
@@ -143,7 +143,7 @@ export default function SupportPage() {
 
       {/* Fix #12: 결과 이미지 전체화면 오버레이 */}
       {fullscreenImage && (
-        <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center" onClick={() => setFullscreenImage(null)}>
+        <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center" role="dialog" aria-modal="true" aria-label="결과 이미지 전체화면" onClick={() => setFullscreenImage(null)}>
           <button className="absolute top-4 right-4 text-white text-2xl z-10">✕</button>
           <img src={fullscreenImage} alt="" className="max-w-full max-h-full object-contain" />
         </div>

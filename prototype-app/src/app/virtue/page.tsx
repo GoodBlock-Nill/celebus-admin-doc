@@ -227,7 +227,7 @@ export default function VirtuePage() {
       {showHistory && (
         <div className="fixed inset-0 z-[100] flex items-end" onClick={() => setShowHistory(false)}>
           <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
-          <div className="relative z-10 w-full max-w-[430px] mx-auto bg-white rounded-t-2xl px-5 py-6 animate-slideInUp" onClick={(e) => e.stopPropagation()}>
+          <div className="relative z-10 w-full max-w-[430px] mx-auto bg-white rounded-t-2xl px-5 py-6 animate-slideInUp" role="dialog" aria-modal="true" aria-label="덕력 이력" onClick={(e) => e.stopPropagation()}>
             <div className="w-10 h-1 bg-gray-200 rounded-full mx-auto mb-4" />
             <h3 className="text-base font-bold text-gray-900 mb-4">덕력 이력</h3>
             <div className="space-y-3 max-h-[50vh] overflow-y-auto">
