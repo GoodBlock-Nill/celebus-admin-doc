@@ -11,8 +11,27 @@ interface ServiceCardProps {
   disabled?: boolean;
 }
 
+const GROUP_COLORS: Record<string, { bg: string; iconBg: string; accent: string }> = {
+  mission: {
+    bg: 'from-violet-50 to-purple-50 border-violet-100',
+    iconBg: 'bg-violet-100',
+    accent: 'text-violet-600',
+  },
+  record: {
+    bg: 'from-blue-50 to-indigo-50 border-blue-100',
+    iconBg: 'bg-blue-100',
+    accent: 'text-blue-600',
+  },
+  more: {
+    bg: 'from-gray-50 to-slate-50 border-gray-150',
+    iconBg: 'bg-gray-100',
+    accent: 'text-gray-600',
+  },
+};
+
 export default function ServiceCard({ card, fullWidth = false, disabled = false }: ServiceCardProps) {
   const addToast = useUIStore((s) => s.addToast);
+  const colors = GROUP_COLORS[card.group] ?? GROUP_COLORS.more;
 
   const handleComingSoon = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -22,10 +41,11 @@ export default function ServiceCard({ card, fullWidth = false, disabled = false 
   const content = (
     <div
       className={cn(
-        'relative rounded-2xl p-4 flex flex-col gap-2 transition-transform active:scale-[0.97]',
-        'bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200',
-        'min-h-[120px]',
-        fullWidth ? 'col-span-2' : ''
+        'relative rounded-2xl p-4 flex flex-col gap-3 transition-all active:scale-[0.97]',
+        'bg-gradient-to-br border',
+        colors.bg,
+        'min-h-[110px]',
+        fullWidth ? 'col-span-2 flex-row items-center' : ''
       )}
     >
       {card.comingSoon && (
@@ -35,10 +55,12 @@ export default function ServiceCard({ card, fullWidth = false, disabled = false 
           </span>
         </div>
       )}
-      <span className="text-2xl">{card.icon}</span>
-      <div>
-        <h3 className="text-sm font-semibold text-gray-900">{card.title}</h3>
-        <p className="text-xs text-gray-500 mt-0.5">{card.statusText}</p>
+      <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center shrink-0', colors.iconBg)}>
+        <span className="text-xl">{card.icon}</span>
+      </div>
+      <div className={fullWidth ? 'flex-1' : ''}>
+        <h3 className="text-[13px] font-bold text-gray-900 leading-tight">{card.title}</h3>
+        <p className={cn('text-[11px] font-medium mt-0.5', colors.accent)}>{card.statusText}</p>
       </div>
     </div>
   );
@@ -53,7 +75,7 @@ export default function ServiceCard({ card, fullWidth = false, disabled = false 
 
   if (card.comingSoon) {
     return (
-      <button onClick={handleComingSoon} className={cn('text-left', fullWidth ? 'col-span-2' : '')}>
+      <button onClick={handleComingSoon} className={cn('text-left w-full', fullWidth ? 'col-span-2' : '')}>
         {content}
       </button>
     );
@@ -63,7 +85,7 @@ export default function ServiceCard({ card, fullWidth = false, disabled = false 
 
   if (IMPLEMENTED_ROUTES.includes(card.href)) {
     return (
-      <Link href={card.href} className={cn(fullWidth ? 'col-span-2' : '')}>
+      <Link href={card.href} className={cn('block', fullWidth ? 'col-span-2' : '')}>
         {content}
       </Link>
     );
@@ -75,11 +97,7 @@ export default function ServiceCard({ card, fullWidth = false, disabled = false 
   };
 
   return (
-    <Link
-      href={card.href}
-      onClick={handleSubScreenClick}
-      className={cn(fullWidth ? 'col-span-2' : '')}
-    >
+    <Link href={card.href} onClick={handleSubScreenClick} className={cn('block', fullWidth ? 'col-span-2' : '')}>
       {content}
     </Link>
   );

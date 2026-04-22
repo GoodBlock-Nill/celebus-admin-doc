@@ -6,6 +6,7 @@ import OnboardingOverlay from '@/components/artist/OnboardingOverlay';
 import ServiceCard from '@/components/cards/ServiceCard';
 import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
+import { cn } from '@/lib/utils';
 import { ARTIST_PRESET_OPTIONS, getArtistPresetState } from '@/lib/presets/artist';
 import { SERVICE_GROUP_LABELS } from '@/lib/types';
 import type { ServiceCardData, ServiceCardGroup } from '@/lib/types';
@@ -139,7 +140,10 @@ export default function ArtistPage() {
             <section key={group}>
               {/* 그룹 라벨 */}
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                <span className={cn(
+                  'text-xs font-bold tracking-wider',
+                  group === 'mission' ? 'text-violet-500' : group === 'record' ? 'text-blue-500' : 'text-gray-400'
+                )}>
                   {SERVICE_GROUP_LABELS[group]}
                 </span>
                 <div className="flex-1 h-px bg-gray-100" />
