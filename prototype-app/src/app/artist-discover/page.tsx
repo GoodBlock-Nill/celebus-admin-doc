@@ -4,48 +4,50 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import PresetSelector from '@/components/dev/PresetSelector';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useUIStore } from '@/stores/useUIStore';
+import { useArtistStore } from '@/stores/useArtistStore';
+import { useArtists, useFollowedArtists, useFollowArtist, useUnfollowArtist } from '@/lib/hooks/useArtists';
 import { ARTIST_DISCOVER_PRESET_OPTIONS } from '@/lib/presets/artistDiscover';
 import { cn } from '@/lib/utils';
+import type { Artist } from '@/lib/types';
 
-interface DiscoverArtist {
-  id: string;
-  name: string;
-  nameEn: string;
-  emoji: string;
-  members: number;
-  recommended: boolean;
-}
-
-const ALL_ARTISTS: DiscoverArtist[] = [
-  { id: 'v01d', name: 'V01D', nameEn: 'V01D', emoji: '💜', members: 4, recommended: true },
-  { id: 'ikon', name: 'iKON', nameEn: 'iKON', emoji: '🔥', members: 6, recommended: true },
-  { id: 'newjeans', name: 'NewJeans', nameEn: 'NewJeans', emoji: '🐰', members: 5, recommended: true },
-  { id: 'ateez', name: 'ATEEZ', nameEn: 'ATEEZ', emoji: '⚓', members: 8, recommended: false },
-  { id: 'txt', name: 'TOMORROW X TOGETHER', nameEn: 'TXT', emoji: '💙', members: 5, recommended: false },
-  { id: 'stayc', name: 'STAYC', nameEn: 'STAYC', emoji: '🌟', members: 6, recommended: false },
-];
+// 아티스트별 이모지 (DB에 없으므로 클라이언트에서 매핑)
+const ARTIST_EMOJI: Record<string, string> = {
+  v01d: '💜',
+  ikon: '🔥',
+  newjeans: '🐰',
+  ateez: '⚓',
+  txt: '💙',
+  stayc: '🌟',
+};
 
 export default function ArtistDiscoverPage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
+  const setActiveArtist = useArtistStore((s) => s.setActiveArtist);
+  const activeArtistId = useArtistStore((s) => s.activeArtistId);
+
+  const { data: allArtists, isLoading: artistsLoading } = useArtists();
+  const { data: followedIds, isLoading: followsLoading } = useFollowedArtists();
+  const followMutation = useFollowArtist();
+  const unfollowMutation = useUnfollowArtist();
+
   const [preset, setPreset] = useState('default');
-  const [followed, setFollowed] = useState<Set<string>>(new Set(['v01d']));
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [unfollowTarget, setUnfollowTarget] = useState<Artist | null>(null);
 
   const handlePreset = (key: string) => {
     setPreset(key);
-    if (key === 'allFollowed') setFollowed(new Set(ALL_ARTISTS.map((a) => a.id)));
-    else if (key === 'default') setFollowed(new Set(['v01d']));
-    else if (key === 'searchEmpty') { setSearchOpen(true); setSearchQuery('zzzznotfound'); }
-    else setFollowed(new Set(['v01d']));
+    if (key === 'searchEmpty') { setSearchOpen(true); setSearchQuery('zzzznotfound'); }
   };
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [unfollowTarget, setUnfollowTarget] = useState<DiscoverArtist | null>(null);
 
-  const artists = ALL_ARTISTS;
-  const followedArtists = artists.filter((a) => followed.has(a.id));
-  const recommendedArtists = artists.filter((a) => a.recommended);
+  const isLoading = artistsLoading || followsLoading;
+  const artists = allArtists ?? [];
+  const followedSet = new Set(followedIds ?? []);
+  const followedArtists = artists.filter((a) => followedSet.has(a.id));
+  const allFollowed = artists.length > 0 && artists.every((a) => followedSet.has(a.id));
 
   const filteredArtists = searchQuery
     ? artists.filter((a) =>
@@ -54,29 +56,60 @@ export default function ArtistDiscoverPage() {
       )
     : artists;
 
-  const allFollowed = artists.length > 0 && artists.every((a) => followed.has(a.id));
-
-  const handleFollow = (artist: DiscoverArtist) => {
-    setFollowed((prev) => new Set([...prev, artist.id]));
-    addToast('success', `'${artist.name}'을 팔로우했어요!`);
-    setTimeout(() => router.push('/'), 500);
+  const handleFollow = async (artist: Artist) => {
+    try {
+      await followMutation.mutateAsync(artist.id);
+      addToast('success', `'${artist.name}'을 팔로우했어요!`);
+      setActiveArtist(artist.id);
+      setTimeout(() => router.push('/home'), 500);
+    } catch {
+      addToast('error', '팔로우에 실패했어요. 다시 시도해 주세요');
+    }
   };
 
-  const handleUnfollow = () => {
+  const handleUnfollow = async () => {
     if (!unfollowTarget) return;
-    if (followed.size <= 1) {
+
+    // 최소 1명 팔로우 필수
+    if (followedSet.size <= 1) {
       addToast('error', '최소 1명의 아티스트를 팔로우해야 해요');
       setUnfollowTarget(null);
       return;
     }
-    setFollowed((prev) => {
-      const next = new Set(prev);
-      next.delete(unfollowTarget.id);
-      return next;
-    });
-    addToast('success', '언팔로우했어요. 데이터는 보존돼요');
+
+    try {
+      await unfollowMutation.mutateAsync(unfollowTarget.id);
+      addToast('success', '언팔로우했어요. 데이터는 보존돼요');
+
+      // 현재 활성 아티스트를 언팔로우했으면 → 가장 오래된 팔로우 아티스트로 자동 전환
+      if (unfollowTarget.id === activeArtistId) {
+        const remaining = followedArtists.filter((a) => a.id !== unfollowTarget.id);
+        if (remaining.length > 0) {
+          setActiveArtist(remaining[0].id);
+        }
+      }
+    } catch {
+      addToast('error', '언팔로우에 실패했어요. 다시 시도해 주세요');
+    }
     setUnfollowTarget(null);
   };
+
+  const getEmoji = (id: string) => ARTIST_EMOJI[id] ?? '🎵';
+
+  if (isLoading) {
+    return (
+      <div className="min-h-dvh bg-white pb-8">
+        <SubPageHeader title="아티스트" />
+        <div className="px-4 mt-4 space-y-4">
+          <Skeleton className="h-20 w-full rounded-2xl" />
+          <Skeleton className="h-32 w-full rounded-2xl" />
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-14 w-full rounded-xl" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-dvh bg-white pb-8">
@@ -123,18 +156,21 @@ export default function ArtistDiscoverPage() {
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">내 아티스트</span>
                 <div className="flex-1 h-px bg-gray-100" />
               </div>
-              <div className="px-4 flex gap-3 overflow-x-auto scrollbar-hide pb-1">
+              <div className="px-4 flex gap-3 overflow-x-auto no-scrollbar pb-1">
                 {followedArtists.map((artist) => (
                   <button key={artist.id} onClick={() => {
-                      if (followedArtists.length <= 1) {
+                      if (followedSet.size <= 1) {
                         addToast('error', '최소 1명의 아티스트를 팔로우해야 해요');
                         return;
                       }
                       setUnfollowTarget(artist);
                     }}
                     className="flex flex-col items-center gap-1 shrink-0">
-                    <div className="relative w-14 h-14 rounded-full bg-violet-100 border-2 border-violet-400 flex items-center justify-center">
-                      <span className="text-xl">{artist.emoji}</span>
+                    <div className={cn(
+                      'relative w-14 h-14 rounded-full border-2 flex items-center justify-center',
+                      artist.id === activeArtistId ? 'bg-violet-100 border-violet-400' : 'bg-gray-100 border-gray-300'
+                    )}>
+                      <span className="text-xl">{getEmoji(artist.id)}</span>
                       <span className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-violet-500 text-white text-[9px] rounded-full flex items-center justify-center font-bold">✓</span>
                     </div>
                     <span className="text-[10px] font-medium text-gray-700 max-w-[56px] truncate">{artist.name}</span>
@@ -144,34 +180,30 @@ export default function ArtistDiscoverPage() {
             </div>
           )}
 
-          {/* 2. 추천 아티스트 */}
-          {recommendedArtists.length > 0 && (
+          {/* 2. 추천 아티스트 (미팔로우만) */}
+          {artists.filter((a) => !followedSet.has(a.id)).length > 0 && (
             <div className="mt-5">
               <div className="px-4 flex items-center gap-2 mb-2">
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">추천 아티스트</span>
                 <div className="flex-1 h-px bg-gray-100" />
               </div>
-              <div className="px-4 flex gap-3 overflow-x-auto scrollbar-hide pb-1">
-                {recommendedArtists.map((artist) => {
-                  const isFollowed = followed.has(artist.id);
-                  return (
-                    <div key={artist.id} className="shrink-0 w-36 bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-200 rounded-xl p-3">
-                      <div className="w-12 h-12 rounded-full bg-violet-100 flex items-center justify-center mx-auto">
-                        <span className="text-2xl">{artist.emoji}</span>
-                      </div>
-                      <p className="text-xs font-bold text-gray-900 text-center mt-2 truncate">{artist.name}</p>
-                      <p className="text-[10px] text-gray-400 text-center">{artist.members}명</p>
-                      <button
-                        onClick={() => isFollowed ? setUnfollowTarget(artist) : handleFollow(artist)}
-                        className={cn(
-                          'w-full mt-2 py-1.5 rounded-lg text-[10px] font-semibold transition-colors',
-                          isFollowed ? 'bg-gray-100 text-gray-400' : 'bg-violet-600 text-white active:bg-violet-700'
-                        )}>
-                        {isFollowed ? '팔로우 중' : '팔로우'}
-                      </button>
+              <div className="px-4 flex gap-3 overflow-x-auto no-scrollbar pb-1">
+                {artists.filter((a) => !followedSet.has(a.id)).map((artist) => (
+                  <div key={artist.id} className="shrink-0 w-36 bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-200 rounded-xl p-3">
+                    <div className="w-12 h-12 rounded-full bg-violet-100 flex items-center justify-center mx-auto">
+                      <span className="text-2xl">{getEmoji(artist.id)}</span>
                     </div>
-                  );
-                })}
+                    <p className="text-xs font-bold text-gray-900 text-center mt-2 truncate">{artist.name}</p>
+                    <p className="text-[10px] text-gray-400 text-center">{artist.members.length}명</p>
+                    <button
+                      onClick={() => handleFollow(artist)}
+                      disabled={followMutation.isPending}
+                      className="w-full mt-2 py-1.5 rounded-lg text-[10px] font-semibold bg-violet-600 text-white active:bg-violet-700 disabled:bg-gray-200 disabled:text-gray-400"
+                    >
+                      팔로우
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -189,18 +221,19 @@ export default function ArtistDiscoverPage() {
           </div>
           <div className="px-4 space-y-1">
             {filteredArtists.map((artist) => {
-              const isFollowed = followed.has(artist.id);
+              const isFollowed = followedSet.has(artist.id);
               return (
                 <div key={artist.id} className="flex items-center gap-3 py-2.5">
                   <div className="w-11 h-11 rounded-full bg-violet-100 flex items-center justify-center shrink-0">
-                    <span className="text-lg">{artist.emoji}</span>
+                    <span className="text-lg">{getEmoji(artist.id)}</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-900 truncate">{artist.name}</p>
-                    <p className="text-[10px] text-gray-400">{artist.nameEn} · {artist.members}명</p>
+                    <p className="text-[10px] text-gray-400">{artist.nameEn} · {artist.members.length}명</p>
                   </div>
                   <button
                     onClick={() => isFollowed ? setUnfollowTarget(artist) : handleFollow(artist)}
+                    disabled={followMutation.isPending || unfollowMutation.isPending}
                     className={cn(
                       'px-3.5 py-1.5 rounded-lg text-[10px] font-semibold shrink-0 transition-colors',
                       isFollowed ? 'bg-gray-100 text-gray-400' : 'bg-violet-600 text-white active:bg-violet-700'
@@ -218,22 +251,26 @@ export default function ArtistDiscoverPage() {
       {searchQuery && filteredArtists.length === 0 && (
         <div className="text-center py-16">
           <span className="text-3xl">🔍</span>
-          <p className="text-sm text-gray-400 mt-3">앗, '{searchQuery}'에 해당하는 아티스트가 없어요</p>
+          <p className="text-sm text-gray-400 mt-3">해당하는 아티스트가 없어요</p>
         </div>
       )}
 
       {/* 언팔로우 확인 모달 */}
       {unfollowTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setUnfollowTarget(null)}>
-          <div className="bg-white rounded-2xl w-72 p-5 text-center shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <span className="text-3xl">{unfollowTarget.emoji}</span>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-6">
+          <div className="absolute inset-0 bg-black/40 animate-fadeIn" />
+          <div className="relative z-10 bg-white rounded-2xl w-72 p-5 text-center shadow-xl animate-scaleIn">
+            <span className="text-3xl">{getEmoji(unfollowTarget.id)}</span>
             <p className="text-sm font-bold text-gray-900 mt-3">'{unfollowTarget.name}'을 언팔로우할까요?</p>
             <p className="text-xs text-gray-400 mt-1">기존 활동 데이터는 보존됩니다.</p>
             <div className="flex gap-2 mt-4">
               <button onClick={() => setUnfollowTarget(null)}
                 className="flex-1 py-2.5 rounded-xl bg-gray-100 text-sm font-semibold text-gray-600">취소</button>
               <button onClick={handleUnfollow}
-                className="flex-1 py-2.5 rounded-xl bg-red-500 text-sm font-semibold text-white">언팔로우</button>
+                disabled={unfollowMutation.isPending}
+                className="flex-1 py-2.5 rounded-xl bg-red-500 text-sm font-semibold text-white disabled:bg-red-300">
+                {unfollowMutation.isPending ? '처리중...' : '언팔로우'}
+              </button>
             </div>
           </div>
         </div>

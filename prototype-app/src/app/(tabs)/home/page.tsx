@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
+import { useArtistStore } from '@/stores/useArtistStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
@@ -32,7 +33,8 @@ const BANNERS = [
 
 export default function HomePage() {
   const router = useRouter();
-  const { activeArtist: artist } = useActiveArtist();
+  const { activeArtist: artist, artists } = useActiveArtist();
+  const setActiveArtist = useArtistStore((s) => s.setActiveArtist);
   const addToast = useUIStore((s) => s.addToast);
 
   const [bannerFilter, setBannerFilter] = useState<'active' | 'closing' | 'ended'>('active');
@@ -142,15 +144,24 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 3. 아티스트 선택 */}
-      <div className="px-4 mt-4 flex items-center gap-3">
-        <button className="flex flex-col items-center gap-1">
-          <div className="w-12 h-12 rounded-full bg-violet-100 border-2 border-violet-500 flex items-center justify-center overflow-hidden">
-            <img src={artist.logoUrl} alt={artist.name} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
-          </div>
-          <span className="text-[9px] font-semibold text-violet-700">{artist.name}</span>
-        </button>
-        <button onClick={() => router.push('/artist-discover')} className="flex flex-col items-center gap-1">
+      {/* 3. 아티스트 선택 — 팔로우한 아티스트 셀렉터 */}
+      <div className="px-4 mt-4 flex items-center gap-3 overflow-x-auto no-scrollbar">
+        {(artists ?? [artist]).map((a) => {
+          const isActive = a.id === artist.id;
+          return (
+            <button key={a.id} onClick={() => setActiveArtist(a.id)} className="flex flex-col items-center gap-1 shrink-0">
+              <div className={cn(
+                'w-12 h-12 rounded-full border-2 flex items-center justify-center overflow-hidden',
+                isActive ? 'bg-violet-100 border-violet-500' : 'bg-gray-100 border-gray-200'
+              )}>
+                <img src={a.logoUrl} alt={a.name} className="w-full h-full object-cover"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              </div>
+              <span className={cn('text-[9px] font-semibold', isActive ? 'text-violet-700' : 'text-gray-400')}>{a.name}</span>
+            </button>
+          );
+        })}
+        <button onClick={() => router.push('/artist-discover')} className="flex flex-col items-center gap-1 shrink-0">
           <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
             <span className="text-xl text-gray-400">+</span>
           </div>
