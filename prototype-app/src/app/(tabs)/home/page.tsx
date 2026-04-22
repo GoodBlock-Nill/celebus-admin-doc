@@ -120,28 +120,60 @@ export default function HomePage() {
             </button>
           </div>
         ) : allDone ? (
-          <button onClick={() => router.push('/daily-mission')} className="w-full bg-green-50 border border-green-200 rounded-2xl px-4 py-3.5 text-center active:bg-green-100 transition-colors">
-            <span className="text-sm font-semibold text-green-700">✅ 오늘 할 일 완료! 🔥{streak}일째</span>
-            <p className="text-[10px] text-green-500 mt-0.5">탭하여 상세 보기</p>
+          <button onClick={() => router.push('/daily-mission')} className="w-full rounded-2xl overflow-hidden active:scale-[0.98] transition-transform">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-500 px-5 py-4 flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                <span className="text-xl">🔥</span>
+              </div>
+              <div className="flex-1 text-left">
+                <p className="text-sm font-bold text-white">{streak}일 연속 달성!</p>
+                <p className="text-xs text-white/80 mt-0.5">오늘 할 일을 모두 완료했어요</p>
+              </div>
+              <span className="text-white/60 text-sm">→</span>
+            </div>
           </button>
         ) : (
-          <div className="bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200 rounded-2xl px-4 py-3.5">
-            <div className="flex items-center gap-3">
-              <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">🔥 {streak > 0 ? `${streak}일째` : '시작!'}</span>
-              <div className="flex-1" />
-              <button onClick={handleCheckIn} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg active:bg-violet-100 transition-colors">
-                <span className="text-sm">{checkedIn ? '✅' : '☐'}</span>
-                <span className={cn('text-xs font-medium', checkedIn ? 'text-green-600' : 'text-gray-600')}>출석</span>
+          <div className="rounded-2xl overflow-hidden">
+            {/* 출석 체크인 */}
+            <button onClick={handleCheckIn} disabled={checkedIn} className={cn(
+              'w-full px-5 py-3.5 flex items-center gap-3 transition-all active:scale-[0.99]',
+              checkedIn
+                ? 'bg-gradient-to-r from-green-500 to-emerald-500'
+                : 'bg-gradient-to-r from-violet-600 to-indigo-600'
+            )}>
+              <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center', checkedIn ? 'bg-white/20' : 'bg-white/15')}>
+                <span className="text-xl">{checkedIn ? '✅' : '👋'}</span>
+              </div>
+              <div className="flex-1 text-left">
+                <p className="text-sm font-bold text-white">{checkedIn ? '출석 완료!' : '출석 체크하기'}</p>
+                <p className="text-xs text-white/70 mt-0.5">{checkedIn ? `🔥 ${streak}일 연속 · +10pt 획득` : `탭하여 출석 · 덕력 +10pt`}</p>
+              </div>
+              {!checkedIn && (
+                <span className="text-xs font-bold text-white bg-white/20 px-3 py-1.5 rounded-full">체크인</span>
+              )}
+            </button>
+
+            {/* 일일 미션 + 퀘스트 */}
+            <div className="bg-gray-50 px-5 py-3 flex items-center gap-3">
+              <button onClick={() => router.push('/daily-mission')} className="flex-1 flex items-center gap-2 active:opacity-70 transition-opacity">
+                <div className={cn('w-8 h-8 rounded-lg flex items-center justify-center', missionDone ? 'bg-green-100' : 'bg-violet-100')}>
+                  <span className="text-sm">{missionDone ? '✅' : '📋'}</span>
+                </div>
+                <div className="text-left">
+                  <p className={cn('text-xs font-semibold', missionDone ? 'text-green-600' : 'text-gray-900')}>{missionDone ? '미션 완료' : '일일 미션'}</p>
+                  <p className="text-[10px] text-gray-400">{missionDone ? '+20pt 획득' : '하러가기 →'}</p>
+                </div>
               </button>
-              <button onClick={() => router.push('/daily-mission')} className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg active:bg-violet-100 transition-colors">
-                <span className="text-sm">{missionDone ? '✅' : '☐'}</span>
-                <span className={cn('text-xs font-medium', missionDone ? 'text-green-600' : 'text-gray-600')}>미션</span>
+              <div className="w-px h-8 bg-gray-200" />
+              <button onClick={() => router.push('/quest')} className="flex-1 flex items-center gap-2 active:opacity-70 transition-opacity">
+                <div className="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center">
+                  <span className="text-sm">🎯</span>
+                </div>
+                <div className="text-left">
+                  <p className="text-xs font-semibold text-gray-900">퀘스트</p>
+                  <p className="text-[10px] text-gray-400">2/5장 이어서 →</p>
+                </div>
               </button>
-            </div>
-            <div className="flex items-center gap-2 mt-2 pt-2 border-t border-violet-100">
-              <span className="text-xs text-violet-700 flex-1">☐ 이번 주 퀘스트: 2/5장</span>
-              <button onClick={() => router.push('/daily-mission')} className="text-[10px] font-semibold text-violet-500 px-2 py-1 rounded-lg active:bg-violet-100 transition-colors">일일미션 →</button>
-              <button onClick={() => router.push('/quest')} className="text-xs font-semibold text-violet-600 px-2 py-1 rounded-lg active:bg-violet-100 transition-colors">이어서 →</button>
             </div>
           </div>
         )}
