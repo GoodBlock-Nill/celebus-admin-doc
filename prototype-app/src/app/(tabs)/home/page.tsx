@@ -67,7 +67,7 @@ export default function HomePage() {
     <div className="min-h-dvh bg-white pb-20">
       {!isLoggedIn && <GuestBanner />}
       {/* 1. 헤더 */}
-      <AppHeader />
+      <AppHeader isGuest={!isLoggedIn} />
 
       {/* 2. 캐러셀 배너 */}
       {/* TODO (HOM-001): 다른 아티스트 이벤트 배너 탭 시 "이 아티스트를 팔로우하시겠습니까?" 인라인 배너 표시.
@@ -92,7 +92,7 @@ export default function HomePage() {
         {(artists ?? [artist]).map((a) => {
           const isActive = a.id === artist.id;
           return (
-            <button key={a.id} onClick={() => setActiveArtist(a.id)} className="flex flex-col items-center gap-1.5 shrink-0">
+            <button key={a.id} onClick={() => { if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; } setActiveArtist(a.id); }} className="flex flex-col items-center gap-1.5 shrink-0">
               <ArtistAvatar artistId={a.id} size="lg" active={isActive} />
               <span className={cn('text-[10px] font-semibold max-w-[56px] truncate', isActive ? 'text-violet-700' : 'text-gray-400')}>{a.nameEn}</span>
             </button>
@@ -111,7 +111,15 @@ export default function HomePage() {
 
       {/* 4. 오늘의 할 일 (컴팩트) */}
       <div className="px-4">
-        {allDone ? (
+        {!isLoggedIn ? (
+          <div className="bg-gradient-to-r from-violet-50 to-indigo-50 rounded-2xl px-4 py-4 text-center">
+            <p className="text-sm font-semibold text-gray-900">로그인하고 시작하기</p>
+            <p className="text-xs text-gray-500 mt-1">출석, 미션, 응모권이 기다리고 있어요!</p>
+            <button onClick={() => addToast('info', '로그인 후 이용 가능합니다')} className="mt-3 px-4 py-2 bg-violet-600 text-white rounded-xl text-xs font-semibold">
+              로그인
+            </button>
+          </div>
+        ) : allDone ? (
           <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 text-center">
             <span className="text-sm font-semibold text-green-700">✅ 오늘 할 일 완료! 🔥{streak}일째</span>
           </div>
@@ -124,7 +132,7 @@ export default function HomePage() {
                 <span className="text-sm">{checkedIn ? '✅' : '☐'}</span>
                 <span className={cn('text-[10px]', checkedIn ? 'text-green-600' : 'text-gray-500')}>출석</span>
               </button>
-              <button onClick={() => { if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; } setMissionDone(true); addToast('success', '미션 완료! 덕력 20pt 획득'); }} className="flex items-center gap-1">
+              <button onClick={() => { setMissionDone(true); addToast('success', '미션 완료! 덕력 20pt 획득'); }} className="flex items-center gap-1">
                 <span className="text-sm">{missionDone ? '✅' : '☐'}</span>
                 <span className={cn('text-[10px]', missionDone ? 'text-green-600' : 'text-gray-500')}>미션</span>
               </button>
@@ -188,7 +196,7 @@ export default function HomePage() {
                     </div>
                     <p className="text-[10px] font-bold text-gray-900 truncate">{bive.name}</p>
                     <span className="text-[9px] text-violet-500 font-medium">{bive.grade}</span>
-                    {owned && (
+                    {owned && isLoggedIn && (
                       <span className="absolute top-2 right-2 text-[9px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full">보유 중</span>
                     )}
                   </button>

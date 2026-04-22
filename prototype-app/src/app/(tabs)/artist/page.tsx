@@ -29,9 +29,17 @@ const ARTIST_CARDS: ServiceCardData[] = [
   { id: 'memory', group: 'more', icon: '📸', title: '기억 저장소', statusText: '기억 8개', href: '/memory', comingSoon: false },
 ];
 
-// Fix #6: 비로그인(guest) 시 로그인 없이 열람 가능한 카드 (읽기 전용)
+// 비로그인(guest) 시 로그인 없이 열람 가능한 카드 (서비스 수준 데이터, 읽기 전용)
 // 나머지 카드(challenge, daily-mission, collection, memory)는 로그인 필요 → 토스트 표시
 const GUEST_OPEN_CARDS = new Set(['virtue', 'support', 'fandom-level', 'raffle', 'info']);
+
+// 비로그인 시 개인화 데이터를 숨겨야 하는 카드 ID 목록
+const GUEST_PERSONAL_CARDS = new Set(['challenge', 'daily-mission', 'virtue', 'collection', 'memory']);
+
+function getGuestStatusText(card: ServiceCardData): string {
+  if (GUEST_PERSONAL_CARDS.has(card.id)) return '-';
+  return card.statusText;
+}
 
 const GROUP_ORDER: ServiceCardGroup[] = ['mission', 'record', 'more'];
 
@@ -94,7 +102,7 @@ export default function ArtistPage() {
       onTouchEnd={handleTouchEnd}
     >
       {/* 앱 헤더 (홈과 동일) */}
-      <AppHeader />
+      <AppHeader isGuest={isGuest} />
 
       {/* 아티스트 헤더 */}
       <ArtistHeader />
@@ -129,12 +137,14 @@ export default function ArtistPage() {
               <div className="grid grid-cols-2 gap-3">
                 {groupCards.map((card, idx) => {
                   const isLastOdd = groupCards.length % 2 === 1 && idx === groupCards.length - 1;
-                  // Fix #6: 비로그인 시 GUEST_OPEN_CARDS 외 카드는 클릭 시 로그인 토스트
+                  // 비로그인 시 GUEST_OPEN_CARDS 외 카드는 클릭 시 로그인 토스트
                   const isGuestBlocked = isGuest && !GUEST_OPEN_CARDS.has(card.id);
+                  // Fix #5: 비로그인 시 개인화 데이터는 "-" 표시
+                  const displayCard = isGuest ? { ...card, statusText: getGuestStatusText(card) } : card;
                   return (
                     <div key={card.id} className={isLastOdd ? 'col-span-2' : ''} onClick={isGuestBlocked ? (e) => { e.preventDefault(); addToast('info', '로그인 후 이용 가능합니다'); } : undefined}>
                       <ServiceCard
-                        card={card}
+                        card={displayCard}
                         fullWidth={isLastOdd}
                         disabled={false}
                       />
