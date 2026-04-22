@@ -14,6 +14,7 @@ import { SUPPORT_PRESET_OPTIONS, applySupportPreset, type SupportPreset } from '
 import { formatNumber } from '@/lib/utils';
 import EventCard from '@/components/support/EventCard';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import EmptyState from '@/components/ui/EmptyState';
 
 export default function SupportPage() {
   const { artistName, activeArtistId } = useActiveArtist();
@@ -104,10 +105,10 @@ export default function SupportPage() {
         ))}
 
         {(events ?? []).length === 0 && (
-          <div className="text-center py-12">
-            <span className="text-3xl">💜</span>
-            <p className="text-sm font-semibold text-gray-900 mt-3">현재 진행 중인 서포트 이벤트가 없습니다</p>
-          </div>
+          <EmptyState
+            emoji="💜"
+            title="현재 진행 중인 서포트 이벤트가 없습니다"
+          />
         )}
       </div>
 

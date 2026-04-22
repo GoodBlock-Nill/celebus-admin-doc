@@ -6,6 +6,7 @@ import { useUIStore } from '@/stores/useUIStore';
 import { useMonthlyMemoryCount } from '@/lib/hooks/useMemory';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { cn } from '@/lib/utils';
+import ConfirmModal from '@/components/ui/ConfirmModal';
 
 type MemoryType = 'photo' | 'letter' | 'memo';
 
@@ -206,20 +207,17 @@ export default function MemoryCreatePage() {
       </div>
 
       {/* 취소 확인 모달 */}
-      {showCancelModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowCancelModal(false)}>
-          <div className="bg-white rounded-2xl w-72 p-5 text-center shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <p className="text-sm font-bold text-gray-900">작성을 취소할까요?</p>
-            <p className="text-xs text-gray-400 mt-1">입력한 내용이 사라져요</p>
-            <div className="flex gap-2 mt-4">
-              <button onClick={() => setShowCancelModal(false)}
-                className="flex-1 py-2.5 rounded-xl bg-gray-100 text-sm font-semibold text-gray-600">취소</button>
-              <button onClick={() => router.back()}
-                className="flex-1 py-2.5 rounded-xl bg-red-500 text-sm font-semibold text-white">나가기</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal
+        open={showCancelModal}
+        title="작성을 취소할까요?"
+        confirmLabel="나가기"
+        cancelLabel="취소"
+        confirmVariant="danger"
+        onConfirm={() => router.back()}
+        onCancel={() => setShowCancelModal(false)}
+      >
+        <p className="text-xs text-gray-400">입력한 내용이 사라져요</p>
+      </ConfirmModal>
     </div>
   );
 }

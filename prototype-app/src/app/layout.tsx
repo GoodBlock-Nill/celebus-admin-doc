@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Suspense } from 'react';
 import QueryProvider from '@/components/providers/QueryProvider';
 import { Toaster } from '@/components/ui/sonner';
 import OfflineIndicator from '@/components/pwa/OfflineIndicator';
@@ -38,7 +39,9 @@ export default function RootLayout({
     <html lang="ko" className={cn('font-sans', geist.variable)}>
       <body className="antialiased">
         <QueryProvider>
-          {children}
+          <Suspense fallback={<div className="min-h-dvh bg-white" />}>
+            {children}
+          </Suspense>
           <OfflineIndicator />
           <InstallPrompt />
           <Toaster position="top-center" richColors closeButton />

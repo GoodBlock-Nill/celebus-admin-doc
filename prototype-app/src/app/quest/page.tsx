@@ -17,6 +17,7 @@ import { useUIStore } from '@/stores/useUIStore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { QUEST_PRESET_OPTIONS, applyQuestPreset } from '@/lib/presets/quest';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import EmptyState from '@/components/ui/EmptyState';
 import type { QuestChapter } from '@/lib/types';
 
 export default function QuestPage() {
@@ -137,22 +138,14 @@ export default function QuestPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12">
-                <p className="text-2xl mb-3">🎉</p>
-                <p className="text-sm font-semibold text-gray-900 mb-1">
-                  이번 주 퀘스트를 모두 완료했어요!
-                </p>
-                <p className="text-xs text-gray-500 mb-4">
-                  새 퀘스트가 열리면 알려드릴게요
-                </p>
-                <button className="text-xs font-medium text-violet-600 bg-violet-50 px-4 py-2 rounded-lg mb-4">
-                  알림 설정하기
-                </button>
-                <div className="flex justify-center gap-4">
-                  <button className="text-xs text-gray-500 underline">덕력 랭킹 확인</button>
-                  <button className="text-xs text-gray-500 underline">래플 응모하기</button>
-                </div>
-              </div>
+              <EmptyState
+                emoji="🎉"
+                title="이번 주 퀘스트를 모두 완료했어요!"
+                description="새 퀘스트가 열리면 알려드릴게요"
+                ctaLabel="알림 설정하기"
+                secondaryCtaLabel="래플 응모하기"
+                secondaryCtaHref="/raffle"
+              />
             )}
           </div>
         </>

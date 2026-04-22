@@ -10,6 +10,8 @@ import PresetSelector from '@/components/dev/PresetSelector';
 import { INFO_PRESET_OPTIONS, getInfoPresetFilter } from '@/lib/presets/info';
 import GuestBanner from '@/components/ui/GuestBanner';
 import BottomSheet from '@/components/ui/BottomSheet';
+import EmptyState from '@/components/ui/EmptyState';
+import TimelineSection from '@/components/info/TimelineSection';
 
 type ItemType = 'schedule' | 'news';
 
@@ -138,86 +140,24 @@ export default function InfoPage() {
             <p className="text-xs text-gray-400">타임라인이 비활성화되어 있어요</p>
           </div>
         ) : sortedItems.length === 0 ? (
-          <div className="text-center py-16">
-            <span className="text-3xl">📋</span>
-            <p className="text-sm font-semibold text-gray-900 mt-3">{artistName}의 첫 소식이 곧 올 거예요!</p>
-            <p className="text-xs text-gray-500 mt-1">새 소식이 올 때 알려드릴게요!</p>
-            <div className="flex gap-2 justify-center mt-4">
-              <button onClick={() => { if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; } toggleArtistAlarm(); }}
-                className="text-xs font-medium text-violet-600 bg-violet-50 px-4 py-2 rounded-lg">
-                알림 설정하기
-              </button>
-              <button onClick={() => router.push('/quest')}
-                className="text-xs font-medium text-white bg-violet-600 px-4 py-2 rounded-lg">
-                V01D 챌린지 시작하기
-              </button>
-            </div>
-          </div>
+          <EmptyState
+            emoji="📋"
+            title={`${artistName}의 첫 소식이 곧 올 거예요!`}
+            description="새 소식이 올 때 알려드릴게요!"
+            ctaLabel="알림 설정하기"
+            onCtaClick={() => { if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; } toggleArtistAlarm(); }}
+            secondaryCtaLabel="V01D 챌린지 시작하기"
+            secondaryCtaHref="/quest"
+          />
         ) : (
-          groups.map((group) => {
-            const groupItems = sortedItems.filter((i) => i.group === group);
-            if (groupItems.length === 0) return null;
-            return (
-              <div key={group} className="mb-5">
-                <div className={cn(
-                  'flex items-center gap-2 mb-3 px-2 py-1 rounded-lg -mx-2',
-                  group === '오늘' ? 'bg-violet-50' : ''
-                )}>
-                  <span className={cn('text-xs font-semibold', group === '오늘' ? 'text-violet-700' : 'text-gray-400')}>
-                    {group}
-                  </span>
-                  <div className="flex-1 h-px bg-gray-100" />
-                </div>
-
-                <div className="space-y-3">
-                  {groupItems.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => { if (item.type === 'schedule') setShowScheduleSheet(item); else addToast('info', '소식 상세 (CEB-INF-201 추후 작성)'); }}
-                      className="w-full flex gap-3 text-left"
-                    >
-                      <span className="text-sm mt-0.5 shrink-0">{item.type === 'schedule' ? '📅' : '📰'}</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          {item.exclusive && item.type === 'schedule' && (
-                            <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-semibold shrink-0">
-                              ⭐ CELEBUS 단독
-                            </span>
-                          )}
-                          <p className="text-sm font-medium text-gray-900 truncate">
-                            {item.exclusive && item.type === 'news' ? `[CELEBUS 단독] ${item.title}` : item.title}
-                          </p>
-                        </div>
-                        {item.type === 'schedule' && (
-                          <p className="text-xs text-gray-500 mt-0.5">
-                            {item.date} {item.time} {item.location && `· ${item.location}`}
-                          </p>
-                        )}
-                        {item.type === 'news' && (
-                          <div className="flex items-center gap-2 mt-1">
-                            {item.image && (
-                              <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden shrink-0">
-                                <img src={item.image} alt="" className="w-full h-full object-cover" />
-                              </div>
-                            )}
-                            <span className="text-[10px] text-gray-400">{item.date}</span>
-                          </div>
-                        )}
-                      </div>
-                      {item.type === 'schedule' && item.alarmOn !== undefined && (
-                        <span
-                          onClick={(e) => { e.stopPropagation(); toggleItemAlarm(item.id); }}
-                          className={cn('shrink-0 mt-0.5 text-lg cursor-pointer', item.alarmOn ? 'text-violet-600' : 'text-gray-300')}
-                        >
-                          {item.alarmOn ? '🔔' : '🔕'}
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            );
-          })
+          <TimelineSection
+            items={sortedItems}
+            groups={groups}
+            onItemClick={(item) => { if (item.type === 'schedule') setShowScheduleSheet(item); else addToast('info', '소식 상세 (CEB-INF-201 추후 작성)'); }}
+            onAlarmToggle={toggleItemAlarm}
+            isLoggedIn={isLoggedIn}
+            artistName={artistName}
+          />
         )}
       </div>
 

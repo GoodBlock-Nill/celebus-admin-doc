@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUIStore } from '@/stores/useUIStore';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
 import { MEMORY_DETAIL_PRESET_OPTIONS, getMemoryDetailPresetState } from '@/lib/presets/memoryDetail';
 import { PRESETS, type PresetKey } from '@/lib/presets/memoryDetailData';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import BottomSheet from '@/components/ui/BottomSheet';
+import ImageGallery from '@/components/memory/ImageGallery';
 
 export default function MemoryDetailPage() {
   const router = useRouter();
@@ -19,8 +20,6 @@ export default function MemoryDetailPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showReportSheet, setShowReportSheet] = useState(false);
   const [fullscreenImg, setFullscreenImg] = useState<number | null>(null);
-  const [galleryScrollIdx, setGalleryScrollIdx] = useState(0);
-  const galleryRef = useRef<HTMLDivElement>(null);
 
   const handlePreset = (key: string) => {
     setPresetKey(key as PresetKey);
@@ -110,32 +109,7 @@ export default function MemoryDetailPage() {
 
             {/* 3. 미디어 갤러리 */}
             {memory.images > 0 && (
-              <div>
-                <div
-                  ref={galleryRef}
-                  className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory"
-                  onScroll={(e) => {
-                    const el = e.currentTarget;
-                    const itemWidth = el.scrollWidth / memory.images;
-                    const idx = Math.round(el.scrollLeft / itemWidth);
-                    setGalleryScrollIdx(idx);
-                  }}
-                >
-                  {Array.from({ length: memory.images }).map((_, i) => (
-                    <button key={i} onClick={() => setFullscreenImg(i)}
-                      className="w-56 h-40 rounded-xl bg-gray-100 flex items-center justify-center shrink-0 active:scale-[0.98] transition-transform snap-start">
-                      <span className="text-3xl">📷</span>
-                    </button>
-                  ))}
-                </div>
-                {memory.images > 1 && (
-                  <div className="flex justify-center gap-1 mt-1">
-                    {Array.from({ length: memory.images }).map((_, i) => (
-                      <div key={i} className={cn('w-1.5 h-1.5 rounded-full transition-colors', i === galleryScrollIdx ? 'bg-violet-500' : 'bg-gray-300')} />
-                    ))}
-                  </div>
-                )}
-              </div>
+              <ImageGallery images={memory.images} onFullscreen={setFullscreenImg} />
             )}
 
             {/* 4. 텍스트 본문 */}
@@ -197,25 +171,21 @@ export default function MemoryDetailPage() {
           )}
 
           {/* ⋯ 메뉴 바텀시트 */}
-          {showMenu && (
-            <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={() => setShowMenu(false)}>
-              <div className="bg-white rounded-t-2xl w-full max-w-lg p-4 pb-8 safe-bottom" role="dialog" aria-modal="true" aria-label="기억 메뉴" onClick={(e) => e.stopPropagation()}>
-                {memory.isMine ? (
-                  <div className="space-y-1">
-                    <button onClick={() => { setShowMenu(false); router.push('/memory-create'); }}
-                      className="w-full py-3 text-sm font-semibold text-gray-900 text-center rounded-xl hover:bg-gray-50">수정하기</button>
-                    <button onClick={() => { setShowMenu(false); setShowDeleteModal(true); }}
-                      className="w-full py-3 text-sm font-semibold text-red-500 text-center rounded-xl hover:bg-red-50">삭제하기</button>
-                  </div>
-                ) : (
-                  <button onClick={() => { setShowMenu(false); setShowReportSheet(true); }}
-                    className="w-full py-3 text-sm font-semibold text-red-500 text-center rounded-xl hover:bg-red-50">신고하기</button>
-                )}
-                <button onClick={() => setShowMenu(false)}
-                  className="w-full py-3 mt-2 text-sm font-semibold text-gray-500 text-center rounded-xl bg-gray-100">취소</button>
+          <BottomSheet open={showMenu} onClose={() => setShowMenu(false)} title="메뉴">
+            {memory.isMine ? (
+              <div className="space-y-1">
+                <button onClick={() => { setShowMenu(false); router.push('/memory-create'); }}
+                  className="w-full py-3 text-sm font-semibold text-gray-900 text-center rounded-xl hover:bg-gray-50">수정하기</button>
+                <button onClick={() => { setShowMenu(false); setShowDeleteModal(true); }}
+                  className="w-full py-3 text-sm font-semibold text-red-500 text-center rounded-xl hover:bg-red-50">삭제하기</button>
               </div>
-            </div>
-          )}
+            ) : (
+              <button onClick={() => { setShowMenu(false); setShowReportSheet(true); }}
+                className="w-full py-3 text-sm font-semibold text-red-500 text-center rounded-xl hover:bg-red-50">신고하기</button>
+            )}
+            <button onClick={() => setShowMenu(false)}
+              className="w-full py-3 mt-2 text-sm font-semibold text-gray-500 text-center rounded-xl bg-gray-100">취소</button>
+          </BottomSheet>
 
           {/* 삭제 확인 모달 */}
           <ConfirmModal
@@ -232,21 +202,16 @@ export default function MemoryDetailPage() {
           </ConfirmModal>
 
           {/* 신고 사유 바텀시트 */}
-          {showReportSheet && (
-            <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={() => setShowReportSheet(false)}>
-              <div className="bg-white rounded-t-2xl w-full max-w-lg p-4 pb-8 safe-bottom" role="dialog" aria-modal="true" aria-label="신고 사유 선택" onClick={(e) => e.stopPropagation()}>
-                <p className="text-sm font-bold text-gray-900 text-center mb-3">신고 사유를 선택해주세요</p>
-                {['부적절한 콘텐츠', '스팸', '욕설·혐오', '개인정보 노출', '기타'].map((reason) => (
-                  <button key={reason} onClick={() => handleReport(reason)}
-                    className="w-full py-3 text-sm text-gray-700 text-center rounded-xl hover:bg-gray-50 border-b border-gray-100 last:border-0">
-                    {reason}
-                  </button>
-                ))}
-                <button onClick={() => setShowReportSheet(false)}
-                  className="w-full py-3 mt-2 text-sm font-semibold text-gray-500 text-center rounded-xl bg-gray-100">취소</button>
-              </div>
-            </div>
-          )}
+          <BottomSheet open={showReportSheet} onClose={() => setShowReportSheet(false)} title="신고 사유 선택">
+            {['부적절한 콘텐츠', '스팸', '욕설·혐오', '개인정보 노출', '기타'].map((reason) => (
+              <button key={reason} onClick={() => handleReport(reason)}
+                className="w-full py-3 text-sm text-gray-700 text-center rounded-xl hover:bg-gray-50 border-b border-gray-100 last:border-0">
+                {reason}
+              </button>
+            ))}
+            <button onClick={() => setShowReportSheet(false)}
+              className="w-full py-3 mt-2 text-sm font-semibold text-gray-500 text-center rounded-xl bg-gray-100">취소</button>
+          </BottomSheet>
 
           {/* 풀스크린 이미지 뷰어 */}
           {fullscreenImg !== null && (

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
@@ -9,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { EVENTS_PRESET_OPTIONS, getEventsPresetState } from '@/lib/presets/events';
 import { useEvents } from '@/lib/hooks/useEvents';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
+import EmptyState from '@/components/ui/EmptyState';
 
 interface EventItem {
   id: string;
@@ -23,7 +23,6 @@ interface EventItem {
 
 // TODO: 다른 아티스트 이벤트 탭 시 팔로우 유도 인라인 배너
 export default function EventsPage() {
-  const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
   const { activeArtistId } = useActiveArtist();
   const { data: rawEvents } = useEvents(activeArtistId);
@@ -113,20 +112,12 @@ export default function EventsPage() {
             </button>
           ))
         ) : (
-          <div className="text-center py-16">
-            <span className="text-3xl">{tab === 'ended' ? '📋' : '📭'}</span>
-            <p className="text-sm text-gray-400 mt-3">
-              {tab === 'ended' ? '마감된 이벤트가 없어요' : '곧 새로운 이벤트가 찾아올 거예요!'}
-            </p>
-            {tab !== 'ended' && (
-              <button
-                onClick={() => router.push('/home')}
-                className="mt-4 px-5 py-2 rounded-full bg-violet-600 text-white text-xs font-semibold active:bg-violet-700 transition-colors"
-              >
-                홈으로 돌아가기
-              </button>
-            )}
-          </div>
+          <EmptyState
+            emoji={tab === 'ended' ? '📋' : '📭'}
+            title={tab === 'ended' ? '마감된 이벤트가 없어요' : '곧 새로운 이벤트가 찾아올 거예요!'}
+            ctaLabel={tab !== 'ended' ? '홈으로 돌아가기' : undefined}
+            ctaHref={tab !== 'ended' ? '/home' : undefined}
+          />
         )}
       </div>
 

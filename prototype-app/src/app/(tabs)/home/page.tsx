@@ -13,6 +13,7 @@ import AppHeader from '@/components/layout/AppHeader';
 import GuestBanner from '@/components/ui/GuestBanner';
 import { HOME_PRESET_OPTIONS, getHomePresetState } from '@/lib/presets/home';
 import BivePreviewSheet from '@/components/home/BivePreviewSheet';
+import BannerCarousel from '@/components/home/BannerCarousel';
 import ShortcutCards from '@/components/home/ShortcutCards';
 import { BIVE_PREVIEW_LIST } from '@/lib/data/bive';
 import type { BivePreviewItem } from '@/lib/data/bive';
@@ -27,7 +28,6 @@ export default function HomePage() {
 
   const [bannerFilter, setBannerFilter] = useState<'active' | 'closing' | 'ended'>('active');
   const [bannerIdx, setBannerIdx] = useState(0);
-  const [carouselTouchX, setCarouselTouchX] = useState(0);
   const [checkedIn, setCheckedIn] = useState(false);
   const [missionDone, setMissionDone] = useState(false);
   const [streak, setStreak] = useState(12);
@@ -55,14 +55,6 @@ export default function HomePage() {
   // All banners from DB are active; 'closing'/'ended' tabs show empty for live data
   const allBanners = (rawBanners ?? []).map((b) => ({ id: b.id, title: b.title, subtitle: b.subtitle ?? '' }));
   const banners = hasContent ? allBanners : [];
-  const filteredBanners = banners.filter(() => bannerFilter === 'active');
-
-  const handleCarouselSwipe = useCallback((direction: 'left' | 'right') => {
-    const maxIdx = filteredBanners.length - 1;
-    if (direction === 'left') setBannerIdx((i) => Math.min(i + 1, maxIdx));
-    else setBannerIdx((i) => Math.max(i - 1, 0));
-  }, [filteredBanners.length]);
-
   const handleCheckIn = useCallback(() => {
     if (checkedIn) return;
     setCheckedIn(true);
@@ -79,54 +71,14 @@ export default function HomePage() {
       {/* 2. 캐러셀 배너 */}
       {/* TODO (HOM-001): 다른 아티스트 이벤트 배너 탭 시 "이 아티스트를 팔로우하시겠습니까?" 인라인 배너 표시.
           현재 프로토타입은 V01D 단일 아티스트만 지원하므로 해당 분기 생략. */}
-      <div className="px-4 mt-3">
-        <div
-          className="relative bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl overflow-hidden h-36"
-          onTouchStart={(e) => setCarouselTouchX(e.touches[0].clientX)}
-          onTouchEnd={(e) => {
-            const diff = e.changedTouches[0].clientX - carouselTouchX;
-            if (Math.abs(diff) > 50) handleCarouselSwipe(diff < 0 ? 'left' : 'right');
-          }}
-        >
-          <button onClick={() => router.push('/events')} className="absolute top-3 right-4 z-10 text-[11px] font-semibold text-white bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full hover:bg-white/30 transition-colors">
-            전체 보기 →
-          </button>
-          <div className="absolute inset-0 flex items-end px-5 pb-4">
-            <div>
-              {filteredBanners.length > 0 ? (
-                <>
-                  <p className="text-white text-sm font-bold">{filteredBanners[bannerIdx % filteredBanners.length]?.title}</p>
-                  <p className="text-white/70 text-xs mt-0.5">{filteredBanners[bannerIdx % filteredBanners.length]?.subtitle}</p>
-                </>
-              ) : (
-                <>
-                  <p className="text-white/80 text-sm font-bold">이벤트 준비 중</p>
-                  <p className="text-white/50 text-xs mt-0.5">곧 새로운 이벤트가 찾아올 거예요!</p>
-                </>
-              )}
-            </div>
-          </div>
-          {filteredBanners.length > 1 && (
-            <div className="absolute bottom-2 right-4 flex gap-1">
-              {filteredBanners.map((_, i) => (
-                <div key={i} className={cn('w-1.5 h-1.5 rounded-full', i === bannerIdx % filteredBanners.length ? 'bg-white' : 'bg-white/40')} />
-              ))}
-            </div>
-          )}
-        </div>
-        <div className="flex gap-2 mt-2">
-          {[
-            { key: 'active' as const, label: '진행중' },
-            { key: 'closing' as const, label: '마감중' },
-            { key: 'ended' as const, label: '마감됨' },
-          ].map((tab) => (
-            <button key={tab.key} onClick={() => { setBannerFilter(tab.key); setBannerIdx(0); }}
-              className={cn('px-3 py-1.5 rounded-full text-[10px] font-semibold', bannerFilter === tab.key ? 'bg-violet-600 text-white' : 'bg-gray-100 text-gray-500')}>
-              {tab.label}
-            </button>
-          ))}
-        </div>
-      </div>
+      <BannerCarousel
+        banners={banners}
+        filter={bannerFilter}
+        onFilterChange={setBannerFilter}
+        bannerIdx={bannerIdx}
+        onBannerChange={setBannerIdx}
+        onViewAll={() => router.push('/events')}
+      />
 
       {/* 3. 아티스트 선택 — [+] 좌측 + 팔로우 아티스트 셀렉터 */}
       <div className="px-4 mt-4 flex items-center gap-3 overflow-x-auto no-scrollbar py-2">

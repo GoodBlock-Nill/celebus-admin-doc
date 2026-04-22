@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 import { COLLECTION_PRESET_OPTIONS, applyCollectionPreset } from '@/lib/presets/collection';
 import { useBiveItems } from '@/lib/hooks/useCollection';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
+import EmptyState from '@/components/ui/EmptyState';
 
 type Category = 'artist' | 'event' | 'special';
 
@@ -148,9 +149,11 @@ export default function CollectionPage() {
         ))}
 
         {!isLoading && filtered.length === 0 && (
-          <div className="col-span-2 text-center py-12">
-            <span className="text-3xl">🃏</span>
-            <p className="text-sm font-semibold text-gray-900 mt-3">이 카테고리에 BIVE가 없습니다</p>
+          <div className="col-span-2">
+            <EmptyState
+              emoji="🃏"
+              title="이 카테고리에 BIVE가 없습니다"
+            />
           </div>
         )}
       </div>
