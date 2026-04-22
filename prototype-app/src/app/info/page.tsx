@@ -135,7 +135,11 @@ export default function InfoPage() {
 
       {/* 타임라인 */}
       <div className="px-4 mt-4">
-        {!presetFilter.showTimeline || sortedItems.length === 0 ? (
+        {!presetFilter.showTimeline ? (
+          <div className="text-center py-8">
+            <p className="text-xs text-gray-400">타임라인이 비활성화되어 있어요</p>
+          </div>
+        ) : sortedItems.length === 0 ? (
           <div className="text-center py-16">
             <span className="text-3xl">📋</span>
             <p className="text-sm font-semibold text-gray-900 mt-3">{artistName}의 첫 소식이 곧 올 거예요!</p>

@@ -23,6 +23,7 @@ export default function DailyMissionPage() {
   const handlePreset = async (key: string) => {
     setPreset(key);
     await applyDailyPreset(key, queryClient);
+    await queryClient.refetchQueries({ queryKey: ['daily-state'] });
   };
 
   const { data, isLoading } = useDailyState(activeArtistId);

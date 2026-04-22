@@ -86,12 +86,18 @@ export default function MemoryPage() {
   };
 
   const [preset, setPreset] = useState('many');
+  const [forceLimit, setForceLimit] = useState(false);
 
   // Fix 1: monthly count for FAB gate
   const { data: monthlyCount } = useMonthlyMemoryCount(activeArtistId);
 
   const handlePreset = async (key: string) => {
     setPreset(key);
+    if (key === 'limitReached') {
+      setForceLimit(true);
+    } else {
+      setForceLimit(false);
+    }
     await applyMemoryPreset(key, queryClient);
   };
 
@@ -303,8 +309,8 @@ export default function MemoryPage() {
       {!showOnboarding && (
         <button
           onClick={() => {
-            // Fix 1: 월간 한도 50건 체크
-            if ((monthlyCount ?? 0) >= 50) {
+            // Fix 1: 월간 한도 50건 체크 (forceLimit은 limitReached 프리셋 시 강제 활성화)
+            if (forceLimit || (monthlyCount ?? 0) >= 50) {
               addToast('info', '이번 달 업로드 한도에 도달했어요. 다음 달에 다시 기록해 주세요!');
               return;
             }

@@ -29,7 +29,8 @@ export default function VirtuePage() {
     setIsLoggedIn(true);
     setPreset(key);
     if (key === 'prevSeason') {
-      setSelectedSeasonId(null);
+      const prevSeason = seasons?.find((s) => !s.isCurrent);
+      if (prevSeason) setSelectedSeasonId(prevSeason.id);
     }
     await applyRankingPreset(key, queryClient);
   };

@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
 import { MEMORY_DETAIL_PRESET_OPTIONS, getMemoryDetailPresetState } from '@/lib/presets/memoryDetail';
 
-type PresetKey = 'photo' | 'letter' | 'memo' | 'public-other' | 'shared-guest' | 'shared-private';
+type PresetKey = 'photo' | 'letter' | 'memo' | 'public-other' | 'shared-guest' | 'shared-private' | 'privateLocked' | 'sharedGuest' | 'publicOther';
 
 interface MemoryDetail {
   emojis: string[];
@@ -68,6 +68,28 @@ const PRESETS: Record<PresetKey, MemoryDetail> = {
     date: '2026.04.03', images: 0,    text: '',
     isPublic: false, isMine: false,
     createdAt: '',
+  },
+  // Aliases for camelCase preset keys used by memoryDetail preset options
+  privateLocked: {
+    emojis: ['💜'], emojiLabels: ['사랑'],
+    type: 'memo', typeLabel: '메모', typeIcon: '📝',
+    date: '2026.04.03', images: 0,    text: '',
+    isPublic: false, isMine: false,
+    createdAt: '',
+  },
+  sharedGuest: {
+    emojis: ['🎉', '😍'], emojiLabels: ['신남', '설렘'],
+    type: 'photo', typeLabel: '사진 기록', typeIcon: '📸',
+    date: '2026.04.10', images: 3,    text: 'V01D 음방 1위 축하! 🎉 정말 감격스러웠어요. 팬들 다 같이 울었다 ㅠㅠ',
+    location: '상암 MBC', isPublic: true, isMine: false,
+    createdAt: '2026.04.10 20:00 작성',
+  },
+  publicOther: {
+    emojis: ['🎉', '😍'], emojiLabels: ['신남', '설렘'],
+    type: 'photo', typeLabel: '사진 기록', typeIcon: '📸',
+    date: '2026.04.10', images: 3,    text: 'V01D 음방 1위 축하! 🎉 정말 감격스러웠어요. 팬들 다 같이 울었다 ㅠㅠ',
+    location: '상암 MBC', isPublic: true, isMine: false,
+    createdAt: '2026.04.10 20:00 작성',
   },
 };
 

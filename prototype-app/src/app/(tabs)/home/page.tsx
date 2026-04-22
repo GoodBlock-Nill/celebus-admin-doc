@@ -139,23 +139,23 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 3. 아티스트 선택 — 팔로우한 아티스트 셀렉터 */}
-      <div className="px-4 mt-4 flex items-center gap-3 overflow-x-auto no-scrollbar">
+      {/* 3. 아티스트 선택 — [+] 좌측 + 팔로우 아티스트 셀렉터 */}
+      <div className="px-4 mt-4 flex items-center gap-3 overflow-x-auto no-scrollbar py-2">
+        <button onClick={() => router.push('/artist-discover')} className="flex flex-col items-center gap-1.5 shrink-0">
+          <div className="w-14 h-14 rounded-full bg-gray-50 border-2 border-dashed border-gray-300 flex items-center justify-center">
+            <span className="text-2xl text-gray-400">+</span>
+          </div>
+          <span className="text-[9px] text-gray-400 font-medium">추가</span>
+        </button>
         {(artists ?? [artist]).map((a) => {
           const isActive = a.id === artist.id;
           return (
-            <button key={a.id} onClick={() => setActiveArtist(a.id)} className="flex flex-col items-center gap-1 shrink-0">
-              <ArtistAvatar artistId={a.id} size="md" active={isActive} />
-              <span className={cn('text-[9px] font-semibold max-w-[48px] truncate', isActive ? 'text-violet-700' : 'text-gray-400')}>{a.nameEn}</span>
+            <button key={a.id} onClick={() => setActiveArtist(a.id)} className="flex flex-col items-center gap-1.5 shrink-0">
+              <ArtistAvatar artistId={a.id} size="lg" active={isActive} />
+              <span className={cn('text-[10px] font-semibold max-w-[56px] truncate', isActive ? 'text-violet-700' : 'text-gray-400')}>{a.nameEn}</span>
             </button>
           );
         })}
-        <button onClick={() => router.push('/artist-discover')} className="flex flex-col items-center gap-1 shrink-0">
-          <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
-            <span className="text-xl text-gray-400">+</span>
-          </div>
-          <span className="text-[9px] text-gray-400">추가</span>
-        </button>
       </div>
 
       {/* ── 선택된 아티스트 기준 ── */}

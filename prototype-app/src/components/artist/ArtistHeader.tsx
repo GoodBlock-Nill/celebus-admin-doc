@@ -9,7 +9,7 @@ export default function ArtistHeader() {
   const gradient = getArtistGradient(activeArtistId);
 
   return (
-    <div className={cn('relative h-44 overflow-hidden bg-gradient-to-br', gradient)}>
+    <div className={cn('relative h-48 overflow-hidden bg-gradient-to-br', gradient)}>
       {/* 하단 어둡게 오버레이 (텍스트 가독성) */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
