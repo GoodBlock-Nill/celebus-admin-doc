@@ -129,7 +129,7 @@ export default function ArtistPage() {
       )}
 
       {/* 카드 그리드 */}
-      <div className="px-4 py-5 space-y-6">
+      <div className="px-4 py-5 pb-24 space-y-6">
         {GROUP_ORDER.map((group) => {
           const groupCards = grouped[group];
           if (groupCards.length === 0) return null;
@@ -151,7 +151,7 @@ export default function ArtistPage() {
                   // Fix #6: 비로그인 시 GUEST_OPEN_CARDS 외 카드는 클릭 시 로그인 토스트
                   const isGuestBlocked = isGuest && !GUEST_OPEN_CARDS.has(card.id);
                   return (
-                    <div key={card.id} onClick={isGuestBlocked ? (e) => { e.preventDefault(); addToast('info', '로그인 후 이용 가능합니다'); } : undefined}>
+                    <div key={card.id} className={isLastOdd ? 'col-span-2' : ''} onClick={isGuestBlocked ? (e) => { e.preventDefault(); addToast('info', '로그인 후 이용 가능합니다'); } : undefined}>
                       <ServiceCard
                         card={card}
                         fullWidth={isLastOdd}
