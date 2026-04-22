@@ -64,7 +64,7 @@ export default function SupportPage() {
   }, [firstActiveId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleInvest = useCallback((eventId: string) => {
-    if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
+    if (!isLoggedIn) { addToast('info', '로그인 화면으로 이동합니다'); return; }
     const amount = investAmounts[eventId] || 100;
     setShowConfirmModal({ eventId, amount });
   }, [isLoggedIn, investAmounts, addToast]);

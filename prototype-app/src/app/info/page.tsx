@@ -77,7 +77,7 @@ export default function InfoPage() {
   const groups = ['오늘', '이번 주', '다음 주', '이후', '지난 주', '이전'];
 
   const toggleItemAlarm = (id: string) => {
-    if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
+    if (!isLoggedIn) { addToast('info', '로그인 화면으로 이동합니다'); return; }
     // Capture current state BEFORE any update so the toast reflects the old value correctly
     const currentAlarm = items.find((i) => i.id === id)?.alarmOn;
     if (currentAlarm) addToast('info', `${artistName} 알림이 해제되었어요`);
@@ -87,7 +87,7 @@ export default function InfoPage() {
   };
 
   const toggleArtistAlarm = () => {
-    if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
+    if (!isLoggedIn) { addToast('info', '로그인 화면으로 이동합니다'); return; }
     setArtistAlarmOn(!artistAlarmOn);
     if (artistAlarmOn) addToast('info', `${artistName} 알림이 해제되었어요`);
     else addToast('success', `${artistName} 알림이 설정되었어요. 새로운 일정과 소식을 알려드릴게요`);
@@ -145,7 +145,7 @@ export default function InfoPage() {
             title={`${artistName}의 첫 소식이 곧 올 거예요!`}
             description="새 소식이 올 때 알려드릴게요!"
             ctaLabel="알림 설정하기"
-            onCtaClick={() => { if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; } toggleArtistAlarm(); }}
+            onCtaClick={() => { if (!isLoggedIn) { addToast('info', '로그인 화면으로 이동합니다'); return; } toggleArtistAlarm(); }}
             secondaryCtaLabel="V01D 챌린지 시작하기"
             secondaryCtaHref="/quest"
           />

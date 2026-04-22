@@ -22,7 +22,7 @@ export default function AppHeader({ isGuest = false }: AppHeaderProps) {
           </button>
         )}
         <button
-          onClick={() => { if (isGuest) { addToast('info', '로그인 후 이용 가능합니다'); return; } router.push('/event-history'); }}
+          onClick={() => { if (isGuest) { addToast('info', '로그인 화면으로 이동합니다'); return; } router.push('/event-history'); }}
           className="text-xs font-medium text-violet-600 bg-violet-50 px-2.5 py-1.5 rounded-lg flex items-center gap-1"
           aria-label={isGuest ? '응모권' : '응모권 15장'}
         >

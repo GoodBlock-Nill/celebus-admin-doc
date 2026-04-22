@@ -56,7 +56,7 @@ export default function ArtistDiscoverPage() {
 
   const handleFollow = async (artist: Artist) => {
     if (!isLoggedIn) {
-      addToast('info', '로그인 후 이용 가능합니다');
+      addToast('info', '로그인 화면으로 이동합니다');
       return;
     }
     try {

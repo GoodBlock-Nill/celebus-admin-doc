@@ -89,7 +89,7 @@ export default function RafflePage() {
 
   const handleCardTap = (raffle: RaffleItem) => {
     if (!isLoggedIn) {
-      addToast('info', '로그인 후 이용 가능합니다');
+      addToast('info', '로그인 화면으로 이동합니다');
       return;
     }
     if (raffle.status === 'drawing') {

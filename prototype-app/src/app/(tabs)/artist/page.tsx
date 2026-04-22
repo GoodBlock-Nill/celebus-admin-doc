@@ -142,7 +142,7 @@ export default function ArtistPage() {
                   // Fix #5: 비로그인 시 개인화 데이터는 "-" 표시
                   const displayCard = isGuest ? { ...card, statusText: getGuestStatusText(card) } : card;
                   return (
-                    <div key={card.id} className={isLastOdd ? 'col-span-2' : ''} onClick={isGuestBlocked ? (e) => { e.preventDefault(); addToast('info', '로그인 후 이용 가능합니다'); } : undefined}>
+                    <div key={card.id} className={isLastOdd ? 'col-span-2' : ''} onClick={isGuestBlocked ? (e) => { e.preventDefault(); addToast('info', '로그인 화면으로 이동합니다'); } : undefined}>
                       <ServiceCard
                         card={displayCard}
                         fullWidth={isLastOdd}

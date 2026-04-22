@@ -119,7 +119,7 @@ function NewsDetailContent() {
   }
 
   const handleLike = () => {
-    if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
+    if (!isLoggedIn) { addToast('info', '로그인 화면으로 이동합니다'); return; }
     setLiked(!liked);
     setLikeCount((c) => liked ? c - 1 : c + 1);
   };

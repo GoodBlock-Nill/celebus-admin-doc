@@ -56,7 +56,7 @@ export default function HomePage() {
   const allBanners = (rawBanners ?? []).map((b) => ({ id: b.id, title: b.title, subtitle: b.subtitle ?? '' }));
   const banners = hasContent ? allBanners : [];
   const handleCheckIn = useCallback(() => {
-    if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
+    if (!isLoggedIn) { addToast('info', '로그인 화면으로 이동합니다'); return; }
     if (checkedIn) return;
     setCheckedIn(true);
     setStreak((s) => s + 1);
@@ -129,7 +129,7 @@ export default function HomePage() {
           <div className="bg-gradient-to-r from-violet-50 to-indigo-50 rounded-2xl px-4 py-4 text-center">
             <p className="text-sm font-semibold text-gray-900">로그인하고 시작하기</p>
             <p className="text-xs text-gray-500 mt-1">출석, 미션, 응모권이 기다리고 있어요!</p>
-            <button onClick={() => addToast('info', '로그인 후 이용 가능합니다')} className="mt-3 px-4 py-2 bg-violet-600 text-white rounded-xl text-xs font-semibold">
+            <button onClick={() => addToast('info', '로그인 화면으로 이동합니다')} className="mt-3 px-4 py-2 bg-violet-600 text-white rounded-xl text-xs font-semibold">
               로그인
             </button>
           </div>
@@ -184,7 +184,7 @@ export default function HomePage() {
 
       {/* 5. 핵심 추천 1개 */}
       <div className="px-4 mt-4">
-        <button onClick={() => { if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; } router.push('/quest'); }}
+        <button onClick={() => { if (!isLoggedIn) { addToast('info', '로그인 화면으로 이동합니다'); return; } router.push('/quest'); }}
           className="w-full bg-white border border-gray-200 rounded-xl px-4 py-4 text-left active:scale-[0.98] transition-transform">
           <div className="flex items-center gap-2">
             <span className="text-lg">{isLoggedIn ? '🎯' : '💜'}</span>
