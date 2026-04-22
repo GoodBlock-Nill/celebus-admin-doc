@@ -13,13 +13,13 @@ import { SUPPORT_PRESET_OPTIONS, applySupportPreset, type SupportPreset } from '
 import { cn, formatNumber } from '@/lib/utils';
 import type { SupportEvent, SupportEventStatus } from '@/lib/types';
 
-const STATUS_CONFIG: Record<SupportEventStatus, { badge: string; color: string }> = {
-  active: { badge: '모집중', color: 'bg-green-100 text-green-700' },
-  achieved: { badge: '달성', color: 'bg-blue-100 text-blue-700' },
-  executing: { badge: '집행중', color: 'bg-amber-100 text-amber-700' },
-  completed: { badge: '완료', color: 'bg-gray-100 text-gray-600' },
-  expired: { badge: '미달성', color: 'bg-red-100 text-red-600' },
-  cancelled: { badge: '취소', color: 'bg-gray-200 text-gray-500' },
+const STATUS_CONFIG: Record<SupportEventStatus, { badge: string; color: string; icon: string }> = {
+  active: { badge: '모집중', color: 'bg-green-100 text-green-700', icon: '' },
+  achieved: { badge: '달성', color: 'bg-blue-100 text-blue-700', icon: '🎯' },
+  executing: { badge: '집행중', color: 'bg-amber-100 text-amber-700', icon: '⏳' },
+  completed: { badge: '완료', color: 'bg-gray-100 text-gray-600', icon: '✅' },
+  expired: { badge: '미달성', color: 'bg-red-100 text-red-600', icon: '⛔' },
+  cancelled: { badge: '취소', color: 'bg-gray-200 text-gray-500', icon: '🚫' },
 };
 
 export default function SupportPage() {
@@ -123,6 +123,7 @@ export default function SupportPage() {
           <div className="relative z-10 w-full max-w-[340px] bg-white rounded-2xl px-6 py-6 animate-scaleIn">
             <h3 className="text-base font-bold text-gray-900 mb-3">덕력 응원</h3>
             <p className="text-sm text-gray-700 leading-relaxed mb-2">덕력 {formatNumber(showConfirmModal.amount)}pt를 응원합니다.</p>
+            <p className="text-xs text-violet-600 font-medium mb-2">응원 후 잔액: {formatNumber(Math.max(0, myHeldPt - showConfirmModal.amount))}pt</p>
             <p className="text-sm text-gray-900 font-semibold mb-3">한번 응원하면 돌이킬 수 없어요.<br />그래도 응원할까요?</p>
             <div className="text-xs text-gray-500 space-y-1 mb-5">
               <p>달성 시: 서포트 집행에 사용됩니다</p>
@@ -153,7 +154,7 @@ function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, 
     <div className={cn('rounded-2xl border transition-all', isExpanded ? 'border-violet-200 bg-violet-50/30' : 'border-gray-200 bg-white')}>
       <button onClick={onToggle} className="w-full px-4 py-4 text-left">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-lg">{event.icon}</span>
+          <span className="text-lg">{config.icon || event.icon}</span>
           <span className="text-sm font-semibold text-gray-900 flex-1 truncate">{event.title}</span>
           <span className={cn('text-[10px] font-medium px-2 py-0.5 rounded-full', config.color)}>{config.badge}</span>
         </div>
@@ -178,6 +179,13 @@ function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, 
           <p className="text-xs text-gray-600 mb-3">{event.description}</p>
           {event.myInvestPt > 0 && <p className="text-xs text-violet-600 mb-1">내 응원: {formatNumber(event.myInvestPt)}pt</p>}
           <p className="text-xs text-gray-500 mb-3">참여자: {event.participants}명</p>
+
+          {(event.status === 'achieved' || event.status === 'executing') && (
+            <div className="bg-blue-50 rounded-xl px-4 py-3 mb-3">
+              <p className="text-sm font-semibold text-blue-800">목표 달성! 감사합니다 💜</p>
+              <p className="text-xs text-blue-600 mt-1">{event.status === 'achieved' ? '집행 대기 중입니다' : '집행이 진행 중입니다'}</p>
+            </div>
+          )}
 
           {event.status === 'active' && (
             <div className="bg-white rounded-xl border border-gray-200 px-3 py-3 mb-3">
