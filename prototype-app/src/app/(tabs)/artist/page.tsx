@@ -101,6 +101,7 @@ export default function ArtistPage() {
 
   return (
     <div
+      className="min-h-dvh bg-white"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
