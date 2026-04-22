@@ -138,8 +138,9 @@ export default function HomePage() {
                 <span className={cn('text-xs font-medium', missionDone ? 'text-green-600' : 'text-gray-600')}>미션</span>
               </button>
             </div>
-            <div className="flex items-center mt-2 pt-2 border-t border-violet-100">
+            <div className="flex items-center gap-2 mt-2 pt-2 border-t border-violet-100">
               <span className="text-xs text-violet-700 flex-1">☐ 이번 주 퀘스트: 2/5장</span>
+              <button onClick={() => router.push('/daily-mission')} className="text-[10px] font-semibold text-violet-500 px-2 py-1 rounded-lg active:bg-violet-100 transition-colors">일일미션 →</button>
               <button onClick={() => router.push('/quest')} className="text-xs font-semibold text-violet-600 px-2 py-1 rounded-lg active:bg-violet-100 transition-colors">이어서 →</button>
             </div>
           </div>
