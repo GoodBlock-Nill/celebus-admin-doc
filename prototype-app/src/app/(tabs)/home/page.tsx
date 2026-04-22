@@ -102,13 +102,13 @@ export default function HomePage() {
         </div>
       ) : (
         <div className="px-4 mt-4 flex items-center gap-3 py-2">
-          <button onClick={() => router.push('/artist-discover')} className="flex flex-col items-center gap-1.5 shrink-0">
+          <button onClick={() => addToast('info', '로그인 화면으로 이동합니다')} className="flex flex-col items-center gap-1.5 shrink-0">
             <div className="w-14 h-14 rounded-full bg-violet-50 border-2 border-dashed border-violet-300 flex items-center justify-center">
               <span className="text-2xl text-violet-400">+</span>
             </div>
             <span className="text-[9px] text-violet-500 font-medium">팔로우</span>
           </button>
-          <p className="text-xs text-gray-400">아티스트를 팔로우하고 시작하세요</p>
+          <p className="text-xs text-gray-400">로그인하고 아티스트를 팔로우하세요</p>
         </div>
       )}
 
