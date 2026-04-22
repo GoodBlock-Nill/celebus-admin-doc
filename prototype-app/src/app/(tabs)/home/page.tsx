@@ -56,11 +56,12 @@ export default function HomePage() {
   const allBanners = (rawBanners ?? []).map((b) => ({ id: b.id, title: b.title, subtitle: b.subtitle ?? '' }));
   const banners = hasContent ? allBanners : [];
   const handleCheckIn = useCallback(() => {
+    if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
     if (checkedIn) return;
     setCheckedIn(true);
     setStreak((s) => s + 1);
     addToast('success', '출석 완료! 덕력 10pt 획득');
-  }, [checkedIn, addToast]);
+  }, [isLoggedIn, checkedIn, addToast]);
 
   return (
     <div className="min-h-dvh bg-white pb-20">
@@ -123,7 +124,7 @@ export default function HomePage() {
                 <span className="text-sm">{checkedIn ? '✅' : '☐'}</span>
                 <span className={cn('text-[10px]', checkedIn ? 'text-green-600' : 'text-gray-500')}>출석</span>
               </button>
-              <button onClick={() => { setMissionDone(true); addToast('success', '미션 완료! 덕력 20pt 획득'); }} className="flex items-center gap-1">
+              <button onClick={() => { if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; } setMissionDone(true); addToast('success', '미션 완료! 덕력 20pt 획득'); }} className="flex items-center gap-1">
                 <span className="text-sm">{missionDone ? '✅' : '☐'}</span>
                 <span className={cn('text-[10px]', missionDone ? 'text-green-600' : 'text-gray-500')}>미션</span>
               </button>

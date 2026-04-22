@@ -8,7 +8,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useUIStore } from '@/stores/useUIStore';
 import { useArtistStore } from '@/stores/useArtistStore';
 import { useArtists, useFollowedArtists, useFollowArtist, useUnfollowArtist } from '@/lib/hooks/useArtists';
-import { ARTIST_DISCOVER_PRESET_OPTIONS } from '@/lib/presets/artistDiscover';
+import { ARTIST_DISCOVER_PRESET_OPTIONS, getArtistDiscoverPresetState } from '@/lib/presets/artistDiscover';
+import GuestBanner from '@/components/ui/GuestBanner';
 import ArtistAvatar, { getArtistEmoji } from '@/components/artist/ArtistAvatar';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import EmptyState from '@/components/ui/EmptyState';
@@ -27,12 +28,15 @@ export default function ArtistDiscoverPage() {
   const unfollowMutation = useUnfollowArtist();
 
   const [preset, setPreset] = useState('default');
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [unfollowTarget, setUnfollowTarget] = useState<Artist | null>(null);
 
   const handlePreset = (key: string) => {
     setPreset(key);
+    const state = getArtistDiscoverPresetState(key);
+    setIsLoggedIn(state.isLoggedIn);
     if (key === 'searchEmpty') { setSearchOpen(true); setSearchQuery('zzzznotfound'); }
   };
 
@@ -50,6 +54,10 @@ export default function ArtistDiscoverPage() {
     : artists;
 
   const handleFollow = async (artist: Artist) => {
+    if (!isLoggedIn) {
+      addToast('info', '로그인 후 이용 가능합니다');
+      return;
+    }
     try {
       await followMutation.mutateAsync(artist.id);
       addToast('success', `'${artist.name}'을 팔로우했어요!`);
@@ -105,6 +113,7 @@ export default function ArtistDiscoverPage() {
 
   return (
     <div className="min-h-dvh bg-white pb-20">
+      {!isLoggedIn && <GuestBanner />}
       <SubPageHeader title="아티스트" />
 
       {/* 검색 토글 */}
@@ -186,7 +195,7 @@ export default function ArtistDiscoverPage() {
                     <p className="text-[10px] text-gray-400 text-center">{artist.members.length}명</p>
                     <button
                       onClick={() => handleFollow(artist)}
-                      disabled={followMutation.isPending}
+                      disabled={followMutation.isPending || !isLoggedIn}
                       className="w-full mt-2 py-1.5 rounded-lg text-[10px] font-semibold bg-violet-600 text-white active:bg-violet-700 disabled:bg-gray-200 disabled:text-gray-400 flex items-center justify-center gap-1"
                     >
                       {followMutation.isPending ? (
@@ -208,7 +217,7 @@ export default function ArtistDiscoverPage() {
           followedSet={followedSet}
           onFollow={handleFollow}
           onUnfollow={(artist) => setUnfollowTarget(artist)}
-          isLoading={followMutation.isPending || unfollowMutation.isPending}
+          isLoading={followMutation.isPending || unfollowMutation.isPending || !isLoggedIn}
           searchQuery={searchQuery}
         />
       )}

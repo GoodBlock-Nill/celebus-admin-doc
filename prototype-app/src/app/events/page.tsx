@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import PresetSelector from '@/components/dev/PresetSelector';
+import GuestBanner from '@/components/ui/GuestBanner';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import { EVENTS_PRESET_OPTIONS, getEventsPresetState } from '@/lib/presets/events';
@@ -28,6 +29,7 @@ export default function EventsPage() {
   const { data: rawEvents } = useEvents(activeArtistId);
   const [tab, setTab] = useState<'active' | 'closing' | 'ended'>('active');
   const [preset, setPreset] = useState('content');
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const events: EventItem[] = (rawEvents ?? []).map((e) => ({
     id: e.id,
@@ -42,6 +44,11 @@ export default function EventsPage() {
 
   const handlePreset = (key: string) => {
     setPreset(key);
+    if (key === 'guest') {
+      setIsLoggedIn(false);
+    } else {
+      setIsLoggedIn(true);
+    }
     const state = getEventsPresetState(key);
     if (state.emptyTab === 'active') setTab('active');
     else if (state.emptyTab === 'closed') setTab('ended');
@@ -64,6 +71,7 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-dvh bg-white pb-20">
+      {!isLoggedIn && <GuestBanner />}
       <SubPageHeader title="이벤트" />
 
       {/* 필터 탭 */}

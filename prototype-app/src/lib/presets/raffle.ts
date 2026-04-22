@@ -7,6 +7,7 @@ export const RAFFLE_PRESET_OPTIONS = [
   { key: 'allActive', label: '전체 진행중' },
   { key: 'allClosed', label: '전체 마감 (당첨/미당첨)' },
   { key: 'empty', label: 'Empty' },
+  { key: 'guest', label: '비로그인' },
 ];
 
 export async function applyRafflePreset(preset: string, queryClient: QueryClient) {

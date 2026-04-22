@@ -11,6 +11,7 @@ import { RAFFLE_PRESET_OPTIONS, applyRafflePreset } from '@/lib/presets/raffle';
 import { useRaffles } from '@/lib/hooks/useRaffle';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import EmptyState from '@/components/ui/EmptyState';
+import GuestBanner from '@/components/ui/GuestBanner';
 
 type RaffleStatus = 'active' | 'drawing' | 'winner' | 'loser' | 'closed';
 type FilterTab = 'active' | 'ended';
@@ -41,9 +42,15 @@ export default function RafflePage() {
   const { data: rawRaffles, isLoading } = useRaffles(activeArtistId);
   const [filter, setFilter] = useState<FilterTab>('active');
   const [preset, setPreset] = useState('mixed');
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const handlePreset = async (key: string) => {
     setPreset(key);
+    if (key === 'guest') {
+      setIsLoggedIn(false);
+    } else {
+      setIsLoggedIn(true);
+    }
     await applyRafflePreset(key, queryClient);
   };
 
@@ -77,6 +84,10 @@ export default function RafflePage() {
   });
 
   const handleCardTap = (raffle: RaffleItem) => {
+    if (!isLoggedIn) {
+      addToast('info', '로그인 후 이용 가능합니다');
+      return;
+    }
     if (raffle.status === 'drawing') {
       addToast('info', '추첨 결과를 기다려주세요. 결과는 마감 후 영업일 2일 이내 발표돼요');
       return;
@@ -92,6 +103,7 @@ export default function RafflePage() {
 
   return (
     <div className="min-h-dvh bg-white pb-20">
+      {!isLoggedIn && <GuestBanner />}
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
           <button onClick={() => router.back()} className="mr-3 -ml-1 p-1">
@@ -99,7 +111,7 @@ export default function RafflePage() {
           </button>
           <h1 className="text-base font-semibold text-gray-900 flex-1">Raffle</h1>
           <span className="text-xs font-medium text-violet-600 bg-violet-50 px-2.5 py-1 rounded-lg">
-            응모권: {myTickets}장
+            응모권: {isLoggedIn ? `${myTickets}장` : '-'}
           </span>
         </div>
       </div>
