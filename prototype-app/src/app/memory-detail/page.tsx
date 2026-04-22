@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUIStore } from '@/stores/useUIStore';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
 import { MEMORY_DETAIL_PRESET_OPTIONS, getMemoryDetailPresetState } from '@/lib/presets/memoryDetail';
@@ -160,8 +161,8 @@ export default function MemoryDetailPage() {
                 </div>
               ) : (
                 <>
-                  <button onClick={() => router.back()} className="mr-3 -ml-1 p-1">
-                    <span className="text-gray-900">←</span>
+                  <button onClick={() => router.back()} className="mr-3 -ml-1 p-2" aria-label="뒤로가기">
+                    <ChevronLeftIcon className="w-5 h-5 text-gray-900" />
                   </button>
                   <h1 className="text-base font-semibold text-gray-900 flex-1">{memory.date}</h1>
                   {/* Fix 8: 비로그인 공유 링크에서는 ⋯ 메뉴 없음 */}

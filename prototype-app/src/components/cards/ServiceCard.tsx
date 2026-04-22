@@ -23,7 +23,7 @@ const GROUP_COLORS: Record<string, { bg: string; iconBg: string; accent: string 
     accent: 'text-blue-600',
   },
   more: {
-    bg: 'from-gray-50 to-slate-50 border-gray-150',
+    bg: 'from-gray-50 to-slate-50 border-gray-200',
     iconBg: 'bg-gray-100',
     accent: 'text-gray-600',
   },

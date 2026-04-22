@@ -9,6 +9,8 @@ import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
 import ArtistAvatar from '@/components/artist/ArtistAvatar';
+import AppHeader from '@/components/layout/AppHeader';
+import GuestBanner from '@/components/ui/GuestBanner';
 import { HOME_PRESET_OPTIONS, getHomePresetState } from '@/lib/presets/home';
 
 interface BiveItem {
@@ -74,25 +76,9 @@ export default function HomePage() {
 
   return (
     <div className="min-h-dvh bg-white pb-20">
-      {!isLoggedIn && (
-        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
-          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
-        </div>
-      )}
+      {!isLoggedIn && <GuestBanner />}
       {/* 1. 헤더 */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
-        <div className="flex items-center h-12 px-4">
-          <span className="text-base font-bold text-violet-700 flex-1">CELEBUS</span>
-          <button className="relative mr-3" onClick={() => addToast('info', '알림 (준비 중)')}>
-            <span className="text-lg">🔔</span>
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[8px] rounded-full flex items-center justify-center font-bold">3</span>
-          </button>
-          <button onClick={() => addToast('info', '응모권 내역 (CEB-FQ-210)')}
-            className="text-xs font-medium text-violet-600 bg-violet-50 px-2.5 py-1 rounded-lg">
-            응모 15
-          </button>
-        </div>
-      </div>
+      <AppHeader />
 
       {/* 2. 캐러셀 배너 */}
       {/* TODO (HOM-001): 다른 아티스트 이벤트 배너 탭 시 "이 아티스트를 팔로우하시겠습니까?" 인라인 배너 표시.

@@ -8,6 +8,7 @@ import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
 import { INFO_PRESET_OPTIONS, getInfoPresetFilter } from '@/lib/presets/info';
+import GuestBanner from '@/components/ui/GuestBanner';
 
 type ItemType = 'schedule' | 'news';
 
@@ -100,11 +101,7 @@ export default function InfoPage() {
 
   return (
     <div className="min-h-dvh bg-white pb-20">
-      {!isLoggedIn && (
-        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
-          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
-        </div>
-      )}
+      {!isLoggedIn && <GuestBanner />}
 
       {/* 헤더 + 🔔 아티스트별 알림 토글 */}
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">

@@ -6,6 +6,7 @@ import OnboardingOverlay from '@/components/artist/OnboardingOverlay';
 import ServiceCard from '@/components/cards/ServiceCard';
 import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
+import AppHeader from '@/components/layout/AppHeader';
 import { cn } from '@/lib/utils';
 import { ARTIST_PRESET_OPTIONS, getArtistPresetState } from '@/lib/presets/artist';
 import { SERVICE_GROUP_LABELS } from '@/lib/types';
@@ -107,18 +108,7 @@ export default function ArtistPage() {
       onTouchEnd={handleTouchEnd}
     >
       {/* 앱 헤더 (홈과 동일) */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
-        <div className="flex items-center h-12 px-4">
-          <span className="text-base font-bold text-violet-700 flex-1">CELEBUS</span>
-          <button className="relative mr-3" onClick={() => addToast('info', '알림 (준비 중)')}>
-            <span className="text-lg">🔔</span>
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[8px] rounded-full flex items-center justify-center font-bold">3</span>
-          </button>
-          <button onClick={() => addToast('info', '응모권 내역 (CEB-FQ-210)')} className="text-xs font-medium text-violet-600 bg-violet-50 px-2.5 py-1 rounded-lg">
-            응모 15
-          </button>
-        </div>
-      </div>
+      <AppHeader />
 
       {/* 아티스트 헤더 */}
       <ArtistHeader />

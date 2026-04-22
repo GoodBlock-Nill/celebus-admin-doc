@@ -1,5 +1,3 @@
-import type { QueryClient } from '@tanstack/react-query';
-
 export const EVENTS_PRESET_OPTIONS = [
   { key: 'content', label: '콘텐츠' },
   { key: 'emptyActive', label: 'Empty (진행중)' },

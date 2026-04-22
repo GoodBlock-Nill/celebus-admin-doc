@@ -1,5 +1,3 @@
-import type { QueryClient } from '@tanstack/react-query';
-
 export const HOME_PRESET_OPTIONS = [
   { key: 'loginContent', label: '로그인+콘텐츠' },
   { key: 'loginEmpty', label: '로그인+Empty' },

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import PresetSelector from '@/components/dev/PresetSelector';
@@ -86,9 +86,11 @@ export default function QuestPage() {
   const [completeModalShown, setCompleteModalShown] = useState(false);
 
   // 5장 완료 시 축하 모달 (1회성)
-  if (isStoryComplete && !completeModalShown && !storyRewardClaimed) {
-    if (!showCompleteModal) setShowCompleteModal(true);
-  }
+  useEffect(() => {
+    if (isStoryComplete && !completeModalShown && !storyRewardClaimed && !showCompleteModal) {
+      setShowCompleteModal(true);
+    }
+  }, [isStoryComplete, completeModalShown, storyRewardClaimed, showCompleteModal]);
 
   const showTimeline = !isStoryComplete || showStoryView;
 

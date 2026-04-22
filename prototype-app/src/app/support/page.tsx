@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
+import GuestBanner from '@/components/ui/GuestBanner';
 import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
@@ -92,11 +93,7 @@ export default function SupportPage() {
 
   return (
     <div className="min-h-dvh bg-white pb-20">
-      {!isLoggedIn && (
-        <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
-          👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요
-        </div>
-      )}
+      {!isLoggedIn && <GuestBanner />}
       <SubPageHeader title={`${artistName} 응원하기`} />
 
       <div className="px-4 mt-4 space-y-3">
