@@ -153,28 +153,17 @@ export default function HomePage() {
               )}
             </button>
 
-            {/* 일일 미션 + 퀘스트 */}
-            <div className="bg-gray-50 px-5 py-3 flex items-center gap-3">
-              <button onClick={() => router.push('/daily-mission')} className="flex-1 flex items-center gap-2 active:opacity-70 transition-opacity">
-                <div className={cn('w-8 h-8 rounded-lg flex items-center justify-center', missionDone ? 'bg-green-100' : 'bg-violet-100')}>
-                  <span className="text-sm">{missionDone ? '✅' : '📋'}</span>
-                </div>
-                <div className="text-left">
-                  <p className={cn('text-xs font-semibold', missionDone ? 'text-green-600' : 'text-gray-900')}>{missionDone ? '미션 완료' : '일일 미션'}</p>
-                  <p className="text-[10px] text-gray-400">{missionDone ? '+20pt 획득' : '하러가기 →'}</p>
-                </div>
-              </button>
-              <div className="w-px h-8 bg-gray-200" />
-              <button onClick={() => router.push('/quest')} className="flex-1 flex items-center gap-2 active:opacity-70 transition-opacity">
-                <div className="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center">
-                  <span className="text-sm">🎯</span>
-                </div>
-                <div className="text-left">
-                  <p className="text-xs font-semibold text-gray-900">퀘스트</p>
-                  <p className="text-[10px] text-gray-400">2/5장 이어서 →</p>
-                </div>
-              </button>
-            </div>
+            {/* 일일 미션 */}
+            <button onClick={() => router.push('/daily-mission')} className="w-full bg-gray-50 px-5 py-3.5 flex items-center gap-3 active:bg-gray-100 transition-colors">
+              <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center', missionDone ? 'bg-green-100' : 'bg-violet-100')}>
+                <span className="text-lg">{missionDone ? '✅' : '📋'}</span>
+              </div>
+              <div className="flex-1 text-left">
+                <p className={cn('text-sm font-semibold', missionDone ? 'text-green-600' : 'text-gray-900')}>{missionDone ? '일일 미션 완료!' : '일일 미션'}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{missionDone ? '+20pt 획득' : '오늘의 미션을 완료하고 덕력을 받으세요'}</p>
+              </div>
+              <span className="text-gray-300 text-sm">→</span>
+            </button>
           </div>
         )}
       </div>
