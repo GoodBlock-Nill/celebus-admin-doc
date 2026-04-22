@@ -81,33 +81,47 @@ export default function HomePage() {
         onViewAll={() => router.push('/events')}
       />
 
-      {/* 3. 아티스트 선택 — [+] 좌측 + 팔로우 아티스트 셀렉터 */}
-      <div className="px-4 mt-4 flex items-center gap-3 overflow-x-auto no-scrollbar py-2">
-        <button onClick={() => router.push('/artist-discover')} className="flex flex-col items-center gap-1.5 shrink-0">
-          <div className="w-14 h-14 rounded-full bg-gray-50 border-2 border-dashed border-gray-300 flex items-center justify-center">
-            <span className="text-2xl text-gray-400">+</span>
-          </div>
-          <span className="text-[9px] text-gray-400 font-medium">추가</span>
-        </button>
-        {(artists ?? [artist]).map((a) => {
-          const isActive = a.id === artist.id;
-          return (
-            <button key={a.id} onClick={() => { if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; } setActiveArtist(a.id); }} className="flex flex-col items-center gap-1.5 shrink-0">
-              <ArtistAvatar artistId={a.id} size="lg" active={isActive} />
-              <span className={cn('text-[10px] font-semibold max-w-[56px] truncate', isActive ? 'text-violet-700' : 'text-gray-400')}>{a.nameEn}</span>
-            </button>
-          );
-        })}
-      </div>
+      {/* 3. 아티스트 선택 */}
+      {isLoggedIn ? (
+        <div className="px-4 mt-4 flex items-center gap-3 overflow-x-auto no-scrollbar py-2">
+          <button onClick={() => router.push('/artist-discover')} className="flex flex-col items-center gap-1.5 shrink-0">
+            <div className="w-14 h-14 rounded-full bg-gray-50 border-2 border-dashed border-gray-300 flex items-center justify-center">
+              <span className="text-2xl text-gray-400">+</span>
+            </div>
+            <span className="text-[9px] text-gray-400 font-medium">추가</span>
+          </button>
+          {(artists ?? [artist]).map((a) => {
+            const isActive = a.id === artist.id;
+            return (
+              <button key={a.id} onClick={() => setActiveArtist(a.id)} className="flex flex-col items-center gap-1.5 shrink-0">
+                <ArtistAvatar artistId={a.id} size="lg" active={isActive} />
+                <span className={cn('text-[10px] font-semibold max-w-[56px] truncate', isActive ? 'text-violet-700' : 'text-gray-400')}>{a.nameEn}</span>
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="px-4 mt-4 flex items-center gap-3 py-2">
+          <button onClick={() => router.push('/artist-discover')} className="flex flex-col items-center gap-1.5 shrink-0">
+            <div className="w-14 h-14 rounded-full bg-violet-50 border-2 border-dashed border-violet-300 flex items-center justify-center">
+              <span className="text-2xl text-violet-400">+</span>
+            </div>
+            <span className="text-[9px] text-violet-500 font-medium">팔로우</span>
+          </button>
+          <p className="text-xs text-gray-400">아티스트를 팔로우하고 시작하세요</p>
+        </div>
+      )}
 
       {/* ── 선택된 아티스트 기준 ── */}
-      <div className="px-4 mt-4">
-        <div className="flex items-center gap-2 mb-3">
-          <div className="flex-1 h-px bg-gray-100" />
-          <span className="text-[9px] text-gray-300">{artist.name} 기준</span>
-          <div className="flex-1 h-px bg-gray-100" />
+      {isLoggedIn && (
+        <div className="px-4 mt-4">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="flex-1 h-px bg-gray-100" />
+            <span className="text-[9px] text-gray-300">{artist.name} 기준</span>
+            <div className="flex-1 h-px bg-gray-100" />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 4. 오늘의 할 일 (컴팩트) */}
       <div className="px-4">
