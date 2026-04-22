@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
-import { useMonthlyMemoryCount } from '@/lib/hooks/useMemory';
+import { useMemories, useMonthlyMemoryCount } from '@/lib/hooks/useMemory';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
@@ -23,14 +23,6 @@ interface Memory {
   location?: string;
 }
 
-const MOCK_MEMORIES: Memory[] = [
-  { id: 'm1', date: '04.14', day: 14, emoji: '😍', title: 'V01D 콘서트 다녀왔다!', type: 'photo', images: 3, location: '잠실 올림픽홀' },
-  { id: 'm2', date: '04.10', day: 10, emoji: '🎉', title: 'V01D 음방 1위 축하!', type: 'photo', images: 5 },
-  { id: 'm3', date: '04.07', day: 7, emoji: '💜', title: 'V01D에게 쓰는 편지', type: 'letter', images: 0 },
-  { id: 'm4', date: '04.03', day: 3, emoji: '✨', title: '오늘 V01D 노래 들으며 행복했다', type: 'memo', images: 0 },
-  { id: 'm5', date: '04.14', day: 14, emoji: '🤩', title: '콘서트 포카 교환 성공!', type: 'photo', images: 2, location: '잠실 올림픽홀' },
-];
-
 const TYPE_ICON = { photo: '📸', letter: '✉️', memo: '📝' };
 
 export default function MemoryPage() {
@@ -40,16 +32,37 @@ export default function MemoryPage() {
   const addToast = useUIStore((s) => s.addToast);
   const queryClient = useQueryClient();
   const [view, setView] = useState<ViewMode>('calendar');
-  const [memories] = useState(MOCK_MEMORIES);
+
+  // Fix #24: 월 네비게이션 state hoisted early so useMemories can use it
+  const [calendarYear, setCalendarYear] = useState(2026);
+  const [calendarMonth, setCalendarMonth] = useState(4); // 1-indexed
+
+  const { data: rawMemories } = useMemories(activeArtistId, calendarYear, calendarMonth);
+
+  const memories: Memory[] = (rawMemories ?? []).map((m) => {
+    const dateObj = new Date(m.date);
+    const day = dateObj.getDate();
+    const monthStr = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const dayStr = String(day).padStart(2, '0');
+    const imageCount = m.images.length;
+    const type: Memory['type'] = imageCount > 0 ? 'photo' : m.text?.startsWith('편지') ? 'letter' : 'memo';
+    return {
+      id: m.id,
+      date: `${monthStr}.${dayStr}`,
+      day,
+      emoji: m.emojis[0] ?? '💜',
+      title: m.text ?? m.emojiLabels[0] ?? '기억',
+      type,
+      images: imageCount,
+      location: m.location ?? undefined,
+    };
+  });
+
   // (Full behavior: navigate to last year's month and expand that day.
   //  Currently the calendar is hardcoded to April 2026, so we auto-select
   //  the day from the yearAgo param when present.)
   // const yearAgoParam = false; // TODO: URL 파라미터 ?yearAgo=true 처리 (Suspense 필요)
   const [selectedDay, setSelectedDay] = useState<number | null>(14);
-
-  // Fix #24: 월 네비게이션 (baseYear/baseMonth 기준으로 캘린더 렌더)
-  const [calendarYear, setCalendarYear] = useState(2026);
-  const [calendarMonth, setCalendarMonth] = useState(4); // 1-indexed
 
   const goToPrevMonth = () => {
     if (calendarMonth === 1) { setCalendarYear((y) => y - 1); setCalendarMonth(12); }

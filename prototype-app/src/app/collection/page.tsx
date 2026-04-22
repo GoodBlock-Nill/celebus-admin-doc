@@ -8,6 +8,8 @@ import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import { COLLECTION_PRESET_OPTIONS, applyCollectionPreset } from '@/lib/presets/collection';
+import { useBiveItems } from '@/lib/hooks/useCollection';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 
 type Category = 'artist' | 'event' | 'special';
 
@@ -20,18 +22,6 @@ interface BiveItem {
   category: Category;
 }
 
-const MOCK_BIVES: BiveItem[] = [
-  { id: 'b1', name: '스토리의 시작', grade: 'Gr.1', image: '/v01d/logo.png', owned: true, category: 'artist' },
-  { id: 'b2', name: '성장 스토리', grade: 'Gr.2', image: '/v01d/logo.png', owned: true, category: 'artist' },
-  { id: 'b3', name: '아티스트의 꿈', grade: 'Gr.3', image: '/v01d/logo.png', owned: false, category: 'artist' },
-  { id: 'b4', name: '아티스트의 준비', grade: 'Gr.4', image: '/v01d/logo.png', owned: false, category: 'artist' },
-  { id: 'b5', name: '아티스트의 데뷔', grade: 'Gr.5', image: '/v01d/logo.png', owned: false, category: 'artist' },
-  { id: 'b6', name: '봄 한정 포카', grade: 'Event', image: '/v01d/logo.png', owned: true, category: 'event' },
-  { id: 'b7', name: '데뷔 기념 포카', grade: 'Event', image: '/v01d/logo.png', owned: true, category: 'event' },
-  { id: 'b8', name: '크리스마스 에디션', grade: 'Event', image: '/v01d/logo.png', owned: false, category: 'event' },
-  { id: 'b9', name: '스페셜 에디션', grade: 'Special', image: '/v01d/logo.png', owned: false, category: 'special' },
-];
-
 const CATEGORIES: { key: Category; label: string; desc: string }[] = [
   { key: 'artist', label: '아티스트', desc: 'V01D 챌린지 완료 시 획득하는 스토리 BIVE' },
   { key: 'event', label: '이벤트', desc: '특별 이벤트·래플 참여 시 지급되는 한정 BIVE' },
@@ -42,9 +32,19 @@ export default function CollectionPage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
   const queryClient = useQueryClient();
+  const { activeArtistId } = useActiveArtist();
+  const { data: rawBives, isLoading } = useBiveItems(activeArtistId);
   const [category, setCategory] = useState<Category>('artist');
-  const [bives] = useState(MOCK_BIVES);
   const [preset, setPreset] = useState('partial');
+
+  const bives: BiveItem[] = (rawBives ?? []).map((b) => ({
+    id: b.id,
+    name: b.name,
+    grade: b.grade,
+    image: b.imageUrl ?? '/v01d/logo.png',
+    owned: b.owned,
+    category: b.category,
+  }));
 
   const handlePreset = async (key: string) => {
     setPreset(key);
@@ -110,7 +110,14 @@ export default function CollectionPage() {
 
       {/* BIVE 그리드 */}
       <div className="px-4 mt-4 grid grid-cols-2 gap-3">
-        {filtered.map((bive) => (
+        {isLoading && (
+          <>
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="rounded-2xl bg-gray-100 aspect-square animate-pulse" />
+            ))}
+          </>
+        )}
+        {!isLoading && filtered.map((bive) => (
           <button
             key={bive.id}
             onClick={() => handleCardTap(bive)}
@@ -140,7 +147,7 @@ export default function CollectionPage() {
           </button>
         ))}
 
-        {filtered.length === 0 && (
+        {!isLoading && filtered.length === 0 && (
           <div className="col-span-2 text-center py-12">
             <span className="text-3xl">🃏</span>
             <p className="text-sm font-semibold text-gray-900 mt-3">이 카테고리에 BIVE가 없습니다</p>

@@ -8,6 +8,8 @@ import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn, formatNumber } from '@/lib/utils';
 import { RAFFLE_PRESET_OPTIONS, applyRafflePreset } from '@/lib/presets/raffle';
+import { useRaffles } from '@/lib/hooks/useRaffle';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 
 type RaffleStatus = 'active' | 'drawing' | 'winner' | 'loser' | 'closed';
 type FilterTab = 'active' | 'ended';
@@ -22,14 +24,6 @@ interface RaffleItem {
   myEntries: number;
 }
 
-const MOCK_RAFFLES: RaffleItem[] = [
-  { id: 'r1', title: 'V01D 사인앨범 래플', prizeImage: '/v01d/logo.png', status: 'active', daysLeft: 5, participants: 128, myEntries: 3 },
-  { id: 'r2', title: 'V01D 포토카드 래플', prizeImage: '/v01d/logo.png', status: 'active', daysLeft: 12, participants: 56, myEntries: 0 },
-  { id: 'r3', title: 'V01D 팬미팅 입장권', prizeImage: '/v01d/logo.png', status: 'winner', daysLeft: 0, participants: 320, myEntries: 10 },
-  { id: 'r4', title: 'V01D 굿즈 세트', prizeImage: '/v01d/logo.png', status: 'loser', daysLeft: 0, participants: 210, myEntries: 5 },
-  { id: 'r5', title: 'V01D 사인 포스터', prizeImage: '/v01d/logo.png', status: 'drawing', daysLeft: 0, participants: 180, myEntries: 7 },
-];
-
 const STATUS_BADGE: Record<RaffleStatus, { label: string; style: string }> = {
   active: { label: '', style: '' },
   drawing: { label: '추첨 대기', style: 'bg-amber-100 text-amber-700' },
@@ -42,8 +36,9 @@ export default function RafflePage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
   const queryClient = useQueryClient();
+  const { activeArtistId } = useActiveArtist();
+  const { data: rawRaffles, isLoading } = useRaffles(activeArtistId);
   const [filter, setFilter] = useState<FilterTab>('active');
-  const [raffles] = useState(MOCK_RAFFLES);
   const [preset, setPreset] = useState('mixed');
 
   const handlePreset = async (key: string) => {
@@ -52,6 +47,25 @@ export default function RafflePage() {
   };
 
   const myTickets: number = 15;
+
+  const raffles: RaffleItem[] = (rawRaffles ?? []).map((r) => {
+    let displayStatus: RaffleStatus = r.status === 'drawing' ? 'drawing' : r.status === 'closed' ? 'closed' : 'active';
+    if (r.status === 'drawing' && r.myResult === 'winner') displayStatus = 'winner';
+    else if (r.status === 'drawing' && r.myResult === 'loser') displayStatus = 'loser';
+    else if (r.status === 'closed' && r.myResult === 'winner') displayStatus = 'winner';
+    else if (r.status === 'closed' && r.myResult === 'loser') displayStatus = 'loser';
+    const endDate = r.endDate ? new Date(r.endDate) : null;
+    const daysLeft = endDate ? Math.max(0, Math.ceil((endDate.getTime() - Date.now()) / 86400000)) : 0;
+    return {
+      id: r.id,
+      title: r.title,
+      prizeImage: r.prizeImage ?? '/v01d/logo.png',
+      status: displayStatus,
+      daysLeft,
+      participants: r.totalEntries,
+      myEntries: r.myEntries,
+    };
+  });
 
   const filtered = raffles.filter((r) => {
     if (filter === 'active') return r.status === 'active';
@@ -110,7 +124,14 @@ export default function RafflePage() {
 
       {/* 래플 카드 리스트 */}
       <div className="px-4 mt-4 space-y-3">
-        {filtered.map((raffle) => {
+        {isLoading && (
+          <>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="w-full bg-gray-100 rounded-2xl h-24 animate-pulse" />
+            ))}
+          </>
+        )}
+        {!isLoading && filtered.map((raffle) => {
           const badge = STATUS_BADGE[raffle.status];
           return (
             <button
@@ -153,7 +174,7 @@ export default function RafflePage() {
           );
         })}
 
-        {filtered.length === 0 && (
+        {!isLoading && filtered.length === 0 && (
           <div className="text-center py-12">
             <span className="text-3xl">🎁</span>
             <p className="text-sm font-semibold text-gray-900 mt-3">

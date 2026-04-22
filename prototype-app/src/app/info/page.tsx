@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
+import { useInfoItems } from '@/lib/hooks/useInfo';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
@@ -30,18 +31,6 @@ interface Notice {
   body?: string;
 }
 
-const MOCK_ITEMS: TimelineItem[] = [
-  { id: 'i1', type: 'schedule', title: 'MBC 음악중심 출연', date: '04.22', time: '14:00', location: '잠실 MBC 방송센터', group: '오늘', alarmOn: true, description: 'V01D 음악중심 생방송 출연. 신곡 "Tug of War" 무대 예정.' },
-  { id: 'i2', type: 'news', title: 'V01D 신곡 뮤비 티저 공개', date: '04.22', image: '/v01d/logo.png', group: '오늘' },
-  { id: 'i3', type: 'schedule', title: '팬미팅 서울', date: '04.25', time: '18:00', location: '서울 올림픽홀', group: '이번 주', exclusive: true, alarmOn: false, description: 'V01D 데뷔 기념 첫 공식 팬미팅. CELEBUS 단독 사전 공개 일정.' },
-  { id: 'i4', type: 'schedule', title: '인기가요 출연', date: '04.27', time: '15:30', location: 'SBS', group: '이번 주', alarmOn: false, description: 'SBS 인기가요 생방송 출연.' },
-  { id: 'i5', type: 'news', title: '[CELEBUS 단독] 멤버 인터뷰 공개', date: '04.24', group: '이번 주', exclusive: true },
-  { id: 'i8', type: 'schedule', title: '라디오 스타 출연', date: '04.29', time: '23:00', location: 'MBC', group: '다음 주', alarmOn: false, description: 'MBC 라디오 스타 출연.' },
-  { id: 'i9', type: 'schedule', title: 'V01D 팬미팅 도쿄', date: '05.10', time: '18:00', location: '도쿄 부도칸', group: '이후', exclusive: true, alarmOn: false, description: 'V01D 해외 팬미팅 도쿄 공연.' },
-  { id: 'i6', type: 'news', title: 'V01D, 음악방송 1위 수상', date: '04.17', group: '지난 주' },
-  { id: 'i7', type: 'news', title: 'V01D "Tug of War" 스트리밍 1억 돌파', date: '04.15', group: '이전' },
-];
-
 const MOCK_NOTICES: Notice[] = [
   { title: 'V01D 팬미팅 좌석 배치 변경 안내', date: '04.21', body: 'V01D 팬미팅(4/25) 좌석 배치가 일부 변경되었습니다. 변경된 좌석은 CELEBUS 앱 Event 탭에서 확인하세요. 문의사항은 고객센터로 연락해주세요.' },
   { title: 'V01D 콘서트 MD 사전예약 안내', date: '04.18', body: '5월 공연 MD 사전예약이 시작됩니다. 자세한 내용은 공지를 확인하세요.' },
@@ -49,15 +38,28 @@ const MOCK_NOTICES: Notice[] = [
 
 export default function InfoPage() {
   const router = useRouter();
-  const { artistName } = useActiveArtist();
+  const { artistName, activeArtistId } = useActiveArtist();
+  const { data: rawItems } = useInfoItems(activeArtistId);
   const addToast = useUIStore((s) => s.addToast);
-  const [items, setItems] = useState(MOCK_ITEMS);
   const [artistAlarmOn, setArtistAlarmOn] = useState(true);
   const [preset, setPreset] = useState('rich');
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [showNoticeSheet, setShowNoticeSheet] = useState(false);
   const [showScheduleSheet, setShowScheduleSheet] = useState<TimelineItem | null>(null);
   const [showPrevNotices, setShowPrevNotices] = useState(false);
+
+  const items: TimelineItem[] = (rawItems ?? []).map((item) => ({
+    id: item.id,
+    type: item.type,
+    title: item.title,
+    date: item.date,
+    time: item.time ?? undefined,
+    location: item.location ?? undefined,
+    image: item.imageUrl ?? undefined,
+    exclusive: item.isExclusive,
+    alarmOn: item.alarmOn,
+    group: item.groupLabel ?? '이전',
+  }));
 
   const handlePreset = (key: string) => {
     setIsLoggedIn(key !== 'guest');
@@ -72,9 +74,6 @@ export default function InfoPage() {
 
   const toggleItemAlarm = (id: string) => {
     if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
-    setItems((prev) => prev.map((item) =>
-      item.id === id ? { ...item, alarmOn: !item.alarmOn } : item
-    ));
     const item = items.find((i) => i.id === id);
     if (item?.alarmOn) addToast('info', `${artistName} 알림이 해제되었어요`);
     else addToast('success', `${artistName} 알림이 설정되었어요. 새로운 일정과 소식을 알려드릴게요`);

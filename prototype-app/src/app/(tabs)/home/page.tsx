@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
+import { useBanners } from '@/lib/hooks/useEvents';
 import { useArtistStore } from '@/stores/useArtistStore';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
@@ -25,16 +26,11 @@ const BIVE_LIST: Omit<BiveItem, 'owned'>[] = [
   { name: 'V01D 스페셜 에디션', grade: '스페셜', emoji: '✨', howToGet: 'Grade 1~5 전체 합성으로 획득' },
 ];
 
-const BANNERS = [
-  { id: 'b1', title: 'V01D 사인앨범 래플', subtitle: 'D-5 | 참여하기', active: true, dDay: 5 },
-  { id: 'b2', title: 'V01D 커피차 서포트', subtitle: '목표 70% 달성중', active: true, dDay: 12 },
-  { id: 'b3', title: '팬미팅 포토카드 래플', subtitle: 'D-3 | 마감 임박!', active: true, dDay: 3 },
-  { id: 'b4', title: '봄맞이 스트리밍 이벤트', subtitle: '마감', active: false, dDay: undefined },
-];
 
 export default function HomePage() {
   const router = useRouter();
-  const { activeArtist: artist, artists } = useActiveArtist();
+  const { activeArtist: artist, artists, activeArtistId } = useActiveArtist();
+  const { data: rawBanners } = useBanners(activeArtistId);
   const setActiveArtist = useArtistStore((s) => s.setActiveArtist);
   const addToast = useUIStore((s) => s.addToast);
 
@@ -64,12 +60,10 @@ export default function HomePage() {
   const hasContent = homePresetState.hasContent;
   const allDone = checkedIn && missionDone;
 
-  const banners = hasContent ? BANNERS : [];
-  const filteredBanners = banners.filter((b) => {
-    if (bannerFilter === 'active') return b.active && (b.dDay === undefined || b.dDay > 3);
-    if (bannerFilter === 'closing') return b.active && b.dDay !== undefined && b.dDay >= 0 && b.dDay <= 3;
-    return !b.active;
-  });
+  // All banners from DB are active; 'closing'/'ended' tabs show empty for live data
+  const allBanners = (rawBanners ?? []).map((b) => ({ id: b.id, title: b.title, subtitle: b.subtitle ?? '' }));
+  const banners = hasContent ? allBanners : [];
+  const filteredBanners = banners.filter(() => bannerFilter === 'active');
 
   const handleCheckIn = useCallback(() => {
     if (checkedIn) return;

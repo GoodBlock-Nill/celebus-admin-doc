@@ -7,6 +7,8 @@ import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import { EVENTS_PRESET_OPTIONS, getEventsPresetState } from '@/lib/presets/events';
+import { useEvents } from '@/lib/hooks/useEvents';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 
 interface EventItem {
   id: string;
@@ -16,25 +18,28 @@ interface EventItem {
   emoji: string;
   dDay?: number;
   active: boolean;
-  endDate?: string; // ISO date string for sorting ended events
+  endDate?: string;
 }
-
-const MOCK_EVENTS: EventItem[] = [
-  { id: 'e1', title: 'V01D 사인앨범 래플', subtitle: '응모권 1장으로 참여', type: 'raffle', emoji: '🎁', dDay: 5, active: true },
-  { id: 'e2', title: 'V01D 커피차 서포트', subtitle: '목표 70% 달성중 · 1,234명 참여', type: 'support', emoji: '☕', dDay: 12, active: true },
-  { id: 'e3', title: '팬미팅 포토카드 래플', subtitle: '응모권 2장으로 참여', type: 'raffle', emoji: '📸', dDay: 3, active: true },
-  { id: 'e4', title: 'V01D 컴백 스트리밍 이벤트', subtitle: '스트리밍 인증 시 응모', type: 'event', emoji: '🎵', dDay: 8, active: true },
-  { id: 'e5', title: '봄맞이 스트리밍 이벤트', subtitle: '2026.03.01 ~ 03.31', type: 'event', emoji: '🌸', active: false, endDate: '2026-03-31' },
-  { id: 'e6', title: '데뷔 1주년 축하 래플', subtitle: '2026.02.14 마감', type: 'raffle', emoji: '🎂', active: false, endDate: '2026-02-14' },
-  { id: 'e7', title: 'V01D 생일카페 서포트', subtitle: '목표 달성 · 2,156명 참여', type: 'support', emoji: '🎉', active: false, endDate: '2026-01-20' },
-];
 
 // TODO: 다른 아티스트 이벤트 탭 시 팔로우 유도 인라인 배너
 export default function EventsPage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
+  const { activeArtistId } = useActiveArtist();
+  const { data: rawEvents } = useEvents(activeArtistId);
   const [tab, setTab] = useState<'active' | 'closing' | 'ended'>('active');
   const [preset, setPreset] = useState('content');
+
+  const events: EventItem[] = (rawEvents ?? []).map((e) => ({
+    id: e.id,
+    title: e.title,
+    subtitle: e.subtitle ?? '',
+    type: e.type,
+    emoji: e.emoji ?? '🎉',
+    dDay: e.dDay ?? undefined,
+    active: e.isActive,
+    endDate: e.endDate ?? undefined,
+  }));
 
   const handlePreset = (key: string) => {
     setPreset(key);
@@ -46,7 +51,7 @@ export default function EventsPage() {
   const presetState = getEventsPresetState(preset);
   const filtered = presetState.forceEmpty
     ? []
-    : MOCK_EVENTS.filter((e) => {
+    : events.filter((e) => {
         if (tab === 'active') return e.active && (e.dDay === undefined || e.dDay > 3);
         if (tab === 'closing') return e.active && e.dDay !== undefined && e.dDay >= 0 && e.dDay <= 3;
         return !e.active;
