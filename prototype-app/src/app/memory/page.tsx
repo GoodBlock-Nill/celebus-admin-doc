@@ -179,7 +179,7 @@ export default function MemoryPage() {
                   )}>
                   <span className={cn('font-medium', isSelected ? 'text-violet-700' : isToday ? 'text-violet-600' : 'text-gray-700')}>{day}</span>
                   {dayMems.length > 0 && (
-                    <span className="text-[8px] leading-none mt-0.5">
+                    <span className="text-[9px] leading-none mt-0.5">
                       {dayMems[0].emoji}{dayMems.length > 1 && <span className="text-gray-400">+{dayMems.length - 1}</span>}
                     </span>
                   )}

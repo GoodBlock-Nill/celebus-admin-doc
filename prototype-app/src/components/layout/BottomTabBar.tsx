@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
+import { useUIStore } from '@/stores/useUIStore';
 import {
   HomeIcon,
   SparklesIcon,
@@ -18,9 +19,13 @@ import {
   UserIcon as UserIconSolid,
 } from '@heroicons/react/24/solid';
 
+// Tabs that are not yet implemented — visually faded and show a coming-soon toast
+const COMING_SOON_HREFS = new Set(['/celebus', '/game', '/my']);
+
 export default function BottomTabBar() {
   const pathname = usePathname();
   const { artistName } = useActiveArtist();
+  const addToast = useUIStore((s) => s.addToast);
 
   const tabs = [
     { key: 'home', label: '홈', href: '/home', Icon: HomeIcon, ActiveIcon: HomeIconSolid },
@@ -38,7 +43,25 @@ export default function BottomTabBar() {
       <div className="flex h-14">
         {tabs.map(({ key, label, href, Icon, ActiveIcon }) => {
           const isActive = pathname === href || pathname.startsWith(href + '/');
+          const isComingSoon = COMING_SOON_HREFS.has(href);
           const TabIcon = isActive ? ActiveIcon : Icon;
+
+          if (isComingSoon) {
+            return (
+              <button
+                key={key}
+                onClick={() => addToast('info', `${label} 준비 중입니다`)}
+                className="flex-1 flex flex-col items-center justify-center gap-0.5 opacity-40"
+                aria-label={`${label} (준비 중)`}
+              >
+                <TabIcon className="w-5 h-5 text-gray-400" />
+                <span className="text-[9px] font-medium text-gray-400 truncate max-w-[60px]">
+                  {label}
+                </span>
+              </button>
+            );
+          }
+
           return (
             <Link
               key={key}

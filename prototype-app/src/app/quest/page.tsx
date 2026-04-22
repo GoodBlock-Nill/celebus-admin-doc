@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import { usePullToRefresh } from '@/lib/hooks/usePullToRefresh';
 import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import PresetSelector from '@/components/dev/PresetSelector';
@@ -35,8 +36,6 @@ export default function QuestPage() {
   const [storyRewardClaimed, setStoryRewardClaimed] = useState(false);
   const [previewChapter, setPreviewChapter] = useState<QuestChapter | null>(null);
   const [showStoryView, setShowStoryView] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [touchStart, setTouchStart] = useState(0);
 
   const isStoryComplete = chapters.length > 0 && chapters.every((ch) => ch.status === 'cleared');
 
@@ -52,23 +51,9 @@ export default function QuestPage() {
   );
 
   // Pull-to-Refresh
-  const handleRefresh = useCallback(() => {
-    setIsRefreshing(true);
-    refetchChapters().finally(() => setIsRefreshing(false));
-  }, [refetchChapters]);
+  const handleRefresh = useCallback(() => { refetchChapters(); }, [refetchChapters]);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (typeof window !== 'undefined' && window.scrollY === 0) {
-      setTouchStart(e.touches[0].clientY);
-    }
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStart === 0) return;
-    const diff = e.changedTouches[0].clientY - touchStart;
-    if (diff > 80 && !isRefreshing) handleRefresh();
-    setTouchStart(0);
-  };
+  const { isRefreshing, handleTouchStart, handleTouchEnd } = usePullToRefresh(handleRefresh);
 
   const hasReviewingMissions = chapters.some(
     (ch) => ch.missions.some((m) => m.status === 'SUBMITTED')

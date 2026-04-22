@@ -38,7 +38,7 @@ export default function PresetSelector({ presets, current, onSelect }: PresetSel
       {open && (
         <>
           <div className="fixed inset-0 z-[89]" onClick={() => setOpen(false)} />
-          <div className="relative z-[90] mb-2 flex flex-col gap-1.5 animate-slideInUp" role="menu">
+          <div className="relative z-[90] mb-2 flex flex-col gap-1.5 animate-slideInUp max-h-[50vh] overflow-y-auto" role="menu">
             {allPresets.map((p) => (
               <button
                 key={p.key}

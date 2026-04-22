@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
+import { usePullToRefresh } from '@/lib/hooks/usePullToRefresh';
 import ArtistHeader from '@/components/artist/ArtistHeader';
 import OnboardingOverlay from '@/components/artist/OnboardingOverlay';
 import ServiceCard from '@/components/cards/ServiceCard';
@@ -48,7 +49,6 @@ function groupCards(cards: ServiceCardData[]) {
 
 export default function ArtistPage() {
   const [cards, setCards] = useState(ARTIST_CARDS);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [preset, setPreset] = useState('loginContent');
   const [isGuest, setIsGuest] = useState(false);
   const { showOnboarding, setShowOnboarding, addToast } = useUIStore();
@@ -75,29 +75,15 @@ export default function ArtistPage() {
 
   // Pull-to-Refresh 시뮬레이션
   const handleRefresh = useCallback(() => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setCards([...ARTIST_CARDS]);
-      setIsRefreshing(false);
-    }, 800);
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setCards([...ARTIST_CARDS]);
+        resolve();
+      }, 800);
+    });
   }, []);
 
-  // 간단한 Pull-to-Refresh (터치 기반)
-  const [touchStart, setTouchStart] = useState(0);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    if (window.scrollY === 0) {
-      setTouchStart(e.touches[0].clientY);
-    }
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const diff = e.changedTouches[0].clientY - touchStart;
-    if (diff > 80 && window.scrollY === 0 && !isRefreshing) {
-      handleRefresh();
-    }
-    setTouchStart(0);
-  };
+  const { isRefreshing, handleTouchStart, handleTouchEnd } = usePullToRefresh(handleRefresh);
 
   const grouped = groupCards(cards);
 

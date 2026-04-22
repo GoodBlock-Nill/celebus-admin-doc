@@ -76,6 +76,11 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Typography scale — use these instead of arbitrary text-[Npx] */
+/* xs: 10px, sm: 12px, base: 14px, lg: 16px, xl: 20px */
+
+/* Section spacing convention: mt-4 between sections, mb-3 for section label to content */
+
 * {
   -webkit-tap-highlight-color: transparent;
 }
