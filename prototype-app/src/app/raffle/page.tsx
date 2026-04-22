@@ -162,6 +162,22 @@ export default function RafflePage() {
             <p className="text-xs text-gray-500 mt-1">
               {filter === 'active' ? '새 래플이 열리면 알려드릴게요' : '진행중인 래플에 참여해보세요'}
             </p>
+            {filter === 'active' && (
+              <div className="flex justify-center gap-2 mt-5">
+                <button
+                  onClick={() => addToast('success', '알림이 설정되었습니다')}
+                  className="px-4 py-2 rounded-full bg-gray-100 text-gray-700 text-xs font-semibold active:bg-gray-200 transition-colors"
+                >
+                  알림 설정
+                </button>
+                <button
+                  onClick={() => router.push('/quest')}
+                  className="px-4 py-2 rounded-full bg-violet-600 text-white text-xs font-semibold active:bg-violet-700 transition-colors"
+                >
+                  V01D 챌린지
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

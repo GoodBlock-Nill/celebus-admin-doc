@@ -142,6 +142,13 @@ export default function VirtuePage() {
           <div className="flex-1 h-px bg-gray-100" />
         </div>
 
+        {/* 시즌 초반 — 참여자 20명 미만 배너 */}
+        {ranking && (ranking.topUsers.length < 20) && (
+          <div className="mb-3 bg-violet-50 border border-violet-200 rounded-xl px-4 py-3 text-center">
+            <p className="text-xs text-violet-700 font-medium">이번 시즌이 막 시작됐어요! 지금 활동하면 TOP 10 진입 기회 💪</p>
+          </div>
+        )}
+
         {/* Fix #9: 신규 유저 Empty 안내 */}
         {!rankingLoading && ranking && !ranking.myRank && (
           <div className="text-center py-4 mb-3">

@@ -96,9 +96,12 @@ function QuestSubmitContent() {
 
         {/* 업로드 영역 */}
         <div className="mb-5">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            인증샷 업로드
-          </p>
+          <div className="flex items-baseline gap-2 mb-3">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              인증샷 업로드
+            </p>
+            <p className="text-[10px] text-gray-400">JPG, PNG, WebP, HEIC · 최대 10MB</p>
+          </div>
 
           {uploadedImage ? (
             <div className="relative w-full aspect-[4/3] bg-gray-100 rounded-2xl overflow-hidden">

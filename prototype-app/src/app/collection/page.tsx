@@ -149,6 +149,7 @@ export default function CollectionPage() {
       </div>
 
       {/* 바로가기 섹션 */}
+      {/* TODO(COL-101): 스펙상 sticky bottom 고정 위치가 요구됨. 현재 프로토타입은 스크롤 흐름에 배치. */}
       <div className="px-4 mt-6">
         <div className="flex items-center gap-2 mb-3">
           <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">바로가기</span>

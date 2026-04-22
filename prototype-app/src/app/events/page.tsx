@@ -29,6 +29,7 @@ const MOCK_EVENTS: EventItem[] = [
   { id: 'e7', title: 'V01D 생일카페 서포트', subtitle: '목표 달성 · 2,156명 참여', type: 'support', emoji: '🎉', active: false, endDate: '2026-01-20' },
 ];
 
+// TODO: 다른 아티스트 이벤트 탭 시 팔로우 유도 인라인 배너
 export default function EventsPage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
