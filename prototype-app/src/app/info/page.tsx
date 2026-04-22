@@ -153,7 +153,7 @@ export default function InfoPage() {
           <TimelineSection
             items={sortedItems}
             groups={groups}
-            onItemClick={(item) => { if (item.type === 'schedule') setShowScheduleSheet(item); else addToast('info', '소식 상세 (CEB-INF-201 추후 작성)'); }}
+            onItemClick={(item) => { if (item.type === 'schedule') setShowScheduleSheet(item); else router.push('/news-detail'); }}
             onAlarmToggle={toggleItemAlarm}
             isLoggedIn={isLoggedIn}
             artistName={artistName}
