@@ -51,7 +51,7 @@ export default function VirtuePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-dvh bg-white pb-8">
+      <div className="min-h-dvh bg-white pb-20">
         <SubPageHeader title="덕력 랭킹" />
         <div className="px-4 mt-4 space-y-4">
           <Skeleton className="h-32 w-full rounded-2xl" />
@@ -65,7 +65,7 @@ export default function VirtuePage() {
   }
 
   return (
-    <div className="min-h-dvh bg-white pb-8">
+    <div className="min-h-dvh bg-white pb-20">
       {!isLoggedIn && (
         <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
           👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요

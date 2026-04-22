@@ -59,7 +59,7 @@ export default function EventsPage() {
       });
 
   return (
-    <div className="min-h-dvh bg-white pb-8">
+    <div className="min-h-dvh bg-white pb-20">
       <SubPageHeader title="이벤트" />
 
       {/* 필터 탭 */}

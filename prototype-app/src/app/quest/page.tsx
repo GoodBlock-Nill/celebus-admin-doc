@@ -96,7 +96,7 @@ export default function QuestPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-dvh bg-white pb-8">
+      <div className="min-h-dvh bg-white pb-20">
         <SubPageHeader title={`${artistName} 챌린지`} />
         <div className="px-4 mt-5 space-y-3">
           <Skeleton className="h-16 rounded-xl" />
@@ -109,7 +109,7 @@ export default function QuestPage() {
 
   return (
     <div
-      className="min-h-dvh bg-white pb-8"
+      className="min-h-dvh bg-white pb-20"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >

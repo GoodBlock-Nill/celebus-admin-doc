@@ -9,23 +9,24 @@ export default function ArtistHeader() {
   const gradient = getArtistGradient(activeArtistId);
 
   return (
-    <div className={cn('relative h-40 overflow-hidden bg-gradient-to-br', gradient)}>
+    <div className={cn('relative h-44 overflow-hidden bg-gradient-to-br', gradient)}>
+      {/* 하단 어둡게 오버레이 (텍스트 가독성) */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
       {/* 배경 패턴 */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-4 right-8 text-6xl opacity-30">
-          {artist.name[0]}
-        </div>
-        <div className="absolute bottom-2 left-4 text-4xl opacity-20">
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-6 right-6 text-7xl font-black text-white">
           {artist.nameEn}
         </div>
       </div>
+
       {/* 콘텐츠 */}
-      <div className="relative z-10 flex items-end h-full px-5 pb-5">
-        <div className="flex items-center gap-3">
-          <ArtistAvatar artistId={activeArtistId} size="md" className="ring-2 ring-white/30" />
+      <div className="relative z-10 flex items-end h-full px-5 pb-6">
+        <div className="flex items-center gap-4">
+          <ArtistAvatar artistId={activeArtistId} size="lg" className="ring-2 ring-white/40 shadow-lg" />
           <div>
-            <h1 className="text-white text-xl font-bold tracking-wide drop-shadow-sm">{artist.name}</h1>
-            <p className="text-white/70 text-xs">{artist.nameEn}</p>
+            <h1 className="text-white text-xl font-bold tracking-wide drop-shadow-md">{artist.name}</h1>
+            <p className="text-white/80 text-xs mt-0.5 drop-shadow-sm">{artist.nameEn} · {artist.members.length}명</p>
           </div>
         </div>
       </div>

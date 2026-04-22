@@ -102,7 +102,7 @@ export default function MemoryDetailPage() {
   };
 
   return (
-    <div className="min-h-dvh bg-white pb-8">
+    <div className="min-h-dvh bg-white pb-20">
 
       {/* Fix 7: 삭제된 기억 에러 상태 */}
       {!memory && (

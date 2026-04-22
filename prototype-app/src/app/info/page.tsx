@@ -97,7 +97,7 @@ export default function InfoPage() {
   });
 
   return (
-    <div className="min-h-dvh bg-white pb-8">
+    <div className="min-h-dvh bg-white pb-20">
       {!isLoggedIn && (
         <div className="bg-violet-600 text-white text-center py-1.5 text-[10px] font-medium">
           👀 비로그인 미리보기 — 열람 가능, 참여 시 로그인 필요

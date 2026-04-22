@@ -76,7 +76,7 @@ export default function RafflePage() {
   };
 
   return (
-    <div className="min-h-dvh bg-white pb-8">
+    <div className="min-h-dvh bg-white pb-20">
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
           <button onClick={() => router.back()} className="mr-3 -ml-1 p-1">

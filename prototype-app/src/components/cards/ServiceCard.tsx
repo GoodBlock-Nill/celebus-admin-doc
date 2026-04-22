@@ -81,23 +81,8 @@ export default function ServiceCard({ card, fullWidth = false, disabled = false 
     );
   }
 
-  const IMPLEMENTED_ROUTES = ['/quest', '/daily-mission', '/support', '/virtue', '/fandom-level', '/raffle', '/collection', '/info', '/memory'];
-
-  if (IMPLEMENTED_ROUTES.includes(card.href)) {
-    return (
-      <Link href={card.href} className={cn('block', fullWidth ? 'col-span-2' : '')}>
-        {content}
-      </Link>
-    );
-  }
-
-  const handleSubScreenClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    addToast('info', '곧 만나요! 기대해 주세요');
-  };
-
   return (
-    <Link href={card.href} onClick={handleSubScreenClick} className={cn('block', fullWidth ? 'col-span-2' : '')}>
+    <Link href={card.href} className={cn('block', fullWidth ? 'col-span-2' : '')}>
       {content}
     </Link>
   );

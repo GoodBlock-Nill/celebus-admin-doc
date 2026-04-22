@@ -90,7 +90,7 @@ export default function MemoryPage() {
   const dayMemories = selectedDay ? getMemoriesForDay(selectedDay) : [];
 
   return (
-    <div className="min-h-dvh bg-white pb-8">
+    <div className="min-h-dvh bg-white pb-20">
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
         <div className="flex items-center h-12 px-4">
           <button onClick={() => router.back()} className="mr-3 -ml-1 p-1"><span className="text-gray-900">←</span></button>
@@ -150,7 +150,8 @@ export default function MemoryPage() {
               const day = i + 1;
               const dayMems = getMemoriesForDay(day);
               const isSelected = selectedDay === day;
-              const isToday = day === 15;
+              const today = new Date();
+              const isToday = calendarYear === today.getFullYear() && calendarMonth === today.getMonth() + 1 && day === today.getDate();
               return (
                 <button key={day} onClick={() => setSelectedDay(isSelected ? null : day)}
                   className={cn(

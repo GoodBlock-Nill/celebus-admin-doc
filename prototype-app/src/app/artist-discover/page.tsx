@@ -88,7 +88,7 @@ export default function ArtistDiscoverPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-dvh bg-white pb-8">
+      <div className="min-h-dvh bg-white pb-20">
         <SubPageHeader title="아티스트" />
         <div className="px-4 mt-4 space-y-4">
           <Skeleton className="h-20 w-full rounded-2xl" />
@@ -102,7 +102,7 @@ export default function ArtistDiscoverPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-white pb-8">
+    <div className="min-h-dvh bg-white pb-20">
       <SubPageHeader title="아티스트" />
 
       {/* 검색 토글 */}

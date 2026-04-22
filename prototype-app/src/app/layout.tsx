@@ -4,10 +4,10 @@ import { Toaster } from '@/components/ui/sonner';
 import OfflineIndicator from '@/components/pwa/OfflineIndicator';
 import InstallPrompt from '@/components/pwa/InstallPrompt';
 import './globals.css';
-import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
+import { Geist } from 'next/font/google';
+import { cn } from '@/lib/utils';
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ['latin', 'latin-ext'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: 'CELEBUS',
@@ -23,10 +23,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  maximumScale: 5,
+  userScalable: true,
   viewportFit: 'cover',
-  themeColor: '#2563EB',
+  themeColor: '#7C3AED',
 };
 
 export default function RootLayout({
@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko" className={cn("font-sans", geist.variable)}>
+    <html lang="ko" className={cn('font-sans', geist.variable)}>
       <body className="antialiased">
         <QueryProvider>
           {children}

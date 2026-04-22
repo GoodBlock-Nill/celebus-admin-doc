@@ -120,13 +120,15 @@ body {
     content: '';
     display: block;
     width: 120px;
-    height: 28px;
+    height: 24px;
     background: #1f1f1f;
-    border-radius: 0 0 16px 16px;
-    margin: 0 auto;
-    position: sticky;
+    border-radius: 0 0 14px 14px;
+    position: absolute;
     top: 0;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 9999;
+    pointer-events: none;
   }
 }
 

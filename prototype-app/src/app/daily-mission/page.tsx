@@ -71,7 +71,7 @@ export default function DailyMissionPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-dvh bg-white pb-8">
+      <div className="min-h-dvh bg-white pb-20">
         <SubPageHeader title="일일 미션" />
         <div className="px-4 mt-4 space-y-3">
           <Skeleton className="h-24 rounded-2xl" />
@@ -83,7 +83,7 @@ export default function DailyMissionPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-white pb-8">
+    <div className="min-h-dvh bg-white pb-20">
       <SubPageHeader title="일일 미션" />
 
       {/* 스트릭 현황 */}
