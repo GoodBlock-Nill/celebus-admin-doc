@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
@@ -80,6 +80,8 @@ export default function MemoryDetailPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showReportSheet, setShowReportSheet] = useState(false);
   const [fullscreenImg, setFullscreenImg] = useState<number | null>(null);
+  const [galleryScrollIdx, setGalleryScrollIdx] = useState(0);
+  const galleryRef = useRef<HTMLDivElement>(null);
 
   const handlePreset = (key: string) => {
     setPresetKey(key as PresetKey);
@@ -170,10 +172,19 @@ export default function MemoryDetailPage() {
             {/* 3. 미디어 갤러리 */}
             {memory.images > 0 && (
               <div>
-                <div className="flex gap-2 overflow-x-auto pb-2">
+                <div
+                  ref={galleryRef}
+                  className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory"
+                  onScroll={(e) => {
+                    const el = e.currentTarget;
+                    const itemWidth = el.scrollWidth / memory.images;
+                    const idx = Math.round(el.scrollLeft / itemWidth);
+                    setGalleryScrollIdx(idx);
+                  }}
+                >
                   {Array.from({ length: memory.images }).map((_, i) => (
                     <button key={i} onClick={() => setFullscreenImg(i)}
-                      className="w-56 h-40 rounded-xl bg-gray-100 flex items-center justify-center shrink-0 active:scale-[0.98] transition-transform">
+                      className="w-56 h-40 rounded-xl bg-gray-100 flex items-center justify-center shrink-0 active:scale-[0.98] transition-transform snap-start">
                       <span className="text-3xl">📷</span>
                     </button>
                   ))}
@@ -181,7 +192,7 @@ export default function MemoryDetailPage() {
                 {memory.images > 1 && (
                   <div className="flex justify-center gap-1 mt-1">
                     {Array.from({ length: memory.images }).map((_, i) => (
-                      <div key={i} className={cn('w-1.5 h-1.5 rounded-full', i === 0 ? 'bg-violet-500' : 'bg-gray-300')} />
+                      <div key={i} className={cn('w-1.5 h-1.5 rounded-full transition-colors', i === galleryScrollIdx ? 'bg-violet-500' : 'bg-gray-300')} />
                     ))}
                   </div>
                 )}

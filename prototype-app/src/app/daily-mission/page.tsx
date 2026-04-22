@@ -126,6 +126,13 @@ export default function DailyMissionPage() {
           </div>
         </div>
 
+        {/* 일일 미션 — null 시 안내 메시지 */}
+        {!mission && (
+          <div className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-4 mb-3 text-center">
+            <p className="text-sm text-gray-400">오늘 미션이 아직 준비되지 않았어요</p>
+          </div>
+        )}
+
         {/* 일일 미션 */}
         {mission && (
           <div className={cn(

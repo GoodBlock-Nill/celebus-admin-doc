@@ -185,9 +185,11 @@ export default function ArtistDiscoverPage() {
                     <button
                       onClick={() => handleFollow(artist)}
                       disabled={followMutation.isPending}
-                      className="w-full mt-2 py-1.5 rounded-lg text-[10px] font-semibold bg-violet-600 text-white active:bg-violet-700 disabled:bg-gray-200 disabled:text-gray-400"
+                      className="w-full mt-2 py-1.5 rounded-lg text-[10px] font-semibold bg-violet-600 text-white active:bg-violet-700 disabled:bg-gray-200 disabled:text-gray-400 flex items-center justify-center gap-1"
                     >
-                      팔로우
+                      {followMutation.isPending ? (
+                        <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : '팔로우'}
                     </button>
                   </div>
                 ))}
@@ -220,10 +222,12 @@ export default function ArtistDiscoverPage() {
                     onClick={() => isFollowed ? setUnfollowTarget(artist) : handleFollow(artist)}
                     disabled={followMutation.isPending || unfollowMutation.isPending}
                     className={cn(
-                      'px-3.5 py-1.5 rounded-lg text-[10px] font-semibold shrink-0 transition-colors',
+                      'px-3.5 py-1.5 rounded-lg text-[10px] font-semibold shrink-0 transition-colors flex items-center justify-center gap-1',
                       isFollowed ? 'bg-gray-100 text-gray-400' : 'bg-violet-600 text-white active:bg-violet-700'
                     )}>
-                    {isFollowed ? '팔로우 중' : '팔로우'}
+                    {!isFollowed && followMutation.isPending ? (
+                      <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : isFollowed ? '팔로우 중' : '팔로우'}
                   </button>
                 </div>
               );

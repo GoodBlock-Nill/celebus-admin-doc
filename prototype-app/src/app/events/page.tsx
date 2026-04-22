@@ -90,7 +90,10 @@ export default function EventsPage() {
           filtered.map((event) => (
             <button key={event.id}
               onClick={() => addToast('info', `${event.title} 상세 (딥링크 이동)`)}
-              className="w-full flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3.5 text-left active:scale-[0.98] transition-transform">
+              className={cn(
+                'w-full flex items-center gap-3 rounded-xl px-4 py-3.5 text-left active:scale-[0.98] transition-transform',
+                event.type === 'raffle' ? 'bg-violet-50/50' : event.type === 'support' ? 'bg-green-50/50' : 'bg-blue-50/50'
+              )}>
               <div className="w-12 h-12 rounded-xl bg-violet-100 flex items-center justify-center shrink-0">
                 <span className="text-xl">{event.emoji}</span>
               </div>

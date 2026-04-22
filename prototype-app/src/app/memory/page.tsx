@@ -168,7 +168,7 @@ export default function MemoryPage() {
               return (
                 <button key={day} onClick={() => setSelectedDay(isSelected ? null : day)}
                   className={cn(
-                    'aspect-square rounded-lg flex flex-col items-center justify-center text-xs relative',
+                    'aspect-square min-h-[44px] rounded-lg flex flex-col items-center justify-center text-xs relative',
                     isSelected ? 'bg-violet-100 border border-violet-300' : isToday ? 'border border-violet-200' : 'hover:bg-gray-50'
                   )}>
                   <span className={cn('font-medium', isSelected ? 'text-violet-700' : isToday ? 'text-violet-600' : 'text-gray-700')}>{day}</span>
@@ -310,7 +310,7 @@ export default function MemoryPage() {
             }
             router.push('/memory-create');
           }}
-          className="fixed bottom-20 left-1/2 -translate-x-1/2 w-14 h-14 rounded-full bg-violet-600 text-white shadow-lg flex items-center justify-center text-2xl active:scale-95 transition-transform z-40"
+          className="fixed bottom-24 left-1/2 -translate-x-1/2 w-14 h-14 rounded-full bg-violet-600 text-white shadow-lg flex items-center justify-center text-2xl active:scale-95 transition-transform z-40"
         >
           +
         </button>

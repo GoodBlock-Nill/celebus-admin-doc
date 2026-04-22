@@ -32,6 +32,7 @@ export default function MemoryCreatePage() {
   const [imageCount, setImageCount] = useState(0);
   const [isPublic, setIsPublic] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showEmojiError, setShowEmojiError] = useState(false);
 
   const hasInput = selectedEmojis.size > 0 || text.length > 0 || location.length > 0 || imageCount > 0;
   const textRequired = memoryType === 'letter' || memoryType === 'memo';
@@ -45,9 +46,16 @@ export default function MemoryCreatePage() {
       else { addToast('info', '이모지는 최대 3개까지 선택할 수 있어요'); }
       return next;
     });
+    // Clear emoji error as soon as user interacts with the selector
+    setShowEmojiError(false);
   };
 
   const handleSave = () => {
+    if (selectedEmojis.size === 0) {
+      setShowEmojiError(true);
+      return;
+    }
+    setShowEmojiError(false);
     addToast('success', '기억이 저장되었어요! 덕력 30pt 획득');
     setTimeout(() => router.back(), 500);
   };
@@ -111,13 +119,16 @@ export default function MemoryCreatePage() {
               <button key={e.emoji} onClick={() => toggleEmoji(e.emoji)}
                 className={cn(
                   'flex-1 flex flex-col items-center gap-1 py-2.5 rounded-xl transition-all',
-                  selectedEmojis.has(e.emoji) ? 'bg-violet-100 border-2 border-violet-400 scale-105' : 'bg-gray-50 border border-gray-200'
+                  selectedEmojis.has(e.emoji) ? 'bg-violet-100 border-2 border-violet-400 scale-105' : showEmojiError ? 'bg-red-50 border border-red-200' : 'bg-gray-50 border border-gray-200'
                 )}>
                 <span className="text-xl">{e.emoji}</span>
                 <span className="text-[9px] text-gray-500">{e.label}</span>
               </button>
             ))}
           </div>
+          {showEmojiError && (
+            <p className="text-xs text-red-500 mt-1.5">감정 이모지를 1개 이상 선택해주세요</p>
+          )}
         </div>
 
         {/* 4. 위치 (선택) */}
@@ -166,7 +177,10 @@ export default function MemoryCreatePage() {
             rows={5}
             className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-900 placeholder:text-gray-400 resize-none" />
           <div className="flex justify-end mt-1">
-            <span className={cn('text-[10px]', text.length >= 1000 ? 'text-red-500 font-bold' : 'text-gray-400')}>{text.length}/1,000</span>
+            <span className={cn(
+              'text-[10px]',
+              text.length >= 950 ? 'text-red-500 font-bold' : text.length >= 800 ? 'text-amber-500 font-medium' : 'text-gray-400'
+            )}>{text.length}/1,000</span>
           </div>
         </div>
 

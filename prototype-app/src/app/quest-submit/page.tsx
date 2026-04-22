@@ -113,7 +113,7 @@ function QuestSubmitContent() {
               />
               <button
                 onClick={handleRemoveImage}
-                className="absolute top-2 right-2 w-7 h-7 bg-black/50 rounded-full flex items-center justify-center"
+                className="absolute top-2 right-2 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center"
               >
                 <XMarkIcon className="w-4 h-4 text-white" />
               </button>

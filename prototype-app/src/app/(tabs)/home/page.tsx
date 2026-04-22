@@ -347,7 +347,7 @@ export default function HomePage() {
       {/* BIVE 미리보기 바텀시트 */}
       {selectedBive && (
         <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40" onClick={() => setSelectedBive(null)}>
-          <div className="bg-white rounded-t-2xl w-full max-w-lg p-5 pb-24 animate-slideInUp" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-t-2xl w-full max-w-lg p-5 pb-28 animate-slideInUp" onClick={(e) => e.stopPropagation()}>
             <div className="flex flex-col items-center">
               <div className="w-32 h-32 rounded-2xl bg-violet-100 flex items-center justify-center mb-4">
                 <span className="text-5xl">{selectedBive.emoji}</span>

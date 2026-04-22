@@ -74,9 +74,12 @@ export default function InfoPage() {
 
   const toggleItemAlarm = (id: string) => {
     if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
-    const item = items.find((i) => i.id === id);
-    if (item?.alarmOn) addToast('info', `${artistName} 알림이 해제되었어요`);
+    // Capture current state BEFORE any update so the toast reflects the old value correctly
+    const currentAlarm = items.find((i) => i.id === id)?.alarmOn;
+    if (currentAlarm) addToast('info', `${artistName} 알림이 해제되었어요`);
     else addToast('success', `${artistName} 알림이 설정되었어요. 새로운 일정과 소식을 알려드릴게요`);
+    // In a real implementation, call a mutation here to toggle the alarm server-side
+    // e.g. toggleAlarmMutation.mutate(id);
   };
 
   const toggleArtistAlarm = () => {

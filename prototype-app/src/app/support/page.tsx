@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import PresetSelector from '@/components/dev/PresetSelector';
@@ -52,11 +52,13 @@ export default function SupportPage() {
     setExpandedId(null);
   };
 
-  // Auto-expand first active event
+  // Auto-expand first active event — useEffect avoids render-time side effects
   const firstActiveId = events?.find((e) => e.status === 'active')?.id;
-  if (expandedId === null && firstActiveId) {
-    setExpandedId(firstActiveId);
-  }
+  useEffect(() => {
+    if (expandedId === null && firstActiveId) {
+      setExpandedId(firstActiveId);
+    }
+  }, [firstActiveId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleInvest = useCallback((eventId: string) => {
     if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; }
@@ -203,7 +205,7 @@ function EventCard({ event, isExpanded, onToggle, investAmount, onAmountChange, 
             <div className="bg-white rounded-xl border border-gray-200 px-3 py-3 mb-3">
               <div className="flex items-center gap-2 mb-2">
                 <button onClick={() => onAmountChange(Math.max(1, investAmount - 100))} className="w-8 h-8 bg-gray-100 rounded-lg text-sm font-bold">-</button>
-                <input type="number" value={investAmount} onChange={(e) => onAmountChange(Math.min(Math.max(1, Number(e.target.value)), Math.min(myHeldPt, remaining)))}
+                <input type="number" inputMode="numeric" value={investAmount} onChange={(e) => onAmountChange(Math.min(Math.max(1, Number(e.target.value)), Math.min(myHeldPt, remaining)))}
                   className="flex-1 text-center text-sm font-semibold border border-gray-200 rounded-lg py-1.5" />
                 <button onClick={() => onAmountChange(Math.min(investAmount + 100, Math.min(myHeldPt, remaining)))} className="w-8 h-8 bg-gray-100 rounded-lg text-sm font-bold">+</button>
               </div>
