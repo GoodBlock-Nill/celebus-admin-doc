@@ -254,6 +254,7 @@ const files = [
   ['APP/[CEB-EVT-101] Raffle.md', 'confluence-html/APP/[CEB-EVT-101] Raffle.html'],
   ['APP/[CEB-COL-101] 컬렉션.md', 'confluence-html/APP/[CEB-COL-101] 컬렉션.html'],
   ['APP/[CEB-INF-101] 정보 피드.md', 'confluence-html/APP/[CEB-INF-101] 정보 피드.html'],
+  ['APP/[CEB-INF-201] 소식 상세.md', 'confluence-html/APP/[CEB-INF-201] 소식 상세.html'],
   ['APP/[CEB-MEM-101] 기억저장소.md', 'confluence-html/APP/[CEB-MEM-101] 기억저장소.html'],
   ['APP/[CEB-HOM-001] 홈 메인.md', 'confluence-html/APP/[CEB-HOM-001] 홈 메인.html'],
   ['APP/[CEB-HOM-101] 이벤트 전체.md', 'confluence-html/APP/[CEB-HOM-101] 이벤트 전체.html'],
