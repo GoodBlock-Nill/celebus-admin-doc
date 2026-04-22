@@ -84,7 +84,7 @@ export default function MemoryDetailPage() {
   };
 
   const presetState = getMemoryDetailPresetState(presetKey);
-  const memory = PRESETS[presetKey];
+  const memory = PRESETS[presetKey] ?? null;
   const isSharedGuest = presetState.isGuest;
   const isSharedPrivate = presetState.isLocked;
 
@@ -102,8 +102,18 @@ export default function MemoryDetailPage() {
   return (
     <div className="min-h-dvh bg-white pb-8">
 
+      {/* Fix 7: 삭제된 기억 에러 상태 */}
+      {!memory && (
+        <div className="min-h-dvh bg-white flex flex-col items-center justify-center px-6 text-center">
+          <span className="text-4xl mb-4">🗑️</span>
+          <p className="text-base font-bold text-gray-900">삭제된 기억이에요</p>
+          <p className="text-xs text-gray-400 mt-1">이미 삭제된 기억이에요</p>
+          <button onClick={() => router.back()} className="mt-6 px-6 py-3 bg-violet-600 text-white rounded-xl text-sm font-semibold">돌아가기</button>
+        </div>
+      )}
+
       {/* 공유 링크 → 비공개 기억 차단 */}
-      {isSharedPrivate && (
+      {memory && isSharedPrivate && (
         <div className="min-h-dvh bg-white flex flex-col items-center justify-center px-6 text-center">
           <span className="text-4xl mb-4">🔒</span>
           <p className="text-base font-bold text-gray-900">이 기억은 비공개예요</p>
@@ -112,19 +122,27 @@ export default function MemoryDetailPage() {
         </div>
       )}
 
-      {!isSharedPrivate && (
+      {memory && !isSharedPrivate && (
         <>
-          {/* 헤더 */}
+          {/* Fix 8: 비로그인 공유 링크 — CELEBUS 로고 헤더, 로그인 유저 — 뒤로가기 헤더 */}
           <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
             <div className="flex items-center h-12 px-4">
-              <button onClick={() => router.back()} className="mr-3 -ml-1 p-1">
-                <span className="text-gray-900">←</span>
-              </button>
-              <h1 className="text-base font-semibold text-gray-900 flex-1">{memory.date}</h1>
-              {!isSharedGuest && (
-                <button onClick={() => setShowMenu(true)} className="p-1">
-                  <span className="text-gray-600 text-lg">⋯</span>
-                </button>
+              {isSharedGuest ? (
+                /* Fix 8: 비로그인 공유 링크 접속 시 로고 표시 (뒤로가기 버튼 없음) */
+                <div className="flex-1 flex items-center justify-center">
+                  <span className="text-base font-bold text-violet-600 tracking-wider">CELEBUS</span>
+                </div>
+              ) : (
+                <>
+                  <button onClick={() => router.back()} className="mr-3 -ml-1 p-1">
+                    <span className="text-gray-900">←</span>
+                  </button>
+                  <h1 className="text-base font-semibold text-gray-900 flex-1">{memory.date}</h1>
+                  {/* Fix 8: 비로그인 공유 링크에서는 ⋯ 메뉴 없음 */}
+                  <button onClick={() => setShowMenu(true)} className="p-1">
+                    <span className="text-gray-600 text-lg">⋯</span>
+                  </button>
+                </>
               )}
             </div>
           </header>
@@ -202,11 +220,11 @@ export default function MemoryDetailPage() {
             )}
           </div>
 
-          {/* 비로그인 공유 링크 접속 — 가입 유도 배너 */}
+          {/* Fix 8: 비로그인 공유 링크 접속 — 가입 유도 하단 고정 배너 */}
           {isSharedGuest && (
             <div className="fixed bottom-0 left-0 right-0 bg-violet-600 text-white px-4 py-4 safe-bottom z-40">
-              <p className="text-sm font-semibold text-center">CELEBUS에서 나만의 기억을 남겨보세요 💜</p>
-              <button onClick={() => addToast('info', 'CELEBUS 홈으로 이동')}
+              <p className="text-sm font-semibold text-center">CELEBUS에서 더 많은 기억을 만나보세요</p>
+              <button onClick={() => router.push('/')}
                 className="w-full mt-2 py-3 bg-white text-violet-600 rounded-xl text-sm font-bold active:bg-violet-50">
                 시작하기
               </button>
@@ -271,7 +289,13 @@ export default function MemoryDetailPage() {
           {fullscreenImg !== null && (
             <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
               <button onClick={() => setFullscreenImg(null)} className="absolute top-4 right-4 text-white text-2xl z-10">✕</button>
-              <div className="text-center">
+              {/* Fix 9: 핀치 줌 — touch-action: pinch-zoom 적용
+                  Full pinch-to-zoom with gesture tracking requires a library (e.g. react-use-gesture).
+                  For now, CSS touch-action enables native browser pinch zoom on mobile. */}
+              <div
+                className="text-center"
+                style={{ touchAction: 'pinch-zoom' }}
+              >
                 <span className="text-6xl">📷</span>
                 <p className="text-white/60 text-sm mt-4">{fullscreenImg + 1} / {memory.images}</p>
               </div>

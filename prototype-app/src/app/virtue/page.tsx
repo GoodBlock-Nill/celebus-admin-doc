@@ -88,6 +88,14 @@ export default function VirtuePage() {
         </select>
       </div>
 
+      {/* 시즌 동결 배너 */}
+      {!currentSeason && (
+        <div className="mx-4 mt-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-center">
+          <p className="text-sm font-semibold text-amber-800">시즌 정산 중이에요!</p>
+          <p className="text-xs text-amber-600 mt-1">새로운 시즌이 곧 시작돼요</p>
+        </div>
+      )}
+
       {/* 내 정보 카드 */}
       <div className="mx-4 mt-3 bg-gradient-to-br from-violet-50 to-indigo-50 rounded-2xl px-5 py-5">
         <div className="flex items-center gap-2 mb-3">
@@ -113,9 +121,11 @@ export default function VirtuePage() {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-xs text-gray-500">{ranking?.seasonLabel} {ranking?.seasonDaysLeft ? `(D-${ranking.seasonDaysLeft})` : ''}</span>
-          <button onClick={() => setShowHistory(true)} className="text-xs text-violet-600 font-medium">
-            덕력 이력 보기 →
-          </button>
+          {isLoggedIn && (
+            <button onClick={() => setShowHistory(true)} className="text-xs text-violet-600 font-medium">
+              덕력 이력 보기 →
+            </button>
+          )}
         </div>
       </div>
 

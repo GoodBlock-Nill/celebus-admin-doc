@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import PresetSelector from '@/components/dev/PresetSelector';
@@ -19,15 +19,23 @@ export default function FandomLevelPage() {
   const [preset, setPreset] = useState('progress');
   const [isLoggedIn, setIsLoggedIn] = useState(true);
 
+  const prevPresetRef = useRef(preset);
+
   const handlePreset = async (key: string) => {
     if (key === 'guest') {
       setIsLoggedIn(false);
       setPreset(key);
+      prevPresetRef.current = key;
       return;
     }
     setIsLoggedIn(true);
+    const prev = prevPresetRef.current;
+    prevPresetRef.current = key;
     setPreset(key);
     await applyFandomPreset(key, queryClient);
+    if (key === 'max' && prev !== 'max') {
+      setTimeout(() => setShowLevelUpModal(true), 400);
+    }
   };
 
   const { data, isLoading } = useFandomLevel(activeArtistId);
@@ -177,6 +185,17 @@ export default function FandomLevelPage() {
         </div>
         <p className="text-[10px] text-gray-400 text-center mt-2">활동하면 팬덤 레벨에 기여됩니다</p>
       </div>
+
+      {process.env.NODE_ENV !== 'production' && (
+        <div className="px-4 mt-4">
+          <button
+            onClick={() => setShowLevelUpModal(true)}
+            className="w-full py-2 rounded-xl bg-amber-100 text-amber-800 text-xs font-semibold active:bg-amber-200 transition-colors"
+          >
+            [DEV] 레벨업 축하 모달 테스트
+          </button>
+        </div>
+      )}
 
       <PresetSelector presets={FANDOM_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
 

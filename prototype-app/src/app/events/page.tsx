@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import SubPageHeader from '@/components/layout/SubPageHeader';
 import PresetSelector from '@/components/dev/PresetSelector';
 import { useUIStore } from '@/stores/useUIStore';
@@ -28,8 +29,9 @@ const MOCK_EVENTS: EventItem[] = [
 ];
 
 export default function EventsPage() {
+  const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
-  const [tab, setTab] = useState<'active' | 'ended'>('active');
+  const [tab, setTab] = useState<'active' | 'closing' | 'ended'>('active');
   const [preset, setPreset] = useState('content');
 
   const handlePreset = (key: string) => {
@@ -42,7 +44,11 @@ export default function EventsPage() {
   const presetState = getEventsPresetState(preset);
   const filtered = presetState.forceEmpty
     ? []
-    : MOCK_EVENTS.filter((e) => tab === 'active' ? e.active : !e.active);
+    : MOCK_EVENTS.filter((e) => {
+        if (tab === 'active') return e.active && (e.dDay === undefined || e.dDay > 3);
+        if (tab === 'closing') return e.active && e.dDay !== undefined && e.dDay >= 0 && e.dDay <= 3;
+        return !e.active;
+      });
 
   return (
     <div className="min-h-dvh bg-white pb-8">
@@ -52,6 +58,7 @@ export default function EventsPage() {
       <div className="px-4 pt-3 pb-2 flex gap-2 border-b border-gray-100">
         {([
           { key: 'active' as const, label: '진행중' },
+          { key: 'closing' as const, label: '마감중' },
           { key: 'ended' as const, label: '마감됨' },
         ]).map((t) => (
           <button key={t.key} onClick={() => setTab(t.key)}
@@ -91,10 +98,18 @@ export default function EventsPage() {
           ))
         ) : (
           <div className="text-center py-16">
-            <span className="text-3xl">{tab === 'active' ? '📭' : '📋'}</span>
+            <span className="text-3xl">{tab === 'ended' ? '📋' : '📭'}</span>
             <p className="text-sm text-gray-400 mt-3">
-              {tab === 'active' ? '곧 새로운 이벤트가 찾아올 거예요!' : '마감된 이벤트가 없어요'}
+              {tab === 'ended' ? '마감된 이벤트가 없어요' : '곧 새로운 이벤트가 찾아올 거예요!'}
             </p>
+            {tab !== 'ended' && (
+              <button
+                onClick={() => router.push('/home')}
+                className="mt-4 px-5 py-2 rounded-full bg-violet-600 text-white text-xs font-semibold active:bg-violet-700 transition-colors"
+              >
+                홈으로 돌아가기
+              </button>
+            )}
           </div>
         )}
       </div>

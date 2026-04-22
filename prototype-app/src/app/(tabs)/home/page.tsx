@@ -24,9 +24,9 @@ const BIVE_LIST: Omit<BiveItem, 'owned'>[] = [
 ];
 
 const BANNERS = [
-  { id: 'b1', title: 'V01D 사인앨범 래플', subtitle: 'D-5 | 참여하기', active: true },
-  { id: 'b2', title: 'V01D 커피차 서포트', subtitle: '목표 70% 달성중', active: true },
-  { id: 'b3', title: '봄맞이 스트리밍 이벤트', subtitle: '마감', active: false },
+  { id: 'b1', title: 'V01D 사인앨범 래플', subtitle: 'D-5 | 참여하기', active: true, dDay: 5 },
+  { id: 'b2', title: 'V01D 커피차 서포트', subtitle: '목표 70% 달성중', active: true, dDay: 12 },
+  { id: 'b3', title: '봄맞이 스트리밍 이벤트', subtitle: '마감', active: false, dDay: undefined },
 ];
 
 export default function HomePage() {
@@ -34,7 +34,7 @@ export default function HomePage() {
   const { activeArtist: artist } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
 
-  const [bannerFilter, setBannerFilter] = useState<'active' | 'ended'>('active');
+  const [bannerFilter, setBannerFilter] = useState<'active' | 'closing' | 'ended'>('active');
   const [bannerIdx, setBannerIdx] = useState(0);
   const [checkedIn, setCheckedIn] = useState(false);
   const [missionDone, setMissionDone] = useState(false);
@@ -61,7 +61,11 @@ export default function HomePage() {
   const allDone = checkedIn && missionDone;
 
   const banners = hasContent ? BANNERS : [];
-  const filteredBanners = banners.filter((b) => bannerFilter === 'active' ? b.active : !b.active);
+  const filteredBanners = banners.filter((b) => {
+    if (bannerFilter === 'active') return b.active && (b.dDay === undefined || b.dDay > 3);
+    if (bannerFilter === 'closing') return b.active && b.dDay !== undefined && b.dDay >= 0 && b.dDay <= 3;
+    return !b.active;
+  });
 
   const handleCheckIn = useCallback(() => {
     if (checkedIn) return;
@@ -124,6 +128,7 @@ export default function HomePage() {
         <div className="flex gap-2 mt-2">
           {[
             { key: 'active' as const, label: '진행중' },
+            { key: 'closing' as const, label: '마감중' },
             { key: 'ended' as const, label: '마감됨' },
           ].map((tab) => (
             <button key={tab.key} onClick={() => { setBannerFilter(tab.key); setBannerIdx(0); }}

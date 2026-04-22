@@ -54,6 +54,14 @@ export default function CollectionPage() {
   const ownedCount = bives.filter((b) => b.owned).length;
   const filtered = bives.filter((b) => b.category === category);
 
+  const ARTIST_GRADES = ['Gr.1', 'Gr.2', 'Gr.3', 'Gr.4', 'Gr.5'];
+  const hasAllGrades = ARTIST_GRADES.every((grade) =>
+    bives.some((b) => b.grade === grade && b.owned)
+  );
+  const firstMissingGrade = ARTIST_GRADES.find((grade) =>
+    !bives.some((b) => b.grade === grade && b.owned)
+  );
+
   const handleCardTap = (bive: BiveItem) => {
     if (!bive.owned) {
       addToast('info', '아직 보유하지 않은 BIVE입니다');
@@ -68,7 +76,7 @@ export default function CollectionPage() {
         <div className="flex items-center h-12 px-4">
           <button onClick={() => router.back()} className="mr-3 -ml-1 p-1"><span className="text-gray-900">←</span></button>
           <h1 className="text-base font-semibold text-gray-900 flex-1">컬렉션</h1>
-          <span className="text-xs font-medium text-violet-600 bg-violet-50 px-2.5 py-1 rounded-lg">보유 {ownedCount}종</span>
+          <span className="text-xs font-medium text-violet-600 bg-violet-50 px-2.5 py-1 rounded-lg">전체 보유 {ownedCount}종</span>
         </div>
       </div>
 
@@ -138,7 +146,22 @@ export default function CollectionPage() {
             { icon: '📋', label: '히스토리', desc: 'BIVE 이력' },
             { icon: '🎁', label: 'BIVE 혜택', desc: '혜택 확인' },
           ].map((item) => (
-            <button key={item.label} onClick={() => addToast('info', `${item.label} (준비 중)`)}
+            <button
+              key={item.label}
+              onClick={() => {
+                if (item.label === '합성') {
+                  if (hasAllGrades) {
+                    addToast('info', '이미 합성을 완료했어요!');
+                  } else if (firstMissingGrade) {
+                    const gradeNum = firstMissingGrade.replace('Gr.', '');
+                    addToast('info', `Grade ${gradeNum}을 아직 보유하지 않았어요. Quest를 완료하고 모아보세요!`);
+                  } else {
+                    addToast('info', '합성 (준비 중)');
+                  }
+                  return;
+                }
+                addToast('info', `${item.label} (준비 중)`);
+              }}
               className="bg-gray-50 rounded-xl px-3 py-3 text-left active:scale-[0.97] transition-transform">
               <span className="text-lg">{item.icon}</span>
               <p className="text-xs font-semibold text-gray-700 mt-1">{item.label}</p>

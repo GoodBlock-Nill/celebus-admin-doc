@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
+import { useMonthlyMemoryCount } from '@/lib/hooks/useMemory';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
@@ -34,14 +35,22 @@ const TYPE_ICON = { photo: '📸', letter: '✉️', memo: '📝' };
 
 export default function MemoryPage() {
   const router = useRouter();
-  const { artistName } = useActiveArtist();
+  // TODO: 1년 전 오늘 푸시 알림 → ?yearAgo=true 쿼리 파라미터로 진입 시 해당 날짜 자동 확장
+  const { artistName, activeArtistId } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
   const queryClient = useQueryClient();
   const [view, setView] = useState<ViewMode>('calendar');
   const [memories] = useState(MOCK_MEMORIES);
+  // (Full behavior: navigate to last year's month and expand that day.
+  //  Currently the calendar is hardcoded to April 2026, so we auto-select
+  //  the day from the yearAgo param when present.)
+  // const yearAgoParam = false; // TODO: URL 파라미터 ?yearAgo=true 처리 (Suspense 필요)
   const [selectedDay, setSelectedDay] = useState<number | null>(14);
   const [showOnboarding] = useState(false);
   const [preset, setPreset] = useState('many');
+
+  // Fix 1: monthly count for FAB gate
+  const { data: monthlyCount } = useMonthlyMemoryCount(activeArtistId);
 
   const handlePreset = async (key: string) => {
     setPreset(key);
@@ -188,19 +197,62 @@ export default function MemoryPage() {
       {/* 지도 뷰 */}
       {view === 'map' && !showOnboarding && (
         <div className="px-4 mt-4">
-          <div className="bg-gray-100 rounded-2xl h-64 flex items-center justify-center relative">
-            <span className="text-gray-400 text-sm">지도 영역 (피그마 참조)</span>
-            {memories.filter((m) => m.location).map((mem, i) => (
-              <div key={mem.id} className="absolute" style={{ top: `${30 + i * 40}px`, left: `${50 + i * 60}px` }}>
-                <span className="text-lg">📍{mem.emoji}</span>
+          {/* Fix 3: 지도 뷰 개선 — 위치 핀 표시 */}
+          <div className="bg-gradient-to-br from-green-50 via-blue-50 to-green-100 rounded-2xl h-72 relative overflow-hidden border border-gray-200">
+            {/* 지도 그리드 배경 */}
+            <div className="absolute inset-0 opacity-20"
+              style={{
+                backgroundImage: 'linear-gradient(#94a3b8 1px, transparent 1px), linear-gradient(90deg, #94a3b8 1px, transparent 1px)',
+                backgroundSize: '40px 40px',
+              }}
+            />
+            {/* 도로 표시 (시각적 요소) */}
+            <div className="absolute inset-0 flex flex-col justify-center gap-8 px-4 opacity-30 pointer-events-none">
+              <div className="h-1 bg-yellow-400 rounded-full" />
+              <div className="h-0.5 bg-gray-400 rounded-full" />
+            </div>
+            {/* 위치 핀 */}
+            {memories.filter((m) => m.location).map((mem, i) => {
+              const positions = [
+                { top: '25%', left: '30%' },
+                { top: '55%', left: '60%' },
+                { top: '35%', left: '70%' },
+                { top: '65%', left: '20%' },
+              ];
+              const pos = positions[i % positions.length];
+              return (
+                <button
+                  key={mem.id}
+                  onClick={() => router.push('/memory-detail')}
+                  className="absolute flex flex-col items-center active:scale-110 transition-transform"
+                  style={{ top: pos.top, left: pos.left, transform: 'translate(-50%, -100%)' }}
+                >
+                  <div className="bg-white rounded-full w-9 h-9 flex items-center justify-center shadow-md border-2 border-violet-400 text-lg">
+                    {mem.emoji}
+                  </div>
+                  <div className="w-0.5 h-2 bg-violet-400" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+                  <div className="mt-1 bg-white/90 rounded px-1.5 py-0.5 text-[9px] font-medium text-gray-700 shadow text-center max-w-[80px] truncate">
+                    {mem.location}
+                  </div>
+                </button>
+              );
+            })}
+            {memories.filter((m) => m.location).length === 0 && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-gray-400 text-sm">위치 정보가 있는 기억이 없어요</span>
               </div>
-            ))}
+            )}
           </div>
+          {/* Fix 3: 위치 없는 기억 배너 */}
           {(() => {
             const noLoc = memories.filter((m) => !m.location).length;
             return noLoc > 0 ? (
-              <button onClick={() => setView('grid')} className="mt-3 w-full text-center text-xs text-gray-500 bg-gray-50 rounded-xl py-2.5">
-                위치 없는 기억 {noLoc}건 → 갤러리에서 보기
+              <button
+                onClick={() => setView('grid')}
+                className="mt-3 w-full text-center text-xs text-gray-500 bg-gray-50 rounded-xl py-2.5 border border-gray-200 active:bg-gray-100 transition-colors"
+              >
+                📷 위치 없는 기억 {noLoc}건 → 갤러리에서 보기
               </button>
             ) : null;
           })()}
@@ -210,7 +262,14 @@ export default function MemoryPage() {
       {/* [+] FAB */}
       {!showOnboarding && (
         <button
-          onClick={() => router.push('/memory-create')}
+          onClick={() => {
+            // Fix 1: 월간 한도 50건 체크
+            if ((monthlyCount ?? 0) >= 50) {
+              addToast('info', '이번 달 업로드 한도에 도달했어요. 다음 달에 다시 기록해 주세요!');
+              return;
+            }
+            router.push('/memory-create');
+          }}
           className="fixed bottom-20 left-1/2 -translate-x-1/2 w-14 h-14 rounded-full bg-violet-600 text-white shadow-lg flex items-center justify-center text-2xl active:scale-95 transition-transform z-40"
         >
           +

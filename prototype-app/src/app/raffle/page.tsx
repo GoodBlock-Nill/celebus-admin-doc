@@ -51,7 +51,7 @@ export default function RafflePage() {
     await applyRafflePreset(key, queryClient);
   };
 
-  const myTickets = 15;
+  const myTickets: number = 15;
 
   const filtered = raffles.filter((r) => {
     if (filter === 'active') return r.status === 'active';
@@ -63,7 +63,11 @@ export default function RafflePage() {
 
   const handleCardTap = (raffle: RaffleItem) => {
     if (raffle.status === 'drawing') {
-      addToast('info', '추첨 결과를 기다려주세요');
+      addToast('info', '추첨 결과를 기다려주세요. 결과는 마감 후 영업일 2일 이내 발표돼요');
+      return;
+    }
+    if (raffle.status === 'active' && myTickets === 0) {
+      addToast('info', '응모권이 부족해요. 퀘스트를 완료하고 응모권을 모아보세요!');
       return;
     }
     if (raffle.status === 'active') addToast('info', 'Raffle 상세 화면으로 이동합니다 (CEB-FQ-202)');

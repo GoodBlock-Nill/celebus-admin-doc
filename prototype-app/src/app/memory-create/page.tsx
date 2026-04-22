@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import SubPageHeader from '@/components/layout/SubPageHeader';
 import { useUIStore } from '@/stores/useUIStore';
+import { useMonthlyMemoryCount } from '@/lib/hooks/useMemory';
+import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { cn } from '@/lib/utils';
 
 type MemoryType = 'photo' | 'letter' | 'memo';
@@ -20,6 +21,9 @@ const EMOJIS = [
 export default function MemoryCreatePage() {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
+  // Fix 6: 월간 잔여 횟수
+  const { activeArtistId } = useActiveArtist();
+  const { data: monthlyCount } = useMonthlyMemoryCount(activeArtistId);
 
   const [memoryType, setMemoryType] = useState<MemoryType>('photo');
   const [selectedEmojis, setSelectedEmojis] = useState<Set<string>>(new Set());
@@ -65,6 +69,9 @@ export default function MemoryCreatePage() {
       </header>
 
       <div className="px-4 py-4 space-y-5">
+        {/* Fix 6: 월간 잔여 횟수 표시 */}
+        <p className="text-xs text-gray-400 text-center">이번 달 {monthlyCount ?? 0}/50건</p>
+
         {/* 1. 유형 선택 */}
         <div>
           <label className="text-xs font-semibold text-gray-500 mb-2 block">유형</label>
