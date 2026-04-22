@@ -129,8 +129,8 @@ export default function ArtistPage() {
         </div>
       )}
 
-      {/* 카드 그리드 */}
-      <div className="px-4 py-5 pb-24 space-y-6">
+      {/* 카드 그리드 — 흰색 라운드 컨테이너로 ArtistHeader와 시각적 분리 */}
+      <div className="bg-white rounded-t-3xl -mt-4 relative z-10 px-4 py-5 pb-24 space-y-6">
         {GROUP_ORDER.map((group) => {
           const groupCards = grouped[group];
           if (groupCards.length === 0) return null;
