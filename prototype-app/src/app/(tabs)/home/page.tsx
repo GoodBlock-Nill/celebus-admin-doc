@@ -157,7 +157,7 @@ export default function HomePage() {
                 <img src={a.logoUrl} alt={a.name} className="w-full h-full object-cover"
                   onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
               </div>
-              <span className={cn('text-[9px] font-semibold', isActive ? 'text-violet-700' : 'text-gray-400')}>{a.name}</span>
+              <span className={cn('text-[9px] font-semibold max-w-[48px] truncate', isActive ? 'text-violet-700' : 'text-gray-400')}>{a.nameEn}</span>
             </button>
           );
         })}
