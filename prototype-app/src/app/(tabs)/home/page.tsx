@@ -170,19 +170,19 @@ export default function HomePage() {
 
       {/* 5. 핵심 추천 1개 */}
       <div className="px-4 mt-4">
-        <button onClick={() => router.push('/quest')}
+        <button onClick={() => { if (!isLoggedIn) { addToast('info', '로그인 후 이용 가능합니다'); return; } router.push('/quest'); }}
           className="w-full bg-white border border-gray-200 rounded-xl px-4 py-4 text-left active:scale-[0.98] transition-transform">
           <div className="flex items-center gap-2">
-            <span className="text-lg">🎯</span>
+            <span className="text-lg">{isLoggedIn ? '🎯' : '💜'}</span>
             <div className="flex-1">
               <p className="text-sm font-semibold text-gray-900">
-                {artist.name} 챌린지 2/5장 진행중
+                {isLoggedIn ? `${artist.name} 챌린지 2/5장 진행중` : `${artist.name}의 팬이 되어보세요`}
               </p>
               <p className="text-xs text-gray-500 mt-0.5">
-                다음 장을 열어볼까요?
+                {isLoggedIn ? '다음 장을 열어볼까요?' : '로그인하고 퀘스트, 래플, 서포트에 참여하세요'}
               </p>
             </div>
-            <span className="text-xs font-medium text-violet-600">이어하기 →</span>
+            <span className="text-xs font-medium text-violet-600">{isLoggedIn ? '이어하기 →' : '시작하기 →'}</span>
           </div>
         </button>
       </div>
