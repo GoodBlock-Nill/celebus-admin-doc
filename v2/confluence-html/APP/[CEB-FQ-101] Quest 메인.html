@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.0</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.21</td></tr>
+<tr><td>버전</td><td>v2.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.04.29</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td></td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -254,7 +254,7 @@ p {
 <tr><th>미션 상태</th><th>상태 아이콘</th><th>CTA</th></tr>
 <tr><td>미완료</td><td>□ 빈 체크박스</td><td>타입별 CTA (위 표 참조)</td></tr>
 <tr><td>제출(확인 중)</td><td>⏳ 시계</td><td>확인 중 (비활성)</td></tr>
-<tr><td>승인(완료)</td><td>✅ 체크</td><td>완료 (비활성) + 보상 표시 "덕력 {N}pt 획득" (Quest 권장값 <strong>75pt</strong> — T3 고관여, [CEB-000] §5.2 참조. BO 자유 설정)</td></tr>
+<tr><td>승인(완료)</td><td>✅ 체크</td><td>완료 (비활성) + 보상 표시 "덕력 {N}DUK 획득" (Quest 권장값 <strong>75DUK</strong> — T3 고관여, [CEB-000] §5.2 참조. BO 자유 설정)</td></tr>
 <tr><td>승인(자동검증)</td><td>✅ 체크</td><td>완료 (비활성) + 보상 표시. Trivia/PM 자동검증 완료</td></tr>
 <tr><td>재도전 필요</td><td>❌ 엑스</td><td>[사유 확인 →] → 반려 사유 모달(CEB-FQ-201-MD) 표시 → [재도전] → CEB-FQ-205 (기존 이미지 클리어)</td></tr>
 <tr><td>게임 준비중</td><td>⏸️ 일시정지</td><td>PM 게임 미가용 시 표시. [알림 설정] CTA</td></tr>
@@ -451,7 +451,7 @@ p {
 <hr>
 <h2>5. 변경 이력</h2>
 <table>
-<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><th>버전</th><th>v2.2</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td>v1.0</td><td>2026.04.14</td><td>@Nill Yoo</td><td>초안 작성. 스토리 타임라인 + 제출 기반 해금 정책 도입. UX 검증 반영: 해금(R1), 완료배너(R2), 잠금프리뷰(R3), 빈상태(R4), 인라인미션(R5), 딥링크갱신(R6), 인트로배너(R7)</td></tr>
 <tr><td>v1.1</td><td>2026.04.14</td><td>@Nill Yoo</td><td>미션 타입별 상세 추가: 타입별 아이콘(📸/🧠/🎯), 캡처형 연관 링크(제출화면 표시), Trivia 재참여(횟수 무제한), PM 미가용 처리(안내+알림CTA), 자동검증 뱃지, 게임 준비중 상태, 타입별 규칙 테이블(4.8)</td></tr>
 <tr><td>v1.2</td><td>2026.04.14</td><td>@Nill Yoo</td><td>최종 검증 반영: 반려 CTA 모달 경유로 통일(2.2), 자동검증 장 reviewing 생략 규칙(4.2), provisional→active 트리거 명확화(4.2), 축하 모달 인라인 상세(4.4), 비로그인 정책 삭제(5), 전 장 심사중 안내(5), 해금 토스트 피드백(4.2)</td></tr>
@@ -463,7 +463,8 @@ p {
 <tr><td>v1.8</td><td>2026.04.21</td><td>@Nill Yoo</td><td>고도화 PDF 검토 반영: 각 장 내 미션 수 최대 10개(BO 설정) 명시, 서사 Quest 5장 고정 명시</td></tr>
 <tr><td>v1.9</td><td>2026.04.22</td><td>@Nill Yoo</td><td>용어 변경: "임시해금"→"해금" 일괄 변경 (다시 잠기지 않으므로). 자동검증 완료 조건 명확화(4.8): 아티스트 일치 + 게임 승리 + 해금 이후 참여 3가지 조건 모두 충족 필요. 개발팀 피드백 반영</td></tr>
 <tr><td>v2.0</td><td>2026.04.22</td><td>@Nill Yoo</td><td>AUTO_COMPLETED→APPROVED 통합: 미션 상태 5종→4종. 자동검증은 뱃지+타입으로만 구분. 게임 오픈 정책 추가: 게임 오픈 시에만 미션 진행, 상시 오픈은 운영 측면 해결. 개발팀 피드백 반영</td></tr>
-<tr><td><strong>v2.1</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.0 동기화 — Quest 보상값 명문화</strong>. ① Quest 완료 보상 권장값 <strong>75pt</strong> (T3 고관여) 표기 — 기존 50~100pt 범위 → 75pt 단일 권장값. BO 자유 설정 가능 ② [CEB-000] §5.2 보상 매트릭스 참조 링크 추가 ③ 미션 상태 표시 영역에 권장값 안내</td></tr>
+<tr><td><strong>v2.1</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.0 동기화 — Quest 보상값 명문화</strong>. ① Quest 완료 보상 권장값 <strong>75DUK</strong> (T3 고관여) 표기 — 기존 50~100DUK 범위 → 75DUK 단일 권장값. BO 자유 설정 가능 ② [CEB-000] §5.2 보상 매트릭스 참조 링크 추가 ③ 미션 상태 표시 영역에 권장값 안내</td></tr>
+<tr><td><strong>v2.2</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 덕력 단위 pt→DUK 일괄 변경</strong>. Quest 보상 덕력·캡 표기 갱신. 정책 변경 없음</td></tr>
 </table>
 
 </body>

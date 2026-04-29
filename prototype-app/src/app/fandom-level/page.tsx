@@ -87,7 +87,7 @@ export default function FandomLevelPage() {
               <div className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 rounded-full transition-all" style={{ width: `${progress}%` }} />
             </div>
             <div className="flex justify-between mb-3">
-              <span className="text-xs text-gray-600 font-medium">{formatNumber(data.currentPt)} / {formatNumber(data.targetPt)}pt</span>
+              <span className="text-xs text-gray-600 font-medium">{formatNumber(data.currentPt)} / {formatNumber(data.targetPt)}DUK</span>
               <span className="text-xs text-amber-600 font-medium">{Math.round(progress)}%</span>
             </div>
           </>
@@ -100,7 +100,7 @@ export default function FandomLevelPage() {
 
         {/* Fix #19: 비로그인 시 내 기여도 "-" 표시 */}
         <p className="text-xs text-gray-500">
-          내 기여: {isLoggedIn ? `${formatNumber(data.myContributionPt)}pt (${contributionPct}%)` : '-'}
+          내 기여: {isLoggedIn ? `${formatNumber(data.myContributionPt)}DUK (${contributionPct}%)` : '-'}
         </p>
       </div>
 
@@ -158,7 +158,7 @@ export default function FandomLevelPage() {
           </div>
           <div className="bg-gray-50 rounded-xl px-3 py-3 text-center">
             <span className="text-lg">⭐</span>
-            <p className="text-xs font-semibold text-gray-700 mt-1">{formatNumber(data.monthlyTotal)}pt</p>
+            <p className="text-xs font-semibold text-gray-700 mt-1">{formatNumber(data.monthlyTotal)}DUK</p>
             <p className="text-[9px] text-gray-400">이번 달 합계</p>
           </div>
           <div className="bg-gray-50 rounded-xl px-3 py-3 text-center">

@@ -120,11 +120,11 @@ export default function VirtuePage() {
           </div>
           <div>
             <p className="text-[10px] text-gray-500">획득 덕력</p>
-            <p className="text-lg font-bold text-gray-900">{`${formatNumber(ranking?.myEarnedPt ?? 0)}pt`}</p>
+            <p className="text-lg font-bold text-gray-900">{`${formatNumber(ranking?.myEarnedPt ?? 0)}DUK`}</p>
           </div>
           <div>
             <p className="text-[10px] text-gray-500">보유 덕력</p>
-            <p className="text-lg font-bold text-gray-600">{`${formatNumber(currency?.virtueHeld ?? 0)}pt`}</p>
+            <p className="text-lg font-bold text-gray-600">{`${formatNumber(currency?.virtueHeld ?? 0)}DUK`}</p>
           </div>
         </div>
         <div className="flex items-center justify-between">
@@ -184,7 +184,7 @@ export default function VirtuePage() {
               <span className="text-sm text-gray-700 text-left">{item.description}</span>
               <div className="flex items-center gap-2 shrink-0 ml-2">
                 <span className={cn('text-sm font-semibold', item.amount > 0 ? 'text-green-600' : 'text-red-500')}>
-                  {item.amount > 0 ? '+' : ''}{item.amount}pt
+                  {item.amount > 0 ? '+' : ''}{item.amount}DUK
                 </span>
                 <span className="text-[10px] text-gray-400">{item.createdAt?.slice(5, 10).replace('-', '.')}</span>
                 {item.type !== 'earn' && <span className="text-[10px] text-gray-300">→</span>}

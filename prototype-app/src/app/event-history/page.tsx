@@ -33,11 +33,11 @@ interface RaffleItem {
 }
 
 const MOCK_QUESTS: QuestItem[] = [
-  { id: 'q1', artistId: 'v01d', artistName: 'V01D', title: 'V01D 공식 X 팔로우', reward: '🎫 ×1 · ❤️ 75pt', date: '2026.04.20', status: '지급완료' },
-  { id: 'q2', artistId: 'v01d', artistName: 'V01D', title: 'V01D 공식 IG 팔로우', reward: '🎫 ×1 · ❤️ 75pt', date: '2026.04.19', status: '검토중' },
-  { id: 'q3', artistId: 'v01d', artistName: 'V01D', title: '"Tug of War" 스트리밍 인증', reward: '❤️ 75pt', date: '2026.04.18', status: '반려' },
+  { id: 'q1', artistId: 'v01d', artistName: 'V01D', title: 'V01D 공식 X 팔로우', reward: '🎫 ×1 · ❤️ 75DUK', date: '2026.04.20', status: '지급완료' },
+  { id: 'q2', artistId: 'v01d', artistName: 'V01D', title: 'V01D 공식 IG 팔로우', reward: '🎫 ×1 · ❤️ 75DUK', date: '2026.04.19', status: '검토중' },
+  { id: 'q3', artistId: 'v01d', artistName: 'V01D', title: '"Tug of War" 스트리밍 인증', reward: '❤️ 75DUK', date: '2026.04.18', status: '반려' },
   { id: 'q4', artistId: 'v01d', artistName: 'V01D', title: 'V01D 앨범 감상 소감 인증', reward: '🎫 ×1', date: '2026.04.15', status: '지급완료' },
-  { id: 'q5', artistId: 'v01d', artistName: 'V01D', title: 'V01D YouTube 구독 인증', reward: '🎫 ×1 · ❤️ 75pt', date: '2026.04.14', status: '지급완료' },
+  { id: 'q5', artistId: 'v01d', artistName: 'V01D', title: 'V01D YouTube 구독 인증', reward: '🎫 ×1 · ❤️ 75DUK', date: '2026.04.14', status: '지급완료' },
 ];
 
 const MOCK_RAFFLES: RaffleItem[] = [

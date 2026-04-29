@@ -73,7 +73,7 @@ export default function SupportPage() {
     if (!showConfirmModal) return;
     try {
       await investMutation.mutateAsync({ eventId: showConfirmModal.eventId, amount: showConfirmModal.amount });
-      addToast('success', `덕력 ${showConfirmModal.amount}pt 응원 완료!`);
+      addToast('success', `덕력 ${showConfirmModal.amount}DUK 응원 완료!`);
     } catch {
       addToast('error', '앗, 응원이 전달되지 않았어요. 다시 시도해 주세요');
     }
@@ -130,8 +130,8 @@ export default function SupportPage() {
       >
         {showConfirmModal && (
           <>
-            <p className="text-sm text-gray-700 leading-relaxed mb-2">덕력 {formatNumber(showConfirmModal.amount)}pt를 응원합니다.</p>
-            <p className="text-xs text-violet-600 font-medium mb-2">응원 후 잔액: {formatNumber(Math.max(0, myHeldPt - showConfirmModal.amount))}pt</p>
+            <p className="text-sm text-gray-700 leading-relaxed mb-2">덕력 {formatNumber(showConfirmModal.amount)}DUK를 응원합니다.</p>
+            <p className="text-xs text-violet-600 font-medium mb-2">응원 후 잔액: {formatNumber(Math.max(0, myHeldPt - showConfirmModal.amount))}DUK</p>
             <p className="text-sm text-gray-900 font-semibold mb-3">한번 응원하면 돌이킬 수 없어요.<br />그래도 응원할까요?</p>
             <div className="text-xs text-gray-500 space-y-1">
               <p>달성 시: 서포트 집행에 사용됩니다</p>

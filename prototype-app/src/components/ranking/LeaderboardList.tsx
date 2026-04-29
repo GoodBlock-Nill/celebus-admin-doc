@@ -63,7 +63,7 @@ export default function LeaderboardList({
               <span className={cn('flex-1 text-sm', user.isMe ? 'font-bold text-violet-700' : 'text-gray-800')}>
                 {user.nickname} {user.isMe && '★'}
               </span>
-              <span className="text-xs text-gray-500">{formatNumber(user.earnedPt)}pt</span>
+              <span className="text-xs text-gray-500">{formatNumber(user.earnedPt)}DUK</span>
             </div>
           );
         })}
@@ -79,7 +79,7 @@ export default function LeaderboardList({
             <span className="w-8 text-xs font-semibold text-gray-500">{myRank}</span>
             <span className="w-6 text-center">⭐</span>
             <span className="flex-1 text-sm font-bold text-violet-700">나 ★</span>
-            <span className="text-xs text-gray-500">{formatNumber(myEarnedPt ?? 0)}pt</span>
+            <span className="text-xs text-gray-500">{formatNumber(myEarnedPt ?? 0)}DUK</span>
           </div>
         </div>
       )}

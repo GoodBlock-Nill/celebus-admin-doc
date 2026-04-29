@@ -57,7 +57,7 @@ export default function MemoryCreatePage() {
       return;
     }
     setShowEmojiError(false);
-    addToast('success', '기억이 저장되었어요! 덕력 75pt 획득');
+    addToast('success', '기억이 저장되었어요! 덕력 75DUK 획득');
     setTimeout(() => router.back(), 500);
   };
 

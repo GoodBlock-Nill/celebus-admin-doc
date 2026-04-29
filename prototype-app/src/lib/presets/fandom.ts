@@ -11,7 +11,7 @@ export const FANDOM_PRESET_OPTIONS = [
 
 // v5.2 권장 곡선 + v5.0 캡 정책 반영:
 // 곡선: Lv1 10,000 → Lv2 30,000 → Lv3 70,000 → Lv4 150,000 → Lv5 300,000 → Lv10 6,000,000
-// 일일 500pt / 주간 3,000pt 캡 + 스트릭 보너스(캡 무관) → 월간 현실 상한 ≈ 14,000pt
+// 일일 500DUK / 주간 3,000DUK 캡 + 스트릭 보너스(캡 무관) → 월간 현실 상한 ≈ 14,000DUK
 export async function applyFandomPreset(preset: string, queryClient: QueryClient) {
   if (preset === 'max') {
     await supabase

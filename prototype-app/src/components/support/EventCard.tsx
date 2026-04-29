@@ -51,7 +51,7 @@ export default function EventCard({
               <div className="h-full bg-violet-500 rounded-full transition-all" style={{ width: `${progress}%` }} />
             </div>
             <div className="flex justify-between mt-1">
-              <span className="text-[10px] text-gray-500">목표: {formatNumber(event.targetPt)}pt</span>
+              <span className="text-[10px] text-gray-500">목표: {formatNumber(event.targetPt)}DUK</span>
               <span className="text-[10px] text-gray-500">D-{event.daysLeft}</span>
             </div>
           </>
@@ -64,7 +64,7 @@ export default function EventCard({
       {isExpanded && (
         <div className="px-4 pb-4 animate-slideInUp">
           <p className="text-xs text-gray-600 mb-3">{event.description}</p>
-          {event.myInvestPt > 0 && <p className="text-xs text-violet-600 mb-1">내 응원: {formatNumber(event.myInvestPt)}pt</p>}
+          {event.myInvestPt > 0 && <p className="text-xs text-violet-600 mb-1">내 응원: {formatNumber(event.myInvestPt)}DUK</p>}
           <p className="text-xs text-gray-500 mb-3">참여자: {event.participants}명</p>
 
           {(event.status === 'achieved' || event.status === 'executing') && (
@@ -87,7 +87,7 @@ export default function EventCard({
                 />
                 <button onClick={() => onAmountChange(Math.min(investAmount + 100, Math.min(myHeldPt, remaining)))} className="w-8 h-8 bg-gray-100 rounded-lg text-sm font-bold">+</button>
               </div>
-              <p className="text-[10px] text-gray-400 text-center mb-2">보유: {formatNumber(myHeldPt)}pt | 남은 목표: {formatNumber(remaining)}pt</p>
+              <p className="text-[10px] text-gray-400 text-center mb-2">보유: {formatNumber(myHeldPt)}DUK | 남은 목표: {formatNumber(remaining)}DUK</p>
               <button onClick={onInvest} disabled={investAmount < 1} className="w-full py-2.5 bg-violet-600 text-white rounded-xl text-sm font-semibold disabled:bg-gray-200 disabled:text-gray-400">
                 응원하기
               </button>
@@ -108,14 +108,14 @@ export default function EventCard({
                   ))}
                 </div>
               )}
-              <p className="text-[10px] text-green-600 mt-2">총 응원: {formatNumber(event.currentPt)}pt | 참여자: {event.participants}명</p>
+              <p className="text-[10px] text-green-600 mt-2">총 응원: {formatNumber(event.currentPt)}DUK | 참여자: {event.participants}명</p>
             </div>
           )}
 
           {(event.status === 'expired' || event.status === 'cancelled') && (
             <div className="bg-red-50 rounded-xl px-4 py-3">
               <p className="text-xs text-red-600">{event.status === 'expired' ? '아쉽지만 이번엔 목표에 닿지 못했어요.' : '아쉽지만 이번 서포트가 취소되었어요.'} 응원한 덕력은 전액 돌려드렸어요</p>
-              <p className="text-[10px] text-red-500 mt-1">반환 완료: {formatNumber(event.myInvestPt)}pt</p>
+              <p className="text-[10px] text-red-500 mt-1">반환 완료: {formatNumber(event.myInvestPt)}DUK</p>
             </div>
           )}
         </div>

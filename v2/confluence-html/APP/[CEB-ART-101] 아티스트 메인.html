@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>ART(아티스트)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.8</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.17</td></tr>
+<tr><td>버전</td><td>v1.9</td></tr>
+<tr><td>최근 업데이트</td><td>2026.04.29</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td></td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -165,7 +165,7 @@ p {
 <tr><td>덕력</td><td>내기록</td><td>⭐</td><td>덕력</td><td>시즌 순위 (예: "시즌 38위")</td><td>→ CEB-DUK-101 덕력 랭킹</td></tr>
 <tr><td>컬렉션</td><td>내기록</td><td>🃏</td><td>컬렉션</td><td>보유 디지털 굿즈 수 (예: "12종")</td><td>→ CEB-COL-101 컬렉션 메인</td></tr>
 <tr><td>응모</td><td>내기록</td><td>🎁</td><td>Raffle</td><td>진행중 래플 수 (예: "래플 2건 진행중")</td><td>→ CEB-EVT-101 래플 리스트</td></tr>
-<tr><td>팬덤 레벨</td><td>내기록</td><td>🏆</td><td>{아티스트명} 키우기</td><td>현재 레벨 + 진행률 (예: "Lv.3 (1,200/2,000pt)")</td><td>→ CEB-EVT-201 팬덤 레벨 상세</td></tr>
+<tr><td>팬덤 레벨</td><td>내기록</td><td>🏆</td><td>{아티스트명} 키우기</td><td>현재 레벨 + 진행률 (예: "Lv.3 (1,200/2,000DUK)")</td><td>→ CEB-EVT-201 팬덤 레벨 상세</td></tr>
 <tr><td>정보</td><td>더보기</td><td>📰</td><td>정보</td><td>새 소식 수 (예: "새소식 3")</td><td>→ CEB-INF-101 정보 피드</td></tr>
 <tr><td>기억 저장소</td><td>더보기</td><td>📸</td><td>기억 저장소</td><td>최근 기억 날짜 또는 "첫 기억을 남겨보세요"</td><td>→ CEB-MEM-101 기억저장소 메인</td></tr>
 </table>
@@ -207,7 +207,7 @@ p {
 <tr><td>컬렉션</td><td>보유 굿즈 없음</td><td>"수집 시작!"</td></tr>
 <tr><td>Raffle</td><td>진행중 래플 있음</td><td>"래플 {N}건 진행중"</td></tr>
 <tr><td>Raffle</td><td>진행중 래플 없음</td><td>"새 래플 준비 중!"</td></tr>
-<tr><td>{아티스트명} 키우기</td><td>레벨 진행중</td><td>"Lv.{N} ({현재pt}/{목표pt}pt)"</td></tr>
+<tr><td>{아티스트명} 키우기</td><td>레벨 진행중</td><td>"Lv.{N} ({현재DUK}/{목표DUK}DUK)"</td></tr>
 <tr><td>{아티스트명} 키우기</td><td>데이터 없음</td><td>"팬덤 레벨 확인"</td></tr>
 <tr><td>정보</td><td>새 소식 있음</td><td>"새소식 {N}" (뱃지). <strong>미읽음 기준</strong> — 유저가 정보 피드(CEB-INF-101)에 진입하면 읽음 처리되어 카운트 감소</td></tr>
 <tr><td>정보</td><td>새 소식 없음</td><td>(뱃지 미표시)</td></tr>
@@ -305,7 +305,7 @@ p {
 <hr>
 <h2>5. 변경 이력</h2>
 <table>
-<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><th>버전</th><th>v1.9</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td>v1.0</td><td>2026.04.13</td><td>@Nill Yoo</td><td>초안 작성</td></tr>
 <tr><td>v1.1</td><td>2026.04.14</td><td>@Nill Yoo</td><td>검증 23건 반영: 그룹 라벨 변경(미션/내기록/더보기), 팬덤 레벨 카드 추가, 비로그인 정책(열람+카드탭 로그인), 헤더 구성(로고+이름+배경), 홀수 카드 1열 풀, Coming Soon 표시, Pull-to-Refresh, 온보딩 오버레이, 복귀 시 재조회, 홈 아티스트 선택 접근경로 제거 등</td></tr>
 <tr><td>v1.2</td><td>2026.04.14</td><td>@Nill Yoo</td><td>공통정책 크로스 검증 반영: 비로그인 카드 상태 기본값 명시(개인 데이터 "-", 서비스 통계 실데이터), Coming Soon 공통정책 참조 추가, Error 카드 탭 동작 정의</td></tr>
@@ -315,6 +315,7 @@ p {
 <tr><td>v1.6</td><td>2026.04.16</td><td>@Nill Yoo</td><td>정보 카드 아이콘 📋→📰 중복 해소, 연관화면 HOM-001 양방향 참조</td></tr>
 <tr><td>v1.7</td><td>2026.04.16</td><td>@Nill Yoo</td><td>비로그인 카드 탭 분기: 개방 5개(덕력/서포트/키우기/Raffle/정보) 읽기 전용 이동 허용, 나머지 4개 로그인 차단 유지</td></tr>
 <tr><td>v1.8</td><td>2026.04.17</td><td>@Nill Yoo</td><td>문서 구조 개선: 영역별(컴포넌트) 그룹핑으로 재구성. 정보 변경 없음</td></tr>
+<tr><td><strong>v1.9</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 덕력 단위 pt→DUK 일괄 변경</strong>. 덕력 카드 표기 갱신</td></tr>
 </table>
 
 </body>

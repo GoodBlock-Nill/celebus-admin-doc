@@ -28,7 +28,7 @@ export default function StreakBonuses({ bonuses, streak }: StreakBonusesProps) {
                 {bonus.claimed ? '✅' : achieved ? '🎁' : '🔒'}
               </div>
               <span className="text-[10px] font-semibold text-gray-700">{bonus.days}일</span>
-              <span className="text-[9px] text-gray-400">{formatNumber(bonus.rewardPt)}pt</span>
+              <span className="text-[9px] text-gray-400">{formatNumber(bonus.rewardPt)}DUK</span>
             </div>
           );
         })}

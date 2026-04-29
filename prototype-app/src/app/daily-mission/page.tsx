@@ -45,7 +45,7 @@ export default function DailyMissionPage() {
   const handleCheckIn = useCallback(() => {
     if (checkedIn) return;
     checkinMutation.mutate(undefined, {
-      onSuccess: () => addToast('success', '출석 완료! 덕력 5pt 획득'),
+      onSuccess: () => addToast('success', '출석 완료! 덕력 5DUK 획득'),
       onError: () => addToast('error', '출석 처리 중 오류가 발생했습니다'),
     });
   }, [checkedIn, checkinMutation, addToast]);
@@ -54,7 +54,7 @@ export default function DailyMissionPage() {
     if (!mission || mission.completed) return;
     // v5.1: 일일 미션은 모두 완료 시 일괄 지급. 개별 토스트는 "완료" 안내만, 보상 메시지는 모두 완료 시 한 번만 발송
     completeMissionMutation.mutate(mission.id, {
-      onSuccess: () => addToast('success', `오늘의 일일 미션을 모두 완료했어요! 덕력 ${mission.rewardPt}pt 획득`),
+      onSuccess: () => addToast('success', `오늘의 일일 미션을 모두 완료했어요! 덕력 ${mission.rewardPt}DUK 획득`),
       onError: () => addToast('error', '미션 처리 중 오류가 발생했습니다'),
     });
   }, [mission, completeMissionMutation, addToast]);
@@ -63,7 +63,7 @@ export default function DailyMissionPage() {
     claimBonusMutation.mutate(days, {
       onSuccess: () => {
         setShowBonusModal(null);
-        addToast('success', `🔥 ${days}일 연속 보너스! ${pt}pt 획득!`);
+        addToast('success', `🔥 ${days}일 연속 보너스! ${pt}DUK 획득!`);
       },
       onError: () => addToast('error', '보너스 수령 중 오류가 발생했습니다'),
     });
@@ -115,7 +115,7 @@ export default function DailyMissionPage() {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400">+5pt</span>
+              <span className="text-xs text-gray-400">+5DUK</span>
               {!checkedIn && (
                 <button
                   onClick={handleCheckIn}
@@ -149,7 +149,7 @@ export default function DailyMissionPage() {
                   {mission.title}
                 </span>
               </div>
-              <span className="text-xs text-gray-400">+{mission.rewardPt}pt</span>
+              <span className="text-xs text-gray-400">+{mission.rewardPt}DUK</span>
             </div>
             <p className="text-xs text-gray-500 ml-6 mb-2">{mission.description}</p>
             {!mission.completed && (
@@ -164,7 +164,7 @@ export default function DailyMissionPage() {
               </div>
             )}
             {mission.completed && (
-              <p className="text-[10px] text-green-600 ml-6">덕력 {mission.rewardPt}pt 획득!</p>
+              <p className="text-[10px] text-green-600 ml-6">덕력 {mission.rewardPt}DUK 획득!</p>
             )}
           </div>
         )}
@@ -187,7 +187,7 @@ export default function DailyMissionPage() {
             onClick={() => setShowBonusModal({ days: pendingBonus.days, pt: pendingBonus.rewardPt })}
             className="w-full py-3 bg-amber-500 text-white rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors animate-pulse-glow"
           >
-            🔥 {pendingBonus.days}일 보너스 받기! (+{pendingBonus.rewardPt}pt)
+            🔥 {pendingBonus.days}일 보너스 받기! (+{pendingBonus.rewardPt}DUK)
           </button>
         </div>
       )}
@@ -210,7 +210,7 @@ export default function DailyMissionPage() {
               {showBonusModal.days}일 연속 달성!
             </p>
             <p className="text-sm text-gray-500">
-              {showBonusModal.pt}pt 보너스가 준비되어 있어요!
+              {showBonusModal.pt}DUK 보너스가 준비되어 있어요!
             </p>
           </div>
         )}

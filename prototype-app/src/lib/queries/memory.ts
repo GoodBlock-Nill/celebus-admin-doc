@@ -87,7 +87,7 @@ export async function createMemory(params: {
     await supabase.from('memory_images').insert(imageRows);
   }
 
-  // Virtue reward (v5.0: T3 고관여 75pt)
+  // Virtue reward (v5.0: T3 고관여 75DUK)
   await supabase.from('virtue_transactions').insert({
     user_id: params.userId,
     artist_id: params.artistId,
