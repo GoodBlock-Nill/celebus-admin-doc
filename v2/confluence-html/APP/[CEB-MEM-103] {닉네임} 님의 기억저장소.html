@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-MEM-103] {닉네임} 님의 기억저장소</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-MEM-103] {닉네임} 님의 기억저장소</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-MEM-103</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>MEM(기억저장소)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.04.29</td></tr>
+<tr><td>Jira 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td></td></tr>
+<tr><td>다국어 영향</td><td>Yes</td></tr>
+<tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 기억저장소 > 모두의 기억저장소 > {닉네임} 님의 기억저장소</td></tr>
+</table>
+<hr>
+<h2>1. 화면 개요</h2>
+<p>[CEB-MEM-102] 모두의 기억저장소에서 특정 유저의 닉네임을 탭했을 때 진입하는 화면이다. 해당 유저가 <strong>저장소 공개 + 게시글 공개</strong> 두 조건을 모두 충족한 게시글만 그리드 형태로 노출된다 (공통정책 §7.1 참조).</p>
+<h3>주요 기능</h3>
+<ul>
+<li>특정 유저의 공개 기억 그리드 조회 (읽기 전용·최신순)</li>
+<li>게시글 좋아요 (공통정책 §7.6 참조)</li>
+<li>게시글 조회수 자동 카운팅 (브라우저 세션 + 24시간 쿨다운)</li>
+<li>게시글 카드 탭 → [CEB-MEM-202] 기억 상세 진입</li>
+</ul>
+<blockquote>
+<p>그 외 동작은 [CEB-MEM-102] 모두의 기억저장소와 동일하다. 본 문서는 차이점 위주로 기술한다.</p>
+</blockquote>
+<h3>접근 경로</h3>
+<ul>
+<li>[CEB-MEM-102] 모두의 기억저장소 > 게시글 카드의 닉네임 탭</li>
+<li>비로그인 유저도 진입 가능 (좋아요·조회수 카운트 미적립). MEM-102 자체가 비로그인 열람 허용 화면이므로 동일하게 적용</li>
+</ul>
+<h3>화면 레이아웃</h3>
+<pre><code>┌────────────────────────────────┐
+│ ←   {닉네임} 님의 기억저장소     │
+├────────────────────────────────┤
+│ ┌──┐  ┌──┐  ┌──┐               │
+│ │📷│  │📷│  │📷│  ← 3열 그리드
+│ │👁123 ❤45│ │👁87 ❤12│ │...   │
+│ └──┘  └──┘  └──┘               │
+└────────────────────────────────┘
+</code></pre>
+<hr>
+<h2>2. 영역별 상세</h2>
+<h3>2.1 서브페이지 헤더</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>뒤로가기</td><td>← 탭 → 이전 화면으로 복귀 (네비게이션 스택 기반, 일반적으로 [CEB-MEM-102])</td></tr>
+<tr><td>타이틀</td><td>"<strong>{닉네임} 님의 기억저장소</strong>" (다국어: §4 참조)</td></tr>
+<tr><td>우측 영역</td><td>없음 (⚙️ 설정·뷰 전환 버튼 모두 미노출)</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<blockquote>
+<p>MEM-101/102와 달리 본 화면은 <strong>타인 저장소</strong>이므로 본인 설정(⚙️)과 뷰 전환 버튼이 표시되지 않는다.</p>
+</blockquote>
+<hr>
+<h3>2.2 그리드 뷰</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>구성</td><td><strong>3열 그리드</strong>. 정사각형 카드 (MEM-102와 동일 규격)</td></tr>
+<tr><td>프로필 사진</td><td><strong>본 화면에서는 표시 생략</strong> (이미 닉네임 저장소이므로 작성자가 자명)</td></tr>
+<tr><td>닉네임</td><td>카드 내 닉네임 텍스트 미표시 (헤더 타이틀로 갈음)</td></tr>
+<tr><td>멀티 사진 아이콘 🖼️</td><td>등록 이미지 ≥2장일 때 표시</td></tr>
+<tr><td>메인 사진</td><td>등록 사진 첫 장 OR <strong>시스템 생성 SVG (글 20자 컷오프)</strong> — 사진 미등록 게시글의 경우 (MEM-102 §2.2 동일 규격)</td></tr>
+<tr><td>조회수</td><td><code>👁 N</code> 천 단위 콤마 (예: 1,234)</td></tr>
+<tr><td>좋아요</td><td><code>❤ N</code> 1탭 토글</td></tr>
+<tr><td>정렬</td><td><strong>최신순 단일</strong> (<code>created_at DESC</code>). 정렬 토글 없음</td></tr>
+<tr><td>탭 동작</td><td>카드 탭 → [CEB-MEM-202] 기억 상세</td></tr>
+</table>
+<blockquote>
+<p>카드 내부 구성·시스템 생성 SVG·좋아요 동작·조회수 동작은 [CEB-MEM-102] §2.2와 동일. 본 화면 고유의 차이점만 위에 명시.</p>
+</blockquote>
+<h4>좋아요·조회수 동작</h4>
+<p>[CEB-MEM-102] §2.2 좋아요/조회수 동작 정책 동일 적용. 공통정책 §7.6 참조.</p>
+<hr>
+<h3>2.3 페이지네이션</h3>
+<table>
+<tr><th>항목</th><th>정책</th></tr>
+<tr><td>초기 로드</td><td>30건</td></tr>
+<tr><td>무한 스크롤</td><td>스크롤 끝 도달 시 30건씩 추가 로드</td></tr>
+<tr><td>캐시</td><td>React Query 5분 stale-time</td></tr>
+</table>
+<hr>
+<h2>3. 상태별 표시</h2>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>Loading</td><td>그리드 영역에 Skeleton UI (3열 × 4행)</td></tr>
+<tr><td>Default</td><td>정상 그리드 표시</td></tr>
+<tr><td>Empty</td><td>"아직 공개된 기억이 없어요" 안내 텍스트 (해당 유저가 저장소는 공개했으나 공개 게시글이 0건일 때)</td></tr>
+<tr><td>저장소 비공개 전환 감지</td><td>진입 시점에 해당 유저가 저장소를 비공개로 전환한 경우 → "이 유저는 저장소를 비공개로 전환했어요" 안내 + [돌아가기] CTA → MEM-102</td></tr>
+<tr><td>Error</td><td>"앗, 불러오지 못했어요" + [다시 불러오기] 버튼 (공통정책 §11.3)</td></tr>
+</table>
+<hr>
+<h2>4. 다국어 라벨</h2>
+<p>공통정책 §1.6 참조.</p>
+<table>
+<tr><th>KO</th><th>EN</th><th>JP</th></tr>
+<tr><td>{닉네임} 님의 기억저장소</td><td>{Nickname}'s Memories</td><td>{ニックネーム}さんの思い出</td></tr>
+<tr><td>아직 공개된 기억이 없어요</td><td>No public memories yet</td><td>まだ公開された思い出はありません</td></tr>
+<tr><td>이 유저는 저장소를 비공개로 전환했어요</td><td>This user has set their memories to private</td><td>このユーザーは思い出を非公開に設定しました</td></tr>
+</table>
+<hr>
+<h2>5. 연관화면ID</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-MEM-102</td><td>모두의 기억저장소</td><td>닉네임 탭 시 본 화면 진입원. 뒤로가기 시 복귀</td></tr>
+<tr><td>CEB-MEM-202</td><td>기억 상세</td><td>카드 탭 시 이동. 좋아요·조회수·신고 기능</td></tr>
+<tr><td>CEB-000</td><td>공통 정책 §7.1 / §7.6 / §10.5</td><td>공개 정책 / 소셜 인터랙션 / 비로그인</td></tr>
+</table>
+<hr>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.04.29</td><td>@Nill Yoo</td><td>초안 작성 (공통정책 v5.4 반영). PDF 기획안(<code>docs/CA-[CEB-MEM-103]{닉네임} 님의 기억저장소-290426-041748.pdf</code>) 기반. 헤더(뒤로가기 + 닉네임 타이틀) + 3열 그리드 + 최신순 단일 정렬. 그 외 동작은 MEM-102와 동일 (좋아요·조회수·시스템 생성 SVG·페이지네이션). 본인 설정 ⚙️·뷰 전환 버튼은 본 화면에서 미노출. 카드 내 프로필 사진·닉네임은 헤더 타이틀로 갈음하여 생략</td></tr>
+</table>
+
+</body>
+</html>

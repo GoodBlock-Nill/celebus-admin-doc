@@ -261,6 +261,8 @@ const files = [
   ['APP/[CEB-ART-201] 아티스트 탐색.md', 'confluence-html/APP/[CEB-ART-201] 아티스트 탐색.html'],
   ['APP/[CEB-MEM-201] 기억 작성.md', 'confluence-html/APP/[CEB-MEM-201] 기억 작성.html'],
   ['APP/[CEB-MEM-202] 기억 상세.md', 'confluence-html/APP/[CEB-MEM-202] 기억 상세.html'],
+  ['APP/[CEB-MEM-102] 모두의 기억저장소.md', 'confluence-html/APP/[CEB-MEM-102] 모두의 기억저장소.html'],
+  ['APP/[CEB-MEM-103] {닉네임} 님의 기억저장소.md', 'confluence-html/APP/[CEB-MEM-103] {닉네임} 님의 기억저장소.html'],
 ];
 
 for (const [md, html] of files) {
