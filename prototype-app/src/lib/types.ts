@@ -164,18 +164,20 @@ export interface SupportEvent {
 }
 
 // --- 팬덤 레벨 ---
+// 카운터 모델: 리셋 모델 (각 레벨에서 0부터 시작, 목표 도달 시 다음 레벨 카운터 0으로 리셋)
+// 정책 출처: v2/[CEB-000] 공통 정책 §5.5 + v2/APP/[CEB-EVT-201] §2.2.1
 
 export interface FandomLevelReward {
   level: number;
-  targetPt: number;
+  targetPt: number; // 해당 레벨의 레벨업 목표 덕력 (단독값, 누적 아님)
   rewardName: string;
   unlocked: boolean;
 }
 
 export interface FandomLevelState {
   currentLevel: number;
-  currentPt: number;
-  targetPt: number;
+  currentPt: number; // 현재 레벨 카운터 값 (레벨업 시 0으로 리셋)
+  targetPt: number; // 현재 레벨의 레벨업 목표
   myContributionPt: number;
   participantCount: number;
   monthlyTotal: number;

@@ -1,6 +1,10 @@
 import { supabase } from '@/lib/supabase';
 import type { FandomLevelState, FandomLevelReward } from '@/lib/types';
 
+// 팬덤 레벨 카운터 모델: 리셋 모델 (정책 v5.3 / EVT-201 v2.2 기준)
+// - 각 레벨에서 카운터 0부터 시작 → target_pt 도달 시 다음 레벨 진입 + 카운터 0 리셋
+// - target_pt는 누적값이 아닌 해당 레벨 단독 목표값
+// - 진행률 = currentPt / target_pt × 100
 export async function fetchFandomLevel(artistId: string, userId: string): Promise<FandomLevelState> {
   // 1. Level config
   const { data: levels } = await supabase

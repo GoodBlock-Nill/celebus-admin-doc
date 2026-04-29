@@ -60,7 +60,7 @@ export default function HomePage() {
     if (checkedIn) return;
     setCheckedIn(true);
     setStreak((s) => s + 1);
-    addToast('success', '출석 완료! 덕력 10pt 획득');
+    addToast('success', '출석 완료! 덕력 5pt 획득');
   }, [isLoggedIn, checkedIn, addToast]);
 
   return (
@@ -160,7 +160,7 @@ export default function HomePage() {
               </div>
               <div className="flex-1 text-left">
                 <p className="text-sm font-bold text-white">{checkedIn ? '출석 완료!' : '출석 체크하기'}</p>
-                <p className="text-xs text-white/70 mt-0.5">{checkedIn ? `🔥 ${streak}일 연속 · +10pt 획득` : `탭하여 출석 · 덕력 +10pt`}</p>
+                <p className="text-xs text-white/70 mt-0.5">{checkedIn ? `🔥 ${streak}일 연속 · +5pt 획득` : `탭하여 출석 · 덕력 +5pt`}</p>
               </div>
               {!checkedIn && (
                 <span className="text-xs font-bold text-white bg-white/20 px-3 py-1.5 rounded-full">체크인</span>
@@ -173,8 +173,8 @@ export default function HomePage() {
                 <span className="text-lg">{missionDone ? '✅' : '📋'}</span>
               </div>
               <div className="flex-1 text-left">
-                <p className={cn('text-sm font-semibold', missionDone ? 'text-green-600' : 'text-gray-900')}>{missionDone ? '일일 미션 완료!' : '일일 미션'}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{missionDone ? '+20pt 획득' : '오늘의 미션을 완료하고 덕력을 받으세요'}</p>
+                <p className={cn('text-sm font-semibold', missionDone ? 'text-green-600' : 'text-gray-900')}>{missionDone ? '일일 미션 모두 완료!' : '일일 미션'}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{missionDone ? '+25pt 획득' : '오늘의 모든 미션을 완료하면 덕력 25pt 일괄 지급'}</p>
               </div>
               <span className="text-gray-300 text-sm">→</span>
             </button>

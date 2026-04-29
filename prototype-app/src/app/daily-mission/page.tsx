@@ -45,15 +45,16 @@ export default function DailyMissionPage() {
   const handleCheckIn = useCallback(() => {
     if (checkedIn) return;
     checkinMutation.mutate(undefined, {
-      onSuccess: () => addToast('success', '출석 완료! 덕력 10pt 획득'),
+      onSuccess: () => addToast('success', '출석 완료! 덕력 5pt 획득'),
       onError: () => addToast('error', '출석 처리 중 오류가 발생했습니다'),
     });
   }, [checkedIn, checkinMutation, addToast]);
 
   const handleGoMission = useCallback(() => {
     if (!mission || mission.completed) return;
+    // v5.1: 일일 미션은 모두 완료 시 일괄 지급. 개별 토스트는 "완료" 안내만, 보상 메시지는 모두 완료 시 한 번만 발송
     completeMissionMutation.mutate(mission.id, {
-      onSuccess: () => addToast('success', `미션 완료! 덕력 ${mission.rewardPt}pt 획득`),
+      onSuccess: () => addToast('success', `오늘의 일일 미션을 모두 완료했어요! 덕력 ${mission.rewardPt}pt 획득`),
       onError: () => addToast('error', '미션 처리 중 오류가 발생했습니다'),
     });
   }, [mission, completeMissionMutation, addToast]);
@@ -114,7 +115,7 @@ export default function DailyMissionPage() {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400">+10pt</span>
+              <span className="text-xs text-gray-400">+5pt</span>
               {!checkedIn && (
                 <button
                   onClick={handleCheckIn}

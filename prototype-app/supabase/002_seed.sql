@@ -148,26 +148,27 @@ INSERT INTO quest_chapters (id, artist_id, chapter_number, title, description, g
   ('ch4', 'v01d', 4, 'V01D를 예측하다', 'V01D의 미래를 예측해보세요! PM 게임 참여', '아티스트의 준비', 4),
   ('ch5', 'v01d', 5, 'V01D를 응원하다', 'V01D를 세상에 알리는 서포트에 함께하세요', '아티스트의 데뷔', 5);
 
+-- v5.0: Quest 보상 T3 고관여 75pt 일관 적용
 INSERT INTO quest_missions (id, chapter_id, title, type, reward_text, sort_order) VALUES
   -- Chapter 1
-  ('m1-1', 'ch1', 'V01D 공식 X 팔로우', 'capture', '덕력 50pt', 1),
-  ('m1-2', 'ch1', 'V01D 공식 IG 팔로우', 'capture', '덕력 50pt', 2),
+  ('m1-1', 'ch1', 'V01D 공식 X 팔로우', 'capture', '덕력 75pt', 1),
+  ('m1-2', 'ch1', 'V01D 공식 IG 팔로우', 'capture', '덕력 75pt', 2),
   ('m1-3', 'ch1', 'V01D 공식 YouTube 구독', 'capture', '응모권 1장', 3),
   -- Chapter 2
-  ('m2-1', 'ch2', '"Tug of War" 스트리밍 인증', 'capture', '덕력 80pt', 1),
-  ('m2-2', 'ch2', '"ROCKROCK" MV 시청 인증', 'capture', '덕력 80pt', 2),
+  ('m2-1', 'ch2', '"Tug of War" 스트리밍 인증', 'capture', '덕력 75pt', 1),
+  ('m2-2', 'ch2', '"ROCKROCK" MV 시청 인증', 'capture', '덕력 75pt', 2),
   ('m2-3', 'ch2', 'V01D 앨범 감상 소감 인증', 'capture', '응모권 1장', 3),
   -- Chapter 3
-  ('m3-1', 'ch3', 'V01D Trivia 1차 도전 (7/10 이상)', 'trivia', '덕력 50pt', 1),
-  ('m3-2', 'ch3', 'V01D Trivia 2차 도전 (7/10 이상)', 'trivia', '덕력 50pt', 2),
+  ('m3-1', 'ch3', 'V01D Trivia 1차 도전 (7/10 이상)', 'trivia', '덕력 75pt', 1),
+  ('m3-2', 'ch3', 'V01D Trivia 2차 도전 (7/10 이상)', 'trivia', '덕력 75pt', 2),
   ('m3-3', 'ch3', 'V01D Trivia 최종 도전 (8/10 이상)', 'trivia', '응모권 2장', 3),
   -- Chapter 4
-  ('m4-1', 'ch4', 'V01D PM 게임 1회 참여', 'pm', '덕력 50pt', 1),
-  ('m4-2', 'ch4', 'V01D PM 게임 2회 참여', 'pm', '덕력 50pt', 2),
+  ('m4-1', 'ch4', 'V01D PM 게임 1회 참여', 'pm', '덕력 75pt', 1),
+  ('m4-2', 'ch4', 'V01D PM 게임 2회 참여', 'pm', '덕력 75pt', 2),
   ('m4-3', 'ch4', 'V01D PM 게임 3회 참여', 'pm', '응모권 3장', 3),
   -- Chapter 5
-  ('m5-1', 'ch5', 'V01D 서포트 X 게시 (@celebus @V01D 태그)', 'capture', '덕력 50pt', 1),
-  ('m5-2', 'ch5', 'V01D 서포트 IG 스토리 공유', 'capture', '덕력 50pt', 2),
+  ('m5-1', 'ch5', 'V01D 서포트 X 게시 (@celebus @V01D 태그)', 'capture', '덕력 75pt', 1),
+  ('m5-2', 'ch5', 'V01D 서포트 IG 스토리 공유', 'capture', '덕력 75pt', 2),
   ('m5-3', 'ch5', 'V01D 응원 메시지 작성', 'capture', '응모권 3장', 3);
 
 -- Mission Links
@@ -188,22 +189,23 @@ INSERT INTO user_quest_progress (user_id, mission_id, status, submitted_at, revi
 
 -- Repeating Quests
 INSERT INTO repeating_quests (id, artist_id, title, period_start, period_end, mission_count, reward_text, status) VALUES
-  ('rq-1', 'v01d', '[4/14~4/20] 스트리밍 인증', '2026-04-14', '2026-04-20', 2, '덕력 50pt', 'active'),
+  ('rq-1', 'v01d', '[4/14~4/20] 스트리밍 인증', '2026-04-14', '2026-04-20', 2, '덕력 75pt', 'active'),
   ('rq-2', 'v01d', '[4/14~4/20] SNS 공유', '2026-04-14', '2026-04-20', 1, '응모권 2장', 'active');
 
 -- ========================
 -- 7. Daily Mission Pool
 -- ========================
 
+-- v5.1: 일일 미션 일괄 지급 25pt (T2 저관여)
 INSERT INTO daily_mission_pool (id, title, description, target_href, reward_pt) VALUES
-  ('dm-1', 'V01D 페이지 방문', 'V01D 탭에 방문하면 완료', '/artist', 20),
-  ('dm-2', '게임존 방문', '게임존 탭에 방문하면 완료', '/game', 20),
-  ('dm-3', '기억저장소 방문', '기억저장소에 방문하면 완료', '/memory', 20),
-  ('dm-4', '덕력 랭킹 확인', '덕력 랭킹을 확인하면 완료', '/virtue', 20),
-  ('dm-5', '래플 확인', '래플 리스트를 확인하면 완료', '/raffle', 20),
-  ('dm-6', '컬렉션 확인', '디지털 굿즈 컬렉션을 확인하면 완료', '/collection', 20),
-  ('dm-7', '서포트 이벤트 확인', '서포트 이벤트를 확인하면 완료', '/support', 20),
-  ('dm-8', '아티스트 정보 확인', '아티스트 정보 피드를 확인하면 완료', '/info', 20);
+  ('dm-1', 'V01D 페이지 방문', 'V01D 탭에 방문하면 완료', '/artist', 25),
+  ('dm-2', '게임존 방문', '게임존 탭에 방문하면 완료', '/game', 25),
+  ('dm-3', '기억저장소 방문', '기억저장소에 방문하면 완료', '/memory', 25),
+  ('dm-4', '덕력 랭킹 확인', '덕력 랭킹을 확인하면 완료', '/virtue', 25),
+  ('dm-5', '래플 확인', '래플 리스트를 확인하면 완료', '/raffle', 25),
+  ('dm-6', '컬렉션 확인', '디지털 굿즈 컬렉션을 확인하면 완료', '/collection', 25),
+  ('dm-7', '서포트 이벤트 확인', '서포트 이벤트를 확인하면 완료', '/support', 25),
+  ('dm-8', '아티스트 정보 확인', '아티스트 정보 피드를 확인하면 완료', '/info', 25);
 
 -- Test User Streak
 INSERT INTO user_streaks (user_id, artist_id, current_streak, last_checkin_date) VALUES
@@ -253,20 +255,23 @@ INSERT INTO user_raffle_entries (user_id, raffle_id, entries, result) VALUES
 -- 10. Fandom Level
 -- ========================
 
+-- v5.2: 권장 레벨링 곡선 적용 (디자이너 피드백 반영)
+-- Lv1 10,000 → Lv5 300,000 → Lv10 6,000,000 누적값. 활성 팬덤 1만 명 기준 6~12개월 Lv5 도달 설계
 INSERT INTO fandom_levels (artist_id, level, target_pt, reward_name) VALUES
-  ('v01d', 1, 500, '독점 콘텐츠 해금'),
-  ('v01d', 2, 2000, '보이스 메시지 + 사인 포토카드'),
-  ('v01d', 3, 5000, '디지털 포카세트 + 사인앨범 래플'),
-  ('v01d', 4, 10000, '???'),
-  ('v01d', 5, 20000, '???'),
-  ('v01d', 6, 35000, '???'),
-  ('v01d', 7, 50000, '???'),
-  ('v01d', 8, 75000, '???'),
-  ('v01d', 9, 100000, '???'),
-  ('v01d', 10, 150000, '???');
+  ('v01d', 1, 10000, '독점 콘텐츠 해금'),
+  ('v01d', 2, 30000, '보이스 메시지 + 사인 포토카드'),
+  ('v01d', 3, 70000, '디지털 포카세트 + 사인앨범 래플'),
+  ('v01d', 4, 150000, '???'),
+  ('v01d', 5, 300000, '???'),
+  ('v01d', 6, 550000, '???'),
+  ('v01d', 7, 1000000, '???'),
+  ('v01d', 8, 1800000, '???'),
+  ('v01d', 9, 3200000, '???'),
+  ('v01d', 10, 6000000, '???');
 
+-- v5.2: 신규 곡선 기준 Lv3 진행 중 (40,000pt = Lv3 70,000 목표 향해 ~57% 진행)
 INSERT INTO fandom_level_progress (artist_id, current_level, current_pt, participant_count, monthly_total, top_activity) VALUES
-  ('v01d', 3, 3000, 342, 1200, 'Quest 미션');
+  ('v01d', 3, 40000, 342, 12000, 'Quest 미션');
 
 INSERT INTO user_fandom_contributions (user_id, artist_id, contribution_pt) VALUES
   ('test-user-001', 'v01d', 150);

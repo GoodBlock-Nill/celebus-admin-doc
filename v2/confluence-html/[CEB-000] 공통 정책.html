@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>ALL (전체)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.9</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.21</td></tr>
+<tr><td>버전</td><td>v4.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026.04.23</td></tr>
 <tr><td>비고</td><td>고도화 서비스 전체 공통 정책 정의서. 각 화면 스펙 문서는 이 문서를 참조.</td></tr>
 </table>
 <hr>
@@ -124,13 +124,22 @@ p {
 </table>
 <h3>1.3 덕력 용어</h3>
 <table>
-<tr><th>구분</th><th>통일 용어</th><th>설명</th></tr>
-<tr><td>덕력 증가</td><td>적립, 획득</td><td>활동 수행 시 자동</td></tr>
-<tr><td>덕력 감소</td><td>응원, 사용</td><td>서포트 이벤트/독점 콘텐츠 해금 시</td></tr>
-<tr><td>랭킹 기준</td><td>획득 덕력</td><td>총 누적 (사용과 무관)</td></tr>
-<tr><td>잔고 기준</td><td>보유 덕력</td><td>획득 - 사용</td></tr>
-<tr><td>기여도</td><td>기여 (팬덤 레벨업)</td><td>팬덤 전체 합산</td></tr>
+<tr><th>KO (통일 용어)</th><th>EN</th><th>JP</th><th>설명</th></tr>
+<tr><td><strong>덕력</strong></td><td><strong>Fan Power</strong></td><td><strong>推し力</strong></td><td>시스템 공식 명칭 (3언어 일관 적용)</td></tr>
+<tr><td>덕력 증가 (적립·획득)</td><td>Earn Fan Power</td><td>推し力 獲得</td><td>활동 수행 시 자동</td></tr>
+<tr><td>덕력 감소 (응원·사용)</td><td>Spend Fan Power</td><td>推し力 使用</td><td>서포트 이벤트 / 독점 콘텐츠 해금 시</td></tr>
+<tr><td>획득 덕력 (랭킹 기준)</td><td>Earned Fan Power</td><td>獲得 推し力</td><td>총 누적 (사용과 무관)</td></tr>
+<tr><td>보유 덕력 (잔고 기준)</td><td>Available Fan Power</td><td>保有 推し力</td><td>획득 - 사용</td></tr>
+<tr><td>사용 덕력 (이력 조회)</td><td>Used Fan Power</td><td>使用 推し力</td><td>누적 사용량</td></tr>
+<tr><td>덕력 랭킹</td><td>Fan Power Ranking</td><td>推し力 ランキング</td><td>시즌 누적 순위</td></tr>
+<tr><td>서포트 응원</td><td>Support Cheer</td><td>サポート応援</td><td>보유 덕력 차감 — 팬덤 서포트 이벤트</td></tr>
+<tr><td>독점 콘텐츠 해금</td><td>Exclusive Content Unlock</td><td>独占コンテンツ解放</td><td>보유 덕력 차감 — 콘텐츠 영구 해금</td></tr>
+<tr><td>덕력 반환</td><td>Fan Power Returned</td><td>推し力 返却</td><td>미달성·집행취소 시 응원 덕력 전액 복구</td></tr>
+<tr><td>기여도 (팬덤 레벨업)</td><td>Contribution (Fandom Level)</td><td>貢献度 (ファンダムレベル)</td><td>팬덤 전체 획득 덕력 합산</td></tr>
 </table>
+<blockquote>
+<p><strong>단일 소스 원칙</strong>: 본 라벨 매핑표는 BO·앱·SNS·문서·푸시 알림에 일관 적용. 변경은 정책 개정(v.x)으로만 가능. (v5.0 신설)</p>
+</blockquote>
 <h3>1.4 시즌 용어</h3>
 <table>
 <tr><th>구분</th><th>통일 용어</th><th>설명</th></tr>
@@ -331,12 +340,12 @@ p {
 <tr><td>배너 이미지</td><td>이미지 업로드</td><td>필수</td><td>캐러셀 배너 이미지</td></tr>
 <tr><td>타이틀</td><td>텍스트</td><td>필수</td><td>배너 제목</td></tr>
 <tr><td>딥링크 URL</td><td>URL</td><td>필수</td><td>탭 시 이동할 화면 (앱 내부 또는 외부)</td></tr>
-<tr><td>상태</td><td>선택 (진행중/마감중/마감됨)</td><td>필수</td><td>필터링 기준</td></tr>
+<tr><td>상태</td><td>선택 (진행중/집계중/마감됨)</td><td>필수</td><td>필터링 기준</td></tr>
 <tr><td>노출 기간</td><td>시작일~종료일</td><td>필수</td><td>노출 기간</td></tr>
 <tr><td>노출 순서</td><td>Number</td><td>선택</td><td>캐러셀 내 순서</td></tr>
 </table>
 <ul>
-<li>필터: [진행중] / [마감중] / [마감됨] 3개 탭 (전체 필터 없음). 마감중: 마감 D-3 이내 (BO에서 마감중 기준일 설정)</li>
+<li>필터: [진행중] / [집계중] / [마감됨] 3개 탭 (전체 필터 없음). 집계중: 이벤트 기간이 끝나 추첨 대기 중인 이벤트 (래플 전용)</li>
 <li>기본 필터: 진행중</li>
 <li>자동 슬라이드: 3~5초 간격</li>
 </ul>
@@ -344,14 +353,16 @@ p {
 <table>
 <tr><th>상태</th><th>코드</th><th>설명</th><th>Badge 색상</th></tr>
 <tr><td>진행중</td><td>Active</td><td>현재 진행중인 이벤트</td><td>초록색</td></tr>
-<tr><td>마감중</td><td>Closing</td><td>마감 임박 (D-3 이내, BO에서 마감중 기준일 설정)</td><td>주황색</td></tr>
-<tr><td>마감됨</td><td>Closed</td><td>이벤트 종료</td><td>회색</td></tr>
+<tr><td>집계중</td><td>Tallying</td><td>이벤트 기간이 끝나 추첨 대기 상태 (래플 등 추첨이 필요한 이벤트 전용)</td><td>노란색</td></tr>
+<tr><td>마감됨</td><td>Closed</td><td>이벤트 종료 (추첨 완료 포함)</td><td>회색</td></tr>
 <tr><td>숨김</td><td>Hidden</td><td>BO에서 Hide 처리. 앱에서 미노출</td><td>-</td></tr>
 </table>
-<blockquote>
-<p>마감중(Closing)은 진행중(Active) 상태의 세분화로, 마감 기준일(기본 D-3) 이내의 이벤트를 별도 탭에서 노출하여 참여 유도. BO에서 기준일 변경 가능.</p>
-<p>숨김(Hidden) 상태는 BO에서 수동으로 설정하며, 앱 캐러셀 배너 및 이벤트 전체 리스트에서 미노출.</p>
-</blockquote>
+<h4>상태 전이 흐름</h4>
+<ul>
+<li>추첨형 이벤트(래플): <code>진행중(Active)</code> → 기간 종료 → <code>집계중(Tallying)</code> → 추첨 완료 → <code>마감됨(Closed)</code></li>
+<li>비추첨형 이벤트(서포트 등): <code>진행중(Active)</code> → 기간 종료 → <code>마감됨(Closed)</code> (집계중 생략)</li>
+<li><code>숨김(Hidden)</code>은 BO 관리자가 수동 설정하며, 언제든 토글 가능. 앱 캐러셀 배너 및 이벤트 전체 리스트에서 미노출.</li>
+</ul>
 <hr>
 <h2>5. 보상 체계</h2>
 <h3>5.1 보상 이원화 (상시/이벤트)</h3>
@@ -363,27 +374,45 @@ p {
 <tr><td>비용 부담</td><td>GoodBlock 전액 (월 ~20~30만원)</td><td>GoodBlock 전액 (연 ~100~200만원)</td></tr>
 <tr><td>역할</td><td>매달 지속적 동기 유지</td><td>"서프라이즈 보너스"로 폭발적 참여 유도</td></tr>
 </table>
-<h3>5.2 덕력 획득 경로</h3>
+<h3>5.2 덕력 획득 경로 (v5.0 — 티어 기반 매트릭스 + 캡)</h3>
+<p><strong>티어 분류 원칙</strong>: 활동 소요시간·관여도 기반 3티어 + 보너스. 핵심 행동(Quest·기억저장소) 가중 강화 + 어뷰징 차단을 위한 일일/주간 캡.</p>
+<h4>보상 매트릭스 (v5.1 — PM/ST 단순화 + 일일 미션 일괄 지급 반영)</h4>
 <table>
-<tr><th>활동</th><th>포인트</th><th>빈도</th><th>비고</th></tr>
-<tr><td>출석 체크 (보상 수령 버튼 탭)</td><td><strong>기본값 10pt</strong> (BO에서 변경 가능)</td><td>1일 1회</td><td>자동 아님, 유저 직접 탭</td></tr>
-<tr><td>일일 미션 완료</td><td><strong>기본값 20pt</strong> (BO에서 변경 가능)</td><td>1일 1건</td><td>자동 검증</td></tr>
-<tr><td>퀘스트 완료</td><td>50~100pt</td><td>미션별</td><td>난이도별 차등</td></tr>
-<tr><td>Trivia 정답</td><td>30pt</td><td>문제당</td><td>게임존 ST</td></tr>
-<tr><td>PM 참여</td><td>20pt</td><td>참여당</td><td>게임존 PM</td></tr>
-<tr><td>PM 적중</td><td>100pt</td><td>적중당</td><td>보너스</td></tr>
-<tr><td>SNS 공유</td><td>50pt</td><td>주 1회 한정</td><td></td></tr>
-<tr><td>디지털 굿즈 획득</td><td>50pt</td><td>획득당</td><td>등급별 차등 가능 (BO 설정)</td></tr>
-<tr><td>응모권 사용 (래플 응모)</td><td>10pt</td><td>응모당</td><td>응모 행위 자체</td></tr>
-<tr><td>기억저장소 업로드</td><td>30pt</td><td>업로드당</td><td>사진/영상</td></tr>
-<tr><td>누적 스트릭 7일</td><td>200pt</td><td></td><td>BO 설정</td></tr>
-<tr><td>누적 스트릭 14일</td><td>500pt</td><td></td><td>BO 설정</td></tr>
-<tr><td>누적 스트릭 30일</td><td>1,000pt</td><td></td><td>BO 설정</td></tr>
-<tr><td>누적 스트릭 100일</td><td>5,000pt</td><td></td><td>BO 설정</td></tr>
+<tr><th>Tier</th><th>활동</th><th>포인트</th><th>빈도</th><th>캡 적용</th><th>비고</th></tr>
+<tr><td><strong>T1 — 즉시·습관</strong></td><td>출석 체크</td><td><strong>5pt</strong></td><td>1일 1회</td><td>✅</td><td>유저 직접 탭</td></tr>
+<tr><td></td><td>응모권 사용 (래플 응모)</td><td><strong>5pt</strong></td><td>응모당</td><td>✅</td><td>응모 행위 자체</td></tr>
+<tr><td><strong>T2 — 저관여</strong></td><td>일일 미션 <strong>모두 완료</strong></td><td><strong>25pt</strong></td><td>1일 1회</td><td>✅</td><td><strong>오늘 제시된 일일 미션 전부 완료 시 일괄 지급</strong> (개별 지급 X)</td></tr>
+<tr><td></td><td>게임 참여 보상 (PM·ST 공통)</td><td><strong>25pt</strong></td><td>게임당</td><td>✅</td><td>게임존 PM·ST 입장 시 1회</td></tr>
+<tr><td></td><td>SNS 공유</td><td><strong>25pt</strong></td><td>주 1회 한정</td><td>✅</td><td>—</td></tr>
+<tr><td><strong>T3 — 고관여</strong></td><td>Quest 완료</td><td><strong>75pt</strong></td><td>미션별</td><td>✅</td><td>난이도별 ±50% BO 조정 가능</td></tr>
+<tr><td></td><td>기억저장소 업로드</td><td><strong>75pt</strong></td><td>업로드당</td><td>✅</td><td>사진/영상</td></tr>
+<tr><td></td><td>디지털 굿즈 획득</td><td><strong>75pt</strong></td><td>획득당</td><td>✅</td><td>등급별 차등 가능 (BO 설정)</td></tr>
+<tr><td><strong>보너스</strong></td><td>PM 정답 보상 (적중)</td><td><strong>100pt</strong></td><td>적중당</td><td>❌</td><td>캡 무관</td></tr>
+<tr><td></td><td>ST 완주 보상 (종료 도달)</td><td><strong>100pt</strong></td><td>완주당</td><td>❌</td><td>캡 무관</td></tr>
+<tr><td></td><td>스트릭 7일</td><td><strong>200pt</strong></td><td>일회</td><td>❌</td><td>캡 무관</td></tr>
+<tr><td></td><td>스트릭 14일</td><td><strong>500pt</strong></td><td>일회</td><td>❌</td><td>캡 무관</td></tr>
+<tr><td></td><td>스트릭 30일</td><td><strong>1,000pt</strong></td><td>일회</td><td>❌</td><td>캡 무관</td></tr>
+<tr><td></td><td>스트릭 100일</td><td><strong>5,000pt</strong></td><td>일회</td><td>❌</td><td>캡 무관</td></tr>
 </table>
 <blockquote>
-<p>포인트 가중치는 운영 데이터를 기반으로 시즌별 조정 가능. BO에서 관리자 설정.</p>
-<p>일일/월간 덕력 적립 상한은 없습니다. 활동한 만큼 적립됩니다.</p>
+<p><strong>v5.1 변경 포인트</strong>:</p>
+<p>- <strong>PM/ST 보상 단순화</strong> — 기존 "PM 참여 25 / Trivia 정답 25/문제 / PM 적중 100" → "<strong>게임 참여 25 (공통) / PM 정답 100 (적중) / ST 완주 100 (종료)</strong>" 3단 구조로 압축</p>
+<p>- <strong>일일 미션 일괄 지급</strong> — "1건당 25pt" → "오늘 제시된 미션 <strong>모두 완료 시 25pt 일괄</strong>". 미션 풀이 1건이면 1건 완료 = 일괄 / 향후 다건 확장 시 모두 완료 조건</p>
+</blockquote>
+<h4>일일/주간 적립 상한 (v5.0 신설)</h4>
+<table>
+<tr><th>단위</th><th>상한</th><th>적용 대상</th></tr>
+<tr><td>일일 캡</td><td><strong>500pt</strong></td><td>T1·T2·T3 활동 합산 (보너스 제외)</td></tr>
+<tr><td>주간 캡</td><td><strong>3,000pt</strong></td><td>T1·T2·T3 활동 합산 (보너스 제외)</td></tr>
+<tr><td>월간 캡</td><td>(도입 안 함)</td><td>자연 종속 (스트릭 활용 유도)</td></tr>
+</table>
+<ul>
+<li><strong>상한 도달 시 처리</strong>: 추가 활동은 인정되되 덕력 적립 0pt + UI에 "오늘은 충분히 모았어요" 안내</li>
+<li><strong>보너스(PM 적중·스트릭) 캡 제외</strong>: 캠페인 운영 효과 보호</li>
+</ul>
+<h4>BO 운영 자율도</h4>
+<blockquote>
+<p>본 표의 포인트값은 <strong>권장값(default)</strong>. 운영자(BO 관리자)는 이벤트성 부스트 등 필요 시 <strong>무제한 자유 변경 가능</strong>. 변경 폭 제한 없음. 단 정책 자체(티어 분류, 캡 단위) 변경은 정책 개정 v.x 필요.</p>
 </blockquote>
 <h3>5.2.1 덕력 시즌 보상 (월간 정산)</h3>
 <table>
@@ -392,13 +421,23 @@ p {
 <tr><td>TOP 10</td><td>사인 포카</td></tr>
 <tr><td>TOP 10%</td><td>슈퍼팬 뱃지 + 디지털 포카</td></tr>
 </table>
-<h4>동일 포인트 처리 규칙</h4>
+<h4>동일 포인트 처리 규칙 (v5.0 — 동시성·정밀도 명문화)</h4>
 <table>
 <tr><th>규칙</th><th>정책</th></tr>
-<tr><td>순위 결정</td><td>같은 획득 덕력 포인트일 경우 해당 포인트에 먼저 도달한 유저가 상위 순위 (동순위 없음, 모든 유저 고유 순위)</td></tr>
+<tr><td>순위 결정</td><td>같은 획득 덕력 포인트일 경우 해당 포인트에 <strong>먼저 도달한 유저</strong>가 상위 순위 (동순위 없음, 모든 유저 고유 순위)</td></tr>
 <tr><td>순번</td><td>연속 순위 부여 (스킵 없음)</td></tr>
 <tr><td>보상 대상</td><td>순위별 보상 적용 (동일 포인트여도 도달 시점에 따라 순위가 다르므로 보상 상이 가능)</td></tr>
+<tr><td><strong>타임스탬프 정밀도</strong></td><td><strong>밀리초(ms) 단위</strong> — 동일 ms 충돌 시 DB 자동 증가 ID로 폴백</td></tr>
+<tr><td><strong>즉시 적립 활동의 시점</strong></td><td>이벤트 발생 시점 (출석·일일미션·Trivia·PM 참여·기타 자동 적립)</td></tr>
+<tr><td><strong>운영자 승인 활동의 시점</strong></td><td><strong>운영자 승인 시각</strong> 기준 (Quest·기억저장소 업로드 등 검수 필요 활동)</td></tr>
+<tr><td><strong>정책 동결</strong></td><td>시즌 1 시작 시점 이후 본 규칙 변경 금지 — 정책 동결</td></tr>
 </table>
+<blockquote>
+<p><strong>운영팀 SOP 권장</strong>: 운영자 승인 처리는 <strong>FIFO(선착순)</strong> 권장 — 유저 제출 순서가 자연스럽게 적립 시점에 반영. 비정상 지연(시스템 장애 등) 시 일괄 승인 + 시각 보정 검토.</p>
+</blockquote>
+<blockquote>
+<p><strong>사용자 안내 문구 (UI)</strong>: "동일 점수 시 먼저 도달한 유저가 상위 순위로 결정됩니다. Quest 등 일부 활동은 운영자 승인 시각을 기준으로 적립됩니다." / EN: "Tied scores are ranked by who reached the score first. Some activities (e.g., Quest) are credited at the time of operator approval."</p>
+</blockquote>
 <h4>월간 시즌 아카이브 보존</h4>
 <table>
 <tr><th>항목</th><th>정책</th></tr>
@@ -416,6 +455,36 @@ p {
 <tr><td>푸시 알림</td><td>"이번 시즌 {순위}위! 보상을 확인하세요"</td></tr>
 <tr><td>동일 포인트 처리</td><td>먼저 도달한 유저가 상위 순위 → 순위별 보상 적용</td></tr>
 </table>
+<h3>5.2.2 멀티 아티스트 귀속 매트릭스 (v5.0 — 신규)</h3>
+<h4>정책 원칙</h4>
+<ul>
+<li><strong>개인 활동</strong>(아티스트 비특정): 유저가 현재 <strong>선택한 아티스트</strong>에 귀속</li>
+<li><strong>콘텐츠 활동</strong>(아티스트 특정): 활동 대상 아티스트에 <strong>자동 귀속</strong> (선택 아티스트 무관)</li>
+<li><strong>아티스트 변경</strong>: 쿨다운 없음 (자유 변경 가능)</li>
+<li><strong>소급 처리</strong>: <strong>시점 이후만 반영</strong> — 변경 이전 적립분은 이전 아티스트에 그대로 유지</li>
+</ul>
+<h4>활동×귀속 매트릭스</h4>
+<table>
+<tr><th>활동</th><th>귀속 대상</th><th>분류</th><th>비고</th></tr>
+<tr><td>출석 체크</td><td>선택 아티스트</td><td>개인</td><td>—</td></tr>
+<tr><td>일일 미션</td><td>선택 아티스트</td><td>개인</td><td>—</td></tr>
+<tr><td>스트릭 보너스</td><td>선택 아티스트</td><td>개인</td><td>보너스 발생 시점 기준</td></tr>
+<tr><td>SNS 공유 (일반 앱 공유)</td><td>선택 아티스트</td><td>개인</td><td>—</td></tr>
+<tr><td>SNS 공유 (특정 콘텐츠)</td><td><strong>콘텐츠의 아티스트</strong></td><td>콘텐츠</td><td>예: V01D Quest 결과 공유 → V01D</td></tr>
+<tr><td>Quest 완료</td><td><strong>Quest의 아티스트</strong></td><td>콘텐츠</td><td>자동 귀속</td></tr>
+<tr><td>기억저장소 업로드</td><td><strong>기억의 아티스트</strong></td><td>콘텐츠</td><td>작성 대상 아티스트</td></tr>
+<tr><td>디지털 굿즈 획득</td><td><strong>굿즈의 아티스트</strong></td><td>콘텐츠</td><td>자동 귀속</td></tr>
+<tr><td>Trivia 정답</td><td><strong>Trivia의 아티스트</strong></td><td>콘텐츠</td><td>게임존 ST 콘텐츠</td></tr>
+<tr><td>PM 참여</td><td><strong>PM의 아티스트</strong></td><td>콘텐츠</td><td>게임존 PM 콘텐츠</td></tr>
+<tr><td>PM 적중</td><td><strong>PM의 아티스트</strong></td><td>콘텐츠</td><td>게임존 PM 콘텐츠</td></tr>
+<tr><td>응모권 사용 (래플)</td><td><strong>래플의 아티스트</strong></td><td>콘텐츠</td><td>응모한 래플 기준 자동</td></tr>
+</table>
+<h4>어뷰징 방지 룰</h4>
+<ul>
+<li><strong>자동 차단</strong>: "시점 이후만 반영" 원칙으로 변경 행위 자체에 인센티브 없음</li>
+<li><strong>동일 활동 1귀속 원칙</strong>: 한 활동의 덕력은 1개 아티스트에만 적립 (분할·중복 X)</li>
+<li><strong>모니터링</strong>: 1일 N회 이상 토글 + 활동 폭주 패턴은 운영 모니터링 권장 (어뷰징 의심 시 검토)</li>
+</ul>
 <h3>5.3 Quest 보상 설정 (BO)</h3>
 <p>Quest 보상은 원타임(5장 스토리)과 반복 퀘스트 모두 동일한 방식으로 설정한다.</p>
 <table>
@@ -470,28 +539,48 @@ p {
 <tr><td>원본 유지</td><td>합성해도 1~5등급 굿즈는 사라지지 않음 (스페셜이 추가로 획득됨)</td></tr>
 <tr><td>보유 효용</td><td>보유 시 독점 콘텐츠 접근 가능 (BO에서 특정 굿즈와 콘텐츠 연결 설정)</td></tr>
 </table>
-<h3>5.5 팬덤 레벨업</h3>
+<h3>5.5 팬덤 레벨업 (v5.3 — 권장 곡선 + 0pt 처리 + 리셋 모델 명문화)</h3>
 <table>
 <tr><th>항목</th><th>정책</th></tr>
-<tr><td>기준</td><td>팬덤 전체 유저의 <strong>획득 덕력</strong> 합산 (자동 누적. 보유/사용 덕력과 무관)</td></tr>
+<tr><td>기준</td><td>팬덤 전체 유저의 <strong>획득 덕력 / Earned Fan Power / 獲得 推し力</strong> 합산 (자동 누적. 보유/사용 덕력과 무관)</td></tr>
 <tr><td>주기</td><td>상시 (리셋 없음)</td></tr>
 <tr><td>레벨 수</td><td>최대 10레벨 (BO에서 레벨 수, 목표 덕력, 보상 모두 설정)</td></tr>
-<tr><td>초기 설정</td><td>BO에서 자유 설정 (목표 충분히 높게 → 6~12개월 소요 권장)</td></tr>
+<tr><td>초기 설정</td><td><strong>권장 곡선</strong> (아래 표) + BO 자유 변경. <strong>BO 미설정 시 권장값 자동 적용</strong> (fallback)</td></tr>
 <tr><td>확장</td><td>최대 10레벨 범위 내에서 관리자가 BO에서 추가 레벨 오픈</td></tr>
 <tr><td>시즌제</td><td>추후 유저 반응을 보고 검토</td></tr>
 </table>
-<h4>팬덤 레벨업 보상 예시 (BO 자유 설정)</h4>
+<h4>권장 레벨링 곡선 (v5.2 신설 / v5.3 리셋 모델 명문화)</h4>
+<blockquote>
+<p><strong>카운터 모델 (v5.3 명시)</strong>: 각 레벨에서 <strong>0부터 시작</strong>하여 아래 "레벨업 목표 덕력" 도달 시 다음 레벨 진입과 동시에 <strong>카운터 0으로 리셋</strong>. 즉, 각 레벨의 목표값은 <strong>이전 레벨 누적이 아니라 해당 레벨 단독 목표값</strong>. 진행률은 <code>현재 레벨 카운터 / 해당 레벨 목표 덕력 × 100 (%)</code>.</p>
+</blockquote>
 <table>
-<tr><th>레벨</th><th>목표</th><th>보상 예시</th></tr>
-<tr><td>Lv.1</td><td>500pt</td><td>독점 콘텐츠 해금</td></tr>
-<tr><td>Lv.2</td><td>2,000pt</td><td>보이스 메시지 + 사인 포카</td></tr>
-<tr><td>Lv.3</td><td>5,000pt</td><td>디지털 포카 세트 + 사인 앨범 추첨</td></tr>
-<tr><td>Lv.4</td><td>10,000pt</td><td>멤버별 독점 셀카 + 사인 앨범 추첨 3명</td></tr>
-<tr><td>Lv.5</td><td>20,000pt</td><td>특별 영상 메시지 + 기념 굿즈</td></tr>
+<tr><th>레벨</th><th>레벨업 목표 덕력</th><th>비고</th></tr>
+<tr><td>Lv 1</td><td>10,000</td><td>첫 레벨업 — 작은 팬덤도 빠른 체감</td></tr>
+<tr><td>Lv 2</td><td>30,000</td><td></td></tr>
+<tr><td>Lv 3</td><td>70,000</td><td></td></tr>
+<tr><td>Lv 4</td><td>150,000</td><td></td></tr>
+<tr><td>Lv 5</td><td>300,000</td><td><strong>6~12개월 도달 설계 기준점</strong></td></tr>
+<tr><td>Lv 6</td><td>550,000</td><td></td></tr>
+<tr><td>Lv 7</td><td>1,000,000</td><td></td></tr>
+<tr><td>Lv 8</td><td>1,800,000</td><td></td></tr>
+<tr><td>Lv 9</td><td>3,200,000</td><td></td></tr>
+<tr><td>Lv 10</td><td>6,000,000</td><td>최종 — 12개월+ 활성 팬덤 도달</td></tr>
 </table>
 <blockquote>
-<p>보상은 관리자가 자유롭게 구성. 위 수치는 권장 예시 (최대 10레벨까지 설정 가능).</p>
-<p>최고 레벨 도달 후 목표 소멸을 방지하기 위해 관리자가 선제적으로 추가 레벨을 준비한다.</p>
+<p>곡선 설계 원칙: 초기 빠른 레벨업 → 후반 점진 증가. 동일 활성도 기준 레벨업 간격이 점차 길어져 도전감 유지.</p>
+</blockquote>
+<h4>0pt 기여 유저 처리 (v5.2 신설 — "조용 제외 + 유도")</h4>
+<p>레벨업 발생 시 해당 아티스트 <strong>획득 덕력 0pt</strong> 기여 유저 처리:</p>
+<table>
+<tr><th>항목</th><th>처리</th></tr>
+<tr><td>레벨업 푸시 알림</td><td>수신 X</td></tr>
+<tr><td>레벨업 축하 모달</td><td>표시 X</td></tr>
+<tr><td>보상 지급</td><td>제외 (기존 정책 유지)</td></tr>
+<tr><td>다음 앱 진입 시 안내 배너</td><td><strong>1회 노출</strong> — 다음 라운드 참여 유도</td></tr>
+<tr><td>활성 유저(1pt 이상)</td><td>푸시·모달·보상 모두 정상</td></tr>
+</table>
+<blockquote>
+<p><strong>취지</strong>: 0pt 유저에게 강제 노출 시 "왜 나는 보상 못 받지?" 이탈 우려. 조용 제외 + 다음 방문 시 자연스러운 참여 유도로 차별화·이탈 방지 균형. 상세 다국어 안내문은 [CEB-EVT-201] §2.2.2 참조.</p>
 </blockquote>
 <h3>5.6 서포트 이벤트 상태 정의</h3>
 <table>
@@ -531,6 +620,24 @@ p {
 <tr><td>초과 응원</td><td>남은 목표량만 차감. 초과분은 보유 덕력에 유지</td></tr>
 <tr><td>응원 대상</td><td>보유 덕력에서만 차감. 획득 덕력(랭킹)에 영향 없음</td></tr>
 </table>
+<h4>소비 엣지케이스 6종 (v5.0 — 신규)</h4>
+<p>서포트 응원 / 독점 콘텐츠 해금 운영 시 발생 가능한 6개 엣지케이스 시스템 동작 + UI 안내문 정책.</p>
+<table>
+<tr><th>#</th><th>케이스</th><th>시스템 동작</th><th>UI 안내문 (KO)</th><th>UI 안내문 (EN)</th><th>UI 안내문 (JP)</th></tr>
+<tr><td>(a)</td><td>보유 0pt 응원 시도</td><td>응원 버튼 비활성화</td><td>덕력이 부족해요</td><td>Not enough Fan Power</td><td>推し力が足りません</td></tr>
+<tr><td>(b)</td><td>시즌 초기화 중 응원</td><td>시각 직전 5분 응원 입력 lock</td><td>잠시 후 새 시즌이 시작돼요. 5분간 응원이 잠시 멈춰요</td><td>A new season starts soon. Cheers paused for 5 minutes</td><td>まもなく新シーズン開始。5分間 応援が一時停止します</td></tr>
+<tr><td>(c)</td><td>응원 → 미달성 → 반환 → 재사용</td><td>반환 즉시 보유 덕력 합산, 다음 응원 사용 가능</td><td>이력: "+500pt (반환 — 미달성)"</td><td>"+500pt (Returned — Goal Not Met)"</td><td>"+500pt (返却 — 未達成)"</td></tr>
+<tr><td>(d)</td><td>해금 후 환불 요청</td><td>환불 정책 도입 안 함 (해금 즉시 소비 인정)</td><td>해금 전 모달: "해금 후 환불이 불가합니다"</td><td>"No refund after unlock"</td><td>"解放後の払い戻しは不可"</td></tr>
+<tr><td>(e)</td><td>응원 도중 BO에서 단가 변경</td><td>새 응원부터 적용. 진행 중 응원은 변경 시점 단가 lock</td><td>(시스템 처리, UI 변동 없음)</td><td>(System-only, no UI change)</td><td>(システム処理のみ)</td></tr>
+<tr><td>(f)</td><td>다중 응원 동시 클릭</td><td>클라이언트 디바운스 0.5초 + 서버 트랜잭션 lock. 선착 1건 처리, 나머지 거부</td><td>토스트: "잠시 후 다시 시도해주세요"</td><td>"Please try again in a moment"</td><td>"少し待ってから再度お試しください"</td></tr>
+</table>
+<h4>소비 엣지케이스 운영 SOP</h4>
+<ul>
+<li><strong>(b) 시즌 초기화 시간</strong>: 사용자에게 사전 공지 24시간 전 (앱 푸시 + 인앱 배너)</li>
+<li><strong>(d) 해금 환불 정책</strong>: 약관·이용약관에도 명시 — 법무 검토 권장</li>
+<li><strong>(f) 동시 클릭 디바운스</strong>: 클라이언트 0.5초는 일반적 UX 표준, 필요 시 1초까지 조정 가능</li>
+<li><strong>이상 패턴 모니터링</strong>: (f) 거부 빈도 추이 → 비정상 트래픽 식별</li>
+</ul>
 <h3>5.7 독점 콘텐츠 해금</h3>
 <table>
 <tr><th>항목</th><th>정책</th></tr>
@@ -653,12 +760,13 @@ p {
 </blockquote>
 <hr>
 <h3>7.4 반복 퀘스트 자동 발행</h3>
+<p><strong>적용 범위: 팬퀘스트(FQ) 전용</strong> — Prediction Market(PM), Survival Trivia(ST)에는 적용되지 않습니다. PM/ST는 개별 게임 단위로 1회성 운영되며, 반복 설정이 존재하지 않습니다.</p>
 <table>
 <tr><th>항목</th><th>정책</th></tr>
-<tr><td>반복 주기</td><td>매일/매주/격주/매월/수동 (BO에서 선택)</td></tr>
-<tr><td>자동 발행</td><td>이전 기간 퀘스트 자동 종료 → 새 퀘스트 자동 오픈</td></tr>
+<tr><td>반복일수</td><td><strong>1~365일 직접 입력</strong> (BO). 예: <code>7</code> → 7일마다 자동 발행</td></tr>
+<tr><td>자동 발행</td><td>이전 기간 퀘스트 자동 종료 → 새 퀘스트 자동 오픈 (반복일수 간격)</td></tr>
 <tr><td>타이틀</td><td>기간 자동 표기 (예: "[4/8~4/14] 스트리밍 인증")</td></tr>
-<tr><td>ON/OFF</td><td>BO에서 자동 발행 토글 가능 (일시 중단 시)</td></tr>
+<tr><td>활성/해제</td><td>BO에서 반복 발행 토글 가능. <strong>해제 시 일시 중단 — 반복일수 설정값은 유지</strong>, 재활성화 시 동일 일수로 재개</td></tr>
 </table>
 <h3>7.5 기억저장소 감정 이모지 규격</h3>
 <h4>이모지 방식</h4>
@@ -1114,6 +1222,12 @@ p {
 <tr><td>v3.7</td><td>2026.04.22</td><td>@Nill Yoo</td><td>CEB-INF-201 소식 상세 작성 완료 반영: 비로그인 매트릭스(10.5) INF-201 추가, 비로그인 CTA 테이블 INF-201 추가, 추후 작성 목록(16) "✅ 작성 완료" 표시</td></tr>
 <tr><td>v3.8</td><td>2026.04.22</td><td>@Nill Yoo</td><td>감정 이모지 규격 상세화(7.5): 유니코드 이모지 방식 확정, BO 관리(추가/수정/삭제/순서) 가능, 최대 12종, 아티스트별 설정 가능. 개발팀 피드백 반영</td></tr>
 <tr><td>v3.9</td><td>2026.04.22</td><td>@Nill Yoo</td><td>Quest 해금 용어 변경(8.5): "제출 기반 임시 해금"→"제출 기반 해금" 일괄 변경. 개발팀 피드백 반영</td></tr>
+<tr><td>v4.0</td><td>2026.04.23</td><td>@Nill Yoo</td><td>반복 퀘스트 정책(7.4) 개정: 적용 범위 '팬퀘스트(FQ) 전용' 명시 (PM/ST 미적용), 반복 주기 프리셋(매일/매주/격주/매월/수동) 제거 → 반복일수 직접 입력(1~365일)으로 변경, 해제 동작 정의(일시 중단·설정값 유지)</td></tr>
+<tr><td>v4.1</td><td>2026.04.23</td><td>@Nill Yoo</td><td>이벤트 상태 체계 개정(4.6, 4.7): '마감중(Closing, D-3 임박)' 제거 → '집계중(Tallying, 추첨 대기)' 추가. 4종 상태(진행중/집계중/마감됨/숨김)로 재정의, 상태 전이 흐름 추가(추첨형/비추첨형 분기). BO 캐러셀 필터 및 앱 홈/이벤트 전체 화면 필터 탭 연쇄 적용</td></tr>
+<tr><td><strong>v5.0</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>🎯 덕력 시스템 메이저 개정 — 5대 영역 전면 재설계</strong>. 워킹 문서 [CEB-DUK-000] 의사결정 결과 일괄 반영. ① <strong>§1.3 다국어 라벨 매핑 11종</strong> 추가 (KO/EN/JP) — 영문: <strong>Fan Power</strong>, 일본어: <strong>推し力</strong> 공식 채택 ② <strong>§5.2 보상 매트릭스 티어 재설계</strong> — T1(즉시·습관) 5pt / T2(저관여) 25pt / T3(고관여) 75pt + 보너스(PM 적중·스트릭 4단계). 일일 캡 500pt, 주간 캡 3,000pt 신설(보너스 제외). BO 무제한 자유 변경 명문화 ③ <strong>§5.2.1 동일 포인트 처리 정밀화</strong> — ms 정밀도 + 충돌 시 DB 자동 ID 폴백 + 즉시 적립은 이벤트 발생 시점·운영자 승인 활동은 <strong>승인 시각</strong> 기준 + 시즌 1 시작 후 정책 동결 ④ <strong>§5.2.2 멀티 아티스트 귀속 매트릭스 신규</strong> — 활동 12종 × 귀속(개인 vs 콘텐츠) 매트릭스 명문화. 4/23 도입 정책 확장. 쿨다운 없음·시점 이후 반영. 어뷰징 자동 차단 ⑤ <strong>§5.6 소비 엣지케이스 6종 신규</strong> — (a) 보유 0pt (b) 시즌 초기화 중 5분 lock (c) 반환 즉시 재사용 (d) 해금 환불 없음 (e) BO 단가 변경 새 응원부터 (f) 동시 클릭 디바운스 + 선착 1건. 3언어 UI 안내문 확정. <strong>영향 화면</strong>: DUK-101 / DUK-201 / EVT-201 / FQ-501 / HOM-001 / MEM-201 / FQ-101 명세서 동기화 필요 (별도 작업)</td></tr>
+<tr><td><strong>v5.1</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>개발팀 피드백 반영 — PM/ST 보상 단순화 + 일일 미션 일괄 지급</strong>. ① <strong>PM/ST 보상 3단 구조 압축</strong> — 기존 "PM 참여 25 / Trivia 정답 25/문제 / PM 적중 100" → <strong>"게임 참여 보상 25(PM·ST 공통, 입장 시 1회) / PM 정답 보상 100(적중) / ST 완주 보상 100(종료 도달)"</strong>. 보상 구조 단순화로 BO 관리 포인트 감소 + 운영 이해도 ↑ ② <strong>일일 미션 일괄 지급</strong> — 기존 "1건당 25pt 즉시 지급" → <strong>"오늘 제시된 모든 일일 미션 완료 시 25pt 일괄 지급"</strong>. 향후 BO 다건 확장 시에도 동일 룰 적용. 동기화: [CEB-FQ-501] v2.1 + [CEB-HOM-001] v2.6</td></tr>
+<tr><td><strong>v5.2</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>디자이너 피드백 반영 — §5.5 팬덤 레벨업 권장 곡선 + 0pt 유저 처리</strong>. ① <strong>권장 레벨링 곡선 신설</strong> — Lv1 10,000 → Lv5 300,000 → Lv10 6,000,000 누적값 권장표. 활성 팬덤 1만 명 기준 6~12개월 Lv5 도달 설계. <strong>BO 미설정 시 권장값 자동 적용 (fallback)</strong> ② <strong>0pt 기여 유저 처리</strong> — "조용 제외 + 유도 메시지" 정책. 푸시·모달·보상 모두 X, 다음 앱 진입 시 안내 배너 1회 노출 (3언어 KO/EN/JP). 강제 노출 시 이탈 우려 → 자연스러운 다음 라운드 참여 유도. 동기화: [CEB-EVT-201] v2.1 (§2.2.1·§2.2.2)</td></tr>
+<tr><td><strong>v5.3</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>팬덤 레벨 카운터 모델 명확화 — 리셋 모델 확정</strong>. 사용자(@Nill Yoo)·개발자·디자이너 팀의 공통 이해와 일치시키기 위해 §5.5 표 표현 정정. ① v5.2 표 컬럼명 <strong>"누적 목표 덕력" → "레벨업 목표 덕력"</strong> 변경 (각 레벨 단독 목표값) ② <strong>"직전 대비 증가폭" 컬럼 제거</strong> (누적 모델 전제이므로 리셋 모델에서는 의미 없음) ③ <strong>카운터 모델 명시 문구 신규</strong>: "각 레벨에서 0부터 시작, 목표 도달 시 다음 레벨 진입과 동시에 카운터 0 리셋" ④ 진행률 공식 재명시: <code>현재 레벨 카운터 / 해당 레벨 목표 덕력 × 100</code>. <strong>곡선 수치는 동일 유지</strong> (10K/30K/70K/.../6M). 시드 주석·프로토타입 UI 코드는 이미 리셋 모델로 작동 중이라 코드 변경 불필요. 동기화: [CEB-EVT-201] v2.2 (§2.2.1·§2.2). <strong>Out of scope</strong>: 캡 정책(일일 500/주간 3,000pt)과 "Lv5 6~12개월 도달" 의도 정합성 — 별도 캘리브레이션 미팅 안건.</td></tr>
 </table>
 
 </body>

@@ -133,11 +133,11 @@ export async function performCheckin(userId: string, artistId: string) {
       last_checkin_date: today,
     });
 
-  // Add virtue transaction
+  // Add virtue transaction (v5.0: T1 즉시·습관 5pt)
   await supabase.from('virtue_transactions').insert({
     user_id: userId,
     artist_id: artistId,
-    amount: 10,
+    amount: 5,
     type: 'earn',
     source: 'checkin',
     description: '출석 체크',
@@ -156,10 +156,11 @@ export async function completeDailyMission(userId: string, artistId: string, mis
     completed_at: new Date().toISOString(),
   });
 
+  // v5.1: 일일 미션 일괄 지급 25pt (T2 저관여)
   await supabase.from('virtue_transactions').insert({
     user_id: userId,
     artist_id: artistId,
-    amount: 20,
+    amount: 25,
     type: 'earn',
     source: 'mission',
     description: '일일 미션 완료',

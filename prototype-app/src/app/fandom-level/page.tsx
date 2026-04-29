@@ -77,7 +77,7 @@ export default function FandomLevelPage() {
         <div className="flex items-center gap-2 mb-3">
           <span className="text-2xl">🏆</span>
           <span className="text-base font-bold text-gray-900">
-            {artistName} Lv.{data.currentLevel} (누적) {data.isMax && <span className="text-amber-600">MAX!</span>}
+            {artistName} Lv.{data.currentLevel} {data.isMax && <span className="text-amber-600">MAX!</span>}
           </span>
         </div>
 

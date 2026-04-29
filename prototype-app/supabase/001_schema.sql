@@ -129,20 +129,23 @@ CREATE TABLE repeating_quests (
 -- 3. Daily Mission System
 -- ========================
 
+-- v5.1: Daily mission unified payout (모든 미션 완료 시 25pt 일괄 지급)
+-- v5.0: T2 저관여 25pt (10→25 변경)
 CREATE TABLE daily_mission_pool (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT,
   target_href TEXT,
-  reward_pt INT DEFAULT 20,
+  reward_pt INT DEFAULT 25,
   is_active BOOLEAN DEFAULT true
 );
 
+-- v5.0: T1 즉시·습관 5pt (10→5 변경)
 CREATE TABLE user_daily_checkins (
   user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
   artist_id TEXT REFERENCES artists(id) ON DELETE CASCADE,
   checkin_date DATE NOT NULL,
-  reward_pt INT DEFAULT 10,
+  reward_pt INT DEFAULT 5,
   created_at TIMESTAMPTZ DEFAULT now(),
   PRIMARY KEY (user_id, artist_id, checkin_date)
 );

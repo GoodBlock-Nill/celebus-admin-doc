@@ -149,15 +149,58 @@ p {
 <li>프로그레스 바는 팬덤 전체 획득 덕력 / 현재 레벨 목표 덕력 비율로 렌더링</li>
 <li>내 기여도는 개인 획득 덕력 / 팬덤 전체 획득 덕력 비율로 계산하여 표시</li>
 </ul>
-<h5>팬덤 레벨 기본 규칙</h5>
+<h5>팬덤 레벨 기본 규칙 (v2.1 — 디자이너 피드백 반영: 권장 레벨링 곡선 + 0pt 처리)</h5>
 <table>
 <tr><th>규칙</th><th>설명</th></tr>
-<tr><td>기여 기준</td><td>팬덤 전체 유저의 <strong>획득 덕력</strong> 합산 (자동 누적. 보유/사용 덕력과 무관)</td></tr>
+<tr><td>기여 기준</td><td>팬덤 전체 유저의 <strong>획득 덕력 / Earned Fan Power / 獲得 推し力</strong> 합산 (자동 누적. 보유/사용 덕력과 무관)</td></tr>
 <tr><td>리셋</td><td>없음 (상시 누적. 시즌제는 추후 검토)</td></tr>
 <tr><td>레벨 수</td><td>최대 10레벨 (BO 설정). BO에서 레벨 수, 목표 덕력, 보상 모두 자유 설정</td></tr>
-<tr><td>목표 설정</td><td>BO에서 레벨별 목표 덕력 + 보상 자유 설정</td></tr>
-<tr><td>목표 기간</td><td>6~12개월에 Lv.5 도달 설계 (충분히 높은 목표값 유지)</td></tr>
-<tr><td>아티스트 분리</td><td>팬덤 레벨은 아티스트별 독립 (artist_id 기반)</td></tr>
+<tr><td>목표 설정</td><td><strong>권장 곡선</strong> (아래 §2.2.1 참조) + BO 자유 변경 가능. BO 미설정 시 권장값 자동 적용</td></tr>
+<tr><td>목표 기간</td><td>활성 팬덤 1만 명 기준 6~12개월 Lv5 도달 설계</td></tr>
+<tr><td>아티스트 분리</td><td>팬덤 레벨은 아티스트별 독립 (artist_id 기반) — <strong>[CEB-000] §5.2.2 멀티 아티스트 귀속 매트릭스</strong> 참조</td></tr>
+<tr><td>활동×귀속</td><td>콘텐츠 활동(Quest·기억·굿즈·게임 참여·PM 정답·ST 완주)은 <strong>활동 대상 아티스트</strong>에 자동 귀속 / 개인 활동(출석·일일미션·스트릭·일반 SNS공유)은 <strong>선택 아티스트</strong>에 귀속</td></tr>
+</table>
+<h5>2.2.1 권장 레벨링 곡선 (v2.1 신규 / v2.2 리셋 모델 명문화)</h5>
+<blockquote>
+<p><strong>카운터 모델 (v2.2 명시)</strong>: 각 레벨에서 <strong>0부터 시작</strong>하여 아래 "레벨업 목표 덕력" 도달 시 다음 레벨 진입과 동시에 <strong>카운터 0으로 리셋</strong>. 즉, 각 레벨의 목표값은 <strong>이전 레벨 누적이 아니라 해당 레벨 단독 목표값</strong>. 진행률은 <code>현재 레벨 카운터 / 해당 레벨 목표 덕력 × 100 (%)</code>.</p>
+</blockquote>
+<table>
+<tr><th>레벨</th><th>레벨업 목표 덕력</th><th>비고</th></tr>
+<tr><td>Lv 1</td><td>10,000</td><td>첫 레벨업 — 작은 팬덤도 빠른 체감</td></tr>
+<tr><td>Lv 2</td><td>30,000</td><td></td></tr>
+<tr><td>Lv 3</td><td>70,000</td><td></td></tr>
+<tr><td>Lv 4</td><td>150,000</td><td></td></tr>
+<tr><td>Lv 5</td><td>300,000</td><td><strong>6~12개월 Lv5 도달 설계 기준점</strong></td></tr>
+<tr><td>Lv 6</td><td>550,000</td><td></td></tr>
+<tr><td>Lv 7</td><td>1,000,000</td><td></td></tr>
+<tr><td>Lv 8</td><td>1,800,000</td><td></td></tr>
+<tr><td>Lv 9</td><td>3,200,000</td><td></td></tr>
+<tr><td>Lv 10</td><td>6,000,000</td><td>최종 — 12개월+ 활성 팬덤 도달</td></tr>
+</table>
+<blockquote>
+<p><strong>권장 곡선 설계 원칙</strong>: 초기 빠른 레벨업 → 후반 점진 증가. 동일 활성도 기준 레벨업 간격이 점차 길어져 도전감 유지.</p>
+<p><strong>BO 자유 변경</strong>: 운영자(BO 관리자)는 위 권장값을 자유롭게 조정 가능. 미설정 시 권장값 자동 적용 (fallback).</p>
+</blockquote>
+<h5>2.2.2 0pt 기여 유저 처리 (v2.1 신규 — 디자이너 피드백 반영)</h5>
+<p>레벨업 발생 시 해당 아티스트에 <strong>획득 덕력 0pt</strong> 기여한 유저는 다음과 같이 처리한다 ("조용 제외 + 유도" 정책).</p>
+<table>
+<tr><th>항목</th><th>처리</th></tr>
+<tr><td>레벨업 푸시 알림</td><td><strong>수신 X</strong> (조용 제외)</td></tr>
+<tr><td>레벨업 축하 모달</td><td><strong>표시 X</strong></td></tr>
+<tr><td>보상 지급</td><td><strong>제외</strong> (기존 정책 유지)</td></tr>
+<tr><td>다음 앱 진입 시 안내 배너</td><td><strong>1회 노출</strong> — "V01D의 레벨업 축하해주세요. 이번 턴 참여하면 다음 보상에서 만나요!"</td></tr>
+<tr><td>배너 닫기</td><td>유저 직접 닫기 가능. 닫은 후 재노출 X</td></tr>
+<tr><td>활성 유저(1pt 이상)</td><td>기존 정책대로 푸시 + 모달 + 보상 모두 정상 진행</td></tr>
+</table>
+<blockquote>
+<p><strong>취지</strong>: 0pt 유저에게 레벨업 알림을 강제 노출하면 "왜 나는 보상 못 받지?" 이탈 유발 우려. 대신 다음 방문 시 자연스럽게 다음 라운드 참여 유도하여 차별화·이탈 방지 균형.</p>
+</blockquote>
+<h6>다국어 안내 배너 (3언어)</h6>
+<table>
+<tr><th>언어</th><th>문구</th></tr>
+<tr><td>KO</td><td>V01D의 레벨업, 함께 축하해주세요. 이번 라운드 참여하면 다음 보상에서 만나요!</td></tr>
+<tr><td>EN</td><td>V01D just leveled up — join us next round and you'll be in the rewards next time!</td></tr>
+<tr><td>JP</td><td>V01Dがレベルアップしました。次のラウンドに参加すれば次回の報酬対象に！</td></tr>
 </table>
 <h5>레벨업 판정 규칙</h5>
 <table>
@@ -211,8 +254,8 @@ p {
 <h5>프로그레스 수치 계산</h5>
 <table>
 <tr><th>수치</th><th>계산 방식</th></tr>
-<tr><td>레벨 진행률</td><td>팬덤 전체 현재 누적 덕력 / 현재 레벨 목표 덕력 × 100 (%)</td></tr>
-<tr><td>내 기여도</td><td>개인 누적 획득 덕력 / 팬덤 전체 누적 획득 덕력 × 100 (%)</td></tr>
+<tr><td>레벨 진행률</td><td>팬덤 전체가 <strong>현재 레벨에서 모은 카운터 덕력</strong> / 현재 레벨의 레벨업 목표 덕력 × 100 (%) — <strong>리셋 모델</strong>: 다음 레벨 진입 시 카운터 0으로 리셋. 상세는 [CEB-000] §5.5 참조</td></tr>
+<tr><td>내 기여도</td><td>개인 누적 획득 덕력 (lifetime) / 팬덤 전체 누적 획득 덕력 (lifetime) × 100 (%) — <strong>별도 누적값</strong>: 레벨 카운터와 무관한 lifetime 통계</td></tr>
 <tr><td>탈퇴 유저 기여분</td><td>유지 (차감하지 않음). 공통정책 10.6 참조</td></tr>
 </table>
 <h4>상태별 표시</h4>
@@ -392,6 +435,9 @@ p {
 <tr><td>v1.6</td><td>2026.04.21</td><td>@Nill Yoo</td><td>고도화 PDF 검토 반영: 팬덤 레벨 최대 10레벨(BO 설정)로 확장, 보상 리스트 BO 자유 설정 안내 추가</td></tr>
 <tr><td>v1.7</td><td>2026.04.22</td><td>@Nill Yoo</td><td>보상 유형별 지급 방식 추가(2.2): 디지털/실물(전원)/실물(추첨) 3종 분류, 기여 0pt 유저 보상 제외, 실물 보상 래플 추첨 규칙(기여도 비례 가중치). 보상 리스트(2.3) 지급 방식 참조 업데이트. 개발팀 피드백 반영</td></tr>
 <tr><td>v1.8</td><td>2026.04.22</td><td>@Nill Yoo</td><td>보상 체계 상세화: 보상 5종 분류(독점콘텐츠/BIVE/다운로드/실물추첨/이벤트참여권), 처리 주체(시스템자동/BO수동) 명시. 독점 콘텐츠 종류 5종 정의(비하인드사진/미공개영상/멤버셀카/보이스메시지/배경화면). 이벤트 보상 종류 4종(팬싸/콘서트VIP/영상통화/특별이벤트). 추첨 규칙 상세화. 개발팀 피드백 반영</td></tr>
+<tr><td><strong>v2.0</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.0 동기화 — 멀티 아티스트 귀속 매트릭스 반영</strong>. ① 기여 기준에 <strong>다국어 라벨 병기</strong> (획득 덕력/Earned Fan Power/獲得 推し力) ② <strong>활동×귀속 룰 명문화</strong> — 콘텐츠 활동은 활동 대상 아티스트 자동 귀속, 개인 활동은 선택 아티스트 귀속 ③ [CEB-000] §5.2.2 멀티 아티스트 귀속 매트릭스 참조 링크 추가</td></tr>
+<tr><td><strong>v2.1</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>디자이너 피드백 반영</strong> — 레벨업 정책 2건 신규 명문화. ① <strong>§2.2.1 권장 레벨링 곡선</strong> 신규 — Lv1 10,000 → Lv5 300,000 → Lv10 6,000,000 누적값 권장표. 활성 팬덤 1만 명 기준 6~12개월 Lv5 도달 설계. BO 미설정 시 권장값 자동 적용 (fallback) ② <strong>§2.2.2 0pt 기여 유저 처리 — 조용 제외 + 유도</strong> — 푸시·모달·보상 모두 X, 다음 앱 진입 시 안내 배너 1회 노출. 3언어 안내 문구(KO/EN/JP) 명문화. 취지: 강제 노출 시 이탈 우려 → 자연스러운 다음 라운드 참여 유도</td></tr>
+<tr><td><strong>v2.2</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.3 동기화 — 팬덤 레벨 카운터 리셋 모델 명문화</strong>. 사용자(@Nill Yoo)·개발자·디자이너 팀 공통 이해와 일치시키기 위해 표 표현 정정. ① <strong>§2.2.1 표 컬럼명 정정</strong> — "누적 목표 덕력" → "<strong>레벨업 목표 덕력</strong>"(레벨별 단독값) ② <strong>"직전 레벨 대비 증가폭" 컬럼 제거</strong> (누적 모델 전제이므로 리셋 모델에서는 의미 없음) ③ <strong>카운터 모델 명시 문구 신규</strong> — "각 레벨에서 0부터 시작, 목표 도달 시 다음 레벨 진입과 동시에 카운터 0 리셋" ④ <strong>§2.2 진행률 공식 명확화</strong> — "팬덤 전체 현재 누적 덕력" → "팬덤 전체가 현재 레벨에서 모은 카운터 덕력"으로 정정. "내 기여도"는 lifetime 통계로 별개 명시. <strong>곡선 수치 동일 유지</strong> (10K~6M). 시드·UI 코드는 이미 리셋 모델로 작동 중이라 코드 변경 불필요</td></tr>
 </table>
 
 </body>

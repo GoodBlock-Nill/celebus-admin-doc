@@ -196,20 +196,31 @@ p {
 <li>내 순위가 TOP 100 내이면 해당 행으로 자동 스크롤 + 하이라이트</li>
 <li>내 순위가 TOP 100 밖이면 리스트 하단 별도 섹션에 내 순위 표시</li>
 </ul>
-<h5>동일 포인트 처리</h5>
+<h5>동일 포인트 처리 (v2.0 — v5.0 공통정책 동기화)</h5>
 <ul>
-<li>같은 획득 덕력 포인트를 가진 유저는 <strong>해당 포인트에 먼저 도달한 유저가 상위 순위</strong> (동순위 없음)</li>
+<li>같은 획득 덕력(Earned Fan Power) 포인트를 가진 유저는 <strong>해당 포인트에 먼저 도달한 유저가 상위 순위</strong> (동순위 없음)</li>
 <li>모든 유저는 고유 순위를 가짐 (순위 스킵 없음, 연속 순위)</li>
 <li>예: A(100pt, 4/10 도달) = 38위, B(100pt, 4/15 도달) = 39위</li>
 <li>시즌 보상: 동일 포인트여도 도달 시점에 따라 순위가 다르므로 <strong>순위별 보상 적용</strong> (보상 상이 가능)</li>
 </ul>
+<h6>도달 시점 판정 정밀도</h6>
+<table>
+<tr><th>항목</th><th>정책</th></tr>
+<tr><td>타임스탬프 단위</td><td><strong>밀리초(ms)</strong> — 동일 ms 충돌 시 DB 자동 증가 ID로 폴백</td></tr>
+<tr><td>즉시 적립 활동의 시점</td><td><strong>이벤트 발생 시점</strong> (출석·일일미션·Trivia·PM 참여 등 자동 적립)</td></tr>
+<tr><td>운영자 승인 활동의 시점</td><td><strong>운영자 승인 시각</strong> (Quest·기억저장소 등 검수 필요 활동)</td></tr>
+<tr><td>정책 동결</td><td>시즌 1 시작 시점 이후 본 규칙 변경 금지</td></tr>
+</table>
+<blockquote>
+<p><strong>사용자 안내 문구</strong>: "동일 점수 시 먼저 도달한 유저가 상위 순위로 결정됩니다. Quest 등 일부 활동은 운영자 승인 시각을 기준으로 적립됩니다." (EN: "Tied scores are ranked by who reached the score first. Some activities are credited at the time of operator approval.")</p>
+</blockquote>
 <h5>랭킹 산정 기준</h5>
 <table>
 <tr><th>규칙</th><th>설명</th></tr>
-<tr><td>기준</td><td>획득 덕력 (보유 덕력/서포트 응원 덕력 무관)</td></tr>
-<tr><td>범위</td><td>아티스트별 분리 (artist_id 기반)</td></tr>
+<tr><td>기준</td><td>획득 덕력 / Earned Fan Power / 獲得 推し力 (보유 덕력·서포트 응원 덕력 무관)</td></tr>
+<tr><td>범위</td><td>아티스트별 분리 (artist_id 기반) — <strong>[CEB-000] §5.2.2 멀티 아티스트 귀속 매트릭스</strong> 참조</td></tr>
 <tr><td>시즌</td><td>BO에서 1개월 또는 3개월 설정 가능 (기본: 월간)</td></tr>
-<tr><td>동일 포인트</td><td>먼저 도달한 유저가 상위 순위 (동순위 없음). 순위별 보상 적용</td></tr>
+<tr><td>동일 포인트</td><td>먼저 도달한 유저가 상위 순위 (동순위 없음). ms 정밀도 + DB ID 폴백</td></tr>
 <tr><td>갱신</td><td>실시간 (활동 시 즉시 반영)</td></tr>
 </table>
 <h4>비로그인</h4>
@@ -401,6 +412,7 @@ p {
 <tr><td>v1.7</td><td>2026.04.21</td><td>@Nill Yoo</td><td>고도화 PDF 검토 반영: 시즌 주기 1개월/3개월 BO 설정 가능으로 변경 (기본: 월간), 월간 시즌→시즌 용어 유연화</td></tr>
 <tr><td>v1.8</td><td>2026.04.21</td><td>@Nill Yoo</td><td>시즌 보상 시스템 상세화: 보상 기준(등수+퍼센트 혼합), 복수 상품 지급, 뱃지 시즌별 설정, 상위 보상 우선(중복 미제공), 시즌명 BO 입력+다국어. 개발팀 피드백 반영</td></tr>
 <tr><td>v1.9</td><td>2026.04.21</td><td>@Nill Yoo</td><td>동일 포인트 처리 변경: 동순위→먼저 도달한 유저가 상위 순위(동순위 없음), 순번 스킵 제거(연속 순위), 보상 순위별 적용</td></tr>
+<tr><td><strong>v2.0</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.0 동기화 — 덕력 시스템 메이저 개정 반영</strong>. ① 동일 포인트 처리 <strong>정밀도 명문화</strong> — 밀리초(ms) 단위 + 동일 ms 충돌 시 DB 자동 증가 ID 폴백 ② <strong>즉시 적립 vs 운영자 승인 활동의 시점 기준 분리</strong> — 즉시 적립은 이벤트 발생 시점, Quest·기억저장소 등은 운영자 승인 시각 기준 ③ 시즌 1 시작 후 정책 동결 명문화 ④ <strong>다국어 라벨 병기</strong> — 획득 덕력/Earned Fan Power/獲得 推し力 ⑤ 멀티 아티스트 귀속 매트릭스(공통정책 §5.2.2) 참조 링크 추가 ⑥ 사용자 안내 문구(KO/EN) 명문화</td></tr>
 </table>
 
 </body>

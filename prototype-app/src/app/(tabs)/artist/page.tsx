@@ -23,7 +23,7 @@ const ARTIST_CARDS: ServiceCardData[] = [
   { id: 'virtue', group: 'record', icon: '⭐', title: '덕력', statusText: '시즌 38위', href: '/virtue', comingSoon: false },
   { id: 'collection', group: 'record', icon: '🃏', title: '컬렉션', statusText: '12종', href: '/collection', comingSoon: false },
   { id: 'raffle', group: 'record', icon: '🎁', title: 'Raffle', statusText: '래플 2건 진행중', href: '/raffle', comingSoon: false },
-  { id: 'fandom-level', group: 'record', icon: '🏆', title: 'V01D 키우기', statusText: 'Lv.3 (1,200/2,000pt)', href: '/fandom-level', comingSoon: false },
+  { id: 'fandom-level', group: 'record', icon: '🏆', title: 'V01D 키우기', statusText: 'Lv.3 (40K/70K)', href: '/fandom-level', comingSoon: false },
   // 더보기 그룹
   { id: 'info', group: 'more', icon: '📰', title: '정보', statusText: '새소식 3', href: '/info', comingSoon: false },
   { id: 'memory', group: 'more', icon: '📸', title: '기억 저장소', statusText: '기억 8개', href: '/memory', comingSoon: false },
