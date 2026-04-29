@@ -1,14 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQueryClient } from '@tanstack/react-query';
 import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
 import { useMemories, useMonthlyMemoryCount } from '@/lib/hooks/useMemory';
 import { useUIStore } from '@/stores/useUIStore';
 import { cn } from '@/lib/utils';
 import PresetSelector from '@/components/dev/PresetSelector';
-import { MEMORY_PRESET_OPTIONS, applyMemoryPreset } from '@/lib/presets/memory';
+import { MEMORY_PRESET_OPTIONS, getMemoryPresetState } from '@/lib/presets/memory';
 import EmptyState from '@/components/ui/EmptyState';
 import CalendarView from '@/components/memory/CalendarView';
 
@@ -32,7 +31,6 @@ export default function MemoryPage() {
   // TODO: 1년 전 오늘 푸시 알림 → ?yearAgo=true 쿼리 파라미터로 진입 시 해당 날짜 자동 확장
   const { artistName, activeArtistId } = useActiveArtist();
   const addToast = useUIStore((s) => s.addToast);
-  const queryClient = useQueryClient();
   const [view, setView] = useState<ViewMode>('calendar');
 
   // Fix #24: 월 네비게이션 state hoisted early so useMemories can use it
@@ -41,24 +39,33 @@ export default function MemoryPage() {
 
   const { data: rawMemories } = useMemories(activeArtistId, calendarYear, calendarMonth);
 
-  const memories: Memory[] = (rawMemories ?? []).map((m) => {
-    const dateObj = new Date(m.date);
-    const day = dateObj.getDate();
-    const monthStr = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const dayStr = String(day).padStart(2, '0');
-    const imageCount = m.images.length;
-    const type: Memory['type'] = imageCount > 0 ? 'photo' : m.text?.startsWith('편지') ? 'letter' : 'memo';
-    return {
-      id: m.id,
-      date: `${monthStr}.${dayStr}`,
-      day,
-      emoji: m.emojis[0] ?? '💜',
-      title: m.text ?? m.emojiLabels[0] ?? '기억',
-      type,
-      images: imageCount,
-      location: m.location ?? undefined,
-    };
-  });
+  const [preset, setPreset] = useState('many');
+  const presetState = getMemoryPresetState(preset);
+
+  // 프리셋 클라이언트 사이드 필터링: DB 시드 데이터를 그대로 두고 표시 상태만 토글
+  const memories: Memory[] = useMemo(() => {
+    if (presetState.forceEmpty) return [];
+    const source = rawMemories ?? [];
+    const filtered = presetState.forceSingle ? source.slice(0, 1) : source;
+    return filtered.map((m) => {
+      const dateObj = new Date(m.date);
+      const day = dateObj.getDate();
+      const monthStr = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const dayStr = String(day).padStart(2, '0');
+      const imageCount = m.images.length;
+      const type: Memory['type'] = imageCount > 0 ? 'photo' : m.text?.startsWith('편지') ? 'letter' : 'memo';
+      return {
+        id: m.id,
+        date: `${monthStr}.${dayStr}`,
+        day,
+        emoji: m.emojis[0] ?? '💜',
+        title: m.text ?? m.emojiLabels[0] ?? '기억',
+        type,
+        images: imageCount,
+        location: m.location ?? undefined,
+      };
+    });
+  }, [rawMemories, presetState.forceEmpty, presetState.forceSingle]);
 
   // (Full behavior: navigate to last year's month and expand that day.
   //  Currently the calendar is hardcoded to April 2026, so we auto-select
@@ -87,20 +94,12 @@ export default function MemoryPage() {
     setShowOnboarding(false);
   };
 
-  const [preset, setPreset] = useState('many');
-  const [forceLimit, setForceLimit] = useState(false);
-
   // Fix 1: monthly count for FAB gate
   const { data: monthlyCount } = useMonthlyMemoryCount(activeArtistId);
+  const forceLimit = presetState.forceLimit;
 
-  const handlePreset = async (key: string) => {
+  const handlePreset = (key: string) => {
     setPreset(key);
-    if (key === 'limitReached') {
-      setForceLimit(true);
-    } else {
-      setForceLimit(false);
-    }
-    await applyMemoryPreset(key, queryClient);
   };
 
   return (
