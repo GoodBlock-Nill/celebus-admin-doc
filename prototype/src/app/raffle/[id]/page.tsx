@@ -53,6 +53,13 @@ export default function RaffleDetailPage({ params }: { params: Promise<{ id: str
   const isEnded = raffle.status === '종료';
 
   // 게시 활성화 조건 — 모든 필수 입력 완료 + 다국어 KO/EN/JA 3개 모두 + BIVE ON 시 이벤트 선택
+  // 수령 가이드는 deliveryType별로 분기 검증 (현장 수령 vs 배송 수령)
+  const pickupValidForPublish = raffle.deliveryType === '배송 수령'
+    ? !!(raffle.pickup.deliveryDeadlineDt && raffle.pickup.deliveryDeadlineTime && raffle.pickup.deliveryFormUrl)
+    : !!(raffle.pickup.startDt && raffle.pickup.endDt && raffle.pickup.openTime && raffle.pickup.closeTime)
+      && !!(raffle.pickup.locationKO && raffle.pickup.locationEN && raffle.pickup.locationJA)
+      && !!(raffle.pickup.itemsKO && raffle.pickup.itemsEN && raffle.pickup.itemsJA);
+
   const canPublish = isDraft
     && !!raffle.artist
     && !!raffle.imageUrl
@@ -64,9 +71,7 @@ export default function RaffleDetailPage({ params }: { params: Promise<{ id: str
     && !!(raffle.descKO && raffle.descEN && raffle.descJA)
     && !!(raffle.prizeKO && raffle.prizeEN && raffle.prizeJA)
     && !!(raffle.noticeKO && raffle.noticeEN && raffle.noticeJA)
-    && !!(raffle.pickup.locationKO && raffle.pickup.locationEN && raffle.pickup.locationJA)
-    && !!(raffle.pickup.itemsKO && raffle.pickup.itemsEN && raffle.pickup.itemsJA)
-    && !!(raffle.pickup.startDt && raffle.pickup.endDt && raffle.pickup.openTime && raffle.pickup.closeTime)
+    && pickupValidForPublish
     && (!raffle.biveRewardYn || raffle.mintingEventId !== null);
 
   // ── Header CTAs by status ─────────────────────────────
@@ -415,19 +420,46 @@ function InfoTab({ raffle, onImageClick }: { raffle: Raffle; onImageClick: () =>
         )}
       </div>
 
-      {/* 수령 가이드 */}
-      <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">수령 가이드</h3>
-        <div className="grid grid-cols-2 gap-5 mb-4 text-sm">
-          <Row label="보상수령 기간" value={`${raffle.pickup.startDt} ~ ${raffle.pickup.endDt}`} />
-          <Row label="운영 시간" value={`${raffle.pickup.openTime} ~ ${raffle.pickup.closeTime}`} />
+      {/* 수령 가이드 / 배송 가이드 — deliveryType에 따라 분기 */}
+      {raffle.deliveryType === '배송 수령' ? (
+        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-4">배송 가이드</h3>
+          <div className="space-y-3 text-sm">
+            <Row
+              label="배송지 입력 마감일시"
+              value={`${raffle.pickup.deliveryDeadlineDt ?? '—'} ${raffle.pickup.deliveryDeadlineTime ?? ''}`.trim()}
+            />
+            <Row
+              label="배송지 입력 폼 URL"
+              value={
+                raffle.pickup.deliveryFormUrl ? (
+                  <a
+                    href={raffle.pickup.deliveryFormUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-indigo-600 hover:underline break-all"
+                  >
+                    {raffle.pickup.deliveryFormUrl}
+                  </a>
+                ) : '—'
+              }
+            />
+          </div>
         </div>
-        <div className="grid grid-cols-3 gap-4 text-sm">
-          <PickupBlock title="한국어" location={raffle.pickup.locationKO} items={raffle.pickup.itemsKO} />
-          <PickupBlock title="영어" location={raffle.pickup.locationEN} items={raffle.pickup.itemsEN} />
-          <PickupBlock title="일본어" location={raffle.pickup.locationJA} items={raffle.pickup.itemsJA} />
+      ) : (
+        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-4">수령 가이드</h3>
+          <div className="grid grid-cols-2 gap-5 mb-4 text-sm">
+            <Row label="보상수령 기간" value={`${raffle.pickup.startDt ?? '—'} ~ ${raffle.pickup.endDt ?? '—'}`} />
+            <Row label="운영 시간" value={`${raffle.pickup.openTime ?? '—'} ~ ${raffle.pickup.closeTime ?? '—'}`} />
+          </div>
+          <div className="grid grid-cols-3 gap-4 text-sm">
+            <PickupBlock title="한국어" location={raffle.pickup.locationKO ?? ''} items={raffle.pickup.itemsKO ?? ''} />
+            <PickupBlock title="영어" location={raffle.pickup.locationEN ?? ''} items={raffle.pickup.itemsEN ?? ''} />
+            <PickupBlock title="일본어" location={raffle.pickup.locationJA ?? ''} items={raffle.pickup.itemsJA ?? ''} />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 유의사항 */}
       <div className="bg-white border border-gray-200 rounded-xl p-5">

@@ -482,21 +482,26 @@ export function getFanQuestUsages(fanQuestId: number): FanQuestUsage[] {
 // ============================================================
 
 export type RaffleStatus = '임시저장' | '진행중' | '추첨대기' | '종료';
-export type RaffleDeliveryType = '현장 수령' | '배송' | '온라인';
+export type RaffleDeliveryType = '현장 수령' | '배송 수령';
 export type RafflePrizeUnit = '장' | '개';
 export type WinnerStatus = '당첨' | '미당첨';
 
 export interface RafflePickup {
-  startDt: string;
-  endDt: string;
-  openTime: string;
-  closeTime: string;
-  locationKO: string;
-  locationEN: string;
-  locationJA: string;
-  itemsKO: string;
-  itemsEN: string;
-  itemsJA: string;
+  // 현장 수령 전용
+  startDt?: string;
+  endDt?: string;
+  openTime?: string;
+  closeTime?: string;
+  locationKO?: string;
+  locationEN?: string;
+  locationJA?: string;
+  itemsKO?: string;
+  itemsEN?: string;
+  itemsJA?: string;
+  // 배송 수령 전용
+  deliveryDeadlineDt?: string;       // 배송지 입력 마감일 (YYYY.MM.DD)
+  deliveryDeadlineTime?: string;     // 배송지 입력 마감 시간 (HH:mm)
+  deliveryFormUrl?: string;          // 배송지 입력 폼 URL
 }
 
 export interface Raffle {
@@ -613,7 +618,7 @@ export const raffles: Raffle[] = [
     startAt: '',
     endAt: '2026.06.30 23:59',
     winnerCount: 10,
-    deliveryType: '배송',
+    deliveryType: '배송 수령',
     imageUrl: '/raffle/raffle-101.jpg',
     titleKO: 'V01D 데뷔 100일 기념 굿즈 박스',
     titleEN: '',
@@ -626,9 +631,9 @@ export const raffles: Raffle[] = [
     prizeJA: '',
     prizeUnit: '개',
     pickup: {
-      startDt: '2026.07.05', endDt: '2026.07.15', openTime: '09:00', closeTime: '18:00',
-      locationKO: '국내 배송 (CJ대한통운)', locationEN: '', locationJA: '',
-      itemsKO: '주소·연락처 (앱 내 등록)', itemsEN: '', itemsJA: '',
+      deliveryDeadlineDt: '2026.07.07',
+      deliveryDeadlineTime: '23:59',
+      deliveryFormUrl: 'https://forms.gle/raffle101-shipping',
     },
     noticeKO: '• 배송지 미등록 시 당첨 무효\n• 7일 이내 미수령 시 자동 폐기',
     noticeEN: '',
@@ -759,7 +764,7 @@ export const raffles: Raffle[] = [
     startAt: '2026.04.01 10:00',
     endAt: '2026.04.08 23:59',
     winnerCount: 15,
-    deliveryType: '배송',
+    deliveryType: '배송 수령',
     imageUrl: '/raffle/raffle-105.jpg',
     titleKO: '[1차] V01D 데뷔 기념 멤버 친필 싸인 앨범[01]',
     titleEN: '[Round 1] V01D Debut Member Signed Album [01]',
@@ -770,9 +775,9 @@ export const raffles: Raffle[] = [
     prizeKO: '친필 싸인 앨범 1장', prizeEN: 'Signed album', prizeJA: '直筆サインアルバム',
     prizeUnit: '장',
     pickup: {
-      startDt: '2026.04.12', endDt: '2026.04.20', openTime: '09:00', closeTime: '18:00',
-      locationKO: '국내 배송', locationEN: 'Domestic shipping', locationJA: '国内配送',
-      itemsKO: '주소·연락처 (앱 등록)', itemsEN: 'Address/contact (in app)', itemsJA: '住所・連絡先(アプリ)',
+      deliveryDeadlineDt: '2026.04.17',
+      deliveryDeadlineTime: '23:59',
+      deliveryFormUrl: 'https://forms.gle/raffle105-shipping',
     },
     noticeKO: '• 7일 이내 배송지 미등록 시 무효',
     noticeEN: '• Forfeit if address not set within 7 days',
@@ -795,7 +800,7 @@ export const raffles: Raffle[] = [
     startAt: '2026.04.09 10:00',
     endAt: '2026.04.15 23:59',
     winnerCount: 15,
-    deliveryType: '배송',
+    deliveryType: '배송 수령',
     imageUrl: '/raffle/raffle-106.jpg',
     titleKO: '[2차] V01D 데뷔 기념 멤버 친필 싸인 앨범[01]',
     titleEN: '[Round 2] V01D Debut Member Signed Album [01]',
@@ -806,9 +811,9 @@ export const raffles: Raffle[] = [
     prizeKO: '친필 싸인 앨범 1장', prizeEN: 'Signed album', prizeJA: '直筆サインアルバム',
     prizeUnit: '장',
     pickup: {
-      startDt: '2026.04.20', endDt: '2026.04.27', openTime: '09:00', closeTime: '18:00',
-      locationKO: '국내 배송', locationEN: 'Domestic shipping', locationJA: '国内配送',
-      itemsKO: '주소·연락처 (앱 등록)', itemsEN: 'Address/contact', itemsJA: '住所・連絡先',
+      deliveryDeadlineDt: '2026.04.24',
+      deliveryDeadlineTime: '23:59',
+      deliveryFormUrl: 'https://forms.gle/raffle106-shipping',
     },
     noticeKO: '• 본 래플은 운영자가 숨김 처리하여 앱에 노출되지 않습니다.',
     noticeEN: '• Hidden by admin — not shown in app.',

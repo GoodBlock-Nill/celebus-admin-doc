@@ -5,7 +5,7 @@ import { PhotoIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { LangField, LangTextarea, type Lang } from '@/components/clone/LangField';
 import { RAFFLE_MINTING_EVENTS, type Raffle, type RaffleDeliveryType, type RafflePrizeUnit } from '@/mock/fanquest';
 
-const DELIVERY_OPTIONS: RaffleDeliveryType[] = ['현장 수령', '배송', '온라인'];
+const DELIVERY_OPTIONS: RaffleDeliveryType[] = ['현장 수령', '배송 수령'];
 const ARTIST_OPTIONS = ['V01D', 'iKON', 'CELEBUS'] as const;
 
 export type RaffleFormValues = {
@@ -25,6 +25,7 @@ export type RaffleFormValues = {
   prizeKO: string;
   prizeEN: string;
   prizeJA: string;
+  // 현장 수령 전용
   pickupStartDt: string;
   pickupEndDt: string;
   openTime: string;
@@ -35,6 +36,11 @@ export type RaffleFormValues = {
   itemsKO: string;
   itemsEN: string;
   itemsJA: string;
+  // 배송 수령 전용
+  deliveryDeadlineDt: string;
+  deliveryDeadlineTime: string;
+  deliveryFormUrl: string;
+  // 공통 유의사항
   noticeKO: string;
   noticeEN: string;
   noticeJA: string;
@@ -57,6 +63,7 @@ export const EMPTY_RAFFLE_FORM: RaffleFormValues = {
   pickupStartDt: '', pickupEndDt: '', openTime: '09:00', closeTime: '18:00',
   locationKO: '', locationEN: '', locationJA: '',
   itemsKO: '', itemsEN: '', itemsJA: '',
+  deliveryDeadlineDt: '', deliveryDeadlineTime: '23:59', deliveryFormUrl: '',
   noticeKO: '', noticeEN: '', noticeJA: '',
   biveRewardYn: false,
   mintingEventId: null,
@@ -75,12 +82,15 @@ export function raffleToForm(r: Raffle): RaffleFormValues {
     deliveryType: r.deliveryType,
     prizeUnit: r.prizeUnit,
     prizeKO: r.prizeKO, prizeEN: r.prizeEN, prizeJA: r.prizeJA,
-    pickupStartDt: r.pickup.startDt,
-    pickupEndDt: r.pickup.endDt,
-    openTime: r.pickup.openTime,
-    closeTime: r.pickup.closeTime,
-    locationKO: r.pickup.locationKO, locationEN: r.pickup.locationEN, locationJA: r.pickup.locationJA,
-    itemsKO: r.pickup.itemsKO, itemsEN: r.pickup.itemsEN, itemsJA: r.pickup.itemsJA,
+    pickupStartDt: r.pickup.startDt ?? '',
+    pickupEndDt: r.pickup.endDt ?? '',
+    openTime: r.pickup.openTime ?? '09:00',
+    closeTime: r.pickup.closeTime ?? '18:00',
+    locationKO: r.pickup.locationKO ?? '', locationEN: r.pickup.locationEN ?? '', locationJA: r.pickup.locationJA ?? '',
+    itemsKO: r.pickup.itemsKO ?? '', itemsEN: r.pickup.itemsEN ?? '', itemsJA: r.pickup.itemsJA ?? '',
+    deliveryDeadlineDt: r.pickup.deliveryDeadlineDt ?? '',
+    deliveryDeadlineTime: r.pickup.deliveryDeadlineTime ?? '23:59',
+    deliveryFormUrl: r.pickup.deliveryFormUrl ?? '',
     noticeKO: r.noticeKO, noticeEN: r.noticeEN, noticeJA: r.noticeJA,
     biveRewardYn: r.biveRewardYn,
     mintingEventId: r.mintingEventId,
@@ -90,12 +100,23 @@ export function raffleToForm(r: Raffle): RaffleFormValues {
 /**
  * 임시저장 저장 가능 조건.
  * 다국어 필드는 한국어/영어/일본어 중 1개 언어 이상 입력이면 통과.
+ * 수령 가이드는 deliveryType별로 분기 검증 (현장 수령 vs 배송 수령).
  * 게시 시점에는 별도로 3개 언어 모두 검증 (래플 상세에서 처리).
  */
 export function canSubmitRaffle(v: RaffleFormValues): boolean {
   const biveValid = !v.biveRewardYn || v.mintingEventId !== null;
   const anyLang = (ko: string, en: string, ja: string) =>
     ko.trim() !== '' || en.trim() !== '' || ja.trim() !== '';
+  const pickupValid = v.deliveryType === '배송 수령'
+    ? Boolean(v.deliveryDeadlineDt && v.deliveryDeadlineTime && v.deliveryFormUrl.trim())
+    : Boolean(
+        v.pickupStartDt &&
+        v.pickupEndDt &&
+        v.openTime &&
+        v.closeTime &&
+        anyLang(v.locationKO, v.locationEN, v.locationJA) &&
+        anyLang(v.itemsKO, v.itemsEN, v.itemsJA),
+      );
   return Boolean(
     v.artist &&
     v.endDate &&
@@ -104,10 +125,7 @@ export function canSubmitRaffle(v: RaffleFormValues): boolean {
     anyLang(v.descKO, v.descEN, v.descJA) &&
     v.winnerCount > 0 &&
     anyLang(v.prizeKO, v.prizeEN, v.prizeJA) &&
-    v.pickupStartDt &&
-    v.pickupEndDt &&
-    anyLang(v.locationKO, v.locationEN, v.locationJA) &&
-    anyLang(v.itemsKO, v.itemsEN, v.itemsJA) &&
+    pickupValid &&
     anyLang(v.noticeKO, v.noticeEN, v.noticeJA) &&
     biveValid,
   );
@@ -317,51 +335,77 @@ export default function RaffleForm({ values, onChange, activeLocks = false, clos
         <div className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">
-              수령 가이드 <span className="text-red-500">*</span>
+              {values.deliveryType === '배송 수령' ? '배송 가이드' : '수령 가이드'}{' '}
+              <span className="text-red-500">*</span>
             </label>
             <div className="border border-gray-200 rounded-lg p-4 space-y-3">
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <div className="text-[11px] text-gray-500 mb-1">수령 시작일</div>
-                  <input type="date" value={values.pickupStartDt} onChange={(e) => set('pickupStartDt', e.target.value)} disabled={lockedFull}
-                    className="w-full h-10 px-2 border border-gray-200 rounded-md text-xs disabled:bg-gray-50" />
-                </div>
-                <div>
-                  <div className="text-[11px] text-gray-500 mb-1">수령 마감일</div>
-                  <input type="date" value={values.pickupEndDt} onChange={(e) => set('pickupEndDt', e.target.value)} disabled={lockedFull}
-                    className="w-full h-10 px-2 border border-gray-200 rounded-md text-xs disabled:bg-gray-50" />
-                </div>
-                <div>
-                  <div className="text-[11px] text-gray-500 mb-1">운영 시작 시간</div>
-                  <input type="time" value={values.openTime} onChange={(e) => set('openTime', e.target.value)} disabled={lockedFull}
-                    className="w-full h-10 px-2 border border-gray-200 rounded-md text-xs disabled:bg-gray-50" />
-                </div>
-                <div>
-                  <div className="text-[11px] text-gray-500 mb-1">운영 마감 시간</div>
-                  <input type="time" value={values.closeTime} onChange={(e) => set('closeTime', e.target.value)} disabled={lockedFull}
-                    className="w-full h-10 px-2 border border-gray-200 rounded-md text-xs disabled:bg-gray-50" />
-                </div>
-              </div>
-              <LangField
-                label="수령 장소"
-                lang={locationLang} onLangChange={setLocationLang}
-                value={values[`location${locationLang}` as const]}
-                onChange={(v) => set(`location${locationLang}` as keyof RaffleFormValues, v as never)}
-                placeholder="수령 장소를 입력하세요"
-                maxLength={100}
-                values={{ KO: values.locationKO, EN: values.locationEN, JA: values.locationJA }}
-                disabled={lockedFull}
-              />
-              <LangField
-                label="지참물"
-                lang={itemsLang} onLangChange={setItemsLang}
-                value={values[`items${itemsLang}` as const]}
-                onChange={(v) => set(`items${itemsLang}` as keyof RaffleFormValues, v as never)}
-                placeholder="지참물을 입력하세요"
-                maxLength={50}
-                values={{ KO: values.itemsKO, EN: values.itemsEN, JA: values.itemsJA }}
-                disabled={lockedFull}
-              />
+              {values.deliveryType === '배송 수령' ? (
+                <>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <div className="text-[11px] text-gray-500 mb-1">배송지 입력 마감일</div>
+                      <input type="date" value={values.deliveryDeadlineDt} onChange={(e) => set('deliveryDeadlineDt', e.target.value)} disabled={lockedFull}
+                        className="w-full h-10 px-2 border border-gray-200 rounded-md text-xs disabled:bg-gray-50" />
+                    </div>
+                    <div>
+                      <div className="text-[11px] text-gray-500 mb-1">배송지 입력 마감 시간</div>
+                      <input type="time" value={values.deliveryDeadlineTime} onChange={(e) => set('deliveryDeadlineTime', e.target.value)} disabled={lockedFull}
+                        className="w-full h-10 px-2 border border-gray-200 rounded-md text-xs disabled:bg-gray-50" />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[11px] text-gray-500 mb-1">배송지 입력 폼 URL</div>
+                    <input type="url" value={values.deliveryFormUrl} onChange={(e) => set('deliveryFormUrl', e.target.value)} disabled={lockedFull}
+                      placeholder="https://"
+                      className="w-full h-10 px-2 border border-gray-200 rounded-md text-xs disabled:bg-gray-50" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <div className="text-[11px] text-gray-500 mb-1">수령 시작일</div>
+                      <input type="date" value={values.pickupStartDt} onChange={(e) => set('pickupStartDt', e.target.value)} disabled={lockedFull}
+                        className="w-full h-10 px-2 border border-gray-200 rounded-md text-xs disabled:bg-gray-50" />
+                    </div>
+                    <div>
+                      <div className="text-[11px] text-gray-500 mb-1">수령 마감일</div>
+                      <input type="date" value={values.pickupEndDt} onChange={(e) => set('pickupEndDt', e.target.value)} disabled={lockedFull}
+                        className="w-full h-10 px-2 border border-gray-200 rounded-md text-xs disabled:bg-gray-50" />
+                    </div>
+                    <div>
+                      <div className="text-[11px] text-gray-500 mb-1">운영 시작 시간</div>
+                      <input type="time" value={values.openTime} onChange={(e) => set('openTime', e.target.value)} disabled={lockedFull}
+                        className="w-full h-10 px-2 border border-gray-200 rounded-md text-xs disabled:bg-gray-50" />
+                    </div>
+                    <div>
+                      <div className="text-[11px] text-gray-500 mb-1">운영 마감 시간</div>
+                      <input type="time" value={values.closeTime} onChange={(e) => set('closeTime', e.target.value)} disabled={lockedFull}
+                        className="w-full h-10 px-2 border border-gray-200 rounded-md text-xs disabled:bg-gray-50" />
+                    </div>
+                  </div>
+                  <LangField
+                    label="수령 장소"
+                    lang={locationLang} onLangChange={setLocationLang}
+                    value={values[`location${locationLang}` as const]}
+                    onChange={(v) => set(`location${locationLang}` as keyof RaffleFormValues, v as never)}
+                    placeholder="수령 장소를 입력하세요"
+                    maxLength={100}
+                    values={{ KO: values.locationKO, EN: values.locationEN, JA: values.locationJA }}
+                    disabled={lockedFull}
+                  />
+                  <LangField
+                    label="지참물"
+                    lang={itemsLang} onLangChange={setItemsLang}
+                    value={values[`items${itemsLang}` as const]}
+                    onChange={(v) => set(`items${itemsLang}` as keyof RaffleFormValues, v as never)}
+                    placeholder="지참물을 입력하세요"
+                    maxLength={50}
+                    values={{ KO: values.itemsKO, EN: values.itemsEN, JA: values.itemsJA }}
+                    disabled={lockedFull}
+                  />
+                </>
+              )}
             </div>
           </div>
 
