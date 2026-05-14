@@ -68,9 +68,9 @@ export default function RftCurrentPage() {
         {/* 출처별 분포 — 발급 / 사용 명확히 분리 */}
         <div className="bg-white border border-gray-200 rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-900">출처별 발급 분포</h3>
+            <h3 className="text-sm font-semibold text-gray-900">정규 발급 출처 분포</h3>
             <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium bg-emerald-50 text-emerald-700">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />발급(EARN) 5종
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />발급 {Object.keys(earnDist).length}종
             </span>
           </div>
           <div className="space-y-3 mb-5">
@@ -98,7 +98,7 @@ export default function RftCurrentPage() {
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-900">출처별 사용 분포</h3>
               <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium bg-rose-50 text-rose-700">
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />사용(USE) {Object.keys(useDist).length}종
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />사용 {Object.keys(useDist).length}종
               </span>
             </div>
             <div className="space-y-3">
@@ -139,7 +139,20 @@ export default function RftCurrentPage() {
         <SimpleTable<RftLog>
           columns={[
             { key: 'occurredAt', label: '일시', width: '140px' },
-            { key: 'nickname', label: '회원', width: '160px' },
+            { key: 'nickname', label: '회원', width: '160px', render: (r) => (
+              <a
+                href={`/members/${r.memberId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-900 font-medium hover:text-indigo-600 hover:underline inline-flex items-center gap-1"
+                title="새 탭으로 회원 상세 진입"
+              >
+                {r.nickname}
+                <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            )},
             { key: 'delta', label: '변동', width: '90px', render: (r) => (
               <span className={r.delta > 0 ? 'text-emerald-600 font-semibold' : 'text-red-500 font-semibold'}>
                 {r.delta > 0 ? '+' : ''}{r.delta}장

@@ -1,18 +1,24 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { ClockIcon } from '@heroicons/react/24/outline';
+import { ClockIcon, ShieldExclamationIcon } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/layout/PageHeader';
 import ConfirmModal from '@/app/fanquest/_components/ConfirmModal';
 import {
   initialGpExchangePolicy,
+  initialAppBuyTogglePolicy,
+  initialGameRewardPolicy,
   type GpExchangePolicy,
+  type AppBuyTogglePolicy,
+  type GameRewardPolicy,
 } from '@/mock/rft';
 
 type LimitMode = 'limited' | 'unlimited';
 
 export default function RftPolicyPage() {
   const [policy, setPolicy] = useState<GpExchangePolicy>(initialGpExchangePolicy);
+  const [buyToggle, setBuyToggle] = useState<AppBuyTogglePolicy>(initialAppBuyTogglePolicy);
+  const [gameReward, setGameReward] = useState<GameRewardPolicy>(initialGameRewardPolicy);
 
   // 입력 상태 (저장 전까지 정책에 미반영)
   const [rateInput, setRateInput] = useState<string>(String(policy.rate));
@@ -22,6 +28,13 @@ export default function RftPolicyPage() {
   const [limitInput, setLimitInput] = useState<string>(
     policy.dailyLimitPerMember === null ? '50' : String(policy.dailyLimitPerMember),
   );
+
+  // Phase 13 — 앱내 구매 운영 토글 입력 상태
+  const [buyEnabledInput, setBuyEnabledInput] = useState<boolean>(buyToggle.enabled);
+  const [buyReasonInput, setBuyReasonInput] = useState<string>(buyToggle.maintenanceReason);
+
+  // Phase 13 — PM·ST 게임 보상 정책 입력 상태
+  const [gameRewardInput, setGameRewardInput] = useState(gameReward.rows);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -35,7 +48,11 @@ export default function RftPolicyPage() {
   const newDailyLimit: number | null = limitMode === 'unlimited' ? null : limitNum;
   const rateChanged = isRateValid && rateNum !== policy.rate;
   const limitChanged = isLimitValid && newDailyLimit !== policy.dailyLimitPerMember;
-  const canSave = isRateValid && isLimitValid && (rateChanged || limitChanged);
+  const buyEnabledChanged = buyEnabledInput !== buyToggle.enabled;
+  const buyReasonChanged = buyReasonInput !== buyToggle.maintenanceReason;
+  const buyChanged = buyEnabledChanged || (buyEnabledInput === false && buyReasonChanged);
+  const gameRewardChanged = JSON.stringify(gameRewardInput) !== JSON.stringify(gameReward.rows);
+  const canSave = isRateValid && isLimitValid && (rateChanged || limitChanged || buyChanged || gameRewardChanged);
 
   // 확인 모달 메시지
   const confirmMessage = useMemo(() => {
@@ -48,11 +65,26 @@ export default function RftPolicyPage() {
       const next = newDailyLimit === null ? '무제한' : `${newDailyLimit}장`;
       lines.push(`회원당 1일 교환 한도를 ${prev} → ${next}으로 변경합니다.`);
     }
+    if (buyEnabledChanged) {
+      const prev = buyToggle.enabled ? 'ON' : 'OFF';
+      const next = buyEnabledInput ? 'ON' : 'OFF';
+      const reasonLine = !buyEnabledInput && buyReasonInput ? ` (사유: ${buyReasonInput})` : '';
+      lines.push(`앱내 응모권 구매를 ${prev} → ${next}으로 전환합니다.${reasonLine}`);
+    }
+    if (gameRewardChanged) {
+      lines.push('PM·ST 게임별 응모권 지급 기본 정책을 변경합니다.');
+    }
     return lines.join('\n');
-  }, [rateChanged, limitChanged, policy.rate, rateNum, policy.dailyLimitPerMember, newDailyLimit]);
+  }, [rateChanged, limitChanged, buyEnabledChanged, gameRewardChanged, policy.rate, rateNum, policy.dailyLimitPerMember, newDailyLimit, buyToggle.enabled, buyEnabledInput, buyReasonInput]);
 
   const handleSave = () => {
     if (!canSave) return;
+    // 토글 ON + 수량 0 안내
+    const zeroOnRows = gameRewardInput.filter((r) => r.enabled && r.defaultAmount === 0);
+    if (zeroOnRows.length > 0 && gameRewardChanged) {
+      const ok = confirm('0매 지급은 OFF와 동일합니다. 진행하시겠습니까?');
+      if (!ok) return;
+    }
     setConfirmOpen(true);
   };
 
@@ -65,6 +97,21 @@ export default function RftPolicyPage() {
       lastUpdatedBy: 'nill',
       lastUpdatedAt: updatedAt,
     });
+    if (buyChanged) {
+      setBuyToggle({
+        enabled: buyEnabledInput,
+        maintenanceReason: buyEnabledInput ? '' : buyReasonInput,
+        lastUpdatedBy: 'nill',
+        lastUpdatedAt: updatedAt,
+      });
+    }
+    if (gameRewardChanged) {
+      setGameReward({
+        rows: gameRewardInput,
+        lastUpdatedBy: 'nill',
+        lastUpdatedAt: updatedAt,
+      });
+    }
     setConfirmOpen(false);
     alert(`[Mock] 응모권 발급 정책이 변경되었습니다.\n\n${confirmMessage}`);
   };
@@ -173,13 +220,149 @@ export default function RftPolicyPage() {
           <br />
           <strong className="font-semibold">무제한 선택 시</strong> 한도 검증을 우회하여 회원이 GP만 충분하면 제한 없이 교환 가능합니다.
         </p>
+        <p className="text-xs text-gray-400 mt-3">
+          마지막 변경 (GP 환율·한도): <strong className="text-gray-600">{policy.lastUpdatedBy}</strong> · {policy.lastUpdatedAt}
+        </p>
+      </div>
+
+      {/* 카드 3 — 앱내 응모권 구매 운영 토글 (Phase 13) */}
+      <div className="bg-white border border-gray-200 rounded-xl p-5 mb-4">
+        <div className="flex items-baseline justify-between mb-1">
+          <h3 className="text-sm font-semibold text-gray-900">앱내 응모권 구매 운영 토글</h3>
+          <span className="text-xs text-gray-400">Buy-RF-Ticket-001</span>
+        </div>
+        <p className="text-xs text-gray-500 mb-3">
+          회원이 앱에서 GP를 사용해 응모권을 직접 구매할 수 있는 기능의 운영 상태입니다.
+        </p>
+
+        <div className="flex items-center gap-5 mb-3">
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="buyEnabled"
+              checked={buyEnabledInput === true}
+              onChange={() => setBuyEnabledInput(true)}
+              className="w-4 h-4 text-emerald-600 focus:ring-emerald-500"
+            />
+            <span className="text-sm text-gray-900">정상 운영 (ON)</span>
+          </label>
+          <label className="inline-flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="buyEnabled"
+              checked={buyEnabledInput === false}
+              onChange={() => setBuyEnabledInput(false)}
+              className="w-4 h-4 text-rose-600 focus:ring-rose-500"
+            />
+            <span className="text-sm text-gray-900">점검중 (OFF)</span>
+          </label>
+        </div>
+
+        <div className="mb-2">
+          <label className={`block text-xs mb-1 ${buyEnabledInput ? 'text-gray-400' : 'text-gray-700'}`}>
+            점검 사유 (선택 입력, 운영 로그 보존용)
+          </label>
+          <input
+            type="text"
+            maxLength={200}
+            disabled={buyEnabledInput}
+            value={buyReasonInput}
+            onChange={(e) => setBuyReasonInput(e.target.value)}
+            placeholder="예: 결제 게이트웨이 점검으로 일시 중단"
+            className="h-11 w-full px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed"
+          />
+        </div>
+
+        {!buyEnabledInput && (
+          <div className="bg-rose-50/60 border border-rose-100 rounded-lg px-3 py-2.5 mt-2 flex items-start gap-2">
+            <ShieldExclamationIcon className="w-4 h-4 text-rose-600 mt-0.5 shrink-0" />
+            <p className="text-xs text-rose-900 leading-relaxed">
+              OFF 전환 시 앱 Buy-RF-Ticket-001 화면의 [구매하기] 버튼이 즉시 <strong className="font-semibold">[점검중]</strong> 텍스트로 비활성됩니다 (탭 시 토스트 안내). 변경은 저장 즉시 회원 앱에 반영됩니다.
+            </p>
+          </div>
+        )}
+
+        <p className="text-xs text-gray-400 mt-3">
+          마지막 변경: <strong className="text-gray-600">{buyToggle.lastUpdatedBy}</strong> · {buyToggle.lastUpdatedAt}
+          {buyToggle.maintenanceReason && ` · 사유: ${buyToggle.maintenanceReason}`}
+        </p>
+      </div>
+
+      {/* 카드 4 — PM·ST 게임별 응모권 지급 기본 정책 (Phase 13) */}
+      <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
+        <div className="flex items-baseline justify-between mb-1">
+          <h3 className="text-sm font-semibold text-gray-900">PM·ST 게임별 응모권 지급 기본 정책</h3>
+          <span className="text-xs text-gray-400">기본값</span>
+        </div>
+        <p className="text-xs text-gray-500 mb-4">
+          게임 종료 시 응모권 자동 지급 여부와 기본 수량을 게임유형별로 설정합니다. 개별 게임에서 다른 값을 사용하려면 게임 생성 폼에서 오버라이드합니다.
+        </p>
+
+        <div className="border border-gray-100 rounded-lg overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 text-xs text-gray-500">
+              <tr>
+                <th className="text-left px-3 py-2 font-medium">게임유형</th>
+                <th className="text-center px-3 py-2 font-medium w-32">기본 지급</th>
+                <th className="text-center px-3 py-2 font-medium w-32">기본 수량 (장)</th>
+                <th className="text-left px-3 py-2 font-medium">비고</th>
+              </tr>
+            </thead>
+            <tbody>
+              {gameRewardInput.map((row, idx) => (
+                <tr key={row.type} className="border-t border-gray-100">
+                  <td className="px-3 py-3 text-gray-900 font-medium">{row.label}</td>
+                  <td className="px-3 py-3 text-center">
+                    <label className="inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={row.enabled}
+                        onChange={(e) => {
+                          const next = [...gameRewardInput];
+                          next[idx] = { ...row, enabled: e.target.checked };
+                          setGameRewardInput(next);
+                        }}
+                        className="sr-only peer"
+                      />
+                      <div className="relative w-9 h-5 bg-gray-200 peer-checked:bg-emerald-500 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-4 after:h-4 after:bg-white after:rounded-full after:transition-transform peer-checked:after:translate-x-4" />
+                    </label>
+                  </td>
+                  <td className="px-3 py-3 text-center">
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      step="1"
+                      disabled={!row.enabled}
+                      value={row.defaultAmount}
+                      onChange={(e) => {
+                        const next = [...gameRewardInput];
+                        next[idx] = { ...row, defaultAmount: Number(e.target.value) || 0 };
+                        setGameRewardInput(next);
+                      }}
+                      className="h-9 w-20 px-2 border border-gray-200 rounded-md text-sm text-center focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-400"
+                    />
+                  </td>
+                  <td className="px-3 py-3 text-xs text-gray-500">{row.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2.5 mt-3">
+          <p className="text-xs text-gray-600 leading-relaxed">
+            본 매트릭스는 <strong className="font-semibold text-gray-800">모든 PM·ST 게임의 기본값</strong>입니다. 개별 게임에서 다른 값을 사용하려면 게임 생성 폼에서 오버라이드하세요. 현재 PM·ST는 운영 0건 휴면 상태이므로 정책은 향후 운영 재개 시점에 적용됩니다.
+          </p>
+        </div>
+
+        <p className="text-xs text-gray-400 mt-3">
+          마지막 변경: <strong className="text-gray-600">{gameReward.lastUpdatedBy}</strong> · {gameReward.lastUpdatedAt}
+        </p>
       </div>
 
       {/* 저장 버튼 */}
-      <div className="flex items-center justify-between">
-        <p className="text-xs text-gray-500">
-          마지막 수정: <strong className="text-gray-700">{policy.lastUpdatedBy}</strong> · {policy.lastUpdatedAt}
-        </p>
+      <div className="flex items-center justify-end">
         <button
           type="button"
           onClick={handleSave}

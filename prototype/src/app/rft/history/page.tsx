@@ -133,7 +133,19 @@ function HistoryInner() {
         columns={[
           { key: 'occurredAt', label: '일시', width: '130px' },
           { key: 'nickname', label: '회원', width: '160px', render: (r) => (
-            <span className="text-gray-900 font-medium">{r.nickname}</span>
+            <a
+              href={`/members/${r.memberId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-900 font-medium hover:text-indigo-600 hover:underline inline-flex items-center gap-1"
+              onClick={(e) => e.stopPropagation()}
+              title="새 탭으로 회원 상세 진입"
+            >
+              {r.nickname}
+              <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
           )},
           { key: 'status', label: '상태', width: '80px', render: (r) => (
             <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${

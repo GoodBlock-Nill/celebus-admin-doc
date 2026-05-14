@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-DUK-201] 시즌 상세</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-DUK-201] 시즌 상세</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-DUK-201</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>DUK — 시즌 정책 설정</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 덕력 > 시즌 관리 > {시즌명}</td></tr>
+<tr><td>비고</td><td>Phase 9 신규. POLICY 영역 핵심 화면 — 티어 보상·캡·정산 정책 설정</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한(§3·§4), 다국어(§5), 활동 로그(§6)</td></tr>
+<tr><td>[CEB-BO-DUK-000] DUK 영역 가이드</td><td>라이프사이클(§6.1), 정산(§6.2), 캡(§6.3), 적립·소비 출처(§6.4·§6.5)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>개별 시즌의 정책(기간·캡·티어 보상·랭킹 보상·이월) 조회·수정. POLICY가 시즌 시작 전 정책을 확정하고, Active 중에는 캡·티어 일부만 수정 가능.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-DUK-101] > Row 클릭</li>
+</ul>
+<p>URL: <code>/duk/seasons/{id}</code></p>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 헤더</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 덕력 > 시즌 관리 > {시즌명(KO)}</code></li>
+<li>뒤로가기 (←) → [CEB-BO-DUK-101]</li>
+<li>타이틀: <code>{시즌명(KO)} [상태 Badge]</code></li>
+<li>우측 상단 액션:</li>
+<li>[수정하기] (Primary, Draft·Ready 상태)</li>
+<li>[캡 조정] (Active 상태, POLICY 사유 입력 필수)</li>
+<li>[게시하기] (Draft 상태)</li>
+<li>[강제 종료] (Active 상태, SUPER 전용 + 사유)</li>
+<li>[삭제하기] (Draft 한정)</li>
+</ul>
+<h3>2.2 정보 그리드</h3>
+<h4>A. 시즌 기본 정보</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>시즌명 (KO/EN/JP)</td><td>다국어</td></tr>
+<tr><td>시즌 설명 (KO/EN/JP)</td><td>200자</td></tr>
+<tr><td>시작일</td><td>YYYY.MM.DD 00:00 KST</td></tr>
+<tr><td>종료일</td><td>YYYY.MM.DD 23:59 KST</td></tr>
+</table>
+<h4>B. 캡 설정</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>회원당 누적 적립 캡</td><td>100,000 DUK (기본)</td></tr>
+<tr><td>캡 도달 시 동작</td><td>추가 적립 차단 + 회원 알림 ("이번 시즌 캡에 도달했어요")</td></tr>
+<tr><td>캡 조정 이력</td><td>(활동 로그 링크)</td></tr>
+</table>
+<h4>C. 티어 보상 설정</h4>
+<p>POLICY가 티어별 잔액 구간 + 보상 정의:</p>
+<table>
+<tr><th>티어</th><th>잔액 조건</th><th>응모권 보상</th><th>BIVE 보상</th><th>추가 보상</th></tr>
+<tr><td>Bronze</td><td>0 ~ 999</td><td>1</td><td>—</td><td>—</td></tr>
+<tr><td>Silver</td><td>1,000 ~ 4,999</td><td>3</td><td>—</td><td>—</td></tr>
+<tr><td>Gold</td><td>5,000 ~ 19,999</td><td>10</td><td>1 (Genesis Edition)</td><td>—</td></tr>
+<tr><td>Platinum</td><td>20,000 ~ 49,999</td><td>30</td><td>3</td><td>독점 콘텐츠</td></tr>
+<tr><td>Diamond</td><td>50,000+</td><td>100</td><td>10</td><td>VIP 뱃지 + 독점</td></tr>
+</table>
+<ul>
+<li>[티어 추가] / [티어 삭제] (Draft 한정)</li>
+<li>[티어 수정] (Draft·Ready 자유, Active 제한적 — 보상량만)</li>
+</ul>
+<blockquote>
+<p><strong>응모권 지급 정합</strong>: 티어별 응모권 보상은 시즌 정산 시 자동 발급되며, [CEB-BO-RFT-201] 변동 내역에서 출처 <strong>"덕력 랭킹 보상"</strong>으로 조회 가능 ([CEB-BO-006] §7.6 + [CEB-BO-010] §4-1 정합).</p>
+</blockquote>
+<h4>D. 랭킹 보상 설정</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>TOP N</td><td>100명 (POLICY 설정)</td></tr>
+<tr><td>1등 보상</td><td>한정 BIVE + 응모권 1,000장</td></tr>
+<tr><td>2~10등 보상</td><td>BIVE + 응모권 500장</td></tr>
+<tr><td>11~100등 보상</td><td>응모권 100장</td></tr>
+<tr><td>동률 처리</td><td>시즌 마지막 적립 시점 기준 (선착순)</td></tr>
+</table>
+<blockquote>
+<p><strong>응모권 지급 정합</strong>: 랭킹 보상으로 발급되는 응모권은 §C 티어 보상과 동일하게 출처 <strong>"덕력 랭킹 보상"</strong>으로 변동 기록.</p>
+</blockquote>
+<h4>E. 정산 정책</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>잔액 이월률</td><td>50% (기본, 0~100% 조정)</td></tr>
+<tr><td>정산 시점</td><td>종료일 자정 자동</td></tr>
+<tr><td>자동 알림</td><td>종료 7일·1일 전 회원 푸시</td></tr>
+<tr><td>정산 실패 재시도</td><td>3회 자동 → 운영자 수동</td></tr>
+</table>
+<h3>2.3 통계 섹션 (Active·Settling·Ended 상태)</h3>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>참여 회원</td><td>1,234명</td></tr>
+<tr><td>누적 적립 / 소비</td><td>12,345,678 / 5,432,100 DUK</td></tr>
+<tr><td>회원당 평균 잔액</td><td>5,615 DUK</td></tr>
+<tr><td>캡 도달 회원</td><td>12명 (1.0%)</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 규칙·로직</h2>
+<h3>3.1 권한별 분기</h3>
+<p>[CEB-BO-DUK-000] §3 적용:</p>
+<table>
+<tr><th>권한</th><th>진입</th><th>[수정]</th><th>[캡 조정] (Active)</th><th>[게시]</th><th>[강제 종료]</th><th>[삭제]</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅ (Draft)</td></tr>
+<tr><td>OPERATOR</td><td>✅ (R)</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅ (Draft)</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>❌</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</table>
+<h3>3.2 상태별 수정 가능 항목</h3>
+<table>
+<tr><th>항목</th><th>Draft</th><th>Ready</th><th>Active</th><th>Settling</th><th>Ended</th></tr>
+<tr><td>시즌명·설명 (다국어)</td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td></tr>
+<tr><td>시작일</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>종료일</td><td>✅</td><td>✅ (연장만)</td><td>✅ (연장만)</td><td>❌</td><td>❌</td></tr>
+<tr><td>캡</td><td>✅</td><td>✅</td><td><strong>✅ (사유 필수, 신규 적립부터 적용)</strong></td><td>❌</td><td>❌</td></tr>
+<tr><td>티어 추가·삭제</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>티어 보상량</td><td>✅</td><td>✅</td><td><strong>✅ (사유 필수)</strong></td><td>❌</td><td>❌</td></tr>
+<tr><td>랭킹 보상</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>이월률</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+</table>
+<h3>3.3 게시 검증</h3>
+<p>[게시하기] 클릭 시 검증:</p>
+<ul>
+<li>다국어 KO/EN/JP 3언어 모두 입력</li>
+<li>시작일·종료일·캡·티어 1개 이상·랭킹 보상 모두 설정</li>
+<li>Active 시즌 미존재 ([CEB-BO-DUK-101] §4.3)</li>
+</ul>
+<h3>3.4 강제 종료 (SUPER 전용)</h3>
+<p>운영 사고 등 비상 상황에서 SUPER가 즉시 종료. 사유 입력 + 2FA 재인증. 즉시 정산 트리거.</p>
+<hr>
+<h2>4. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>정보 그리드 Skeleton</td></tr>
+<tr><td>Default</td><td>정상</td></tr>
+<tr><td>Settling</td><td>통계 영역 "정산 진행 중..." 안내</td></tr>
+<tr><td>Error</td><td>"시즌 정보를 불러오지 못했습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>5. 활동 로그</h2>
+<p>[CEB-BO-DUK-000] §5 적용:</p>
+<ul>
+<li>시즌 정책 수정 / 캡 조정 / 티어 보상 설정 / 게시 / 강제 종료 / 삭제 — 모두 별도 행 기록</li>
+</ul>
+<hr>
+<h2>6. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>시즌 미존재</td><td>Toast (Error) → [CEB-BO-DUK-101] 리다이렉트</td></tr>
+<tr><td>게시 검증 실패</td><td>Toast (Error): "시작일·캡·티어·랭킹 보상을 모두 설정해주세요."</td></tr>
+<tr><td>Active 시즌 존재 — 게시 시도</td><td>Toast (Error): "현재 Active 시즌이 있습니다."</td></tr>
+<tr><td>캡 조정 시 사유 미입력</td><td>Toast (Error): "캡 변경 사유를 입력해주세요."</td></tr>
+<tr><td>정산 실패 (시스템 알림)</td><td>SUPER 푸시 + 자동 재시도 3회</td></tr>
+</table>
+<hr>
+<h2>7. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>관계</th></tr>
+<tr><td>CEB-BO-DUK-101</td><td>상위</td></tr>
+<tr><td>CEB-BO-DUK-102</td><td>시즌 랭킹 (정산 시 보상 지급)</td></tr>
+<tr><td>CEB-BO-DUK-401</td><td>변동 내역 (시즌 단위 필터링)</td></tr>
+<tr><td>CEB-BO-USR-201 [활동내역] 탭</td><td>회원 단위 DUK 이력</td></tr>
+</table>
+<hr>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026-05-06</td><td>@Nill Yoo</td><td>Phase 9 신규. ① 정보 그리드 5섹션 (기본/캡/티어/랭킹/정산) ② <strong>티어 보상 매트릭스</strong> 5단계 (Bronze~Diamond) 기본값 정의 ③ <strong>상태별 수정 매트릭스</strong> §3.2 — Active 캡·티어 보상량 수정 가능 (사유 필수) ④ 게시 검증 §3.3 ⑤ SUPER 강제 종료 + 2FA ⑥ 활동 로그 6종</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-14</strong></td><td><strong>@Nill Yoo</strong></td><td>§2.2-C 티어 보상·§2.2-D 랭킹 보상에 응모권 지급 시 출처 "덕력 랭킹 보상"으로 변동 기록 정합 명시 ([CEB-BO-006] §7.6 + [CEB-BO-010] §4-1 정합)</td></tr>
+</table>
+
+</body>
+</html>

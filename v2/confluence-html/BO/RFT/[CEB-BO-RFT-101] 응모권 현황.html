@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-RFT-101] 응모권 현황</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-RFT-101] 응모권 현황</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-RFT-101</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>RFT — 응모권</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.14</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 응모권 > 응모권 현황</td></tr>
+<tr><td>비고</td><td></td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-14 · 버전: <strong>v2.2</strong> (출처 분포 5종 재정의, 일일 미션 폐기, 덕력 랭킹 보상 신규, 닉네임 새탭 링크화)</p>
+<p>화면 경로: <code>/rft/current</code> · Breadcrumb: <code>홈 › 응모권 › 응모권 현황</code></p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>응모권의 발급·보유·사용 총량과 출처별 발급·사용 분포를 한 화면에서 모니터링하는 대시보드. 분석·CS 대응 용도. <strong>순수 조회 전용</strong> — 운영자가 데이터를 직접 수정할 수 없다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/rft/current</code></td></tr>
+<tr><td>Breadcrumb</td><td>홈 / 응모권 / 응모권 현황</td></tr>
+<tr><td>진입 경로</td><td>사이드바 "래플 > 응모권 현황"</td></tr>
+<tr><td>용도</td><td>응모권 발급·보유·사용 추이 모니터링, 출처별 비중 분석</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<p>페이지 제목 우측에 <strong>기간 필터 5종</strong> 토글 버튼:</p>
+<table>
+<tr><th>옵션</th><th>의미</th></tr>
+<tr><td>오늘</td><td>오늘 0시 ~ 현재</td></tr>
+<tr><td>이번 주</td><td>이번 주 월요일 0시 ~ 현재</td></tr>
+<tr><td>이번 달</td><td>이번 달 1일 0시 ~ 현재 (기본값)</td></tr>
+<tr><td>올해</td><td>올해 1월 1일 0시 ~ 현재</td></tr>
+<tr><td>전체</td><td>누적 전체 (기간 제한 없음)</td></tr>
+</table>
+<p>기간 변경 시 통계 카드 + 분포 패널의 발급·사용 수치가 해당 기간 기준으로 재집계된다. <strong>보유 카드는 시점 스냅샷이므로 기간 필터 영향을 받지 않는다</strong>.</p>
+<h3>2-2. 통계 카드 (가로 3개)</h3>
+<table>
+<tr><th>카드</th><th>의미</th></tr>
+<tr><td>총 발급</td><td>기간 내 발급된 응모권 누적 수량 (에메랄드 톤)</td></tr>
+<tr><td>총 보유</td><td><strong>현재 시점</strong> 회원들이 보유 중인 응모권 잔액 합계. 기간 필터 영향 없음</td></tr>
+<tr><td>총 사용</td><td>기간 내 사용된 응모권 누적 수량 (회색 톤)</td></tr>
+</table>
+<h3>2-3. 출처별 분포 패널 (풀폭, grid-cols-1)</h3>
+<p>가로 풀폭 단일 패널에 발급·사용 분포를 상하로 분리하여 노출. 정규 발급 출처 5종 + 사용 출처 1종 = 정규 6종.</p>
+<h4>상단: 정규 발급 출처 분포 (에메랄드 톤 배지 "발급 5종")</h4>
+<ul>
+<li>막대 5개: <strong>퀘스트 보상 / PM·ST 보상 / BIVE 보유혜택 / 덕력 랭킹 보상 / GP로 응모권 구매</strong></li>
+<li>각 항목에 "+{N}장 ({비중%})" 표시</li>
+<li><strong>막대 클릭 시 [CEB-BO-RFT-201]로 이동하여 해당 출처 필터 자동 적용</strong></li>
+</ul>
+<h4>하단: 출처별 사용 분포 (rose 톤 배지 "사용 1종")</h4>
+<ul>
+<li>막대 1개: 래플 응모 사용</li>
+<li>항목에 "-{N}장 (100%)" 표시</li>
+<li><strong>막대 클릭 시 [CEB-BO-RFT-201]로 이동하여 사용 출처 필터 자동 적용</strong></li>
+</ul>
+<blockquote>
+<p><strong>운영 카테고리(래플 취소 환불 / 운영자 보정 적립 / 만료 소멸 / 운영자 회수)는 본 분포 패널에 노출하지 않는다</strong> — 정규 회원 노출 출처가 아니므로 [CEB-BO-RFT-201] 변동 내역에서만 조회 가능.</p>
+<p>⚠️ <strong>일일 미션 카드 제외</strong> — 일일 미션은 응모권을 발급하지 않음 ([CEB-BO-FQ-501] 덕력 25만 적립).</p>
+</blockquote>
+<h3>2-4. 최근 변동 (10건 고정 테이블)</h3>
+<table>
+<tr><th>컬럼</th><th>정렬</th><th>표시 내용</th></tr>
+<tr><td>일시</td><td>좌측</td><td>변동 발생 시각 (YYYY.MM.DD HH:mm)</td></tr>
+<tr><td>회원</td><td>좌측</td><td><strong>회원 닉네임 — 클릭 시 <code>target=_blank</code>로 [CEB-BO-USR-201] 회원 상세 새 탭 진입</strong> ([CEB-BO-RFT-201] §6 정합)</td></tr>
+<tr><td>변동</td><td>좌측</td><td>발급(+N장, 에메랄드) / 사용(-N장, rose)</td></tr>
+<tr><td>출처</td><td>좌측</td><td>한국어 출처명 (퀘스트 보상 / PM·ST 보상 / BIVE 보유혜택 / 덕력 랭킹 보상 / GP로 응모권 구매 / 래플 응모. 운영 카테고리는 "(운영) {유형}")</td></tr>
+<tr><td>아티스트 컨텍스트</td><td>좌측</td><td>V01D/iKON/CELEBUS 배지 또는 "전역"</td></tr>
+<tr><td>참조</td><td>좌측</td><td>관련 엔티티 식별값</td></tr>
+</table>
+<ul>
+<li><strong>10건 고정</strong> — 페이지네이션 없음</li>
+<li>우상단 <strong>"더 보기 →"</strong> 버튼 클릭 시 [CEB-BO-RFT-201] 응모권 변동 내역으로 이동 (필터 없이 전체)</li>
+</ul>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>헤더 토글</td><td>기간 필터 5종</td><td>통계·분포 집계 범위 결정 (보유 제외)</td></tr>
+<tr><td>통계 카드 1</td><td>총 발급</td><td>기간 내 발급 누적 수량</td></tr>
+<tr><td>통계 카드 2</td><td>총 보유</td><td>현재 시점 보유 잔액 합계 (기간 무관)</td></tr>
+<tr><td>통계 카드 3</td><td>총 사용</td><td>기간 내 사용 누적 수량</td></tr>
+<tr><td>분포 패널 상단</td><td>정규 발급 출처 5종</td><td>막대 클릭 → RFT-201 필터 이동</td></tr>
+<tr><td>분포 패널 하단</td><td>출처별 사용 1종</td><td>막대 클릭 → RFT-201 필터 이동</td></tr>
+<tr><td>최근 변동 테이블</td><td>10건 시계열</td><td>"더 보기" 클릭 → RFT-201</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<p>본 화면은 <strong>상태 변경 액션이 없는 조회 전용 화면</strong>이므로 상태별 분기 대신 데이터 가용성 분기만 존재.</p>
+<table>
+<tr><th>데이터 조건</th><th>동작</th></tr>
+<tr><td>기간 내 변동 0건</td><td>통계 카드 3개 모두 "0", 분포 패널 막대 모두 0% (회색), 최근 변동 테이블 "응모권 발급·사용 이력이 없습니다." 빈 상태</td></tr>
+<tr><td>분포 0% 카운트</td><td>막대 길이 0%, 텍스트만 회색 처리</td></tr>
+<tr><td>권한 없음 진입</td><td>[관리자 > 권한관리] 설정에 따라 화면 자체 미노출 또는 접근 차단</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>데이터 캐시</td><td>통계·분포 패널 = 5분 캐시 (실시간 대시보드 아님). 최근 변동 = 0분 캐시 (요청 시점 최신)</td></tr>
+<tr><td>보유 카드 시점</td><td><strong>현재 시점 스냅샷</strong>. 기간 필터 변경에도 값 고정</td></tr>
+<tr><td>막대 클릭 → 필터 이동</td><td>분포 막대 클릭 시 RFT-201의 출처 드롭다운에 해당 출처 자동 선택. 기간 필터는 RFT-101 선택값과 연계되지 않음 (RFT-201은 자체 기간 정책)</td></tr>
+<tr><td>변동 데이터</td><td>append-only 영구 보존. 만료·환수 없음 ([CEB-BO-010] §5 정합)</td></tr>
+</table>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>출처별 발급 막대 클릭</td><td>[CEB-BO-RFT-201] (출처 필터 자동 적용)</td></tr>
+<tr><td>출처별 사용 막대 클릭</td><td>[CEB-BO-RFT-201] (사용 출처 필터 자동 적용)</td></tr>
+<tr><td>"더 보기 →" 버튼</td><td>[CEB-BO-RFT-201] (필터 없음, 전체 노출)</td></tr>
+<tr><td>사이드바 "변동 내역"</td><td>[CEB-BO-RFT-201]</td></tr>
+<tr><td>회원 셀 (최근 변동) 클릭</td><td><strong>[CEB-BO-USR-201] 회원 상세 — <code>target=_blank</code> 새 탭 진입</strong></td></tr>
+<tr><td>사이드바 "응모권 발급 정책"</td><td>[CEB-BO-RFT-301] (앱 구매 토글 + GP 환율·한도 + PM/ST 정책)</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v2.2</strong></td><td><strong>2026-05-14</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>출처 분포 5종 재정의 + 닉네임 새탭 링크화</strong> — ① §2-3 발급 분포 4종 → 5종 (퀘스트·PM·ST·BIVE·덕력 랭킹·GP 구매). 일일 미션 카드 제거 ② §2-4 최근 변동 회원 컬럼에 <strong>새 탭 USR-201 진입</strong> 명시 ③ §6 연관 화면에 RFT-301 추가 + 회원 셀 동작 "참고" → 명확화 ④ 운영 카테고리(래플 취소 환불 / 운영자 보정 적립 / 만료 소멸 / 운영자 회수) 분포 비노출 명시</td></tr>
+<tr><td>v2.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>분포 패널 정합</strong> — 아티스트 컨텍스트별 분포 패널 + 보유 회원 분포 4구간 카드 전체 삭제. 출처별 분포 패널을 풀폭(grid-cols-1)으로 확장. 발급 분포 5종 → 4종(서포트 보상 영구 폐기). §3 노출 정보·§4 데이터 분기에서 관련 행 제거. Page Properties 표 신규(13필드)</td></tr>
+<tr><td>v2.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>RFL 톤 전면 재작성</strong> — 권한 매트릭스 제거 후 "[관리자 > 권한관리] 설정을 따름" 단일화. 개발 용어(EARN/USE/FANQUEST_REWARD 등) 한국어 전면 치환. 기간 필터 5종 유지. 최근 변동 10건 고정 + "더 보기" 원클릭. 분포 막대 클릭 시 RFT-201 필터 이동 명시</td></tr>
+<tr><td>(v1.x)</td><td>—</td><td>—</td><td>(v1.x 명세 전면 폐기. 이력 보존 목적의 참고용은 git history에서 확인)</td></tr>
+</table>
+
+</body>
+</html>

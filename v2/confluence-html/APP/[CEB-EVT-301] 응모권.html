@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-EVT-301] 응모권</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-EVT-301] 응모권</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-EVT-301</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>EVT(Raffle/응모)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>다국어 영향</td><td>Yes (KO/EN/JP)</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 응모권</td></tr>
+<tr><td>비고</td><td>v1 [CEB-FQ-210] 응모권 흡수. v2 BO [CEB-BO-006] §7.6 정합 (변동 유형 10종, 덕력 랭킹 보상 포함)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 개요</h2>
+<p>유저가 보유한 응모권(티켓) 수량을 확인하고, 적립·사용 거래 이력을 조회하는 화면. 응모권 구매(GP 사용) 진입점.</p>
+<h5>주요 기능</h5>
+<ul>
+<li>보유 응모권 실시간 표시</li>
+<li>응모권 구매 진입 (GP 사용, 비율은 정책 결정)</li>
+<li>적립 이력: Quest 보상, BIVE 보유 보상, ST 탈락 보상, PM 보상, GP 구매, 환불·회수</li>
+<li>사용 이력: Raffle 응모, 만료 소멸</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>[CEB-HOM-001] 홈 메인 > 응모권 카드/배너 진입</li>
+<li>[CEB-EVT-101] Raffle 메인 > 응모권 영역</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<pre><code>[&lt;] 응모권
+─────────────────────────────────
+🎫 보유 응모권  {N}장   [구매하기]
+─────────────────────────────────
+[ 적립 ]  [ 사용 ]
+─────────────────────────────────
+이력 리스트 (무한 스크롤)
+  [{아티스트}] QUEST
+  {Quest title}                 +{N}
+  YYYY.MM.DD hh:mm:ss
+─────────────────────────────────
+  Survival Trivia
+  {Game title}                  +{N}
+  YYYY.MM.DD hh:mm:ss
+─────────────────────────────────
+  {N} GP 사용
+  응모권 구매                   +{N}
+  YYYY.MM.DD hh:mm:ss
+─────────────────────────────────
+</code></pre>
+<table>
+<tr><th>영역</th><th>항목</th><th>설명</th></tr>
+<tr><td>Header</td><td>[<] / "응모권"</td><td></td></tr>
+<tr><td>보유 카드</td><td>🎫 + "보유 응모권" 레이블 + 수량(Big) + [구매하기]</td><td>실시간</td></tr>
+<tr><td>탭</td><td>[적립] / [사용] (2탭)</td><td>기본: 적립</td></tr>
+<tr><td>리스트</td><td>서브 타이틀 + 메인 타이틀 + 일시 + ±수량 (보라색)</td><td>페이지네이션 무한 스크롤 (20건)</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 규칙·로직</h2>
+<h3>3.1 변동 유형 매핑 ([CEB-BO-006] §7.6 정합)</h3>
+<h4>적립 탭 (+ 변동)</h4>
+<table>
+<tr><th>변동 유형</th><th>서브 타이틀</th><th>메인 타이틀</th><th>출처</th></tr>
+<tr><td>퀘스트 보상</td><td>[{아티스트}] 퀘스트</td><td>{Quest 타이틀}</td><td>Quest 검수 승인</td></tr>
+<tr><td>PM·ST 보상</td><td>Survival Trivia / Prediction Market</td><td>{게임 타이틀}</td><td>게임 종료 시 자동 (게임별 응모권 지급 토글이 켜져 있을 때)</td></tr>
+<tr><td>BIVE 보유혜택</td><td>[{아티스트}] BIVE</td><td>BIVE 보유 보상</td><td>매일 자정 직후 자동</td></tr>
+<tr><td>덕력 랭킹 보상</td><td>[덕력] {시즌명}</td><td>시즌 랭킹·티어 보상</td><td>덕력 시즌 정산 시 자동 발급</td></tr>
+<tr><td>GP로 응모권 구매</td><td>{N} GP 사용</td><td>응모권 구매</td><td>회원이 응모권 구매 화면에서 직접 구매</td></tr>
+<tr><td>운영 — 취소 환불</td><td>(운영) 응모 취소 환불</td><td>{Raffle 타이틀}</td><td>래플 취소 시 운영자 환불</td></tr>
+<tr><td>운영 — 보정 적립</td><td>(운영) 보정 적립</td><td>(관리자 메모)</td><td>운영자 수동 보정 적립</td></tr>
+</table>
+<h4>사용 탭 (− 변동)</h4>
+<table>
+<tr><th>변동 유형</th><th>서브 타이틀</th><th>메인 타이틀</th><th>출처</th></tr>
+<tr><td>래플 응모 사용</td><td>[{아티스트}] 래플</td><td>{Raffle 타이틀}</td><td>래플 응모</td></tr>
+<tr><td>만료 소멸</td><td>(시스템) 만료 소멸</td><td>(자동)</td><td>응모권 유효기간 만료</td></tr>
+<tr><td>운영 — 회수</td><td>(운영) 회수</td><td>(관리자 메모)</td><td>어뷰징·정책 위반 회수</td></tr>
+</table>
+<blockquote>
+<p>⚠️ <strong>일일 미션은 응모권을 발급하지 않음</strong> — [CEB-FQ-501] 일일 미션 보상은 <strong>덕력 25 적립</strong> (응모권 미발급).</p>
+</blockquote>
+<h3>3.2 탭 동작</h3>
+<ul>
+<li>탭 전환 시 해당 부호의 이력만 필터링</li>
+<li>전환 시 리스트 최상단으로 스크롤 초기화</li>
+</ul>
+<h3>3.3 [구매하기] 동작</h3>
+<ul>
+<li>탭 시 응모권 구매 화면(Buy-RF-Ticket-001, [CEB-BO-RFT-301] §5에서 정의)으로 이동</li>
+<li>GP 사용 → 응모권 적립 (변동 유형: GP로 응모권 구매)</li>
+<li>교환 비율과 1일 한도는 [CEB-BO-RFT-301] 정책 화면에서 운영자가 조정</li>
+<li><strong>앱내 구매 운영 토글이 OFF인 경우</strong>: [구매하기] 버튼이 [점검중]으로 비활성. 탭 시 토스트 안내 ("현재 응모권 구매가 일시적으로 중단되었습니다.")</li>
+</ul>
+<h3>3.4 정렬·페이지네이션</h3>
+<table>
+<tr><th>항목</th><th>규칙</th></tr>
+<tr><td>정렬</td><td>최신 일시순 (desc)</td></tr>
+<tr><td>검색</td><td>없음</td></tr>
+<tr><td>페이지네이션</td><td>무한 스크롤 (20건씩 추가 로드)</td></tr>
+</table>
+<hr>
+<h2>4. UI 상태·에러</h2>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>Loading</td><td>Skeleton</td></tr>
+<tr><td>Empty (적립)</td><td>일러스트 + "응모권 적립 내역이 없어요"</td></tr>
+<tr><td>Empty (사용)</td><td>일러스트 + "응모권 사용 내역이 없어요"</td></tr>
+<tr><td>Network Error</td><td>에러 메시지 + [재시도]</td></tr>
+</table>
+<hr>
+<h2>5. 연관 화면</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-HOM-001</td><td>홈 메인</td><td>진입</td></tr>
+<tr><td>CEB-EVT-101</td><td>Raffle 메인</td><td>형제</td></tr>
+<tr><td>CEB-EVT-102</td><td>Raffle 상세 (진행중)</td><td>응모권 사용 발생처</td></tr>
+<tr><td>Buy-RF-Ticket-001</td><td>응모권 구매</td><td>[구매하기] 진입 ([CEB-BO-RFT-301] §5에서 정의)</td></tr>
+<tr><td>CEB-BO-FQ-301</td><td>응모권 거래 내역 (BO)</td><td>데이터 마스터</td></tr>
+</table>
+<hr>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026-05-06</td><td>@Nill Yoo</td><td>Phase 11 신규. v1 [CEB-FQ-210] (Carl Lee, v2.0 2026-04-07) 흡수. ① 9종 거래 코드 매핑 정합 (BO-006 §7.6) ② BIVE 보유 보상 적립 경로 추가 ③ 만료 소멸·운영 회수 사용 케이스 추가 ④ 화면 ID CEB-FQ-210 → CEB-EVT-301 (EVT 영역 정합)</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-14</strong></td><td><strong>@Nill Yoo</strong></td><td>변동 유형 정합 갱신. ① 덕력 랭킹 보상 신규 적립 항목 (덕력 시즌 정산 시 티어·랭킹 보상 자동 발급) ② 일일 미션 응모권 미발급 명시 (덕력 25만 적립) ③ §3.3 [구매하기]에 앱내 구매 운영 토글(OFF 시 [점검중]) 분기 추가 ④ 연관 화면 Buy-RF-Ticket-001로 통일</td></tr>
+</table>
+
+</body>
+</html>

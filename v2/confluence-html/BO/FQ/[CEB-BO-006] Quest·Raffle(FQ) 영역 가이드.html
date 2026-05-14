@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-006] Quest(FQ) 영역 가이드</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-006] Quest(FQ) 영역 가이드</h1>
+<blockquote>
+<p>⚠️ <strong>영역 분리 (v1.2, 2026-05-13)</strong> — 본 문서는 v1.1까지 Quest와 Raffle을 함께 다뤘으나, 사이드바 메뉴 재구성으로 <strong>Raffle은 [CEB-BO-012] RFL 독립 영역</strong>(<code>v2/BO/RFL/</code>)으로 이전되었습니다. 본 문서는 이제 <strong>Quest 영역 전용</strong>입니다. Raffle 명세는 [CEB-BO-012] 및 <code>[CEB-BO-RFL-101 ~ 203-MD-NOTE]</code> 참조.</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-006</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>BO Quest·Raffle 영역 (FQ)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.13</td></tr>
+<tr><td>비고</td><td>v1.1 — 사이드바 메뉴 재구성: Quest는 "에피소드" 그룹 하위 페이지(<code>/sq/quests</code>), Raffle은 "래플" 그룹(<code>/raffle</code>)으로 분리. 응모권 그룹 폐기 → "래플" 그룹으로 흡수</td></tr>
+</table>
+<hr>
+<h2>1. 개요</h2>
+<p>Quest·Raffle(FQ) 영역은 CELEBUS 팬퀘스트 서비스의 <strong>운영 핵심</strong>으로, Quest(미션형) 와 Raffle(추첨형) 두 종류 콘텐츠의 생성·검수·추첨·배송을 담당한다. 분석 리포트(<code>[CEB-BO-001-A]</code>)에서 검증된 바와 같이 현재 BO 운영의 <strong>활성 영역</strong>이며, BIVE NFT 자동 민팅과도 연결되어 있다 (24개 캠페인 중 23개가 팬퀘스트 보상).</p>
+<table>
+<tr><th>항목</th><th>위치</th></tr>
+<tr><td>마스터 가이드</td><td>[CEB-BO-001] §2 12영역 매핑 (#1 FQ), §3 마이그레이션 전략</td></tr>
+<tr><td>영역 ID 체계</td><td>[CEB-BO-001] §5 — <code>CEB-BO-FQ-{번호}[-{유형}]</code></td></tr>
+<tr><td>권한 매트릭스</td><td>[CEB-BO-000] §3·§4 (4단계 권한 정책)</td></tr>
+<tr><td>다국어 입력</td><td>[CEB-BO-000] §5 (KO/EN/JP 3언어 동시 필수)</td></tr>
+<tr><td>활동 로그</td><td>[CEB-BO-000] §6 (3년 보관 append-only)</td></tr>
+<tr><td>BIVE 보상 연결</td><td>[CEB-BO-004] §4.3 민팅 캠페인 — 팬퀘스트 보상 자동 민팅</td></tr>
+<tr><td>분석 리포트</td><td>[CEB-BO-001-A] §3.7 팬퀘스트 영역 검증</td></tr>
+</table>
+<hr>
+<h2>1A. 사이드바 메뉴 위치 (v1.1)</h2>
+<p>v1.1부터 Quest/Raffle은 <strong>탭이 아닌 독립 페이지</strong>이며 서로 다른 메뉴 그룹에 속한다.</p>
+<pre><code>에피소드 (BookOpenIcon)
+  ├─ 그룹 리스트          → /sq/groups/list
+  ├─ 팬퀘스트 대기내역    → /sq/pending
+  └─ 팬퀘스트            → /sq/quests        ★ 이전 /fanquest Quest 탭
+래플 (SparklesIcon)       ← 이전 "팬퀘스트" 단일 항목을 그룹으로 승격
+  ├─ 래플                → /raffle           ★ 이전 /fanquest Raffle 탭
+  ├─ 응모권 현황         → /rft/current      (응모권 그룹에서 이동)
+  └─ 변동 내역           → /rft/history      (응모권 그룹에서 이동)
+</code></pre>
+<blockquote>
+<p>⚠️ 기존 <code>/fanquest</code>는 <code>/sq/quests</code>로 자동 redirect 처리되어 북마크 호환성 유지. 상세·수정·생성·반려사유 라우트(<code>/fanquest/[id]</code>, <code>/fanquest/[id]/edit</code>, <code>/fanquest/create</code>, <code>/fanquest/reject-reasons</code>)는 그대로 유지된다.</p>
+</blockquote>
+<hr>
+<h2>2. 화면 목록 (34개)</h2>
+<h3>2.1 메인 진입 (2 · v1.1부터 독립 페이지)</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>라우트</th><th>유형</th><th>v1 흡수 / v2 신규</th><th>마이그레이션 상태</th></tr>
+<tr><td>CEB-BO-FQ-101</td><td>팬퀘스트 (Quest 리스트)</td><td><code>/sq/quests</code></td><td>Page</td><td>v1 흡수 + v2 정책 호환</td><td>✅ v1.1</td></tr>
+<tr><td>CEB-BO-FQ-102</td><td>래플 (Raffle 리스트)</td><td><code>/raffle</code></td><td>Page</td><td>v1 흡수 + v2 정책 호환</td><td>✅ v1.1 (스텁)</td></tr>
+</table>
+<h3>2.2 Quest 생성·생성 모달 (5)</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th><th>마이그레이션 상태</th></tr>
+<tr><td>CEB-BO-FQ-101-CREATE</td><td>Quest 생성</td><td>Page</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-CANCEL</td><td>Quest 생성 취소</td><td>Modal</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-COMPLE</td><td>Quest 생성 완료</td><td>Modal</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-ADD</td><td>반려사유 추가</td><td>Modal</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-EDIT</td><td>반려사유 수정</td><td>Modal</td><td>후속</td></tr>
+</table>
+<h3>2.3 Quest 상세·수정·검수 (8)</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th><th>마이그레이션 상태</th></tr>
+<tr><td>CEB-BO-FQ-201</td><td>Quest 상세 (기본정보 탭)</td><td>Page</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-202</td><td>Quest 상세 (대기내역 탭)</td><td>Page</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-203</td><td>Quest 상세 (처리내역 탭)</td><td>Page</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-201-EDIT</td><td>Quest 수정</td><td>Page</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-OPEN</td><td>Quest 게시</td><td>Modal</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-CLOSE</td><td>Quest 종료</td><td>Modal</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-DELETE</td><td>Quest 삭제</td><td>Modal</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-202-MD-REJECT</td><td>Quest 반려사유</td><td>Modal</td><td>후속</td></tr>
+</table>
+<h3>2.4 Quest 부속 모달 (3)</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th></tr>
+<tr><td>CEB-BO-FQ-201-MD-CANCEL</td><td>Quest 수정 취소</td><td>Modal</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-COMPLE</td><td>Quest 수정 완료</td><td>Modal</td></tr>
+<tr><td>CEB-BO-FQ-101-REJETSET</td><td>반려사유 설정</td><td>Page</td></tr>
+</table>
+<h3>2.5 Raffle 생성·생성 모달 (3)</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th></tr>
+<tr><td>CEB-BO-FQ-102-CREATE</td><td>Raffle 생성</td><td>Page</td></tr>
+<tr><td>CEB-BO-FQ-102-MD-CANCEL</td><td>Raffle 생성 취소</td><td>Modal</td></tr>
+<tr><td>CEB-BO-FQ-102-MD-COMPLE</td><td>Raffle 생성 완료</td><td>Modal</td></tr>
+</table>
+<h3>2.6 Raffle 상세·수정·관리 (8)</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th></tr>
+<tr><td>CEB-BO-FQ-204</td><td>Raffle 상세 (기본정보 탭)</td><td>Page</td></tr>
+<tr><td>CEB-BO-FQ-204-EDIT</td><td>Raffle 수정</td><td>Page</td></tr>
+<tr><td>CEB-BO-FQ-204-MD-OPEN</td><td>Raffle 게시</td><td>Modal</td></tr>
+<tr><td>CEB-BO-FQ-204-MD-CLOSE</td><td>Raffle 종료</td><td>Modal</td></tr>
+<tr><td>CEB-BO-FQ-204-MD-DELETE</td><td>Raffle 삭제</td><td>Modal</td></tr>
+<tr><td>CEB-BO-FQ-204-MD-CANCEL</td><td>Raffle 수정 취소</td><td>Modal</td></tr>
+<tr><td>CEB-BO-FQ-204-MD-COMPLE</td><td>Raffle 수정 완료</td><td>Modal</td></tr>
+</table>
+<h3>2.7 Raffle 응모·추첨 (4)</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th></tr>
+<tr><td>CEB-BO-FQ-205</td><td>Raffle 상세 (응모내역 탭)</td><td>Page</td></tr>
+<tr><td>CEB-BO-FQ-205-MD-DETAIL</td><td>응모내역 상세</td><td>Modal</td></tr>
+<tr><td>CEB-BO-FQ-206</td><td>Raffle 상세 (추첨내역 탭)</td><td>Page</td></tr>
+<tr><td>CEB-BO-FQ-206-MD-DRAW</td><td>Raffle 추첨하기</td><td>Modal</td></tr>
+<tr><td>CEB-BO-FQ-206-MD-DETAIL</td><td>당첨자 비고사항</td><td>Modal</td></tr>
+</table>
+<h3>2.8 응모권 거래 (1)</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th></tr>
+<tr><td>CEB-BO-FQ-301</td><td>응모권 거래 내역</td><td>Page</td></tr>
+</table>
+<h3>2.9 일일 미션 (1, Phase 12 신규)</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th></tr>
+<tr><td>CEB-BO-FQ-501</td><td>일일 미션 관리</td><td>Page (3탭: 미션 풀·정책 설정·통계·로그)</td></tr>
+</table>
+<blockquote>
+<p>APP <code>[CEB-FQ-501]</code> v2.2 대응. 출석 5DUK + 일괄 25DUK + 스트릭 4단계 (7/14/30/100일).</p>
+</blockquote>
+<hr>
+<h2>2A. APP↔BO 영역 매핑 정합 (Phase 12 보강)</h2>
+<blockquote>
+<p>⚠️ <strong>APP과 BO의 영역 접두어 불일치 주의</strong> — APP 화면 ID의 영역 접두어는 BO 영역과 1:1로 일치하지 않는다. 다음 매핑을 따른다.</p>
+</blockquote>
+<table>
+<tr><th>APP 화면ID</th><th>APP 화면명</th><th>관리 BO 화면 (실제 운영)</th><th>BO 영역</th></tr>
+<tr><td>CEB-EVT-101</td><td>Raffle 메인 (앱)</td><td>CEB-BO-FQ-102</td><td><strong>FQ</strong> (Raffle 등록)</td></tr>
+<tr><td>CEB-EVT-102</td><td>Raffle 상세 (진행중)</td><td>CEB-BO-FQ-204</td><td><strong>FQ</strong> (기본정보 탭)</td></tr>
+<tr><td>CEB-EVT-102-MD</td><td>Raffle 응모 모달</td><td>CEB-BO-FQ-205</td><td><strong>FQ</strong> (응모내역 탭)</td></tr>
+<tr><td>CEB-EVT-103</td><td>Raffle 상세 (당첨)</td><td>CEB-BO-FQ-204~206</td><td><strong>FQ</strong></td></tr>
+<tr><td>CEB-EVT-104</td><td>Raffle 상세 (미당첨)</td><td>CEB-BO-FQ-206</td><td><strong>FQ</strong> (추첨내역 탭)</td></tr>
+<tr><td>CEB-EVT-201</td><td>팬덤 레벨 (앱)</td><td>CEB-BO-EVT-101/201/401</td><td><strong>EVT</strong> (팬덤 레벨 전용)</td></tr>
+<tr><td>CEB-EVT-301</td><td>응모권 (앱)</td><td>CEB-BO-FQ-301</td><td><strong>FQ</strong> (9종 거래 코드)</td></tr>
+<tr><td>CEB-FQ-501</td><td>일일 미션 (앱)</td><td>CEB-BO-FQ-501</td><td><strong>FQ</strong> (Phase 12 신규)</td></tr>
+</table>
+<p><strong>핵심 규칙</strong>:</p>
+<ul>
+<li>APP <strong>EVT-1xx</strong>는 모두 <strong>Raffle</strong> → <strong>BO-FQ</strong>에서 관리</li>
+<li>APP <strong>EVT-201</strong>만 <strong>팬덤 레벨</strong> → <strong>BO-EVT</strong>에서 관리</li>
+<li>APP <strong>EVT-301</strong>은 <strong>응모권 거래</strong> → <strong>BO-FQ-301</strong>에서 관리</li>
+</ul>
+<hr>
+<h2>3. 화면 ID 체계</h2>
+<p>[CEB-BO-001] §5 화면 ID 표 FQ 행 발췌.</p>
+<table>
+<tr><th>메인 List</th><th>Create</th><th>Edit</th><th>Detail (탭)</th><th>부속</th><th>모달</th></tr>
+<tr><td><strong>101</strong> (Quest 탭), <strong>102</strong> (Raffle 탭)</td><td>101-CREATE, 102-CREATE</td><td>201-EDIT, 204-EDIT</td><td>201~206 (Quest 3탭, Raffle 3탭)</td><td>301 (응모권 거래), 101-REJETSET</td><td>MD-OPEN, MD-CLOSE, MD-DELETE, MD-CANCEL, MD-COMPLE, MD-REJECT, MD-DETAIL, MD-DRAW, MD-ADD, MD-EDIT</td></tr>
+</table>
+<p><strong>번호 분배 사유</strong>:</p>
+<ul>
+<li>101 = Quest 메인 (Quest 탭), 102 = Raffle 메인 (Raffle 탭) — 두 종류 콘텐츠 분리</li>
+<li>201~203 = Quest 상세 3탭 (기본정보 / 대기내역 / 처리내역)</li>
+<li>204~206 = Raffle 상세 3탭 (기본정보 / 응모내역 / 추첨내역)</li>
+<li>301 = 응모권 거래 내역 (Quest·Raffle 전체 통합)</li>
+</ul>
+<hr>
+<h2>4. 권한 매트릭스</h2>
+<p>[CEB-BO-000] §4 적용. FQ 영역은 OPERATOR 중심 운영.</p>
+<h3>4.1 화면별 R/W/D</h3>
+<table>
+<tr><th>화면</th><th>SUPER</th><th>OPERATOR</th><th>POLICY</th><th>EXTERNAL_ARTIST</th></tr>
+<tr><td>FQ-101/102 메인</td><td>R</td><td>R/W (생성·검수)</td><td>R</td><td>R (자기 아티스트 한정)</td></tr>
+<tr><td>FQ-101-CREATE / 102-CREATE</td><td>R/W</td><td>R/W</td><td>—</td><td>R/W (자기 아티스트, 검수 제외)</td></tr>
+<tr><td>FQ-201/202/203/204 상세</td><td>R/W/D</td><td>R/W</td><td>R</td><td>R (자기 아티스트 한정)</td></tr>
+<tr><td>FQ-201-EDIT / 204-EDIT</td><td>R/W</td><td>R/W (생성자 본인 또는 SUPER 위임)</td><td>—</td><td>R/W (자기 아티스트)</td></tr>
+<tr><td>FQ-201-MD-OPEN/CLOSE 게시·종료</td><td>R/W</td><td>R/W</td><td>—</td><td>— (검수 권한 없음)</td></tr>
+<tr><td>FQ-201-MD-DELETE 삭제</td><td>R/W (Draft만)</td><td>R/W (Draft만)</td><td>—</td><td>R/W (자기 아티스트, Draft만)</td></tr>
+<tr><td>FQ-202-MD-REJECT 반려</td><td>R/W</td><td>R/W (검수자 본인)</td><td>—</td><td>—</td></tr>
+<tr><td>FQ-205 응모내역</td><td>R</td><td>R</td><td>R</td><td>R (자기 아티스트)</td></tr>
+<tr><td>FQ-206-MD-DRAW 추첨</td><td>R/W</td><td>R/W (추첨 실행)</td><td>—</td><td>—</td></tr>
+<tr><td>FQ-301 응모권 거래</td><td>R</td><td>R (조회 전용)</td><td>R</td><td>—</td></tr>
+<tr><td>FQ-101-REJETSET 반려사유 설정</td><td>R/W/D</td><td>R/W</td><td>—</td><td>—</td></tr>
+</table>
+<blockquote>
+<p><strong>EXTERNAL_ARTIST 제약</strong>: 자기 아티스트 한정 콘텐츠 등록·수정만 가능. 검수(승인·반려)·추첨·삭제(게시 후)는 본사 OPERATOR 이상이 처리.</p>
+</blockquote>
+<h3>4.2 Raffle 추첨 가드레일 (SUPER 추가 검증)</h3>
+<p>대규모 보상이 걸린 Raffle의 추첨은 추가 보안 절차 적용:</p>
+<table>
+<tr><th>조건</th><th>추가 검증</th></tr>
+<tr><td>응모권 사용 누적 ≥ 10,000장</td><td>SUPER 2FA 재인증 후 추첨 실행</td></tr>
+<tr><td>보상 BIVE 발행 ≥ 100장</td><td>SUPER 승인 모달 통과 후 추첨</td></tr>
+<tr><td>일반 Raffle</td><td>OPERATOR 단독 추첨 가능</td></tr>
+</table>
+<hr>
+<h2>5. 다국어 입력 정책</h2>
+<p>[CEB-BO-000] §5 적용. FQ 영역은 사용자 노출 텍스트 비중 매우 높음 — 3언어 동시 필수 엄격 적용.</p>
+<h3>5.1 필수 입력 필드</h3>
+<table>
+<tr><th>화면</th><th>필드</th><th>글자수</th><th>비고</th></tr>
+<tr><td>Quest/Raffle 생성</td><td>타이틀</td><td>50자</td><td>KO/EN/JP 3언어 모두 필수</td></tr>
+<tr><td>Quest/Raffle 생성</td><td>상세설명</td><td>500자</td><td>KO/EN/JP, WYSIWYG 줄바꿈 포함</td></tr>
+<tr><td>Quest/Raffle 생성</td><td>유저 가이드 (Quest 한정)</td><td>500자</td><td>KO/EN/JP</td></tr>
+<tr><td>반려사유 (운영자용 식별 명칭)</td><td>명칭</td><td>30자</td><td>KO 단일 (내부 관리)</td></tr>
+<tr><td>반려사유 (유저 안내 메시지)</td><td>메시지</td><td>200자</td><td>KO/EN/JP 3언어</td></tr>
+<tr><td>Raffle 응모 안내</td><td>안내문</td><td>200자</td><td>KO/EN/JP</td></tr>
+</table>
+<h3>5.2 임시저장 vs 게시 검증</h3>
+<ul>
+<li><strong>임시저장(Draft)</strong>: 1개 언어만 입력해도 허용</li>
+<li><strong>게시(Active 전환)</strong>: KO/EN/JP 모두 비어있지 않아야 함. 1개라도 빈 칸 → 게시 차단 + 토스트(Error) "모든 언어 필드를 입력해주세요"</li>
+</ul>
+<hr>
+<h2>6. 활동 로그 메시지 템플릿</h2>
+<p>[CEB-BO-000] §6 양식 적용. 모든 FQ 액션은 자동 로그 (3년 보관, append-only).</p>
+<table>
+<tr><th>액션</th><th>로그 메시지 (KO)</th><th>권한</th><th>발생 화면</th></tr>
+<tr><td>Quest 생성</td><td>Quest '{타이틀}'을(를) 생성했습니다. (상태: 임시저장/게시대기)</td><td>OPERATOR/SUPER</td><td>FQ-101-CREATE</td></tr>
+<tr><td>Quest 게시</td><td>Quest '{타이틀}'을(를) 게시했습니다. (보상: {보상 BIVE}, 종료: {종료일})</td><td>OPERATOR/SUPER</td><td>FQ-201-MD-OPEN</td></tr>
+<tr><td>Quest 수정</td><td>Quest '{타이틀}'의 정보를 수정했습니다. (변경 항목: {필드 목록})</td><td>OPERATOR/SUPER</td><td>FQ-201-EDIT</td></tr>
+<tr><td>Quest 종료</td><td>Quest '{타이틀}'을(를) 조기 종료했습니다. (참여자: {n}명, 사유: {요약})</td><td>OPERATOR/SUPER</td><td>FQ-201-MD-CLOSE</td></tr>
+<tr><td>Quest 삭제</td><td>Quest '{타이틀}'을(를) 삭제했습니다. (Draft 상태만 가능)</td><td>OPERATOR/SUPER</td><td>FQ-201-MD-DELETE</td></tr>
+<tr><td>검수 승인</td><td>Quest '{타이틀}'의 제출 {n}건을 승인했습니다. (총 보상 BIVE 민팅: {n}장)</td><td>OPERATOR/SUPER</td><td>FQ-202</td></tr>
+<tr><td>검수 반려</td><td>Quest '{타이틀}'의 제출 {n}건을 반려했습니다. (사유: {반려코드})</td><td>OPERATOR/SUPER</td><td>FQ-202-MD-REJECT</td></tr>
+<tr><td>반려사유 등록</td><td>반려사유 '{명칭}'을(를) 등록했습니다. (코드: {REJ_*})</td><td>OPERATOR/SUPER</td><td>FQ-101-MD-ADD</td></tr>
+<tr><td>반려사유 수정</td><td>반려사유 '{명칭}'의 메시지를 수정했습니다. (코드: {REJ_*})</td><td>OPERATOR/SUPER</td><td>FQ-101-MD-EDIT</td></tr>
+<tr><td>Raffle 생성</td><td>Raffle '{타이틀}'을(를) 생성했습니다. (응모 정원: {n}, 당첨 인원: {n})</td><td>OPERATOR/SUPER</td><td>FQ-102-CREATE</td></tr>
+<tr><td>Raffle 게시</td><td>Raffle '{타이틀}'을(를) 게시했습니다. (응모 마감: {일시})</td><td>OPERATOR/SUPER</td><td>FQ-204-MD-OPEN</td></tr>
+<tr><td>Raffle 수정</td><td>Raffle '{타이틀}'의 정보를 수정했습니다. (변경 항목: {필드 목록})</td><td>OPERATOR/SUPER</td><td>FQ-204-EDIT</td></tr>
+<tr><td>Raffle 종료</td><td>Raffle '{타이틀}'을(를) 조기 종료했습니다. (응모자: {n}명)</td><td>OPERATOR/SUPER</td><td>FQ-204-MD-CLOSE</td></tr>
+<tr><td>Raffle 삭제</td><td>Raffle '{타이틀}'을(를) 삭제했습니다. (Draft 상태만 가능)</td><td>OPERATOR/SUPER</td><td>FQ-204-MD-DELETE</td></tr>
+<tr><td><strong>Raffle 추첨 실행</strong></td><td><strong>Raffle '{타이틀}'의 추첨을 실행했습니다.</strong> (응모자 {n}명 → 당첨 {n}명, 시드: {hex})</td><td>OPERATOR/SUPER</td><td>FQ-206-MD-DRAW</td></tr>
+<tr><td>Raffle 추첨 SUPER 검증</td><td>Raffle '{타이틀}' 추첨 SUPER 추가 인증 통과 (응모권 {n}장 / BIVE {n}장)</td><td>SUPER</td><td>FQ-206-MD-DRAW</td></tr>
+<tr><td>당첨자 비고 수정</td><td>Raffle '{타이틀}' 당첨자 '{닉네임}' 비고를 수정했습니다.</td><td>OPERATOR/SUPER</td><td>FQ-206-MD-DETAIL</td></tr>
+<tr><td>응모권 환불</td><td>응모권 환불 처리: 회원 '{닉네임}'에게 {n}장 환불 (사유: {요약})</td><td>SUPER 전용</td><td>FQ-301</td></tr>
+</table>
+<hr>
+<h2>7. 영역 고유 정책</h2>
+<h3>7.1 Quest 라이프사이클</h3>
+<pre><code>임시저장 (Draft) → 게시 (Active) → 종료 (Ended)
+   ↓ 삭제 가능              ↓ 검수 진행          ↓ 보상 지급 완료
+   (Draft만)            (대기/처리 탭)         (수정 불가)
+</code></pre>
+<table>
+<tr><th>상태</th><th>설명</th><th>가능 액션</th></tr>
+<tr><td>Draft</td><td>임시저장. 미게시</td><td>수정·삭제·게시</td></tr>
+<tr><td>Active</td><td>진행 중. 유저 참여 가능</td><td>수정 (제한적), 종료, 검수</td></tr>
+<tr><td>Ended</td><td>종료. 추가 참여 불가</td><td>처리내역 조회만</td></tr>
+</table>
+<h3>7.2 Raffle 라이프사이클</h3>
+<pre><code>임시저장 (Draft) → 게시 (Active) → 추첨 대기 (Closed) → 종료 (Ended)
+   ↓ 삭제 가능        ↓ 응모 진행      ↓ 추첨 실행          ↓ 보상 지급 완료
+</code></pre>
+<table>
+<tr><th>상태</th><th>설명</th><th>가능 액션</th></tr>
+<tr><td>Draft</td><td>임시저장</td><td>수정·삭제·게시</td></tr>
+<tr><td>Active</td><td>응모 진행 중</td><td>수정 (제한적), 종료</td></tr>
+<tr><td>Closed</td><td>응모 마감, 추첨 대기</td><td>추첨 실행</td></tr>
+<tr><td>Ended</td><td>추첨 완료, 보상 지급 완료</td><td>응모·추첨내역 조회만</td></tr>
+</table>
+<h3>7.3 Quest 검수 워크플로우</h3>
+<pre><code>유저 제출 → [대기내역 탭] (Pending)
+              ↓
+   운영자 검토 ─┬→ 승인 → 보상 BIVE 자동 민팅 → [처리내역 탭] (Approved)
+                └→ 반려 → 반려사유 코드 지정 → [처리내역 탭] (Rejected)
+                                ↓
+                        유저 알림 + 재참여 가이드
+</code></pre>
+<h4>검수 시 BIVE 자동 민팅 (BO-004 §4.3 연동)</h4>
+<p>승인 시 자동 트리거:</p>
+<ol>
+<li>Quest의 보상 캠페인 ID 조회</li>
+<li>BIVE 토큰 발행 큐에 추가</li>
+<li>회원 외부 지갑으로 민팅 (블록 컨펌)</li>
+<li>회원 알림 + 활동 로그 ([CEB-BO-000] §6)</li>
+</ol>
+<p><strong>현재 운영 검증</strong> (분석 리포트 §3.5.3): V01D 23종 BIVE × 평균 100장 = ~2,768개가 이 경로로 발행됨.</p>
+<h3>7.4 반려사유 데이터베이스</h3>
+<p>[CEB-BO-FQ-101-REJETSET]에서 통합 관리. 반려사유는 코드(REJ_*)로 정규화하여 일관된 유저 안내 메시지를 보장.</p>
+<table>
+<tr><th>항목</th><th>정책</th></tr>
+<tr><td>코드 형식</td><td><code>REJ_{n}</code> (자동 채번, 4자리)</td></tr>
+<tr><td>운영자 식별 명칭</td><td>KO 단일, 30자 (내부 관리용)</td></tr>
+<tr><td>유저 안내 메시지</td><td>KO/EN/JP 3언어, 각 200자</td></tr>
+<tr><td>상태</td><td>Active (사용) / Inactive (비활성, 신규 검수에서 비노출)</td></tr>
+<tr><td>수정 시 영향</td><td>메시지 수정 → 신규 반려부터 적용. 과거 반려 건 영향 없음</td></tr>
+</table>
+<h3>7.5 Raffle 추첨 알고리즘</h3>
+<p><strong>시드 기반 결정론적 추첨</strong> (재계산 가능 + 무결성 보장):</p>
+<pre><code>seed = SHA256(raffleId + drawTimestamp + adminUserId + entryListSnapshot)
+shuffled = Fisher-Yates(entries, seed)
+winners = shuffled[0:winnerCount]
+</code></pre>
+<table>
+<tr><th>항목</th><th>정책</th></tr>
+<tr><td>시드 출처</td><td>추첨 실행 시점 hash (raffleId + timestamp + adminId + 응모 스냅샷)</td></tr>
+<tr><td>시드 기록</td><td>활동 로그에 <code>시드: {hex}</code> 기록 → 분쟁 시 재현 가능</td></tr>
+<tr><td>응모 스냅샷</td><td>추첨 실행 직전 응모 데이터 동결 (이후 응모 시도 자동 차단)</td></tr>
+<tr><td>중복 응모 가중치</td><td>응모권 1장 = 1엔트리 (10장 응모자는 10엔트리)</td></tr>
+<tr><td>당첨자 중복</td><td>1명당 최대 1회 당첨 (다중 응모해도 1회만)</td></tr>
+</table>
+<h3>7.6 응모권 변동 유형 (RFT 영역 SSOT)</h3>
+<p>응모권은 회원 노출 발급 출처 5종 + 사용 출처 1종 + 운영 카테고리 4종 = 총 10종 변동 유형으로 관리된다. RFT 영역(<code>v2/BO/RFT/</code>)이 자산 마스터이며, 본 §7.6은 변동 유형 SSOT.</p>
+<h4>정규 발급 출처 5종 (회원 노출 카드·필터)</h4>
+<table>
+<tr><th>변동 유형</th><th>트리거</th><th>SSOT 문서</th></tr>
+<tr><td>퀘스트 보상</td><td>Quest 검수 승인 시 자동 발급</td><td>[CEB-BO-FQ-203] §처리 내역 §승인</td></tr>
+<tr><td>PM·ST 보상</td><td>게임 종료 시 자동 (게임별 응모권 지급 토글이 켜져 있을 때)</td><td>[CEB-BO-RFT-301] §4 + [CEB-BO-RFT-302]</td></tr>
+<tr><td>BIVE 보유혜택</td><td>매일 자정 직후 자동 지급</td><td>[CEB-BO-BIVE-104] §혜택 관리</td></tr>
+<tr><td>덕력 랭킹 보상</td><td>덕력 시즌 정산 시 티어·랭킹 보상으로 자동 발급</td><td>[CEB-BO-DUK-201] §2.2-C·D + [CEB-BO-DUK-000] §6.2</td></tr>
+<tr><td>GP로 응모권 구매</td><td>회원이 앱 응모권 구매 화면에서 GP로 직접 구매</td><td>[CEB-BO-RFT-301] §3 (앱내 구매 운영 토글)</td></tr>
+</table>
+<h4>사용 출처 1종</h4>
+<table>
+<tr><th>변동 유형</th><th>트리거</th></tr>
+<tr><td>래플 응모 사용</td><td>래플 응모 시 차감</td></tr>
+</table>
+<h4>운영 카테고리 4종 (정규 발급 출처와 별도 분류)</h4>
+<table>
+<tr><th>변동 유형</th><th>트리거</th></tr>
+<tr><td>래플 취소 환불</td><td>운영자가 래플 강제 종료·취소 시 응모자 자동 환불</td></tr>
+<tr><td>운영자 보정 적립</td><td>최고 권한 운영자가 CS 대응으로 수동 환불</td></tr>
+<tr><td>만료 소멸</td><td>사용 기한 경과 자동 소멸</td></tr>
+<tr><td>운영자 회수</td><td>최고 권한 운영자가 부정 이용 회수 ([CEB-BO-USR] §7.4 연동)</td></tr>
+</table>
+<blockquote>
+<p>⚠️ <strong>일일 미션은 응모권을 발급하지 않음</strong> — 일일 미션 보상은 <strong>덕력 25 적립</strong> ([CEB-BO-FQ-501] §2.4 정합)이며, 응모권 변동을 발생시키지 않는다. RFT 영역의 정규 발급 출처 5종에 포함되지 않음.</p>
+</blockquote>
+<hr>
+<h2>8. v1 → v2 마이그레이션 매핑</h2>
+<p>v1 BO-FQ 34개 모두 v2/BO/로 이전 + Deprecation 태그. 매핑 매트릭스(<code>v1_v2_mapping_matrix.md</code> §2) 와 동기화.</p>
+<table>
+<tr><th>v1 화면</th><th>v2 화면</th><th>주요 v2 정책 갱신</th></tr>
+<tr><td>BO-FQ-101 (Quest 탭)</td><td>CEB-BO-FQ-101</td><td>권한 매트릭스, 활동 로그 §6, 다국어 §5.1, [CEB-BO-000] 참조</td></tr>
+<tr><td>BO-FQ-101-Create</td><td>CEB-BO-FQ-101-CREATE</td><td>동일 + EXTERNAL_ARTIST 권한 적용</td></tr>
+<tr><td>BO-FQ-101-MD-CANCEL/COMPLE/ADD/EDIT/REJETSET</td><td>CEB-BO-FQ-101-MD-* / FQ-101-REJETSET</td><td>동일</td></tr>
+<tr><td>BO-FQ-102 (Raffle 탭) ~ 102-MD-*</td><td>CEB-BO-FQ-102 + 102-MD-*</td><td>동일</td></tr>
+<tr><td>BO-FQ-201/202/203 (Quest 상세 3탭)</td><td>CEB-BO-FQ-201/202/203</td><td>동일 + 검수 워크플로우 §7.3</td></tr>
+<tr><td>BO-FQ-201-EDIT, 201-MD-OPEN/CLOSE/DELETE/CANCEL/COMPLE</td><td>CEB-BO-FQ-201-EDIT + MD-*</td><td>동일</td></tr>
+<tr><td>BO-FQ-202-MD-REJECT</td><td>CEB-BO-FQ-202-MD-REJECT</td><td>반려사유 코드 표준화 §7.4</td></tr>
+<tr><td>BO-FQ-204/205/206 (Raffle 상세 3탭)</td><td>CEB-BO-FQ-204/205/206</td><td>동일 + 추첨 알고리즘 §7.5</td></tr>
+<tr><td>BO-FQ-204-EDIT, 204-MD-* (5종)</td><td>CEB-BO-FQ-204-EDIT + MD-*</td><td>동일</td></tr>
+<tr><td>BO-FQ-205-MD-DETAIL</td><td>CEB-BO-FQ-205-MD-DETAIL</td><td>동일</td></tr>
+<tr><td>BO-FQ-206-MD-DRAW</td><td>CEB-BO-FQ-206-MD-DRAW</td><td>SUPER 가드레일 §4.2 적용</td></tr>
+<tr><td>BO-FQ-206-MD-DETAIL</td><td>CEB-BO-FQ-206-MD-DETAIL</td><td>동일</td></tr>
+<tr><td>BO-FQ-301</td><td>CEB-BO-FQ-301</td><td>응모권 거래 코드 §7.6 표준화</td></tr>
+</table>
+<hr>
+<h2>9. 검증·QA 체크포인트</h2>
+<p>[CEB-BO-001] §9 적용.</p>
+<p>각 화면 마이그레이션 후 확인:</p>
+<ul>
+<li>[ ] Page Properties 에 @Nill Yoo 작성자 표기</li>
+<li>[ ] [CEB-BO-000] 공통 정책 참조 명시</li>
+<li>[ ] 권한 매트릭스 (§4) 본 영역 가이드 참조 또는 직접 명시</li>
+<li>[ ] 활동 로그 템플릿 (§6) 해당 액션 포함</li>
+<li>[ ] 다국어 입력 (§5) KO/EN/JP 3언어 명시</li>
+<li>[ ] 변경 이력 (changelog) 표 추가</li>
+<li>[ ] HTML 변환본 (<code>v2/confluence-html/BO/</code>) 자동 생성 확인 (<code>npm run docs:watch</code>)</li>
+<li>[ ] v1 원본에 deprecated 태그 추가</li>
+<li>[ ] <code>v1_v2_mapping_matrix.md</code> 해당 행 🟢 완료로 갱신</li>
+</ul>
+<hr>
+<h2>10. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.2</strong></td><td><strong>2026.05.13</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>영역 분리</strong> — 본 문서는 Quest 전용으로 축소. Raffle 명세 13개 화면은 모두 <strong>[CEB-BO-012] RFL 영역</strong>(<code>v2/BO/RFL/</code>)으로 이전, 기존 FQ-102/204/205/206 시리즈는 DEPRECATED 배너 처리. 제목 "Quest·Raffle(FQ)" → "<strong>Quest(FQ)</strong>". §2 화면 인벤토리에서 Raffle 행은 보존하되 DEPRECATED 표기</td></tr>
+<tr><td>v1.1</td><td>2026.05.13</td><td>@Nill Yoo</td><td><strong>사이드바 메뉴 재구성</strong> — Quest를 "에피소드" 그룹 하위 페이지(<code>/sq/quests</code>)로 이동, Raffle은 신규 "래플" 그룹(<code>/raffle</code>)으로 분리. 응모권 그룹 폐기 → 응모권 현황·변동 내역을 래플 그룹 안으로 흡수. §1A 신규 추가, §2.1 라우트 컬럼 추가. 기존 <code>/fanquest</code> → <code>/sq/quests</code> redirect. 상세/생성/수정 라우트는 그대로 유지</td></tr>
+<tr><td>v1.0</td><td>2026.05.05</td><td>@Nill Yoo</td><td>초안 작성. v1 BO-FQ 34개 화면을 v2 12영역 체계로 흡수하기 위한 영역 가이드. v2 BO-002~005 와 동일 구조 (Page Properties / 화면 목록 / 권한 매트릭스 / 다국어 / 활동 로그 / 영역 고유 정책 / 마이그레이션 매핑 / QA 체크). 영역 고유 정책 6개: Quest 라이프사이클 / Raffle 라이프사이클 / Quest 검수 워크플로우 (BIVE 자동 민팅 연동) / 반려사유 DB / Raffle 추첨 알고리즘 / 응모권 거래 코드. SUPER 추첨 가드레일 (응모권 10K+ 또는 BIVE 100+) 신규 정의. v1 BO-FQ 34개 v2 ID 매핑 명시.</td></tr>
+</table>
+
+</body>
+</html>
