@@ -1,259 +1,251 @@
-import { mockRankings } from './rankings';
-import { mockGames } from './games';
-import type { Participant, GPChange, GPChangeType, GameType, RankingUser } from '@/lib/types';
+/**
+ * 운영 사이트 회원 영역 100% 클론용 mock 데이터.
+ * - 운영 사이트 /members 의 컬럼·통계와 동일 구조
+ * - 운영 데이터(2026.05.06 기준): 전체 578 / 정상 568 / 정지 0 / 탈퇴대기 6 / 탈퇴완료 4
+ */
+
+export type AccountStatus = 'ACTIVE' | 'SUSPENDED' | 'WITHDRAWAL_PENDING' | 'WITHDRAWAL_COMPLETED';
+export type LoginType = 'GOOGLE' | 'APPLE' | 'KAKAO' | 'NAVER' | 'EMAIL';
 
 export interface Member {
   id: string;
   nickname: string;
   email: string;
-  currentGP: number;
+  phoneCountry: string; // +82, +86 등
+  phone: string;
+  walletAddress: string | null;
+  joinedAt: string; // YYYY.MM.DD HH:mm
+  // 상세
+  country: string;
+  loginType: LoginType;
+  lastLoginAt: string;
+  accountStatus: AccountStatus;
+  didIssued: boolean;
+  setApprovalGranted: boolean;
+  bio: string;
 }
 
-// Seeded PRNG for deterministic data
-function createSeededRandom(seed: number) {
+export const STATUS_LABEL: Record<AccountStatus, { label: string; bg: string; text: string }> = {
+  ACTIVE: { label: '정상', bg: 'bg-green-100', text: 'text-green-700' },
+  SUSPENDED: { label: '정지', bg: 'bg-red-100', text: 'text-red-700' },
+  WITHDRAWAL_PENDING: { label: '탈퇴대기', bg: 'bg-yellow-100', text: 'text-yellow-800' },
+  WITHDRAWAL_COMPLETED: { label: '탈퇴완료', bg: 'bg-gray-100', text: 'text-gray-600' },
+};
+
+export const LOGIN_LABEL: Record<LoginType, string> = {
+  GOOGLE: 'Google',
+  APPLE: 'Apple',
+  KAKAO: 'Kakao',
+  NAVER: 'Naver',
+  EMAIL: '이메일',
+};
+
+// Seeded RNG
+function rng(seed: number) {
   let s = seed;
   return () => {
-    s = (s * 16807 + 0) % 2147483647;
-    return (s - 1) / 2147483646;
+    s = (s * 1103515245 + 12345) & 0x7fffffff;
+    return s / 0x7fffffff;
   };
 }
 
-function randomHex(rand: () => number, length: number): string {
-  return Array.from({ length }, () => Math.floor(rand() * 16).toString(16)).join('');
+const REF = new Date('2026-05-06T13:03:00+09:00').getTime();
+function fmt(ts: number) {
+  const d = new Date(ts);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-// Fixed reference date for deterministic datetime generation
-const REF_DATE = new Date('2026-02-06T12:00:00+09:00').getTime();
+// 운영 회원 일부 + 가짜 데이터로 578명 생성
+const NICKNAMES = [
+  'in.mycosmos', 'qqqaas', 'luna_jiyun_lee', 'dhyem', 'jaea306122',
+  'manju', 'sally410504', 'sohyun0105', '', 'suu.b1n',
+  'mimi', 'jjeom5jjang', 'effieee02', 'xxxx', 'rdy0602',
+  'lena', 'xbdjeui', 'c.s.k', 'yoon', 'hello17',
+  'ttee', 'celebus', 'joonk85', 'teddy2', 'mice',
+];
 
-// Generate 15 members from rankings with deterministic currentGP
-const memberRand = createSeededRandom(100);
-export const mockMembers: Member[] = mockRankings.slice(0, 15).map((ranking) => ({
-  id: ranking.uid,
-  nickname: ranking.nickname,
-  email: `${ranking.nickname.replace(/\d+$/, '')}@celebus.com`,
-  currentGP: Math.floor(memberRand() * 45000) + 5000,
-}));
+const COUNTRIES: Array<[string, string, string]> = [
+  ['+82', 'KR', 'Korea, Republic of South Korea'],
+  ['+82', 'KR', 'Korea, Republic of South Korea'],
+  ['+82', 'KR', 'Korea, Republic of South Korea'],
+  ['+82', 'KR', 'Korea, Republic of South Korea'],
+  ['+86', 'CN', 'China'],
+  ['+81', 'JP', 'Japan'],
+  ['+1', 'US', 'United States'],
+];
+
+const LOGIN_TYPES: LoginType[] = ['GOOGLE', 'APPLE', 'KAKAO', 'NAVER', 'EMAIL'];
+
+export const members: Member[] = (() => {
+  const list: Member[] = [];
+  const total = 578;
+
+  for (let i = 0; i < total; i++) {
+    const r = rng(1000 + i);
+    const idNum = total - i; // ttee가 마지막(=가장 오래된, id 작은 값)
+    const nickname = NICKNAMES[i] ?? (r() > 0.05 ? `user_${idNum}` : '');
+    const [code, , country] = COUNTRIES[Math.floor(r() * COUNTRIES.length)];
+    const phone = String(Math.floor(r() * 9_000_000_000) + 1_000_000_000);
+    const walletAddress = r() > 0.08
+      ? `0x${Array.from({ length: 40 }, () => Math.floor(r() * 16).toString(16)).join('')}`
+      : null;
+    // 가입일은 첫 행이 가장 최근 (운영 정렬: 가입일 최신순)
+    const joinedTs = REF - i * (5 * 60 * 1000 + Math.floor(r() * 30 * 60 * 1000));
+    const lastLoginTs = joinedTs + Math.floor(r() * 30 * 86400000);
+
+    // 상태 분포: 568 정상 / 6 탈퇴대기 / 4 탈퇴완료 / 0 정지 (운영 데이터)
+    let accountStatus: AccountStatus = 'ACTIVE';
+    if (i === 15 || i === 100 || i === 200 || i === 300 || i === 400 || i === 500) accountStatus = 'WITHDRAWAL_PENDING';
+    if (i === 50 || i === 250 || i === 450 || i === 550) accountStatus = 'WITHDRAWAL_COMPLETED';
+
+    list.push({
+      id: String(idNum),
+      nickname,
+      email: nickname ? `${nickname.replace(/\W+/g, '')}@good-block.com` : '-',
+      phoneCountry: code,
+      phone,
+      walletAddress,
+      joinedAt: fmt(joinedTs),
+      country,
+      loginType: LOGIN_TYPES[Math.floor(r() * LOGIN_TYPES.length)],
+      lastLoginAt: fmt(Math.min(lastLoginTs, REF)),
+      accountStatus,
+      didIssued: r() > 0.55,
+      setApprovalGranted: r() > 0.5,
+      bio: '',
+    });
+  }
+  return list;
+})();
+
+export function getMemberStats() {
+  return {
+    total: members.length,
+    active: members.filter((m) => m.accountStatus === 'ACTIVE').length,
+    suspended: members.filter((m) => m.accountStatus === 'SUSPENDED').length,
+    withdrawalPending: members.filter((m) => m.accountStatus === 'WITHDRAWAL_PENDING').length,
+    withdrawalCompleted: members.filter((m) => m.accountStatus === 'WITHDRAWAL_COMPLETED').length,
+  };
+}
 
 export function getMemberById(id: string): Member | undefined {
-  return mockMembers.find(m => m.id === id);
+  return members.find((m) => m.id === id);
 }
 
-export function getRankingByUid(uid: string): RankingUser | undefined {
-  return mockRankings.find(r => r.uid === uid);
+// 운영 사이트의 BIVE 데이터 (in.mycosmos 회원이 1개 보유)
+export interface BiveOwned {
+  id: string;
+  memberId: string;
+  editionFull: string; // "CELEBUS / CELEBUS / CELEBUS" 형식
+  artistGroupFull: string;
+  artistFull: string;
+  biveName: string; // "CELEBUS Event-001"
+  grade: 'Event' | 'Ticket' | 'Mix' | 'Pick';
+  gradeNumber: string; // "001"
+  tokenIdShort: string; // "#3337"
+  tokenIdFull: string; // - (운영에서는 - 표시)
+  mintedAt: string; // YYYY.MM.DD
+  mintEvent: string; // "CELEBUS 1st Welcome ED"
+  holderNickname: string;
+  holderWalletShort: string; // "0x8023E9F2...3689Becc"
+  imageSrc: string;
+  // 기능상태
+  canSend: boolean;
+  canMix: boolean;
+  canPick: boolean;
 }
 
-// Games that can have participation (not Draft)
-const participableGames = mockGames.filter(g => g.status !== 'Draft' && g.status !== 'Ready');
+export const biveOwned: BiveOwned[] = [
+  {
+    id: 'bv-1',
+    memberId: '578', // in.mycosmos = id 578 (가장 최근 가입자, NICKNAMES[0])
+    editionFull: 'CELEBUS / CELEBUS / CELEBUS',
+    artistGroupFull: 'CELEBUS / CELEBUS / CELEBUS',
+    artistFull: 'CELEBUS / CELEBUS / CELEBUS',
+    biveName: 'CELEBUS Event-001',
+    grade: 'Event',
+    gradeNumber: '001',
+    tokenIdShort: '#3337',
+    tokenIdFull: '-',
+    mintedAt: '2026.05.06',
+    mintEvent: 'CELEBUS 1st Welcome ED',
+    holderNickname: 'in.mycosmos',
+    holderWalletShort: '0x8023E9F2...3689Becc',
+    imageSrc: 'https://assets.celebus.xyz/celebus/bive/6.png',
+    canSend: false,
+    canMix: false,
+    canPick: false,
+  },
+];
 
-const GP_TYPES: GPChangeType[] = ['PARTICIPATION', 'BOOSTING', 'REFUND', 'REWARD', 'EXCHANGE_IN', 'EXCHANGE_OUT', 'REFUND_CANCEL'];
-const NOTES_MAP: Record<GPChangeType, string> = {
-  PARTICIPATION: '게임 참여',
-  BOOSTING: '부스팅 사용',
-  REFUND: '참여 GP 환급',
-  REWARD: '예측 성공 보상',
-  EXCHANGE_IN: 'CELB → GP 교환',
-  EXCHANGE_OUT: 'GP → CELB 교환',
-  REFUND_CANCEL: '게임 취소 환불',
-};
-
-// Generate dedicated participant entries per member
-function generateMemberParticipants(member: Member, memberIndex: number): Participant[] {
-  const rand = createSeededRandom(memberIndex * 1000 + 7);
-  const gameCount = Math.floor(rand() * 16) + 25; // 25~40 games per member
-  const selectedGames = participableGames
-    .slice()
-    .sort(() => rand() - 0.5)
-    .slice(0, gameCount);
-
-  return selectedGames.map((game, i) => {
-    const isST = game.type === 'SURVIVAL_TRIVIA';
-    const isCompleted = game.status === 'Closed' || game.status === 'Ended';
-    const participationGP = game.participationCost;
-
-    if (isST) {
-      // Survival Trivia participant
-      const survivedStage = Math.floor(rand() * 10) + 1; // 1-10
-      const survivedAll = survivedStage === 10;
-      const heartsUsed = Math.floor(rand() * 3); // 0-2
-      const rewardGP = isCompleted && survivedAll ? Math.floor(rand() * 300) + 100 : 0;
-
-      return {
-        id: `mpart-${member.id}-${String(i + 1).padStart(3, '0')}`,
-        gameId: game.id,
-        nickname: member.nickname,
-        uid: member.id,
-        choice: null,
-        participationGP,
-        boostingGP: 0,
-        status: '참여 완료',
-        participatedAt: new Date(REF_DATE - rand() * 50 * 24 * 60 * 60 * 1000).toISOString(),
-        rewardGP,
-        refundGP: 0,
-        survivedStage,
-        heartsUsed,
-        eliminatedAtStage: survivedAll ? null : survivedStage,
-        gameType: 'SURVIVAL_TRIVIA' as GameType,
-      };
-    }
-
-    // Prediction Market participant
-    const choice: 'YES' | 'NO' = rand() > 0.5 ? 'YES' : 'NO';
-    const isCorrect = game.result ? choice === game.result : false;
-    const boostingGP = rand() > 0.4 ? game.boostingCost : 0;
-    const rewardGP = isCompleted && isCorrect ? Math.floor(rand() * 200) + 50 : 0;
-    const refundGP = isCompleted ? participationGP : 0;
-
-    return {
-      id: `mpart-${member.id}-${String(i + 1).padStart(3, '0')}`,
-      gameId: game.id,
-      nickname: member.nickname,
-      uid: member.id,
-      choice,
-      participationGP,
-      boostingGP,
-      status: '참여 완료',
-      participatedAt: new Date(REF_DATE - rand() * 50 * 24 * 60 * 60 * 1000).toISOString(),
-      rewardGP,
-      refundGP,
-      gameType: 'PREDICTION_MARKET' as GameType,
-    };
-  }).sort((a, b) => new Date(b.participatedAt).getTime() - new Date(a.participatedAt).getTime());
+export function getBivesByMember(memberId: string): BiveOwned[] {
+  return biveOwned.filter((b) => b.memberId === memberId);
 }
 
-// Generate GP change entries derived from actual participation data
-function generateMemberGPChanges(member: Member, memberIndex: number, participants: Participant[]): GPChange[] {
-  const rand = createSeededRandom(memberIndex * 2000 + 13);
-  const walletAddress = `0x${randomHex(rand, 40)}`;
-  const entries: GPChange[] = [];
-  let entryIndex = 0;
-
-  const makeEntry = (
-    type: GPChangeType, amount: number, datetime: string,
-    gameId: string | null, gameTitle: string | null,
-    exchangeId: string | null, txid: string | null, notes: string,
-    gameType?: GameType
-  ): GPChange => ({
-    id: `MGPC-${member.id}-${String(++entryIndex).padStart(4, '0')}`,
-    datetime, nickname: member.nickname, walletAddress,
-    type, amount, balanceAfter: 0,
-    relatedGameId: gameId, relatedGameTitle: gameTitle,
-    relatedGameType: gameType,
-    relatedExchangeId: exchangeId, txid, notes,
-  });
-
-  // Step 1: Derive GP changes from each participation
-  for (const p of participants) {
-    const game = mockGames.find(g => g.id === p.gameId);
-    const gameTitle = game?.title.ko ?? null;
-    const gameType = p.gameType ?? game?.type;
-    const isST = gameType === 'SURVIVAL_TRIVIA';
-    const pAt = new Date(p.participatedAt).getTime();
-
-    // PARTICIPATION note differs by game type
-    const participationNote = isST ? '트리비아 참여' : '게임 참여';
-    entries.push(makeEntry(
-      'PARTICIPATION', -p.participationGP, p.participatedAt,
-      p.gameId, gameTitle, null, null, participationNote, gameType
-    ));
-
-    // BOOSTING: PM only (ST has no boosting)
-    if (!isST && p.boostingGP > 0) {
-      entries.push(makeEntry(
-        'BOOSTING', -p.boostingGP,
-        new Date(pAt + 60000).toISOString(),
-        p.gameId, gameTitle, null, null, '부스팅 사용', gameType
-      ));
-    }
-
-    // REFUND: PM only (ST has no GP refund)
-    if (!isST && p.refundGP > 0) {
-      entries.push(makeEntry(
-        'REFUND', p.refundGP,
-        new Date(pAt + 2 * 86400000 + Math.floor(rand() * 3600000)).toISOString(),
-        p.gameId, gameTitle, null, null, '참여 GP 환급', gameType
-      ));
-    }
-
-    if (p.rewardGP > 0) {
-      // REWARD note differs by game type
-      const rewardNote = isST ? '생존 보상' : '예측 성공 보상';
-      entries.push(makeEntry(
-        'REWARD', p.rewardGP,
-        new Date(pAt + 2 * 86400000 + 3600000 + Math.floor(rand() * 3600000)).toISOString(),
-        p.gameId, gameTitle, null, null, rewardNote, gameType
-      ));
-    }
-  }
-
-  // Step 2: Add EXCHANGE_IN/OUT entries (5~10)
-  const exchangeCount = Math.floor(rand() * 6) + 5;
-  for (let i = 0; i < exchangeCount; i++) {
-    const isCharge = rand() > 0.3;
-    const amount = [100, 500, 1000, 2000, 5000][Math.floor(rand() * 5)];
-    const exId = `EX${String(Math.floor(rand() * 60) + 1).padStart(6, '0')}`;
-    const exTxid = `0x${randomHex(rand, 64)}`;
-    entries.push(makeEntry(
-      isCharge ? 'EXCHANGE_IN' : 'EXCHANGE_OUT',
-      isCharge ? amount : -amount,
-      new Date(REF_DATE - Math.floor(rand() * 60) * 86400000).toISOString(),
-      null, null, exId, exTxid,
-      isCharge ? 'CELB → GP 교환' : 'GP → CELB 교환'
-    ));
-  }
-
-  // Step 3: Sort chronologically ASC
-  entries.sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime());
-
-  // Step 4: Calculate initial charge to ensure positive balance at every point
-  // Simulate running balance to find the deepest deficit
-  let simBalance = 0;
-  let minSimBalance = 0;
-  for (const entry of entries) {
-    simBalance += entry.amount;
-    minSimBalance = Math.min(minSimBalance, simBalance);
-  }
-  // Initial charge must cover the deepest deficit plus a buffer
-  const initialCharge = Math.abs(minSimBalance) + 3000 + Math.floor(rand() * 5000);
-
-  const earliestDate = entries.length > 0
-    ? new Date(new Date(entries[0].datetime).getTime() - 86400000).toISOString()
-    : new Date(REF_DATE - 60 * 86400000).toISOString();
-
-  entries.unshift(makeEntry(
-    'EXCHANGE_IN', initialCharge, earliestDate,
-    null, null, `EX${String(Math.floor(rand() * 60) + 1).padStart(6, '0')}`,
-    `0x${randomHex(rand, 64)}`, 'CELB → GP 교환'
-  ));
-
-  // Step 5: Forward walk computing balanceAfter (start from 0)
-  let balance = 0;
-  for (const entry of entries) {
-    balance = Math.max(0, balance + entry.amount);
-    entry.balanceAfter = balance;
-  }
-
-  // Step 6: Update member.currentGP to final balance
-  member.currentGP = balance;
-
-  // Return sorted DESC for display
-  return entries.sort((a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime());
+// 참여내역 — 4서브탭 (투표·Quest·Raffle·부스팅)
+export interface VoteEntry {
+  id: string;
+  memberId: string;
+  status: 'Active' | 'Closed';
+  projectName: string; // "언더라이트 (UNDER:LIGHT)"
+  voteType: string; // "MAIN"
+  title: string; // "1차 메인 투표"
+  totalVotes: number;
+  lastEnteredAt: string;
 }
 
-// Pre-generate data for all members (cached at module level)
-// IMPORTANT: participants must be generated first, then GP changes derived from them
-const memberParticipantsCache = new Map<string, Participant[]>();
-const memberGPChangesCache = new Map<string, GPChange[]>();
+// ttee 회원에 운영 데이터 매칭: 1건
+export const voteEntries: VoteEntry[] = [
+  {
+    id: 've-1',
+    memberId: '1', // ttee
+    status: 'Active',
+    projectName: '언더라이트 (UNDER:LIGHT)',
+    voteType: 'MAIN',
+    title: '1차 메인 투표',
+    totalVotes: 4,
+    lastEnteredAt: '2026.03.25 13:37',
+  },
+];
 
-mockMembers.forEach((member, index) => {
-  const participants = generateMemberParticipants(member, index);
-  memberParticipantsCache.set(member.id, participants);
-  memberGPChangesCache.set(member.id, generateMemberGPChanges(member, index, participants));
-});
-
-export function getMemberParticipants(memberId: string): Participant[] {
-  return memberParticipantsCache.get(memberId) ?? [];
+export function getVotesByMember(memberId: string): VoteEntry[] {
+  return voteEntries.filter((v) => v.memberId === memberId);
 }
 
-export function getMemberGPChanges(memberId: string): GPChange[] {
-  return memberGPChangesCache.get(memberId) ?? [];
+// 게임존 GP 변동 — ttee 회원 9건 (운영 동일)
+export type GPChangeType = 'CHARGE' | 'WITHDRAW' | 'NONE';
+
+export interface GPChange {
+  id: string;
+  memberId: string;
+  occurredAt: string; // YYYY.MM.DD HH:mm
+  type: GPChangeType;
+  amount: number; // +/- GP
+  balanceAfter: number;
+  notes: string;
+}
+
+export const gpChanges: GPChange[] = [
+  { id: 'gp-1', memberId: '1', occurredAt: '2026.04.29 19:14', type: 'NONE', amount: 5, balanceAfter: 15, notes: 'GP 출석체크' },
+  { id: 'gp-2', memberId: '1', occurredAt: '2026.04.28 14:08', type: 'NONE', amount: 5, balanceAfter: 10, notes: 'GP 출석체크' },
+  { id: 'gp-3', memberId: '1', occurredAt: '2026.04.27 13:15', type: 'NONE', amount: 5, balanceAfter: 5, notes: 'GP 출석체크' },
+  { id: 'gp-4', memberId: '1', occurredAt: '2026.04.24 13:37', type: 'NONE', amount: -5, balanceAfter: 0, notes: '응모권 구매' },
+  { id: 'gp-5', memberId: '1', occurredAt: '2026.04.24 13:07', type: 'NONE', amount: 5, balanceAfter: 5, notes: 'GP 출석체크' },
+  { id: 'gp-6', memberId: '1', occurredAt: '2026.03.25 16:39', type: 'WITHDRAW', amount: -5, balanceAfter: 0, notes: 'GP 보내기' },
+  { id: 'gp-7', memberId: '1', occurredAt: '2026.03.25 16:38', type: 'CHARGE', amount: 5, balanceAfter: 5, notes: 'GP 가져오기' },
+  { id: 'gp-8', memberId: '1', occurredAt: '2026.03.25 16:38', type: 'WITHDRAW', amount: -5, balanceAfter: 0, notes: 'GP 보내기' },
+  { id: 'gp-9', memberId: '1', occurredAt: '2026.03.25 16:37', type: 'CHARGE', amount: 5, balanceAfter: 5, notes: 'GP 가져오기' },
+];
+
+export function getGPChangesByMember(memberId: string): GPChange[] {
+  return gpChanges.filter((g) => g.memberId === memberId);
+}
+
+export function getGPSummary(memberId: string) {
+  const all = getGPChangesByMember(memberId);
+  const balance = all.length > 0 ? all[0].balanceAfter : 0;
+  const earned = all.filter((c) => c.amount > 0).reduce((s, c) => s + c.amount, 0);
+  const used = all.filter((c) => c.amount < 0).reduce((s, c) => s + Math.abs(c.amount), 0);
+  return { balance, earned, used };
 }

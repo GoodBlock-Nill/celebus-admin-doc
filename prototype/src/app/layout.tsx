@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import AdminLayout from '@/components/layout/AdminLayout';
 
 export const metadata: Metadata = {
-  title: 'CELEBUS ADMIN',
-  description: 'CELEBUS Admin - Game Zone Management',
+  title: 'Celebus Backoffice',
+  description: 'CELEBUS 운영 백오피스 클론 (prototype)',
 };
 
 export default function RootLayout({
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className="antialiased bg-gray-50">
-        {children}
+        <AdminLayout>{children}</AdminLayout>
       </body>
     </html>
   );
