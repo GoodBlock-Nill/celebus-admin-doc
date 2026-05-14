@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeftIcon, InformationCircleIcon, PhotoIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/layout/PageHeader';
@@ -17,7 +17,7 @@ import {
 
 type ArtistGroup = 'V01D' | 'iKON' | 'CELEBUS';
 
-export default function SqCreatePage() {
+function SqCreateInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const groupIdParam = searchParams.get('groupId');
@@ -334,5 +334,13 @@ export default function SqCreatePage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function SqCreatePage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-sm text-gray-500">로딩 중...</div>}>
+      <SqCreateInner />
+    </Suspense>
   );
 }
