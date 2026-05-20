@@ -12,14 +12,6 @@ export type SlotKind = 'MAIN' | 'TODAY_TODO' | 'TOGETHER' | 'MISSION';
 export type SlotTab = 'home' | 'artist';
 export type SlotTargetMode = 'GLOBAL_ONLY' | 'ARTIST_ONLY';
 export type BannerStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
-export type BannerSourceType =
-  | 'RAFFLE'
-  | 'SUPPORT_EVENT'
-  | 'QUEST'
-  | 'BIVE_CAMPAIGN'
-  | 'INF_NEWS'
-  | 'ARTIST_HOME'
-  | 'PROMO';
 export type ArtistGroup = 'V01D' | 'iKON' | 'CELEBUS' | 'MADEIN' | 'UNDER:LIGHT';
 
 export type BannerPeriod =
@@ -107,23 +99,10 @@ const SLOT_KIND_BADGE: Record<SlotKind, { bg: string; text: string }> = {
   MISSION: { bg: 'bg-sky-100', text: 'text-sky-700' },
 };
 
-const SOURCE_TYPE_BADGE: Record<BannerSourceType, { bg: string; text: string; label: string }> = {
-  RAFFLE: { bg: 'bg-pink-100', text: 'text-pink-700', label: '래플' },
-  SUPPORT_EVENT: { bg: 'bg-rose-100', text: 'text-rose-700', label: '응원하기' },
-  QUEST: { bg: 'bg-amber-100', text: 'text-amber-700', label: '퀘스트' },
-  BIVE_CAMPAIGN: { bg: 'bg-indigo-100', text: 'text-indigo-700', label: 'BIVE' },
-  INF_NEWS: { bg: 'bg-sky-100', text: 'text-sky-700', label: '소식' },
-  ARTIST_HOME: { bg: 'bg-purple-100', text: 'text-purple-700', label: '아티스트 홈' },
-  PROMO: { bg: 'bg-emerald-100', text: 'text-emerald-700', label: '프로모션' },
-};
-
 export interface HomeBanner {
   id: number;
   slotKind: SlotKind;
   artistGroup: ArtistGroup | null;
-  sourceType: BannerSourceType;
-  sourceRefId: number | null;
-  sourceRefName: string;
   titleKO: string;
   titleEN: string;
   titleJP: string;
@@ -165,9 +144,6 @@ export function getSlotKindLabel(s: SlotKind): string {
 export function getSlotKindBadge(s: SlotKind) {
   return SLOT_KIND_BADGE[s];
 }
-export function getSourceTypeBadge(t: BannerSourceType) {
-  return SOURCE_TYPE_BADGE[t];
-}
 export function formatPeriod(period: BannerPeriod): string {
   if (period.type === 'UNLIMITED') return '무기한';
   return `${period.openDt} ~ ${period.closeDt}`;
@@ -182,9 +158,6 @@ export const banners: HomeBanner[] = [
     id: 1,
     slotKind: 'MAIN',
     artistGroup: null,
-    sourceType: 'RAFFLE',
-    sourceRefId: 12,
-    sourceRefName: 'V01D 콘서트 티켓 래플',
     titleKO: 'V01D journey #01 콘서트 초대',
     titleEN: 'V01D journey #01 Concert Invitation',
     titleJP: 'V01D journey #01 コンサートご招待',
@@ -205,9 +178,6 @@ export const banners: HomeBanner[] = [
     id: 2,
     slotKind: 'MAIN',
     artistGroup: null,
-    sourceType: 'PROMO',
-    sourceRefId: null,
-    sourceRefName: 'CELEBUS 1주년 캠페인',
     titleKO: 'CELEBUS 1주년 — 함께한 시간',
     titleEN: 'CELEBUS 1st Anniversary',
     titleJP: 'CELEBUS 1周年',
@@ -228,9 +198,6 @@ export const banners: HomeBanner[] = [
     id: 3,
     slotKind: 'MAIN',
     artistGroup: null,
-    sourceType: 'INF_NEWS',
-    sourceRefId: 102,
-    sourceRefName: '5월 운영 점검 안내',
     titleKO: '5월 정기 점검 안내',
     titleEN: 'May Maintenance Notice',
     titleJP: '5月メンテナンスのお知らせ',
@@ -253,9 +220,6 @@ export const banners: HomeBanner[] = [
     id: 201,
     slotKind: 'TODAY_TODO',
     artistGroup: 'V01D',
-    sourceType: 'QUEST',
-    sourceRefId: 15,
-    sourceRefName: 'V01D 데뷔 100일 특별 미션',
     titleKO: 'V01D 데뷔 100일 — 함께 축하해요',
     titleEN: 'V01D 100 Days — Celebrate Together',
     titleJP: 'V01Dデビュー100日',
@@ -278,9 +242,6 @@ export const banners: HomeBanner[] = [
     id: 300,
     slotKind: 'TOGETHER',
     artistGroup: 'V01D',
-    sourceType: 'QUEST',
-    sourceRefId: 12,
-    sourceRefName: 'V01D 트리비아 시즌1',
     titleKO: 'V01D 트리비아 참가 안내',
     titleEN: 'Join V01D Trivia',
     titleJP: 'V01D トリビアに参加',
@@ -301,9 +262,6 @@ export const banners: HomeBanner[] = [
     id: 301,
     slotKind: 'TOGETHER',
     artistGroup: 'V01D',
-    sourceType: 'INF_NEWS',
-    sourceRefId: 110,
-    sourceRefName: 'V01D 5월 소식 정리',
     titleKO: 'V01D 5월의 소식',
     titleEN: "V01D's May News",
     titleJP: 'V01D 5月のニュース',
@@ -326,9 +284,6 @@ export const banners: HomeBanner[] = [
     id: 310,
     slotKind: 'TOGETHER',
     artistGroup: 'iKON',
-    sourceType: 'ARTIST_HOME',
-    sourceRefId: null,
-    sourceRefName: 'iKON 아티스트 홈',
     titleKO: 'iKON FOUREVER 투어 시작',
     titleEN: 'iKON FOUREVER Tour',
     titleJP: 'iKON FOUREVER ツアー',
@@ -351,9 +306,6 @@ export const banners: HomeBanner[] = [
     id: 400,
     slotKind: 'MISSION',
     artistGroup: 'V01D',
-    sourceType: 'QUEST',
-    sourceRefId: 16,
-    sourceRefName: 'V01D 데일리 미션',
     titleKO: 'V01D 데일리 미션 — 오늘의 한 곡 듣기',
     titleEN: 'V01D Daily — Today’s Song',
     titleJP: 'V01D デイリー 今日の1曲',
@@ -376,9 +328,6 @@ export const banners: HomeBanner[] = [
     id: 401,
     slotKind: 'MISSION',
     artistGroup: 'MADEIN',
-    sourceType: 'PROMO',
-    sourceRefId: null,
-    sourceRefName: 'MADEIN 사전 신청',
     titleKO: 'MADEIN 새 미니앨범 사전 신청',
     titleEN: 'MADEIN New Mini Album Pre-Order',
     titleJP: 'MADEIN 新ミニアルバム予約',

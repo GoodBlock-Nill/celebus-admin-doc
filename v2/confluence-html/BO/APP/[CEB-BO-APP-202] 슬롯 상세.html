@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>APP — 앱 운영</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v6.1</td></tr>
+<tr><td>버전</td><td>v6.2</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,7 +96,7 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v6.1</strong> (영역 명칭 정합 + 소스 타입 8종 정합 — "앱 배너 관리" 구 명칭, 소스 타입 7종 표기 정정)</p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v6.2</strong> (딥링크 정책 정합 — "소스 타입" 컬럼 표시 정의를 URL 텍스트 그대로 표시로 변경)</p>
 <p>화면 경로: <code>/home/banners/slot/{slotKind}/{artist}</code> · Breadcrumb: <code>홈 › 앱 › 배너 관리 › {위치} · {아티스트}</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
@@ -137,7 +137,7 @@ p {
 <tr><td>정렬 핸들</td><td>드래그로 순서 변경</td></tr>
 <tr><td>순서</td><td>1, 2, 3 …</td></tr>
 <tr><td>상태</td><td>Badge (임시저장 / 노출중 / 노출 종료)</td></tr>
-<tr><td>소스 타입</td><td>Badge (이동 없음·래플·응원하기·퀘스트·BIVE·소식·아티스트 홈·프로모션 8종, [CEB-BO-013] §9-1 정합)</td></tr>
+<tr><td>소스 타입</td><td>운영자가 입력한 URL 텍스트 그대로 표시. 빈 값이면 "—" (이동 없음). 너무 긴 URL은 말줄임 + 호버 시 풀 URL 툴팁. [CEB-BO-013] §9 정합</td></tr>
 <tr><td>타이틀 (KO)</td><td>메인 + 서브 타이틀 2줄</td></tr>
 <tr><td>노출 기간</td><td>"무기한" Badge 또는 <code>YYYY.MM.DD HH:mm ~ YYYY.MM.DD HH:mm</code></td></tr>
 <tr><td>최근 수정</td><td>수정 시각 + 수정자</td></tr>
@@ -188,7 +188,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v6.1</strong></td><td><strong>2026.05.20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>영역 명칭·소스 타입 정합 정정</strong> — ① Page Properties 기능영역(Epic)·§6 연관 화면을 "<strong>앱 배너 관리</strong>" → "<strong>앱 운영</strong>"으로 정정 ([CEB-BO-013] v7.0 정합 누락) ② §2-3 캐러셀 슬롯 테이블 "소스 타입" 컬럼의 Badge 옵션이 <strong>7종(이동 없음 누락)</strong>으로 잔존해 있던 것을 <strong>8종 (이동 없음 포함)</strong>으로 정정 ([CEB-BO-013] v7.5 §9-1 정합 누락. 표시 전용 배너는 "이동 없음"으로 노출됨)</td></tr>
+<tr><td><strong>v6.2</strong></td><td><strong>2026.05.20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>딥링크 정책 정합 — "소스 타입" 컬럼 표시 정의 변경</strong> — [CEB-BO-013] §9 v7.9 결정(소스 타입 드롭다운 폐지, URL 직접 입력)에 따라 §2-3 캐러셀 슬롯 테이블의 "소스 타입" 컬럼을 <strong>운영자가 입력한 URL 텍스트 그대로 표시</strong>로 정의. 빈 값이면 "—" (이동 없음). 너무 긴 URL은 말줄임 + 호버 시 풀 URL 툴팁</td></tr>
+<tr><td>v6.1</td><td>2026.05.20</td><td>@Nill Yoo</td><td><strong>영역 명칭·소스 타입 정합 정정</strong> — ① Page Properties 기능영역(Epic)·§6 연관 화면을 "<strong>앱 배너 관리</strong>" → "<strong>앱 운영</strong>"으로 정정 ([CEB-BO-013] v7.0 정합 누락) ② §2-3 캐러셀 슬롯 테이블 "소스 타입" 컬럼의 Badge 옵션이 <strong>7종(이동 없음 누락)</strong>으로 잔존해 있던 것을 <strong>8종 (이동 없음 포함)</strong>으로 정정 ([CEB-BO-013] v7.5 §9-1 정합 누락. 표시 전용 배너는 "이동 없음"으로 노출됨)</td></tr>
 <tr><td>v6.0</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>RFT 양식 정합</strong> — ① Page Properties 13필드 확장 ② 상단 한 줄 헤더 추가 ③ 표 구분자 컴팩트(공백 없음) 형태로 통일 ④ 하이픈 형태 헤딩 번호 ⑤ §3 화면에 노출되는 정보 / §4 상태별 동작 분기 / §5 검증 규칙 신설 ⑥ 권한 표 제거 → "[관리자 > 권한관리] 설정에 따라" 단일화 ⑦ 영역 가이드 ID 참조를 [CEB-BO-013]으로 갱신</td></tr>
 <tr><td>v5.0</td><td>2026-05-19</td><td>@Nill Yoo</td><td>운영 도입 공식 발행본</td></tr>
 <tr><td>v4.x</td><td>2026-05-19</td><td>@Nill Yoo</td><td>신규 작성 + 타겟 모드 가드 + 단일 슬롯 DRAFT 다수 등록 (옵션 A)</td></tr>

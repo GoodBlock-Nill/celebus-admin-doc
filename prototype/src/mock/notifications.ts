@@ -53,8 +53,7 @@ export interface Notification {
   reachCount?: number;              // 도달 회원 수
   failCount?: number;               // 실패 수
   pushOffCount?: number;            // 푸시 권한 OFF 수
-  deeplinkSourceType?: string;
-  deeplinkLabel?: string;
+  deeplinkLabel?: string;            // URL (빈 값 = 본문 클릭 비활성)
   createdAt: string;
   updatedAt: string;
   updatedBy: string;
@@ -117,7 +116,6 @@ export const NOTIFICATIONS: Notification[] = [
     reachCount: 24812,
     failCount: 12,
     pushOffCount: 1024,
-    deeplinkSourceType: 'ARTIST_HOME',
     deeplinkLabel: 'V01D 아티스트 홈',
     createdAt: '2026.05.18 14:25',
     updatedAt: '2026.05.18 14:30',
@@ -177,7 +175,6 @@ export const NOTIFICATIONS: Notification[] = [
     reachCount: 18230,
     failCount: 312,
     pushOffCount: 720,
-    deeplinkSourceType: 'INF_NEWS',
     deeplinkLabel: '소식 #2104',
     createdAt: '2026.05.18 17:55',
     updatedAt: '2026.05.18 18:00',
@@ -205,7 +202,6 @@ export const NOTIFICATIONS: Notification[] = [
     reachCount: 24812,
     failCount: 28,
     pushOffCount: 1102,
-    deeplinkSourceType: 'BIVE_CAMPAIGN',
     deeplinkLabel: 'V01D Genesis 컬렉션',
     createdAt: '2026.05.18 19:50',
     updatedAt: '2026.05.18 20:00',
@@ -241,7 +237,6 @@ export const NOTIFICATIONS: Notification[] = [
     targetType: 'GLOBAL',
     scheduleType: 'SCHEDULED',
     sendAt: '2026.05.24 10:00',
-    deeplinkSourceType: 'PROMO',
     deeplinkLabel: '응모권 보관함',
     createdAt: '2026.05.19 09:00',
     updatedAt: '2026.05.19 11:30',
@@ -259,7 +254,6 @@ export const NOTIFICATIONS: Notification[] = [
     sendAt: '2026.05.17 11:00',
     reachCount: 9340,
     failCount: 0,
-    deeplinkSourceType: 'SUPPORT_EVENT',
     deeplinkLabel: '서포트 이벤트 #88',
     createdAt: '2026.05.17 10:55',
     updatedAt: '2026.05.17 11:00',

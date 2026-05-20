@@ -15,12 +15,10 @@ import {
   getSlot,
   getSlotKindBadge,
   getSlotKindLabel,
-  getSourceTypeBadge,
   getStatusBadge,
   getStatusLabel,
   SLOT_KIND_META,
   type ArtistGroup,
-  type BannerSourceType,
   type BannerStatus,
   type HomeBanner,
   type SlotKind,
@@ -267,7 +265,6 @@ function BannerRow({
   onClick: () => void;
 }) {
   const status = getStatusBadge(banner.status as BannerStatus);
-  const source = getSourceTypeBadge(banner.sourceType as BannerSourceType);
   const period = formatPeriod(banner.period);
   return (
     <tr
@@ -299,10 +296,14 @@ function BannerRow({
           {getStatusLabel(banner.status as BannerStatus)}
         </span>
       </td>
-      <td className="px-3 py-3 whitespace-nowrap">
-        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${source.bg} ${source.text}`}>
-          {source.label}
-        </span>
+      <td className="px-3 py-3 text-xs text-gray-700">
+        {banner.linkUrl ? (
+          <span title={banner.linkUrl} className="inline-block max-w-[200px] truncate align-middle font-mono">
+            {banner.linkUrl}
+          </span>
+        ) : (
+          <span className="text-gray-400">—</span>
+        )}
       </td>
       <td className="px-3 py-3 text-sm">
         <div className="text-gray-900 font-medium truncate max-w-[420px]">{banner.titleKO}</div>

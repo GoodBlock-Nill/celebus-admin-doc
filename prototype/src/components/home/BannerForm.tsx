@@ -13,7 +13,7 @@ import {
   SLOT_KIND_META,
 } from '@/mock/home';
 import DeeplinkPicker from '@/components/shared/DeeplinkPicker';
-import { type Deeplink, type DeeplinkSourceType } from '@/types/deeplink';
+import { type Deeplink } from '@/types/deeplink';
 
 interface Props {
   mode: 'create' | 'edit' | 'view';
@@ -50,8 +50,7 @@ export default function BannerForm({
   const [subtitleEN, setSubtitleEN] = useState(initial?.subtitleEN ?? '');
   const [subtitleJP, setSubtitleJP] = useState(initial?.subtitleJP ?? '');
   const [deeplink, setDeeplink] = useState<Deeplink>({
-    source: (initial?.sourceType as DeeplinkSourceType | undefined) ?? 'NONE',
-    value: initial?.linkUrl ?? '',
+    url: initial?.linkUrl ?? '',
   });
   const initialPeriod: BannerPeriod = initial?.period ?? { type: 'CUSTOM', openDt: '', closeDt: '' };
   const [periodType, setPeriodType] = useState<'UNLIMITED' | 'CUSTOM'>(initialPeriod.type);
@@ -132,7 +131,7 @@ export default function BannerForm({
       </Section>
 
       {/* D. 딥링크 */}
-      <Section title="D. 딥링크 (선택)" description="배너 클릭 시 회원 앱 영역 이동. 소스 타입별 입력 가이드 노출. '이동 없음' 선택 시 표시 전용 배너">
+      <Section title="D. 딥링크 (선택)" description="회원 앱에서 도달할 URL을 직접 입력. 비우면 표시 전용 배너 (클릭 비활성)">
         <DeeplinkPicker value={deeplink} onChange={setDeeplink} disabled={readOnly} />
       </Section>
 

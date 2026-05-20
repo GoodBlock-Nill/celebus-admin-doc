@@ -15,7 +15,7 @@ import {
   type NotiTargetType,
 } from '@/mock/notifications';
 import DeeplinkPicker from '@/components/shared/DeeplinkPicker';
-import { emptyDeeplink, type Deeplink, type DeeplinkSourceType } from '@/types/deeplink';
+import { emptyDeeplink, type Deeplink } from '@/types/deeplink';
 
 type Lang = 'ko' | 'en' | 'jp';
 
@@ -77,8 +77,7 @@ export function fromNotification(n: Notification): NotificationFormState {
     scheduleType: n.scheduleType,
     sendAt: n.sendAt ?? '',
     deeplink: {
-      source: (n.deeplinkSourceType as DeeplinkSourceType | undefined) ?? 'NONE',
-      value: n.deeplinkLabel ?? '',
+      url: n.deeplinkLabel ?? '',
     },
   };
 }

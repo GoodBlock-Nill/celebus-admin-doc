@@ -1,91 +1,55 @@
 'use client';
 
-import { ChevronUpDownIcon } from '@heroicons/react/24/outline';
 import {
-  DEEPLINK_SOURCE_META,
-  DEEPLINK_SOURCES,
+  DEEPLINK_PLACEHOLDER,
+  isDeeplinkValid,
   type Deeplink,
-  type DeeplinkSourceType,
 } from '@/types/deeplink';
 
 interface Props {
   value: Deeplink;
   onChange: (v: Deeplink) => void;
   disabled?: boolean;
-  /** 컴팩트 모드: 한 줄로 노출 (배너 폼 등 좁은 영역) */
+  /** 컴팩트 모드: 라벨·힌트 텍스트 생략 (좁은 영역) */
   compact?: boolean;
 }
 
+/**
+ * 딥링크 입력 컴포넌트 (v2.0 — 단순화)
+ *
+ * - 소스 타입 드롭다운 폐지. URL 단일 텍스트박스 1개
+ * - 빈 값 = 이동 없음 (표시 전용 배너 / 본문 클릭 비활성 알림)
+ * - URL 형식 검증: https:// · http:// · / 중 하나로 시작해야 함
+ * - [CEB-BO-013] §9 v7.9 정합
+ */
 export default function DeeplinkPicker({ value, onChange, disabled = false, compact = false }: Props) {
-  const meta = DEEPLINK_SOURCE_META[value.source];
-  const isNone = value.source === 'NONE';
+  const isValid = isDeeplinkValid(value);
+  const showError = !isValid && value.url.trim().length > 0;
 
-  const setSource = (source: DeeplinkSourceType) => {
-    // 소스 변경 시 NONE이면 값 초기화
-    onChange({ source, value: source === 'NONE' ? '' : value.value });
-  };
-
-  const setValue = (v: string) => onChange({ source: value.source, value: v });
-
-  if (compact) {
-    return (
-      <div className="flex gap-3">
-        <SourceSelect value={value.source} onChange={setSource} disabled={disabled} minWidth="160px" />
-        <input
-          disabled={disabled || isNone}
-          value={value.value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder={meta.placeholder}
-          className="flex-1 h-10 px-3 border border-gray-200 rounded-lg text-sm disabled:bg-gray-50"
-        />
-      </div>
-    );
-  }
+  const setUrl = (url: string) => onChange({ url });
 
   return (
-    <div className="space-y-3">
-      <SourceSelect value={value.source} onChange={setSource} disabled={disabled} minWidth="200px" />
-      <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">{meta.hint}</label>
-        <input
-          disabled={disabled || isNone}
-          value={value.value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder={meta.placeholder}
-          className="w-full h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
-        />
-      </div>
-    </div>
-  );
-}
-
-function SourceSelect({
-  value,
-  onChange,
-  disabled,
-  minWidth,
-}: {
-  value: DeeplinkSourceType;
-  onChange: (v: DeeplinkSourceType) => void;
-  disabled?: boolean;
-  minWidth: string;
-}) {
-  return (
-    <div className="relative">
-      <select
-        value={value}
+    <div className={compact ? '' : 'space-y-1'}>
+      <input
+        type="text"
         disabled={disabled}
-        onChange={(e) => onChange(e.target.value as DeeplinkSourceType)}
-        style={{ minWidth }}
-        className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer disabled:bg-gray-50"
-      >
-        {DEEPLINK_SOURCES.map((s) => (
-          <option key={s} value={s}>
-            {DEEPLINK_SOURCE_META[s].label}
-          </option>
-        ))}
-      </select>
-      <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+        value={value.url}
+        onChange={(e) => setUrl(e.target.value)}
+        placeholder={DEEPLINK_PLACEHOLDER}
+        className={`w-full h-10 px-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 ${
+          showError ? 'border-red-300 bg-red-50' : 'border-gray-200'
+        }`}
+      />
+      {showError && (
+        <p className="text-xs text-red-600 mt-1">
+          URL은 https://, http://, 또는 /로 시작해야 합니다.
+        </p>
+      )}
+      {!compact && !showError && (
+        <p className="text-xs text-gray-500 mt-1">
+          비우면 이동 없음 (표시 전용). 외부 URL은 새 탭, 내부 URL은 SPA 라우팅.
+        </p>
+      )}
     </div>
   );
 }

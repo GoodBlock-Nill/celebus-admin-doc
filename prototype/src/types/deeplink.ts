@@ -1,56 +1,36 @@
 // 공통 딥링크 타입 — 배너(APP-201)·알림(APP-302) 등에서 공유
-// 알림 관리 기준 통일 (v1.0)
-// - 소스 타입 7종 + "이동 없음"
-// - 소스 타입별 힌트·placeholder 보존 (배너 폼이 가진 풍부한 가이드 유지)
-
-export type DeeplinkSourceType =
-  | 'NONE'              // 이동 없음 (기본)
-  | 'RAFFLE'            // 래플
-  | 'SUPPORT_EVENT'     // 응원하기
-  | 'QUEST'             // 퀘스트
-  | 'BIVE_CAMPAIGN'     // BIVE
-  | 'INF_NEWS'          // 소식
-  | 'ARTIST_HOME'       // 아티스트 홈
-  | 'PROMO';            // 프로모션
+// v2.0: 소스 타입 드롭다운 폐지. URL 텍스트 1개 단일 입력
+// - 빈 값 = 이동 없음 (표시 전용 배너 / 본문 클릭 비활성 알림)
+// - URL 형식 검증: https:// · http:// · / 중 하나로 시작
 
 export interface Deeplink {
-  source: DeeplinkSourceType;
-  value: string;        // source가 NONE이면 빈 문자열
+  url: string;          // 빈 문자열이면 이동 없음
 }
 
-interface DeeplinkSourceMeta {
-  label: string;
-  hint: string;
-  placeholder: string;
-}
-
-export const DEEPLINK_SOURCE_META: Record<DeeplinkSourceType, DeeplinkSourceMeta> = {
-  NONE:           { label: '이동 없음',     hint: '클릭 시 이동하지 않음', placeholder: '소스 타입 선택 시 활성화' },
-  RAFFLE:         { label: '래플',          hint: '래플 ID 검색',          placeholder: '/raffle/{id}' },
-  SUPPORT_EVENT:  { label: '응원하기',      hint: '서포트 이벤트 ID 검색', placeholder: '/support_event/{id}' },
-  QUEST:          { label: '퀘스트',        hint: 'Quest ID 검색',         placeholder: '/quest/{id}' },
-  BIVE_CAMPAIGN:  { label: 'BIVE',          hint: 'BIVE 에디션 ID 검색',   placeholder: '/bive_campaign/{id}' },
-  INF_NEWS:       { label: '소식',          hint: '소식 ID 검색',          placeholder: '/inf_news/{id}' },
-  ARTIST_HOME:    { label: '아티스트 홈',   hint: '아티스트 선택',         placeholder: '/artists/{group}' },
-  PROMO:          { label: '프로모션',      hint: '내부/외부 URL 자유 입력', placeholder: 'https://… 또는 /event/…' },
-};
-
-export const DEEPLINK_SOURCES: DeeplinkSourceType[] = [
-  'NONE',
-  'RAFFLE',
-  'SUPPORT_EVENT',
-  'QUEST',
-  'BIVE_CAMPAIGN',
-  'INF_NEWS',
-  'ARTIST_HOME',
-  'PROMO',
-];
+export const DEEPLINK_PLACEHOLDER = 'https:// 또는 /로 시작하는 URL (비우면 이동 없음)';
 
 export function emptyDeeplink(): Deeplink {
-  return { source: 'NONE', value: '' };
+  return { url: '' };
+}
+
+export function isDeeplinkEmpty(d: Deeplink): boolean {
+  return !d.url.trim();
+}
+
+/** URL 형식 검증: https://, http://, / 중 하나로 시작해야 함. 빈 값은 허용 (이동 없음). */
+export function isDeeplinkValid(d: Deeplink): boolean {
+  const v = d.url.trim();
+  if (!v) return true;
+  return /^(https?:\/\/|\/)/.test(v);
+}
+
+/** 외부 URL 여부 (새 탭 열기 판정용) */
+export function isExternalDeeplink(d: Deeplink): boolean {
+  return /^https?:\/\//.test(d.url.trim());
 }
 
 export function getDeeplinkLabel(d: Deeplink): string {
-  if (d.source === 'NONE') return '이동 없음';
-  return `${DEEPLINK_SOURCE_META[d.source].label} · ${d.value || '—'}`;
+  const v = d.url.trim();
+  if (!v) return '이동 없음';
+  return v;
 }
