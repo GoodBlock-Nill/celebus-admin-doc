@@ -77,6 +77,7 @@ export function fromNotification(n: Notification): NotificationFormState {
     scheduleType: n.scheduleType,
     sendAt: n.sendAt ?? '',
     deeplink: {
+      sourceType: n.deeplinkSourceType ?? '',
       url: n.deeplinkLabel ?? '',
     },
   };

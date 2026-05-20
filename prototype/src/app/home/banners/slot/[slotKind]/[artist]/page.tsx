@@ -297,9 +297,9 @@ function BannerRow({
         </span>
       </td>
       <td className="px-3 py-3 text-xs text-gray-700">
-        {banner.linkUrl ? (
-          <span title={banner.linkUrl} className="inline-block max-w-[200px] truncate align-middle font-mono">
-            {banner.linkUrl}
+        {banner.sourceType ? (
+          <span title={banner.linkUrl || undefined} className="inline-block max-w-[160px] truncate align-middle">
+            {banner.sourceType}
           </span>
         ) : (
           <span className="text-gray-400">—</span>

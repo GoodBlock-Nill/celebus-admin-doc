@@ -53,6 +53,7 @@ export interface Notification {
   reachCount?: number;              // 도달 회원 수
   failCount?: number;               // 실패 수
   pushOffCount?: number;            // 푸시 권한 OFF 수
+  deeplinkSourceType?: string;       // 운영자 자유 입력 분류 라벨 (예: "래플", "프로모션"). 빈 문자열 허용
   deeplinkLabel?: string;            // URL (빈 값 = 본문 클릭 비활성)
   createdAt: string;
   updatedAt: string;

@@ -103,6 +103,7 @@ export interface HomeBanner {
   id: number;
   slotKind: SlotKind;
   artistGroup: ArtistGroup | null;
+  sourceType: string;   // 운영자 자유 입력 분류 라벨 (예: "래플", "프로모션"). 빈 문자열 허용
   titleKO: string;
   titleEN: string;
   titleJP: string;
@@ -158,6 +159,7 @@ export const banners: HomeBanner[] = [
     id: 1,
     slotKind: 'MAIN',
     artistGroup: null,
+    sourceType: '',
     titleKO: 'V01D journey #01 콘서트 초대',
     titleEN: 'V01D journey #01 Concert Invitation',
     titleJP: 'V01D journey #01 コンサートご招待',
@@ -178,6 +180,7 @@ export const banners: HomeBanner[] = [
     id: 2,
     slotKind: 'MAIN',
     artistGroup: null,
+    sourceType: '',
     titleKO: 'CELEBUS 1주년 — 함께한 시간',
     titleEN: 'CELEBUS 1st Anniversary',
     titleJP: 'CELEBUS 1周年',
@@ -198,6 +201,7 @@ export const banners: HomeBanner[] = [
     id: 3,
     slotKind: 'MAIN',
     artistGroup: null,
+    sourceType: '',
     titleKO: '5월 정기 점검 안내',
     titleEN: 'May Maintenance Notice',
     titleJP: '5月メンテナンスのお知らせ',
@@ -220,6 +224,7 @@ export const banners: HomeBanner[] = [
     id: 201,
     slotKind: 'TODAY_TODO',
     artistGroup: 'V01D',
+    sourceType: '',
     titleKO: 'V01D 데뷔 100일 — 함께 축하해요',
     titleEN: 'V01D 100 Days — Celebrate Together',
     titleJP: 'V01Dデビュー100日',
@@ -242,6 +247,7 @@ export const banners: HomeBanner[] = [
     id: 300,
     slotKind: 'TOGETHER',
     artistGroup: 'V01D',
+    sourceType: '',
     titleKO: 'V01D 트리비아 참가 안내',
     titleEN: 'Join V01D Trivia',
     titleJP: 'V01D トリビアに参加',
@@ -262,6 +268,7 @@ export const banners: HomeBanner[] = [
     id: 301,
     slotKind: 'TOGETHER',
     artistGroup: 'V01D',
+    sourceType: '',
     titleKO: 'V01D 5월의 소식',
     titleEN: "V01D's May News",
     titleJP: 'V01D 5月のニュース',
@@ -284,6 +291,7 @@ export const banners: HomeBanner[] = [
     id: 310,
     slotKind: 'TOGETHER',
     artistGroup: 'iKON',
+    sourceType: '',
     titleKO: 'iKON FOUREVER 투어 시작',
     titleEN: 'iKON FOUREVER Tour',
     titleJP: 'iKON FOUREVER ツアー',
@@ -306,6 +314,7 @@ export const banners: HomeBanner[] = [
     id: 400,
     slotKind: 'MISSION',
     artistGroup: 'V01D',
+    sourceType: '',
     titleKO: 'V01D 데일리 미션 — 오늘의 한 곡 듣기',
     titleEN: 'V01D Daily — Today’s Song',
     titleJP: 'V01D デイリー 今日の1曲',
@@ -328,6 +337,7 @@ export const banners: HomeBanner[] = [
     id: 401,
     slotKind: 'MISSION',
     artistGroup: 'MADEIN',
+    sourceType: '',
     titleKO: 'MADEIN 새 미니앨범 사전 신청',
     titleEN: 'MADEIN New Mini Album Pre-Order',
     titleJP: 'MADEIN 新ミニアルバム予約',

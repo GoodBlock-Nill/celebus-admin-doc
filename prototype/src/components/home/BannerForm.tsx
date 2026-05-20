@@ -50,6 +50,7 @@ export default function BannerForm({
   const [subtitleEN, setSubtitleEN] = useState(initial?.subtitleEN ?? '');
   const [subtitleJP, setSubtitleJP] = useState(initial?.subtitleJP ?? '');
   const [deeplink, setDeeplink] = useState<Deeplink>({
+    sourceType: initial?.sourceType ?? '',
     url: initial?.linkUrl ?? '',
   });
   const initialPeriod: BannerPeriod = initial?.period ?? { type: 'CUSTOM', openDt: '', closeDt: '' };
@@ -131,7 +132,7 @@ export default function BannerForm({
       </Section>
 
       {/* D. 딥링크 */}
-      <Section title="D. 딥링크 (선택)" description="회원 앱에서 도달할 URL을 직접 입력. 비우면 표시 전용 배너 (클릭 비활성)">
+      <Section title="D. 딥링크 (선택)" description="소스 타입 분류 라벨 + 회원 앱에서 도달할 URL을 직접 입력. URL을 비우면 표시 전용 배너 (클릭 비활성)">
         <DeeplinkPicker value={deeplink} onChange={setDeeplink} disabled={readOnly} />
       </Section>
 
