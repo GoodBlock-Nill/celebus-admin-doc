@@ -57,6 +57,14 @@ export default function NotificationDetailPage({ params }: { params: Promise<{ i
         <span className="inline-flex rounded-md px-2 py-0.5 text-xs bg-emerald-50 text-emerald-700">
           {getChannelLabel(n.channel)}
         </span>
+        {n.status === 'SCHEDULED' && n.sendAt && (
+          <span className="inline-flex rounded-md px-2 py-0.5 text-xs bg-amber-50 text-amber-700">
+            예약 · {n.sendAt}
+          </span>
+        )}
+        {(n.status === 'SENT' || n.status === 'PARTIAL_FAILED' || n.status === 'FAILED') && n.sendAt && (
+          <span className="text-xs text-gray-600">발송 {n.sendAt}</span>
+        )}
         <span className="text-xs text-gray-500 ml-2">
           최근 수정: {n.updatedAt} · {n.updatedBy}
         </span>

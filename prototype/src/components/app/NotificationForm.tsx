@@ -257,47 +257,8 @@ export default function NotificationForm({ readOnly = false, initial }: Props) {
         )}
       </Section>
 
-      {/* E. 발송 시점 */}
-      <Section title="D. 발송 시점" subtitle="즉시 / 예약 / 임시저장">
-        <div className="grid grid-cols-3 gap-3">
-          <ScheduleCard
-            active={state.scheduleType === 'IMMEDIATE'}
-            disabled={disabled}
-            onClick={() => set('scheduleType', 'IMMEDIATE')}
-            title="즉시 발송"
-            desc="[발송] 클릭 시 즉시 큐 처리 (평균 5~15분)"
-          />
-          <ScheduleCard
-            active={state.scheduleType === 'SCHEDULED'}
-            disabled={disabled}
-            onClick={() => set('scheduleType', 'SCHEDULED')}
-            title="예약 발송"
-            desc="예약 시점에 자동 큐 처리 (KST)"
-          />
-          <ScheduleCard
-            active={state.scheduleType === 'DRAFT'}
-            disabled={disabled}
-            onClick={() => set('scheduleType', 'DRAFT')}
-            title="임시저장"
-            desc="발송 시점 미지정 — 추후 수정 후 발송/예약"
-          />
-        </div>
-        {state.scheduleType === 'SCHEDULED' && (
-          <div className="mt-4">
-            <label className="block text-xs font-medium text-gray-600 mb-1.5">예약 일시 (KST, 분 단위)</label>
-            <input
-              disabled={disabled}
-              value={state.sendAt}
-              onChange={(e) => set('sendAt', e.target.value)}
-              placeholder="2026.05.20 09:00"
-              className="h-10 px-3 border border-gray-200 rounded-lg text-sm w-[260px]"
-            />
-          </div>
-        )}
-      </Section>
-
-      {/* E. 딥링크 */}
-      <Section title="E. 딥링크 (선택)" subtitle="알림 본문 탭/클릭 시 회원 앱 영역 이동. 소스 타입별 입력 가이드 노출">
+      {/* D. 딥링크 */}
+      <Section title="D. 딥링크 (선택)" subtitle="알림 본문 탭/클릭 시 회원 앱 영역 이동. 소스 타입별 입력 가이드 노출">
         <DeeplinkPicker
           value={state.deeplink}
           onChange={(v) => set('deeplink', v)}
@@ -441,30 +402,3 @@ function TargetCard({
   );
 }
 
-function ScheduleCard({
-  active,
-  disabled,
-  onClick,
-  title,
-  desc,
-}: {
-  active: boolean;
-  disabled: boolean;
-  onClick: () => void;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <button
-      type="button"
-      disabled={disabled}
-      onClick={onClick}
-      className={`border rounded-lg p-4 text-left transition ${
-        active ? 'border-amber-400 bg-amber-50/40' : 'border-gray-200 bg-white'
-      } ${disabled ? 'opacity-70 cursor-not-allowed' : 'hover:border-amber-400'}`}
-    >
-      <p className={`text-sm font-semibold ${active ? 'text-amber-700' : 'text-gray-900'}`}>{title}</p>
-      <p className="text-xs text-gray-500 mt-1">{desc}</p>
-    </button>
-  );
-}
