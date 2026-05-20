@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-SQ-204-COND-EDIT] 완료 조건 수정 모달 (폐지)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-SQ-204-COND-EDIT] 완료 조건 수정 모달 (폐지)</h1>
+<blockquote>
+<p>🚫 <strong>DEPRECATED</strong> (v2.2에서 폐기) — 완료 조건 별도 계층이 폐기되고 완료 판정 필드가 <strong>미션에 직접 흡수</strong>되었기 때문이다. 본 모달은 더 이상 사용되지 않는다.</p>
+<p>></p>
+<p>- <strong>대체 흐름</strong>: 미션 상세 ([CEB-BO-SQ-204])의 [수정하기] 액션에서 미션 기본정보·보상·완료 판정(판정 유형·기준값·소스 참조값·반복 주기·기간)을 통합 수정</p>
+<p>- 본 문서는 이력 보존용으로 유지된다</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-SQ-204-COND-EDIT</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
+<tr><td>상태</td><td><strong>Deprecated</strong> (v2.2 폐기)</td></tr>
+<tr><td>버전</td><td>v2.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.12</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>—</td></tr>
+<tr><td>비고</td><td>v2.2에서 완료 조건 계층 폐기. 판정 필드는 미션이 직접 흡수. 본 문서는 이력 보존용.</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-12 · 버전: <strong>v2.1</strong> (DEPRECATED)</p>
+<p>모달 경로: 미션 상세의 완료 조건 테이블 행 클릭 → 모달 노출 (v2.2부터 미사용)</p>
+<p>관련 화면: [CEB-BO-SQ-204] 미션 상세</p>
+</blockquote>
+<h2>1. 모달 개요</h2>
+<p>기존 완료 조건 정보를 수정. 부모 미션의 <code>type</code>은 변경 불가이고, 그 결과 <code>sourceType</code>도 변경 불가. 부모 에피소드/그룹이 CLOSED 상태이면 수정 자체 차단.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>트리거</td><td>미션 상세 완료 조건 테이블 행 클릭</td></tr>
+<tr><td>진입 조건</td><td>부모 에피소드/그룹의 status ≠ <code>CLOSED</code></td></tr>
+<tr><td>차단 조건</td><td>CLOSED 시 read-only 또는 클릭 비활성</td></tr>
+<tr><td>접근 권한</td><td>OPERATOR, EXTERNAL_ARTIST(자기 아티스트)</td></tr>
+</table>
+<h2>2. UI 구조</h2>
+<h3>2-1. 헤더</h3>
+<ul>
+<li>제목: <code>완료 조건 수정</code> (h3)</li>
+<li>보조: <code>미션: {mission.titleKO}</code> · 출처 타입 배지</li>
+<li>X 닫기 버튼</li>
+</ul>
+<h3>2-2. 본문 필드 (prefilled)</h3>
+<table>
+<tr><th>필드</th><th>수정 가능</th><th>비고</th></tr>
+<tr><td>출처 타입 (<code>sourceType</code>)</td><td>❌</td><td>mission type 종속, read-only 배지</td></tr>
+<tr><td>완료 조건 ID (<code>id</code>)</td><td>❌</td><td>시스템 발번, hidden 또는 회색 표시</td></tr>
+<tr><td>미션 ID (<code>episodeId</code>)</td><td>❌</td><td>종속</td></tr>
+<tr><td>조건 내용 (<code>sourceRefName</code>)</td><td>✅</td><td>textbox, max 100자</td></tr>
+<tr><td>판정 유형 (<code>completedType</code>)</td><td>✅</td><td>dropdown — mission type별 옵션 분기</td></tr>
+<tr><td>기준 수치 (<code>completedValue</code>)</td><td>✅</td><td><code>TRIVIA_CORRECT_COUNT</code>일 때만 활성</td></tr>
+<tr><td>반복 주기 (<code>repeatCycle</code>)</td><td>✅</td><td>REPEAT 에피소드 chapter에서만 활성</td></tr>
+<tr><td>기간 (<code>openDt</code> / <code>closeDt</code>)</td><td>✅</td><td>그룹 기간 외 설정 시 경고</td></tr>
+</table>
+<h3>2-3. 안내 메시지</h3>
+<ul>
+<li>CLOSED 안내(필요 시): <code>종료된 완료 조건은 수정할 수 없습니다.</code> (회색 배너)</li>
+<li>영향 안내: <code>이 완료 조건의 변경은 현재 진행 중인 유저 활동에 즉시 반영됩니다.</code></li>
+</ul>
+<h3>2-4. CTA</h3>
+<table>
+<tr><th>버튼</th><th>색상</th><th>동작</th></tr>
+<tr><td>취소</td><td>gray-outline</td><td>변경사항 있으면 확인 후 닫기</td></tr>
+<tr><td>저장하기</td><td>indigo (primary)</td><td>검증 통과 시 활성</td></tr>
+</table>
+<h2>3. 변경 가능 매트릭스</h2>
+<table>
+<tr><th>필드</th><th>sourceType=FAN_QUEST</th><th>PM</th><th>ST</th></tr>
+<tr><td>sourceRefName</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>completedType</td><td>❌ (ADMIN_APPROVAL 고정)</td><td>PM 옵션 2종 중 전환</td><td>ST 옵션 2종 중 전환</td></tr>
+<tr><td>completedValue</td><td>—</td><td>—</td><td><code>TRIVIA_CORRECT_COUNT</code> 시만</td></tr>
+<tr><td>repeatCycle</td><td>REPEAT chapter면 ✅</td><td>동</td><td>동</td></tr>
+<tr><td>openDt / closeDt</td><td>✅</td><td>✅</td><td>✅</td></tr>
+</table>
+<h2>4. 검증 규칙</h2>
+<table>
+<tr><th>검증</th><th>동작</th></tr>
+<tr><td><code>sourceRefName</code> 공백</td><td>저장 disabled</td></tr>
+<tr><td><code>completedType</code> null</td><td>저장 disabled</td></tr>
+<tr><td><code>TRIVIA_CORRECT_COUNT</code> + completedValue 0</td><td>disabled</td></tr>
+<tr><td>openDt ≥ closeDt</td><td>disabled</td></tr>
+<tr><td>부모 에피소드/그룹 CLOSED</td><td>모든 필드 disabled</td></tr>
+<tr><td>변경사항 없음</td><td>저장 클릭 시 토스트 <code>변경사항이 없습니다.</code></td></tr>
+</table>
+<h2>5. 결과 처리</h2>
+<table>
+<tr><th>시나리오</th><th>결과</th></tr>
+<tr><td>성공</td><td>모달 닫힘 + 완료 조건 테이블 해당 행 갱신 + 토스트 <code>완료 조건이 수정되었습니다.</code></td></tr>
+<tr><td>실패 (서버)</td><td>모달 유지 + 에러 인라인</td></tr>
+<tr><td>취소</td><td>변경사항 있으면 확인 모달</td></tr>
+</table>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입/이탈</th><th>화면</th></tr>
+<tr><td>트리거</td><td>[CEB-BO-SQ-204] 미션 상세</td></tr>
+<tr><td>성공 후 복귀</td><td>동</td></tr>
+<tr><td>추가 모달</td><td>[CEB-BO-SQ-204-COND-CREATE]</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>변경</th></tr>
+<tr><td>v2.1</td><td>2026-05-12</td><td>용어 통일 — 미션 수정 모달 → 완료 조건 수정 모달</td></tr>
+<tr><td>v2.0</td><td>2026-05-12</td><td>신규 — chapter 종속 필드 잠금, REPEAT chapter 외 주기 비활성, CLOSED 부모 차단 정책 명시</td></tr>
+</table>
+
+</body>
+</html>

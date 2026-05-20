@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-SQ-101-CREATE] 에피소드 그룹 생성</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-SQ-101-CREATE] 에피소드 그룹 생성</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-SQ-101-CREATE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v3.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 에피소드 > 그룹 리스트 > 새 그룹 생성</td></tr>
+<tr><td>비고</td><td></td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v3.0</strong> (한국어 도메인 용어 정합)</p>
+<p>화면 경로: <code>/sq/groups/create</code> · Breadcrumb: <code>홈 › 에피소드 › 그룹 리스트 › 새 그룹 생성</code></p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>신규 에피소드 그룹을 생성하는 폼 화면. 아티스트·상태·타이틀·기간만 입력하며, 메인 이미지·다국어·설명 등은 그룹 레벨에 없음 (에피소드 레벨에서만 입력).</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/sq/groups/create</code></td></tr>
+<tr><td>Breadcrumb</td><td>홈 / 에피소드 / 그룹 리스트 / 새 그룹 생성</td></tr>
+<tr><td>페이지 제목</td><td>"새 에피소드 그룹 생성"</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-SQ-101] 그룹 리스트의 [새 그룹 생성] 버튼</td></tr>
+<tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<ul>
+<li>좌측: ← 뒤로가기 버튼 → 그룹 리스트로 복귀</li>
+<li>페이지 제목 "새 에피소드 그룹 생성"</li>
+</ul>
+<h3>2-2. 안내 박스</h3>
+<p>회색 톤 안내: "그룹은 아티스트별 시즌·큐레이션 묶음입니다. 진행중 상태는 아티스트당 1개만 허용됩니다."</p>
+<h3>2-3. 경고 박스 (조건부 노출)</h3>
+<p>상태를 <strong>진행중</strong>으로 선택했을 때, 같은 아티스트에 이미 진행중인 그룹이 존재하면:</p>
+<ul>
+<li>빨강 톤 박스: "현재 {아티스트}에 이미 진행중인 그룹이 있습니다. 진행중 상태로 저장할 수 없습니다."</li>
+</ul>
+<h3>2-4. 입력 폼 — 기본 정보</h3>
+<table>
+<tr><th>필드</th><th>입력 방식</th><th>옵션·검증</th><th>필수</th></tr>
+<tr><td>아티스트</td><td>드롭다운</td><td>V01D / iKON / CELEBUS</td><td>★</td></tr>
+<tr><td>상태</td><td>드롭다운</td><td>임시저장 / 진행중 / 종료 (기본 "임시저장")</td><td>★</td></tr>
+<tr><td>타이틀</td><td>텍스트</td><td>한국어, 최대 80자</td><td>★</td></tr>
+</table>
+<h3>2-5. 입력 폼 — 기간</h3>
+<table>
+<tr><th>필드</th><th>입력 방식</th><th>검증</th><th>필수</th></tr>
+<tr><td>시작일자</td><td>날짜 + 시간 선택</td><td>종료일자보다 이전</td><td>★</td></tr>
+<tr><td>종료일자</td><td>날짜 + 시간 선택</td><td>시작일자보다 이후</td><td>★</td></tr>
+</table>
+<h3>2-6. 하단 액션 (Sticky 푸터)</h3>
+<ul>
+<li>[취소] → 그룹 리스트로 복귀 (입력값 있을 시 확인 다이얼로그)</li>
+<li>[저장] — 필수 항목 모두 입력 + 진행중 중복 검증 통과 시 활성</li>
+</ul>
+<h2>3. 화면에 노출되는 정보 / 입력되는 정보</h2>
+<p>본 화면은 신규 데이터 입력 화면이므로 운영자가 입력하는 정보 중심.</p>
+<table>
+<tr><th>영역</th><th>입력 정보</th><th>의미</th></tr>
+<tr><td>기본 정보</td><td>아티스트·상태·타이틀</td><td>그룹의 식별·상태·표시 정보</td></tr>
+<tr><td>기간</td><td>시작일자·종료일자</td><td>그룹 기간 (하위 에피소드는 본 기간 상속)</td></tr>
+<tr><td>자동 기록</td><td>식별값·에피소드 수·생성자·생성일시·최근 수정자·최근 수정일시</td><td>저장 시 시스템 자동 부여</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>데이터 로딩 중</td><td>Skeleton 폼</td></tr>
+<tr><td>신규 진입</td><td>빈 폼 (상태 "임시저장" 기본 선택)</td></tr>
+<tr><td>진행중 중복 발생</td><td>경고 박스 노출 + [저장] 비활성</td></tr>
+<tr><td>시작일자 ≥ 종료일자</td><td>인라인 에러 + [저장] 비활성</td></tr>
+<tr><td>저장 성공</td><td>그룹 상세 페이지([CEB-BO-SQ-201])로 이동 + "그룹이 생성되었습니다." 토스트</td></tr>
+<tr><td>권한 없음 진입</td><td>[관리자 > 권한관리] 설정에 따라 화면 미노출 또는 [저장] 비활성</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<table>
+<tr><th>케이스</th><th>동작</th></tr>
+<tr><td>필수 미입력</td><td>[저장] 버튼 비활성</td></tr>
+<tr><td>시작일자 ≥ 종료일자</td><td>인라인 에러 + [저장] 비활성</td></tr>
+<tr><td>진행중 중복 (같은 아티스트의 다른 그룹이 이미 진행중)</td><td>경고 박스 노출 + [저장] 차단</td></tr>
+<tr><td>타이틀 80자 초과</td><td>글자수 표시 + 초과 입력 차단</td></tr>
+</table>
+<h3>5-1. 동적 검증 동작</h3>
+<ul>
+<li>아티스트 변경 시: 진행중 중복 검증 재실행</li>
+<li>상태 변경 시: "진행중" 선택하면 경고 박스 즉시 토글</li>
+<li>취소: 입력값 있으면 확인 다이얼로그 → 그룹 리스트로 복귀</li>
+</ul>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>액션</th><th>다음 화면</th></tr>
+<tr><td>← 뒤로가기 / [취소]</td><td>[CEB-BO-SQ-101] 에피소드 그룹 리스트</td></tr>
+<tr><td>[저장] 성공</td><td>[CEB-BO-SQ-201] 에피소드 그룹 상세</td></tr>
+<tr><td>영역 가이드 참조</td><td>[CEB-BO-011] 스토리 퀘스트(SQ) 영역 가이드</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v3.0</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>한국어 도메인 용어 정합 + Page Properties 13필드</strong> — ① Page Properties 표 신설 ② §3 데이터 모델 표(영문 인터페이스 EpisodeGroup + 영문 필드명) 폐기 → §3 입력 정보 표로 재구성 ③ 권한 enum "OPERATOR, EXTERNAL_ARTIST(자기 아티스트)" → "[관리자 > 권한관리]" ④ 상태 enum(DRAFT/ACTIVE/CLOSED) → 한국어(임시저장/진행중/종료) ⑤ 검증 함수 호출(<code>hasActiveGroupForArtist</code>) → 운영 동작 설명 ⑥ §4 상태별 동작 분기·§5 검증 규칙 양식 정합 ⑦ 변경 이력 5칸 양식</td></tr>
+<tr><td>v2.0</td><td>2026-05-12</td><td>@Nill Yoo</td><td>신규 (그룹 계층 도입 반영)</td></tr>
+</table>
+
+</body>
+</html>
