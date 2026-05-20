@@ -86,18 +86,18 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>RFT — 응모권</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.2</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.14</td></tr>
+<tr><td>버전</td><td>v3.3</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
-<tr><td>Breadcrumb</td><td>홈 > 래플 > 응모권 관리</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 래플 > 응모권 발급 정책</td></tr>
 <tr><td>비고</td><td></td></tr>
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-14 · 버전: <strong>v3.2</strong> (앱내 구매 운영 토글 + PM·ST 게임 보상 기본 정책 카드 신규)</p>
-<p>화면 경로: <code>/rft/policy</code> · Breadcrumb: <code>홈 › 래플 › 응모권 관리</code></p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v3.3</strong> (사이드바 라벨 정합 + 부제 확장 — 앱내 구매 토글·PM·ST 정책 반영)</p>
+<p>화면 경로: <code>/rft/policy</code> · Breadcrumb: <code>홈 › 래플 › 응모권 발급 정책</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
 <p>운영자가 응모권 발급·구매·교환과 관련된 <strong>운영 정책 4종</strong>을 한 화면에서 직접 조정하는 설정 화면.</p>
@@ -111,15 +111,15 @@ p {
 <table>
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>화면 경로</td><td><code>/rft/policy</code></td></tr>
-<tr><td>Breadcrumb</td><td>홈 / 래플 / 응모권 관리</td></tr>
-<tr><td>진입 경로</td><td>사이드바 "래플 > 응모권 관리"</td></tr>
+<tr><td>Breadcrumb</td><td>홈 / 래플 / 응모권 발급 정책</td></tr>
+<tr><td>진입 경로</td><td>사이드바 "래플 > 응모권 발급 정책"</td></tr>
 <tr><td>용도</td><td>GP 환율 + 회원당 1일 교환 한도 + 앱내 구매 운영 토글 + PM·ST 게임 보상 기본 정책</td></tr>
 </table>
 <h2>2. 화면 구성</h2>
 <h3>2-1. 헤더 + 1일 기준 안내 박스</h3>
 <ul>
 <li>페이지 제목 "응모권 발급 정책"</li>
-<li>부제: "GP를 응모권으로 교환할 때 적용되는 환율과 회원당 1일 교환 한도를 운영자가 직접 조정합니다."</li>
+<li>부제: "GP → 응모권 환율, 회원당 1일 교환 한도, 앱내 응모권 구매 운영 토글, PM·ST 게임별 응모권 지급 기본 정책을 운영자가 직접 조정합니다."</li>
 <li>안내 박스 (인디고 톤): "<strong>1일 기준</strong>: KST 자정(00:00 ~ 23:59:59). 매일 자정에 회원별 한도가 자동 리셋됩니다."</li>
 </ul>
 <h3>2-2. 카드 1 — GP → 응모권 환율</h3>
@@ -241,7 +241,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v3.2</strong></td><td><strong>2026-05-14</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 토글·게임 정책 카드 신규</strong> — ① §1 화면 개요 정책 4종 (GP 환율 / 1일 한도 / 앱내 구매 토글 / PM·ST 게임 정책)으로 확장 ② §2-6 카드 3 — 앱내 응모권 구매 운영 토글 (Buy-RF-Ticket-001) 신규 (ON/OFF + 점검 사유 + 마지막 변경 정보) ③ §2-7 카드 4 — PM·ST 게임별 응모권 지급 기본 정책 매트릭스 신규 (전 게임유형 ON + 0매 기본, 게임별 오버라이드로 수량 지정) ④ §2-5 저장 확인 모달에 토글·정책 변경 메시지 2종 추가 ⑤ §3 노출 정보, §4 상태 분기, §5 검증 규칙 모두 신규 항목 보강 ⑥ §6 연관 화면에 Buy-RF-Ticket-001 + RFT-302 추가. 앱 측 Buy-RF-Ticket-001 화면 정의는 본 문서에서 다루지 않음 (앱 측 별도)</td></tr>
+<tr><td><strong>v3.3</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>사이드바 라벨 통일 + 부제 확장</strong> — ① 사이드바 메뉴·Breadcrumb 표기를 "응모권 관리" → "<strong>응모권 발급 정책</strong>"으로 정정 (파일명·페이지 제목과 일치). 이전 [CEB-BO-RFT-101]·[CEB-BO-RFT-201] §6 참조와도 정합 ② §2-1 부제를 환율·한도 2종만 언급하던 v3.2 이전 표현에서 "GP 환율, 1일 교환 한도, <strong>앱내 응모권 구매 운영 토글, PM·ST 게임별 응모권 지급 기본 정책</strong>"으로 확장 (§2-6·§2-7 신규 카드 반영)</td></tr>
+<tr><td>v3.2</td><td>2026-05-14</td><td>@Nill Yoo</td><td><strong>운영 토글·게임 정책 카드 신규</strong> — ① 정책 범위 4종 (GP 환율 / 1일 한도 / 앱내 구매 토글 / PM·ST 게임 정책)으로 확장 ② §2-6 카드 3 — 앱내 응모권 구매 운영 토글(Buy-RF-Ticket-001) 신규: ON/OFF + 점검 사유 입력. OFF 시 앱 [구매하기] 버튼이 [점검중]으로 비활성 ③ §2-7 카드 4 — PM·ST 게임별 응모권 지급 기본 정책 매트릭스 신규: 전 게임유형 ON + 기본 수량 0매. 개별 게임 수량 지정은 [CEB-BO-RFT-302] 게임 생성 폼에서 오버라이드 ④ §2-3 카드 2 하단으로 "마지막 변경(GP 환율·한도)" 정보 이동, 푸터에는 저장 버튼만 ⑤ §6 연관 화면에 Buy-RF-Ticket-001 + [CEB-BO-RFT-302] 추가</td></tr>
 <tr><td>v3.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>회원당 1일 교환 한도 기본값을 "무제한"으로 변경</strong> — 한도 적용은 운영 후 부하 발생 시 명시적으로 활성화하도록 보수적 디폴트 설정</td></tr>
 <tr><td>v3.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>DEPRECATED 해제 + 전면 재작성</strong> — 사용자 결정에 따라 GP↔응모권 환율 + 회원당 1일 교환 한도를 운영자가 직접 조정할 수 있는 화면으로 부활. 단일 화면 카드 2개(환율·한도) + 무제한/제한 라디오 토글 + 저장 확인 모달. KST 자정 기준 매일 자정 자동 리셋. 사이드바 "래플 > 응모권 관리" 메뉴 추가</td></tr>
 <tr><td>v2.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>(DEPRECATED)</strong> Page Properties 표 신규(13필드) — 상태 Deprecated, 본문 변경 없음</td></tr>
