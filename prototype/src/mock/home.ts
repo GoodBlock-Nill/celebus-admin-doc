@@ -1,7 +1,16 @@
-// 홈 운영(HOM) MVP — [CEB-BO-HOM-*] SSOT
-// ERD: event_banner / event_banner_translation (SQL 1, 2 테이블)
-// 멀티아티스트: nullable artist_group_id (전역 배너 가능, 🟠 High)
+// 홈 운영(HOM) v4.0 — [CEB-BO-HOM-*] SSOT
+// 슬롯(slot) 단위 재설계:
+//  - 슬롯 = (slotKind × artistGroup) 자동 조합. 배너는 슬롯 안에 등록
+//  - 위치(slotKind):
+//    · MAIN (홈 메인 캐러셀, 최대 동시 8개)
+//    · TODAY_TODO (홈 오늘의 할일, 1개 고정)
+//    · TOGETHER (아티스트 메인 다함께, 최대 동시 8개)
+//    · MISSION (아티스트 메인 미션, 1개 고정)
+//  - 아티스트: 전역(null, MAIN·TODAY_TODO만) 또는 단일 아티스트
 
+export type SlotKind = 'MAIN' | 'TODAY_TODO' | 'TOGETHER' | 'MISSION';
+export type SlotTab = 'home' | 'artist';
+export type SlotTargetMode = 'GLOBAL_ONLY' | 'ARTIST_ONLY';
 export type BannerStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
 export type BannerSourceType =
   | 'RAFFLE'
@@ -9,75 +18,184 @@ export type BannerSourceType =
   | 'QUEST'
   | 'BIVE_CAMPAIGN'
   | 'INF_NEWS'
+  | 'ARTIST_HOME'
   | 'PROMO';
-export type ArtistGroup = 'V01D' | 'iKON' | 'CELEBUS' | null; // null = 전역
-export type HomeCardType = 'BANNER_TOP' | 'NEW_NEWS' | 'FAN_QUEST' | 'BIVE_HIGHLIGHT' | 'SUPPORT_EVENT';
+export type ArtistGroup = 'V01D' | 'iKON' | 'CELEBUS' | 'MADEIN' | 'UNDER:LIGHT';
+
+export type BannerPeriod =
+  | { type: 'UNLIMITED' }
+  | { type: 'CUSTOM'; openDt: string; closeDt: string };
+
+export const ACTIVE_ARTISTS: ArtistGroup[] = [
+  'V01D',
+  'iKON',
+  'CELEBUS',
+  'MADEIN',
+  'UNDER:LIGHT',
+];
+
+interface ImageSpec {
+  ratio: string;       // 표시용 (예: '3:4', '3:1')
+  recommended: string; // 권장 사이즈 (예: '900×1200')
+}
+
+interface SlotKindMeta {
+  label: string;
+  tab: SlotTab;
+  capacity: 'MULTI' | 'SINGLE';
+  capacityLimit: number | null;     // MULTI일 때 한도
+  targetMode: SlotTargetMode;       // 전역 전용 / 아티스트 전용
+  imageSpec: ImageSpec;             // 위치별 권장 이미지 비율·사이즈
+}
+
+export const SLOT_KIND_META: Record<SlotKind, SlotKindMeta> = {
+  MAIN: {
+    label: '메인',
+    tab: 'home',
+    capacity: 'MULTI',
+    capacityLimit: 8,
+    targetMode: 'GLOBAL_ONLY',
+    imageSpec: { ratio: '1:1', recommended: '1080×1080' },
+  },
+  TODAY_TODO: {
+    label: '오늘의 할일',
+    tab: 'home',
+    capacity: 'SINGLE',
+    capacityLimit: 1,
+    targetMode: 'ARTIST_ONLY',
+    imageSpec: { ratio: '16:9', recommended: '1920×1080' },
+  },
+  TOGETHER: {
+    label: '다함께',
+    tab: 'artist',
+    capacity: 'MULTI',
+    capacityLimit: 8,
+    targetMode: 'ARTIST_ONLY',
+    imageSpec: { ratio: '16:9', recommended: '1920×1080' },
+  },
+  MISSION: {
+    label: '미션',
+    tab: 'artist',
+    capacity: 'SINGLE',
+    capacityLimit: 1,
+    targetMode: 'ARTIST_ONLY',
+    imageSpec: { ratio: '16:9', recommended: '1920×1080' },
+  },
+};
+
+const SLOT_KINDS_BY_TAB: Record<SlotTab, SlotKind[]> = {
+  home: ['MAIN', 'TODAY_TODO'],
+  artist: ['TOGETHER', 'MISSION'],
+};
+
+const STATUS_LABEL: Record<BannerStatus, string> = {
+  DRAFT: '임시저장',
+  ACTIVE: '노출중',
+  CLOSED: '노출 종료',
+};
+
+const STATUS_BADGE: Record<BannerStatus, { bg: string; text: string }> = {
+  DRAFT: { bg: 'bg-gray-100', text: 'text-gray-700' },
+  ACTIVE: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
+  CLOSED: { bg: 'bg-slate-200', text: 'text-slate-600' },
+};
+
+const SLOT_KIND_BADGE: Record<SlotKind, { bg: string; text: string }> = {
+  MAIN: { bg: 'bg-violet-100', text: 'text-violet-700' },
+  TODAY_TODO: { bg: 'bg-amber-100', text: 'text-amber-700' },
+  TOGETHER: { bg: 'bg-pink-100', text: 'text-pink-700' },
+  MISSION: { bg: 'bg-sky-100', text: 'text-sky-700' },
+};
+
+const SOURCE_TYPE_BADGE: Record<BannerSourceType, { bg: string; text: string; label: string }> = {
+  RAFFLE: { bg: 'bg-pink-100', text: 'text-pink-700', label: '래플' },
+  SUPPORT_EVENT: { bg: 'bg-rose-100', text: 'text-rose-700', label: '응원하기' },
+  QUEST: { bg: 'bg-amber-100', text: 'text-amber-700', label: '퀘스트' },
+  BIVE_CAMPAIGN: { bg: 'bg-indigo-100', text: 'text-indigo-700', label: 'BIVE' },
+  INF_NEWS: { bg: 'bg-sky-100', text: 'text-sky-700', label: '소식' },
+  ARTIST_HOME: { bg: 'bg-purple-100', text: 'text-purple-700', label: '아티스트 홈' },
+  PROMO: { bg: 'bg-emerald-100', text: 'text-emerald-700', label: '프로모션' },
+};
 
 export interface HomeBanner {
   id: number;
-  artistGroup: ArtistGroup;
+  slotKind: SlotKind;
+  artistGroup: ArtistGroup | null;
   sourceType: BannerSourceType;
   sourceRefId: number | null;
   sourceRefName: string;
   titleKO: string;
   titleEN: string;
   titleJP: string;
+  subtitleKO: string;
+  subtitleEN: string;
+  subtitleJP: string;
   imageUrl: string;
   linkUrl: string;
-  displayOrder: number;
-  openDt: string;
-  closeDt: string;
+  displayOrder: number; // MULTI 슬롯만 의미
+  period: BannerPeriod;
   status: BannerStatus;
-  impressionCount: number;
-  clickCount: number;
   createdBy: string;
   createdAt: string;
   updatedBy: string;
   updatedAt: string;
 }
 
-export interface HomeCard {
-  id: number;
-  cardType: HomeCardType;
-  artistGroup: ArtistGroup;
-  enabled: boolean;
-  displayOrder: number;
-  titleKO: string;
-  description: string;
-  sourceCount: number; // 카드가 표시하는 콘텐츠 수
+export interface Slot {
+  slotKind: SlotKind;
+  artistGroup: ArtistGroup | null;
+  banners: HomeBanner[];
+  meta: SlotKindMeta;
+  activeCount: number;
+  draftCount: number;
+  closedCount: number;
+  lastUpdatedAt: string | null;
+  lastUpdatedBy: string | null;
 }
 
-const SOURCE_TYPE_BADGE: Record<BannerSourceType, { bg: string; text: string; label: string }> = {
-  RAFFLE: { bg: 'bg-pink-100', text: 'text-pink-700', label: 'Raffle' },
-  SUPPORT_EVENT: { bg: 'bg-rose-100', text: 'text-rose-700', label: '응원하기' },
-  QUEST: { bg: 'bg-amber-100', text: 'text-amber-700', label: 'Quest' },
-  BIVE_CAMPAIGN: { bg: 'bg-indigo-100', text: 'text-indigo-700', label: 'BIVE' },
-  INF_NEWS: { bg: 'bg-sky-100', text: 'text-sky-700', label: '소식' },
-  PROMO: { bg: 'bg-emerald-100', text: 'text-emerald-700', label: '프로모션' },
-};
-
+export function getStatusLabel(s: BannerStatus): string {
+  return STATUS_LABEL[s];
+}
+export function getStatusBadge(s: BannerStatus) {
+  return STATUS_BADGE[s];
+}
+export function getSlotKindLabel(s: SlotKind): string {
+  return SLOT_KIND_META[s].label;
+}
+export function getSlotKindBadge(s: SlotKind) {
+  return SLOT_KIND_BADGE[s];
+}
 export function getSourceTypeBadge(t: BannerSourceType) {
   return SOURCE_TYPE_BADGE[t];
 }
+export function formatPeriod(period: BannerPeriod): string {
+  if (period.type === 'UNLIMITED') return '무기한';
+  return `${period.openDt} ~ ${period.closeDt}`;
+}
+export function getArtistDisplay(a: ArtistGroup | null): string {
+  return a ?? '전역';
+}
 
 export const banners: HomeBanner[] = [
+  // === MAIN — 전역 (홈 메인 캐러셀) ===
   {
     id: 1,
-    artistGroup: 'V01D',
+    slotKind: 'MAIN',
+    artistGroup: null,
     sourceType: 'RAFFLE',
     sourceRefId: 12,
     sourceRefName: 'V01D 콘서트 티켓 래플',
     titleKO: 'V01D journey #01 콘서트 초대',
     titleEN: 'V01D journey #01 Concert Invitation',
     titleJP: 'V01D journey #01 コンサートご招待',
+    subtitleKO: '응모하고 단독 무대에 함께해요',
+    subtitleEN: 'Enter the raffle and join us live',
+    subtitleJP: '応募して特別ステージへ',
     imageUrl: '/home/banner-1.jpg',
     linkUrl: '/raffle/12',
     displayOrder: 1,
-    openDt: '2026.05.07 10:00',
-    closeDt: '2026.05.14 23:59',
+    period: { type: 'CUSTOM', openDt: '2026.05.07 10:00', closeDt: '2026.05.14 23:59' },
     status: 'ACTIVE',
-    impressionCount: 12450,
-    clickCount: 1832,
     createdBy: 'nill',
     createdAt: '2026.05.06 16:30',
     updatedBy: 'nill',
@@ -85,6 +203,7 @@ export const banners: HomeBanner[] = [
   },
   {
     id: 2,
+    slotKind: 'MAIN',
     artistGroup: null,
     sourceType: 'PROMO',
     sourceRefId: null,
@@ -92,14 +211,14 @@ export const banners: HomeBanner[] = [
     titleKO: 'CELEBUS 1주년 — 함께한 시간',
     titleEN: 'CELEBUS 1st Anniversary',
     titleJP: 'CELEBUS 1周年',
+    subtitleKO: '1년의 여정에 감사를 담아',
+    subtitleEN: 'Thank you for the year',
+    subtitleJP: '1年間ありがとう',
     imageUrl: '/home/banner-2.jpg',
-    linkUrl: '/event/anniversary-2026',
+    linkUrl: 'https://celebus.xyz/event/anniversary-2026',
     displayOrder: 2,
-    openDt: '2026.05.01 00:00',
-    closeDt: '2026.05.31 23:59',
+    period: { type: 'UNLIMITED' },
     status: 'ACTIVE',
-    impressionCount: 38201,
-    clickCount: 4012,
     createdBy: 'admin',
     createdAt: '2026.04.25 14:00',
     updatedBy: 'admin',
@@ -107,112 +226,227 @@ export const banners: HomeBanner[] = [
   },
   {
     id: 3,
-    artistGroup: 'iKON',
-    sourceType: 'BIVE_CAMPAIGN',
-    sourceRefId: 23,
-    sourceRefName: 'iKON 컴백 BIVE 한정 에디션',
-    titleKO: 'iKON 컴백 기념 BIVE 한정',
-    titleEN: 'iKON Comeback Limited BIVE',
-    titleJP: 'iKON カムバック限定BIVE',
+    slotKind: 'MAIN',
+    artistGroup: null,
+    sourceType: 'INF_NEWS',
+    sourceRefId: 102,
+    sourceRefName: '5월 운영 점검 안내',
+    titleKO: '5월 정기 점검 안내',
+    titleEN: 'May Maintenance Notice',
+    titleJP: '5月メンテナンスのお知らせ',
+    subtitleKO: '5/15 02:00~04:00 서비스 일시 중지',
+    subtitleEN: 'Service paused May 15, 02:00~04:00',
+    subtitleJP: '5/15 02:00〜04:00 サービス一時停止',
     imageUrl: '/home/banner-3.jpg',
-    linkUrl: '/bive/edition/23',
+    linkUrl: '/info/102',
     displayOrder: 3,
-    openDt: '2026.04.15 18:00',
-    closeDt: '2026.05.15 23:59',
-    status: 'ACTIVE',
-    impressionCount: 8721,
-    clickCount: 1240,
-    createdBy: 'carl',
-    createdAt: '2026.04.10 11:30',
-    updatedBy: 'carl',
-    updatedAt: '2026.04.15 17:55',
+    period: { type: 'CUSTOM', openDt: '2026.05.10 09:00', closeDt: '2026.05.15 04:00' },
+    status: 'CLOSED',
+    createdBy: 'admin',
+    createdAt: '2026.05.09 18:00',
+    updatedBy: 'admin',
+    updatedAt: '2026.05.15 04:00',
   },
+
+  // === TODAY_TODO — V01D ===
   {
-    id: 4,
+    id: 201,
+    slotKind: 'TODAY_TODO',
     artistGroup: 'V01D',
     sourceType: 'QUEST',
-    sourceRefId: 8,
-    sourceRefName: 'V01D 데뷔 100일 퀘스트',
+    sourceRefId: 15,
+    sourceRefName: 'V01D 데뷔 100일 특별 미션',
     titleKO: 'V01D 데뷔 100일 — 함께 축하해요',
-    titleEN: '',
-    titleJP: '',
-    imageUrl: '/home/banner-4.jpg',
-    linkUrl: '/quest/8',
-    displayOrder: 4,
-    openDt: '2026.05.20 00:00',
-    closeDt: '2026.06.20 23:59',
+    titleEN: 'V01D 100 Days — Celebrate Together',
+    titleJP: 'V01Dデビュー100日',
+    subtitleKO: '100일 챌린지 미션 참여',
+    subtitleEN: 'Join the 100-day challenge',
+    subtitleJP: '100日チャレンジに参加',
+    imageUrl: '/home/todo-v01d.jpg',
+    linkUrl: '/quest/15',
+    displayOrder: 1,
+    period: { type: 'CUSTOM', openDt: '2026.05.20 00:00', closeDt: '2026.06.20 23:59' },
     status: 'DRAFT',
-    impressionCount: 0,
-    clickCount: 0,
     createdBy: 'nill',
     createdAt: '2026.05.08 17:20',
     updatedBy: 'nill',
     updatedAt: '2026.05.09 10:15',
   },
+
+  // === TOGETHER — V01D (아티스트 메인 다함께 캐러셀) ===
   {
-    id: 5,
+    id: 300,
+    slotKind: 'TOGETHER',
     artistGroup: 'V01D',
-    sourceType: 'SUPPORT_EVENT',
-    sourceRefId: 4,
-    sourceRefName: 'V01D 데뷔 100일 서포트 광고',
-    titleKO: 'V01D 데뷔 100일 — 강남역 광고 응원',
-    titleEN: 'V01D 100 Days Debut Cheer Ad',
-    titleJP: 'V01D デビュー100日',
-    imageUrl: '/home/banner-5.jpg',
-    linkUrl: '/support/4',
-    displayOrder: 5,
-    openDt: '2026.04.01 00:00',
-    closeDt: '2026.04.30 23:59',
+    sourceType: 'QUEST',
+    sourceRefId: 12,
+    sourceRefName: 'V01D 트리비아 시즌1',
+    titleKO: 'V01D 트리비아 참가 안내',
+    titleEN: 'Join V01D Trivia',
+    titleJP: 'V01D トリビアに参加',
+    subtitleKO: '오늘 잘 알고 있는지 확인해보세요',
+    subtitleEN: 'See how well you know V01D today',
+    subtitleJP: '今日のV01Dクイズ',
+    imageUrl: '/home/together-v01d-1.jpg',
+    linkUrl: '/quest/12',
+    displayOrder: 1,
+    period: { type: 'CUSTOM', openDt: '2026.04.10 00:00', closeDt: '2026.04.30 23:59' },
     status: 'CLOSED',
-    impressionCount: 24521,
-    clickCount: 3201,
     createdBy: 'nill',
-    createdAt: '2026.03.20 13:00',
+    createdAt: '2026.04.09 11:00',
     updatedBy: 'nill',
-    updatedAt: '2026.05.01 00:30',
+    updatedAt: '2026.04.30 23:59',
   },
   {
-    id: 6,
-    artistGroup: null,
+    id: 301,
+    slotKind: 'TOGETHER',
+    artistGroup: 'V01D',
     sourceType: 'INF_NEWS',
-    sourceRefId: 102,
-    sourceRefName: '5월 운영 점검 안내',
-    titleKO: '5월 정기 점검 안내 (5/15 02:00~04:00)',
-    titleEN: 'May Maintenance Notice',
-    titleJP: '5月メンテナンスのお知らせ',
-    imageUrl: '/home/banner-6.jpg',
-    linkUrl: '/info/102',
-    displayOrder: 6,
-    openDt: '2026.05.10 09:00',
-    closeDt: '2026.05.15 04:00',
+    sourceRefId: 110,
+    sourceRefName: 'V01D 5월 소식 정리',
+    titleKO: 'V01D 5월의 소식',
+    titleEN: "V01D's May News",
+    titleJP: 'V01D 5月のニュース',
+    subtitleKO: '이번 달 V01D 활동을 한눈에',
+    subtitleEN: 'May activities at a glance',
+    subtitleJP: '今月のV01D活動',
+    imageUrl: '/home/together-v01d-2.jpg',
+    linkUrl: '/info/110',
+    displayOrder: 2,
+    period: { type: 'UNLIMITED' },
     status: 'ACTIVE',
-    impressionCount: 5210,
-    clickCount: 412,
+    createdBy: 'nill',
+    createdAt: '2026.05.01 10:00',
+    updatedBy: 'nill',
+    updatedAt: '2026.05.01 10:00',
+  },
+
+  // === TOGETHER — iKON ===
+  {
+    id: 310,
+    slotKind: 'TOGETHER',
+    artistGroup: 'iKON',
+    sourceType: 'ARTIST_HOME',
+    sourceRefId: null,
+    sourceRefName: 'iKON 아티스트 홈',
+    titleKO: 'iKON FOUREVER 투어 시작',
+    titleEN: 'iKON FOUREVER Tour',
+    titleJP: 'iKON FOUREVER ツアー',
+    subtitleKO: '서울 공연 안내와 굿즈 정보',
+    subtitleEN: 'Seoul shows and merch',
+    subtitleJP: 'ソウル公演とグッズ',
+    imageUrl: '/home/together-ikon.jpg',
+    linkUrl: '/artists/ikon',
+    displayOrder: 1,
+    period: { type: 'UNLIMITED' },
+    status: 'ACTIVE',
+    createdBy: 'nill',
+    createdAt: '2026.04.28 09:30',
+    updatedBy: 'nill',
+    updatedAt: '2026.05.01 00:00',
+  },
+
+  // === MISSION — V01D ===
+  {
+    id: 400,
+    slotKind: 'MISSION',
+    artistGroup: 'V01D',
+    sourceType: 'QUEST',
+    sourceRefId: 16,
+    sourceRefName: 'V01D 데일리 미션',
+    titleKO: 'V01D 데일리 미션 — 오늘의 한 곡 듣기',
+    titleEN: 'V01D Daily — Today’s Song',
+    titleJP: 'V01D デイリー 今日の1曲',
+    subtitleKO: '하루 1곡 듣고 응모권 받기',
+    subtitleEN: 'Listen daily for tickets',
+    subtitleJP: '毎日1曲で応募券',
+    imageUrl: '/home/mission-v01d.jpg',
+    linkUrl: '/quest/16',
+    displayOrder: 1,
+    period: { type: 'UNLIMITED' },
+    status: 'ACTIVE',
+    createdBy: 'nill',
+    createdAt: '2026.05.05 09:00',
+    updatedBy: 'nill',
+    updatedAt: '2026.05.05 09:00',
+  },
+
+  // === MISSION — MADEIN ===
+  {
+    id: 401,
+    slotKind: 'MISSION',
+    artistGroup: 'MADEIN',
+    sourceType: 'PROMO',
+    sourceRefId: null,
+    sourceRefName: 'MADEIN 사전 신청',
+    titleKO: 'MADEIN 새 미니앨범 사전 신청',
+    titleEN: 'MADEIN New Mini Album Pre-Order',
+    titleJP: 'MADEIN 新ミニアルバム予約',
+    subtitleKO: '한정 굿즈 패키지 안내',
+    subtitleEN: 'Limited goods package',
+    subtitleJP: '限定グッズパッケージ',
+    imageUrl: '/home/mission-madein.jpg',
+    linkUrl: 'https://celebus.xyz/event/madein-preorder',
+    displayOrder: 1,
+    period: { type: 'CUSTOM', openDt: '2026.05.18 00:00', closeDt: '2026.06.10 23:59' },
+    status: 'DRAFT',
     createdBy: 'admin',
-    createdAt: '2026.05.09 18:00',
+    createdAt: '2026.05.17 14:20',
     updatedBy: 'admin',
-    updatedAt: '2026.05.09 18:00',
+    updatedAt: '2026.05.17 14:20',
   },
 ];
-
-export const homeCards: HomeCard[] = [
-  { id: 1, cardType: 'BANNER_TOP', artistGroup: null, enabled: true, displayOrder: 1, titleKO: '상단 배너 슬라이드', description: '홈 최상단 배너 캐러셀 (자동 슬라이드 5초)', sourceCount: 6 },
-  { id: 2, cardType: 'NEW_NEWS', artistGroup: 'V01D', enabled: true, displayOrder: 2, titleKO: 'V01D 최신 소식', description: 'V01D 카테고리 최근 5건 노출', sourceCount: 5 },
-  { id: 3, cardType: 'FAN_QUEST', artistGroup: 'V01D', enabled: true, displayOrder: 3, titleKO: '진행 중 팬퀘스트', description: '활성 Quest 3건 + 응모 가능 Raffle 2건', sourceCount: 5 },
-  { id: 4, cardType: 'BIVE_HIGHLIGHT', artistGroup: 'iKON', enabled: true, displayOrder: 4, titleKO: '이번 주 BIVE', description: 'iKON 한정 에디션 + 다음 민팅 이벤트', sourceCount: 3 },
-  { id: 5, cardType: 'SUPPORT_EVENT', artistGroup: null, enabled: false, displayOrder: 5, titleKO: '진행 중 응원하기', description: '활성 응원 이벤트 노출 (현재 비활성화)', sourceCount: 0 },
-];
-
-export const bannerStats = {
-  total: banners.length,
-  active: banners.filter((b) => b.status === 'ACTIVE').length,
-  draft: banners.filter((b) => b.status === 'DRAFT').length,
-  closed: banners.filter((b) => b.status === 'CLOSED').length,
-  globalCount: banners.filter((b) => b.artistGroup === null).length,
-  totalImpression: banners.reduce((s, b) => s + b.impressionCount, 0),
-  totalClick: banners.reduce((s, b) => s + b.clickCount, 0),
-};
 
 export function getBannerById(id: number): HomeBanner | undefined {
   return banners.find((b) => b.id === id);
+}
+
+// 슬롯 1개 — 빈 슬롯도 derived 가능
+export function getSlot(slotKind: SlotKind, artistGroup: ArtistGroup | null): Slot {
+  const list = banners.filter(
+    (b) => b.slotKind === slotKind && b.artistGroup === artistGroup
+  );
+  const lastBanner = [...list].sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1))[0];
+  return {
+    slotKind,
+    artistGroup,
+    banners: list.sort((a, b) => a.displayOrder - b.displayOrder),
+    meta: SLOT_KIND_META[slotKind],
+    activeCount: list.filter((b) => b.status === 'ACTIVE').length,
+    draftCount: list.filter((b) => b.status === 'DRAFT').length,
+    closedCount: list.filter((b) => b.status === 'CLOSED').length,
+    lastUpdatedAt: lastBanner?.updatedAt ?? null,
+    lastUpdatedBy: lastBanner?.updatedBy ?? null,
+  };
+}
+
+// 탭별 자동 생성 슬롯 인벤토리
+export function getSlotsForTab(tab: SlotTab): Slot[] {
+  const kinds = SLOT_KINDS_BY_TAB[tab];
+  const slots: Slot[] = [];
+  for (const kind of kinds) {
+    const meta = SLOT_KIND_META[kind];
+    const targets: (ArtistGroup | null)[] =
+      meta.targetMode === 'GLOBAL_ONLY' ? [null] : [...ACTIVE_ARTISTS];
+    for (const artist of targets) {
+      slots.push(getSlot(kind, artist));
+    }
+  }
+  return slots;
+}
+
+// 탭별 합산 상태 카운트 (슬롯 내 배너 기준)
+export function getTabStatusCounts(tab: SlotTab) {
+  const slots = getSlotsForTab(tab);
+  let total = 0;
+  let active = 0;
+  let draft = 0;
+  let closed = 0;
+  for (const s of slots) {
+    total += s.banners.length;
+    active += s.activeCount;
+    draft += s.draftCount;
+    closed += s.closedCount;
+  }
+  return { total, active, draft, closed };
 }

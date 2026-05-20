@@ -38,6 +38,7 @@ import {
   PhotoIcon,
   CalendarDaysIcon,
   GiftIcon,
+  BellAlertIcon,
 } from '@heroicons/react/24/outline';
 
 interface SubMenu {
@@ -73,7 +74,7 @@ const ADMIN_MENU: MenuItem[] = [
     icon: DevicePhoneMobileIcon,
     children: [
       { label: '배너 관리', href: '/home/banners', icon: PhotoIcon },
-      { label: '카드 관리', href: '/home/cards', icon: Square2StackIcon },
+      { label: '알림 관리', href: '/app/notifications', icon: BellAlertIcon },
     ],
   },
   {
