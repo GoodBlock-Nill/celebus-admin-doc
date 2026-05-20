@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.0</td></tr>
+<tr><td>버전</td><td>v3.1</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,7 +96,7 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v3.0</strong> (한국어 도메인 용어 정합)</p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v3.1</strong> (반복 주기 표시 옵션 4종으로 확장 — 일간/주간/월간/없음)</p>
 <p>화면 경로: <code>/sq/{id}/quests/{qid}</code> · Breadcrumb: <code>홈 › 에피소드 › {그룹명} › {에피소드명} › 미션 N</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
@@ -148,7 +148,7 @@ p {
 </table>
 <table>
 <tr><th>우측</th><th>값</th></tr>
-<tr><td>반복 주기</td><td>월간 / 주간 / 없음</td></tr>
+<tr><td>반복 주기</td><td><strong>일간 / 주간 / 월간 / 없음</strong> (4종). 단일 미션이거나 팬퀘스트 유형이면 팬퀘스트 자체 설정 상속 또는 "없음"</td></tr>
 <tr><td>시작</td><td>시작일자 (없으면 "그룹 기간 상속")</td></tr>
 <tr><td>종료</td><td>종료일자 (없으면 "그룹 기간 상속")</td></tr>
 </table>
@@ -218,7 +218,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v3.0</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>한국어 도메인 용어 정합 + Page Properties 13필드</strong> — ① Page Properties 표 신설 ② §3 데이터 모델 표(<code>StoryEpisode</code>·<code>StoryMission</code> 영문 인터페이스 + 영문 필드명 + 코드 경로) 폐기 → §3 화면 노출 정보 표로 재구성 ③ 유형 enum(FAN_QUEST/PREDICTION_MARKET/SURVIVAL_TRIVIA) → 한국어(팬퀘스트/예측 마켓/서바이벌 트리비아) ④ 판정 유형 enum(ADMIN_APPROVAL/PM_PARTICIPATION/PM_CORRECT/TRIVIA_PARTICIPATION/TRIVIA_CORRECT_COUNT) → 한국어 라벨 ⑤ 반복 주기 enum(MONTHLY/WEEKLY) → 월간/주간 ⑥ 헬퍼 함수(<code>getFanQuestUsages</code>) 제거 → 운영 동작 설명 ⑦ §2-4 매트릭스 신설로 유형별 분기 명확화 ⑧ §4 상태별 동작·§5 검증 규칙 양식 정합 ⑨ 변경 이력 5칸 양식</td></tr>
+<tr><td><strong>v3.1</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>반복 주기 표시 옵션 4종 확장</strong> — §2-4 완료 판정 카드 우측 "반복 주기" 행 옵션을 기존 (월간/주간/없음 3종) → <strong>일간/주간/월간/없음 4종</strong>으로 확장. [CEB-BO-SQ-204-CREATE] v3.1에서 일간/주간/월간 3종 버튼 그룹을 도입함에 따라 상세 표시도 4종 노출하도록 정합. 팬퀘스트 유형 미션은 팬퀘스트 자체 설정 상속 표시. [CEB-BO-011] v3.2 정합</td></tr>
+<tr><td>v3.0</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>한국어 도메인 용어 정합 + Page Properties 13필드</strong> — ① Page Properties 표 신설 ② §3 데이터 모델 표(<code>StoryEpisode</code>·<code>StoryMission</code> 영문 인터페이스 + 영문 필드명 + 코드 경로) 폐기 → §3 화면 노출 정보 표로 재구성 ③ 유형 enum(FAN_QUEST/PREDICTION_MARKET/SURVIVAL_TRIVIA) → 한국어(팬퀘스트/예측 마켓/서바이벌 트리비아) ④ 판정 유형 enum(ADMIN_APPROVAL/PM_PARTICIPATION/PM_CORRECT/TRIVIA_PARTICIPATION/TRIVIA_CORRECT_COUNT) → 한국어 라벨 ⑤ 반복 주기 enum(MONTHLY/WEEKLY) → 월간/주간 ⑥ 헬퍼 함수(<code>getFanQuestUsages</code>) 제거 → 운영 동작 설명 ⑦ §2-4 매트릭스 신설로 유형별 분기 명확화 ⑧ §4 상태별 동작·§5 검증 규칙 양식 정합 ⑨ 변경 이력 5칸 양식</td></tr>
 <tr><td>v2.2</td><td>2026-05-12</td><td>@Nill Yoo</td><td><strong>완료 조건 계층 폐기</strong> — 완료 판정 필드 미션에 직접 흡수. 완료 조건 테이블 섹션 + "완료 조건 추가" 버튼 + "완료 조건 수" 통계 카드 제거. 새 "완료 판정 카드" 추가. 통계 4→3 카드, 파스텔 톤</td></tr>
 <tr><td>v2.1</td><td>2026-05-12</td><td>@Nill Yoo</td><td>용어 통일 — 챕터→미션, 완료 조건 분리</td></tr>
 <tr><td>v2.0</td><td>2026-05-12</td><td>@Nill Yoo</td><td>신규 — 미션(챕터) 상세 화면 정의</td></tr>

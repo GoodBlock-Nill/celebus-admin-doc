@@ -67,6 +67,18 @@ export interface StoryQuest {
   activeMembers: number;
   totalCompleted: number;
   pendingReview: number;
+  /**
+   * v3.2 신규 — 메인 에피소드 완료 보상 (메인 에피소드 전용).
+   * 에피소드 안의 모든 미션이 완료된 회원에게 자동 지급.
+   * REPEAT 에피소드에서는 null.
+   */
+  episodeReward?: {
+    entryTicket: number;
+    fanPoint: number;
+    biveRewardYn: boolean;
+    mintingEventId?: number | null;
+    mintingEventName?: string | null;
+  } | null;
   createdBy: string;
   createdAt: string;
   updatedBy: string;
@@ -100,8 +112,11 @@ export interface StoryEpisode {
   completedValue?: number;
   /** PM/ST 미션의 출처 콘텐츠 표시명 (FAN_QUEST는 fanQuestId로 대체) */
   sourceRefName?: string;
-  /** REPEAT 에피소드 미션의 반복 주기 */
-  repeatCycle?: 'MONTHLY' | 'WEEKLY' | null;
+  /**
+   * REPEAT 에피소드 미션의 반복 주기.
+   * v3.2 — 'DAILY' 추가 (PM/ST 반복 미션 반복 주기 일간/주간/월간 3종 정합).
+   */
+  repeatCycle?: 'DAILY' | 'MONTHLY' | 'WEEKLY' | null;
   /** 운영 기간 — 비우면 그룹 기간 상속 */
   openDt?: string;
   closeDt?: string;
@@ -127,6 +142,13 @@ export const storyQuests: StoryQuest[] = [
     activeMembers: 240,
     totalCompleted: 180,
     pendingReview: 6,
+    episodeReward: {
+      entryTicket: 20,
+      fanPoint: 500,
+      biveRewardYn: true,
+      mintingEventId: 1,
+      mintingEventName: 'V01D Welcome ED',
+    },
     createdBy: 'nill',
     createdAt: '2024.12.22 10:00',
     updatedBy: 'nill',
