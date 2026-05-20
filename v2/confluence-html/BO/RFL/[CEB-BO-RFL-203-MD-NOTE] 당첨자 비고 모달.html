@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-RFL-203-MD-NOTE] 당첨자 비고 모달</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-RFL-203-MD-NOTE] 당첨자 비고 모달</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-RFL-203-MD-NOTE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>RFL — 래플</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.6</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.13</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 래플 > 래플 상세 > 추첨내역 > 비고 모달</td></tr>
+<tr><td>비고</td><td></td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-13 · 버전: <strong>v1.6</strong> (Page Properties 표 신규)</p>
+<p>모달 트리거: [CEB-BO-RFL-203] 추첨내역 테이블의 비고 아이콘 클릭 (당첨자만)</p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>특정 당첨자에 대한 운영 내부 메모(비고사항)를 입력·수정하는 모달. CS 대응·배송 메모·특이사항 기록 용도. <strong>당첨자에 한정</strong>, 미당첨자에서는 비고 아이콘이 비활성된다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>모달 트리거</td><td>추첨내역 탭 종료 테이블의 비고 아이콘</td></tr>
+<tr><td>진입 조건</td><td>래플 상태 = 종료 + 해당 행이 당첨자</td></tr>
+<tr><td>영향</td><td>당첨자 비고 메모 수정 (한국어 200자 이내)</td></tr>
+<tr><td>권한</td><td>[관리자 > 권한관리]에 설정된 권한을 따름</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<ul>
+<li>모달 제목: "당첨자 비고사항"</li>
+<li>보조 정보: 당첨자 닉네임 · 전화번호</li>
+<li>우상단: 모달 닫기 버튼</li>
+</ul>
+<h3>2-2. 본문 — 당첨자/미당첨자 분기</h3>
+<h4>당첨자</h4>
+<ul>
+<li>안내문: "CS 대응·배송 메모 등 운영 내부 노트 (한국어, 200자)"</li>
+<li>텍스트 입력 영역 (여러 줄, 5행 정도) — 기존 비고 내용 미리 채워짐</li>
+<li>입력 즉시 200자 자동 잘림</li>
+<li>우측 하단: 글자수 카운터 "N/200"</li>
+</ul>
+<h4>미당첨자</h4>
+<ul>
+<li>안내 문구: "미당첨자는 비고를 작성할 수 없습니다."</li>
+<li>저장 버튼 미노출 (취소만)</li>
+</ul>
+<h3>2-3. 액션 버튼</h3>
+<table>
+<tr><th>버튼</th><th>색상</th><th>표시 조건</th><th>동작</th></tr>
+<tr><td>취소</td><td>회색 외곽선</td><td>항상</td><td>모달 닫기 (변경사항 폐기)</td></tr>
+<tr><td><strong>저장</strong></td><td>인디고 (강조)</td><td>당첨자만</td><td>비고 메모 저장 + "비고가 저장되었습니다" 토스트</td></tr>
+</table>
+<h2>3. 화면에 노출되는 정보 / 저장 후 변화</h2>
+<table>
+<tr><th>항목</th><th>저장 전</th><th>저장 후</th></tr>
+<tr><td>비고 메모</td><td>(이전 값 또는 빈 문자열)</td><td>입력값 (최대 200자)</td></tr>
+<tr><td>마지막 작성자</td><td>(이전 운영자)</td><td>현재 운영자 닉네임으로 갱신</td></tr>
+<tr><td>마지막 수정 일시</td><td>(이전 일시)</td><td>현재 시각으로 갱신</td></tr>
+<tr><td>활동 로그</td><td>(변화 없음)</td><td>"래플 '{타이틀}' 당첨자 '{닉네임}' 비고를 수정했습니다." 기록 (3년 보존)</td></tr>
+</table>
+<p>본 메모는 <strong>운영 내부 전용</strong>:</p>
+<ul>
+<li>회원 앱에 노출되지 않음</li>
+<li>CS 인계 메모, 배송 처리 메모, 부정 행위 의심 기록 등 활용</li>
+<li>한국어 단일 (다국어 불필요 — 운영자만 조회)</li>
+<li>추적 범위: <strong>마지막 작성자 + 수정 일시만 기록</strong>. 중간 수정 이력은 보존하지 않음 (대신 활동 로그에서 수정 이벤트 자체는 추적 가능)</li>
+</ul>
+<h2>4. 검증 규칙</h2>
+<table>
+<tr><th>검증 조건</th><th>동작</th></tr>
+<tr><td>행의 상태 ≠ 당첨</td><td>추첨내역 테이블의 비고 아이콘이 비활성 (모달 진입 불가)</td></tr>
+<tr><td>입력 길이 > 200자</td><td>입력 즉시 200자로 자동 잘림</td></tr>
+<tr><td>변경사항 없는 채 저장</td><td>토스트 "변경사항이 없습니다" 노출 후 모달 유지. 활동 로그·마지막 수정자 갱신 없음</td></tr>
+<tr><td>보상 지급 토글 상태</td><td>본 모달과 무관 — 비고와 보상 지급은 독립적으로 운영</td></tr>
+</table>
+<h2>5. 연관 화면</h2>
+<table>
+<tr><th>액션</th><th>다음 화면</th></tr>
+<tr><td>저장 성공</td><td>모달 닫기 + [CEB-BO-RFL-203] 추첨내역 탭 (테이블 외관 변화 없음 — 비고는 비공개 정보)</td></tr>
+<tr><td>보상 지급 토글</td><td>본 모달과 별개로 추첨내역 테이블에서 직접 토글</td></tr>
+<tr><td>회원 상세에서 비고 확인 (확장)</td><td>[CEB-BO-USR-201] 회원 상세 (운영 환경)</td></tr>
+</table>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td>v1.6</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>Page Properties 표 신규(13필드)</strong> — 본문 변경 없음</td></tr>
+<tr><td>v1.3</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>권한 표현 일원화</strong> — "OPERATOR/SUPER (POLICY 조회/EXTERNAL_ARTIST 자기 아티스트)" 세부 명세를 "[관리자 > 권한관리] 설정을 따름"으로 변경</td></tr>
+<tr><td>v1.2</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>추적 정책 명시</strong> — 마지막 작성자 + 수정 일시만 기록 (중간 이력 보존 안 함). 활동 로그 3년 보존. "변경사항 없음" 토스트 동작 명확화</td></tr>
+<tr><td>v1.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>기획자 언어로 재작성</strong> — 개발 용어·코드 경로 제거</td></tr>
+<tr><td>v1.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>신규 작성</strong> — 기존 [CEB-BO-FQ-206-MD-DETAIL] 폐기. 당첨자만 활성·미당첨자 비활성 정책 명시</td></tr>
+</table>
+
+</body>
+</html>

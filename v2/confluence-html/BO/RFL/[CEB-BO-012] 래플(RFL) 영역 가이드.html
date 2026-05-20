@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-012] 래플(RFL) 영역 가이드</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-012] 래플(RFL) 영역 가이드</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-012</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>RFL — 래플</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.7</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 래플</td></tr>
+<tr><td>비고</td><td></td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v1.7</strong> (영역 가이드 정합 정정 — §2 메뉴 구조에 응모권 발급 정책 추가 / §4 화면 인벤토리 실제 버전 갱신 / §7-1 활동 로그 대분류 정정)</p>
+<p>본 문서는 사이드바 "래플" 그룹의 <strong>래플 화면 영역</strong> 전체를 다룬다. 응모권 현황·변동 내역·응모권 발급 정책은 별도 [CEB-BO-010] RFT 영역 참조.</p>
+</blockquote>
+<h2>1. 영역 정의</h2>
+<p><strong>래플(Raffle, 이하 RFL)</strong> 은 회원이 응모권을 사용해 응모하고, 마감 후 운영자가 추첨을 실행하여 당첨자에게 경품(필요시 BIVE NFT)을 지급하는 추첨형 콘텐츠 영역이다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>영역 코드</td><td>RFL (Raffle)</td></tr>
+<tr><td>영역 가이드</td><td>본 문서 <code>[CEB-BO-012]</code></td></tr>
+<tr><td>화면 ID 패턴</td><td><code>CEB-BO-RFL-{번호}[-{유형}]</code></td></tr>
+<tr><td>사이드바 메뉴</td><td>좌측 "래플" 그룹</td></tr>
+<tr><td>분리 배경</td><td>메뉴 재구성으로 기존 팬퀘스트 영역에서 분리. 운영 흐름상 응모권·BIVE와 함께 묶이는 것이 자연스러움</td></tr>
+</table>
+<blockquote>
+<p>⚠️ <strong>운영 용어 주의</strong>: 모든 한국어 라벨·본문에서 "래플"로 통일한다. 화면 명세 본문·헤더·Breadcrumb 등 사용자 가시 영역에 "Raffle" 영문을 혼용하지 않는다.</p>
+</blockquote>
+<h2>2. 메뉴 구조</h2>
+<p>사이드바 "래플" 그룹은 다음 4개 메뉴로 구성된다.</p>
+<table>
+<tr><th>메뉴</th><th>진입 화면</th><th>영역</th></tr>
+<tr><td>래플</td><td>래플 리스트</td><td><strong>본 영역 (RFL)</strong></td></tr>
+<tr><td>응모권 현황</td><td>응모권 통계·분포</td><td>[CEB-BO-RFT-101]</td></tr>
+<tr><td>변동 내역</td><td>응모권 발급·사용 로그</td><td>[CEB-BO-RFT-201]</td></tr>
+<tr><td>응모권 발급 정책</td><td>GP 환율·1일 한도·앱내 구매 토글·PM·ST 게임 보상 기본 정책</td><td>[CEB-BO-RFT-301]</td></tr>
+</table>
+<p>응모권 현황·변동 내역·응모권 발급 정책은 별도 <strong>응모권(RFT) 영역</strong>이며 본 문서 범위 밖. 사이드바 그룹화는 운영 동선상의 묶음일 뿐 영역은 분리되어 있다.</p>
+<h2>3. 접근 권한</h2>
+<p>본 영역의 모든 화면·액션에 대한 권한은 <strong>[관리자 > 권한관리]에서 설정된 권한을 따른다</strong>. 세부 권한 매트릭스(역할별 조회·생성·수정·삭제·추첨·숨김 등의 가능 여부)는 권한관리 화면에서 운영자가 직접 설정하며, 본 문서는 각 화면·모달에서 어떤 액션이 가능한지에 대한 정책만 정의한다.</p>
+<blockquote>
+<p>권한이 없는 운영자가 진입한 경우 해당 액션 버튼은 미노출되거나 비활성 상태로 처리한다.</p>
+</blockquote>
+<h2>4. 화면 인벤토리</h2>
+<p>화면 인벤토리 버전은 본 영역 가이드 v1.7 시점의 실제 화면 명세 버전을 반영한다 (정합 정정).</p>
+<table>
+<tr><th>화면명</th><th>문서 ID</th><th>상태</th></tr>
+<tr><td>래플 리스트</td><td>[CEB-BO-RFL-101]</td><td>✅ v1.6</td></tr>
+<tr><td>래플 생성</td><td>[CEB-BO-RFL-101-CREATE]</td><td>✅ v1.7</td></tr>
+<tr><td>래플 상세 (기본정보)</td><td>[CEB-BO-RFL-201]</td><td>✅ v1.8</td></tr>
+<tr><td>래플 수정</td><td>[CEB-BO-RFL-201-EDIT]</td><td>✅ v1.7</td></tr>
+<tr><td>래플 상세 (응모내역)</td><td>[CEB-BO-RFL-202]</td><td>✅ v1.6</td></tr>
+<tr><td>래플 상세 (추첨내역)</td><td>[CEB-BO-RFL-203]</td><td>✅ v1.7</td></tr>
+<tr><td>래플 게시 모달</td><td>[CEB-BO-RFL-201-MD-OPEN]</td><td>✅ v1.7</td></tr>
+<tr><td>래플 종료 모달</td><td>[CEB-BO-RFL-201-MD-CLOSE]</td><td>✅ v1.6</td></tr>
+<tr><td>래플 삭제 모달</td><td>[CEB-BO-RFL-201-MD-DELETE]</td><td>✅ v1.6</td></tr>
+<tr><td>숨김 처리·해제 모달</td><td>[CEB-BO-RFL-201-MD-HIDE]</td><td>✅ v1.6</td></tr>
+<tr><td>래플 추첨 모달</td><td>[CEB-BO-RFL-203-MD-DRAW]</td><td>✅ v1.6</td></tr>
+<tr><td>응모내역 상세 모달</td><td>[CEB-BO-RFL-202-MD-DETAIL]</td><td>✅ v1.6</td></tr>
+<tr><td>당첨자 비고 모달</td><td>[CEB-BO-RFL-203-MD-NOTE]</td><td>✅ v1.6</td></tr>
+<tr><td>(외부) 응모권 현황</td><td>[CEB-BO-RFT-101]</td><td>(RFT 영역)</td></tr>
+<tr><td>(외부) 응모권 변동 내역</td><td>[CEB-BO-RFT-201]</td><td>(RFT 영역)</td></tr>
+<tr><td>(외부) 응모권 발급 정책</td><td>[CEB-BO-RFT-301]</td><td>(RFT 영역)</td></tr>
+</table>
+<h2>5. 래플 한 건의 운영 정보</h2>
+<p>운영자가 래플 한 건을 관리하기 위해 필요한 핵심 정보 영역.</p>
+<table>
+<tr><th>영역</th><th>운영 정보</th></tr>
+<tr><td>식별</td><td>아티스트, 한국어/영어/일본어 타이틀 (각 100자 이내)</td></tr>
+<tr><td>대표 이미지</td><td>권장 크기 686×332px (가로 2:1), 최대 5MB, jpeg/png/jpg/webp/gif/svg</td></tr>
+<tr><td>응모 정보</td><td>시작일시 (게시 시점 자동 기록), 마감일시</td></tr>
+<tr><td>보상</td><td>당첨 추첨 수, 보상지급 타입 (현장 수령 / 배송 / 온라인)</td></tr>
+<tr><td>경품 상세</td><td>경품 단위 (장/개), 한국어/영어/일본어 경품 내역 (각 50자 이내)</td></tr>
+<tr><td>추가 보상 (BIVE, 선택)</td><td>당첨자에게 자동 민팅되는 BIVE 1종 선택. [CEB-BO-004] BIVE 영역의 캠페인 중에서</td></tr>
+<tr><td>수령 가이드</td><td>수령 시작·마감일, 운영 시간, 한국어/영어/일본어 수령 장소·지참물</td></tr>
+<tr><td>유의사항</td><td>한국어/영어/일본어 유의사항 (각 500자 이내)</td></tr>
+<tr><td>응모 통계</td><td>총 응모자 수, 누적 사용 응모권</td></tr>
+<tr><td>추첨 결과 (종료 후)</td><td>당첨 인원, 미당첨 인원, 보상 지급 완료 인원</td></tr>
+<tr><td>운영 메타</td><td>생성자, 생성 일시, 최근 수정자, 최근 수정 일시</td></tr>
+<tr><td>노출 제어</td><td>종료 후 앱 노출 여부 (숨김 처리 토글)</td></tr>
+</table>
+<h3>5-1. 추가 보상(BIVE) 선택 옵션</h3>
+<p>[CEB-BO-004] BIVE 영역에 등록된 민팅 캠페인 중에서 선택. 예시 (시연용):</p>
+<table>
+<tr><th>캠페인 ID</th><th>캠페인명</th></tr>
+<tr><td>23</td><td>V01D Welcome ED</td></tr>
+<tr><td>24</td><td>V01D Trivia Master</td></tr>
+<tr><td>25</td><td>V01D Final Boss</td></tr>
+<tr><td>26</td><td>V01D Prophet</td></tr>
+<tr><td>27</td><td>V01D 100 Days</td></tr>
+<tr><td>28</td><td>iKON FOUREVER Commemorative</td></tr>
+</table>
+<h3>5-2. 정책 상수</h3>
+<ul>
+<li><strong>1 래플 = 1 BIVE 매핑</strong> (팬퀘스트 정책 준용)</li>
+<li><strong>BIVE 지급 대상 = 당첨자 한정</strong> (미당첨자에게는 BIVE 미지급)</li>
+<li><strong>BIVE 자동 민팅 시점 = 추첨 확정 즉시</strong> (당첨자 전원에게 일괄 민팅 큐 적재)</li>
+<li><strong>다국어 게시 검증</strong>: 한국어/영어/일본어 3개 모두 필수</li>
+<li><strong>임시저장 검증</strong>: 1개 언어 이상 입력이면 가능 (한국어 필수 아님)</li>
+<li><strong>추첨 가중치</strong>: 회원의 사용 응모권 수에 정확 비례 (응모권 10장 = 1장 사용 회원보다 10배 높은 당첨 확률)</li>
+<li><strong>재추첨 횟수</strong>: 무제한 (확정 전까지 자유롭게 시드 재계산)</li>
+<li><strong>추첨 확정 후 되돌리기</strong>: 완전 불가 (한 번 확정은 최종)</li>
+<li><strong>다른 래플 중복 당첨</strong>: 허용 (각 래플은 독립적)</li>
+<li><strong>미당첨자 위로 보상</strong>: 없음 (응모권 환급·위로 BIVE 모두 없음)</li>
+<li><strong>공통 페이지네이션 패턴</strong>: 모든 리스트·내역 테이블에 <strong>페이지당 20건</strong>(모달 내 시계열은 10건), <strong>항상 노출</strong>(1페이지일 때도 <code>‹ 1 ›</code> 비활성). <strong>윈도잉 규칙</strong>: 총 페이지 ≤ 7이면 전체 노출, 8 이상이면 <code>1 ... cur-1 cur cur+1 ... last</code> 윈도우 + <code>...</code>. 정렬·검색·필터 변경 시 1페이지로 자동 리셋. 운영 사이트와 동일</li>
+</ul>
+<h2>6. 상태 머신</h2>
+<p>래플은 다음 4상태를 순차적으로 거친다.</p>
+<pre><code>[생성 폼 작성]
+   ↓ 임시저장
+임시저장 ───── 게시 ─────→ 진행중 ───── 종료 ─────→ 추첨대기 ───── 추첨 확정 ───→ 종료
+   │                          │                       │                               │
+   삭제 가능                  수정 가능              추첨 가능                     숨김 처리·해제
+</code></pre>
+<table>
+<tr><th>상태</th><th>의미</th><th>운영자 가능 액션</th></tr>
+<tr><td>임시저장</td><td>미게시. 작성·검토 중</td><td>수정 / 삭제 / 게시</td></tr>
+<tr><td>진행중</td><td>앱에 노출 + 회원 응모 가능</td><td>수정 (응모자 보호 잠금 적용) / 종료</td></tr>
+<tr><td>추첨대기</td><td>응모 마감 + 추첨 대기</td><td>추첨내역 탭에서 "추첨하기" / <strong>응모내역 탭에서 추첨 제외 명단 토글</strong> ([CEB-BO-RFL-202])</td></tr>
+<tr><td>종료</td><td>추첨 확정 + 결과 공개</td><td>숨김 처리 / 숨김 해제 (앱 노출 토글). 추첨 제외 명단은 동결되어 변경 불가</td></tr>
+</table>
+<blockquote>
+<p><strong>자동 종료</strong>: 마감일시 도달 시 시스템이 진행중 → 추첨대기로 자동 전환. 운영자 수동 "종료"와 결과 동일. 자동 종료 발생 시 <strong>관리자 대시보드에 알림 노출 + 활동 로그 기록</strong>.</p>
+</blockquote>
+<blockquote>
+<p><strong>추첨 제외 명단 동결</strong>: 추첨대기 → 종료 전환(추첨 확정) 시점에 [CEB-BO-RFL-202]의 추첨 제외 토글 상태가 동결되어 종료 상태에서는 변경 불가. 추첨 풀(응모자 − 제외) 기준으로 당첨자·미당첨자가 산출되며, 제외 회원은 어느 명단에도 포함되지 않는다 (응모권 환급도 없음).</p>
+</blockquote>
+<h3>6-1. 응모자 0건 종료의 특수 처리</h3>
+<p>진행중·추첨대기 상태에서 응모자가 한 명도 없을 때 운영자가 "종료하기" 또는 마감일시 도래로 자동 종료 시:</p>
+<ul>
+<li>추첨대기 단계를 거치지 않고 <strong>즉시 종료 상태로 전환</strong></li>
+<li>추첨 시드 미생성, 당첨자·미당첨자 데이터 없음</li>
+<li>추첨내역 탭에 "추첨 없이 자동 종료 — 입상자 없음" 표기 노출</li>
+<li>BIVE 보상이 설정되어 있어도 민팅 발생하지 않음</li>
+</ul>
+<h2>7. 외부 영역 연동</h2>
+<table>
+<tr><th>외부 영역</th><th>연결 방식</th><th>핵심 정의</th></tr>
+<tr><td>응모권(RFT)</td><td>회원이 응모 시 응모권 차감</td><td>본 영역은 차감 트리거만, 응모권 발급·잔량은 [CEB-BO-010] RFT 영역</td></tr>
+<tr><td>BIVE(NFT) 민팅</td><td>래플의 BIVE 보상 선택 시 [CEB-BO-004] 민팅 캠페인 1종 매핑</td><td>추첨 확정 즉시 당첨자 전원에게 자동 민팅</td></tr>
+<tr><td>회원 통계</td><td>(조회 전용)</td><td>총 응모자·사용 응모권은 실시간 갱신. 추첨 후 당첨·미당첨·지급 완료 인원 기록</td></tr>
+<tr><td>회원 알림</td><td>앱 푸시 + 인앱 알림 센터</td><td>추첨 확정 시 당첨자·미당첨자 모두에게 발송. 이메일·SMS 없음</td></tr>
+<tr><td>활동 로그</td><td>[CEB-BO-000] §6 표준 양식 (3년 보관, 개인정보 보호법 준용)</td><td>생성·게시·종료·삭제·추첨 실행·자동 종료·비고 수정·숨김 처리·<strong>추첨 제외</strong>·<strong>추첨 제외 해제</strong> 모두 기록</td></tr>
+</table>
+<h3>7-1. 활동 로그 신규 액션 — 추첨 제외 명단 (v1.4 신설 / v1.7 대분류 정정)</h3>
+<table>
+<tr><th>대분류</th><th>중분류</th><th>소분류</th><th>메시지 형식</th></tr>
+<tr><td>래플</td><td>추첨</td><td>추첨 제외</td><td>래플 '{타이틀}'의 응모자 '{닉네임}'을(를) 추첨에서 제외했습니다.</td></tr>
+<tr><td>래플</td><td>추첨</td><td>추첨 제외</td><td>래플 '{타이틀}'에서 응모자 {N}명을 추첨에서 제외했습니다. (일괄)</td></tr>
+<tr><td>래플</td><td>추첨</td><td>추첨 제외 해제</td><td>래플 '{타이틀}'의 응모자 '{닉네임}'의 추첨 제외를 해제했습니다.</td></tr>
+<tr><td>래플</td><td>추첨</td><td>추첨 제외 해제</td><td>래플 '{타이틀}'에서 응모자 {N}명의 추첨 제외를 해제했습니다. (일괄)</td></tr>
+</table>
+<ul>
+<li>토글 처리 권한·기록 대상은 [관리자 > 권한관리] 설정을 따름</li>
+<li>추첨대기 상태에서만 가능하며, 종료 상태로 전환되면 더 이상 새로운 로그 추가 없음 (제외 명단 동결)</li>
+</ul>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.7</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>영역 가이드 정합 정정</strong> — ① §2 메뉴 구조 표에 <strong>[CEB-BO-RFT-301] 응모권 발급 정책 메뉴 추가</strong> (RFT-301 v3.0 부활로 사이드바 4개 메뉴가 되었으나 본 영역 가이드는 3개 메뉴 시점에 frozen되어 있던 정합 누락 정정) ② §4 화면 인벤토리 모두 v1.1로 frozen되어 있던 표기를 <strong>실제 현행 버전(v1.6~v1.8)으로 갱신</strong>. 외부 영역 항목에 RFT-301 추가 ③ §7-1 추첨 제외 활동 로그 <strong>대분류 "팬퀘스트" → "래플"·중분류 "래플" → "추첨"으로 정정</strong> (래플은 v1.0에서 팬퀘스트 영역에서 분리·독립 영역으로 신설되었으므로 활동 로그 대분류도 "래플"이어야 함. v1.4 신설 시점부터 잔존하던 정합 오류) ④ §1 운영 용어 주의 가이드를 "한국어 라벨·본문 모두 '래플'로 통일"로 명확화 (영문 'Raffle' 본문 혼용 금지)</td></tr>
+<tr><td>v1.6</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>Page Properties 표 신규(13필드)</strong> — Screen ID·기획/디자인/개발 담당자·기능영역·상태·버전·최근 업데이트·API·피그마·프로토타입·Breadcrumb·비고. 본문 변경 없음</td></tr>
+<tr><td>v1.5</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>공통 페이지네이션 패턴 정책 §5-2 추가</strong> — 페이지당 20건(모달 10건), 항상 노출, 운영 동일 윈도잉(≤7 전체, >7 윈도우), 정렬·필터 변경 시 1페이지 자동 리셋</td></tr>
+<tr><td>v1.4</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>추첨 제외 명단 정책 신설</strong> — §6 상태 머신 보조 정책 ("추첨대기 → 종료 전환 시 제외 명단 동결") + §7-1 활동 로그 신규 액션 2건 ("추첨 제외"·"추첨 제외 해제") 등록. 응모권 환급 없음 명시</td></tr>
+<tr><td>v1.3</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>권한 표현 일원화</strong> — §3 권한 매트릭스 테이블·EXTERNAL_ARTIST 정의 등 세부 권한 명세를 "[관리자 > 권한관리] 설정을 따름"으로 단순화 (세부 권한 정책 미확정 상태)</td></tr>
+<tr><td>v1.2</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>모호한 정책 24개 결정 반영</strong> — 추첨 가드레일 완전 삭제, 추첨 가중치 공식 (응모권 수 비례), 응모자 0건 종료 분기 신설, 알림 채널·로그 보관 기간·미당첨자 위로 정책 명시</td></tr>
+<tr><td>v1.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>기획자 언어로 재작성</strong> — 개발 용어·코드 경로 제거. 운영 정책 세부(글자수·이미지 권장 크기·다국어 필수 등) 보존. "데이터 모델" → "운영 정보" 표기로 전환</td></tr>
+<tr><td>v1.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>신규 작성</strong> — 사이드바 메뉴 재구성으로 Raffle을 팬퀘스트 영역에서 분리하여 RFL 독립 영역 신설. 14개 화면·모달 인벤토리, 4상태 머신, BIVE 보상 반영</td></tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-RFL-201-MD-OPEN] 래플 게시 모달</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-RFL-201-MD-OPEN] 래플 게시 모달</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-RFL-201-MD-OPEN</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>RFL — 래플</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.7</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.13</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 래플 > 래플 상세 > 게시 모달</td></tr>
+<tr><td>비고</td><td></td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-13 · 버전: <strong>v1.7</strong> (사전 검증 — 버튼 비활성으로 차단)</p>
+<p>모달 트리거: [CEB-BO-RFL-201] 헤더의 [게시하기] 버튼 (임시저장 상태에서만 노출 + 게시 조건 모두 충족 시에만 활성)</p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>임시저장 상태의 래플을 진행중 상태로 전환하는 확인 모달. 게시 시점에 시작일시가 자동 기록되며 회원 앱에 즉시 노출된다.</p>
+<blockquote>
+<p><strong>모달 진입 시점에는 게시 조건이 모두 충족된 것이 보장됨</strong>. [CEB-BO-RFL-201] §4-2에 명시된 [게시하기] 버튼 활성화 조건 9개가 모두 통과한 후에만 모달이 노출된다. 누락 필드가 있으면 버튼이 비활성 상태로 표시되어 모달 자체에 진입할 수 없다.</p>
+</blockquote>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>모달 트리거</td><td>래플 상세 헤더의 [게시하기] 버튼 (활성 상태일 때만)</td></tr>
+<tr><td>진입 조건</td><td>래플 상태 = 임시저장 + [CEB-BO-RFL-201] §4-2의 게시 조건 9개 모두 충족</td></tr>
+<tr><td>영향</td><td>상태가 임시저장 → 진행중으로 전환되고, 시작일시가 현재 시각으로 자동 기록됨</td></tr>
+<tr><td>권한</td><td>[관리자 > 권한관리]에 설정된 권한을 따름</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<ul>
+<li>모달 제목: "게시하시겠어요?"</li>
+</ul>
+<h3>2-2. 본문 메시지</h3>
+<pre><code>'{래플 타이틀}'을(를) 게시합니다.
+게시 시점부터 앱에 즉시 노출되며 응모가 시작됩니다.
+</code></pre>
+<h3>2-3. 액션 버튼</h3>
+<table>
+<tr><th>버튼</th><th>색상</th><th>동작</th></tr>
+<tr><td>취소</td><td>회색 외곽선</td><td>모달 닫기</td></tr>
+<tr><td><strong>게시하기</strong></td><td>인디고 (강조)</td><td>검증 통과 시 상태 전환</td></tr>
+</table>
+<h2>3. 화면에 노출되는 정보 / 게시 후 변화</h2>
+<p>게시 모달 자체는 단순 확인 모달로 정보 노출이 거의 없다. 게시 확정 후 다음 정보가 변경된다.</p>
+<table>
+<tr><th>항목</th><th>게시 전</th><th>게시 후</th></tr>
+<tr><td>상태</td><td>임시저장</td><td>진행중</td></tr>
+<tr><td>시작일시</td><td>비어 있음</td><td>현재 시각 자동 기록</td></tr>
+<tr><td>최근 수정자</td><td>(이전 값)</td><td>현재 운영자</td></tr>
+<tr><td>최근 수정 일시</td><td>(이전 값)</td><td>현재 시각</td></tr>
+<tr><td>앱 노출</td><td>노출되지 않음</td><td>즉시 노출, 회원 응모 가능</td></tr>
+</table>
+<h2>4. 검증 규칙</h2>
+<p>본 모달은 <strong>사전 검증 통과 후에만 진입</strong>하는 단순 확인 모달이므로 모달 자체의 검증 분기는 최소화된다. 모든 게시 조건은 [CEB-BO-RFL-201] §4-2에서 정의되며, 1개라도 미충족이면 [게시하기] 버튼이 비활성 상태로 표시되어 본 모달에 진입할 수 없다.</p>
+<table>
+<tr><th>검증 조건</th><th>동작</th></tr>
+<tr><td>게시 조건 9개 모두 충족 ([CEB-BO-RFL-201] §4-2)</td><td>버튼 활성 → 본 모달 진입 가능</td></tr>
+<tr><td>게시 조건 1개라도 미충족</td><td>버튼 비활성(회색) → 클릭 불가, 모달 진입 차단. 운영자는 [수정하기]에서 누락 항목 직접 확인</td></tr>
+<tr><td>게시 권한 없는 운영자</td><td>래플 상세 헤더에서 [게시하기] 버튼 자체가 노출되지 않음 ([관리자 > 권한관리] 설정에 따름)</td></tr>
+<tr><td>래플 상태 ≠ 임시저장</td><td>헤더 액션 자체가 미노출되어 모달 진입 불가</td></tr>
+</table>
+<blockquote>
+<p><strong>다국어 검증 정책</strong>: 임시저장 단계에서는 <strong>한국어/영어/일본어 중 1개 언어 이상</strong>만 입력해도 저장 허용 (한국어가 비어 있고 영어만 채워져도 가능). 다만 <strong>게시 시점에는 한국어/영어/일본어 3개 모두 필수</strong>. 누락된 언어가 있으면 [게시하기] 버튼이 비활성 상태로 표시되어 본 모달에 진입할 수 없으며, 운영자가 [CEB-BO-RFL-201-EDIT] 수정 화면에서 보완해야 한다.</p>
+</blockquote>
+<h2>5. 연관 화면</h2>
+<table>
+<tr><th>액션</th><th>다음 화면</th></tr>
+<tr><td>게시 성공</td><td>[CEB-BO-RFL-201] — 상태 배지가 자동으로 진행중으로 변경되고, 헤더 액션이 [수정하기] · [종료하기]로 전환됨</td></tr>
+<tr><td>게시 조건 미충족 (모달 미진입)</td><td>[CEB-BO-RFL-201-EDIT] 수정 화면에서 누락 항목 보완</td></tr>
+</table>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td>v1.7</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>사전 검증 정책 반영</strong> — [게시하기] 버튼 비활성화로 사전 차단되어 모달이 노출되지 않는 구조 명시. §1 화면 개요 + §4 검증 규칙에서 "다국어 alert 차단" 표현 제거 후 "버튼 비활성 → 모달 미진입"으로 재서술. [CEB-BO-RFL-201] §4-2 게시 조건 9개 참조</td></tr>
+<tr><td>v1.6</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>Page Properties 표 신규(13필드)</strong> — 본문 변경 없음</td></tr>
+<tr><td>v1.3</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>권한 표현 일원화</strong> — "OPERATOR/SUPER (EXTERNAL_ARTIST 불가)" 등의 세부 명세를 "[관리자 > 권한관리] 설정을 따름"으로 변경</td></tr>
+<tr><td>v1.2</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>다국어 임시저장 정책 명시</strong> — 임시저장은 "1개 언어 이상" 입력이면 가능. 게시 시점에만 3개 언어 모두 필수</td></tr>
+<tr><td>v1.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>기획자 언어로 재작성</strong> — 개발 용어·코드 경로 제거</td></tr>
+<tr><td>v1.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>신규 작성</strong> — 기존 [CEB-BO-FQ-204-MD-OPEN] 폐기. 다국어 검증 정책 명시</td></tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-RFL-202] 래플 상세 (응모내역)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-RFL-202] 래플 상세 (응모내역)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-RFL-202</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>RFL — 래플</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.6</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.13</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 래플 > 래플 상세 > 응모내역</td></tr>
+<tr><td>비고</td><td></td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-13 · 버전: <strong>v1.6</strong> (Page Properties 표 신규)</p>
+<p>화면 경로: <code>/raffle/{id}</code> (탭=응모내역) · Breadcrumb: <code>홈 › 래플 › 래플 상세 › 응모내역</code></p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>래플 상세 페이지의 두 번째 탭. 응모한 회원의 누적 응모 현황을 운영자가 모니터링하고, <strong>추첨대기 상태에서는 특정 응모자를 추첨에서 제외할 수 있다</strong>. 추첨 확정 전까지 제외는 자유롭게 토글 가능하며, 응모권 환급은 발생하지 않는다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/raffle/{id}</code> (탭 버튼으로 전환)</td></tr>
+<tr><td>Breadcrumb</td><td>래플 / 래플 상세 / 응모내역</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-RFL-201] 상세 화면에서 "응모내역" 탭 클릭</td></tr>
+<tr><td>용도</td><td>CS 대응, 어뷰징 분석, 응모 추이 모니터링, <strong>추첨 제외 명단 관리(추첨대기)</strong></td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 통계 카드 (가로 3개)</h3>
+<table>
+<tr><th>카드</th><th>의미</th></tr>
+<tr><td>누적 참여자 수</td><td>응모한 회원 수 (중복 제외)</td></tr>
+<tr><td>누적 사용 응모권 합계</td><td>사용된 응모권 총합 (한 회원이 N장 응모하면 N으로 계상)</td></tr>
+<tr><td><strong>추첨 제외</strong></td><td>추첨 풀에서 제외 처리된 응모자 수. 추첨대기 상태에서 운영자가 토글한 결과</td></tr>
+</table>
+<blockquote>
+<p>응모권 거래 자체는 [CEB-BO-010] 응모권(RFT) 영역에서 별도로 트래킹된다. <strong>추첨 제외 처리 시 응모권 환급은 발생하지 않는다</strong> (이미 사용된 응모권은 그대로 소진 처리).</p>
+</blockquote>
+<h3>2-2. 일괄 처리 액션 바 (추첨대기 + 선택 1건 이상에서만 노출)</h3>
+<p>체크박스로 응모자 1명 이상 선택 시 테이블 상단에 노출:</p>
+<table>
+<tr><th>요소</th><th>설명</th></tr>
+<tr><td>선택 카운터</td><td>"N건 선택됨" 텍스트</td></tr>
+<tr><td>[선택 N건 추첨 제외]</td><td>선택 응모자를 추첨 제외로 일괄 전환. 이미 제외 상태인 응모자는 변화 없음</td></tr>
+<tr><td>[선택 N건 제외 해제]</td><td>선택 응모자를 정상 상태로 일괄 전환. 이미 정상 상태인 응모자는 변화 없음</td></tr>
+<tr><td>[선택 해제]</td><td>선택 초기화 (상태 변경 없음)</td></tr>
+</table>
+<p><strong>노출 조건</strong>:</p>
+<ul>
+<li>래플 상태 = <strong>추첨대기</strong>일 때만</li>
+<li>선택 응모자 1명 이상일 때만</li>
+<li>그 외 상태(임시저장·진행중·종료)에서는 액션 바 자체 미노출</li>
+</ul>
+<h3>2-3. 정렬·검색 바</h3>
+<table>
+<tr><th>위치</th><th>요소</th><th>옵션</th></tr>
+<tr><td>좌</td><td>정렬 드롭다운</td><td>"응모일시 최근 순" (기본) / "응모권 많은 순" — <strong>동률 정렬</strong>: "응모권 많은 순"에서 누적 응모권이 같은 회원은 <strong>최근 응모일시가 최신인 회원이 위</strong>에 위치</td></tr>
+<tr><td>우</td><td>검색 대상 드롭다운</td><td>"닉네임" (기본) / "전화번호"</td></tr>
+<tr><td>우</td><td>키워드 입력 칸</td><td>부분 일치 검색</td></tr>
+<tr><td>우</td><td>[초기화] 버튼</td><td>정렬·검색 초기화 (선택 상태는 별도, 초기화 영향 없음)</td></tr>
+</table>
+<h3>2-4. 응모자 목록 테이블 (7개 컬럼)</h3>
+<table>
+<tr><th>컬럼</th><th>정렬</th><th>표시 내용</th></tr>
+<tr><td><strong>체크박스</strong></td><td>좌측 첫 컬럼</td><td>헤더 = 현재 보이는 응모자 전체 선택 토글. 각 행 = 개별 선택. <strong>추첨대기 상태에서만 활성</strong>, 그 외 상태에서는 비활성</td></tr>
+<tr><td>유저 닉네임</td><td>좌측</td><td>응모 회원의 닉네임</td></tr>
+<tr><td>전화번호</td><td>좌측</td><td>회원 전화번호 (예: 01012345678 형식)</td></tr>
+<tr><td>최근 사용 응모권</td><td>우측</td><td>가장 최근 응모 1건에서 사용한 응모권 수량</td></tr>
+<tr><td>최근 응모일시</td><td>우측</td><td>가장 최근 응모 시각 (YYYY.MM.DD HH:mm)</td></tr>
+<tr><td>누적 사용 응모권</td><td>우측</td><td>본 래플에 응모한 응모권 총합 (강조)</td></tr>
+<tr><td><strong>상태</strong></td><td>우측 끝</td><td>"정상" (회색 배지) / "추첨 제외" (rose 배지). 모든 상태에서 표시</td></tr>
+</table>
+<p><strong>행 클릭 동작</strong>:</p>
+<ul>
+<li>체크박스 영역 클릭 → 선택 토글만, 모달 미오픈</li>
+<li>그 외 빈 영역 클릭 → 응모내역 상세 모달 ([CEB-BO-RFL-202-MD-DETAIL]) 노출</li>
+</ul>
+<p><strong>제외된 응모자 시각 표시</strong>: "추첨 제외" 행은 배경에 옅은 rose 톤이 적용되어 정상 응모자와 구분된다.</p>
+<h3>2-5. 페이지네이션</h3>
+<ul>
+<li><strong>페이지당 20건</strong> (필터·검색 결과 기준)</li>
+<li><strong>항상 노출</strong> — 응모자가 20건 미만이라 1페이지일 때도 <code>‹ 1 ›</code> 비활성 형태로 노출 (운영 사이트 정합)</li>
+<li><strong>윈도잉 규칙</strong> — 총 페이지 ≤ 7이면 전체 페이지 번호 노출, 8페이지 이상이면 <code>1 ... cur-1 cur cur+1 ... last</code> 윈도우 + 양 끝(<code>...</code>) 표시</li>
+<li>정렬·검색·키워드 변경 시 자동으로 1페이지로 리셋</li>
+<li>체크박스 "현재 페이지 전체 선택"은 <strong>현재 페이지에 보이는 응모자만</strong> 대상 (페이지 외 응모자는 선택에서 제외)</li>
+</ul>
+<h3>2-6. 빈 상태</h3>
+<ul>
+<li>검색 결과 0건: "응모 내역이 없습니다." 메시지 노출</li>
+<li>응모자 자체가 없을 때 (임시저장 등): 동일 메시지</li>
+</ul>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>통계 카드 1</td><td>누적 참여자 수</td><td>응모 회원 수 (중복 제외)</td></tr>
+<tr><td>통계 카드 2</td><td>누적 사용 응모권 합계</td><td>사용된 응모권 총합</td></tr>
+<tr><td>통계 카드 3</td><td>추첨 제외</td><td>제외 처리된 응모자 수 (추첨 풀에서 차감 대상)</td></tr>
+<tr><td>테이블 컬럼 1</td><td>체크박스</td><td>선택 상태 (추첨대기에서만 활성)</td></tr>
+<tr><td>테이블 컬럼 2</td><td>유저 닉네임</td><td>응모 회원의 닉네임</td></tr>
+<tr><td>테이블 컬럼 3</td><td>전화번호</td><td>회원 전화번호</td></tr>
+<tr><td>테이블 컬럼 4</td><td>최근 사용 응모권</td><td>마지막 응모 1건의 사용 수량</td></tr>
+<tr><td>테이블 컬럼 5</td><td>최근 응모일시</td><td>가장 최근 응모 시각</td></tr>
+<tr><td>테이블 컬럼 6</td><td>누적 사용 응모권</td><td>본 래플에 응모한 응모권 총합</td></tr>
+<tr><td>테이블 컬럼 7</td><td>상태</td><td>정상 / 추첨 제외</td></tr>
+</table>
+<p><strong>참고 — 회원당 1행, 시계열은 모달에서</strong>: 본 화면은 한 회원당 1행으로 누적 요약만 노출한다. 회원의 응모 1건 1건의 시계열 기록은 행 클릭 시 모달에서 확인 가능.</p>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>래플 상태</th><th>데이터</th><th>체크박스</th><th>일괄 처리 바</th><th>상태 컬럼</th></tr>
+<tr><td>임시저장</td><td>응모자 0건 (빈 상태)</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>진행중</td><td>실시간 갱신</td><td>비활성</td><td>미노출</td><td>표시만 (전 회원 "정상")</td></tr>
+<tr><td><strong>추첨대기</strong></td><td>마감 이후 갱신 중단 (스냅샷 고정)</td><td><strong>활성</strong></td><td><strong>선택 1건 이상 시 노출</strong></td><td><strong>표시 + 토글 가능</strong></td></tr>
+<tr><td>종료</td><td>추첨 시 스냅샷 고정. 추첨 결과는 별도 [CEB-BO-RFL-203]</td><td>비활성</td><td>미노출</td><td>표시만 (추첨 확정 시점에 동결)</td></tr>
+</table>
+<p><strong>액션</strong>:</p>
+<ul>
+<li>행 클릭 후 모달 진입 (모든 상태)</li>
+<li>추첨 제외 토글 (추첨대기에서만)</li>
+<li>응모 환불·취소는 응모권 영역([CEB-BO-RFT-201])에서 별도 처리 ([관리자 > 권한관리] 설정에 따라 권한 부여된 운영자만 수행)</li>
+</ul>
+<h2>5. 검증 규칙 — 추첨 제외 정책</h2>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>토글 가능 상태</td><td><strong>추첨대기 상태에서만</strong> 토글 가능. 진행중·종료에서는 잠금</td></tr>
+<tr><td>사유 입력</td><td><strong>없음</strong> — 토글 1회 클릭(또는 일괄 처리)으로 즉시 반영. 사후 감사 추적은 활동 로그로 대체</td></tr>
+<tr><td>제외 해제</td><td><strong>가능</strong> — 추첨 확정 전까지 자유롭게 정상 ↔ 제외 전환 가능</td></tr>
+<tr><td>응모권 환급</td><td><strong>없음</strong> — 이미 사용된 응모권은 그대로 소진 처리. 향후 별도 환급이 필요한 경우 응모권 영역([CEB-BO-RFT-201])에서 별도 흐름으로 처리</td></tr>
+<tr><td>정렬 영향</td><td><strong>없음</strong> — 제외 회원도 누적 응모권 많은 순/응모일시 최근 순 정렬에 정상 포함. 상태 컬럼·배경 톤으로만 구분</td></tr>
+<tr><td>검색 영향</td><td><strong>없음</strong> — 닉네임·전화번호 검색에 정상 노출</td></tr>
+<tr><td>동결 시점</td><td><strong>추첨 확정 시</strong> ([CEB-BO-RFL-203-MD-DRAW] 추첨 확정 클릭 시점) 모든 응모자의 제외 상태가 동결되어 종료 상태에서 토글 비활성</td></tr>
+</table>
+<h2>6. 활동 로그</h2>
+<p>추첨 제외 토글 시 활동 로그에 다음 형식으로 기록:</p>
+<table>
+<tr><th>액션</th><th>메시지 형식</th></tr>
+<tr><td>단건 제외</td><td>래플 '{타이틀}'의 응모자 '{닉네임}'을(를) 추첨에서 제외했습니다.</td></tr>
+<tr><td>단건 해제</td><td>래플 '{타이틀}'의 응모자 '{닉네임}'의 추첨 제외를 해제했습니다.</td></tr>
+<tr><td>다중 제외</td><td>래플 '{타이틀}'에서 응모자 {N}명을 추첨에서 제외했습니다.</td></tr>
+<tr><td>다중 해제</td><td>래플 '{타이틀}'에서 응모자 {N}명의 추첨 제외를 해제했습니다.</td></tr>
+</table>
+<p>분류: 대=래플 / 중=추첨 / 소=추첨 제외(또는 추첨 제외 해제). 자세한 활동 로그 정책은 [CEB-BO-012] 영역 가이드 §7 참조.</p>
+<h2>7. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>응모자 행 클릭 (체크박스 외 영역)</td><td>[CEB-BO-RFL-202-MD-DETAIL] 응모내역 상세 모달</td></tr>
+<tr><td>기본정보 탭</td><td>[CEB-BO-RFL-201]</td></tr>
+<tr><td>추첨내역 탭</td><td>[CEB-BO-RFL-203] (추첨 풀 = 응모자 − 추첨 제외)</td></tr>
+<tr><td>추첨 모달</td><td>[CEB-BO-RFL-203-MD-DRAW] (제외 명단 차감 반영)</td></tr>
+<tr><td>뒤로가기 (상세 헤더)</td><td>[CEB-BO-RFL-101] 리스트</td></tr>
+<tr><td>응모권 거래 추적 (참고)</td><td>[CEB-BO-RFT-201] 변동 내역</td></tr>
+</table>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td>v1.6</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>Page Properties 표 신규(13필드)</strong> — 본문 변경 없음</td></tr>
+<tr><td>v1.5</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>페이지네이션 정책 명시</strong> — 20건/페이지 + 항상 노출(1페이지일 때도 비활성 형태) + 운영 동일 윈도잉(≤7 전체, >7 윈도우). 정렬·검색 변경 시 1페이지 자동 리셋. 체크박스 전체 선택은 현재 페이지 기준</td></tr>
+<tr><td>v1.4</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>추첨 제외 명단 정책 추가</strong> — 통계 카드 1개·체크박스 컬럼·상태 컬럼·일괄 처리 액션 바 신규. 추첨대기에서만 토글 가능, 사유 없음, 해제 가능, 응모권 환급 없음, 추첨 확정 시 동결</td></tr>
+<tr><td>v1.3</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>권한 표현 일원화</strong> — SUPER 권한 등의 세부 명세를 "[관리자 > 권한관리] 설정을 따름"으로 변경</td></tr>
+<tr><td>v1.2</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>동률 정렬 규칙 명시</strong> — "응모권 많은 순" 정렬에서 누적 응모권 동률 시 최근 응모일시 최신 순으로 2차 정렬</td></tr>
+<tr><td>v1.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>기획자 언어로 재작성</strong> — 개발 용어·코드 경로 제거. 운영 정책 세부 유지</td></tr>
+<tr><td>v1.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>신규 작성</strong> — 사이드바 메뉴 재구성 후 분리. 기존 [CEB-BO-FQ-205] 폐기 및 본 문서로 이전. 정렬 옵션(응모일시·응모권), 5컬럼 운영 동등</td></tr>
+</table>
+
+</body>
+</html>

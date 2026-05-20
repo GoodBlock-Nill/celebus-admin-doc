@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-RFL-201-MD-HIDE] 숨김 처리·해제 모달</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-RFL-201-MD-HIDE] 숨김 처리·해제 모달</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-RFL-201-MD-HIDE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>RFL — 래플</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.6</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.13</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 래플 > 래플 상세 > 숨김 처리·해제 모달</td></tr>
+<tr><td>비고</td><td></td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-13 · 버전: <strong>v1.6</strong> (Page Properties 표 신규)</p>
+<p>모달 트리거: [CEB-BO-RFL-201] 헤더의 [숨김 처리] 또는 [숨김 해제] 버튼 (종료 상태에서만 노출)</p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>종료된 래플을 앱에서 노출하지 않도록 처리하거나, 다시 노출하도록 해제하는 토글 모달. 데이터와 추첨내역은 보존되며 운영 화면에서는 계속 조회 가능하지만, 회원 앱 측 노출만 제어한다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>모달 트리거</td><td>래플 상세 헤더의 [숨김 처리] 또는 [숨김 해제] 버튼</td></tr>
+<tr><td>진입 조건</td><td>래플 상태 = 종료</td></tr>
+<tr><td>영향</td><td>앱 노출 여부 토글 (숨김 ↔ 노출)</td></tr>
+<tr><td>권한</td><td>[관리자 > 권한관리]에 설정된 권한을 따름</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<p>현재 상태에 따라 제목이 분기된다.</p>
+<table>
+<tr><th>현재 노출 상태</th><th>모달 제목</th></tr>
+<tr><td>노출 중 (숨김 아님)</td><td>"숨김 처리하시겠어요?"</td></tr>
+<tr><td>숨김 중</td><td>"숨김 해제하시겠어요?"</td></tr>
+</table>
+<h3>2-2. 본문 메시지</h3>
+<p><strong>숨김 처리 시:</strong></p>
+<pre><code>본 래플이 앱에서 숨겨집니다.
+다시 노출하려면 [숨김 해제]로 전환하세요.
+</code></pre>
+<p><strong>숨김 해제 시:</strong></p>
+<pre><code>앱에서 다시 노출됩니다.
+</code></pre>
+<h3>2-3. 액션 버튼</h3>
+<table>
+<tr><th>버튼</th><th>색상</th><th>동작</th></tr>
+<tr><td>취소</td><td>회색 외곽선</td><td>모달 닫기</td></tr>
+<tr><td><strong>숨김 처리</strong> / <strong>숨김 해제</strong></td><td>빨강 (숨김 처리) / 인디고 (숨김 해제)</td><td>노출 상태 토글</td></tr>
+</table>
+<h2>3. 화면에 노출되는 정보 / 토글 후 변화</h2>
+<table>
+<tr><th>항목</th><th>변화</th></tr>
+<tr><td>앱 노출 여부</td><td>토글됨 (노출 ↔ 숨김)</td></tr>
+<tr><td>최근 수정자·일시</td><td>현재 운영자 / 현재 시각</td></tr>
+<tr><td>활동 로그</td><td>보존 — "래플 '{타이틀}'을(를) 숨김 처리/해제했습니다."</td></tr>
+</table>
+<p>추가 영향:</p>
+<ul>
+<li><strong>숨김 적용 범위는 앱 "래플 리스트"에서만</strong>. 앱의 래플 메인 목록에서 노출 제외</li>
+<li>이미 응모한 회원은 앱 "내 래플 이력" 화면에서 자신의 응모·당첨/미당첨 결과를 그대로 조회 가능 (숨김의 영향을 받지 않음)</li>
+<li>운영 리스트([CEB-BO-RFL-101])에서는 "숨김" 배지로 시각 구분</li>
+<li>회원 자산(응모권·BIVE 보유)에는 영향 없음</li>
+</ul>
+<h2>4. 검증 규칙</h2>
+<table>
+<tr><th>검증 조건</th><th>동작</th></tr>
+<tr><td>래플 상태 ≠ 종료</td><td>헤더의 [숨김 처리/해제] 액션 미노출 (임시저장·진행중·추첨대기는 액션 없음)</td></tr>
+<tr><td>숨김 처리 권한이 없는 운영자</td><td>헤더의 [숨김 처리/해제] 액션이 노출되지 않음 ([관리자 > 권한관리] 설정에 따름)</td></tr>
+</table>
+<h2>5. 연관 화면</h2>
+<table>
+<tr><th>액션</th><th>다음 화면</th></tr>
+<tr><td>토글 성공</td><td>[CEB-BO-RFL-201] — 헤더 배지·액션 라벨 즉시 갱신 ([숨김 처리] ↔ [숨김 해제])</td></tr>
+<tr><td>리스트로 복귀</td><td>[CEB-BO-RFL-101] — "숨김" 컬럼에서 배지로 시각 확인 가능</td></tr>
+</table>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td>v1.6</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>Page Properties 표 신규(13필드)</strong> — 본문 변경 없음</td></tr>
+<tr><td>v1.3</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>권한 표현 일원화</strong> — "OPERATOR/SUPER/EXTERNAL_ARTIST" 세부 명세를 "[관리자 > 권한관리] 설정을 따름"으로 변경</td></tr>
+<tr><td>v1.2</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>숨김 적용 범위 명확화</strong> — 앱 "래플 리스트"에서만 숨김. 회원의 "내 래플 이력"은 영향 없음</td></tr>
+<tr><td>v1.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>기획자 언어로 재작성</strong> — 개발 용어·코드 경로 제거</td></tr>
+<tr><td>v1.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>신규 작성</strong> — 운영 사이트 동등 클론. 기존 팬퀘스트 영역에 없던 신규 모달. 종료 상태만 토글 가능</td></tr>
+</table>
+
+</body>
+</html>

@@ -97,22 +97,22 @@ p {
 <hr>
 <blockquote>
 <p>작성자: @Nill Yoo · 작성일: 2026-05-13 · 버전: <strong>v1.7</strong> (수령/배송 가이드 분기 정합)</p>
-<p>화면 경로: <code>/raffle/{id}/edit</code> · Breadcrumb: <code>홈 › 래플 › Raffle 상세 › 수정</code></p>
+<p>화면 경로: <code>/raffle/{id}/edit</code> · Breadcrumb: <code>홈 › 래플 › 래플 상세 › 수정</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
 <p>기존 래플 한 건의 마스터 정보를 수정한다. 래플 생성 화면([CEB-BO-RFL-101-CREATE])과 <strong>동일한 3열 입력 폼</strong>을 재사용하되, 진행중·종료·추첨대기 상태에 따라 일부 항목을 잠근다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>화면 경로</td><td><code>/raffle/{id}/edit</code></td></tr>
-<tr><td>Breadcrumb</td><td>래플 / Raffle 상세 / 수정</td></tr>
-<tr><td>페이지 제목</td><td>"Raffle 수정" + 래플 타이틀 + 상태 배지</td></tr>
+<tr><td>Breadcrumb</td><td>래플 / 래플 상세 / 수정</td></tr>
+<tr><td>페이지 제목</td><td>"래플 수정" + 래플 타이틀 + 상태 배지</td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-RFL-201] 헤더의 [수정하기] 버튼 (임시저장·진행중에서만 노출)</td></tr>
 </table>
 <h2>2. 화면 구성</h2>
 <h3>2-1. 헤더</h3>
 <ul>
 <li>Breadcrumb (3단계)</li>
-<li>페이지 제목 "Raffle 수정" + 래플 타이틀 + 현재 상태 배지</li>
+<li>페이지 제목 "래플 수정" + 래플 타이틀 + 현재 상태 배지</li>
 <li>우측 액션 2개:</li>
 <li><strong>[취소하기]</strong> — 변경사항 있을 시 확인 다이얼로그 노출 후 상세 화면으로 복귀</li>
 <li><strong>[저장하기]</strong> — 모든 필수 항목 입력 완료 시 활성</li>
