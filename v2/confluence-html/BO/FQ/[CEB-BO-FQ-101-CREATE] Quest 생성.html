@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-101-CREATE] Quest 생성 (SQ 영역으로 이전)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-101-CREATE] Quest 생성 (SQ 영역으로 이전)</h1>
+<blockquote>
+<p>🚫 <strong>DEPRECATED</strong> (2026-05-20) — 본 화면은 SQ 영역으로 이전되었다. 최신 명세는 [CEB-BO-SQ-302-CREATE] Quest 생성 참조. 본 문서는 이력 보존용으로 유지된다.</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-FQ-101-CREATE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트) — Quest</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.05</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 팬퀘스트 > Quest 생성</td></tr>
+<tr><td>비고</td><td>v1 BO-FQ/[CEB-BO-FQ-101-Create] v1.3 (2026.03.25) → v2 정책 호환 갱신. v2 가이드 [CEB-BO-006] §2.2 참조</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한 체계(§3·§4), 다국어(§5), 활동 로그(§6), UI 상태(§7), 토스트(§9), 미디어 업로드(§16)</td></tr>
+<tr><td>[CEB-BO-006] Quest·Raffle(FQ) 영역 가이드</td><td>권한 매트릭스(§4), 다국어 입력(§5), 활동 로그 템플릿(§6), Quest 라이프사이클(§7.1)</td></tr>
+<tr><td>[CEB-BO-004] BIVE(NFT) 영역 가이드</td><td>민팅 캠페인 4탭(§4.3) — NFT 보상 연결 시 참조</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>신규 Quest를 생성하기 위한 입력 폼 화면. 기본 정보(다국어)·설정(아티스트·타입·마감)·보상(응모권/NFT)·연관 링크를 입력하고 임시저장(Draft) 상태로 저장한다. 게시(Active 전환)는 [CEB-BO-FQ-201] 상세에서 [CEB-BO-FQ-201-MD-OPEN] 모달을 통해 진행.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>Quest 기본 정보 입력 (타이틀·설명·유저 가이드·대표 이미지) — KO/EN/JP 3언어 지원</li>
+<li>Quest 설정 입력 (아티스트·타입·마감 일시)</li>
+<li>Quest 보상 설정 (응모권 / 응모권+NFT / NFT)</li>
+<li>연관 링크 입력 (선택, 최대 2개)</li>
+<li>임시저장(Draft) 상태로 즉시 저장</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-101] 팬퀘스트 메인 (Quest 탭) > [생성하기] 버튼 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 헤더 (Header)</h3>
+<table>
+<tr><th>구분</th><th>요소명</th><th>타입</th><th>설명</th></tr>
+<tr><td>텍스트</td><td>Quest 생성</td><td>Title</td><td>화면 타이틀</td></tr>
+<tr><td>버튼</td><td>취소하기</td><td>Secondary Button</td><td>[CEB-BO-FQ-101-MD-CANCEL] 모달 호출</td></tr>
+<tr><td>버튼</td><td>생성하기</td><td>Primary Button</td><td>모든 필수 입력 완료 시 활성화. [CEB-BO-FQ-101-MD-COMPLE] 모달 호출</td></tr>
+</table>
+<h3>2.2 화면 레이아웃 (3-Column)</h3>
+<p>화면은 좌→중→우 3개 섹션이 배치된 3-column 레이아웃.</p>
+<pre><code>+----------------------------+----------------------------+----------------------------+
+|        기본 정보           |        퀘스트 설정          |        보상 설정            |
+|                            |                            |                            |
+|  타이틀  *  [KO/EN/JP]    |  아티스트  *    [Dropdown]  |  보상 종류  *   [Dropdown]  |
+|  설명    *  [KO/EN/JP]    |  퀘스트 타입 * [Dropdown]   |  응모권 수량    [Dropdown]  |
+|  유저 가이드 * [KO/EN/JP] |  마감 일시  *  [DatePicker] |  NFT 이벤트    [Dropdown]  |
+|  대표 이미지 *  [Upload]   |  연관 링크     [+ 링크 추가]|                            |
+|                            |                            |                            |
+|                            |  * 시작 일시는 게시 시점에  |                            |
+|                            |    자동으로 설정됩니다.     |                            |
+|                            |    마감일은 오늘 기준 최소  |                            |
+|                            |    1일 이후부터 선택 가능   |                            |
++----------------------------+----------------------------+----------------------------+
+</code></pre>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<h3>2.3 기본 정보 섹션 (좌측)</h3>
+<table>
+<tr><th>요소명</th><th>타입</th><th>필수</th><th>글자수</th><th>설명</th></tr>
+<tr><td>타이틀</td><td>Text Input + 언어 탭(KO/EN/JP)</td><td>Y</td><td><strong>50자</strong></td><td>[CEB-BO-006] §5.1 표준 글자수 (v1 100자 → v2 50자 정정)</td></tr>
+<tr><td>설명</td><td>Textarea + 언어 탭(KO/EN/JP)</td><td>Y</td><td><strong>500자</strong></td><td>[CEB-BO-006] §5.1 표준 (v1 200자 → v2 500자 확장)</td></tr>
+<tr><td>유저 가이드</td><td>Textarea + 언어 탭(KO/EN/JP)</td><td>Y</td><td>500자</td><td>[CEB-BO-006] §5.1</td></tr>
+<tr><td>대표 이미지</td><td>Image Upload (Drag & Drop)</td><td>Y</td><td>—</td><td>권장 1920x1080 (16:9), JPG/PNG, 최대 50MB ([CEB-BO-000] §16 미디어 업로드)</td></tr>
+</table>
+<ul>
+<li>각 텍스트 필드 우측에 글자수 카운터 (예: 0/50)</li>
+<li>언어 탭: KO(기본 선택) / EN / JP — 미입력 언어는 빨간 점, 입력 완료 시 체크마크</li>
+<li>임시저장은 1개 언어만 입력해도 허용. <strong>게시 시점</strong>(별도 화면)에 3언어 검증 ([CEB-BO-006] §5.2)</li>
+</ul>
+<h3>2.4 퀘스트 설정 섹션 (중앙)</h3>
+<table>
+<tr><th>요소명</th><th>타입</th><th>필수</th><th>설명</th></tr>
+<tr><td>아티스트</td><td>Dropdown</td><td>Y</td><td>등록된 아티스트 그룹 목록에서 선택. EXTERNAL_ARTIST 권한자는 자기 아티스트로 자동 고정 (변경 불가)</td></tr>
+<tr><td>퀘스트 타입</td><td>Dropdown</td><td>Y</td><td>미션 유형 선택 (기본값: "이미지 촬영 및 업로드")</td></tr>
+<tr><td>마감 일시</td><td>Date Picker + Time Picker</td><td>Y</td><td>시작 일시는 게시 시점 자동 설정. 마감은 현재 시점 +1일 이후 (Time Picker 기본값 23:59)</td></tr>
+</table>
+<h4>연관 링크 (선택, 최대 2개)</h4>
+<p>유저가 퀘스트 수행 시 참고할 외부 링크. 앱에서 라벨 버튼으로 노출.</p>
+<table>
+<tr><th>요소명</th><th>타입</th><th>필수</th><th>글자수</th><th>설명</th></tr>
+<tr><td>링크 라벨</td><td>Text Input + 언어 탭(KO/EN/JP)</td><td>조건부</td><td>각 20자</td><td>URL 입력 시 3언어 모두 필수 ([CEB-BO-006] §5.1 카드 라벨·뱃지명 표준)</td></tr>
+<tr><td>링크 URL</td><td>Text Input</td><td>조건부</td><td>500자</td><td>https:// 또는 http:// 형식</td></tr>
+<tr><td>[+ 링크 추가]</td><td>Text Button</td><td>—</td><td>—</td><td>새 링크 행 추가 (최대 2개, 도달 시 비활성화)</td></tr>
+<tr><td>[삭제]</td><td>Icon Button (X)</td><td>—</td><td>—</td><td>해당 링크 행 삭제</td></tr>
+</table>
+<h3>2.5 보상 설정 섹션 (우측)</h3>
+<table>
+<tr><th>요소명</th><th>타입</th><th>필수</th><th>설명</th></tr>
+<tr><td>보상 종류</td><td>Dropdown</td><td>Y</td><td>응모권 / 응모권 + NFT / NFT (기본값: 응모권)</td></tr>
+<tr><td>응모권 수량</td><td>Dropdown</td><td>조건부</td><td>"응모권" 포함 시 노출. 1~10장 (기본값: 1장)</td></tr>
+<tr><td>NFT 이벤트</td><td>Dropdown</td><td>조건부</td><td>"NFT" 포함 시 노출. [CEB-BO-004] §4.3 BIVE 민팅 캠페인 목록 (Event/Ticket/Mix/Pick 4탭 중 활성 캠페인)</td></tr>
+</table>
+<p>동적 UI:</p>
+<ul>
+<li>"응모권" → 응모권 수량만 노출</li>
+<li>"응모권 + NFT" → 응모권 수량 + NFT 이벤트 모두 노출</li>
+<li>"NFT" → NFT 이벤트만 노출</li>
+</ul>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 버튼 동작</h3>
+<table>
+<tr><th>버튼</th><th>동작</th><th>권한</th></tr>
+<tr><td>[취소하기]</td><td>[CEB-BO-FQ-101-MD-CANCEL] 모달 호출</td><td>모든 진입 권한</td></tr>
+<tr><td>[생성하기]</td><td>필수 입력 완료 시 활성화. [CEB-BO-FQ-101-MD-COMPLE] 모달 호출</td><td>OPERATOR/SUPER, EXTERNAL_ARTIST(자기 아티스트)</td></tr>
+</table>
+<h3>3.2 네비게이션</h3>
+<ul>
+<li>생성 취소 시: [CEB-BO-FQ-101] 팬퀘스트 메인 이동</li>
+<li>생성 완료 시: [CEB-BO-FQ-201] 해당 Quest 상세 (기본정보 탭) 이동</li>
+</ul>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한별 기능 분기</h3>
+<p>[CEB-BO-006] §4 적용. 본 화면 한정:</p>
+<table>
+<tr><th>권한</th><th>화면 접근</th><th>입력</th><th>아티스트 선택</th><th>NFT 보상 연결</th><th>[생성하기]</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>전체</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅</td><td>전체</td><td>✅</td><td>✅</td></tr>
+<tr><td>POLICY</td><td>❌</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>✅</td><td>✅</td><td><strong>자기 아티스트 자동 고정</strong></td><td>✅</td><td>✅</td></tr>
+</table>
+<h3>4.2 다국어 입력 유효성 (KO/EN/JP)</h3>
+<p>[CEB-BO-006] §5 적용:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>미입력 언어 존재</td><td>해당 언어 탭에 빨간 점(dot)</td></tr>
+<tr><td>모든 언어 입력 완료</td><td>모든 언어 탭에 체크마크</td></tr>
+<tr><td>임시저장 시</td><td>1개 언어만 입력해도 허용</td></tr>
+<tr><td><strong>게시 시 (별도 화면)</strong></td><td>KO/EN/JP 3언어 모두 비어있지 않아야 함. 미충족 시 게시 차단</td></tr>
+</table>
+<h3>4.3 기간 설정 로직</h3>
+<ul>
+<li>시작 일시: 별도 입력 없음. [생성하기] → 임시저장 → [게시하기] 시점의 서버 시간(KST UTC+9)이 자동 설정</li>
+<li>마감 일시: 현재 시점 +1일 이후만 선택 가능</li>
+<li>캘린더에서 +1일 미만 비활성화</li>
+<li>시간 입력: 시(00~23), 분(00~59) 정수만</li>
+</ul>
+<h3>4.4 보상 설정 로직</h3>
+<ul>
+<li>응모권 수량: 직접 입력 X, Dropdown 1~10장</li>
+<li>NFT 이벤트 목록: BIVE 시스템 API 연동 — 활성 상태(<code>Active</code>) + 보상 미할당 캠페인만 노출 ([CEB-BO-004] §4.3)</li>
+<li>보상 종류 변경 시 하위 입력 필드 동적 노출/숨김</li>
+</ul>
+<h3>4.5 연관 링크 유효성</h3>
+<ul>
+<li>0~2개 입력 가능 (선택)</li>
+<li>링크 한 행마다 라벨(KO/EN/JP) + URL 쌍 필수</li>
+<li>라벨만 입력 + URL 미입력 → 인라인 에러: "URL을 입력해주세요"</li>
+<li>URL만 입력 + 라벨 미입력 → 인라인 에러: "라벨을 입력해주세요"</li>
+<li>URL 형식: <code>https://</code> 또는 <code>http://</code> 시작 → 미준수 시 "올바른 URL 형식을 입력해주세요 (예: https://example.com)"</li>
+<li>미입력 시 [생성하기] 활성화에 영향 없음</li>
+</ul>
+<h3>4.6 [생성하기] 활성화 조건</h3>
+<p>모두 충족해야 활성화:</p>
+<ul>
+<li>타이틀: 1개 이상 언어 입력완료 (임시저장 기준 — [CEB-BO-006] §5.2)</li>
+<li>설명: 1개 이상 언어 입력완료</li>
+<li>유저 가이드: 1개 이상 언어 입력완료</li>
+<li>대표 이미지: 업로드 완료</li>
+<li>아티스트: 선택 완료</li>
+<li>퀘스트 타입: 선택 완료</li>
+<li>마감 일시: 설정 완료</li>
+<li>보상 설정: 종류 + 하위 항목 입력 완료</li>
+<li>연관 링크: 입력 시 유효성 검증 통과 (미입력 시 영향 없음)</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading (아티스트·NFT 이벤트 목록 조회)</td><td>Skeleton (Dropdown 영역)</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Disabled ([생성하기] 비활성)</td><td>회색 처리, 클릭 불가, hover 시 미충족 항목 안내 툴팁</td></tr>
+<tr><td>Error (저장 실패)</td><td>Toast (Error) + 폼 데이터 유지</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>[CEB-BO-006] §6 적용:</p>
+<table>
+<tr><th>액션</th><th>로그 메시지 (KO)</th><th>권한</th></tr>
+<tr><td>Quest 생성 (임시저장)</td><td>Quest '{타이틀}'을(를) 생성했습니다. (상태: 임시저장)</td><td>OPERATOR/SUPER, EXTERNAL_ARTIST</td></tr>
+</table>
+<p>생성 시 활동 로그는 자동 기록 ([CEB-BO-000] §6, 3년 보관 append-only).</p>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지 유형</th><th>메시지 내용</th></tr>
+<tr><td>Quest 생성 성공</td><td>Toast (Success)</td><td>"Quest 생성이 완료되었습니다."</td></tr>
+<tr><td>Quest 생성 실패</td><td>Toast (Error)</td><td>"Quest 생성에 실패하였습니다. 다시 시도하세요"</td></tr>
+<tr><td>필수 항목 미입력 시 [생성하기] 클릭</td><td>인라인 에러</td><td>미입력 필드 하단에 "필수 입력 항목입니다."</td></tr>
+<tr><td>다국어 일부 미입력 (임시저장 시)</td><td>탭 표시</td><td>빨간 점(dot) 표시 — 저장은 허용</td></tr>
+<tr><td>다국어 전부 미입력</td><td>인라인 에러</td><td>"최소 1개 이상의 언어를 입력해주세요"</td></tr>
+<tr><td>URL 형식 오류</td><td>인라인 에러</td><td>"올바른 URL 형식을 입력해주세요 (예: https://example.com)"</td></tr>
+<tr><td>이미지 업로드 용량 초과</td><td>Toast (Error)</td><td>"이미지 용량이 50MB를 초과합니다. ([CEB-BO-000] §16)"</td></tr>
+<tr><td>이미지 형식 오류</td><td>Toast (Error)</td><td>"지원하지 않는 이미지 형식입니다. (JPG/PNG)"</td></tr>
+<tr><td>네트워크 오류</td><td>Toast (Error)</td><td>[CEB-BO-000] §12 표준</td></tr>
+<tr><td>EXTERNAL_ARTIST 자기 아티스트 외 선택 시도</td><td>UI 차단</td><td>아티스트 Dropdown 자기 아티스트만 노출</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-FQ-101</td><td>팬퀘스트 메인 (Quest 탭)</td><td>상위 (생성 취소 후 이동)</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-COMPLE</td><td>Quest 생성 완료 모달</td><td>하위 ([생성하기] 버튼)</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-CANCEL</td><td>Quest 생성 취소 모달</td><td>하위 ([취소하기] 버튼)</td></tr>
+<tr><td>CEB-BO-FQ-201</td><td>Quest 상세 (기본정보 탭)</td><td>하위 (생성 완료 후 해당 Quest 상세 이동)</td></tr>
+<tr><td>CEB-BO-004 BIVE 가이드</td><td>NFT 민팅 캠페인 목록</td><td>데이터 소스 (NFT 보상 연결)</td></tr>
+</table>
+<hr>
+<h2>9. v1 → v2 변경 사항 요약</h2>
+<table>
+<tr><th>항목</th><th>v1</th><th>v2</th></tr>
+<tr><td>타이틀 글자수</td><td>100자</td><td><strong>50자</strong> ([CEB-BO-006] §5.1 표준 통일)</td></tr>
+<tr><td>설명 글자수</td><td>200자</td><td><strong>500자</strong> ([CEB-BO-006] §5.1 표준 통일)</td></tr>
+<tr><td>권한 체계</td><td>Super Admin / Admin 쓰기·읽기 (3단계)</td><td>SUPER / OPERATOR / POLICY / EXTERNAL_ARTIST (4단계)</td></tr>
+<tr><td>EXTERNAL_ARTIST 처리</td><td>미정의</td><td>자기 아티스트 자동 고정, NFT 보상 연결 가능</td></tr>
+<tr><td>NFT 이벤트 출처</td><td>"BIVE 시스템" 일반 명시</td><td>[CEB-BO-004] §4.3 4탭 (Event/Ticket/Mix/Pick) 명시</td></tr>
+<tr><td>활동 로그</td><td>미정의</td><td>[CEB-BO-006] §6 템플릿 적용 (생성 로그)</td></tr>
+<tr><td>다국어 정책</td><td>모두 입력 필수</td><td><strong>임시저장 1개 허용 / 게시 시 3언어 검증</strong> ([CEB-BO-006] §5.2)</td></tr>
+<tr><td>미디어 업로드</td><td>50MB</td><td>[CEB-BO-000] §16 표준 참조 (50MB 유지)</td></tr>
+</table>
+<hr>
+<h2>10. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2025.12.09</td><td>@Nill Yoo</td><td>(v1) 초안 작성</td></tr>
+<tr><td>v1.1</td><td>2026.03.24</td><td>@Nill Yoo</td><td>(v1) 상태 표기 한글화</td></tr>
+<tr><td>v1.2</td><td>2026.03.24</td><td>@Nill Yoo</td><td>(v1) PDF 디자인 기준 3-column 레이아웃</td></tr>
+<tr><td>v1.3</td><td>2026.03.25</td><td>@Nill Yoo</td><td>(v1) 연관 링크 필드 추가</td></tr>
+<tr><td><strong>v2.0</strong></td><td><strong>2026.05.05</strong></td><td><strong>@Nill Yoo</strong></td><td>v2 정책 호환 갱신. ① [CEB-BO-000]/[CEB-BO-006]/[CEB-BO-004] 공통 정책 참조 헤더 ② 권한 4단계 + EXTERNAL_ARTIST 자기 아티스트 자동 고정 정책 ③ 다국어 글자수 표준 통일 (타이틀 50자, 설명 500자) — [CEB-BO-006] §5.1 ④ 임시저장 1언어 허용 / 게시 시 3언어 검증 ([CEB-BO-006] §5.2) ⑤ NFT 이벤트 출처를 [CEB-BO-004] §4.3 4탭으로 명시 ⑥ UI 상태별 처리 §5, 활동 로그 §6 신규 ⑦ §9 v1→v2 변경 사항 요약 추가 ⑧ v1 원본 deprecation 동시 진행</td></tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-101-MD-CANCEL] Quest 생성 취소 (SQ 영역으로 이전)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-101-MD-CANCEL] Quest 생성 취소 (SQ 영역으로 이전)</h1>
+<blockquote>
+<p>🚫 <strong>DEPRECATED</strong> (2026-05-20) — 본 화면은 SQ 영역으로 이전되었다. 최신 명세는 [CEB-BO-SQ-302-MD-CANCEL] Quest 생성 취소 모달 참조. 본 문서는 이력 보존용으로 유지된다.</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-FQ-101-MD-CANCEL</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트) — Quest</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.05</td></tr>
+<tr><td>Breadcrumb</td><td>(해당 없음 — 모달)</td></tr>
+<tr><td>비고</td><td>v1 BO-FQ/[CEB-BO-FQ-101-MD-CANCEL] v1.1 (2026.03.24) → v2 정책 호환 갱신</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>모달 패턴(§9), UI 상태(§7), 토스트(§9)</td></tr>
+<tr><td>[CEB-BO-006] Quest·Raffle(FQ) 영역 가이드</td><td>권한 매트릭스(§4)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>Quest 생성 화면([CEB-BO-FQ-101-CREATE])에서 [취소하기] 클릭 시 데이터 손실 경고와 최종 취소 의사 확인. 의도하지 않은 데이터 손실 방지를 위한 가드레일.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-101-CREATE] > [취소하기] 버튼 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>모달 구조</h3>
+<table>
+<tr><th>영역</th><th>내용</th></tr>
+<tr><td>아이콘</td><td>상단 중앙 경고 심볼 (Warning)</td></tr>
+<tr><td>타이틀</td><td>"Quest 생성 취소"</td></tr>
+<tr><td>안내 메시지</td><td>"입력된 데이터는 모두 사라집니다" / "계속 진행하시겠습니까?"</td></tr>
+<tr><td>닫기 버튼 (X)</td><td>우측 상단</td></tr>
+</table>
+<h3>하단 액션 버튼</h3>
+<table>
+<tr><th>버튼</th><th>타입</th><th>동작</th></tr>
+<tr><td>[다시 돌아가기]</td><td>Secondary</td><td>모달 닫기 + 작성 화면 상태 유지</td></tr>
+<tr><td>[확인]</td><td>Primary (Danger)</td><td>임시 입력 데이터 폐기 + [CEB-BO-FQ-101] 이동</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 버튼 동작</h3>
+<table>
+<tr><th>버튼</th><th>동작</th></tr>
+<tr><td>[다시 돌아가기]</td><td>생성 취소 철회, 작성 화면 복귀 (상태 유지)</td></tr>
+<tr><td>[확인]</td><td>클라이언트 임시 데이터 전체 폐기 + [CEB-BO-FQ-101] 리다이렉트</td></tr>
+<tr><td>[X] 닫기</td><td>모달만 닫기, 작성 화면 상태 그대로 유지 (= 다시 돌아가기와 동일)</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한별 분기</h3>
+<p>본 모달은 [CEB-BO-FQ-101-CREATE] 진입 가능한 권한에서 호출됨. 별도 권한 검증 없음.</p>
+<h3>4.2 취소 프로세스</h3>
+<ul>
+<li><strong>확인 클릭</strong>: 클라이언트 메모리의 임시 입력값(타이틀/설명/유저 가이드/이미지/연관 링크 등) 모두 삭제 → [CEB-BO-FQ-101] 리다이렉트</li>
+<li><strong>취소(다시 돌아가기 / X)</strong>: 모달만 닫음. 작성 데이터 보존</li>
+<li>서버 통신 없음 (확정 저장 전이므로)</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 + §9 모달 패턴 적용. 본 모달은 단순 확인이므로 Loading/Error 없음.</p>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>본 모달 자체는 로그 미기록. 사용자가 [확인] 시 [CEB-BO-FQ-101-CREATE]가 미저장 상태에서 종료되는 것이므로 활동 로그 미발생.</p>
+<hr>
+<h2>7. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-FQ-101-CREATE</td><td>Quest 생성</td><td>상위 (모달 호출처)</td></tr>
+<tr><td>CEB-BO-FQ-101</td><td>팬퀘스트 메인 (Quest 탭)</td><td>[확인] 시 이동</td></tr>
+</table>
+<hr>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2025.12.09</td><td>@Nill Yoo</td><td>(v1) 초안 작성</td></tr>
+<tr><td>v1.1</td><td>2026.03.24</td><td>@Nill Yoo</td><td>(v1) 상태 표기 한글화</td></tr>
+<tr><td><strong>v2.0</strong></td><td><strong>2026.05.05</strong></td><td><strong>@Nill Yoo</strong></td><td>v2 정책 호환 갱신. ① [CEB-BO-000] §9 모달 패턴 / [CEB-BO-006] §4 권한 매트릭스 참조 헤더 추가 ② 권한 검증 위임 명시 (호출자 권한 신뢰) ③ 활동 로그 §6 명시 (모달 자체는 로그 미발생) ④ v1 원본 deprecation 동시 진행</td></tr>
+</table>
+
+</body>
+</html>

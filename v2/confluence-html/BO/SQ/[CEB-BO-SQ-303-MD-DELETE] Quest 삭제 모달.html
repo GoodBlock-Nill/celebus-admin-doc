@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-SQ-303-MD-DELETE] Quest 삭제 모달</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-SQ-303-MD-DELETE] Quest 삭제 모달</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-SQ-303-MD-DELETE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>SQ — 에피소드 > 팬퀘스트</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td>ConfirmModal danger 공용 (sm/md)</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 에피소드 > 팬퀘스트 > Quest 상세 > 삭제</td></tr>
+<tr><td>비고</td><td>FQ 영역에서 SQ 영역으로 이전 (기존 [CEB-BO-FQ-201-MD-DELETE] 폐기)</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v1.0</strong> (FQ 영역에서 SQ 영역으로 이전 신규 작성)</p>
+<p>모달 트리거: [CEB-BO-SQ-303] Quest 상세의 [삭제하기] 액션 (임시저장 상태에서만 노출)</p>
+</blockquote>
+<h2>1. 모달 개요</h2>
+<p>임시저장 Quest를 영구 삭제하는 확인 모달. 위험 액션이므로 빨강 톤. 복구 불가.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>트리거</td><td>Quest 상세의 [삭제하기] (임시저장 상태에서만 노출)</td></tr>
+<tr><td>진입 조건</td><td>Quest 상태가 "임시저장"</td></tr>
+<tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다</td></tr>
+<tr><td>영향 범위</td><td>Quest 영구 삭제 (복구 불가)</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<ul>
+<li>모달 제목: "Quest 삭제"</li>
+</ul>
+<h3>2-2. 본문</h3>
+<blockquote>
+<p>삭제한 Quest는 복구할 수 없습니다.</p>
+<p>계속 진행하시겠습니까?</p>
+</blockquote>
+<h3>2-3. 에피소드 사용 현황 패널 (조건부 추가 노출)</h3>
+<p>본 Quest를 사용 중인 에피소드 미션이 있으면 본문 아래 "사용 중인 에피소드" 패널 추가 노출. 모달 사이즈는 md로 확대. 삭제 시 미션 매핑 자동 해제 안내 포함.</p>
+<h3>2-4. 하단 액션</h3>
+<table>
+<tr><th>버튼</th><th>색상</th><th>동작</th></tr>
+<tr><td>취소</td><td>회색 외곽선</td><td>모달 닫기</td></tr>
+<tr><td>삭제</td><td><strong>빨강 (danger)</strong></td><td>Quest 영구 삭제 + 팬퀘스트 리스트로 복귀</td></tr>
+</table>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>헤더</td><td>"Quest 삭제"</td><td>모달 식별</td></tr>
+<tr><td>본문</td><td>영구 삭제 안내</td><td>운영자 의도 확인</td></tr>
+<tr><td>에피소드 사용 패널 (조건부)</td><td>본 Quest 사용 미션 목록 + 매핑 자동 해제 안내</td><td>삭제 영향 사전 안내</td></tr>
+<tr><td>하단</td><td>[취소] · [삭제] (빨강)</td><td>진행 선택</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>임시저장 Quest 진입</td><td>모달 정상 노출</td></tr>
+<tr><td>진행중·종료 Quest</td><td>트리거 액션 자체 미노출</td></tr>
+<tr><td>사용 중인 에피소드 있음</td><td>모달 사이즈 md + 에피소드 패널 + 매핑 해제 안내</td></tr>
+<tr><td>사용 중인 에피소드 없음</td><td>모달 사이즈 sm (기본)</td></tr>
+<tr><td>[삭제] 클릭</td><td>Quest 영구 삭제 + 팬퀘스트 리스트로 복귀</td></tr>
+<tr><td>[취소] / 외부 클릭</td><td>모달 닫힘 (Quest 유지)</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>Quest 상태 ≠ 임시저장</td><td>모달 진입 불가</td></tr>
+<tr><td>영구 삭제</td><td>복구 불가. git history 등 별도 백업 없음</td></tr>
+<tr><td>미션 매핑 자동 해제</td><td>본 Quest가 매핑된 미션이 있으면 삭제 시 미션의 팬퀘스트 매핑이 자동 해제 (미션 자체는 보존)</td></tr>
+</table>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입·이탈</th><th>화면</th></tr>
+<tr><td>트리거</td><td>[CEB-BO-SQ-303] Quest 상세 (임시저장)</td></tr>
+<tr><td>삭제 후</td><td>[CEB-BO-SQ-302] 팬퀘스트 리스트</td></tr>
+<tr><td>사용 중인 에피소드 패널 행 클릭</td><td>[CEB-BO-SQ-204] 미션 상세</td></tr>
+<tr><td>외부 영역 (구 명세)</td><td>[CEB-BO-FQ-201-MD-DELETE] (DEPRECATED)</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>FQ 영역에서 SQ 영역으로 신규 이전</strong> — 기존 [CEB-BO-FQ-201-MD-DELETE] v2.0을 SQ 영역 컨텍스트로 신규 작성. 프로토타입 ConfirmModal danger 패턴(<code>pendingModal === 'delete'</code>) + EpisodeUsagePanel(md) 정합. Page Properties 13필드, 변경 이력 5칸</td></tr>
+</table>
+
+</body>
+</html>

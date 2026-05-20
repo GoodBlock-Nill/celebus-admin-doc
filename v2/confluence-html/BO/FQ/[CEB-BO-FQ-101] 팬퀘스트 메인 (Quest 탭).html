@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-101] 팬퀘스트 메인 (Quest 탭) (SQ 영역으로 이전)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-101] 팬퀘스트 메인 (Quest 탭) (SQ 영역으로 이전)</h1>
+<blockquote>
+<p>🚫 <strong>DEPRECATED</strong> (2026-05-20) — 본 화면은 SQ 영역으로 이전되었다. 최신 명세는 [CEB-BO-SQ-302] 팬퀘스트 리스트 참조. 본 문서는 이력 보존용으로 유지된다.</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-FQ-101</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트) — Quest</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.05</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 팬퀘스트 > Fan Quest 관리</td></tr>
+<tr><td>비고</td><td>v1 BO-FQ/[CEB-BO-FQ-101] v1.1 (2026.03.24) → v2 정책 호환 갱신. v2 가이드 [CEB-BO-006] §2.1 참조</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<p>본 화면 명세서는 다음 공통 정책 문서를 우선 참조한다. 충돌 시 공통 정책 우선.</p>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한 체계(§3·§4), 다국어(§5), 활동 로그(§6), UI 상태(§7), 토스트(§9)</td></tr>
+<tr><td>[CEB-BO-006] Quest·Raffle(FQ) 영역 가이드</td><td>영역별 권한 매트릭스(§4), 활동 로그 템플릿(§6), Quest 라이프사이클(§7.1), 검수 워크플로우(§7.3)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>팬퀘스트 서비스의 Quest 목록을 조회·관리하는 어드민 메인 화면. 운영자는 본 화면에서 등록된 모든 Quest의 상태·검수 대기 건수를 한눈에 파악하고, 신규 Quest 생성·반려사유 설정·개별 Quest 상세로 진입한다.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>등록된 전체 Quest 목록 조회 및 검색</li>
+<li>상태별 Quest 필터링 (진행중 / 임시저장 / 종료)</li>
+<li>신규 Quest 생성 진입</li>
+<li>반려사유 데이터베이스 진입</li>
+<li>Quest 상세 화면 진입</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>사이드 메뉴 > 팬퀘스트 > Fan Quest 관리 진입 시 기본 노출 (Quest 탭 활성)</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 영역 (Top Area)</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 팬퀘스트 > Fan Quest 관리</code></li>
+<li>Tab Menu (상호 배타):</li>
+<li><strong>Quest</strong> (현재 화면)</li>
+<li><strong>Raffle</strong> → [CEB-BO-FQ-102] 이동</li>
+</ul>
+<h3>2.2 검색·필터 영역</h3>
+<table>
+<tr><th>구분</th><th>요소명</th><th>타입</th><th>설명</th></tr>
+<tr><td>필터</td><td>상태</td><td>Dropdown</td><td>전체 / 진행중 / 임시저장 / 종료 (Default: 전체)</td></tr>
+<tr><td>필터</td><td>검색 대상</td><td>Dropdown</td><td>타이틀 / 아티스트 (Default: 타이틀)</td></tr>
+<tr><td>입력</td><td>키워드</td><td>Text Input</td><td>부분 일치 검색. Enter 또는 검색 아이콘으로 실행. Placeholder는 검색 대상 따라 변경</td></tr>
+<tr><td>버튼</td><td>초기화</td><td>Dark Button</td><td>검색 조건 초기 상태 리셋</td></tr>
+<tr><td>버튼</td><td>반려사유 설정</td><td>Secondary Button</td><td>[CEB-BO-FQ-101-REJETSET] 이동</td></tr>
+<tr><td>버튼</td><td>생성하기</td><td>Primary Button</td><td>[CEB-BO-FQ-101-CREATE] 이동</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<h3>2.3 목록 영역 (List Table)</h3>
+<table>
+<tr><th>컬럼명</th><th>데이터 타입</th><th>설명</th></tr>
+<tr><td>상태</td><td>Badge</td><td>Quest 상태 표시 ([CEB-BO-006] §7.1 라이프사이클)</td></tr>
+<tr><td>타이틀</td><td>Text</td><td>Quest 타이틀 (KO 우선 노출, 다국어 — [CEB-BO-006] §5)</td></tr>
+<tr><td>아티스트</td><td>Text</td><td>연결된 아티스트명</td></tr>
+<tr><td>기간</td><td>Date Range</td><td>시작(게시)일 ~ 마감(종료)일 (YYYY.MM.DD ~ YYYY.MM.DD)</td></tr>
+<tr><td>검토 필요</td><td>Number</td><td>검수 대기 중인 유저 제출물 수량 (실시간)</td></tr>
+</table>
+<ul>
+<li>Row 클릭 → [CEB-BO-FQ-201] 퀘스트 상세 (기본정보 탭) 이동</li>
+<li>마감일 전 수동 종료 시 기간 종료일은 종료 처리 일자로 변경</li>
+</ul>
+<h3>2.4 페이지네이션</h3>
+<table>
+<tr><th>구분</th><th>요소명</th><th>설명</th></tr>
+<tr><td>버튼</td><td>Previous</td><td>이전 페이지</td></tr>
+<tr><td>버튼</td><td>1, 2, 3, ..., N</td><td>직접 이동</td></tr>
+<tr><td>버튼</td><td>Next</td><td>다음 페이지</td></tr>
+</table>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 버튼 동작</h3>
+<table>
+<tr><th>버튼</th><th>동작</th><th>권한</th></tr>
+<tr><td>[초기화]</td><td>모든 검색 조건 리셋</td><td>모든 권한</td></tr>
+<tr><td>[반려사유 설정]</td><td>[CEB-BO-FQ-101-REJETSET] 이동</td><td>OPERATOR/SUPER</td></tr>
+<tr><td>[생성하기]</td><td>[CEB-BO-FQ-101-CREATE] 이동</td><td>OPERATOR/SUPER, EXTERNAL_ARTIST(자기 아티스트)</td></tr>
+</table>
+<h3>3.2 네비게이션</h3>
+<ul>
+<li>Row 클릭 → [CEB-BO-FQ-201] 이동</li>
+<li>[Raffle] 탭 클릭 → [CEB-BO-FQ-102] 이동</li>
+</ul>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한별 기능 분기</h3>
+<p>[CEB-BO-006] §4 권한 매트릭스 적용. 본 화면 한정 표:</p>
+<table>
+<tr><th>권한</th><th>화면 접근</th><th>조회</th><th>[반려사유 설정]</th><th>[생성하기]</th><th>Row 클릭</th></tr>
+<tr><td>SUPER (슈퍼관리자)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR (운영자)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>POLICY (정책관리자)</td><td>✅</td><td>✅ (조회 전용)</td><td>❌</td><td>❌</td><td>✅</td></tr>
+<tr><td>EXTERNAL_ARTIST (아티스트사)</td><td>✅</td><td>✅ (자기 아티스트만)</td><td>❌</td><td>✅ (자기 아티스트만)</td><td>✅ (자기 아티스트만)</td></tr>
+</table>
+<blockquote>
+<p>EXTERNAL_ARTIST 가 본 화면에 진입하면 목록은 자기 아티스트가 매핑된 Quest 만 노출 (서버 측 필터링).</p>
+</blockquote>
+<h3>4.2 정렬 기준</h3>
+<table>
+<tr><th>정렬 기준</th><th>정렬 방식</th><th>비고</th></tr>
+<tr><td>마감(종료)일</td><td>오름차순 (임박순)</td><td>기본 정렬</td></tr>
+</table>
+<h3>4.3 검토 필요 카운트</h3>
+<ul>
+<li>상태가 <strong>임시저장(Draft)</strong> 인 경우 → 0 (참여 불가, 고정)</li>
+<li>상태가 <strong>진행중(Active)</strong> 또는 <strong>종료(Ended)</strong> 인 경우 → 검수 미처리(Pending) 건수 실시간 표시</li>
+<li>카운트 0 표기: "0" (대시 사용 안 함)</li>
+</ul>
+<h3>4.4 상태 정의</h3>
+<p>[CEB-BO-006] §7.1 Quest 라이프사이클 참조. 본 화면 노출 라벨:</p>
+<table>
+<tr><th>상태 코드</th><th>라벨 (KO)</th><th>Badge 색상</th><th>검토 필요 컬럼</th></tr>
+<tr><td>Draft</td><td>임시저장</td><td>Gray</td><td>0 (고정)</td></tr>
+<tr><td>Active</td><td>진행중</td><td>Green</td><td>실시간 카운트</td></tr>
+<tr><td>Ended</td><td>종료</td><td>Black</td><td>실시간 카운트 (검수 잔여건)</td></tr>
+</table>
+<h3>4.5 검색 조건</h3>
+<ul>
+<li>상태 필터 + 키워드 검색은 AND 조건</li>
+<li>키워드 검색은 부분 일치(LIKE) 지원</li>
+<li>검색어 미입력 시 해당 조건 무시 (상태 필터만 적용)</li>
+<li>검색 대상이 "아티스트"일 때: 아티스트 그룹·멤버명 통합 검색</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준 UI 상태 적용.</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>Skeleton UI (헤더·필터·5행 row skeleton)</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Empty</td><td>테이블 영역에 "검색 결과가 없습니다." (검색 결과 0건일 때) / "등록된 Quest가 없습니다." (전체 0건일 때)</td></tr>
+<tr><td>Error</td><td>"Quest 목록 조회에 실패하였습니다. 다시 시도하세요." + [재시도] 버튼</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>[CEB-BO-006] §6 적용. 본 화면(목록 조회) 자체는 로그 미기록 (빈도 과다). 단, 네비게이션 이동 후 액션 화면(생성·검수 등)에서 발생.</p>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<p>[CEB-BO-000] §12 표준 + 본 화면 고유:</p>
+<table>
+<tr><th>상황</th><th>메시지·처리</th></tr>
+<tr><td>검색 결과 없음</td><td>테이블 영역 Empty 메시지 (§5)</td></tr>
+<tr><td>목록 조회 실패</td><td>Toast (Error): "Quest 목록 조회에 실패하였습니다. 다시 시도하세요."</td></tr>
+<tr><td>권한 부족</td><td>Toast (Error): "권한이 없습니다." + 사이드 메뉴 [팬퀘스트] 비활성</td></tr>
+<tr><td>네트워크 오류</td><td>[CEB-BO-000] §12 표준 처리</td></tr>
+<tr><td>EXTERNAL_ARTIST 자기 아티스트 외 접근</td><td>서버 측 차단 + Toast (Error): "접근 권한이 없는 Quest입니다."</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-FQ-102</td><td>팬퀘스트 메인 (Raffle 탭)</td><td>형제 화면 ([Raffle] 탭)</td></tr>
+<tr><td>CEB-BO-FQ-101-CREATE</td><td>Quest 생성</td><td>하위 ([생성하기] 버튼)</td></tr>
+<tr><td>CEB-BO-FQ-101-REJETSET</td><td>반려사유 설정</td><td>하위 ([반려사유 설정] 버튼)</td></tr>
+<tr><td>CEB-BO-FQ-201</td><td>Quest 상세 (기본정보 탭)</td><td>하위 (Row 클릭)</td></tr>
+<tr><td>CEB-BO-FQ-202</td><td>Quest 상세 (대기내역 탭)</td><td>손자 (상세 내 탭 이동)</td></tr>
+<tr><td>CEB-BO-FQ-203</td><td>Quest 상세 (처리내역 탭)</td><td>손자 (상세 내 탭 이동)</td></tr>
+</table>
+<hr>
+<h2>9. 운영 검증 (분석 리포트 [CEB-BO-001-A] §3.7)</h2>
+<p>2026-05-05 실제 BO 운영 환경(<code>https://gb.celebus.xyz/fanquest</code>)에서 검증된 사항:</p>
+<ul>
+<li>5페이지 분량의 Quest 활성 운영 중</li>
+<li>V01D, iKON 등 실제 아티스트 연동 Quest 다수</li>
+<li>BIVE 자동 민팅 연결 정상 (24개 캠페인 중 23개 팬퀘스트 보상 — [CEB-BO-004] §4.3)</li>
+<li>v1 운영 그대로 가동 중 → 본 v2 명세는 정책 호환 갱신 (UI 변경 없음)</li>
+</ul>
+<hr>
+<h2>10. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2025.12.09</td><td>@Nill Yoo</td><td>(v1) 초안 작성</td></tr>
+<tr><td>v1.1</td><td>2026.03.24</td><td>@Nill Yoo</td><td>(v1) 상태 표기 한글화</td></tr>
+<tr><td><strong>v2.0</strong></td><td><strong>2026.05.05</strong></td><td><strong>@Nill Yoo</strong></td><td>v2 정책 호환 갱신. ① [CEB-BO-000] 공통 정책 참조 헤더 추가 ② [CEB-BO-006] FQ 영역 가이드 참조 추가 ③ 권한 매트릭스 v2 4단계(SUPER/OPERATOR/POLICY/EXTERNAL_ARTIST) 적용 — 기존 v1 3단계(Super Admin / Admin 쓰기 / Admin 읽기) 대체 ④ EXTERNAL_ARTIST 자기 아티스트 한정 제약 명시 ⑤ UI 상태별 처리 §5 추가 ([CEB-BO-000] §7 표준) ⑥ 활동 로그 §6 추가 ⑦ 운영 검증 §9 추가 (분석 리포트 [CEB-BO-001-A] §3.7 인용) ⑧ v1 원본 deprecation 처리 동시 진행</td></tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-SQ-303-EDIT] Quest 수정</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-SQ-303-EDIT] Quest 수정</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-SQ-303-EDIT</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>SQ — 에피소드 > 팬퀘스트</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td>/fanquest/[id]/edit (목표 라우트 /sq/quests/{id}/edit)</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 에피소드 > 팬퀘스트 > Quest 수정</td></tr>
+<tr><td>비고</td><td>FQ 영역에서 SQ 영역으로 이전 (기존 [CEB-BO-FQ-201-EDIT] 폐기). 프로토타입과 1:1 정합</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v1.0</strong> (FQ 영역에서 SQ 영역으로 이전 신규 작성)</p>
+<p>화면 경로: <code>/fanquest/{id}/edit</code> (목표 <code>/sq/quests/{id}/edit</code>) · Breadcrumb: <code>홈 › 에피소드 › 팬퀘스트 › Quest 수정</code></p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>기존 Quest 1건의 정보를 수정하는 폼 화면. 생성 화면([CEB-BO-SQ-302-CREATE])과 동일한 3섹션 폼을 재사용하되, <strong>진행중 상태일 때 일부 필드 자동 잠금</strong>.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/fanquest/{id}/edit</code> (목표 <code>/sq/quests/{id}/edit</code>)</td></tr>
+<tr><td>Breadcrumb</td><td>홈 / 에피소드 / 팬퀘스트 / Quest 수정</td></tr>
+<tr><td>페이지 제목</td><td>"Quest 수정" + 상태 배지</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-SQ-303] Quest 상세의 [수정하기] 버튼 (임시저장·진행중에서만 노출)</td></tr>
+<tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<ul>
+<li>페이지 제목 "Quest 수정" + 상태 배지 (진행중=에메랄드 / 임시저장=회색)</li>
+<li>우측 액션 2개:</li>
+<li>[취소하기] (빨강) — 변경사항 확인 후 상세 화면으로 복귀</li>
+<li>[수정하기] (인디고) — 검증 통과 시 활성</li>
+</ul>
+<blockquote>
+<p>종료 상태 진입 시: "종료된 Quest는 수정할 수 없습니다. [상세로 돌아가기]" 안내 화면만 노출 (폼 미렌더링)</p>
+</blockquote>
+<h3>2-2. 진행중 상태 배너 (조건부 노출)</h3>
+<p>진행중 Quest 진입 시 상단에 앰버 톤 안내 박스:</p>
+<blockquote>
+<p>진행중 상태에서는 기본 정보(타이틀, 설명, 가이드, 연관 링크)만 수정 가능합니다.</p>
+</blockquote>
+<h3>2-3. 에피소드 사용 현황 배너</h3>
+<p>진행중 Quest 진입 시 본 Quest를 사용 중인 에피소드 정보 표시 (변경 영향도 안내).</p>
+<h3>2-4. 입력 폼 (3섹션, [CEB-BO-SQ-302-CREATE] §2-2와 동일 구조)</h3>
+<table>
+<tr><th>섹션</th><th>임시저장 수정 가능</th><th>진행중 수정 가능</th></tr>
+<tr><td>A. 기본 정보 — 타이틀·설명·유저 가이드 (다국어)</td><td>✅</td><td>✅</td></tr>
+<tr><td>A. 기본 정보 — 대표 이미지</td><td>✅</td><td>❌ (잠금)</td></tr>
+<tr><td>B. 퀘스트 설정 — 아티스트·타입</td><td>✅</td><td>❌ (잠금)</td></tr>
+<tr><td>B. 퀘스트 설정 — 참여 방식·반복 주기·기간</td><td>✅</td><td>❌ (잠금)</td></tr>
+<tr><td>B. 퀘스트 설정 — 연관 링크</td><td>✅</td><td>✅</td></tr>
+<tr><td>C. 보상 설정</td><td>✅</td><td>❌ (잠금)</td></tr>
+</table>
+<blockquote>
+<p>진행중 잠금 필드는 시각적으로 비활성 처리 + opacity 50% + 커서 not-allowed.</p>
+</blockquote>
+<h2>3. 화면에 노출되는 정보 / 입력되는 정보</h2>
+<table>
+<tr><th>영역</th><th>정보</th><th>의미</th></tr>
+<tr><td>헤더</td><td>페이지 제목·상태 배지·취소·수정 버튼</td><td>화면 식별 + 액션</td></tr>
+<tr><td>진행중 배너</td><td>수정 제한 안내 (조건부)</td><td>운영자 영향도 안내</td></tr>
+<tr><td>에피소드 사용 현황</td><td>본 Quest 사용 미션 목록</td><td>수정 영향 범위</td></tr>
+<tr><td>A 기본 정보</td><td>타이틀·설명·가이드·이미지</td><td>회원 노출 콘텐츠 (가이드 500자)</td></tr>
+<tr><td>B 퀘스트 설정</td><td>아티스트·타입·참여 방식·기간·링크</td><td>운영 메타</td></tr>
+<tr><td>C 보상 설정</td><td>응모권·덕력·NFT</td><td>회원 보상</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>Quest 상태</th><th>동작</th></tr>
+<tr><td>임시저장</td><td>모든 필드 수정 가능. 검증 통과 시 [수정하기] 활성</td></tr>
+<tr><td>진행중</td><td>기본 정보 4종(타이틀·설명·가이드·연관 링크)만 수정 가능. 다국어 KO/EN/JA 모두 입력 + 이미지 존재 검증만 필요</td></tr>
+<tr><td>종료</td><td>안내 화면만 노출, 폼 미렌더링</td></tr>
+<tr><td>[취소하기] / ← 뒤로가기</td><td>[CEB-BO-SQ-303-MD-CANCEL] Quest 수정 취소 모달</td></tr>
+<tr><td>[수정하기] 성공</td><td>[CEB-BO-SQ-303-MD-COMPLE] Quest 수정 완료 모달</td></tr>
+<tr><td>권한 없음 진입</td><td>화면 미노출 또는 [수정하기] 비활성</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<h3>5-1. 임시저장 상태 ([수정하기] 활성 조건)</h3>
+<p>[CEB-BO-SQ-302-CREATE] §5와 동일.</p>
+<h3>5-2. 진행중 상태 ([수정하기] 활성 조건)</h3>
+<table>
+<tr><th>항목</th><th>조건</th></tr>
+<tr><td>타이틀·설명·유저 가이드</td><td>한국어/영어/일본어 3개 언어 모두 입력</td></tr>
+<tr><td>대표 이미지</td><td>등록</td></tr>
+</table>
+<blockquote>
+<p>보상·기간·아티스트·타입·참여 방식 검증은 진행중 수정에서 제외 (잠금 필드).</p>
+</blockquote>
+<h3>5-3. 종료 상태</h3>
+<table>
+<tr><th>동작</th><th>내용</th></tr>
+<tr><td>폼 진입 차단</td><td>"종료된 Quest는 수정할 수 없습니다." 안내 화면</td></tr>
+<tr><td>[상세로 돌아가기] 링크</td><td>인디고 텍스트 링크로 [CEB-BO-SQ-303]으로 복귀</td></tr>
+</table>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>액션</th><th>다음 화면</th></tr>
+<tr><td>← 뒤로가기 / [취소하기]</td><td>[CEB-BO-SQ-303-MD-CANCEL] Quest 수정 취소 모달</td></tr>
+<tr><td>취소 모달 [확인]</td><td>[CEB-BO-SQ-303] Quest 상세로 복귀</td></tr>
+<tr><td>[수정하기] 성공</td><td>[CEB-BO-SQ-303-MD-COMPLE] Quest 수정 완료 모달</td></tr>
+<tr><td>완료 모달 [확인]</td><td>[CEB-BO-SQ-303] Quest 상세로 복귀</td></tr>
+<tr><td>영역 가이드 참조</td><td>[CEB-BO-011] 스토리 퀘스트(SQ) 영역 가이드</td></tr>
+<tr><td>외부 영역 (구 명세)</td><td>[CEB-BO-FQ-201-EDIT] (DEPRECATED)</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>FQ 영역에서 SQ 영역으로 신규 이전</strong> — 기존 [CEB-BO-FQ-201-EDIT] v2.0을 SQ 영역 컨텍스트로 신규 작성. 사이드바 "에피소드 > 팬퀘스트" 메뉴 정합. 프로토타입(<code>src/app/fanquest/[id]/edit/page.tsx</code>) 1:1 정합 검증 (진행중 잠금 매트릭스·검증 룰 동일). Page Properties 13필드, 변경 이력 5칸</td></tr>
+</table>
+
+</body>
+</html>

@@ -10,7 +10,7 @@
 | 개발담당자 |  |
 | 기능영역(Epic) | SQ — 스토리 퀘스트(에피소드) |
 | 상태 | Draft |
-| 버전 | v3.0 |
+| 버전 | v3.1 |
 | 최근 업데이트 | 2026.05.20 |
 | API |  |
 | 피그마 링크 |  |
@@ -20,7 +20,7 @@
 
 ---
 
-> 작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: **v3.0** (한국어 도메인 용어 전면 재작성 — 코드 식별자·ERD 인터페이스 표 제거. 미션 수정 경로 정정 — v2.2 이후 미션 수정은 [CEB-BO-SQ-204] 상세 화면에서 진행)
+> 작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: **v3.1** (팬퀘스트 Quest 17개 화면 SQ 영역 흡수 — §2 화면 ID 매핑·§9 v1↔v2 매핑에 SQ-302~SQ-501 행 추가)
 > 본 문서는 SQ 영역의 모든 데이터 계층·상태 머신·정책·운영 플로우를 통합 정의한다. 화면별 UI 명세는 각 화면 ID 문서 참조.
 
 ## 1. 영역 개요
@@ -48,7 +48,17 @@
 | /sq/{id}/quests/create | 미션 추가 | [CEB-BO-SQ-204-CREATE] |
 | /sq/{id}/quests/{qid} | 미션 상세 (수정 진입점 포함) | [CEB-BO-SQ-204] |
 | /sq/pending | 팬퀘스트 대기내역 | [CEB-BO-SQ-301] |
-| /sq/quests | (외부) 팬퀘스트 Quest 리스트 (v1.1 메뉴 이전) | [CEB-BO-FQ-101] |
+| /sq/quests | 팬퀘스트 리스트 (v3.1 SQ 영역 흡수, 구 FQ-101) | [CEB-BO-SQ-302] |
+| /sq/quests/create | Quest 생성 (구 FQ-101-CREATE) | [CEB-BO-SQ-302-CREATE] |
+| (모달) | Quest 생성 취소·완료 (구 FQ-101-MD-CANCEL/COMPLE) | [CEB-BO-SQ-302-MD-CANCEL] · [CEB-BO-SQ-302-MD-COMPLE] |
+| /sq/quests/{id} (info) | Quest 상세 (기본정보 탭, 구 FQ-201) | [CEB-BO-SQ-303] |
+| /sq/quests/{id}/edit | Quest 수정 (구 FQ-201-EDIT) | [CEB-BO-SQ-303-EDIT] |
+| (모달) | Quest 게시·종료·삭제·수정 취소·완료 (구 FQ-201-MD-OPEN/CLOSE/DELETE/CANCEL/COMPLE) | [CEB-BO-SQ-303-MD-OPEN] · [CEB-BO-SQ-303-MD-CLOSE] · [CEB-BO-SQ-303-MD-DELETE] · [CEB-BO-SQ-303-MD-CANCEL] · [CEB-BO-SQ-303-MD-COMPLE] |
+| /sq/quests/{id} (pending) | Quest 상세 (대기내역 탭, 구 FQ-202) | [CEB-BO-SQ-304] |
+| (모달) | 제출 반려 (구 FQ-202-MD-REJECT) | [CEB-BO-SQ-304-MD-REJECT] |
+| /sq/quests/{id} (history) | Quest 상세 (처리내역 탭, 구 FQ-203) | [CEB-BO-SQ-305] |
+| /sq/reject-reasons | 반려사유 설정 (구 FQ-101-REJETSET) | [CEB-BO-SQ-501] |
+| (모달) | 반려사유 추가·수정 (구 FQ-101-MD-ADD/EDIT) | [CEB-BO-SQ-501-MD-ADD] · [CEB-BO-SQ-501-MD-EDIT] |
 
 ### 2-2. 폐지된 화면 (이력 보존)
 
@@ -356,7 +366,8 @@
 
 | 버전 | 일자 | 작성자 | 변경 |
 |---|---|---|---|
-| **v3.0** | **2026-05-20** | **@Nill Yoo** | **한국어 도메인 용어 전면 재작성 + 미션 수정 경로 정정** — ① Page Properties 13필드 신설 ② §3 ER 다이어그램(EpisodeGroup·StoryQuest·StoryEpisode 영문 인터페이스 + 영문 필드명) **전면 폐기** → §3 운영 계층 요약으로 재작성 (한국어 도메인 용어, 정책 상수 한국어 표) ③ §4 상태 머신 enum DRAFT/ACTIVE/CLOSED → 임시저장/진행중/종료 한국어 ④ §5 정책에서 코드 함수 호출(`hasActiveGroupForArtist()`)·테이블명·코드 식별자 모두 한국어 운영 동작 설명으로 치환 ⑤ §6-6 미션 수정 플로우 정정 — v2.2에서 미션 수정 모달이 폐기되고 미션 상세 화면([CEB-BO-SQ-204])에서 진입하므로 잘못된 모달 ID 참조 제거 ⑥ §7 팬퀘스트 연동 표에서 API/헬퍼 코드 식별자 제거 → 운영 동작 설명으로 치환 ⑦ §8 검증 케이스 한국어 ⑧ §9 v1↔v2 매핑 표 정합 갱신 (SQ-204, SQ-204-CREATE 신규 행 추가, 폐지된 화면 명시) ⑨ §1 권한 OPERATOR/EXTERNAL_ARTIST/READ_ONLY 구 enum 제거 → [관리자 > 권한관리] 참조 |
+| **v3.1** | **2026-05-20** | **@Nill Yoo** | **팬퀘스트(Quest) 17개 화면 SQ 영역 흡수** — ① §2-1 활성 화면 매핑에 SQ-302·302-CREATE·302-MD-CANCEL/COMPLE·303·303-EDIT·303-MD-OPEN/CLOSE/DELETE/CANCEL/COMPLE·304·304-MD-REJECT·305·501·501-MD-ADD/EDIT 17개 신규 추가 ② 외부 영역 (외부) 팬퀘스트 Quest 리스트 행 제거 ③ 프로토타입(`src/app/sq/quests/page.tsx` + `src/app/fanquest/*`) 1:1 정합 검증 ④ FQ 원본 17개는 DEPRECATED 표기로 이력 보존 |
+| v3.0 | 2026-05-20 | @Nill Yoo | **한국어 도메인 용어 전면 재작성** + 미션 수정 경로 정정** — ① Page Properties 13필드 신설 ② §3 ER 다이어그램(EpisodeGroup·StoryQuest·StoryEpisode 영문 인터페이스 + 영문 필드명) **전면 폐기** → §3 운영 계층 요약으로 재작성 (한국어 도메인 용어, 정책 상수 한국어 표) ③ §4 상태 머신 enum DRAFT/ACTIVE/CLOSED → 임시저장/진행중/종료 한국어 ④ §5 정책에서 코드 함수 호출(`hasActiveGroupForArtist()`)·테이블명·코드 식별자 모두 한국어 운영 동작 설명으로 치환 ⑤ §6-6 미션 수정 플로우 정정 — v2.2에서 미션 수정 모달이 폐기되고 미션 상세 화면([CEB-BO-SQ-204])에서 진입하므로 잘못된 모달 ID 참조 제거 ⑥ §7 팬퀘스트 연동 표에서 API/헬퍼 코드 식별자 제거 → 운영 동작 설명으로 치환 ⑦ §8 검증 케이스 한국어 ⑧ §9 v1↔v2 매핑 표 정합 갱신 (SQ-204, SQ-204-CREATE 신규 행 추가, 폐지된 화면 명시) ⑨ §1 권한 OPERATOR/EXTERNAL_ARTIST/READ_ONLY 구 enum 제거 → [관리자 > 권한관리] 참조 |
 | v2.3 | 2026-05-13 | @Nill Yoo | **사이드바 메뉴 재구성** — 팬퀘스트(Quest) 리스트가 본 영역 하위 /sq/quests로 이전. 래플은 별도 "래플" 그룹으로 분리. §2 화면 ID 매핑에 행 추가 |
 | v2.2 | 2026-05-12 | @Nill Yoo | **완료 조건 계층 폐기** — 미션이 완료 조건 직접 흡수 (4단계 → 3단계). §3 ER 다이어그램 갱신, §5-7 완료 판정 정책으로 통합, §5-8 cascade에서 완료 조건 행 제거. 화면 매핑에서 완료 조건 추가·수정을 폐지 표기 |
 | v2.1 | 2026-05-12 | @Nill Yoo | 용어 통일 — 챕터→미션, 완료 조건 분리. §5-9 미션 순서 변경 정책 신규 |

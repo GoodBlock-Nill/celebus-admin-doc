@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>[CEB-BO-006] Quest(FQ) 영역 가이드</title>
+  <title>[CEB-BO-006] Quest(FQ) 영역 가이드 (Quest 화면 SQ 영역으로 이전됨)</title>
   <style>
     body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -76,9 +76,11 @@ p {
   </style>
 </head>
 <body>
-<h1>[CEB-BO-006] Quest(FQ) 영역 가이드</h1>
+<h1>[CEB-BO-006] Quest(FQ) 영역 가이드 (Quest 화면 SQ 영역으로 이전됨)</h1>
 <blockquote>
-<p>⚠️ <strong>영역 분리 (v1.2, 2026-05-13)</strong> — 본 문서는 v1.1까지 Quest와 Raffle을 함께 다뤘으나, 사이드바 메뉴 재구성으로 <strong>Raffle은 [CEB-BO-012] RFL 독립 영역</strong>(<code>v2/BO/RFL/</code>)으로 이전되었습니다. 본 문서는 이제 <strong>Quest 영역 전용</strong>입니다. Raffle 명세는 [CEB-BO-012] 및 <code>[CEB-BO-RFL-101 ~ 203-MD-NOTE]</code> 참조.</p>
+<p>⚠️ <strong>영역 분리 (v1.2, 2026-05-13)</strong> — 본 문서는 v1.1까지 Quest와 Raffle을 함께 다뤘으나, 사이드바 메뉴 재구성으로 <strong>Raffle은 [CEB-BO-012] RFL 독립 영역</strong>(<code>v2/BO/RFL/</code>)으로 이전되었습니다. Raffle 명세는 [CEB-BO-012] 및 <code>[CEB-BO-RFL-101 ~ 203-MD-NOTE]</code> 참조.</p>
+<p>></p>
+<p>🚫 <strong>Quest 화면 SQ 영역 흡수 (v2.0, 2026-05-20)</strong> — Quest 관련 17개 화면 명세도 SQ 영역으로 이전되었습니다. 최신 명세는 <strong>[CEB-BO-011] 스토리 퀘스트(SQ) 영역 가이드</strong> 및 SQ-302·303·304·305·501 시리즈 참조. 기존 FQ 원본 17개 파일은 DEPRECATED 표기로 본 폴더에 이력 보존. 본 문서는 v1.x 운영 인벤토리 + 분석 리포트 참조 용도로만 유지된다.</p>
 </blockquote>
 <h2>Page Properties</h2>
 <table>
@@ -89,9 +91,9 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BO Quest·Raffle 영역 (FQ)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.2</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.13</td></tr>
-<tr><td>비고</td><td>v1.1 — 사이드바 메뉴 재구성: Quest는 "에피소드" 그룹 하위 페이지(<code>/sq/quests</code>), Raffle은 "래플" 그룹(<code>/raffle</code>)으로 분리. 응모권 그룹 폐기 → "래플" 그룹으로 흡수</td></tr>
+<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>비고</td><td>v2.0 — Quest 17개 화면 SQ 영역으로 흡수. 최신 명세는 [CEB-BO-011] 및 SQ-302/303/304/305/501 시리즈. 본 문서는 v1.x 인벤토리 + 분석 리포트 참조 용도</td></tr>
 </table>
 <hr>
 <h2>1. 개요</h2>
@@ -122,40 +124,63 @@ p {
 <p>⚠️ 기존 <code>/fanquest</code>는 <code>/sq/quests</code>로 자동 redirect 처리되어 북마크 호환성 유지. 상세·수정·생성·반려사유 라우트(<code>/fanquest/[id]</code>, <code>/fanquest/[id]/edit</code>, <code>/fanquest/create</code>, <code>/fanquest/reject-reasons</code>)는 그대로 유지된다.</p>
 </blockquote>
 <hr>
-<h2>2. 화면 목록 (34개)</h2>
+<h2>2. 화면 목록 (Quest 관련 17개는 SQ 영역으로 흡수됨)</h2>
+<h3>2.0 SQ 영역 흡수 매핑 (v2.0, 2026-05-20)</h3>
+<p>Quest 관련 모든 화면(17개) 명세가 SQ 영역으로 이전되었다. FQ 원본 파일은 DEPRECATED 표기로 본 폴더에 이력 보존.</p>
+<table>
+<tr><th>FQ 원본 ID</th><th>신규 SQ ID</th><th>신규 화면명 (최신 명세 위치)</th></tr>
+<tr><td>CEB-BO-FQ-101</td><td><strong>CEB-BO-SQ-302</strong></td><td>팬퀘스트 리스트</td></tr>
+<tr><td>CEB-BO-FQ-101-CREATE</td><td><strong>CEB-BO-SQ-302-CREATE</strong></td><td>Quest 생성</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-CANCEL</td><td><strong>CEB-BO-SQ-302-MD-CANCEL</strong></td><td>Quest 생성 취소 모달</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-COMPLE</td><td><strong>CEB-BO-SQ-302-MD-COMPLE</strong></td><td>Quest 생성 완료 모달</td></tr>
+<tr><td>CEB-BO-FQ-201</td><td><strong>CEB-BO-SQ-303</strong></td><td>Quest 상세 (기본정보 탭)</td></tr>
+<tr><td>CEB-BO-FQ-201-EDIT</td><td><strong>CEB-BO-SQ-303-EDIT</strong></td><td>Quest 수정</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-OPEN</td><td><strong>CEB-BO-SQ-303-MD-OPEN</strong></td><td>Quest 게시 모달</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-CLOSE</td><td><strong>CEB-BO-SQ-303-MD-CLOSE</strong></td><td>Quest 종료 모달</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-DELETE</td><td><strong>CEB-BO-SQ-303-MD-DELETE</strong></td><td>Quest 삭제 모달</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-CANCEL</td><td><strong>CEB-BO-SQ-303-MD-CANCEL</strong></td><td>Quest 수정 취소 모달</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-COMPLE</td><td><strong>CEB-BO-SQ-303-MD-COMPLE</strong></td><td>Quest 수정 완료 모달</td></tr>
+<tr><td>CEB-BO-FQ-202</td><td><strong>CEB-BO-SQ-304</strong></td><td>Quest 상세 (대기내역 탭)</td></tr>
+<tr><td>CEB-BO-FQ-202-MD-REJECT</td><td><strong>CEB-BO-SQ-304-MD-REJECT</strong></td><td>제출 반려 모달</td></tr>
+<tr><td>CEB-BO-FQ-203</td><td><strong>CEB-BO-SQ-305</strong></td><td>Quest 상세 (처리내역 탭)</td></tr>
+<tr><td>CEB-BO-FQ-101-REJETSET</td><td><strong>CEB-BO-SQ-501</strong></td><td>반려사유 설정</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-ADD</td><td><strong>CEB-BO-SQ-501-MD-ADD</strong></td><td>반려사유 추가 모달</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-EDIT</td><td><strong>CEB-BO-SQ-501-MD-EDIT</strong></td><td>반려사유 수정 모달</td></tr>
+</table>
+<p>이하 §2.1~§2.4의 인벤토리는 v1.x 운영 시점 참조용이며, <strong>최신 명세는 위 매핑 표의 SQ ID 문서를 참조</strong>할 것.</p>
 <h3>2.1 메인 진입 (2 · v1.1부터 독립 페이지)</h3>
 <table>
 <tr><th>화면ID</th><th>화면명</th><th>라우트</th><th>유형</th><th>v1 흡수 / v2 신규</th><th>마이그레이션 상태</th></tr>
-<tr><td>CEB-BO-FQ-101</td><td>팬퀘스트 (Quest 리스트)</td><td><code>/sq/quests</code></td><td>Page</td><td>v1 흡수 + v2 정책 호환</td><td>✅ v1.1</td></tr>
+<tr><td>CEB-BO-FQ-101</td><td>팬퀘스트 (Quest 리스트)</td><td><code>/sq/quests</code></td><td>Page</td><td>→ [CEB-BO-SQ-302]</td><td>🚫 DEPRECATED (SQ-302로 이전)</td></tr>
 <tr><td>CEB-BO-FQ-102</td><td>래플 (Raffle 리스트)</td><td><code>/raffle</code></td><td>Page</td><td>v1 흡수 + v2 정책 호환</td><td>✅ v1.1 (스텁)</td></tr>
 </table>
-<h3>2.2 Quest 생성·생성 모달 (5)</h3>
+<h3>2.2 Quest 생성·생성 모달 (5) — DEPRECATED (SQ 영역으로 이전)</h3>
 <table>
 <tr><th>화면ID</th><th>화면명</th><th>유형</th><th>마이그레이션 상태</th></tr>
-<tr><td>CEB-BO-FQ-101-CREATE</td><td>Quest 생성</td><td>Page</td><td>후속</td></tr>
-<tr><td>CEB-BO-FQ-101-MD-CANCEL</td><td>Quest 생성 취소</td><td>Modal</td><td>후속</td></tr>
-<tr><td>CEB-BO-FQ-101-MD-COMPLE</td><td>Quest 생성 완료</td><td>Modal</td><td>후속</td></tr>
-<tr><td>CEB-BO-FQ-101-MD-ADD</td><td>반려사유 추가</td><td>Modal</td><td>후속</td></tr>
-<tr><td>CEB-BO-FQ-101-MD-EDIT</td><td>반려사유 수정</td><td>Modal</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-101-CREATE</td><td>Quest 생성</td><td>Page</td><td>🚫 → [CEB-BO-SQ-302-CREATE]</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-CANCEL</td><td>Quest 생성 취소</td><td>Modal</td><td>🚫 → [CEB-BO-SQ-302-MD-CANCEL]</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-COMPLE</td><td>Quest 생성 완료</td><td>Modal</td><td>🚫 → [CEB-BO-SQ-302-MD-COMPLE]</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-ADD</td><td>반려사유 추가</td><td>Modal</td><td>🚫 → [CEB-BO-SQ-501-MD-ADD]</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-EDIT</td><td>반려사유 수정</td><td>Modal</td><td>🚫 → [CEB-BO-SQ-501-MD-EDIT]</td></tr>
 </table>
-<h3>2.3 Quest 상세·수정·검수 (8)</h3>
+<h3>2.3 Quest 상세·수정·검수 (8) — DEPRECATED (SQ 영역으로 이전)</h3>
 <table>
 <tr><th>화면ID</th><th>화면명</th><th>유형</th><th>마이그레이션 상태</th></tr>
-<tr><td>CEB-BO-FQ-201</td><td>Quest 상세 (기본정보 탭)</td><td>Page</td><td>후속</td></tr>
-<tr><td>CEB-BO-FQ-202</td><td>Quest 상세 (대기내역 탭)</td><td>Page</td><td>후속</td></tr>
-<tr><td>CEB-BO-FQ-203</td><td>Quest 상세 (처리내역 탭)</td><td>Page</td><td>후속</td></tr>
-<tr><td>CEB-BO-FQ-201-EDIT</td><td>Quest 수정</td><td>Page</td><td>후속</td></tr>
-<tr><td>CEB-BO-FQ-201-MD-OPEN</td><td>Quest 게시</td><td>Modal</td><td>후속</td></tr>
-<tr><td>CEB-BO-FQ-201-MD-CLOSE</td><td>Quest 종료</td><td>Modal</td><td>후속</td></tr>
-<tr><td>CEB-BO-FQ-201-MD-DELETE</td><td>Quest 삭제</td><td>Modal</td><td>후속</td></tr>
-<tr><td>CEB-BO-FQ-202-MD-REJECT</td><td>Quest 반려사유</td><td>Modal</td><td>후속</td></tr>
+<tr><td>CEB-BO-FQ-201</td><td>Quest 상세 (기본정보 탭)</td><td>Page</td><td>🚫 → [CEB-BO-SQ-303]</td></tr>
+<tr><td>CEB-BO-FQ-202</td><td>Quest 상세 (대기내역 탭)</td><td>Page</td><td>🚫 → [CEB-BO-SQ-304]</td></tr>
+<tr><td>CEB-BO-FQ-203</td><td>Quest 상세 (처리내역 탭)</td><td>Page</td><td>🚫 → [CEB-BO-SQ-305]</td></tr>
+<tr><td>CEB-BO-FQ-201-EDIT</td><td>Quest 수정</td><td>Page</td><td>🚫 → [CEB-BO-SQ-303-EDIT]</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-OPEN</td><td>Quest 게시</td><td>Modal</td><td>🚫 → [CEB-BO-SQ-303-MD-OPEN]</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-CLOSE</td><td>Quest 종료</td><td>Modal</td><td>🚫 → [CEB-BO-SQ-303-MD-CLOSE]</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-DELETE</td><td>Quest 삭제</td><td>Modal</td><td>🚫 → [CEB-BO-SQ-303-MD-DELETE]</td></tr>
+<tr><td>CEB-BO-FQ-202-MD-REJECT</td><td>Quest 반려사유</td><td>Modal</td><td>🚫 → [CEB-BO-SQ-304-MD-REJECT]</td></tr>
 </table>
-<h3>2.4 Quest 부속 모달 (3)</h3>
+<h3>2.4 Quest 부속 모달 (3) — DEPRECATED (SQ 영역으로 이전)</h3>
 <table>
-<tr><th>화면ID</th><th>화면명</th><th>유형</th></tr>
-<tr><td>CEB-BO-FQ-201-MD-CANCEL</td><td>Quest 수정 취소</td><td>Modal</td></tr>
-<tr><td>CEB-BO-FQ-201-MD-COMPLE</td><td>Quest 수정 완료</td><td>Modal</td></tr>
-<tr><td>CEB-BO-FQ-101-REJETSET</td><td>반려사유 설정</td><td>Page</td></tr>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th><th>마이그레이션 상태</th></tr>
+<tr><td>CEB-BO-FQ-201-MD-CANCEL</td><td>Quest 수정 취소</td><td>Modal</td><td>🚫 → [CEB-BO-SQ-303-MD-CANCEL]</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-COMPLE</td><td>Quest 수정 완료</td><td>Modal</td><td>🚫 → [CEB-BO-SQ-303-MD-COMPLE]</td></tr>
+<tr><td>CEB-BO-FQ-101-REJETSET</td><td>반려사유 설정</td><td>Page</td><td>🚫 → [CEB-BO-SQ-501]</td></tr>
 </table>
 <h3>2.5 Raffle 생성·생성 모달 (3)</h3>
 <table>
@@ -434,7 +459,8 @@ winners = shuffled[0:winnerCount]
 <h2>10. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
-<tr><td><strong>v1.2</strong></td><td><strong>2026.05.13</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>영역 분리</strong> — 본 문서는 Quest 전용으로 축소. Raffle 명세 13개 화면은 모두 <strong>[CEB-BO-012] RFL 영역</strong>(<code>v2/BO/RFL/</code>)으로 이전, 기존 FQ-102/204/205/206 시리즈는 DEPRECATED 배너 처리. 제목 "Quest·Raffle(FQ)" → "<strong>Quest(FQ)</strong>". §2 화면 인벤토리에서 Raffle 행은 보존하되 DEPRECATED 표기</td></tr>
+<tr><td><strong>v1.3</strong></td><td><strong>2026.05.14</strong></td><td><strong>@Nill Yoo</strong></td><td>§7.6 응모권 변동 유형 9 → 10. ① 덕력 랭킹 보상 신규 (덕력 시즌 정산 시 티어·랭킹 보상으로 자동 발급) ② 정규 발급 출처 5종(퀘스트 보상 / PM·ST 보상 / BIVE 보유혜택 / 덕력 랭킹 보상 / GP로 응모권 구매)과 운영 카테고리 4종(래플 취소 환불 / 운영자 보정 적립 / 만료 소멸 / 운영자 회수)을 분리해서 표기 ③ 일일 미션 응모권 미발급 명시 (덕력 25만 적립)</td></tr>
+<tr><td>v1.2</td><td>2026.05.13</td><td>@Nill Yoo</td><td><strong>영역 분리</strong> — 본 문서는 Quest 전용으로 축소. Raffle 명세 13개 화면은 모두 <strong>[CEB-BO-012] RFL 영역</strong>(<code>v2/BO/RFL/</code>)으로 이전, 기존 FQ-102/204/205/206 시리즈는 DEPRECATED 배너 처리. 제목 "Quest·Raffle(FQ)" → "<strong>Quest(FQ)</strong>". §2 화면 인벤토리에서 Raffle 행은 보존하되 DEPRECATED 표기</td></tr>
 <tr><td>v1.1</td><td>2026.05.13</td><td>@Nill Yoo</td><td><strong>사이드바 메뉴 재구성</strong> — Quest를 "에피소드" 그룹 하위 페이지(<code>/sq/quests</code>)로 이동, Raffle은 신규 "래플" 그룹(<code>/raffle</code>)으로 분리. 응모권 그룹 폐기 → 응모권 현황·변동 내역을 래플 그룹 안으로 흡수. §1A 신규 추가, §2.1 라우트 컬럼 추가. 기존 <code>/fanquest</code> → <code>/sq/quests</code> redirect. 상세/생성/수정 라우트는 그대로 유지</td></tr>
 <tr><td>v1.0</td><td>2026.05.05</td><td>@Nill Yoo</td><td>초안 작성. v1 BO-FQ 34개 화면을 v2 12영역 체계로 흡수하기 위한 영역 가이드. v2 BO-002~005 와 동일 구조 (Page Properties / 화면 목록 / 권한 매트릭스 / 다국어 / 활동 로그 / 영역 고유 정책 / 마이그레이션 매핑 / QA 체크). 영역 고유 정책 6개: Quest 라이프사이클 / Raffle 라이프사이클 / Quest 검수 워크플로우 (BIVE 자동 민팅 연동) / 반려사유 DB / Raffle 추첨 알고리즘 / 응모권 거래 코드. SUPER 추첨 가드레일 (응모권 10K+ 또는 BIVE 100+) 신규 정의. v1 BO-FQ 34개 v2 ID 매핑 명시.</td></tr>
 </table>

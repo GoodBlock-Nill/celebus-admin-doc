@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.0</td></tr>
+<tr><td>버전</td><td>v3.1</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,7 +96,7 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v3.0</strong> (한국어 도메인 용어 전면 재작성 — 코드 식별자·권한 enum 표·데이터 모델 표 제거, RFT/RFL/APP 양식 정합)</p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v3.1</strong> (팬퀘스트 Quest 17개 화면 SQ 영역 흡수 — FQ → SQ 신규 ID 이전, §4 인벤토리 확장)</p>
 <p>본 문서는 사이드바 "에피소드" 그룹 전체를 다룬다. 화면별 상세 명세는 [CEB-BO-SQ-FLOW] 및 각 화면 문서 참조.</p>
 </blockquote>
 <h2>1. 영역 개요</h2>
@@ -117,15 +117,16 @@ p {
 <p>⚠️ <strong>운영 용어 주의</strong>: 사이드바·페이지 제목·본문 모두 "에피소드"로 통일한다. 화면 본문에 영문 인터페이스명("StoryQuest" 등)이나 코드 식별자(<code>fanQuestId</code>·<code>displayOrder</code> 등)를 사용하지 않는다.</p>
 </blockquote>
 <h2>2. 메뉴 구조</h2>
-<p>사이드바 "에피소드" 그룹은 다음 3개 메뉴로 구성된다. (v1.1 메뉴 재구성 — 팬퀘스트 Quest 리스트가 본 영역 하위로 이전, 래플은 별도 그룹으로 분리)</p>
+<p>사이드바 "에피소드" 그룹은 다음 4개 메뉴로 구성된다. (v1.1 메뉴 재구성 — 팬퀘스트 Quest 리스트가 본 영역 하위로 이전, v3.1 — 반려사유 설정도 본 영역으로 흡수)</p>
 <pre><code>에피소드  📖
   ├─ 그룹 리스트          → /sq/groups/list
   ├─ 팬퀘스트 대기내역    → /sq/pending
-  └─ 팬퀘스트            → /sq/quests       (v1.1 신규 — 구 /fanquest Quest 탭에서 이전)
+  ├─ 팬퀘스트            → /sq/quests       (v1.1 신규 — 구 /fanquest Quest 탭에서 이전. v3.1 — SQ-302로 SQ 영역 컨텍스트 명세 신규 작성)
+  └─ 반려사유 설정       → /sq/reject-reasons  (v3.1 신규 흡수 — 구 /fanquest/reject-reasons)
 </code></pre>
 <p>기본 확장 상태로 설정되어 페이지 로드 시 자동 펼침.</p>
 <blockquote>
-<p><strong>팬퀘스트 메뉴 이동(v1.1)</strong>: 팬퀘스트(Quest)는 SQ 미션의 1:1 소스이므로 운영 흐름상 본 영역 안에서 관리한다. 상세·생성·수정 화면은 기존 팬퀘스트(FQ) 영역 명세를 그대로 사용. 래플은 별도 "래플" 그룹으로 분리되었다.</p>
+<p><strong>팬퀘스트 메뉴 이전·흡수(v1.1·v3.1)</strong>: 팬퀘스트(Quest)는 SQ 미션의 1:1 소스이므로 운영 흐름상 본 영역 안에서 관리한다. v3.1부터 Quest 관련 17개 화면 명세도 모두 SQ 영역(SQ-302~SQ-305 + SQ-501·관련 모달)으로 이전됨. 기존 [CEB-BO-FQ-101] 등 FQ 원본은 DEPRECATED 표기로 이력 보존. 래플은 별도 "래플" 그룹으로 분리.</p>
 </blockquote>
 <h2>3. 권한</h2>
 <p>본 영역의 모든 화면·액션 권한은 <strong>[관리자 > 권한관리]에서 설정된 권한을 따른다</strong>. 권한이 없는 운영자가 진입한 경우 해당 화면·버튼은 미노출 또는 비활성 상태로 처리한다. 본 문서에서는 세부 역할 명세를 별도로 두지 않는다.</p>
@@ -146,8 +147,24 @@ p {
 <tr><td>/sq/{id}/quests/create</td><td>미션 추가</td><td>[CEB-BO-SQ-204-CREATE]</td><td>✅ v3.0</td></tr>
 <tr><td>/sq/{id}/quests/{qid}</td><td>미션 상세</td><td>[CEB-BO-SQ-204]</td><td>✅ v3.0</td></tr>
 <tr><td>/sq/pending</td><td>팬퀘스트 대기내역</td><td>[CEB-BO-SQ-301]</td><td>✅ v3.0</td></tr>
-<tr><td>(통합 플로우 문서)</td><td>에피소드 영역 플로우 및 로직</td><td>[CEB-BO-SQ-FLOW]</td><td>✅ v3.0</td></tr>
-<tr><td>/sq/quests</td><td>(외부) 팬퀘스트 Quest 리스트</td><td>[CEB-BO-FQ-101]</td><td>(FQ 영역, 라우트만 본 그룹으로 이전)</td></tr>
+<tr><td>/sq/quests</td><td>팬퀘스트 리스트 (구 FQ-101)</td><td>[CEB-BO-SQ-302]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>/sq/quests/create</td><td>Quest 생성 (구 FQ-101-CREATE)</td><td>[CEB-BO-SQ-302-CREATE]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>(모달)</td><td>Quest 생성 취소 (구 FQ-101-MD-CANCEL)</td><td>[CEB-BO-SQ-302-MD-CANCEL]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>(모달)</td><td>Quest 생성 완료 (구 FQ-101-MD-COMPLE)</td><td>[CEB-BO-SQ-302-MD-COMPLE]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>/sq/quests/{id} (info)</td><td>Quest 상세 (기본정보 탭, 구 FQ-201)</td><td>[CEB-BO-SQ-303]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>/sq/quests/{id}/edit</td><td>Quest 수정 (구 FQ-201-EDIT)</td><td>[CEB-BO-SQ-303-EDIT]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>(모달)</td><td>Quest 게시 (구 FQ-201-MD-OPEN)</td><td>[CEB-BO-SQ-303-MD-OPEN]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>(모달)</td><td>Quest 종료 (구 FQ-201-MD-CLOSE)</td><td>[CEB-BO-SQ-303-MD-CLOSE]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>(모달)</td><td>Quest 삭제 (구 FQ-201-MD-DELETE)</td><td>[CEB-BO-SQ-303-MD-DELETE]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>(모달)</td><td>Quest 수정 취소 (구 FQ-201-MD-CANCEL)</td><td>[CEB-BO-SQ-303-MD-CANCEL]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>(모달)</td><td>Quest 수정 완료 (구 FQ-201-MD-COMPLE)</td><td>[CEB-BO-SQ-303-MD-COMPLE]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>/sq/quests/{id} (pending)</td><td>Quest 상세 (대기내역 탭, 구 FQ-202)</td><td>[CEB-BO-SQ-304]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>(모달)</td><td>제출 반려 (구 FQ-202-MD-REJECT)</td><td>[CEB-BO-SQ-304-MD-REJECT]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>/sq/quests/{id} (history)</td><td>Quest 상세 (처리내역 탭, 구 FQ-203)</td><td>[CEB-BO-SQ-305]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>/sq/reject-reasons</td><td>반려사유 설정 (구 FQ-101-REJETSET)</td><td>[CEB-BO-SQ-501]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>(모달)</td><td>반려사유 추가 (구 FQ-101-MD-ADD)</td><td>[CEB-BO-SQ-501-MD-ADD]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>(모달)</td><td>반려사유 수정 (구 FQ-101-MD-EDIT)</td><td>[CEB-BO-SQ-501-MD-EDIT]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
+<tr><td>(통합 플로우 문서)</td><td>에피소드 영역 플로우 및 로직</td><td>[CEB-BO-SQ-FLOW]</td><td>✅ v3.1</td></tr>
 </table>
 <h3>4-2. 폐지된 화면 (이력 보존)</h3>
 <table>
@@ -232,7 +249,8 @@ p {
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v3.0</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>한국어 도메인 용어 전면 재작성 (RFT/RFL/APP 양식 정합)</strong> — ① Page Properties 13필드 표 신설 (Screen ID·담당자·기능영역·상태·버전·최근 업데이트·Breadcrumb 등) ② §3 권한 enum 표(OPERATOR/EXTERNAL_ARTIST/READ_ONLY) 제거 → "<strong>[관리자 > 권한관리] 설정을 따른다</strong>" 단일화 (메모리 [feedback-permission-dynamic] 정합) ③ §5 데이터 모델 표(영문 인터페이스 EpisodeGroup/StoryQuest/StoryEpisode + 영문 필드명) <strong>전면 폐기</strong> → §5 정책 상수로 재구성. 운영 정책(아티스트당 진행중 1개·메인 5·반복 1·미션 10·다국어 필수·팬퀘스트 1:1 매핑·미션 순서·공통 페이지네이션 등)을 한국어 도메인 용어로 재기술 ④ §6 상태 머신 신설 — 임시저장/진행중/종료 3상태 + 그룹·에피소드·미션 상속 정책 ⑤ §7 외부 영역 연동에서 코드 식별자 모두 한국어 표기 (<code>StoryEpisode.fanQuestId</code> → "미션의 팬퀘스트 매핑(1:1)") ⑥ §8 활동 로그 표 신설 (그룹·에피소드·미션 11종 메시지 형식) ⑦ §4 화면 인벤토리 frozen v2.0 → 실제 현행 v3.0으로 갱신. 활성 13개 / 통합 플로우 1개 / 폐지된 5개 분리 ⑧ §2 메뉴 구조에 사이드바 라벨 명확화</td></tr>
+<tr><td><strong>v3.1</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>팬퀘스트(Quest) 17개 화면 SQ 영역 흡수 (FQ → SQ 신규 ID 이전 + 프로토타입 1:1 정합)</strong> — ① §2 메뉴 구조에 "반려사유 설정" 메뉴 추가 (사이드바 3개 → 4개) ② §4-1 활성 화면 인벤토리에 17개 신규 행 추가 (SQ-302·302-CREATE·302-MD-CANCEL·302-MD-COMPLE·303·303-EDIT·303-MD-OPEN·303-MD-CLOSE·303-MD-DELETE·303-MD-CANCEL·303-MD-COMPLE·304·304-MD-REJECT·305·501·501-MD-ADD·501-MD-EDIT). 외부 영역 (외부) 팬퀘스트 Quest 리스트 행 제거 ③ 기존 FQ 원본 17개([CEB-BO-FQ-101] 등)는 DEPRECATED 표기로 이력 보존 ④ 프로토타입(<code>src/app/sq/quests/page.tsx</code> + <code>src/app/fanquest/*</code>) 1:1 정합 검증</td></tr>
+<tr><td>v3.0</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>한국어 도메인 용어 전면 재작성</strong> (RFT/RFL/APP 양식 정합)<strong> — ① Page Properties 13필드 표 신설 (Screen ID·담당자·기능영역·상태·버전·최근 업데이트·Breadcrumb 등) ② §3 권한 enum 표(OPERATOR/EXTERNAL_ARTIST/READ_ONLY) 제거 → "</strong>[관리자 > 권한관리] 설정을 따른다<strong>" 단일화 (메모리 [feedback-permission-dynamic] 정합) ③ §5 데이터 모델 표(영문 인터페이스 EpisodeGroup/StoryQuest/StoryEpisode + 영문 필드명) </strong>전면 폐기** → §5 정책 상수로 재구성. 운영 정책(아티스트당 진행중 1개·메인 5·반복 1·미션 10·다국어 필수·팬퀘스트 1:1 매핑·미션 순서·공통 페이지네이션 등)을 한국어 도메인 용어로 재기술 ④ §6 상태 머신 신설 — 임시저장/진행중/종료 3상태 + 그룹·에피소드·미션 상속 정책 ⑤ §7 외부 영역 연동에서 코드 식별자 모두 한국어 표기 (<code>StoryEpisode.fanQuestId</code> → "미션의 팬퀘스트 매핑(1:1)") ⑥ §8 활동 로그 표 신설 (그룹·에피소드·미션 11종 메시지 형식) ⑦ §4 화면 인벤토리 frozen v2.0 → 실제 현행 v3.0으로 갱신. 활성 13개 / 통합 플로우 1개 / 폐지된 5개 분리 ⑧ §2 메뉴 구조에 사이드바 라벨 명확화</td></tr>
 <tr><td>v2.3</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>사이드바 메뉴 재구성</strong> — 팬퀘스트(Quest) 리스트가 본 영역 하위 페이지(/sq/quests)로 이전. 래플은 별도 "래플" 그룹으로 분리. 화면 인벤토리에 행 추가, §2 메뉴 트리 갱신</td></tr>
 <tr><td>v2.2</td><td>2026-05-12</td><td>@Nill Yoo</td><td><strong>완료 조건 계층 폐기 — 미션이 완료 판정 직접 흡수</strong> (3계층化). 통계 카드 파스텔 톤. 에피소드 상태 배지 제거 (그룹 상태 상속). 표시 순서 입력란 제거 (↑↓ 전용). 임시저장 그룹 mock 보강</td></tr>
 <tr><td>v2.1</td><td>2026-05-12</td><td>@Nill Yoo</td><td>용어 통일 — 챕터→미션, 완료 조건 분리. 미션 순서 변경 정책 추가</td></tr>
