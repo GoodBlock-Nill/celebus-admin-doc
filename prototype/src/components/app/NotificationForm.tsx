@@ -14,10 +14,8 @@ import {
   type NotiScheduleType,
   type NotiTargetType,
 } from '@/mock/notifications';
-import { BookmarkIcon, BookmarkSquareIcon } from '@heroicons/react/24/outline';
 import DeeplinkPicker from '@/components/shared/DeeplinkPicker';
 import { emptyDeeplink, type Deeplink, type DeeplinkSourceType } from '@/types/deeplink';
-import { TEMPLATES, type NotiTemplate } from '@/mock/notifications';
 
 type Lang = 'ko' | 'en' | 'jp';
 
@@ -97,31 +95,8 @@ export default function NotificationForm({ readOnly = false, initial }: Props) {
 
   const disabled = readOnly;
 
-  const loadTemplate = (t: NotiTemplate) => {
-    setState((s) => ({
-      ...s,
-      titleKo: t.title.ko,
-      titleEn: t.title.en,
-      titleJp: t.title.jp,
-      bodyKo: t.body.ko,
-      bodyEn: t.body.en,
-      bodyJp: t.body.jp,
-      pushShortKo: t.pushShort?.ko ?? '',
-      pushShortEn: t.pushShort?.en ?? '',
-      pushShortJp: t.pushShort?.jp ?? '',
-      channel: t.channel,
-      deeplink: {
-        source: (t.deeplinkSourceType as DeeplinkSourceType | undefined) ?? 'NONE',
-        value: t.deeplinkLabel ?? '',
-      },
-    }));
-  };
-
   return (
     <div className="space-y-6">
-      {/* 재사용 템플릿 (수동 알림 작성 보조) */}
-      {!readOnly && <TemplateBar onLoad={loadTemplate} onSave={() => alert('현재 메시지를 재사용 템플릿으로 저장했습니다. (Mock)')} />}
-
       {/* A. 메시지 다국어 */}
       <Section title="A. 메시지 (다국어)" subtitle="KO/EN/JP 모두 입력 시 발송 가능">
         <LangBlock
@@ -330,59 +305,6 @@ export default function NotificationForm({ readOnly = false, initial }: Props) {
         />
       </Section>
     </div>
-  );
-}
-
-function TemplateBar({ onLoad, onSave }: { onLoad: (t: NotiTemplate) => void; onSave: () => void }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <section className="bg-white border border-dashed border-indigo-200 rounded-xl p-4 flex items-center gap-3 flex-wrap">
-      <BookmarkIcon className="w-5 h-5 text-indigo-500 shrink-0" />
-      <p className="text-xs text-gray-600 mr-2">
-        자주 쓰는 알림이 있다면 재사용 템플릿을 불러오거나 현재 메시지를 저장해 두세요.
-      </p>
-      <div className="flex-1" />
-      <div className="relative">
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="h-9 px-3 text-xs flex items-center gap-1.5 border border-gray-200 bg-white text-gray-700 rounded-lg hover:bg-gray-50"
-        >
-          <BookmarkIcon className="w-3.5 h-3.5" />
-          템플릿 불러오기 ({TEMPLATES.length})
-        </button>
-        {open && (
-          <div className="absolute top-full right-0 mt-1.5 w-72 bg-white border border-gray-200 rounded-lg shadow-lg z-10 max-h-80 overflow-y-auto">
-            {TEMPLATES.length === 0 ? (
-              <p className="px-3 py-4 text-xs text-gray-500 text-center">저장된 템플릿이 없습니다.</p>
-            ) : (
-              TEMPLATES.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => {
-                    onLoad(t);
-                    setOpen(false);
-                  }}
-                  className="w-full text-left px-3 py-2.5 hover:bg-gray-50 border-b border-gray-50 last:border-b-0"
-                >
-                  <p className="text-xs font-medium text-gray-900 truncate">{t.name}</p>
-                  <p className="text-[11px] text-gray-500 truncate">{t.title.ko}</p>
-                </button>
-              ))
-            )}
-          </div>
-        )}
-      </div>
-      <button
-        type="button"
-        onClick={onSave}
-        className="h-9 px-3 text-xs flex items-center gap-1.5 border border-indigo-200 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100"
-      >
-        <BookmarkSquareIcon className="w-3.5 h-3.5" />
-        현재 메시지를 템플릿으로 저장
-      </button>
-    </section>
   );
 }
 
