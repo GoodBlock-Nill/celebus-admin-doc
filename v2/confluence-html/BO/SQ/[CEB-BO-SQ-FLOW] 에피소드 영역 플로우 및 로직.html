@@ -293,7 +293,7 @@ p {
 <li>완료 판정 유형 옵션은 §3-3 매트릭스 참조</li>
 <li>완료 판정 기준값은 "트리비아 N회 정답" 선택 시에만 의미 있음</li>
 <li>소스 참조값은 예측 마켓·서바이벌 트리비아일 때만 사용</li>
-<li>반복 주기는 반복 슬롯의 미션에서만 의미 있음 (월간/주간)</li>
+<li>반복 주기는 반복 에피소드의 PM·ST 미션에서만 의미 있음 (일간 / 주간 / 월간). 팬퀘스트 유형은 팬퀘스트 자체 설정 상속</li>
 <li>기간은 비우면 부모 그룹의 기간을 상속 (개별 오버라이드 가능)</li>
 </ul>
 <h3>5-8. 삭제 정책 (cascade · v2.2)</h3>
@@ -430,7 +430,7 @@ p {
 <h2>10. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v3.2</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드·미션 정책 4건 정합 갱신</strong> — ① §3-2 에피소드 표에 "에피소드 완료 보상" 항목 추가 (메인 전용, 응모권+팬덤 포인트+BIVE) ② §3-3 미션 표에 "반복 여부 (메인/반복 분기)·반복 주기 (일간/주간/월간, PM·ST 한정)·반복 운영 기간 (그룹 기간 내 검증)" 정합 ③ §5-2-1 메인/반복 에피소드 미션 유형 분기 정책 신설 ④ §5-2-2 메인 에피소드 완료 보상 정책 신설 ⑤ §6-5 미션 추가 플로우 갱신 (메인=단일 잠금, 반복=주기·기간 추가 입력 흐름) ⑥ [CEB-BO-011] v3.2 §5 정책 상수 5행 + 화면별 명세(SQ-202-CREATE/EDIT, SQ-202, SQ-204-CREATE, SQ-204) v3.1 정합</td></tr>
+<tr><td><strong>v3.2</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드·미션 정책 4건 정합 갱신 + 정합 정정 보완</strong> — ① §3-2 에피소드 표에 "에피소드 완료 보상" 항목 추가 (메인 전용, 응모권+팬덤 포인트+BIVE) ② §3-3 미션 표에 "반복 여부 (메인/반복 분기)·반복 주기 (일간/주간/월간, PM·ST 한정)·반복 운영 기간 (그룹 기간 내 검증)" 정합 ③ §5-2-1 메인/반복 에피소드 미션 유형 분기 정책 신설 ④ §5-2-2 메인 에피소드 완료 보상 정책 신설 ⑤ §6-5 미션 추가 플로우 갱신 (메인=단일 잠금, 반복=주기·기간 추가 입력 흐름) ⑥ [CEB-BO-011] v3.2 §5 정책 상수 5행 + 화면별 명세(SQ-202-CREATE/EDIT, SQ-202, SQ-204-CREATE, SQ-204) v3.1 정합 ⑦ <strong>정합 보완(같은 날 추가 정정)</strong>: §5-7 반복 주기 옵션 표기 (월간/주간 잔존) → (일간/주간/월간)으로 정정. §11 관련 문서 섹션에 v3.1 흡수 17개 화면 목록 보충</td></tr>
 <tr><td>v3.1</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>팬퀘스트(Quest) 17개 화면 SQ 영역 흡수</strong> — ① §2-1 활성 화면 매핑에 SQ-302·302-CREATE·302-MD-CANCEL/COMPLE·303·303-EDIT·303-MD-OPEN/CLOSE/DELETE/CANCEL/COMPLE·304·304-MD-REJECT·305·501·501-MD-ADD/EDIT 17개 신규 추가 ② 외부 영역 (외부) 팬퀘스트 Quest 리스트 행 제거 ③ 프로토타입(<code>src/app/sq/quests/page.tsx</code> + <code>src/app/fanquest/*</code>) 1:1 정합 검증 ④ FQ 원본 17개는 DEPRECATED 표기로 이력 보존</td></tr>
 <tr><td>v3.0</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>한국어 도메인 용어 전면 재작성</strong> + 미션 수정 경로 정정<strong> — ① Page Properties 13필드 신설 ② §3 ER 다이어그램(EpisodeGroup·StoryQuest·StoryEpisode 영문 인터페이스 + 영문 필드명) </strong>전면 폐기** → §3 운영 계층 요약으로 재작성 (한국어 도메인 용어, 정책 상수 한국어 표) ③ §4 상태 머신 enum DRAFT/ACTIVE/CLOSED → 임시저장/진행중/종료 한국어 ④ §5 정책에서 코드 함수 호출(<code>hasActiveGroupForArtist()</code>)·테이블명·코드 식별자 모두 한국어 운영 동작 설명으로 치환 ⑤ §6-6 미션 수정 플로우 정정 — v2.2에서 미션 수정 모달이 폐기되고 미션 상세 화면([CEB-BO-SQ-204])에서 진입하므로 잘못된 모달 ID 참조 제거 ⑥ §7 팬퀘스트 연동 표에서 API/헬퍼 코드 식별자 제거 → 운영 동작 설명으로 치환 ⑦ §8 검증 케이스 한국어 ⑧ §9 v1↔v2 매핑 표 정합 갱신 (SQ-204, SQ-204-CREATE 신규 행 추가, 폐지된 화면 명시) ⑨ §1 권한 OPERATOR/EXTERNAL_ARTIST/READ_ONLY 구 enum 제거 → [관리자 > 권한관리] 참조</td></tr>
 <tr><td>v2.3</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>사이드바 메뉴 재구성</strong> — 팬퀘스트(Quest) 리스트가 본 영역 하위 /sq/quests로 이전. 래플은 별도 "래플" 그룹으로 분리. §2 화면 ID 매핑에 행 추가</td></tr>
@@ -445,6 +445,7 @@ p {
 <li>에피소드 화면: [CEB-BO-SQ-202], [CEB-BO-SQ-202-CREATE], [CEB-BO-SQ-202-EDIT], [CEB-BO-SQ-202-MD-DELETE]</li>
 <li>미션 화면: [CEB-BO-SQ-204], [CEB-BO-SQ-204-CREATE]</li>
 <li>대기내역: [CEB-BO-SQ-301]</li>
+<li>팬퀘스트(Quest) 흡수 화면 (v3.1 신규 17개): [CEB-BO-SQ-302], [CEB-BO-SQ-302-CREATE], [CEB-BO-SQ-302-MD-CANCEL], [CEB-BO-SQ-302-MD-COMPLE], [CEB-BO-SQ-303], [CEB-BO-SQ-303-EDIT], [CEB-BO-SQ-303-MD-OPEN], [CEB-BO-SQ-303-MD-CLOSE], [CEB-BO-SQ-303-MD-DELETE], [CEB-BO-SQ-303-MD-CANCEL], [CEB-BO-SQ-303-MD-COMPLE], [CEB-BO-SQ-304], [CEB-BO-SQ-304-MD-REJECT], [CEB-BO-SQ-305], [CEB-BO-SQ-501], [CEB-BO-SQ-501-MD-ADD], [CEB-BO-SQ-501-MD-EDIT]</li>
 <li>팬퀘스트 연동: [CEB-BO-FQ-FLOW]</li>
 </ul>
 

@@ -111,7 +111,7 @@ p {
 <tr><td>영역 가이드</td><td>본 문서 <code>[CEB-BO-011]</code></td></tr>
 <tr><td>화면 ID 패턴</td><td><code>CEB-BO-SQ-{번호}[-{유형}]</code></td></tr>
 <tr><td>사이드바 메뉴</td><td>좌측 "에피소드" 그룹</td></tr>
-<tr><td>운영 화면 수</td><td>활성 13개 + 통합 플로우 문서 1개 + 폐지된 5개</td></tr>
+<tr><td>운영 화면 수</td><td>활성 30개 + 통합 플로우 문서 1개 + 폐지된 7개</td></tr>
 </table>
 <blockquote>
 <p>⚠️ <strong>운영 용어 주의</strong>: 사이드바·페이지 제목·본문 모두 "에피소드"로 통일한다. 화면 본문에 영문 인터페이스명("StoryQuest" 등)이나 코드 식별자(<code>fanQuestId</code>·<code>displayOrder</code> 등)를 사용하지 않는다.</p>
@@ -131,7 +131,7 @@ p {
 <h2>3. 권한</h2>
 <p>본 영역의 모든 화면·액션 권한은 <strong>[관리자 > 권한관리]에서 설정된 권한을 따른다</strong>. 권한이 없는 운영자가 진입한 경우 해당 화면·버튼은 미노출 또는 비활성 상태로 처리한다. 본 문서에서는 세부 역할 명세를 별도로 두지 않는다.</p>
 <h2>4. 화면 인벤토리</h2>
-<p>본 영역은 <strong>활성 화면 13개 + 통합 플로우 문서 1개 + 폐지된 5개</strong>로 구성된다. 인벤토리 버전은 본 영역 가이드 v3.0 시점의 실제 화면 명세 버전을 반영한다.</p>
+<p>본 영역은 <strong>활성 화면 30개 + 통합 플로우 문서 1개 + 폐지된 7개</strong>로 구성된다 (v3.1 흡수 17개 포함). 인벤토리 버전은 본 영역 가이드 v3.2 시점의 실제 화면 명세 버전을 반영한다.</p>
 <h3>4-1. 활성 화면</h3>
 <table>
 <tr><th>라우트</th><th>화면명</th><th>문서 ID</th><th>상태</th></tr>
@@ -140,12 +140,12 @@ p {
 <tr><td>/sq/groups/{gid}</td><td>에피소드 그룹 상세</td><td>[CEB-BO-SQ-201]</td><td>✅ v3.0</td></tr>
 <tr><td>/sq/groups/{gid}/edit</td><td>에피소드 그룹 수정</td><td>[CEB-BO-SQ-201-EDIT]</td><td>✅ v3.0</td></tr>
 <tr><td>(모달)</td><td>에피소드 그룹 삭제</td><td>[CEB-BO-SQ-201-MD-DELETE]</td><td>✅ v3.0</td></tr>
-<tr><td>/sq/create</td><td>에피소드 생성</td><td>[CEB-BO-SQ-202-CREATE]</td><td>✅ v3.0</td></tr>
-<tr><td>/sq/{id}</td><td>에피소드 상세</td><td>[CEB-BO-SQ-202]</td><td>✅ v3.0</td></tr>
-<tr><td>/sq/{id}/edit</td><td>에피소드 수정</td><td>[CEB-BO-SQ-202-EDIT]</td><td>✅ v3.0</td></tr>
+<tr><td>/sq/create</td><td>에피소드 생성</td><td>[CEB-BO-SQ-202-CREATE]</td><td>✅ v3.1</td></tr>
+<tr><td>/sq/{id}</td><td>에피소드 상세</td><td>[CEB-BO-SQ-202]</td><td>✅ v3.1</td></tr>
+<tr><td>/sq/{id}/edit</td><td>에피소드 수정</td><td>[CEB-BO-SQ-202-EDIT]</td><td>✅ v3.1</td></tr>
 <tr><td>(모달)</td><td>에피소드 삭제</td><td>[CEB-BO-SQ-202-MD-DELETE]</td><td>✅ v3.0</td></tr>
-<tr><td>/sq/{id}/quests/create</td><td>미션 추가</td><td>[CEB-BO-SQ-204-CREATE]</td><td>✅ v3.0</td></tr>
-<tr><td>/sq/{id}/quests/{qid}</td><td>미션 상세</td><td>[CEB-BO-SQ-204]</td><td>✅ v3.0</td></tr>
+<tr><td>/sq/{id}/quests/create</td><td>미션 추가</td><td>[CEB-BO-SQ-204-CREATE]</td><td>✅ v3.1</td></tr>
+<tr><td>/sq/{id}/quests/{qid}</td><td>미션 상세</td><td>[CEB-BO-SQ-204]</td><td>✅ v3.1</td></tr>
 <tr><td>/sq/pending</td><td>팬퀘스트 대기내역</td><td>[CEB-BO-SQ-301]</td><td>✅ v3.0</td></tr>
 <tr><td>/sq/quests</td><td>팬퀘스트 리스트 (구 FQ-101)</td><td>[CEB-BO-SQ-302]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
 <tr><td>/sq/quests/create</td><td>Quest 생성 (구 FQ-101-CREATE)</td><td>[CEB-BO-SQ-302-CREATE]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
@@ -164,7 +164,7 @@ p {
 <tr><td>/sq/reject-reasons</td><td>반려사유 설정 (구 FQ-101-REJETSET)</td><td>[CEB-BO-SQ-501]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
 <tr><td>(모달)</td><td>반려사유 추가 (구 FQ-101-MD-ADD)</td><td>[CEB-BO-SQ-501-MD-ADD]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
 <tr><td>(모달)</td><td>반려사유 수정 (구 FQ-101-MD-EDIT)</td><td>[CEB-BO-SQ-501-MD-EDIT]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
-<tr><td>(통합 플로우 문서)</td><td>에피소드 영역 플로우 및 로직</td><td>[CEB-BO-SQ-FLOW]</td><td>✅ v3.1</td></tr>
+<tr><td>(통합 플로우 문서)</td><td>에피소드 영역 플로우 및 로직</td><td>[CEB-BO-SQ-FLOW]</td><td>✅ v3.2</td></tr>
 </table>
 <h3>4-2. 폐지된 화면 (이력 보존)</h3>
 <table>
@@ -247,14 +247,14 @@ p {
 <tr><td>에피소드 생성</td><td>그룹 '{그룹명}'에 에피소드 '{타이틀}'을(를) 추가했습니다. (유형: {메인/반복})</td></tr>
 <tr><td>에피소드 수정</td><td>에피소드 '{타이틀}'의 정보를 수정했습니다. (변경 항목: {필드 목록})</td></tr>
 <tr><td>에피소드 삭제</td><td>에피소드 '{타이틀}'을(를) 삭제했습니다. (하위 미션 {N}건 동시 삭제, 팬퀘스트 매핑 자동 해제)</td></tr>
-<tr><td>미션 추가</td><td>에피소드 '{에피소드명}'에 미션 '{타이틀}'을(를) 추가했습니다. (유형: {팬퀘스트/예측마켓/서바이벌트리비아})</td></tr>
+<tr><td>미션 추가</td><td>에피소드 '{에피소드명}'에 미션 '{타이틀}'을(를) 추가했습니다. (유형: {팬퀘스트/예측마켓/서바이벌트리비아}, 반복: {단일/반복}, 반복 주기: {일간/주간/월간/—})</td></tr>
 <tr><td>미션 수정</td><td>미션 '{타이틀}'의 정보를 수정했습니다. (변경 항목: {필드 목록})</td></tr>
 <tr><td>미션 순서 변경</td><td>에피소드 '{에피소드명}'의 미션 순서를 변경했습니다. ('{타이틀}' {기존 순서} → {신규 순서})</td></tr>
 </table>
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v3.2</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드·미션 정책 4건 갱신</strong> — ① 메인 에피소드 완료 보상 정책 신설 (에피소드 안 모든 미션 완료 시 자동 지급. 응모권 + 팬덤 포인트 + BIVE 구조) ② 메인 에피소드 미션 유형 제한 — <strong>단일 미션만</strong> 추가 가능 ③ 반복 에피소드 미션 유형 — 단일·반복 모두 가능 (팬퀘스트는 반복 종류만) ④ PM·ST 반복 미션 반복 주기·기간 설정 신설 — 반복 ON일 때 일간/주간/월간 3종 + 시작·종료일 자유 입력 (그룹 기간 안에서만 허용). 팬퀘스트 유형은 팬퀘스트 자체 설정 상속. §5 정책 상수 5행 추가, §9 변경 이력 v3.2</td></tr>
+<tr><td><strong>v3.2</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드·미션 정책 4건 갱신 + 정합 정정 보완</strong> — ① 메인 에피소드 완료 보상 정책 신설 (에피소드 안 모든 미션 완료 시 자동 지급. 응모권 + 팬덤 포인트 + BIVE 구조) ② 메인 에피소드 미션 유형 제한 — <strong>단일 미션만</strong> 추가 가능 ③ 반복 에피소드 미션 유형 — 단일·반복 모두 가능 (팬퀘스트는 반복 종류만) ④ PM·ST 반복 미션 반복 주기·기간 설정 신설 — 반복 ON일 때 일간/주간/월간 3종 + 시작·종료일 자유 입력 (그룹 기간 안에서만 허용). 팬퀘스트 유형은 팬퀘스트 자체 설정 상속. §5 정책 상수 5행 추가 ⑤ <strong>정합 보완(같은 날 추가 정정)</strong>: §1·§4 헤더 인벤토리 카운트를 활성 30개·폐지 7개로 정정(v3.1 흡수 17개 본문 반영 후 카운트 누락분 보완). §4-1 인벤토리 버전 표기를 실제 화면 명세 버전으로 갱신(SQ-FLOW v3.2, SQ-202·SQ-202-CREATE·SQ-202-EDIT·SQ-204·SQ-204-CREATE v3.1). §8 활동 로그 "미션 추가" 메시지에 "반복(단일/반복)" + "반복 주기" 필드 추가. §10 관련 문서 섹션에 v3.1 흡수 17개 화면 목록 보충</td></tr>
 <tr><td>v3.1</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>팬퀘스트(Quest) 17개 화면 SQ 영역 흡수 (FQ → SQ 신규 ID 이전 + 프로토타입 1:1 정합)</strong> — ① §2 메뉴 구조에 "반려사유 설정" 메뉴 추가 (사이드바 3개 → 4개) ② §4-1 활성 화면 인벤토리에 17개 신규 행 추가 (SQ-302·302-CREATE·302-MD-CANCEL·302-MD-COMPLE·303·303-EDIT·303-MD-OPEN·303-MD-CLOSE·303-MD-DELETE·303-MD-CANCEL·303-MD-COMPLE·304·304-MD-REJECT·305·501·501-MD-ADD·501-MD-EDIT). 외부 영역 (외부) 팬퀘스트 Quest 리스트 행 제거 ③ 기존 FQ 원본 17개([CEB-BO-FQ-101] 등)는 DEPRECATED 표기로 이력 보존 ④ 프로토타입(<code>src/app/sq/quests/page.tsx</code> + <code>src/app/fanquest/*</code>) 1:1 정합 검증</td></tr>
 <tr><td>v3.0</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>한국어 도메인 용어 전면 재작성</strong> (RFT/RFL/APP 양식 정합)<strong> — ① Page Properties 13필드 표 신설 (Screen ID·담당자·기능영역·상태·버전·최근 업데이트·Breadcrumb 등) ② §3 권한 enum 표(OPERATOR/EXTERNAL_ARTIST/READ_ONLY) 제거 → "</strong>[관리자 > 권한관리] 설정을 따른다<strong>" 단일화 (메모리 [feedback-permission-dynamic] 정합) ③ §5 데이터 모델 표(영문 인터페이스 EpisodeGroup/StoryQuest/StoryEpisode + 영문 필드명) </strong>전면 폐기** → §5 정책 상수로 재구성. 운영 정책(아티스트당 진행중 1개·메인 5·반복 1·미션 10·다국어 필수·팬퀘스트 1:1 매핑·미션 순서·공통 페이지네이션 등)을 한국어 도메인 용어로 재기술 ④ §6 상태 머신 신설 — 임시저장/진행중/종료 3상태 + 그룹·에피소드·미션 상속 정책 ⑤ §7 외부 영역 연동에서 코드 식별자 모두 한국어 표기 (<code>StoryEpisode.fanQuestId</code> → "미션의 팬퀘스트 매핑(1:1)") ⑥ §8 활동 로그 표 신설 (그룹·에피소드·미션 11종 메시지 형식) ⑦ §4 화면 인벤토리 frozen v2.0 → 실제 현행 v3.0으로 갱신. 활성 13개 / 통합 플로우 1개 / 폐지된 5개 분리 ⑧ §2 메뉴 구조에 사이드바 라벨 명확화</td></tr>
 <tr><td>v2.3</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>사이드바 메뉴 재구성</strong> — 팬퀘스트(Quest) 리스트가 본 영역 하위 페이지(/sq/quests)로 이전. 래플은 별도 "래플" 그룹으로 분리. 화면 인벤토리에 행 추가, §2 메뉴 트리 갱신</td></tr>
@@ -270,6 +270,8 @@ p {
 <li>에피소드 화면: [CEB-BO-SQ-202], [CEB-BO-SQ-202-CREATE], [CEB-BO-SQ-202-EDIT], [CEB-BO-SQ-202-MD-DELETE]</li>
 <li>미션 화면: [CEB-BO-SQ-204], [CEB-BO-SQ-204-CREATE]</li>
 <li>대기내역: [CEB-BO-SQ-301]</li>
+<li>팬퀘스트(Quest) 흡수 화면 (v3.1 신규): [CEB-BO-SQ-302], [CEB-BO-SQ-302-CREATE], [CEB-BO-SQ-302-MD-CANCEL], [CEB-BO-SQ-302-MD-COMPLE], [CEB-BO-SQ-303], [CEB-BO-SQ-303-EDIT], [CEB-BO-SQ-303-MD-OPEN], [CEB-BO-SQ-303-MD-CLOSE], [CEB-BO-SQ-303-MD-DELETE], [CEB-BO-SQ-303-MD-CANCEL], [CEB-BO-SQ-303-MD-COMPLE], [CEB-BO-SQ-304], [CEB-BO-SQ-304-MD-REJECT], [CEB-BO-SQ-305]</li>
+<li>반려사유 설정 화면 (v3.1 신규): [CEB-BO-SQ-501], [CEB-BO-SQ-501-MD-ADD], [CEB-BO-SQ-501-MD-EDIT]</li>
 <li>팬퀘스트 영역 (외부 연관): [CEB-BO-006], [CEB-BO-FQ-101], [CEB-BO-FQ-FLOW]</li>
 </ul>
 
