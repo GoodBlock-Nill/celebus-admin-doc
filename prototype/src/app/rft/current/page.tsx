@@ -28,7 +28,8 @@ export default function RftCurrentPage() {
 
   const earnDist = getSourceDistribution();
   const useDist = getUseDistribution();
-  const recent = rftLogs.slice(0, 10);
+  const recentIssued = rftLogs.filter((l) => l.delta > 0).slice(0, 5);
+  const recentUsed = rftLogs.filter((l) => l.delta < 0).slice(0, 5);
 
   const sourceLabelMap = Object.fromEntries(
     sourcePolicies.map((s) => [s.code, s.nameKO]),
@@ -125,53 +126,89 @@ export default function RftCurrentPage() {
         </div>
       </div>
 
-      {/* 최근 변동 (10건) */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <h3 className="text-sm font-semibold text-gray-900">최근 변동</h3>
-          <button
-            onClick={() => router.push('/rft/history')}
-            className="text-sm text-indigo-600 hover:underline"
-          >
-            더 보기 →
-          </button>
+      {/* 최근 변동 — 좌우 분할 (좌: 최근 발급 5건 / 우: 최근 사용 5건) */}
+      <div className="grid grid-cols-2 gap-4">
+        <RecentPanel
+          title="최근 발급"
+          accent="emerald"
+          rows={recentIssued}
+          emptyMessage="발급 이력이 없습니다."
+          onMore={() => router.push('/rft/history?type=ISSUED')}
+          sourceLabelMap={sourceLabelMap}
+        />
+        <RecentPanel
+          title="최근 사용"
+          accent="rose"
+          rows={recentUsed}
+          emptyMessage="사용 이력이 없습니다."
+          onMore={() => router.push('/rft/history?type=USED')}
+          sourceLabelMap={sourceLabelMap}
+        />
+      </div>
+
+    </div>
+  );
+}
+
+function RecentPanel({
+  title,
+  accent,
+  rows,
+  emptyMessage,
+  onMore,
+  sourceLabelMap,
+}: {
+  title: string;
+  accent: 'emerald' | 'rose';
+  rows: RftLog[];
+  emptyMessage: string;
+  onMore: () => void;
+  sourceLabelMap: Record<string, string>;
+}) {
+  const badge = accent === 'emerald' ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700';
+  const deltaColor = accent === 'emerald' ? 'text-emerald-600' : 'text-rose-500';
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+          <span className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium ${badge}`}>5건</span>
         </div>
+        <button onClick={onMore} className="text-sm text-indigo-600 hover:underline">
+          더 보기 →
+        </button>
+      </div>
+      {rows.length === 0 ? (
+        <div className="px-5 py-12 text-center text-sm text-gray-400">{emptyMessage}</div>
+      ) : (
         <SimpleTable<RftLog>
           columns={[
-            { key: 'occurredAt', label: '일시', width: '140px' },
-            { key: 'nickname', label: '회원', width: '160px', render: (r) => (
+            { key: 'occurredAt', label: '일시', width: '130px' },
+            { key: 'nickname', label: '회원', width: '120px', render: (r) => (
               <a
                 href={`/members/${r.memberId}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-900 font-medium hover:text-indigo-600 hover:underline inline-flex items-center gap-1"
+                className="text-gray-900 font-medium hover:text-indigo-600 hover:underline"
                 title="새 탭으로 회원 상세 진입"
               >
                 {r.nickname}
-                <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
               </a>
             )},
-            { key: 'delta', label: '변동', width: '90px', render: (r) => (
-              <span className={r.delta > 0 ? 'text-emerald-600 font-semibold' : 'text-red-500 font-semibold'}>
+            { key: 'delta', label: '변동', width: '80px', align: 'right', render: (r) => (
+              <span className={`${deltaColor} font-semibold`}>
                 {r.delta > 0 ? '+' : ''}{r.delta}장
               </span>
             )},
-            { key: 'sourceFeature', label: '출처', width: '160px', render: (r) => (
-              <span className="text-gray-700">{sourceLabelMap[r.sourceFeature] ?? r.sourceFeature}</span>
-            )},
-            { key: 'sourceArtistContext', label: '아티스트 컨텍스트', width: '140px', render: (r) => (
-              <span className={r.sourceArtistContext ? 'inline-flex rounded-full px-2.5 py-1 text-xs font-medium bg-indigo-50 text-indigo-700' : 'text-gray-400 text-xs'}>
-                {r.sourceArtistContext ?? '전역'}
+            { key: 'sourceFeature', label: '출처', render: (r) => (
+              <span className="text-gray-700 text-xs" title={sourceLabelMap[r.sourceFeature] ?? r.sourceFeature}>
+                {sourceLabelMap[r.sourceFeature] ?? r.sourceFeature}
               </span>
             )},
-            { key: 'sourceRefId', label: '참조', render: (r) => <span className="text-gray-500 text-xs">{r.sourceRefId}</span> },
           ]}
-          rows={recent}
+          rows={rows}
         />
-      </div>
-
+      )}
     </div>
   );
 }

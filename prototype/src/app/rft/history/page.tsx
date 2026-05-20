@@ -10,15 +10,15 @@ import { rftLogs, sourcePolicies, type RftLog, type RftSourceFeature } from '@/m
 
 const PAGE_SIZE = 20;
 
-const STATUS_OPTIONS = [
-  { value: 'all', label: '변동 유형(전체)' },
-  { value: 'ISSUED', label: '발급' },
-  { value: 'USED', label: '사용' },
-] as const;
+type StatusType = 'ISSUED' | 'USED';
+
+function parseStatus(raw: string | null): StatusType {
+  return raw === 'USED' ? 'USED' : 'ISSUED';
+}
 
 function HistoryInner() {
   const search = useSearchParams();
-  const [statusFilter, setStatusFilter] = useState<'all' | 'ISSUED' | 'USED'>('all');
+  const [statusFilter, setStatusFilter] = useState<StatusType>(parseStatus(search.get('type')));
   const [sourceFilter, setSourceFilter] = useState<RftSourceFeature | 'all'>(
     (search.get('source') as RftSourceFeature) ?? 'all',
   );
@@ -33,7 +33,9 @@ function HistoryInner() {
 
   const filtered = useMemo(() => {
     return rftLogs.filter((l) => {
-      if (statusFilter !== 'all' && l.status !== statusFilter) return false;
+      // 운영 카테고리 포함 — 부호 기준으로 자동 분류
+      if (statusFilter === 'ISSUED' && l.delta <= 0) return false;
+      if (statusFilter === 'USED' && l.delta >= 0) return false;
       if (sourceFilter !== 'all' && l.sourceFeature !== sourceFilter) return false;
       if (artistFilter !== 'all') {
         const a = l.sourceArtistContext ?? '전역';
@@ -47,23 +49,33 @@ function HistoryInner() {
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const aggIssued = filtered.filter((l) => l.delta > 0).reduce((s, l) => s + l.delta, 0);
-  const aggUsed = -filtered.filter((l) => l.delta < 0).reduce((s, l) => s + l.delta, 0);
+  const aggTotal = filtered.reduce((s, l) => s + Math.abs(l.delta), 0);
 
   return (
     <div>
       <PageHeader title="응모권 변동 내역" breadcrumbItems={[{ label: '응모권' }, { label: '변동 내역' }]} />
 
       <div className="flex flex-wrap items-center gap-3 mb-4">
-        <div className="relative">
-          <select
-            value={statusFilter}
-            onChange={(e) => { setStatusFilter(e.target.value as 'all' | 'ISSUED' | 'USED'); setPage(1); }}
-            className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[140px]"
-          >
-            {STATUS_OPTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
-          </select>
-          <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+        {/* 변동 유형 필수 선택 (발급/사용 토글) */}
+        <div className="inline-flex items-center bg-white border border-gray-200 rounded-lg p-0.5" role="radiogroup" aria-label="변동 유형">
+          {([
+            { v: 'ISSUED' as const, label: '발급', activeBg: 'bg-emerald-100 text-emerald-700' },
+            { v: 'USED' as const, label: '사용', activeBg: 'bg-rose-100 text-rose-700' },
+          ]).map(({ v, label, activeBg }) => {
+            const active = statusFilter === v;
+            return (
+              <button
+                key={v}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                onClick={() => { setStatusFilter(v); setPage(1); }}
+                className={`h-9 px-4 text-sm rounded-md transition ${active ? `${activeBg} font-semibold` : 'text-gray-600 hover:bg-gray-50'}`}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
         <div className="relative">
           <select
@@ -102,7 +114,7 @@ function HistoryInner() {
         </div>
         <button
           onClick={() => {
-            setStatusFilter('all'); setSourceFilter('all'); setArtistFilter('all'); setKeyword(''); setPage(1);
+            setStatusFilter('ISSUED'); setSourceFilter('all'); setArtistFilter('all'); setKeyword(''); setPage(1);
           }}
           className="h-10 px-4 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800"
         >
@@ -110,23 +122,22 @@ function HistoryInner() {
         </button>
       </div>
 
-      <div className="grid grid-cols-4 gap-3 mb-4">
+      <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="bg-gray-50 rounded-lg p-3">
           <div className="text-xs text-gray-500 mb-1">필터 결과</div>
           <div className="text-lg font-bold text-gray-900">{filtered.length.toLocaleString()}건</div>
         </div>
-        <div className="bg-emerald-50 rounded-lg p-3">
-          <div className="text-xs text-emerald-700 mb-1">발급 합계</div>
-          <div className="text-lg font-bold text-emerald-700">+{aggIssued.toLocaleString()}장</div>
-        </div>
-        <div className="bg-rose-50 rounded-lg p-3">
-          <div className="text-xs text-rose-700 mb-1">사용 합계</div>
-          <div className="text-lg font-bold text-rose-700">-{aggUsed.toLocaleString()}장</div>
-        </div>
-        <div className="bg-indigo-50 rounded-lg p-3">
-          <div className="text-xs text-indigo-700 mb-1">순변동</div>
-          <div className="text-lg font-bold text-indigo-700">{aggIssued - aggUsed >= 0 ? '+' : ''}{(aggIssued - aggUsed).toLocaleString()}장</div>
-        </div>
+        {statusFilter === 'ISSUED' ? (
+          <div className="bg-emerald-50 rounded-lg p-3">
+            <div className="text-xs text-emerald-700 mb-1">발급 합계</div>
+            <div className="text-lg font-bold text-emerald-700">+{aggTotal.toLocaleString()}장</div>
+          </div>
+        ) : (
+          <div className="bg-rose-50 rounded-lg p-3">
+            <div className="text-xs text-rose-700 mb-1">사용 합계</div>
+            <div className="text-lg font-bold text-rose-700">-{aggTotal.toLocaleString()}장</div>
+          </div>
+        )}
       </div>
 
       <SimpleTable<RftLog>
