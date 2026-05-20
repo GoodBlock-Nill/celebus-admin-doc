@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-APP-202] 슬롯 상세</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-APP-202] 슬롯 상세</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-APP-202</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>APP — 앱 운영</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v6.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 앱 > 배너 관리 > {위치} · {아티스트}</td></tr>
+<tr><td>비고</td><td></td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v6.1</strong> (영역 명칭 정합 + 소스 타입 8종 정합 — "앱 배너 관리" 구 명칭, 소스 타입 7종 표기 정정)</p>
+<p>화면 경로: <code>/home/banners/slot/{slotKind}/{artist}</code> · Breadcrumb: <code>홈 › 앱 › 배너 관리 › {위치} · {아티스트}</code></p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>슬롯 1개에 들어있는 배너들을 조회·추가·정렬하는 화면. 위치별 정책(캐러셀 vs 단일)에 따라 UI가 자동 분기된다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/home/banners/slot/{slotKind}/{artist}</code> (artist=GLOBAL 또는 그룹명)</td></tr>
+<tr><td>Breadcrumb</td><td>홈 / 앱 / 배너 관리 / {위치} · {아티스트}</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-APP-101] 배너 관리 Row 클릭</td></tr>
+<tr><td>용도</td><td>슬롯 1개의 배너 인벤토리 관리 (추가·정렬·진입)</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<table>
+<tr><th>요소</th><th>설명</th></tr>
+<tr><td>타이틀</td><td>"{위치명} — {아티스트명}" (예: "메인 — 전역", "다함께 — V01D")</td></tr>
+<tr><td>위치 Badge</td><td>메인 / 오늘의 할일 / 다함께 / 미션</td></tr>
+<tr><td>아티스트 Badge</td><td>"전역" (회색) 또는 그룹명 (인디고)</td></tr>
+<tr><td>정책 Badge</td><td>"캐러셀 · 최대 동시 8개" / "단일 배너 1개 고정"</td></tr>
+<tr><td>[+ 배너 추가]</td><td>항상 활성. 클릭 시 [CEB-BO-APP-201] 신규 작성 진입 (슬롯 컨텍스트 쿼리 전달)</td></tr>
+</table>
+<h3>2-2. 슬롯 상태 안내 띠</h3>
+<p>슬롯 유형 + 노출중/대기 조합 6시나리오.</p>
+<table>
+<tr><th>슬롯 유형</th><th>상황</th><th>안내 텍스트</th></tr>
+<tr><td>캐러셀</td><td>한도 미달</td><td>"노출중 N / 8" + 대기 건수</td></tr>
+<tr><td>캐러셀</td><td>한도 도달</td><td>강조 색 + "한도 도달. 신규 노출 시작 시 기존 1건을 종료해 주세요."</td></tr>
+<tr><td>단일</td><td>비어 있음</td><td>"이 슬롯은 비어 있습니다. [배너 추가]로 등록해 주세요."</td></tr>
+<tr><td>단일</td><td>노출중 1건만</td><td>"노출중 1 / 1"</td></tr>
+<tr><td>단일</td><td>노출중 1건 + 대기 N건</td><td>"노출중 1 / 1 · 대기 N건 · 대기 배너 [노출 시작] 시 기존이 자동 종료됩니다."</td></tr>
+<tr><td>단일</td><td>노출중 0건 + 대기 N건</td><td>"노출중 0 / 1 · 대기 N건" (운영자가 [노출 시작] 필요)</td></tr>
+</table>
+<h3>2-3. 배너 리스트 테이블</h3>
+<p>캐러셀 슬롯과 단일 슬롯의 컬럼 구성이 다르다.</p>
+<h4>캐러셀 슬롯 (메인 / 다함께)</h4>
+<table>
+<tr><th>컬럼</th><th>표시 내용</th></tr>
+<tr><td>정렬 핸들</td><td>드래그로 순서 변경</td></tr>
+<tr><td>순서</td><td>1, 2, 3 …</td></tr>
+<tr><td>상태</td><td>Badge (임시저장 / 노출중 / 노출 종료)</td></tr>
+<tr><td>소스 타입</td><td>Badge (이동 없음·래플·응원하기·퀘스트·BIVE·소식·아티스트 홈·프로모션 8종, [CEB-BO-013] §9-1 정합)</td></tr>
+<tr><td>타이틀 (KO)</td><td>메인 + 서브 타이틀 2줄</td></tr>
+<tr><td>노출 기간</td><td>"무기한" Badge 또는 <code>YYYY.MM.DD HH:mm ~ YYYY.MM.DD HH:mm</code></td></tr>
+<tr><td>최근 수정</td><td>수정 시각 + 수정자</td></tr>
+</table>
+<h4>단일 슬롯 (오늘의 할일 / 미션)</h4>
+<p>캐러셀과 동일 컬럼에서 <strong>정렬 핸들·순서 컬럼만 제거</strong>.</p>
+<p>Row 클릭 → [CEB-BO-APP-201] 배너 상세·작성 진입.</p>
+<h3>2-4. 빈 상태</h3>
+<p>배너 0건일 때: Empty 아이콘 + "등록된 배너가 없습니다." + [+ 첫 배너 추가] CTA.</p>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>헤더</td><td>위치 / 아티스트 / 정책 Badge</td><td>현재 슬롯의 메타</td></tr>
+<tr><td>안내 띠</td><td>노출중·대기 카운트 + 운영 가이드</td><td>슬롯 상태 시나리오별 안내</td></tr>
+<tr><td>테이블</td><td>슬롯 내 배너 N건</td><td>캐러셀은 순서·드래그 / 단일은 순서·드래그 미노출</td></tr>
+<tr><td>[+ 배너 추가]</td><td>항상 활성</td><td>슬롯 컨텍스트 쿼리 prefill 후 신규 폼 진입</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>데이터 로딩 중</td><td>Skeleton 테이블</td></tr>
+<tr><td>배너 0건</td><td>Empty CTA "등록된 배너가 없습니다." + [+ 첫 배너 추가]</td></tr>
+<tr><td>캐러셀 노출중 8개 도달</td><td>안내 띠 강조 색 + 신규 노출 시작 시 차단 토스트</td></tr>
+<tr><td>단일 슬롯 대기 [노출 시작]</td><td>기존 ACTIVE 있으면 confirm 모달 "{기존 배너 제목}이(가) 자동 종료됩니다"</td></tr>
+<tr><td>드래그 정렬 (캐러셀)</td><td>즉시 서버 PATCH + 활동 로그 + 성공 토스트</td></tr>
+<tr><td>정렬 저장 실패</td><td>행 원위치 복귀 + 에러 토스트</td></tr>
+<tr><td>잘못된 (위치, 대상) 조합 URL 직접 접근</td><td>가드 화면: "메인 위치는 전역만 지원합니다." / "오늘의 할일 위치는 아티스트만 지원합니다." + [배너 리스트로] 복귀 버튼</td></tr>
+<tr><td>권한 없음 진입</td><td>[관리자 > 권한관리] 설정에 따라 화면 자체 미노출 또는 [+ 배너 추가]·드래그 비활성</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>슬롯 자체 등록·삭제</td><td><strong>불가</strong>. 슬롯은 시스템 자동 생성 ([CEB-BO-013] §4-3)</td></tr>
+<tr><td>[+ 배너 추가] 활성</td><td>항상 활성 — 캐러셀은 8개 한도와 무관하게 등록 가능, 단일은 DRAFT 다수 등록 가능</td></tr>
+<tr><td>캐러셀 한도 차단</td><td>[노출 시작]에서만 차단. 등록 자체는 무제한</td></tr>
+<tr><td>단일 슬롯 ACTIVE</td><td>항상 1건만. 대기 DRAFT가 [노출 시작] 시 기존 자동 OFF</td></tr>
+<tr><td>드래그 정렬</td><td>캐러셀 슬롯만. 단일은 정렬 개념 없음</td></tr>
+<tr><td>활동 로그</td><td>정렬 변경만 본 화면에서 발생. 등록·수정·노출 ON/OFF·삭제는 [CEB-BO-APP-201]에서</td></tr>
+</table>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>사이드바 "앱 > 배너 관리"</td><td>[CEB-BO-APP-101] 배너 관리</td></tr>
+<tr><td>[+ 배너 추가]</td><td>[CEB-BO-APP-201] 배너 상세·작성 (신규 작성)</td></tr>
+<tr><td>배너 Row 클릭</td><td>[CEB-BO-APP-201] 배너 상세·작성 (조회·수정)</td></tr>
+<tr><td>영역 가이드 참조</td><td>[CEB-BO-013] 앱 운영(APP) 영역 가이드</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v6.1</strong></td><td><strong>2026.05.20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>영역 명칭·소스 타입 정합 정정</strong> — ① Page Properties 기능영역(Epic)·§6 연관 화면을 "<strong>앱 배너 관리</strong>" → "<strong>앱 운영</strong>"으로 정정 ([CEB-BO-013] v7.0 정합 누락) ② §2-3 캐러셀 슬롯 테이블 "소스 타입" 컬럼의 Badge 옵션이 <strong>7종(이동 없음 누락)</strong>으로 잔존해 있던 것을 <strong>8종 (이동 없음 포함)</strong>으로 정정 ([CEB-BO-013] v7.5 §9-1 정합 누락. 표시 전용 배너는 "이동 없음"으로 노출됨)</td></tr>
+<tr><td>v6.0</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>RFT 양식 정합</strong> — ① Page Properties 13필드 확장 ② 상단 한 줄 헤더 추가 ③ 표 구분자 컴팩트(공백 없음) 형태로 통일 ④ 하이픈 형태 헤딩 번호 ⑤ §3 화면에 노출되는 정보 / §4 상태별 동작 분기 / §5 검증 규칙 신설 ⑥ 권한 표 제거 → "[관리자 > 권한관리] 설정에 따라" 단일화 ⑦ 영역 가이드 ID 참조를 [CEB-BO-013]으로 갱신</td></tr>
+<tr><td>v5.0</td><td>2026-05-19</td><td>@Nill Yoo</td><td>운영 도입 공식 발행본</td></tr>
+<tr><td>v4.x</td><td>2026-05-19</td><td>@Nill Yoo</td><td>신규 작성 + 타겟 모드 가드 + 단일 슬롯 DRAFT 다수 등록 (옵션 A)</td></tr>
+</table>
+
+</body>
+</html>

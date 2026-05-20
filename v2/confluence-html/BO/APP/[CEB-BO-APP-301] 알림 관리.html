@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-APP-301] 알림 관리</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-APP-301] 알림 관리</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-APP-301</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>APP — 앱 운영 (알림)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.7</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 앱 > 알림 관리</td></tr>
+<tr><td>비고</td><td></td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v1.7</strong> (재사용 템플릿 개념 자체 폐지 정합 — §2-1·§3·§6 잔존 표현 정정)</p>
+<p>화면 경로: <code>/app/notifications</code> · <code>?tab=manual</code> (기본) · <code>?tab=auto</code> · Breadcrumb: <code>홈 › 앱 › 알림 관리</code></p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>운영자가 회원 앱(PWA)에 발송되는 알림(기본알림 + 푸시알림 Web Push)을 조회·발송·관리하는 인벤토리 화면. <strong>수동 알림(운영자 캠페인)</strong>과 <strong>자동 트리거 알림(시스템 발송 로그)</strong>의 라이프사이클이 본질적으로 다르므로 같은 사이드바 메뉴 하위에서 <strong>2개 탭으로 분리</strong>한다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/app/notifications</code> (탭 쿼리 동기화 — <code>?tab=manual</code> / <code>?tab=auto</code>)</td></tr>
+<tr><td>Breadcrumb</td><td>홈 / 앱 / 알림 관리</td></tr>
+<tr><td>진입 경로</td><td>사이드바 "앱 > 알림 관리"</td></tr>
+<tr><td>용도</td><td>탭 1 수동 알림 캠페인 조회·작성·발송 / 탭 2 자동 트리거 발송 로그 조회</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 공통 헤더 (탭 위)</h3>
+<table>
+<tr><th>요소</th><th>설명</th></tr>
+<tr><td>페이지 제목</td><td>"알림 관리"</td></tr>
+<tr><td>우측 상단 액션</td><td>[+ 새 알림] (<strong>수동 탭에서만</strong> 노출, [CEB-BO-APP-302] 신규 작성 진입). 재사용 템플릿은 [CEB-BO-APP-303] v3.1에서 <strong>개념 자체 폐지</strong> — 운영자는 매번 직접 작성</td></tr>
+</table>
+<h3>2-2. 발송 방식 탭</h3>
+<table>
+<tr><th>탭</th><th>라벨</th><th>카운트 배지</th><th>성격</th></tr>
+<tr><td>수동 알림</td><td>"수동 알림"</td><td>기간 내 수동 알림 N건</td><td>운영자가 캠페인성으로 작성·예약·발송하는 1회 메시지</td></tr>
+<tr><td>자동 트리거</td><td>"자동 트리거"</td><td>기간 내 자동 발송된 N건</td><td>시스템 이벤트로 자동 발송된 로그 (운영자 작성 불가)</td></tr>
+</table>
+<p>탭 전환 시 동작:</p>
+<ul>
+<li>필터 초기화</li>
+<li>URL 쿼리 동기화 (<code>?tab=manual</code> / <code>?tab=auto</code>) — 브라우저 뒤로가기·새 탭 공유 호환</li>
+</ul>
+<h3>2-3. 기간 필터 토글 (탭 공통)</h3>
+<p>5종 토글: 오늘 / 이번 주 / 이번 달 / 올해 / 전체. 탭별 통계 카드 + 인벤토리 집계 범위를 결정한다.</p>
+<h3>2-4. 수동 알림 탭</h3>
+<h4>A. 통계 카드 (4종)</h4>
+<table>
+<tr><th>카드</th><th>의미</th><th>색상</th></tr>
+<tr><td>전체 (수동)</td><td>기간 내 수동 알림 총 개수</td><td>회색</td></tr>
+<tr><td>임시저장</td><td>DRAFT 상태 수동 알림 수</td><td>회색</td></tr>
+<tr><td>예약</td><td>SCHEDULED 상태 수동 알림 수</td><td>인디고</td></tr>
+<tr><td>발송 완료</td><td>SENT 상태 수동 알림 수</td><td>초록</td></tr>
+</table>
+<p>실패/부분 실패 건수가 1건 이상이면 카드 아래 경고 줄로 "⚠ 실패/부분 실패 알림이 {N}건 있습니다. 상태 필터에서 확인해 주세요." 표시.</p>
+<h4>B. 필터 바</h4>
+<table>
+<tr><th>필터</th><th>옵션</th></tr>
+<tr><td>대상</td><td>전체 / 전역 / 아티스트 팬덤(활성 그룹 동적) / 회원 그룹</td></tr>
+<tr><td>채널</td><td>전체 / 기본만 / 기본 + 푸시</td></tr>
+<tr><td>상태</td><td>전체 / 임시저장 / 예약 / 발송중 / 발송 완료 / 부분 실패 / 실패 (수동 6종, [CEB-BO-013] §14-1)</td></tr>
+<tr><td>키워드</td><td>제목 부분 일치 (KO/EN/JP 통합 검색)</td></tr>
+<tr><td>[초기화]</td><td>모든 필터 해제</td></tr>
+</table>
+<h4>C. 테이블 컬럼</h4>
+<table>
+<tr><th>컬럼</th><th>표시 내용</th></tr>
+<tr><td>상태</td><td>Badge 6종</td></tr>
+<tr><td>채널</td><td>"기본" / "기본 + 푸시" Badge</td></tr>
+<tr><td>제목(KO)</td><td>메인 제목 + 본문 1줄 미리보기</td></tr>
+<tr><td>대상</td><td>"전역" / "팬덤 · V01D" / "회원 그룹 · 5명"</td></tr>
+<tr><td>발송 시점</td><td>즉시 발송 시각 / "예약 · YYYY.MM.DD HH:mm" / "—" (임시저장)</td></tr>
+<tr><td>도달 수</td><td>발송 완료 후 도달 회원 수 (중복 제거)</td></tr>
+<tr><td>작성자</td><td>운영자 닉네임</td></tr>
+</table>
+<p>Row 클릭 → [CEB-BO-APP-302] 상세 (편집 가능).</p>
+<h3>2-5. 자동 트리거 탭 — 트리거 정책 카탈로그 (조회 전용)</h3>
+<p>자동 트리거는 시스템 이벤트 발생 시 백엔드가 자동 발송하는 알림으로, <strong>운영자가 신규 등록·메시지 수정·활성 변경을 모두 할 수 없다</strong>. 본 탭은 현재 백엔드에 등록된 트리거 정책 목록을 조회 전용으로 표시한다 ([CEB-BO-013] §12·§14-2 정합).</p>
+<h4>A. 안내 띠</h4>
+<p>상단 보라색 안내: "자동 트리거는 시스템 이벤트 발생 시 시스템이 자동으로 발송하는 알림입니다. <strong>메시지·대상·활성 상태 변경은 개발팀에 별도 요청</strong>해 주세요. 이 화면은 현재 등록된 트리거 정책 목록을 조회만 할 수 있습니다."</p>
+<h4>B. 필터 바 (최소화)</h4>
+<table>
+<tr><th>필터</th><th>옵션</th></tr>
+<tr><td>트리거 카테고리</td><td>전체 / 래플 / 응원·퀘스트 / BIVE / 회원 활동 / 시스템 공지</td></tr>
+<tr><td>활성 상태</td><td>전체 / 사용중 / 미사용</td></tr>
+<tr><td>키워드</td><td>트리거명 부분 일치</td></tr>
+<tr><td>[초기화]</td><td>모든 필터 해제</td></tr>
+</table>
+<p><strong>기간 필터·대상 필터·발송 인스턴스 상태 필터 모두 없음</strong> (피드백 #2·#3·#7 반영).</p>
+<h4>C. 트리거 정책 테이블 (수동 알림 탭과 동일 시각 통일감)</h4>
+<table>
+<tr><th>컬럼</th><th>표시 내용</th></tr>
+<tr><td>활성</td><td>"<strong>사용중</strong>" (초록) 또는 "<strong>미사용</strong>" (회색) 배지. read-only</td></tr>
+<tr><td>카테고리</td><td>트리거 카테고리 배지 — 보라 톤</td></tr>
+<tr><td>채널</td><td>"기본" / "기본 + 푸시" 배지</td></tr>
+<tr><td>트리거</td><td>트리거명 1줄 + 트리거 조건 1줄 미리보기 (호버 시 풀 텍스트 툴팁)</td></tr>
+<tr><td>제목 (KO)</td><td>메시지 제목 1줄 + 본문 1줄 (말줄임)</td></tr>
+<tr><td>최근 발송</td><td>YYYY.MM.DD HH:mm 또는 "—"</td></tr>
+</table>
+<p>Row 클릭 시 <strong>상세 미리보기 모달</strong> 노출 (다국어 메시지·딥링크·트리거 조건 read-only 조회). 자동 트리거 메시지는 변수 토큰(<code>{닉네임}</code>·<code>{래플명}</code> 등)을 포함하므로 수동 알림으로 복제하지 않는다 — 운영자가 유사 캠페인이 필요하면 [+ 새 알림]에서 빈 폼으로 새로 작성한다.</p>
+<h4>D. 제거된 요소</h4>
+<table>
+<tr><th>제거</th><th>이유 (개발팀 피드백)</th></tr>
+<tr><td>통계 카드 (대시보드)</td><td>피드백 #5 — 운영자 관심 영역 아님</td></tr>
+<tr><td>대상 필터 (전역/팬덤/회원 그룹)</td><td>피드백 #3 — 대상은 트리거 조건이 결정</td></tr>
+<tr><td>인원수 표시 ("회원 그룹 · N명")</td><td>피드백 #6 — 이벤트당 발송이라 누계 무의미</td></tr>
+<tr><td>상태 필터 (SENDING/SENT/PARTIAL_FAILED/FAILED)</td><td>피드백 #2 — 발송 인스턴스 단위 X. "사용중/미사용"만</td></tr>
+<tr><td>Row 클릭 → 별도 상세 화면</td><td>카탈로그 카드 + 미리보기 모달로 충분</td></tr>
+<tr><td>발송 인스턴스 인벤토리</td><td>피드백 #1·#4 — 운영자 다루는 영역 아님</td></tr>
+</table>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>공통 헤더</td><td>[+ 새 알림] (수동 탭만)</td><td>진입점. 재사용 템플릿은 [CEB-BO-APP-303] v3.1에서 개념 자체 폐지 — 운영자는 매번 직접 작성</td></tr>
+<tr><td>탭</td><td>"수동 알림" / "자동 트리거" + 카운트 배지</td><td>발송 방식 분리</td></tr>
+<tr><td>기간 필터</td><td>오늘 / 이번 주 / 이번 달 / 올해 / 전체</td><td>집계 범위 (수동 탭 전용)</td></tr>
+<tr><td>수동 탭 통계</td><td>전체 / 임시저장 / 예약 / 발송 완료 (4종)</td><td>캠페인 운영 상태</td></tr>
+<tr><td>수동 탭 필터·테이블</td><td>대상·채널·상태(6종)·키워드 + 컬럼 7종</td><td>캠페인 단위 조회</td></tr>
+<tr><td>자동 탭 안내 띠</td><td>"변경은 개발팀 요청" 안내</td><td>조회 전용 영역 명시</td></tr>
+<tr><td>자동 탭 필터·테이블</td><td>카테고리·활성·키워드 + 6컬럼 테이블 (활성·카테고리·채널·트리거·제목·최근 발송)</td><td>트리거 정책 조회. 수동 알림 탭과 시각 통일</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>데이터 로딩 중</td><td>Skeleton 테이블 또는 카드 그리드</td></tr>
+<tr><td>수동 탭 0건</td><td>"조건에 맞는 수동 알림이 없습니다." + [필터 초기화]. 전체 0건일 때 "등록된 수동 알림이 없습니다." + [+ 첫 알림 작성] CTA</td></tr>
+<tr><td>자동 탭 0건</td><td>"조건에 맞는 트리거 정책이 없습니다." + [필터 초기화]. 트리거 정책 자체가 0건이면 "등록된 자동 트리거가 없습니다. 개발팀에 트리거 추가를 요청해 주세요."</td></tr>
+<tr><td>수동 탭 발송중 상태</td><td>도달 수 컬럼 "처리 중…" + 자동 polling (30초)</td></tr>
+<tr><td>수동 탭 실패 알림</td><td>상태 Badge 빨강 + Row 우측 [재발송 시도]</td></tr>
+<tr><td>자동 탭 Row 클릭</td><td>상세 미리보기 모달 노출 — KO/EN/JP 다국어 메시지·딥링크·트리거 조건 read-only 조회</td></tr>
+<tr><td><code>?tab=auto</code> 직접 진입</td><td>자동 트리거 탭 선택 상태로 진입</td></tr>
+<tr><td>권한 없음</td><td>[관리자 > 권한관리] 설정에 따라 화면 자체 미노출 또는 [+ 새 알림] 비활성</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<h3>5-1. 탭 분리 규칙</h3>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>[+ 새 알림] 노출</td><td><strong>수동 탭에서만</strong>. 자동 탭에서는 헤더에서 숨김 (자동 트리거 알림은 운영자 작성 불가)</td></tr>
+<tr><td>탭 카운트 배지</td><td>수동 탭은 기간 필터 적용 후 건수, 자동 탭은 트리거 정책 총 개수</td></tr>
+<tr><td>탭별 필터 격리</td><td>탭 전환 시 모든 필터 자동 초기화 (다른 탭의 필터가 의미 없으므로)</td></tr>
+<tr><td>자동 탭 Row 액션</td><td>Row 클릭 시 상세 미리보기 모달 노출 (다국어 메시지 read-only). 별도 상세 페이지 진입 없음</td></tr>
+<tr><td>기간 필터 적용 범위</td><td>수동 탭에만 적용. 자동 탭은 트리거 정책 카탈로그이므로 기간 무관</td></tr>
+</table>
+<h3>5-2. 인벤토리·집계 규칙</h3>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>예약 알림 취소</td><td>SCHEDULED 상태에서만 가능 (수동 탭만 해당). 발송중/완료 후에는 취소 불가</td></tr>
+<tr><td>도달 수 집계</td><td>발송 완료 후 5분 캐시. 푸시(Web Push) + 기본알림 도달 회원 합집합</td></tr>
+<tr><td>통계 카드 카운트</td><td>기간 필터 기준 (필터 바와 무관)</td></tr>
+<tr><td>회원 그룹 대상 표시</td><td>"회원 그룹 · {N}명" 형태. 상세는 Row 클릭 후 APP-302에서 조회</td></tr>
+</table>
+<h3>5-3. 자동 트리거 탭 제약</h3>
+<p>자동 트리거는 백엔드 코드/설정에 정의되어 있어 백오피스에서 다음을 할 수 없다. <strong>변경은 모두 개발팀 요청 채널을 통해서만 가능</strong>하다 ([CEB-BO-013] §12-1).</p>
+<table>
+<tr><th>제약</th><th>내용</th></tr>
+<tr><td>신규 등록</td><td>백오피스에서 불가. 개발팀에 트리거 추가 요청</td></tr>
+<tr><td>메시지·대상·트리거 조건 수정</td><td>백오피스에서 불가. 개발팀에 변경 요청</td></tr>
+<tr><td>활성/미사용 토글</td><td>백오피스에서 불가. 개발팀에 활성/비활성 요청</td></tr>
+<tr><td>삭제</td><td>백오피스에서 불가</td></tr>
+<tr><td>가능 액션</td><td>[상세 미리보기] (다국어 메시지 모달 read-only)만. 자동 트리거 메시지는 변수 토큰을 포함하므로 수동 알림으로 복제하지 않으며, 유사 캠페인이 필요하면 운영자가 [+ 새 알림]에서 빈 폼으로 새로 작성한다</td></tr>
+</table>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>수동 탭 Row 클릭</td><td>[CEB-BO-APP-302] 알림 상세·작성 (편집 가능)</td></tr>
+<tr><td>자동 탭 Row 클릭</td><td>모달 노출 (다국어 메시지·딥링크 read-only). 페이지 이동 없음</td></tr>
+<tr><td>[+ 새 알림] (수동 탭만)</td><td>[CEB-BO-APP-302] 알림 상세·작성 (신규 작성)</td></tr>
+<tr><td>재사용 템플릿 진입</td><td>(없음) — [CEB-BO-APP-303] v3.1에서 개념 자체 폐지. 운영자는 매번 [+ 새 알림]에서 빈 폼으로 작성</td></tr>
+<tr><td>영역 가이드 참조</td><td>[CEB-BO-013] 앱 운영(APP) 영역 가이드</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.7</strong></td><td><strong>2026.05.20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>재사용 템플릿 개념 자체 폐지 정합</strong> — [CEB-BO-APP-303] v3.1 / [CEB-BO-APP-302] v1.8 / [CEB-BO-013] v7.7 결정(템플릿 개념 자체 폐지)에 맞춰 본 문서에 잔존하던 "신규 폼 안에 통합" 표현을 정리. ① §2-1 헤더 우측 액션 보조 텍스트 정정 ② §3 노출 정보 표 [+ 새 알림] 의미 행 정정 ③ §6 연관 화면 "재사용 템플릿 진입" 행 정정 — 진입 경로 자체 폐지. 운영자는 [+ 새 알림]에서 매번 빈 폼으로 작성</td></tr>
+<tr><td>v1.6</td><td>2026.05.20</td><td>@Nill Yoo</td><td><strong>헤더 [재사용 템플릿] 액션 제거</strong> — [CEB-BO-APP-303] 폐지(v3.0)에 따라 재사용 템플릿 기능은 [CEB-BO-APP-302] 신규 폼 안 [템플릿 불러오기]·[저장]으로 통합. §2-1·§3·§6 관련 참조 정합</td></tr>
+<tr><td>v1.5</td><td>2026.05.20</td><td>@Nill Yoo</td><td><strong>자동 탭을 카드 그리드 → 테이블로 변환</strong> — 수동 알림 탭과 시각 통일감 확보. 6컬럼 (활성·카테고리·채널·트리거·제목·최근 발송). Row 클릭 시 상세 미리보기 모달 노출. 별도 [상세 미리보기] 버튼 제거 (행 클릭으로 단일화)</td></tr>
+<tr><td>v1.4</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>자동 탭 카드 액션 축소</strong> — [복제하여 수동 알림 작성] 제거. 자동 트리거 메시지는 변수 토큰(<code>{닉네임}</code>·<code>{래플명}</code> 등)을 포함하므로 수동 알림으로 복제할 실효성이 낮다는 판단. 자동 탭 카드 액션은 <strong>[상세 미리보기]만</strong> 남김. 유사 캠페인이 필요하면 운영자가 [+ 새 알림] 빈 폼에서 새로 작성</td></tr>
+<tr><td>v1.3</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>개발팀 피드백 반영 — 자동 트리거를 "트리거 정책 카탈로그(조회 전용)"로 재정의</strong> — ① 자동 탭에서 통계 카드·기간 필터·대상 필터·인원수 컬럼·발송 인스턴스 행 모두 제거 ② 필터 3종으로 축소(카테고리·활성·키워드) ③ 발송 인스턴스 단위 4종 상태 → "사용중/미사용" 2종 ([CEB-BO-013] §14-2) ④ 카드 그리드 + 상세 미리보기 모달 + [복제하여 수동 알림 작성] ⑤ [+ 새 알림]은 수동 탭에서만 ⑥ 헤더 라벨 "[템플릿 관리]" → "[재사용 템플릿]" ⑦ §5-3 자동 트리거 제약: 신규 등록·메시지 수정·활성 토글·삭제 모두 백오피스 불가, 개발팀 요청 채널 ([CEB-BO-013] §12-1)</td></tr>
+<tr><td>v1.2</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>수동/자동 트리거 탭 분리</strong> — ① 단일 통합 인벤토리 → "수동 알림" / "자동 트리거" 2탭으로 분리 (URL <code>?tab=manual</code> / <code>?tab=auto</code> 쿼리 동기화) ② 탭별로 통계 카드(수동 4종 / 자동 3종)·필터·테이블 컬럼·상태 enum(수동 6종 / 자동 4종) 모두 독립 ③ [+ 새 알림]은 수동 탭에서만 노출 ④ 자동 탭은 시스템 발송 로그 성격 — 운영자 작성·수정·삭제 불가, [복제]·[재발송 시도]만 가능 ⑤ 자동 탭에 트리거 카테고리 필터 5종 + 트리거명 검색 신설 ⑥ 자동 탭 상단 안내 띠 — 트리거 정책은 [APP-303]에서 관리 명시</td></tr>
+<tr><td>v1.1</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>PWA 푸시 전제 정정</strong> — §1 화면 개요에 회원 앱이 PWA이며 푸시는 Web Push임을 명시. 푸시 미발송 사유·미도달 처리는 [CEB-BO-013] §17-2 정합</td></tr>
+<tr><td>v1.0</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>신규 작성</strong> — 알림 인벤토리 화면 정의. 통계 5종 + 필터 5종 + 인벤토리 테이블 7컬럼. 수동·자동 트리거 통합 조회. RFT 양식 정합</td></tr>
+</table>
+
+</body>
+</html>

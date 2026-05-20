@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-013] 앱 운영(APP) 영역 가이드</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-013] 앱 운영(APP) 영역 가이드</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-013</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>APP — 앱 운영</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v7.8</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 앱</td></tr>
+<tr><td>비고</td><td></td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v7.8</strong> (정합 정정 — §17-2 FCM/APNs 표현·§18 알림 템플릿 로그·§20 소스 타입 7종 표기 누락 정정)</p>
+<p>본 문서는 회원 앱 운영 영역(APP)의 전체 범위·정책·서브 영역을 정의한다. 사이드바 "앱" 메뉴 하위의 모든 서브 화면 SSOT.</p>
+</blockquote>
+<h2>1. 영역 개요</h2>
+<p>회원 앱 운영(APP)은 운영자가 회원 앱의 노출 콘텐츠와 알림을 관리하는 통합 영역. 현재 2개 서브 영역으로 구성된다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>영역 범위</td><td>배너 관리(슬롯 인벤토리) + 알림 관리(인앱 + 푸시)</td></tr>
+<tr><td>사이드바 위치</td><td>운영 사이트 "앱" 메뉴 하위</td></tr>
+<tr><td>서브 영역 수</td><td>2종 (배너 / 알림) — 추후 확장 가능</td></tr>
+<tr><td>영역 ID 체계</td><td><code>CEB-BO-APP-{번호}</code> — 배너 1xx·2xx, 알림 3xx</td></tr>
+</table>
+<h3>1-1. 서브 영역</h3>
+<table>
+<tr><th>서브 영역</th><th>사이드바 메뉴</th><th>핵심 화면</th><th>용도</th></tr>
+<tr><td>배너</td><td>"앱 > 배너 관리"</td><td>APP-101 / APP-202 / APP-201</td><td>슬롯(위치 × 아티스트) 자동 생성 + 슬롯별 배너 라이프사이클 운영</td></tr>
+<tr><td>알림</td><td>"앱 > 알림 관리"</td><td>APP-301 / APP-302</td><td>기본알림(인앱 알림센터) + 푸시알림(Web Push) 통합 발송·예약. 재사용 템플릿 개념 자체 폐지 (APP-303 v3.1) — 운영자는 매번 직접 작성</td></tr>
+</table>
+<h2>2. 화면 목록</h2>
+<h3>2-1. 배너 (APP-1xx · 2xx)</h3>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>진입 경로</th><th>작성 상태</th></tr>
+<tr><td>[CEB-BO-APP-101]</td><td>배너 관리</td><td>사이드바 "앱 > 배너 관리"</td><td>✅ v6.0</td></tr>
+<tr><td>[CEB-BO-APP-202]</td><td>슬롯 상세</td><td>APP-101 슬롯 Row 클릭</td><td>✅ v6.0</td></tr>
+<tr><td>[CEB-BO-APP-201]</td><td>배너 상세·작성</td><td>APP-202 [+ 배너 추가] / 배너 Row 클릭</td><td>✅ v6.0</td></tr>
+</table>
+<h3>2-2. 알림 (APP-3xx)</h3>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>진입 경로</th><th>작성 상태</th></tr>
+<tr><td>[CEB-BO-APP-301]</td><td>알림 관리</td><td>사이드바 "앱 > 알림 관리"</td><td>✅ v1.0</td></tr>
+<tr><td>[CEB-BO-APP-302]</td><td>알림 상세·작성</td><td>APP-301 [+ 새 알림] / 알림 Row 클릭</td><td>✅ v1.0</td></tr>
+<tr><td>[CEB-BO-APP-303]</td><td>(폐지) 알림 재사용 템플릿 관리</td><td>—</td><td>⊘ v3.1 개념 자체 폐지 — 운영자는 매번 직접 작성</td></tr>
+</table>
+<h2>3. 권한</h2>
+<p>본 영역의 모든 화면·액션 권한은 <strong>[관리자 > 권한관리]에서 설정된 권한을 따른다</strong>. 권한이 없는 운영자가 진입한 경우 해당 화면·버튼은 미노출 또는 비활성 상태로 처리한다.</p>
+<hr>
+<h1>배너 서브 영역 정책</h1>
+<h2>4. 슬롯 정의 (배너)</h2>
+<h3>4-1. 슬롯 핵심 개념</h3>
+<table>
+<tr><th>용어</th><th>정의</th></tr>
+<tr><td>슬롯(slot)</td><td>위치 × 아티스트 조합. 시스템이 자동 생성하며 운영자가 추가·삭제 불가</td></tr>
+<tr><td>위치(slotKind)</td><td>회원 앱에서 배너가 실제 노출되는 자리 (메인 / 오늘의 할일 / 다함께 / 미션)</td></tr>
+<tr><td>아티스트</td><td>전역(모든 회원, 메인 위치 전용) 또는 단일 아티스트</td></tr>
+<tr><td>배너</td><td>슬롯 안에 등록되는 노출 콘텐츠 1건</td></tr>
+</table>
+<h3>4-2. 위치 4종 정의</h3>
+<table>
+<tr><th>탭</th><th>위치</th><th>타겟 모드</th><th>슬롯당 배너 정책</th><th>회원 앱 노출 형태</th></tr>
+<tr><td>홈</td><td>메인</td><td>전역만</td><td>캐러셀, 동시 최대 8개 (운영자 정렬)</td><td>홈 최상단 슬라이드</td></tr>
+<tr><td>홈</td><td>오늘의 할일</td><td>아티스트만</td><td>단일 1개 (자동 교체)</td><td>홈 미션 영역 단일 카드</td></tr>
+<tr><td>아티스트 메인</td><td>다함께</td><td>아티스트만</td><td>캐러셀, 동시 최대 8개 (운영자 정렬)</td><td>아티스트 홈 캐러셀</td></tr>
+<tr><td>아티스트 메인</td><td>미션</td><td>아티스트만</td><td>단일 1개 (자동 교체)</td><td>아티스트 홈 미션 영역</td></tr>
+</table>
+<h3>4-3. 자동 생성 슬롯 수 (활성 아티스트 5명 기준)</h3>
+<table>
+<tr><th>탭</th><th>슬롯 = 위치 × 대상</th><th>총</th></tr>
+<tr><td>홈</td><td>메인 <strong>1</strong>(전역) + 오늘의 할일 <strong>5</strong>(아티스트)</td><td><strong>6</strong></td></tr>
+<tr><td>아티스트 메인</td><td>다함께 <strong>5</strong> + 미션 <strong>5</strong></td><td><strong>10</strong></td></tr>
+</table>
+<h2>5. 배너 노출 기간 + 제어 정책</h2>
+<h3>5-1. 노출 기간 모드</h3>
+<table>
+<tr><th>모드</th><th>동작</th></tr>
+<tr><td>무기한</td><td>시작·종료일 없음. 운영자가 [즉시 노출 시작]을 눌러야 노출. [즉시 노출 종료]로만 종료</td></tr>
+<tr><td>사용자 지정</td><td>공개일·종료일 입력. 일정 도래 시 자동 노출/종료. 운영자가 [즉시 시작/종료]로 오버라이드 가능</td></tr>
+</table>
+<h3>5-2. 시점별 동작 (사용자 지정 모드)</h3>
+<table>
+<tr><th>시점</th><th>동작</th></tr>
+<tr><td>공개일 도래</td><td>자동 노출 시작 (상태: 임시저장 → 노출중)</td></tr>
+<tr><td>종료일 도래</td><td>자동 노출 종료 (상태: 노출중 → 노출 종료, 데이터 보존)</td></tr>
+<tr><td>[즉시 노출 시작]</td><td>공개일 미도래여도 즉시 노출. 공개일 자동 갱신</td></tr>
+<tr><td>[즉시 노출 종료]</td><td>종료일 미도래여도 즉시 종료. 종료일 자동 갱신</td></tr>
+</table>
+<h3>5-3. 캐러셀 슬롯 동시 노출 한도 (메인 / 다함께)</h3>
+<ul>
+<li>슬롯 1개당 동시 노출 최대 8개. 등록 자체는 무제한</li>
+<li>9번째를 [노출 시작]하려고 하면 차단 + 안내 토스트</li>
+<li>운영자가 직접 1개를 OFF한 뒤 9번째를 ON 해야 함</li>
+</ul>
+<h3>5-4. 단일 슬롯 자동 교체 (오늘의 할일 / 미션)</h3>
+<ul>
+<li>슬롯당 노출중(ACTIVE) 배너는 항상 1개만. 임시저장(DRAFT)은 여러 건 등록 가능</li>
+<li>운영자가 대기 중인 DRAFT 배너를 [노출 시작]하면 그 슬롯의 기존 노출 배너가 자동 OFF</li>
+<li>슬롯이 비어 있으면 회원 앱에서 해당 자리가 숨겨짐 (기본 폴백 이미지 없음)</li>
+</ul>
+<h2>6. 배너 상태 정의</h2>
+<table>
+<tr><th>상태 (운영 표시)</th><th>데이터 키</th><th>의미</th><th>Badge 색상</th></tr>
+<tr><td>임시저장</td><td>DRAFT</td><td>등록 완료, 공개일 미도래·운영자가 ON 안 함</td><td>회색</td></tr>
+<tr><td>노출중</td><td>ACTIVE</td><td>회원 앱에 노출 중</td><td>초록</td></tr>
+<tr><td>노출 종료</td><td>CLOSED</td><td>종료일 도래 또는 운영자가 [즉시 종료]</td><td>진한 회색</td></tr>
+</table>
+<h2>7. 배너 다국어 정책</h2>
+<p>[CEB-BO-000] §5 적용. 회원 앱은 KO/EN/JP 3언어 자동 매칭.</p>
+<table>
+<tr><th>필드</th><th>KO</th><th>EN</th><th>JP</th><th>글자수</th></tr>
+<tr><td>메인 타이틀</td><td>필수</td><td>필수</td><td>필수</td><td>30자</td></tr>
+<tr><td>서브 타이틀</td><td>필수</td><td>필수</td><td>필수</td><td>60자</td></tr>
+<tr><td>이미지 대체 텍스트</td><td>선택</td><td>선택</td><td>선택</td><td>100자</td></tr>
+</table>
+<ul>
+<li>임시저장 시 1개 언어만 입력해도 허용</li>
+<li>[노출 시작] 시 KO/EN/JP 3언어 모두 입력 검증</li>
+</ul>
+<h2>8. 배너 미디어 권장 비율</h2>
+<table>
+<tr><th>위치</th><th>이미지 형태</th><th>권장 비율</th><th>권장 사이즈</th></tr>
+<tr><td>메인 (홈 캐러셀)</td><td>메인이미지</td><td>1:1 (정사각)</td><td>1080×1080</td></tr>
+<tr><td>오늘의 할일 (홈)</td><td>배경이미지</td><td>16:9 (가로)</td><td>1920×1080</td></tr>
+<tr><td>다함께 (아티스트 메인 캐러셀)</td><td>배경이미지</td><td>16:9 (가로)</td><td>1920×1080</td></tr>
+<tr><td>미션 (아티스트 메인)</td><td>배경이미지</td><td>16:9 (가로)</td><td>1920×1080</td></tr>
+</table>
+<h2>9. 딥링크 공통 정책 (배너·알림 공유)</h2>
+<p>배너(APP-201)·알림(APP-302)이 동일한 딥링크 입력 체계를 사용한다 — 운영자 학습 비용 최소화 + 향후 신규 영역(예: 미션·이벤트 상세) 도입 시 공통 컴포넌트 재사용.</p>
+<h3>9-1. 소스 타입 8종 (이동 없음 포함)</h3>
+<table>
+<tr><th>소스 타입</th><th>의미</th><th>입력 가이드</th><th>일반 딥링크 대상</th></tr>
+<tr><td>이동 없음</td><td>클릭 시 이동 없음 (배너는 표시 전용, 알림은 본문 클릭 비활성)</td><td>입력 없음</td><td>—</td></tr>
+<tr><td>래플</td><td>래플 응모 안내</td><td>래플 ID 검색</td><td>래플 상세</td></tr>
+<tr><td>응원하기</td><td>서포트 이벤트 안내</td><td>서포트 이벤트 ID 검색</td><td>서포트 이벤트 상세</td></tr>
+<tr><td>퀘스트</td><td>퀘스트 참여 안내</td><td>Quest ID 검색</td><td>퀘스트 상세</td></tr>
+<tr><td>BIVE</td><td>BIVE 에디션·민팅·캠페인 안내</td><td>BIVE 에디션 ID 검색</td><td>BIVE 에디션 상세</td></tr>
+<tr><td>소식</td><td>공지·인포 게시</td><td>소식 ID 검색</td><td>소식 상세</td></tr>
+<tr><td>아티스트 홈</td><td>특정 아티스트 홈 진입 유도</td><td>아티스트 선택</td><td>아티스트 홈</td></tr>
+<tr><td>프로모션</td><td>마케팅·캠페인 등 외부/자유 안내</td><td>내부/외부 URL 자유 입력</td><td>외부 URL 또는 내부 이벤트 페이지</td></tr>
+</table>
+<h3>9-2. 딥링크 입력 UI 공통 규격</h3>
+<table>
+<tr><th>항목</th><th>규격</th></tr>
+<tr><td>입력 컴포넌트</td><td>공통 <code>DeeplinkPicker</code> 사용 (소스 타입 드롭다운 + 값 입력)</td></tr>
+<tr><td>기본값</td><td>"이동 없음"</td></tr>
+<tr><td>값 입력 활성</td><td>소스 타입이 "이동 없음"이 아닐 때만</td></tr>
+<tr><td>placeholder</td><td>소스 타입별 분기 (예: <code>/raffle/{id}</code>, <code>/artists/{group}</code>, <code>https://… 또는 /event/…</code>)</td></tr>
+<tr><td>힌트 라벨</td><td>소스 타입별 분기 (예: "래플 ID 검색", "BIVE 에디션 ID 검색")</td></tr>
+<tr><td>외부 URL 승인</td><td>자유 (별도 승인 없음)</td></tr>
+</table>
+<h3>9-3. 양 영역에서의 사용 차이</h3>
+<table>
+<tr><th>영역</th><th>필수/선택</th><th>비고</th></tr>
+<tr><td>배너 (APP-201)</td><td>선택 — "이동 없음" 허용 (표시 전용 배너 가능)</td><td>노출 시작 전 [발행] 단계에서는 권장</td></tr>
+<tr><td>알림 (APP-302)</td><td>선택 — 본문 클릭 시 이동 없이 알림만 표시 가능</td><td>인앱 알림센터·푸시 모두 동일 적용</td></tr>
+</table>
+<h2>10. 배너 정렬 정책</h2>
+<ul>
+<li>기본: 운영자 수동 정렬 (드래그 앤 드롭, 캐러셀 슬롯 전용)</li>
+<li>회원 앱 캐러셀 노출 순서는 정렬 결과 그대로 반영</li>
+<li>단일 슬롯은 1자리 고정이라 정렬 개념 없음</li>
+</ul>
+<hr>
+<h1>알림 서브 영역 정책</h1>
+<h2>11. 알림 채널 정의</h2>
+<p>회원 앱은 <strong>PWA(Progressive Web App)</strong>로 운영되며, 푸시알림은 <strong>Web Push API</strong> 기반으로 발송된다.</p>
+<table>
+<tr><th>채널</th><th>정의</th><th>회원 앱 노출 형태</th></tr>
+<tr><td>기본알림</td><td>인앱 알림센터 (회원 앱 안의 알림 아이콘·리스트)</td><td>회원 앱 알림 화면, 영구 보관, 회원이 읽음/삭제 처리 가능</td></tr>
+<tr><td>푸시알림</td><td>Web Push (PWA · VAPID 기반)</td><td>회원 디바이스의 알림 배너·잠금화면. 회원 브라우저 알림 권한(<code>Notification.permission</code>), 푸시 구독(<code>PushSubscription</code>) 등록, iOS의 경우 PWA 홈 화면 추가 여부 영향</td></tr>
+</table>
+<p>한 메시지는 <strong>기본 + 푸시 동시 발송</strong>을 기본으로 한다. 운영자는 폼에서 <strong>푸시 발송 토글</strong>로 푸시만 끌 수 있다 (기본알림은 항상 생성).</p>
+<h3>11-1. PWA 푸시 발송 제약</h3>
+<p>회원 앱이 PWA이기 때문에 네이티브 앱과 다음 점이 다르다. 운영자는 발송 규모·도달 예측 시 이 제약을 인지해야 한다.</p>
+<table>
+<tr><th>환경</th><th>푸시 수신 조건</th></tr>
+<tr><td>Android (Chrome/Edge 등)</td><td>브라우저 탭만 있어도 수신 가능. 알림 권한 허용 + 푸시 구독 등록 시</td></tr>
+<tr><td>iOS Safari</td><td><strong>PWA가 홈 화면에 추가되어 있어야만</strong> 푸시 수신 가능 (iOS 16.4+). Safari 탭만 사용하는 회원은 푸시 미수신</td></tr>
+<tr><td>Desktop (Chrome/Edge/Firefox)</td><td>알림 권한 허용 + 푸시 구독 등록 시 수신 가능</td></tr>
+<tr><td>브라우저 푸시 쿼터</td><td>일부 브라우저는 자체 발송 빈도 제한(예: Chrome budget). 우리 일일 한도(§17) 미만에서도 잘릴 수 있음</td></tr>
+</table>
+<p>기본알림(인앱 알림센터)은 위 제약과 무관하게 항상 생성된다.</p>
+<h2>12. 알림 발송 방식</h2>
+<table>
+<tr><th>방식</th><th>동작</th></tr>
+<tr><td>운영자 수동</td><td>운영자가 [CEB-BO-APP-302]에서 메시지를 직접 작성·예약·발송. 즉시 또는 예약 시점 발송. 모든 메시지·대상·발송 시점을 운영자가 자유롭게 정의</td></tr>
+<tr><td>시스템 자동 트리거</td><td>시스템 이벤트(래플 당첨·퀘스트 제출 승인/반려·BIVE 구매 완료·회원 가입 환영 등)에 백엔드가 자동 발송. 메시지·대상·발송 조건은 모두 백엔드 코드/설정에 정의되어 있어 <strong>백오피스에서 신규 등록·수정 불가</strong>. 변경은 개발팀 요청 채널을 통해서만 가능. 일정 기반 캠페인(BIVE 컬렉션 출시 D-1·응모권 만료 임박 등)은 자동 트리거가 아니라 수동 알림으로 운영자가 직접 작성·예약한다</td></tr>
+</table>
+<h3>12-1. 자동 트리거 변경 절차</h3>
+<p>운영자가 자동 트리거의 메시지·대상·활성 상태를 변경하고 싶을 경우:</p>
+<ol>
+<li>백오피스 [CEB-BO-APP-301] 자동 트리거 탭에서 현재 정책 목록 확인 (조회 전용)</li>
+<li>변경 요청을 개발팀에 전달 (요청 채널은 별도 합의)</li>
+<li>개발팀이 백엔드 코드/설정 변경 후 배포</li>
+<li>배포 후 백오피스에서 갱신된 정책 카탈로그 확인</li>
+</ol>
+<p>수동 + 자동은 [CEB-BO-APP-301]에서 <strong>별도 탭으로 분리</strong> 조회된다 (수동 알림 인벤토리 / 자동 트리거 정책 카탈로그).</p>
+<h2>13. 알림 대상(타겟팅)</h2>
+<table>
+<tr><th>대상</th><th>정의</th></tr>
+<tr><td>전역</td><td>모든 회원 (글로벌 공지·점검 안내 등)</td></tr>
+<tr><td>아티스트 팬덤</td><td>특정 아티스트 그룹 팬덤(예: V01D 팬). 회원 팬덤 그룹 매핑 기준 ([CEB-BO-USR-201])</td></tr>
+<tr><td>특정 회원 그룹</td><td>운영자가 회원 목록을 직접 업로드·검색·선택한 임시 그룹 (CS 응대·1:1 안내)</td></tr>
+</table>
+<blockquote>
+<p>트리거 알림(자동)은 대상이 트리거 이벤트의 주체로 자동 결정 (예: 래플 당첨자 N명).</p>
+</blockquote>
+<h2>14. 알림 상태 정의</h2>
+<p>수동 알림(운영자 캠페인)과 자동 트리거 알림(시스템 이벤트)은 라이프사이클이 달라 상태 enum도 별도 정의한다. [CEB-BO-APP-301]은 발송 방식별 탭으로 분리해 각 탭에서 해당 상태만 노출한다.</p>
+<h3>14-1. 수동 알림 상태 (6종)</h3>
+<table>
+<tr><th>상태 (운영 표시)</th><th>데이터 키</th><th>의미</th><th>Badge 색상</th></tr>
+<tr><td>임시저장</td><td>DRAFT</td><td>작성 완료, 발송 전</td><td>회색</td></tr>
+<tr><td>예약</td><td>SCHEDULED</td><td>발송 시점 예약됨</td><td>인디고</td></tr>
+<tr><td>발송중</td><td>SENDING</td><td>대량 발송 처리 중</td><td>노랑</td></tr>
+<tr><td>발송 완료</td><td>SENT</td><td>발송 처리 완료 (도달 수 집계됨)</td><td>초록</td></tr>
+<tr><td>부분 실패</td><td>PARTIAL_FAILED</td><td>일부 회원 발송 실패 (재시도 권장)</td><td>주황</td></tr>
+<tr><td>실패</td><td>FAILED</td><td>발송 처리 자체 실패</td><td>빨강</td></tr>
+</table>
+<h3>14-2. 자동 트리거 정책 상태 (운영자 노출 2종)</h3>
+<p>운영자가 [CEB-BO-APP-301] 자동 트리거 탭에서 확인하는 상태는 <strong>트리거 정책 단위의 활성 여부 2종</strong>만이다.</p>
+<table>
+<tr><th>상태 (운영 표시)</th><th>데이터 키</th><th>의미</th><th>Badge 색상</th></tr>
+<tr><td>사용중</td><td>active=true</td><td>현재 트리거가 활성화되어 이벤트 발생 시 자동 발송됨</td><td>초록</td></tr>
+<tr><td>미사용</td><td>active=false</td><td>트리거 정책은 등록되어 있으나 비활성화 상태 (개발팀에 요청해 켤 수 있음)</td><td>회색</td></tr>
+</table>
+<blockquote>
+<p><strong>발송 인스턴스별 상태</strong>(SENDING/SENT/PARTIAL_FAILED/FAILED)는 백엔드 내부 상태로 백오피스에서 노출하지 않는다. 운영자에게는 트리거 정책의 활성 여부만 보이며, 개별 발송 인스턴스의 성공/실패는 관심 영역이 아니다. 활성 전환·메시지 수정은 모두 개발팀 요청 채널을 통해서만 가능하다 (§12-1).</p>
+</blockquote>
+<h2>15. 알림 다국어 정책</h2>
+<p>[CEB-BO-000] §5 적용. 회원 앱은 KO/EN/JP 3언어 자동 매칭.</p>
+<table>
+<tr><th>필드</th><th>KO</th><th>EN</th><th>JP</th><th>글자수</th></tr>
+<tr><td>제목</td><td>필수</td><td>필수</td><td>필수</td><td>50자</td></tr>
+<tr><td>본문</td><td>필수</td><td>필수</td><td>필수</td><td>200자</td></tr>
+<tr><td>푸시 짧은 메시지</td><td>선택 (미입력 시 제목 자동 사용)</td><td>선택</td><td>선택</td><td>65자 (Web Push 표시 길이 권장)</td></tr>
+</table>
+<ul>
+<li>임시저장 시 1개 언어만 입력해도 허용</li>
+<li>[발송] / 예약 발송 처리 시 KO/EN/JP 3언어 모두 입력 검증</li>
+</ul>
+<h2>16. 알림 딥링크 (선택)</h2>
+<p>알림 본문 탭/클릭 시 회원 앱 영역으로 이동. <strong>딥링크 입력은 §9 공통 정책을 그대로 따른다</strong> — 배너와 동일한 <code>DeeplinkPicker</code> 컴포넌트·소스 타입 8종(이동 없음 포함)·동일 placeholder/힌트.</p>
+<h2>17. 알림 발송 한도·정책</h2>
+<h3>17-1. 한도·동시 발송</h3>
+<table>
+<tr><th>항목</th><th>정책</th></tr>
+<tr><td>회원당 일일 푸시 수신 한도</td><td><strong>20건</strong> (시스템 트리거 + 수동 합산). 초과 시 푸시 미발송 (기본알림은 정상 생성)</td></tr>
+<tr><td>전역 알림 동시 발송 한도</td><td>시스템 큐 처리 — 운영자 [발송] 클릭 후 평균 5~15분 소요</td></tr>
+<tr><td>회원 탈퇴·휴면</td><td>알림 발송 대상에서 자동 제외</td></tr>
+<tr><td>운영 차단 회원</td><td>알림 발송 대상에서 자동 제외</td></tr>
+</table>
+<h3>17-2. 푸시 미발송 사유 정의 (PWA Web Push 기준)</h3>
+<p>운영자가 [발송]을 눌러도 다음 사유에 해당하는 회원은 푸시를 수신하지 못한다. <strong>기본알림(인앱 알림센터)은 모든 사유에 무관하게 정상 생성</strong>되며, 회원은 앱 진입 시 알림센터에서 확인 가능하다.</p>
+<table>
+<tr><th>사유</th><th>정의</th><th>발송 결과 카운트 분류</th></tr>
+<tr><td>알림 권한 미허용</td><td>회원 브라우저의 <code>Notification.permission</code> 값이 <code>granted</code>가 아님 (<code>default</code> 또는 <code>denied</code>)</td><td><strong>권한 OFF</strong></td></tr>
+<tr><td>푸시 구독 없음</td><td>회원이 푸시 구독(<code>PushSubscription</code>) 자체를 등록한 적 없음 (앱 첫 진입 후 권한 미응답 등)</td><td><strong>권한 OFF</strong></td></tr>
+<tr><td>iOS PWA 미설치</td><td>iOS Safari 회원이 홈 화면에 PWA를 추가하지 않은 상태 (iOS는 PWA 설치 회원만 푸시 수신 가능)</td><td><strong>권한 OFF</strong></td></tr>
+<tr><td>구독 만료·철회</td><td>회원 구독이 푸시 서비스에서 만료(<code>expired</code>) 또는 철회(<code>unregistered</code>) 처리됨 (브라우저 데이터 삭제 등)</td><td><strong>권한 OFF</strong></td></tr>
+<tr><td>일일 한도 초과</td><td>§17-1의 회원당 일일 20건 초과 시 발송 차단</td><td><strong>한도 초과</strong></td></tr>
+<tr><td>푸시 서비스 일시 오류</td><td>Web Push 게이트웨이(VAPID 기반 push service — Chrome/Edge는 FCM 백엔드, Safari는 Apple Push, Firefox는 자체 등 브라우저별 push service) 응답 오류로 발송 실패</td><td><strong>실패</strong> (재시도 가능)</td></tr>
+</table>
+<p>발송 결과 통계는 위 분류를 합산해 <strong>도달 수 / 권한 OFF / 한도 초과 / 실패</strong>로 운영자에게 표시한다.</p>
+<h3>17-3. 구독 회복 정책</h3>
+<p>회원이 푸시 권한을 차단했다가 추후 다시 허용한 경우, 회원 앱이 자동으로 새 구독을 등록한다. 운영자가 별도로 재구독 요청할 필요는 없다.</p>
+<h2>18. 활동 로그</h2>
+<p>[CEB-BO-000] §6 양식. 3년 보관·append-only.</p>
+<table>
+<tr><th>액션</th><th>로그 메시지 (KO)</th></tr>
+<tr><td>배너 등록</td><td>배너 '{제목}' 등록 (슬롯: {위치} · {아티스트}, 기간: {무기한/시작~종료})</td></tr>
+<tr><td>배너 즉시 노출 시작</td><td>배너 '{제목}'을(를) 즉시 노출 시작했습니다.</td></tr>
+<tr><td>배너 즉시 노출 종료</td><td>배너 '{제목}'의 노출을 즉시 종료했습니다.</td></tr>
+<tr><td>배너 자동 교체</td><td>{위치} · {아티스트} 슬롯의 배너 '{새 배너}' 노출 시작으로 '{기존 배너}'이(가) 자동 종료되었습니다.</td></tr>
+<tr><td>배너 삭제</td><td>배너 '{제목}'을(를) 삭제했습니다.</td></tr>
+<tr><td>알림 발송</td><td>알림 '{제목}' 발송 (대상: {전역/팬덤·{아티스트}/회원 그룹·{N}명}, 채널: {기본/기본+푸시})</td></tr>
+<tr><td>알림 예약</td><td>알림 '{제목}' 예약 발송 등록 (예약 시각: {YYYY.MM.DD HH:mm})</td></tr>
+<tr><td>알림 예약 취소</td><td>예약 알림 '{제목}'의 예약을 취소했습니다.</td></tr>
+<tr><td>알림 자동 발송</td><td>트리거 '{트리거명}'에 의해 알림 '{제목}' 자동 발송 (대상 {N}명)</td></tr>
+</table>
+<h2>19. 운영 대시보드 지표</h2>
+<h3>19-1. 배너 (APP-101)</h3>
+<table>
+<tr><th>카드</th><th>의미</th></tr>
+<tr><td>전체 / 노출중 / 임시저장 / 노출 종료</td><td>현재 탭(홈/아티스트 메인)의 배너 상태 합산</td></tr>
+</table>
+<h3>19-2. 알림 (APP-301)</h3>
+<table>
+<tr><th>카드</th><th>의미</th></tr>
+<tr><td>전체 / 발송 완료 / 예약 / 실패</td><td>알림 상태별 카운트</td></tr>
+<tr><td>오늘 도달 회원 수</td><td>당일 알림 도달 누적 (중복 제거)</td></tr>
+</table>
+<blockquote>
+<p>인터랙션 지표(노출 수·클릭률·푸시 오픈율 등)는 별도 통계 화면에서 추후 다룸.</p>
+</blockquote>
+<h2>20. 프로토타입 정합 상태</h2>
+<p>운영 사이트 prototype <code>/home/banners</code> 화면을 본 명세와 완전 정합시킴 (2026.05.19 워크스루 검증 완료). 알림 영역(APP-3xx)은 prototype 미구현 상태 — 명세 우선 발행 후 후속 작업.</p>
+<table>
+<tr><th>검증 항목</th><th>정합 상태</th></tr>
+<tr><td>슬롯 자동 생성 (홈 6 / 아티스트 메인 10)</td><td>✅</td></tr>
+<tr><td>위치별 타겟 모드 가드</td><td>✅</td></tr>
+<tr><td>캐러셀 드래그 정렬 + 한도 8개 안내</td><td>✅</td></tr>
+<tr><td>단일 슬롯 [+ 배너 추가] 항상 활성 (DRAFT 다수 등록)</td><td>✅</td></tr>
+<tr><td>단일 슬롯 자동 교체 confirm</td><td>✅</td></tr>
+<tr><td>신규/상세 폼 슬롯 컨텍스트 read-only prefill</td><td>✅</td></tr>
+<tr><td>미디어 비율 슬롯별 분기 (메인 1:1 / 그 외 16:9)</td><td>✅</td></tr>
+<tr><td>소스 타입 8종 (이동 없음 포함) + 아티스트 5그룹</td><td>✅</td></tr>
+<tr><td>상태 한글 표기</td><td>✅</td></tr>
+<tr><td>알림 영역 (APP-3xx)</td><td>⚪ prototype 미구현 (명세만 발행)</td></tr>
+</table>
+<h2>21. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v7.8</strong></td><td><strong>2026.05.20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>정합 정정 (이전 버전 누락분)</strong> — ① §17-2 푸시 미발송 사유 표의 "푸시 서비스(FCM/APNs 게이트웨이)" 표현 정정 → "<strong>Web Push 게이트웨이(VAPID 기반 push service — 브라우저별 push service)</strong>" (v7.1 PWA Web Push 정정 시 §17-2 표 안 텍스트 누락. §11은 Web Push로 갱신되었으나 §17-2는 FCM/APNs 잔존하여 자체 모순) ② §18 활동 로그에서 <strong>"알림 템플릿 등록" 행 삭제</strong> (v7.7 재사용 템플릿 개념 자체 폐지 결정에 따라 템플릿 활동 로그도 제거) ③ §20 정합 상태 표에서 "<strong>소스 타입 7종</strong>" → "<strong>소스 타입 8종 (이동 없음 포함)</strong>"로 정정 (v7.5에서 §9-1 소스 타입을 7종 → 8종으로 확장했으나 §20 정합 상태 표 갱신 누락)</td></tr>
+<tr><td>v7.7</td><td>2026.05.20</td><td>@Nill Yoo</td><td><strong>재사용 템플릿 개념 자체 폐지</strong> — v7.6의 "별도 화면 폐지 + 폼 통합" 결정이 모순(저장은 가능한데 편집·삭제는 불가)임을 확인. 개념 자체를 가져가지 않음. APP-302 v1.8 / APP-303 v3.1 / 프로토타입 mock에서 <code>NotiTemplate</code>·<code>TEMPLATES</code>·<code>getTemplateById</code> 모두 삭제</td></tr>
+<tr><td>v7.6</td><td>2026.05.20</td><td>@Nill Yoo</td><td><strong>APP-303 화면 폐지 (UI/UX 검증 후속)</strong> — 별도 화면 운영 비용 대비 실 사용 빈도 미검증. 재사용 템플릿 기능은 [CEB-BO-APP-302] 신규 폼 안 [템플릿 불러오기] 드롭다운 + [현재 메시지를 템플릿으로 저장] 버튼으로 통합. 편집·복제·삭제는 단순화로 제거 — <strong>v7.7에서 이 통합도 모순으로 판단해 개념 자체 폐지</strong></td></tr>
+<tr><td>v7.5</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>딥링크 공통 정책 통합</strong> — ① §9 "배너 클릭 이동 정책" → "딥링크 공통 정책 (배너·알림 공유)"로 확장 ② 소스 타입 7종 → <strong>8종 (이동 없음 추가)</strong>. 배너도 표시 전용 가능 ③ §9-2 딥링크 입력 UI 공통 규격 신설 — 공통 <code>DeeplinkPicker</code> 컴포넌트·placeholder·힌트 라벨 명시 ④ §9-3 배너 vs 알림 사용 차이 정리 ⑤ §16 알림 딥링크 → §9 공통 정책 참조로 단순화</td></tr>
+<tr><td>v7.4</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>개발팀 피드백 반영 — 자동 트리거를 "조회 전용 카탈로그"로 재정의</strong> — ① §12 발송 방식 표 정정 — 자동 트리거는 백오피스에서 신규 등록·수정 불가. 변경은 개발팀 요청 채널을 통해서만 가능. ② §12-1 자동 트리거 변경 절차 신설 ③ §14-2 자동 트리거 상태 정의 단순화 — 발송 인스턴스 단위 4종 enum(SENDING/SENT/PARTIAL_FAILED/FAILED)을 백엔드 내부 상태로 재분류. <strong>운영자 노출 상태는 "사용중/미사용" 2종</strong>(트리거 정책 단위 active boolean)만. ④ 수동·자동을 같은 인벤토리에 통합하지 않고 [CEB-BO-APP-301]에서 별도 탭으로 분리</td></tr>
+<tr><td>v7.3</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>자동 트리거 vs 수동 알림 경계 정정</strong> — §12 자동 트리거 예시에서 "BIVE 민팅 임박" 제거 → "BIVE 구매 완료·회원 가입 환영" 등 진짜 이벤트 직결 항목으로 교체. <strong>일정 기반 캠페인(BIVE 컬렉션 출시 D-1·응모권 만료 임박 등)은 자동 트리거가 아니라 수동 알림</strong>로 운영자가 직접 작성·예약함을 명시 (메시지 톤·일정 운영 유연성 확보)</td></tr>
+<tr><td>v7.2</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>알림 상태 정의 분리</strong> — §14 단일 상태 표 → §14-1 수동 알림(6종, 기존 유지) / §14-2 자동 트리거 알림(4종 — SENDING/SENT/PARTIAL_FAILED/FAILED). 자동 트리거에 DRAFT/SCHEDULED 단계 없음 명시. 일배치 트리거도 배치 실행 시각에 SENDING 진입, 그 전에는 알림 인스턴스 미생성. 트리거 정책은 [CEB-BO-APP-303]에서 정의</td></tr>
+<tr><td>v7.1</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>PWA 푸시 전제 정정</strong> — ① §11 채널 정의 "OS 푸시(FCM/APNs)" → "<strong>Web Push (PWA · VAPID 기반)</strong>"로 정정 ② §11-1 신설 — PWA 푸시 발송 제약 (Android/iOS Safari/Desktop/브라우저 쿼터) ③ §17 분리 — §17-1 한도·동시발송 / §17-2 푸시 미발송 사유 다항목 (권한 미허용·구독 없음·iOS PWA 미설치·구독 만료·한도 초과·서비스 오류) / §17-3 구독 회복 정책 ④ §15 글자수 권장 "OS 푸시" → "Web Push"</td></tr>
+<tr><td>v7.0</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>알림 서브 영역 추가</strong> — ① 영역명 "앱 배너 관리(APP)" → "<strong>앱 운영(APP)</strong>" 확장 ② §1-1 서브 영역 표 신설 (배너 / 알림) ③ §2-2 알림 화면 목록 (APP-301·302·303) ④ §11~17 알림 정책 신설 — 채널(기본+푸시) / 발송 방식(수동+자동 트리거) / 대상(전역/아티스트 팬덤/회원 그룹) / 상태 6종 / 다국어 / 발송 한도 ⑤ §18 활동 로그에 알림 액션 5종 추가 ⑥ §19-2 알림 대시보드 지표 신설 ⑦ §20 정합 상태에 알림 영역 ⚪ 표기</td></tr>
+<tr><td>v6.0</td><td>2026.05.19</td><td>@Nill Yoo</td><td>RFT 양식 정합 + 영역 ID 재배정 (CEB-BO-APP-000 → CEB-BO-013)</td></tr>
+<tr><td>v5.0</td><td>2026-05-19</td><td>@Nill Yoo</td><td>운영 도입 공식 발행본 (v3.x~v4.x 통합 정리)</td></tr>
+<tr><td>v4.x</td><td>2026-05-19</td><td>@Nill Yoo</td><td>슬롯 단위 재설계 + 타겟 모드 분리 + 미디어 비율 정의 + 단일 슬롯 자동 교체 옵션 A</td></tr>
+<tr><td>v3.x</td><td>2026-05-18</td><td>@Nill Yoo</td><td>운영자 시나리오 기반 재정의 + 노출 위치 탭 분리 + 노출 기간 모드</td></tr>
+<tr><td>v2.0</td><td>2026-05-18</td><td>@Nill Yoo</td><td>(폐기) 4탭 통합 구조</td></tr>
+<tr><td>v1.0</td><td>2026-05-06</td><td>@Nill Yoo</td><td>(폐기) Phase 9 초안</td></tr>
+</table>
+
+</body>
+</html>

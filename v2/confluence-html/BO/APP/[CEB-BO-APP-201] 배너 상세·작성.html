@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-APP-201] 배너 상세·작성</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-APP-201] 배너 상세·작성</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-APP-201</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>APP — 앱 운영</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v6.4</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 앱 > 배너 관리 > {위치} · {아티스트} > {제목}</td></tr>
+<tr><td>비고</td><td></td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v6.4</strong> (영역 명칭·활동 로그 참조 §번호 정정)</p>
+<p>화면 경로: <code>/home/banners/{id}</code> · Breadcrumb: <code>홈 › 앱 › 배너 관리 › {위치} · {아티스트} › {제목}</code></p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>배너 1건을 신규 작성·조회·수정·노출 제어하는 단일 화면. 신규(<code>/home/banners/new</code>)와 상세(<code>/home/banners/{id}</code>)를 동일 폼으로 통합한다. 슬롯 컨텍스트(위치 + 아티스트)는 [CEB-BO-APP-202] 슬롯 상세에서 [+ 배너 추가]로 진입할 때 자동 prefill되며, 본 화면에서는 read-only로 표기한다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/home/banners/new?slot={slotKind}&artist={artist}</code> (신규) · <code>/home/banners/{id}</code> (조회) · <code>/home/banners/{id}?mode=edit</code> (수정)</td></tr>
+<tr><td>Breadcrumb</td><td>홈 / 앱 / 배너 관리 / {위치 · 아티스트} / {제목}</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-APP-202] 슬롯 상세 [+ 배너 추가] (신규) · 슬롯 상세 배너 Row 클릭 (조회)</td></tr>
+<tr><td>용도</td><td>배너 1건의 다국어·미디어·소스·딥링크·노출 기간·노출 ON/OFF 운영</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<table>
+<tr><th>요소</th><th>설명</th></tr>
+<tr><td>Breadcrumb + 뒤로가기</td><td>홈 / 앱 / 배너 관리 / {위치 · 아티스트} / {제목 KO}</td></tr>
+<tr><td>타이틀</td><td><code>{메인 타이틀 KO}</code> (신규 시 "새 배너")</td></tr>
+<tr><td>위치 Badge</td><td>메인 / 오늘의 할일 / 다함께 / 미션</td></tr>
+<tr><td>아티스트 Badge</td><td>"전역" 또는 그룹명</td></tr>
+<tr><td>상태 Badge</td><td>임시저장 (회색) / 노출중 (초록) / 노출 종료 (진회색)</td></tr>
+<tr><td>기간 Badge</td><td>"무기한" 또는 기간 표시</td></tr>
+<tr><td>액션 영역</td><td>상태별 가능 액션 (§4 참조)</td></tr>
+</table>
+<h3>2-2. 입력 폼 (5섹션)</h3>
+<h4>A. 슬롯 컨텍스트 (read-only)</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>배너 위치</td><td>슬롯의 위치 Badge + 정책 보조 표시 ("캐러셀 · 최대 8개" / "단일")</td></tr>
+<tr><td>아티스트</td><td>슬롯의 아티스트 Badge ("전역" 또는 단일 아티스트)</td></tr>
+</table>
+<blockquote>
+<p>슬롯 컨텍스트는 슬롯 상세에서 prefill되어 본 화면에서 변경할 수 없다. 변경이 필요하면 다른 슬롯 상세에서 신규 작성을 시작한다. 아티스트 메인 슬롯(다함께/미션)은 전역이 없고 항상 단일 아티스트.</p>
+</blockquote>
+<h4>B. 기본 정보 (다국어)</h4>
+<table>
+<tr><th>필드</th><th>KO</th><th>EN</th><th>JP</th><th>글자수</th></tr>
+<tr><td>메인 타이틀</td><td>필수</td><td>필수</td><td>필수</td><td>30자</td></tr>
+<tr><td>서브 타이틀</td><td>필수</td><td>필수</td><td>필수</td><td>60자</td></tr>
+<tr><td>이미지 대체 텍스트</td><td>선택</td><td>선택</td><td>선택</td><td>100자</td></tr>
+</table>
+<h4>C. 미디어 (슬롯별 분기)</h4>
+<p>[CEB-BO-013] §8 적용. 슬롯의 위치에 따라 권장 비율·사이즈가 자동 분기되어 폼에 표기.</p>
+<table>
+<tr><th>위치</th><th>이미지 형태</th><th>권장 비율</th><th>권장 사이즈</th></tr>
+<tr><td>메인</td><td>메인이미지</td><td>1:1 (정사각)</td><td>1080×1080</td></tr>
+<tr><td>오늘의 할일</td><td>배경이미지</td><td>16:9 (가로)</td><td>1920×1080</td></tr>
+<tr><td>다함께</td><td>배경이미지</td><td>16:9 (가로)</td><td>1920×1080</td></tr>
+<tr><td>미션</td><td>배경이미지</td><td>16:9 (가로)</td><td>1920×1080</td></tr>
+</table>
+<table>
+<tr><th>공통 항목</th><th>값</th></tr>
+<tr><td>최대 용량</td><td>50MB ([CEB-BO-000] §16)</td></tr>
+<tr><td>허용 형식</td><td>JPG / PNG / WEBP</td></tr>
+<tr><td>미리보기</td><td>업로드 즉시 미리보기 + 회원 앱 시뮬레이션 (슬롯별 다른 자리·비율 표시)</td></tr>
+</table>
+<h4>D. 딥링크 (선택)</h4>
+<p>[CEB-BO-013] §9 공통 딥링크 정책 적용. <strong>알림(APP-302)과 동일한 <code>DeeplinkPicker</code> 컴포넌트 사용</strong> — 소스 타입 8종(이동 없음 포함) + 소스별 placeholder·힌트 라벨.</p>
+<table>
+<tr><th>단계</th><th>입력</th></tr>
+<tr><td>1) 소스 타입 선택</td><td>드롭다운 8종: <strong>이동 없음</strong> (기본, 표시 전용 배너 가능) / 래플 / 응원하기 / 퀘스트 / BIVE / 소식 / 아티스트 홈 / 프로모션</td></tr>
+<tr><td>2) 딥링크 입력</td><td>소스 타입별 힌트 라벨 + placeholder 노출. "이동 없음" 선택 시 입력 비활성</td></tr>
+</table>
+<blockquote>
+<p>내부 딥링크 대상이 종료 상태이면 경고 표시. [노출 시작] 차단 또는 운영자 재확인 옵션.</p>
+</blockquote>
+<h4>E. 노출 기간</h4>
+<p>[CEB-BO-013] §5 적용.</p>
+<table>
+<tr><th>모드</th><th>입력</th></tr>
+<tr><td>무기한</td><td>일정 입력 없음. 저장 후 운영자 [즉시 노출 시작]으로 ON, [즉시 노출 종료]로 OFF</td></tr>
+<tr><td>사용자 지정</td><td>공개일시 + 종료일시 (Date+Time Picker, KST, 분 단위). 도래 시 자동 노출/종료 + [즉시 시작/종료] 오버라이드 가능</td></tr>
+</table>
+<p>라디오 선택 후 "사용자 지정" 시 공개·종료일 입력 필드 동적 노출.</p>
+<blockquote>
+<p><strong>캐러셀 슬롯</strong>의 슬라이드 순서는 본 폼에서 다루지 않는다 — 저장 시 마지막 순서로 자동 배치되며, 슬롯 상세([CEB-BO-APP-202])에서 드래그로 변경한다. 단일 슬롯(오늘의 할일·미션)은 정렬 개념 없음. E 섹션 하단에 안내 부기로 노출.</p>
+</blockquote>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>헤더 Badge</td><td>위치 / 아티스트 / 상태 / 기간</td><td>배너 컨텍스트 한눈에</td></tr>
+<tr><td>A 슬롯 컨텍스트</td><td>위치 + 아티스트</td><td>read-only</td></tr>
+<tr><td>B 다국어</td><td>KO/EN/JP 타이틀 · 대체 텍스트</td><td>노출 시작 검증 대상</td></tr>
+<tr><td>C 미디어</td><td>슬롯별 권장 비율·사이즈 + 업로드 영역</td><td>위치 기준 동적 분기</td></tr>
+<tr><td>D 딥링크</td><td>소스 타입 8종 (이동 없음 포함) + 소스별 동적 입력 가이드</td><td>회원 클릭 이동 정의 (선택). [CEB-BO-013] §9 공통 정책</td></tr>
+<tr><td>E 노출 기간</td><td>무기한 / 사용자 지정 라디오 + 일정</td><td>ON/OFF 흐름 결정</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<h3>4-1. 상태별 가능 액션</h3>
+<table>
+<tr><th>현재 상태</th><th>가능 액션</th></tr>
+<tr><td>임시저장 (DRAFT)</td><td>[수정] [삭제] [즉시 노출 시작]</td></tr>
+<tr><td>노출중 (ACTIVE)</td><td>[수정] [복제] [즉시 노출 종료]</td></tr>
+<tr><td>노출 종료 (CLOSED)</td><td>[복제] [삭제]</td></tr>
+</table>
+<h3>4-2. 데이터·동작 분기</h3>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>데이터 로딩 중</td><td>Skeleton 폼 (섹션별 회색 영역)</td></tr>
+<tr><td>신규 진입 (쿼리 prefill)</td><td>A 슬롯 컨텍스트 read-only 표시 + 빈 폼</td></tr>
+<tr><td>신규 진입 (슬롯 쿼리 없음)</td><td><strong>안전망 리다이렉트</strong> — <code>/home/banners</code> 배너 관리로 이동 + 안내 토스트 "슬롯을 먼저 선택해 주세요. 배너 관리에서 슬롯 행을 클릭한 뒤 [+ 배너 추가]로 진입합니다." 운영자가 의도 없이 첫 슬롯으로 진입하는 사고 방지</td></tr>
+<tr><td>조회 실패</td><td>"배너 정보를 불러올 수 없습니다." + [재시도]</td></tr>
+<tr><td>검증 실패 ([노출 시작])</td><td>토스트 (Error) + 누락 필드 빨강 강조</td></tr>
+<tr><td>저장 성공</td><td>토스트 (Success) + 슬롯 상세로 복귀</td></tr>
+<tr><td>캐러셀 한도 초과</td><td>토스트 (Error) "이 슬롯의 동시 노출 8개를 이미 채웠습니다."</td></tr>
+<tr><td>단일 슬롯 자동 교체 안내</td><td>[노출 시작] 클릭 시 확인 모달 "{기존 배너 제목}이(가) 자동으로 노출 종료됩니다. 진행하시겠습니까?"</td></tr>
+<tr><td>권한 없음 진입</td><td>[관리자 > 권한관리] 설정에 따라 화면 자체 미노출 또는 액션 버튼 비활성</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<h3>5-1. 다국어 검증</h3>
+<table>
+<tr><th>검증 시점</th><th>검증 항목</th></tr>
+<tr><td>임시저장</td><td>메인 타이틀 KO 최소 입력</td></tr>
+<tr><td>[노출 시작] (즉시 또는 자동)</td><td>메인·서브 타이틀 KO/EN/JP 모두 입력 + 이미지 업로드 + 공개일·종료일 (사용자 지정 시) + 딥링크 (이동 없음 허용)</td></tr>
+</table>
+<p>미충족 시 토스트 + 누락 필드 빨강 강조. 자동 노출의 경우 공개일 도래 시점에 검증 실패하면 자동 노출 차단 + 운영자 알림.</p>
+<h3>5-2. 슬롯 한도·교체</h3>
+<table>
+<tr><th>슬롯 유형</th><th>규칙</th></tr>
+<tr><td>캐러셀 (메인/다함께)</td><td>[노출 시작] 시 슬롯 ACTIVE 8개 초과 차단 ([CEB-BO-013] §5-3)</td></tr>
+<tr><td>단일 (오늘의 할일/미션)</td><td>[노출 시작] 시 기존 ACTIVE 있으면 자동 OFF (즉시 교체) ([CEB-BO-013] §5-4)</td></tr>
+</table>
+<h3>5-3. 활동 로그</h3>
+<p>[CEB-BO-013] §18 정합.</p>
+<table>
+<tr><th>액션</th><th>로그 메시지</th></tr>
+<tr><td>배너 등록</td><td>배너 '{제목}' 등록 (슬롯: {위치} · {아티스트}, 기간: {무기한/시작~종료})</td></tr>
+<tr><td>배너 수정</td><td>배너 '{제목}'의 정보를 수정했습니다. (변경 항목: {필드 목록})</td></tr>
+<tr><td>배너 복제</td><td>배너 '{원본 제목}'을(를) 복제했습니다. (신규 ID: {신규ID})</td></tr>
+<tr><td>즉시 노출 시작</td><td>배너 '{제목}'을(를) 즉시 노출 시작했습니다.</td></tr>
+<tr><td>즉시 노출 종료</td><td>배너 '{제목}'의 노출을 즉시 종료했습니다.</td></tr>
+<tr><td>자동 교체 (시스템)</td><td>{위치} · {아티스트} 슬롯의 배너 '{새 배너}' 노출 시작으로 '{기존 배너}'이(가) 자동 종료되었습니다.</td></tr>
+<tr><td>삭제</td><td>배너 '{제목}'을(를) 삭제했습니다.</td></tr>
+</table>
+<h3>5-4. 복제 동작</h3>
+<p>[복제] 클릭 → 현재 배너의 모든 입력값을 신규 작성 폼에 프리필 → <code>/home/banners/new?slot={slotKind}&artist={artist}</code>로 이동. 단, 공개일·종료일·상태·통계는 초기화.</p>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>슬롯 상세 [+ 배너 추가]</td><td>본 화면 (신규 작성, A 슬롯 컨텍스트 prefill)</td></tr>
+<tr><td>슬롯 상세 배너 Row 클릭</td><td>본 화면 (조회 모드)</td></tr>
+<tr><td>본 화면 [복제]</td><td>본 화면 (신규 작성, 입력값 prefill)</td></tr>
+<tr><td>본 화면 취소 / 저장 후</td><td>[CEB-BO-APP-202] 슬롯 상세로 복귀</td></tr>
+<tr><td>영역 가이드 참조</td><td>[CEB-BO-013] 앱 운영(APP) 영역 가이드</td></tr>
+<tr><td>활성 아티스트 조회 출처</td><td>[CEB-BO-ART-101] 아티스트 리스트</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v6.4</strong></td><td><strong>2026.05.20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>영역 명칭 및 활동 로그 §번호 참조 정정</strong> — ① Page Properties 기능영역(Epic)·§6 연관 화면의 영역 가이드 명칭을 "<strong>앱 배너 관리</strong>" → "<strong>앱 운영</strong>"으로 정정 ([CEB-BO-013] v7.0 정합 누락) ② §5-3 활동 로그 참조를 "[CEB-BO-013] §12 정합" → "<strong>[CEB-BO-013] §18 정합</strong>"으로 정정 (§12는 알림 발송 방식 섹션, 활동 로그는 §18)</td></tr>
+<tr><td>v6.3</td><td>2026.05.20</td><td>@Nill Yoo</td><td><strong>안전망 추가 (UI/UX 검증 후속)</strong> — §4-2에 "신규 진입 시 슬롯 쿼리 없으면 배너 관리 리스트로 리다이렉트 + 안내 토스트" 추가. 운영자가 의도 없이 첫 슬롯으로 진입하는 사고 방지</td></tr>
+<tr><td>v6.2</td><td>2026.05.20</td><td>@Nill Yoo</td><td><strong>오버스펙 정리 (UI/UX 검증 후속)</strong> — F "노출 우선순위" 섹션 제거. 안내 1줄(슬라이드 순서는 슬롯 상세에서 드래그)을 E "노출 기간" 섹션 하단 부기로 통합. 입력 폼 6섹션 → 5섹션</td></tr>
+<tr><td>v6.1</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>딥링크 공통 정책 적용</strong> — ① D 섹션 라벨 "소스 타입 + 딥링크" → "딥링크 (선택)" ② 알림(APP-302)과 동일한 <code>DeeplinkPicker</code> 공통 컴포넌트 사용 ③ 소스 타입 7종 → <strong>8종 (이동 없음 추가)</strong>. 배너도 표시 전용 가능 ④ 소스별 딥링크 입력 필드 표 제거 → 공통 컴포넌트의 placeholder/힌트로 대체 ⑤ [CEB-BO-013] §9 공통 정책 참조</td></tr>
+<tr><td>v6.0</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>RFT 양식 정합</strong> — ① Page Properties 13필드 확장 ② 상단 한 줄 헤더 추가 ③ 표 구분자 컴팩트(공백 없음) 형태로 통일 ④ 하이픈 형태 헤딩 번호 ⑤ §3 화면에 노출되는 정보 / §4 상태별 동작 분기 / §5 검증 규칙 신설 ⑥ 권한 표 제거 → "[관리자 > 권한관리] 설정에 따라" 단일화 ⑦ 영역 가이드 ID 참조를 [CEB-BO-013]으로 갱신</td></tr>
+<tr><td>v5.0</td><td>2026-05-19</td><td>@Nill Yoo</td><td>운영 도입 공식 발행본</td></tr>
+<tr><td>v4.x</td><td>2026-05-19</td><td>@Nill Yoo</td><td>슬롯 컨텍스트 진입 + 슬롯별 미디어 비율 (메인 1:1 / 그 외 16:9)</td></tr>
+<tr><td>v3.x</td><td>2026-05-18</td><td>@Nill Yoo</td><td>운영자 시나리오 기반 재정의 + 노출 위치 명칭 통일 + 노출 기간 무기한/사용자 지정</td></tr>
+<tr><td>v2.0</td><td>2026-05-18</td><td>@Nill Yoo</td><td>(폐기) 4탭 통합 구조</td></tr>
+<tr><td>v1.0</td><td>2026-05-06</td><td>@Nill Yoo</td><td>(폐기) Phase 9 초안</td></tr>
+</table>
+
+</body>
+</html>
