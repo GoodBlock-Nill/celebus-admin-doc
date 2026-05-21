@@ -33,7 +33,7 @@ function HistoryInner() {
 
   const filtered = useMemo(() => {
     return rftLogs.filter((l) => {
-      // 운영 카테고리 포함 — 부호 기준으로 자동 분류
+      // 발급/사용 부호 기준 분류
       if (statusFilter === 'ISSUED' && l.delta <= 0) return false;
       if (statusFilter === 'USED' && l.delta >= 0) return false;
       if (sourceFilter !== 'all' && l.sourceFeature !== sourceFilter) return false;
@@ -182,16 +182,12 @@ function HistoryInner() {
           { key: 'balanceAfter', label: '잔액', width: '80px', align: 'right', render: (r) => (
             <span className="text-gray-700">{r.balanceAfter}장</span>
           )},
-          { key: 'sourceFeature', label: '출처', width: '160px', render: (r) => {
-            // [CEB-BO-RFT-201] §2-3 정합 — 운영 카테고리 행은 "(운영) {유형}" 표기로 식별 (2026-05-21 sync 정정)
-            const isAdminCategory = r.sourceFeature === 'RAFFLE_CANCEL_REFUND' || r.sourceFeature === 'ADMIN_CORRECTION' || r.sourceFeature === 'ADMIN_RECLAIM';
-            const label = sourceLabelMap[r.sourceFeature] ?? r.sourceFeature;
-            return (
-              <span className={`text-gray-700 ${isAdminCategory ? 'text-xs' : ''}`} title={label}>
-                {isAdminCategory ? `(운영) ${label}` : label}
-              </span>
-            );
-          }},
+          // [CEB-BO-RFT-201] v2.6 정합 — 운영 카테고리 3종 폐기로 정규 출처 한국어 라벨만 표시 (2026-05-21 정정)
+          { key: 'sourceFeature', label: '출처', width: '160px', render: (r) => (
+            <span className="text-gray-700" title={sourceLabelMap[r.sourceFeature] ?? r.sourceFeature}>
+              {sourceLabelMap[r.sourceFeature] ?? r.sourceFeature}
+            </span>
+          )},
           { key: 'sourceArtistContext', label: '아티스트 컨텍스트', width: '150px', render: (r) => (
             <span className={r.sourceArtistContext ? 'inline-flex rounded-full px-2.5 py-1 text-xs font-medium bg-indigo-50 text-indigo-700' : 'text-gray-400 text-xs'}>
               {r.sourceArtistContext ?? '전역'}

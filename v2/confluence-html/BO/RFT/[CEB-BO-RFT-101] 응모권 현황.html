@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>RFT — 응모권</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.4</td></tr>
+<tr><td>버전</td><td>v2.5</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.14</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,7 +96,7 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v2.4</strong> (운영 카테고리 안내 4종 → 3종 — "만료 소멸" 항목 정정. RFT-010 §5 "만료 없음" 정책 정합)</p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v2.5</strong> (운영 카테고리 자체 폐기 정합 — §2-3 분포 패널 미노출 안내 제거. [CEB-BO-010] v2.6 정합)</p>
 <p>화면 경로: <code>/rft/current</code> · Breadcrumb: <code>홈 › 응모권 › 응모권 현황</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
@@ -142,7 +142,6 @@ p {
 <li><strong>막대 클릭 시 [CEB-BO-RFT-201]로 이동하여 사용 출처 필터 자동 적용</strong></li>
 </ul>
 <blockquote>
-<p><strong>운영 카테고리(래플 취소 환불 / 운영자 보정 적립 / 운영자 회수)는 본 분포 패널에 노출하지 않는다</strong> — 정규 회원 노출 출처가 아니므로 [CEB-BO-RFT-201] 변동 내역에서만 조회 가능.</p>
 <p>⚠️ <strong>일일 미션 카드 제외</strong> — 일일 미션은 응모권을 발급하지 않음 ([CEB-BO-FQ-501] 덕력 25만 적립).</p>
 </blockquote>
 <h3>2-4. 최근 변동 — 좌우 분할 (각 5건 고정)</h3>
@@ -208,7 +207,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v2.4</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 카테고리 안내 4종 → 3종 (정합성 정정)</strong> — §2-3 안내 문구에서 <strong>"만료 소멸" 제거</strong>. [CEB-BO-010] §5 "만료 없음 (영구 보유)" 정책과 자체 모순이었음</td></tr>
+<tr><td><strong>v2.5</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 카테고리 자체 폐기 정합</strong> — [CEB-BO-010] v2.6 §4-3 운영 카테고리 3종 폐기에 정합. §2-3 분포 패널의 "운영 카테고리(래플 취소 환불 / 운영자 보정 적립 / 운영자 회수)는 본 분포 패널에 노출하지 않는다" 안내 제거 — 운영 카테고리 자체가 폐기되어 안내 의미 없음</td></tr>
+<tr><td>v2.4</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>운영 카테고리 안내 4종 → 3종 (정합성 정정)</strong> — §2-3 안내 문구에서 <strong>"만료 소멸" 제거</strong>. [CEB-BO-010] §5 "만료 없음 (영구 보유)" 정책과 자체 모순이었음</td></tr>
 <tr><td>v2.3</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>최근 변동 좌우 분할 (개발팀 피드백)</strong> — ① §2-4 단일 10건 테이블 → <strong>좌우 분할 (최근 발급 5건 / 최근 사용 5건)</strong>. 발급·사용 본질이 다른 데이터(+/-) 혼재 혼란 해소 ② 각 패널의 "더 보기 →" 클릭 시 [CEB-BO-RFT-201]에 <code>?type=ISSUED</code> 또는 <code>?type=USED</code> 쿼리로 변동 유형 사전 선택 ③ 좁아진 너비 고려 출처 컬럼 호버 툴팁, 아티스트 컨텍스트·참조 컬럼은 제거 (RFT-201에서 풀 정보 조회) ④ §3·§6 정합 갱신 ⑤ §4 빈 상태 메시지 패널별 분리</td></tr>
 <tr><td>v2.2</td><td>2026-05-14</td><td>@Nill Yoo</td><td><strong>출처 분포 5종 재정의 + 닉네임 새 탭 링크화</strong> — ① §2-3 정규 발급 분포 5종 (퀘스트 보상 / PM·ST 보상 / BIVE 보유혜택 / 덕력 랭킹 보상 / GP로 응모권 구매)으로 갱신. 일일 미션 카드 제거 ② §2-4 최근 변동 회원 컬럼: 닉네임 클릭 시 [CEB-BO-USR-201] 회원 상세 새 탭 진입 ③ §6 연관 화면에 [CEB-BO-RFT-301] 추가 ④ 운영 카테고리(래플 취소 환불 / 운영자 보정 적립 / 만료 소멸 / 운영자 회수)는 분포 패널에 노출하지 않음</td></tr>
 <tr><td>v2.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>분포 패널 정합</strong> — 아티스트 컨텍스트별 분포 패널 + 보유 회원 분포 4구간 카드 전체 삭제. 출처별 분포 패널을 풀폭(grid-cols-1)으로 확장. 발급 분포 5종 → 4종(서포트 보상 영구 폐기). §3 노출 정보·§4 데이터 분기에서 관련 행 제거. Page Properties 표 신규(13필드)</td></tr>

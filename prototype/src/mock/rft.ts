@@ -10,11 +10,8 @@ export type RftSourceFeature =
   | 'BIVE_BENEFIT'           // BIVE 보유혜택
   | 'DUK_RANKING_REWARD'     // 덕력 랭킹 보상 (Phase 13 신규)
   | 'GP_EXCHANGE'            // GP로 응모권 구매
-  | 'RAFFLE_ENTRY'           // 래플 응모 사용
-  // [CEB-BO-010] §3 운영 카테고리 3종 (2026-05-21 sync 정정 — RFT-201 출처 필터 정합)
-  | 'RAFFLE_CANCEL_REFUND'   // 래플 취소 환불
-  | 'ADMIN_CORRECTION'       // 운영자 보정 적립
-  | 'ADMIN_RECLAIM';         // 운영자 회수
+  | 'RAFFLE_ENTRY';          // 래플 응모 사용
+// [CEB-BO-010] v2.6 정합 — 운영 카테고리 3종(RAFFLE_CANCEL_REFUND·ADMIN_CORRECTION·ADMIN_RECLAIM) 폐기 (2026-05-21 정정)
 
 export type RftSourceRefType =
   | 'QUEST'
@@ -130,43 +127,6 @@ export const sourcePolicies: SourceMeta[] = [
     lastUpdatedBy: 'nill',
     lastUpdatedAt: '2026.04.27 12:35',
   },
-  // [CEB-BO-010] §3 운영 카테고리 3종 (2026-05-21 sync 정정)
-  {
-    code: 'RAFFLE_CANCEL_REFUND',
-    nameKO: '래플 취소 환불',
-    nameEN: 'Raffle Cancel Refund',
-    nameJP: 'Raffle キャンセル返金',
-    category: 'EARN',
-    refType: 'RAFFLE',
-    active: true,
-    issueRule: '운영자가 래플 운영을 취소한 경우 응모자 전원에게 응모권 환불 처리',
-    lastUpdatedBy: 'nill',
-    lastUpdatedAt: '2026.05.21 09:00',
-  },
-  {
-    code: 'ADMIN_CORRECTION',
-    nameKO: '운영자 보정 적립',
-    nameEN: 'Admin Correction',
-    nameJP: '運営者補正',
-    category: 'EARN',
-    refType: 'EXCHANGE',
-    active: true,
-    issueRule: '시스템 오류·고객 보상 등 사유로 운영자가 수동 적립한 응모권',
-    lastUpdatedBy: 'nill',
-    lastUpdatedAt: '2026.05.21 09:00',
-  },
-  {
-    code: 'ADMIN_RECLAIM',
-    nameKO: '운영자 회수',
-    nameEN: 'Admin Reclaim',
-    nameJP: '運営者回収',
-    category: 'USE',
-    refType: 'EXCHANGE',
-    active: true,
-    issueRule: '부정 사용 등 사유로 운영자가 수동 회수한 응모권',
-    lastUpdatedBy: 'nill',
-    lastUpdatedAt: '2026.05.21 09:00',
-  },
 ];
 
 // 결정적 회원·로그 시드 데이터
@@ -258,9 +218,6 @@ function makeLog(
     DUK_RANKING_REWARD: 'SEASON',
     GP_EXCHANGE: 'EXCHANGE',
     RAFFLE_ENTRY: 'RAFFLE',
-    RAFFLE_CANCEL_REFUND: 'RAFFLE',
-    ADMIN_CORRECTION: 'EXCHANGE',
-    ADMIN_RECLAIM: 'EXCHANGE',
   };
   const refIdMap: Record<RftSourceFeature, string> = {
     QUEST_REWARD: `Quest #${44 - (id % 8)}`,
@@ -269,9 +226,6 @@ function makeLog(
     DUK_RANKING_REWARD: `Season #${(id % 4) + 1}`,
     GP_EXCHANGE: `Tx ${100000 + id}`,
     RAFFLE_ENTRY: `Raffle #${12 - (id % 5)}`,
-    RAFFLE_CANCEL_REFUND: `Raffle #${5 + (id % 3)} 취소`,
-    ADMIN_CORRECTION: `보정 #${200 + id}`,
-    ADMIN_RECLAIM: `회수 #${300 + id}`,
   };
   return {
     id,
@@ -304,10 +258,6 @@ const SAMPLE_LOGS: { d: number; h: number; m: number; f: RftSourceFeature; delta
   { d: 3, h: 15, m: 2, f: 'RAFFLE_ENTRY', delta: -1, bal: 2 },
   { d: 4, h: 14, m: 3, f: 'GP_EXCHANGE', delta: 2, bal: 3 },
   { d: 4, h: 12, m: 4, f: 'GAME_REWARD', delta: 1, bal: 1 },
-  // [CEB-BO-010] §3 운영 카테고리 3종 샘플 로그 (2026-05-21 sync 정정)
-  { d: 5, h: 10, m: 5, f: 'RAFFLE_CANCEL_REFUND', delta: 1, bal: 6 },
-  { d: 5, h: 14, m: 6, f: 'ADMIN_CORRECTION', delta: 5, bal: 11 },
-  { d: 6, h: 11, m: 7, f: 'ADMIN_RECLAIM', delta: -3, bal: 8 },
 ];
 
 // 12명 회원 × 약 10건 = 약 120건 변동 로그
