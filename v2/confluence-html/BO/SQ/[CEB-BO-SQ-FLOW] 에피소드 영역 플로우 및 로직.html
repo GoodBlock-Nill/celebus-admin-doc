@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.5</td></tr>
+<tr><td>버전</td><td>v3.6</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,7 +96,7 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v3.5</strong> (PM/ST 다국어 타이틀 검증 정정 — KO/EN/JA 3종 모두 필수. §5 "다국어 필수" 표준 정합)</p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v3.6</strong> (미션 수정 플로우 §6-6 재작성 — [CEB-BO-SQ-204-EDIT] v1.0 신규 진입 + 상태별 잠금 정책 명시)</p>
 <p>본 문서는 SQ 영역의 모든 데이터 계층·상태 머신·정책·운영 플로우를 통합 정의한다. 화면별 UI 명세는 각 화면 ID 문서 참조.</p>
 </blockquote>
 <h2>1. 영역 개요</h2>
@@ -121,6 +121,7 @@ p {
 <tr><td>(모달)</td><td>에피소드 삭제</td><td>[CEB-BO-SQ-202-MD-DELETE]</td></tr>
 <tr><td>/sq/{id}/quests/create</td><td>미션 추가</td><td>[CEB-BO-SQ-204-CREATE]</td></tr>
 <tr><td>/sq/{id}/quests/{qid}</td><td>미션 상세 (수정 진입점 포함)</td><td>[CEB-BO-SQ-204]</td></tr>
+<tr><td>/sq/{id}/quests/{qid}/edit</td><td>미션 수정 (v3.6 신규)</td><td>[CEB-BO-SQ-204-EDIT]</td></tr>
 <tr><td>/sq/pending</td><td>팬퀘스트 대기내역</td><td>[CEB-BO-SQ-301]</td></tr>
 <tr><td>/sq/quests</td><td>팬퀘스트 리스트 (v3.1 SQ 영역 흡수, 구 FQ-101)</td><td>[CEB-BO-SQ-302]</td></tr>
 <tr><td>/sq/quests/create</td><td>Quest 생성 (구 FQ-101-CREATE)</td><td>[CEB-BO-SQ-302-CREATE]</td></tr>
@@ -365,16 +366,24 @@ p {
        그룹 기간 밖이면 인라인 에러
 6. 추가하기 → 에피소드 상세 복귀 + 카드 즉시 갱신 + 토스트
 </code></pre>
-<h3>6-6. 미션 수정 플로우 (v3.0 정정 — 모달 폐기, 상세 화면 진입)</h3>
-<pre><code>1. 에피소드 상세의 미션 카드 또는 행 클릭
-   - 부모 에피소드·그룹이 종료면 클릭 비활성 또는 read-only 진입
-2. 미션 상세 [CEB-BO-SQ-204] 노출 (현재 값 prefill)
-3. 소스 참조값 · 완료 판정 유형 · 기준값 · 반복 주기 · 기간 수정 가능
-   - 미션 유형·식별값·부모 에피소드는 read-only
-4. 저장하기 → 행 갱신 + 토스트
+<h3>6-6. 미션 수정 플로우 (v3.6 정정 — [CEB-BO-SQ-204-EDIT] 신규 진입 + 상태별 잠금)</h3>
+<pre><code>1. 에피소드 상세 → 미션 카드 클릭 → 미션 상세 [CEB-BO-SQ-204]
+2. 미션 상세에서 [수정하기] 버튼 클릭 → 미션 수정 [CEB-BO-SQ-204-EDIT] 진입
+   (경로: /sq/{id}/quests/{qid}/edit)
+3. 부모 에피소드 상태에 따라 일부 필드 read-only 잠금:
+   - 임시저장(DRAFT): 전체 수정 가능
+   - 진행중(ACTIVE): 보상 필드(응모권·덕력·BIVE·민팅 캠페인) read-only — 회원 기대권 보호
+   - 종료(CLOSED): 전체 read-only + [저장] 비활성
+4. 미션 유형(팬퀘스트/예측 마켓/서바이벌 트리비아)·팬퀘스트 매핑(fanQuestId)은 항상 read-only
+   - 변경 필요 시 미션 삭제 후 재생성
+5. 팬퀘스트 유형 미션:
+   - 타이틀·다국어 타이틀·이미지·보상 read-only (자체 상속, 인디고 안내 박스)
+   - 본 화면에서는 BIVE 토글·민팅 캠페인 등 미션 고유 메타만 수정 가능
+6. PM/ST 유형 미션 + 다국어 타이틀 KO·EN·JA 중 한 언어라도 비어 있음 → [저장] 비활성
+7. [저장] → 미션 상세로 복귀 + 토스트 "수정 완료"
 </code></pre>
 <blockquote>
-<p><strong>v3.0 정정</strong>: v2.2 이전에는 "미션 수정 모달"이 존재했으나 v2.2부터 미션 상세 화면([CEB-BO-SQ-204])에서 진입·수정한다. v2.2 시점 본 문서가 모달 ID를 잘못 표기하던 부분 정정.</p>
+<p><strong>v3.6 정정</strong>: v3.0~v3.5에서는 "미션 상세 [CEB-BO-SQ-204]에서 직접 수정"으로 표기했으나, [CEB-BO-SQ-204-EDIT] v1.0 신규로 별도 수정 화면이 분리됨. 미션 상세는 read-only 정보 조회 + [수정하기] 진입점 역할만 담당.</p>
 </blockquote>
 <h3>6-7. 그룹·에피소드 삭제 플로우 (임시저장 한정)</h3>
 <pre><code>1. 그룹 또는 에피소드 상세에서 "삭제" CTA 클릭
@@ -431,7 +440,8 @@ p {
 <h2>10. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v3.5</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>PM/ST 다국어 타이틀 검증 정정 — KO·EN·JA 3종 모두 필수 (사용자 정정 반영)</strong> — v3.4에서 "KO 필수 + EN/JA 선택"으로 디폴트 적었으나 사용자 정정: [CEB-BO-011] §5 "다국어 필수" 표준에 통일. §3-3 미션 표 "다국어 타이틀" 행 정정. [CEB-BO-SQ-204-CREATE] v3.3·[CEB-BO-011] v3.5 동시 정합</td></tr>
+<tr><td><strong>v3.6</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>미션 수정 플로우 §6-6 재작성 — [CEB-BO-SQ-204-EDIT] v1.0 신규 진입 + 상태별 잠금</strong> ① §2-1 활성 화면 표에 <code>/sq/{id}/quests/{qid}/edit</code> 미션 수정 [CEB-BO-SQ-204-EDIT] 행 신규 ② §6-6 미션 수정 플로우 v3.0 → v3.6 재작성 — 미션 상세 [CEB-BO-SQ-204]에서 [수정하기] 버튼 → 별도 수정 화면 [CEB-BO-SQ-204-EDIT] 진입 (직접 수정 모드 제거). 부모 에피소드 상태별 잠금 (DRAFT/ACTIVE/CLOSED), 유형·팬퀘스트 매핑 read-only, 팬퀘스트 유형 메타만 수정 정책 명시 ③ [CEB-BO-SQ-204] v3.3·[CEB-BO-011] v3.6 동시 정합</td></tr>
+<tr><td>v3.5</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>PM/ST 다국어 타이틀 검증 정정 — KO·EN·JA 3종 모두 필수 (사용자 정정 반영)</strong> — v3.4에서 "KO 필수 + EN/JA 선택"으로 디폴트 적었으나 사용자 정정: [CEB-BO-011] §5 "다국어 필수" 표준에 통일. §3-3 미션 표 "다국어 타이틀" 행 정정. [CEB-BO-SQ-204-CREATE] v3.3·[CEB-BO-011] v3.5 동시 정합</td></tr>
 <tr><td>v3.4</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>§3-3 미션 표에 다국어 타이틀 (PM·ST 한정) 신규 (사용자 피드백 반영)</strong> — PM/ST 미션은 외부 콘텐츠를 참조하지 않고 직접 입력하는 구조이므로 다국어 타이틀(KO/EN/JP, 각 50자, KO 필수 + EN/JA 선택) 입력. 팬퀘스트는 매핑된 팬퀘스트 타이틀 자동 상속. [CEB-BO-011] v3.4 §5 정책 상수 + [CEB-BO-SQ-204-CREATE] v3.2 §2-7 정합</td></tr>
 <tr><td>v3.3</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>용어 정정 — "팬덤 포인트" → "덕력(DUK)"</strong> ([CEB-BO-DUK-000] 영역 가이드 표준 정합) — §3-2 에피소드 표·§3-3 미션 표·변경 이력 본문의 보상 화폐 라벨 일괄 정정</td></tr>
 <tr><td><strong>v3.2</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드·미션 정책 4건 정합 갱신 + 정합 정정 보완</strong> — ① §3-2 에피소드 표에 "에피소드 완료 보상" 항목 추가 (메인 전용, 응모권+덕력+BIVE) ② §3-3 미션 표에 "반복 여부 (메인/반복 분기)·반복 주기 (일간/주간/월간, PM·ST 한정)·반복 운영 기간 (그룹 기간 내 검증)" 정합 ③ §5-2-1 메인/반복 에피소드 미션 유형 분기 정책 신설 ④ §5-2-2 메인 에피소드 완료 보상 정책 신설 ⑤ §6-5 미션 추가 플로우 갱신 (메인=단일 잠금, 반복=주기·기간 추가 입력 흐름) ⑥ [CEB-BO-011] v3.2 §5 정책 상수 5행 + 화면별 명세(SQ-202-CREATE/EDIT, SQ-202, SQ-204-CREATE, SQ-204) v3.1 정합 ⑦ <strong>정합 보완(같은 날 추가 정정)</strong>: §5-7 반복 주기 옵션 표기 (월간/주간 잔존) → (일간/주간/월간)으로 정정. §11 관련 문서 섹션에 v3.1 흡수 17개 화면 목록 보충</td></tr>

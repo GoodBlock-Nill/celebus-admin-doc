@@ -71,8 +71,9 @@ export default function QuestDetailPage({ params }: { params: Promise<{ id: stri
           <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-medium ${typeBadge.bg} ${typeBadge.text}`}>
             {typeBadge.label}
           </span>
+          {/* [CEB-BO-SQ-204] §4 v3.3 정합 — [수정하기] → [CEB-BO-SQ-204-EDIT] 진입 (2026-05-21 sync 정정) */}
           <button
-            onClick={() => alert(`[Mock] 미션 수정 (SQ-204-EDIT) — '${quest.titleKO}'`)}
+            onClick={() => router.push(`/sq/${storyId}/quests/${quest.id}/edit`)}
             className="h-10 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
           >
             수정하기
