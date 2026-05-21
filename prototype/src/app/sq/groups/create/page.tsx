@@ -112,14 +112,15 @@ export default function GroupCreatePage() {
               <option value="CELEBUS">CELEBUS</option>
             </select>
           </Field>
-          <Field label="상태" required hint="ACTIVE는 아티스트당 1개 제한">
+          <Field label="상태" required hint="진행중은 아티스트당 1개 제한">
             <select
               value={form.status}
               onChange={(e) => update('status', e.target.value as EpisodeGroupStatus)}
               className="h-10 w-full px-3 border border-gray-200 rounded-lg text-sm bg-white"
             >
-              <option value="DRAFT">DRAFT</option>
-              <option value="ACTIVE">ACTIVE</option>
+              <option value="DRAFT">임시저장</option>
+              <option value="ACTIVE">진행중</option>
+              <option value="CLOSED">종료</option>
             </select>
           </Field>
         </div>

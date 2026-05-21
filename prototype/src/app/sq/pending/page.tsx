@@ -19,7 +19,11 @@ export default function FanquestPendingPage() {
   const [artist, setArtist] = useState<ArtistFilter>('전체');
   const [page, setPage] = useState(1);
 
-  const all = useMemo(() => getQuestsWithPending(), []);
+  // [CEB-BO-SQ-301] §2-3 정합 — 검토 필요(대기 건수) 내림차순 정렬 (2026-05-21 sync 정정)
+  const all = useMemo(
+    () => [...getQuestsWithPending()].sort((a, b) => (b.pendingCount ?? 0) - (a.pendingCount ?? 0)),
+    []
+  );
   const filtered = useMemo(
     () => (artist === '전체' ? all : all.filter((q) => q.artist === artist)),
     [all, artist],

@@ -49,6 +49,11 @@ function SqCreateInner() {
   const [imageUrl, setImageUrl] = useState('');
   const [imageFileName, setImageFileName] = useState('');
   const [dragOver, setDragOver] = useState(false);
+  // [CEB-BO-SQ-202-CREATE] §2-7 v3.1 — 에피소드 완료 보상 (메인 에피소드 전용)
+  const [rewardEntryTicket, setRewardEntryTicket] = useState(0);
+  const [rewardFanPoint, setRewardFanPoint] = useState(0);
+  const [biveRewardYn, setBiveRewardYn] = useState(false);
+  const [mintingEventId, setMintingEventId] = useState('');
 
   const isValid =
     !isBlocked &&
@@ -214,7 +219,7 @@ function SqCreateInner() {
           <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">상태</label>
             <div className="h-11 px-3 inline-flex items-center bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600">
-              DRAFT (자동)
+              임시저장 (자동)
             </div>
           </div>
         </div>
@@ -306,9 +311,68 @@ function SqCreateInner() {
         </div>
       </div>
 
+      {/* [CEB-BO-SQ-202-CREATE] §2-7 v3.1 정합 — 에피소드 완료 보상 (메인 에피소드 전용, 2026-05-21 sync 정정) */}
+      {episodeKind === 'MAIN' && (
+        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
+          <h4 className="text-base font-semibold text-gray-900 mb-1">에피소드 완료 보상 <span className="text-[11px] font-normal text-gray-500 ml-1">(선택)</span></h4>
+          <p className="text-[11px] text-gray-500 mb-4">에피소드 안의 모든 미션이 완료된 회원에게 자동 지급되는 보상. 미션 보상과 별도 추가 지급. 모든 값이 0/OFF여도 저장 가능</p>
+          <div className="grid grid-cols-2 gap-5 mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">응모권 보상 (장)</label>
+              <input
+                type="number"
+                min={0}
+                value={rewardEntryTicket}
+                onChange={(e) => setRewardEntryTicket(Math.max(0, parseInt(e.target.value || '0', 10)))}
+                className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">팬덤 포인트 보상</label>
+              <input
+                type="number"
+                min={0}
+                value={rewardFanPoint}
+                onChange={(e) => setRewardFanPoint(Math.max(0, parseInt(e.target.value || '0', 10)))}
+                className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-3 mb-3">
+            <label className="text-sm font-medium text-gray-900">BIVE 보상</label>
+            <button
+              type="button"
+              onClick={() => setBiveRewardYn(!biveRewardYn)}
+              className={`relative inline-flex h-5 w-9 items-center rounded-full transition ${biveRewardYn ? 'bg-indigo-600' : 'bg-gray-300'}`}
+            >
+              <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${biveRewardYn ? 'translate-x-4' : 'translate-x-0.5'}`} />
+            </button>
+            <span className="text-xs text-gray-500">{biveRewardYn ? 'ON — 민팅 캠페인 필수' : 'OFF'}</span>
+          </div>
+          {biveRewardYn && (
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">민팅 캠페인 <span className="text-red-500">*</span></label>
+              <select
+                value={mintingEventId}
+                onChange={(e) => setMintingEventId(e.target.value)}
+                className="h-11 w-full px-3 border border-gray-200 rounded-lg text-sm bg-white"
+              >
+                <option value="">민팅 캠페인 선택</option>
+                <option value="1">V01D Welcome ED</option>
+                <option value="2">Trivia Master</option>
+                <option value="3">Final Boss</option>
+                <option value="4">Prophet</option>
+                <option value="5">100 Days</option>
+                <option value="6">Anniversary</option>
+              </select>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6">
         <p className="text-xs text-amber-800 leading-relaxed">
-          <strong>다음 단계</strong>: 에피소드 생성 후 상세 화면에서 <strong>퀘스트(1~10개)</strong>를 등록하세요.
+          <strong>다음 단계</strong>: 에피소드 생성 후 상세 화면에서 <strong>미션(1~10개)</strong>을 등록하세요.
         </p>
       </div>
 

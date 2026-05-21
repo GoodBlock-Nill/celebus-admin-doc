@@ -50,6 +50,10 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
   const [rewardEntryTicket, setRewardEntryTicket] = useState(5);
   const [rewardFanPoint, setRewardFanPoint] = useState(100);
   const [repeat, setRepeat] = useState(false);
+  // [CEB-BO-SQ-204-CREATE] §2-7 v3.1 — PM/ST 반복 주기·기간 설정 (반복 ON일 때만)
+  const [repeatCycle, setRepeatCycle] = useState<'DAILY' | 'WEEKLY' | 'MONTHLY'>('WEEKLY');
+  const [repeatStartDt, setRepeatStartDt] = useState('');
+  const [repeatEndDt, setRepeatEndDt] = useState('');
   const [biveRewardYn, setBiveRewardYn] = useState(false);
   const [mintingEventId, setMintingEventId] = useState('');
 
@@ -139,14 +143,26 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
         </div>
       )}
 
-      {isRepeatEpisode && (
+      {/* [CEB-BO-SQ-204-CREATE] §2-3 정합 — 부모 에피소드 유형 안내 박스 (2026-05-21 sync 정정) */}
+      {isRepeatEpisode ? (
         <div className="bg-violet-50 border border-violet-200 rounded-xl p-4 mb-4 flex items-start gap-3">
           <InformationCircleIcon className="w-5 h-5 text-violet-600 mt-0.5 shrink-0" />
           <div>
-            <p className="text-sm font-semibold text-violet-900 mb-0.5">반복 에피소드 (REPEAT)</p>
+            <p className="text-sm font-semibold text-violet-900 mb-0.5">반복 에피소드 미션 정책</p>
             <p className="text-xs text-violet-800 leading-relaxed">
-              본 에피소드는 <strong>반복 가능한 콘텐츠</strong>만 등록할 수 있습니다.
-              FAN_QUEST 드롭다운에는 <strong>반복 설정된 팬퀘스트</strong>만 노출되며, PM/ST는 그룹 기간 동안 누적 횟수로 검증됩니다.
+              ① 팬퀘스트 유형은 <strong>반복 종류의 팬퀘스트만</strong> 매핑 가능.
+              ② 예측 마켓·서바이벌 트리비아는 단일·반복 모두 가능. 반복 ON 시 <strong>반복 주기·기간 설정 필수</strong>입니다.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4 mb-4 flex items-start gap-3">
+          <InformationCircleIcon className="w-5 h-5 text-indigo-600 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-indigo-900 mb-0.5">메인 에피소드 미션 정책</p>
+            <p className="text-xs text-indigo-800 leading-relaxed">
+              메인 에피소드는 <strong>단일 미션만</strong> 추가 가능합니다. 반복 미션이 필요하면 반복 에피소드에서 추가하세요.
+              본 화면에서는 <strong>반복 여부 토글이 표시되지 않습니다</strong>.
             </p>
           </div>
         </div>
@@ -244,7 +260,7 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
         )}
       </div>
 
-      {/* 섹션 2 — PM/ST 완료 조건 (게임 유형만) */}
+      {/* 섹션 2 — PM/ST 완료 조건 (게임 유형만) — [CEB-BO-SQ-204-CREATE] §2-7 정합 유형별 분기 (2026-05-21 sync 정정) */}
       {isGameType && type && (
         <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
           <h4 className="text-base font-semibold text-gray-900 mb-4">완료 조건</h4>
@@ -256,8 +272,12 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
                 onChange={(e) => setGameCondition(e.target.value as GameCondition)}
                 className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm bg-white"
               >
-                <option value="PARTICIPATION_COUNT">참여 횟수 (PARTICIPATION_COUNT)</option>
-                <option value="WIN_COUNT">{type === 'PREDICTION_MARKET' ? '정답 횟수 (PM 승리)' : '생존 횟수 (ST 승리)'}</option>
+                <option value="PARTICIPATION_COUNT">
+                  {type === 'PREDICTION_MARKET' ? '예측 참여' : '트리비아 참여'}
+                </option>
+                <option value="WIN_COUNT">
+                  {type === 'PREDICTION_MARKET' ? '예측 정답' : '트리비아 N회 정답'}
+                </option>
               </select>
             </div>
             <div>
@@ -308,21 +328,81 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
 
-          <div className="border-t border-gray-100 pt-4">
-            <div className="flex items-center justify-between">
-              <label className="block text-sm font-medium text-gray-900">반복 여부</label>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={repeat}
-                  onChange={(e) => setRepeat(e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:bg-emerald-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5" />
-                <span className="ml-2 text-sm text-gray-700">{repeat ? '반복' : '단발성'}</span>
-              </label>
+          {/* [CEB-BO-SQ-204-CREATE] §2-7 v3.1 — 반복 여부 토글: 메인 진입 시 자동 OFF·잠금 (2026-05-21 sync 정정) */}
+          {isRepeatEpisode && (
+            <div className="border-t border-gray-100 pt-4">
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-medium text-gray-900">반복 여부 <span className="text-[11px] text-gray-400 font-normal ml-1">(반복 에피소드 전용)</span></label>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={repeat}
+                    onChange={(e) => setRepeat(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:bg-emerald-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5" />
+                  <span className="ml-2 text-sm text-gray-700">{repeat ? '반복' : '단일'}</span>
+                </label>
+              </div>
+
+              {/* [CEB-BO-SQ-204-CREATE] §2-7 v3.1 — 반복 주기·기간 설정 (반복 ON일 때만 노출) */}
+              {repeat && (
+                <div className="mt-4 pt-4 border-t border-gray-100">
+                  <p className="text-xs text-gray-600 mb-3">반복 주기와 운영 기간을 설정하세요. 시작·종료일을 비우면 그룹 기간을 상속합니다.</p>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-900 mb-2">반복 주기 <span className="text-red-500">*</span></label>
+                    <div className="flex gap-2">
+                      {(['DAILY', 'WEEKLY', 'MONTHLY'] as const).map((cycle) => (
+                        <button
+                          key={cycle}
+                          type="button"
+                          onClick={() => setRepeatCycle(cycle)}
+                          className={`h-10 px-4 text-sm font-medium rounded-lg border transition ${
+                            repeatCycle === cycle
+                              ? 'bg-indigo-600 text-white border-indigo-600'
+                              : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          {cycle === 'DAILY' ? '일간' : cycle === 'WEEKLY' ? '주간' : '월간'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-900 mb-2">시작일자</label>
+                      <input
+                        type="datetime-local"
+                        value={repeatStartDt}
+                        onChange={(e) => setRepeatStartDt(e.target.value)}
+                        className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm"
+                      />
+                      <p className="text-[11px] text-gray-400 mt-1">비우면 그룹 시작일 상속</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-900 mb-2">종료일자</label>
+                      <input
+                        type="datetime-local"
+                        value={repeatEndDt}
+                        onChange={(e) => setRepeatEndDt(e.target.value)}
+                        className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm"
+                      />
+                      <p className="text-[11px] text-gray-400 mt-1">비우면 그룹 종료일 상속. 그룹 기간 안에서만 허용</p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          )}
+
+          {/* 메인 에피소드 진입 시 자동 단일 안내 */}
+          {!isRepeatEpisode && (
+            <div className="border-t border-gray-100 pt-4">
+              <p className="text-xs text-gray-500">
+                ※ 메인 에피소드 진입 — 본 미션은 <strong>단일 미션</strong>으로 자동 저장됩니다 (반복 토글 미노출).
+              </p>
+            </div>
+          )}
         </div>
       )}
 

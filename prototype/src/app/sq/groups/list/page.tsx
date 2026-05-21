@@ -14,12 +14,14 @@ import {
   type EpisodeGroupStatus,
 } from '@/mock/sq';
 
-const PAGE_SIZE = 10;
+// [CEB-BO-SQ-101] §2-5 정합 — 페이지당 20건 (2026-05-21 sync 정정)
+const PAGE_SIZE = 20;
 
+// [CEB-BO-SQ-101] §2-3 정합 — 상태 배지 한국어 라벨 (2026-05-21 sync 정정)
 const STATUS_BADGE: Record<EpisodeGroupStatus, { bg: string; text: string; label: string }> = {
-  DRAFT: { bg: 'bg-gray-200', text: 'text-gray-700', label: 'DRAFT' },
-  ACTIVE: { bg: 'bg-emerald-500', text: 'text-white', label: 'ACTIVE' },
-  CLOSED: { bg: 'bg-gray-400', text: 'text-white', label: 'CLOSED' },
+  DRAFT: { bg: 'bg-gray-200', text: 'text-gray-700', label: '임시저장' },
+  ACTIVE: { bg: 'bg-emerald-500', text: 'text-white', label: '진행중' },
+  CLOSED: { bg: 'bg-gray-400', text: 'text-white', label: '종료' },
 };
 
 export default function GroupListPage() {
@@ -53,16 +55,16 @@ export default function GroupListPage() {
 
       <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 mb-6">
         <p className="text-xs text-indigo-800 leading-relaxed">
-          <strong>에피소드 그룹</strong>은 시즌·큐레이션 단위의 최상위 묶음입니다. 아티스트별로 운영하며 <strong>ACTIVE 상태는 아티스트당 1개만 허용</strong>됩니다.
+          <strong>에피소드 그룹</strong>은 시즌·큐레이션 단위의 최상위 묶음입니다. 아티스트별로 운영하며 <strong>진행중 상태는 아티스트당 1개만 허용</strong>됩니다.
           그룹 안에서 여러 에피소드를 생성하여 운영하세요.
         </p>
       </div>
 
       <div className="grid grid-cols-4 gap-4 mb-6">
         <StatusCard label="전체 그룹" count={groupStats.total} barColor="bg-gray-300" labelStyle="text" />
-        <StatusCard label="DRAFT" count={groupStats.draft} barColor="bg-gray-300" labelStyle="badge" badgeClass={STATUS_BADGE.DRAFT.bg + ' ' + STATUS_BADGE.DRAFT.text} />
-        <StatusCard label="ACTIVE" count={groupStats.active} barColor="bg-emerald-500" labelStyle="badge" badgeClass={STATUS_BADGE.ACTIVE.bg + ' ' + STATUS_BADGE.ACTIVE.text} />
-        <StatusCard label="CLOSED" count={groupStats.closed} barColor="bg-gray-400" labelStyle="badge" badgeClass={STATUS_BADGE.CLOSED.bg + ' ' + STATUS_BADGE.CLOSED.text} />
+        <StatusCard label="임시저장" count={groupStats.draft} barColor="bg-gray-300" labelStyle="badge" badgeClass={STATUS_BADGE.DRAFT.bg + ' ' + STATUS_BADGE.DRAFT.text} />
+        <StatusCard label="진행중" count={groupStats.active} barColor="bg-emerald-500" labelStyle="badge" badgeClass={STATUS_BADGE.ACTIVE.bg + ' ' + STATUS_BADGE.ACTIVE.text} />
+        <StatusCard label="종료" count={groupStats.closed} barColor="bg-gray-400" labelStyle="badge" badgeClass={STATUS_BADGE.CLOSED.bg + ' ' + STATUS_BADGE.CLOSED.text} />
       </div>
 
       <div className="flex items-center gap-3 mb-4">
@@ -73,9 +75,9 @@ export default function GroupListPage() {
             className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[140px]"
           >
             <option value="">상태(전체)</option>
-            <option value="DRAFT">DRAFT</option>
-            <option value="ACTIVE">ACTIVE</option>
-            <option value="CLOSED">CLOSED</option>
+            <option value="DRAFT">임시저장</option>
+            <option value="ACTIVE">진행중</option>
+            <option value="CLOSED">종료</option>
           </select>
           <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
         </div>

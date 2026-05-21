@@ -81,14 +81,15 @@ export default function SqQuestsPage() {
           onClick={() => { setStatusFilter(''); setSearchType('title'); setKeyword(''); setPage(1); }}
           className="h-10 px-4 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800"
         >초기화</button>
+        {/* [CEB-BO-SQ-302] §2-2 정합 — /sq/ 라우트 (2026-05-21 sync 정정) */}
         <button
-          onClick={() => router.push('/fanquest/reject-reasons')}
+          onClick={() => router.push('/sq/reject-reasons')}
           className="h-10 px-4 inline-flex items-center text-sm font-medium text-red-600 bg-red-50 border border-red-100 rounded-lg hover:bg-red-100"
         >
           반려사유 설정
         </button>
         <button
-          onClick={() => router.push('/fanquest/create')}
+          onClick={() => router.push('/sq/quests/create')}
           className="h-10 px-4 inline-flex items-center text-sm font-medium text-indigo-600 bg-indigo-50 border border-indigo-100 rounded-lg hover:bg-indigo-100"
         >
           생성하기
@@ -117,7 +118,7 @@ export default function SqQuestsPage() {
         ]}
         rows={paged}
         emptyMessage="팬퀘스트가 없습니다."
-        onRowClick={(q) => router.push(`/fanquest/${q.id}?tab=info`)}
+        onRowClick={(q) => router.push(`/sq/quests/${q.id}?tab=info`)}
       />
 
       <SimplePagination page={page} totalPages={totalPages} onChange={setPage} />

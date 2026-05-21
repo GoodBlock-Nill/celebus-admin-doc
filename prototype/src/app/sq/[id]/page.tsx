@@ -2,15 +2,16 @@
 
 import { use, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeftIcon, PlusIcon, PhotoIcon, ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, PlusIcon, PhotoIcon, ChevronUpIcon, ChevronDownIcon, ExclamationTriangleIcon, GiftIcon } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/layout/PageHeader';
 import StatCardWithBar from '@/components/clone/StatCardWithBar';
-import { getStoryQuestById, getEpisodesByStoryId, getGroupById, MAX_EPISODES_PER_STORY, type EpisodeType, type StoryEpisode } from '@/mock/sq';
+import { getStoryQuestById, getEpisodesByStoryId, getGroupById, MAX_EPISODES_PER_STORY, type EpisodeType, type StoryEpisode, type StoryQuest } from '@/mock/sq';
 
-const TYPE_BADGE: Record<EpisodeType, { bg: string; text: string }> = {
-  FAN_QUEST: { bg: 'bg-pink-100', text: 'text-pink-700' },
-  PREDICTION_MARKET: { bg: 'bg-amber-100', text: 'text-amber-700' },
-  SURVIVAL_TRIVIA: { bg: 'bg-blue-100', text: 'text-blue-700' },
+// [CEB-BO-SQ-202] §2-6 정합 — 한국어 유형 라벨 (2026-05-21 sync 정정)
+const TYPE_BADGE: Record<EpisodeType, { bg: string; text: string; label: string }> = {
+  FAN_QUEST: { bg: 'bg-pink-100', text: 'text-pink-700', label: '팬퀘스트' },
+  PREDICTION_MARKET: { bg: 'bg-amber-100', text: 'text-amber-700', label: '예측 마켓' },
+  SURVIVAL_TRIVIA: { bg: 'bg-blue-100', text: 'text-blue-700', label: '서바이벌 트리비아' },
 };
 
 export default function SqDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -21,6 +22,7 @@ export default function SqDetailPage({ params }: { params: Promise<{ id: string 
   const [episodes, setEpisodes] = useState<StoryEpisode[]>(initialEpisodes);
   const router = useRouter();
   const group = story ? getGroupById(story.groupId) : undefined;
+  const [deleteEpisodeModalOpen, setDeleteEpisodeModalOpen] = useState(false);
 
   if (!story) return <div className="p-8 text-sm text-gray-500">에피소드를 찾을 수 없습니다.</div>;
 
@@ -52,25 +54,35 @@ export default function SqDetailPage({ params }: { params: Promise<{ id: string 
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* [CEB-BO-SQ-202] §2-1 정합 — 유형 배지 한국어 (2026-05-21 sync 정정) */}
           <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-bold ${
             story.episodeKind === 'REPEAT' ? 'bg-violet-100 text-violet-700' : 'bg-indigo-100 text-indigo-700'
-          }`}>{story.episodeKind}</span>
+          }`}>{story.episodeKind === 'REPEAT' ? '반복' : '메인'}</span>
           <button
             onClick={() => router.push(`/sq/${storyId}/edit`)}
             className="h-10 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
           >
             수정하기
           </button>
+          {/* [CEB-BO-SQ-202] §2-1 정합 — 임시저장 상태에 [삭제] 액션 (2026-05-21 sync 정정) */}
+          {story.status === 'DRAFT' && (
+            <button
+              onClick={() => setDeleteEpisodeModalOpen(true)}
+              className="h-10 px-4 text-sm font-medium text-rose-600 bg-white border border-rose-200 rounded-lg hover:bg-rose-50"
+            >
+              삭제
+            </button>
+          )}
           {story.status === 'DRAFT' ? (
             <button
-              onClick={() => alert(`[Mock] 게시 모달 (SQ-201-MD-OPEN) — '${story.titleKO}'`)}
+              onClick={() => alert(`[Mock] 게시 — '${story.titleKO}'`)}
               className="h-10 px-4 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
             >
               게시하기
             </button>
           ) : story.status === 'ACTIVE' ? (
             <button
-              onClick={() => alert(`[Mock] 종료 모달 (SQ-201-MD-CLOSE) — '${story.titleKO}'`)}
+              onClick={() => alert(`[Mock] 종료 — '${story.titleKO}'`)}
               className="h-10 px-4 text-sm font-medium text-red-600 bg-red-50 border border-red-100 rounded-lg hover:bg-red-100"
             >
               종료하기
@@ -78,6 +90,21 @@ export default function SqDetailPage({ params }: { params: Promise<{ id: string 
           ) : null}
         </div>
       </div>
+
+      {/* [CEB-BO-SQ-202-MD-DELETE] 에피소드 삭제 확인 모달 (2026-05-21 sync 정정) */}
+      {deleteEpisodeModalOpen && (
+        <DeleteEpisodeModal
+          story={story}
+          missionsCount={episodes.length}
+          hasFanQuestMapping={episodes.some((e) => e.type === 'FAN_QUEST' && e.fanQuestId != null)}
+          onCancel={() => setDeleteEpisodeModalOpen(false)}
+          onConfirm={() => {
+            setDeleteEpisodeModalOpen(false);
+            alert(`[Mock] 에피소드 '${story.titleKO}' 삭제 완료. 하위 미션 ${episodes.length}건도 함께 삭제. 팬퀘스트 매핑은 자동 해제됨.`);
+            router.push(`/sq/groups/${story.groupId}`);
+          }}
+        />
+      )}
 
       {/* 섹션 1 — 메인 이미지(3:4) + 기본 정보 + 관리 정보 */}
       <div className="grid grid-cols-[200px_1fr_1fr] gap-5 mb-6">
@@ -108,7 +135,7 @@ export default function SqDetailPage({ params }: { params: Promise<{ id: string 
           <h4 className="text-sm font-semibold text-gray-900 mb-4">기본 정보</h4>
           <div className="space-y-3 text-sm">
             <Row label="아티스트" value={story.artistGroup} />
-            <Row label="에피소드 종류" value={story.episodeKind === 'REPEAT' ? '반복 (REPEAT)' : '메인 (MAIN)'} />
+            <Row label="에피소드 종류" value={story.episodeKind === 'REPEAT' ? '반복' : '메인'} />
             <Row label="상위 그룹" value={group?.titleKO ?? '—'} />
             <Row label="그룹 기간" value={group ? `${group.startDt} ~ ${group.endDt}` : '—'} />
             <Row label="표시 순서" value={`#${story.displayOrder}`} />
@@ -144,6 +171,55 @@ export default function SqDetailPage({ params }: { params: Promise<{ id: string 
           <DescBlock lang="JA" value={story.descJA} />
         </div>
       </div>
+
+      {/* [CEB-BO-SQ-202] §2-3 v3.1 정합 — 에피소드 완료 보상 카드 (메인 에피소드 전용, 2026-05-21 sync 정정) */}
+      {story.episodeKind === 'MAIN' && (
+        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <GiftIcon className="w-5 h-5 text-indigo-600" />
+              <h4 className="text-sm font-semibold text-gray-900">에피소드 완료 보상</h4>
+            </div>
+            <span className="text-xs text-gray-500">모든 미션 완료 회원에게 자동 지급</span>
+          </div>
+          {story.episodeReward ? (
+            <div className="grid grid-cols-4 gap-4 text-sm">
+              <div>
+                <div className="text-xs text-gray-500 mb-1">응모권</div>
+                <div className="text-base font-semibold text-gray-900">
+                  {story.episodeReward.entryTicket > 0 ? `${story.episodeReward.entryTicket} 장` : '—'}
+                </div>
+              </div>
+              <div>
+                <div className="text-xs text-gray-500 mb-1">팬덤 포인트</div>
+                <div className="text-base font-semibold text-gray-900">
+                  {story.episodeReward.fanPoint > 0 ? story.episodeReward.fanPoint.toLocaleString('ko-KR') : '—'}
+                </div>
+              </div>
+              <div>
+                <div className="text-xs text-gray-500 mb-1">BIVE 보상</div>
+                <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+                  story.episodeReward.biveRewardYn
+                    ? 'bg-indigo-100 text-indigo-700'
+                    : 'bg-gray-100 text-gray-500'
+                }`}>
+                  {story.episodeReward.biveRewardYn ? '지급' : '미지급'}
+                </span>
+              </div>
+              <div>
+                <div className="text-xs text-gray-500 mb-1">민팅 캠페인</div>
+                <div className="text-sm text-gray-900">
+                  {story.episodeReward.biveRewardYn && story.episodeReward.mintingEventName
+                    ? story.episodeReward.mintingEventName
+                    : '—'}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-xs text-gray-500">보상 없음 (모든 값 0/OFF)</div>
+          )}
+        </div>
+      )}
 
       {/* 섹션 2 — 진행 통계 4카드 */}
       <div className="grid grid-cols-4 gap-4 mb-6">
@@ -227,7 +303,7 @@ export default function SqDetailPage({ params }: { params: Promise<{ id: string 
                         <span className="text-gray-400">#</span>{ep.order} / {MAX_EPISODES_PER_STORY}
                       </span>
                       <span className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium ${typeBadge.bg} ${typeBadge.text}`}>
-                        {ep.type}
+                        {typeBadge.label}
                       </span>
                     </div>
 
@@ -296,6 +372,62 @@ function DescBlock({ lang, value }: { lang: 'KO' | 'EN' | 'JA'; value: string })
       <p className={`leading-relaxed whitespace-pre-line ${value ? 'text-gray-700' : 'text-gray-400 italic'}`}>
         {value || '(미입력)'}
       </p>
+    </div>
+  );
+}
+
+// [CEB-BO-SQ-202-MD-DELETE] 에피소드 삭제 확인 모달 (2026-05-21 sync 정정)
+function DeleteEpisodeModal({
+  story,
+  missionsCount,
+  hasFanQuestMapping,
+  onCancel,
+  onConfirm,
+}: {
+  story: StoryQuest;
+  missionsCount: number;
+  hasFanQuestMapping: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
+        <div className="flex items-start gap-3 mb-4">
+          <ExclamationTriangleIcon className="w-6 h-6 text-rose-600 mt-0.5 shrink-0" />
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">에피소드를 삭제하시겠습니까?</h3>
+            <p className="text-sm text-gray-600 mt-1">복구할 수 없습니다.</p>
+          </div>
+        </div>
+        <div className="bg-rose-50 border border-rose-100 rounded-lg p-4 mb-4">
+          <p className="text-sm font-medium text-rose-900 mb-2">삭제 영향</p>
+          <ul className="text-xs text-rose-800 space-y-1">
+            <li>• 에피소드: '{story.titleKO}'</li>
+            <li>• 하위 미션 {missionsCount}건도 함께 삭제됩니다</li>
+            {hasFanQuestMapping && (
+              <li>• 팬퀘스트 매핑이 자동 해제됩니다 (팬퀘스트 자체는 보존)</li>
+            )}
+            <li>• 부모 그룹의 에피소드 수가 자동 감소합니다</li>
+          </ul>
+        </div>
+        <div className="flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="h-10 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+          >
+            취소
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="h-10 px-4 text-sm font-semibold text-white bg-rose-600 rounded-lg hover:bg-rose-700"
+          >
+            삭제
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

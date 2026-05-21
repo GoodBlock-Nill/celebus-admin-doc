@@ -81,7 +81,7 @@ export default function QuestDetailPage({ params }: { params: Promise<{ id: stri
             onClick={() => alert(`[Mock] 미션 삭제 모달 — '${quest.titleKO}'`)}
             className="h-10 px-4 text-sm font-medium text-red-600 bg-red-50 border border-red-100 rounded-lg hover:bg-red-100"
           >
-            삭제
+            삭제하기
           </button>
         </div>
       </div>
@@ -93,9 +93,9 @@ export default function QuestDetailPage({ params }: { params: Promise<{ id: stri
           <div className="space-y-3 text-sm">
             <Row label="순서" value={`${quest.order} / 10`} />
             <Row label="유형" value={typeBadge.label} />
-            <Row label="반복 여부" value={quest.repeat ? '반복' : '단발성'} />
-            <Row label="응모권 보상" value={`+${quest.rewardEntryTicket}장`} />
-            <Row label="덕력 보상" value={`+${quest.rewardFanPoint} DUK`} />
+            <Row label="반복 여부" value={quest.repeat ? '반복' : '단일'} />
+            <Row label="응모권 보상" value={`${quest.rewardEntryTicket}장`} />
+            <Row label="팬덤 포인트 보상" value={quest.rewardFanPoint.toLocaleString('ko-KR')} />
           </div>
           <div className="border-t border-gray-100 pt-3 mt-3 text-[11px] text-gray-500 leading-relaxed">
             메인 이미지는 상위 <strong>에피소드</strong>에서 한 번 등록하여 모든 미션이 공통 사용합니다.
@@ -147,11 +147,30 @@ export default function QuestDetailPage({ params }: { params: Promise<{ id: stri
               <Row label="조건 내용" value={quest.sourceRefName ?? '—'} />
             )}
             {quest.type === 'FAN_QUEST' && quest.fanQuestId != null && (
-              <Row label="연결된 팬퀘스트" value={`FQ #${quest.fanQuestId}`} />
+              <div className="flex items-start justify-between gap-4">
+                <span className="text-gray-500 shrink-0">연결된 팬퀘스트</span>
+                {/* [CEB-BO-SQ-204] §2-6 정합 — 팬퀘스트 상세 링크 (2026-05-21 sync 정정) */}
+                <button
+                  type="button"
+                  onClick={() => router.push(`/sq/quests/${quest.fanQuestId}?tab=info`)}
+                  className="text-indigo-600 hover:text-indigo-700 font-medium underline-offset-2 hover:underline"
+                >
+                  팬퀘스트 #{quest.fanQuestId} →
+                </button>
+              </div>
             )}
           </div>
           <div className="space-y-3">
-            <Row label="반복 주기" value={quest.repeatCycle ?? '—'} />
+            {/* [CEB-BO-SQ-204] §2-4 v3.1 정합 — 반복 주기 4종 한국어 (2026-05-21 sync 정정) */}
+            <Row
+              label="반복 주기"
+              value={
+                quest.repeatCycle === 'DAILY' ? '일간'
+                : quest.repeatCycle === 'WEEKLY' ? '주간'
+                : quest.repeatCycle === 'MONTHLY' ? '월간'
+                : '없음'
+              }
+            />
             <Row label="시작" value={quest.openDt ?? '그룹 기간 상속'} />
             <Row label="종료" value={quest.closeDt ?? '그룹 기간 상속'} />
           </div>

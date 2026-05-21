@@ -33,6 +33,11 @@ export default function SqEditPage({ params }: { params: Promise<{ id: string }>
   const [imageUrl, setImageUrl] = useState(story?.imageUrl ?? '');
   const [imageFileName, setImageFileName] = useState('');
   const [dragOver, setDragOver] = useState(false);
+  // [CEB-BO-SQ-202-EDIT] §2-7 v3.1 — 에피소드 완료 보상 (메인 에피소드 전용, 진행중 read-only)
+  const [rewardEntryTicket, setRewardEntryTicket] = useState(story?.episodeReward?.entryTicket ?? 0);
+  const [rewardFanPoint, setRewardFanPoint] = useState(story?.episodeReward?.fanPoint ?? 0);
+  const [biveRewardYn, setBiveRewardYn] = useState(story?.episodeReward?.biveRewardYn ?? false);
+  const [mintingEventId, setMintingEventId] = useState(story?.episodeReward?.mintingEventId?.toString() ?? '');
 
   if (!story) return <div className="p-8 text-sm text-gray-500">에피소드를 찾을 수 없습니다.</div>;
 
@@ -95,6 +100,7 @@ export default function SqEditPage({ params }: { params: Promise<{ id: string }>
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-[24px] font-bold text-gray-900">에피소드 수정</h1>
+              {/* [CEB-BO-SQ-202-EDIT] §2-1 정합 — 유형 배지 한국어 (2026-05-21 sync 정정) */}
               <span
                 className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold ${
                   story.episodeKind === 'REPEAT'
@@ -102,7 +108,7 @@ export default function SqEditPage({ params }: { params: Promise<{ id: string }>
                     : 'bg-indigo-100 text-indigo-700'
                 }`}
               >
-                {story.episodeKind}
+                {story.episodeKind === 'REPEAT' ? '반복' : '메인'}
               </span>
             </div>
             <p className="text-sm text-gray-500 mt-1">
@@ -115,11 +121,20 @@ export default function SqEditPage({ params }: { params: Promise<{ id: string }>
         </div>
       </div>
 
-      {!editableByStatus && (
+      {/* [CEB-BO-SQ-202-EDIT] §2-2 정합 — 상태별 알림 배너 (2026-05-21 sync 정정) */}
+      {story.status === 'CLOSED' && (
         <div className="bg-rose-50 border border-rose-100 rounded-xl p-4 mb-6 flex items-start gap-3">
           <InformationCircleIcon className="w-5 h-5 text-rose-600 mt-0.5 shrink-0" />
           <p className="text-sm text-rose-800 leading-relaxed">
-            <strong>CLOSED 상태</strong>의 에피소드는 수정할 수 없습니다. 본 페이지는 읽기 전용으로 진입했습니다.
+            <strong>종료된 에피소드</strong>는 수정할 수 없습니다. 새 에피소드 생성을 권장합니다.
+          </p>
+        </div>
+      )}
+      {story.status === 'ACTIVE' && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+          <InformationCircleIcon className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+          <p className="text-sm text-amber-800 leading-relaxed">
+            <strong>진행중 에피소드</strong>의 수정 사항은 즉시 회원 앱에 반영됩니다. <strong>에피소드 완료 보상은 회원 기대권 보호 차원에서 read-only 잠금</strong>입니다.
           </p>
         </div>
       )}
@@ -130,7 +145,7 @@ export default function SqEditPage({ params }: { params: Promise<{ id: string }>
           <p className="text-sm font-semibold text-indigo-900 mb-0.5">에피소드 수정 정책</p>
           <p className="text-xs text-indigo-800 leading-relaxed">
             마스터 메타데이터만 수정 가능합니다. <strong>기간은 상위 그룹</strong>에서 관리하며 본 화면에서 변경할 수 없습니다.
-            다국어는 <strong>KO/EN/JA 3개 언어 모두 필수</strong>입니다. 에피소드당 퀘스트는 최대 {MAX_EPISODES_PER_STORY}개입니다.
+            다국어는 <strong>KO/EN/JA 3개 언어 모두 필수</strong>입니다. 에피소드당 미션은 최대 {MAX_EPISODES_PER_STORY}개입니다.
           </p>
         </div>
       </div>
@@ -275,6 +290,74 @@ export default function SqEditPage({ params }: { params: Promise<{ id: string }>
           </div>
         </div>
       </div>
+
+      {/* [CEB-BO-SQ-202-EDIT] §2-7 v3.1 정합 — 에피소드 완료 보상 (메인 에피소드 전용, 진행중 read-only 잠금, 2026-05-21 sync 정정) */}
+      {story.episodeKind === 'MAIN' && (
+        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
+          <h4 className="text-base font-semibold text-gray-900 mb-1">
+            에피소드 완료 보상
+            {story.status === 'ACTIVE' && (
+              <span className="text-[11px] font-normal text-amber-700 ml-2">(진행중 — read-only 잠금)</span>
+            )}
+          </h4>
+          <p className="text-[11px] text-gray-500 mb-4">모든 미션이 완료된 회원에게 자동 지급. 진행중 진입 시 회원 기대권 보호 차원에서 잠금</p>
+          <div className="grid grid-cols-2 gap-5 mb-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">응모권 보상 (장)</label>
+              <input
+                type="number"
+                min={0}
+                value={rewardEntryTicket}
+                onChange={(e) => setRewardEntryTicket(Math.max(0, parseInt(e.target.value || '0', 10)))}
+                disabled={!editableByStatus || story.status === 'ACTIVE'}
+                className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">팬덤 포인트 보상</label>
+              <input
+                type="number"
+                min={0}
+                value={rewardFanPoint}
+                onChange={(e) => setRewardFanPoint(Math.max(0, parseInt(e.target.value || '0', 10)))}
+                disabled={!editableByStatus || story.status === 'ACTIVE'}
+                className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-3 mb-3">
+            <label className="text-sm font-medium text-gray-900">BIVE 보상</label>
+            <button
+              type="button"
+              onClick={() => setBiveRewardYn(!biveRewardYn)}
+              disabled={!editableByStatus || story.status === 'ACTIVE'}
+              className={`relative inline-flex h-5 w-9 items-center rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed ${biveRewardYn ? 'bg-indigo-600' : 'bg-gray-300'}`}
+            >
+              <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${biveRewardYn ? 'translate-x-4' : 'translate-x-0.5'}`} />
+            </button>
+            <span className="text-xs text-gray-500">{biveRewardYn ? 'ON' : 'OFF'}</span>
+          </div>
+          {biveRewardYn && (
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">민팅 캠페인 <span className="text-red-500">*</span></label>
+              <select
+                value={mintingEventId}
+                onChange={(e) => setMintingEventId(e.target.value)}
+                disabled={!editableByStatus || story.status === 'ACTIVE'}
+                className="h-11 w-full px-3 border border-gray-200 rounded-lg text-sm bg-white disabled:bg-gray-50"
+              >
+                <option value="">민팅 캠페인 선택</option>
+                <option value="1">V01D Welcome ED</option>
+                <option value="2">Trivia Master</option>
+                <option value="3">Final Boss</option>
+                <option value="4">Prophet</option>
+                <option value="5">100 Days</option>
+                <option value="6">Anniversary</option>
+              </select>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 grid grid-cols-4 gap-3 text-xs">
         <Info label="생성자" value={story.createdBy} />

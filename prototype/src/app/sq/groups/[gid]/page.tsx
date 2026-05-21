@@ -1,8 +1,8 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeftIcon, PlusIcon, ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, PlusIcon, ChevronUpIcon, ChevronDownIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/layout/PageHeader';
 import StatCardWithBar from '@/components/clone/StatCardWithBar';
 import {
@@ -38,6 +38,8 @@ export default function GroupDetailPage({ params }: { params: Promise<{ gid: str
   const totalPending = allEpisodes.reduce((s, e) => s + e.pendingReview, 0);
   const canAddMain = canAddMainEpisode(groupId);
   const canAddRepeat = canAddRepeatEpisode(groupId);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const episodes = allEpisodes;
 
   return (
     <div>
@@ -75,23 +77,47 @@ export default function GroupDetailPage({ params }: { params: Promise<{ gid: str
           >
             그룹 수정
           </button>
+          {/* [CEB-BO-SQ-201] §2-1 정합 — 임시저장 상태에 [그룹 삭제] 액션 (2026-05-21 sync 정정) */}
+          {group.status === 'DRAFT' && (
+            <button
+              onClick={() => setDeleteModalOpen(true)}
+              className="h-10 px-4 text-sm font-medium text-rose-600 bg-white border border-rose-200 rounded-lg hover:bg-rose-50"
+            >
+              그룹 삭제
+            </button>
+          )}
           {group.status === 'DRAFT' ? (
             <button
-              onClick={() => alert(`[Mock] 그룹 ACTIVE 전환 — 아티스트당 ACTIVE 1개 검증 후 진행`)}
+              onClick={() => alert(`[Mock] 그룹 진행중 전환 — 아티스트당 진행중 1개 검증 후 진행`)}
               className="h-10 px-4 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
             >
-              ACTIVE로 전환
+              진행중 전환
             </button>
           ) : group.status === 'ACTIVE' ? (
             <button
-              onClick={() => alert(`[Mock] 그룹 CLOSED 전환 — '${group.titleKO}'`)}
+              onClick={() => alert(`[Mock] 그룹 종료 전환 — '${group.titleKO}'`)}
               className="h-10 px-4 text-sm font-medium text-red-600 bg-red-50 border border-red-100 rounded-lg hover:bg-red-100"
             >
-              CLOSED로 전환
+              종료 전환
             </button>
           ) : null}
         </div>
       </div>
+
+      {/* [CEB-BO-SQ-201-MD-DELETE] 그룹 삭제 확인 모달 (2026-05-21 sync 정정) */}
+      {deleteModalOpen && (
+        <DeleteGroupModal
+          group={group}
+          episodesCount={episodes.length}
+          missionsCount={episodes.reduce((sum, ep) => sum + (ep.episodeCount ?? 0), 0)}
+          onCancel={() => setDeleteModalOpen(false)}
+          onConfirm={() => {
+            setDeleteModalOpen(false);
+            alert(`[Mock] 그룹 '${group.titleKO}' 삭제 완료. 하위 에피소드·미션도 모두 삭제됨.`);
+            router.push('/sq/groups/list');
+          }}
+        />
+      )}
 
       {/* 섹션 1 — 그룹 정보 카드 */}
       <div className="grid grid-cols-2 gap-5 mb-6">
@@ -304,6 +330,60 @@ function Row({ label, value }: { label: string; value: string }) {
     <div className="flex items-start justify-between gap-4">
       <span className="text-gray-500 shrink-0">{label}</span>
       <span className="text-gray-900 text-right">{value}</span>
+    </div>
+  );
+}
+
+// [CEB-BO-SQ-201-MD-DELETE] 그룹 삭제 확인 모달 (2026-05-21 sync 정정)
+function DeleteGroupModal({
+  group,
+  episodesCount,
+  missionsCount,
+  onCancel,
+  onConfirm,
+}: {
+  group: StoryQuest extends never ? never : { titleKO: string };
+  episodesCount: number;
+  missionsCount: number;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
+        <div className="flex items-start gap-3 mb-4">
+          <ExclamationTriangleIcon className="w-6 h-6 text-rose-600 mt-0.5 shrink-0" />
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">에피소드 그룹을 삭제하시겠습니까?</h3>
+            <p className="text-sm text-gray-600 mt-1">복구할 수 없습니다.</p>
+          </div>
+        </div>
+        <div className="bg-rose-50 border border-rose-100 rounded-lg p-4 mb-4">
+          <p className="text-sm font-medium text-rose-900 mb-2">삭제 영향</p>
+          <ul className="text-xs text-rose-800 space-y-1">
+            <li>• 그룹: '{group.titleKO}'</li>
+            <li>• 하위 에피소드 {episodesCount}건도 함께 삭제됩니다</li>
+            <li>• 하위 미션 {missionsCount}건도 함께 삭제됩니다</li>
+            <li>• 미션의 팬퀘스트 매핑이 자동 해제됩니다 (팬퀘스트 자체는 보존)</li>
+          </ul>
+        </div>
+        <div className="flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="h-10 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+          >
+            취소
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="h-10 px-4 text-sm font-semibold text-white bg-rose-600 rounded-lg hover:bg-rose-700"
+          >
+            삭제
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -93,11 +93,20 @@ export default function GroupEditPage({ params }: { params: Promise<{ gid: strin
         </div>
       </div>
 
-      {!editableByStatus && (
-        <div className="bg-rose-50 border border-rose-100 rounded-xl p-4 mb-6 flex items-start gap-3">
-          <InformationCircleIcon className="w-5 h-5 text-rose-600 mt-0.5 shrink-0" />
-          <p className="text-sm text-rose-800 leading-relaxed">
-            <strong>CLOSED 상태</strong>의 그룹은 수정할 수 없습니다. 읽기 전용으로 진입했습니다.
+      {/* [CEB-BO-SQ-201-EDIT] §2-2 정합 — 상태별 알림 배너 (2026-05-21 sync 정정) */}
+      {group.status === 'CLOSED' && (
+        <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+          <InformationCircleIcon className="w-5 h-5 text-gray-600 mt-0.5 shrink-0" />
+          <p className="text-sm text-gray-700 leading-relaxed">
+            <strong>종료된 그룹</strong>입니다. 수정 후 상태 전환은 불가합니다.
+          </p>
+        </div>
+      )}
+      {group.status === 'ACTIVE' && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex items-start gap-3">
+          <InformationCircleIcon className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+          <p className="text-sm text-amber-800 leading-relaxed">
+            <strong>진행중 그룹</strong>의 수정 사항은 즉시 회원 앱에 반영됩니다. 신중히 진행하세요.
           </p>
         </div>
       )}
@@ -106,7 +115,7 @@ export default function GroupEditPage({ params }: { params: Promise<{ gid: strin
         <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 mb-6 flex items-start gap-3">
           <ExclamationTriangleIcon className="w-5 h-5 text-rose-600 mt-0.5 shrink-0" />
           <p className="text-sm text-rose-800 leading-relaxed">
-            <strong>{form.artistGroup}</strong> 아티스트는 이미 다른 ACTIVE 그룹이 존재합니다. 기존 그룹을 CLOSED 후 본 그룹을 ACTIVE 전환하세요.
+            <strong>{form.artistGroup}</strong> 아티스트는 이미 다른 진행중 그룹이 존재합니다. 기존 그룹을 종료 후 본 그룹을 진행중으로 전환하세요.
           </p>
         </div>
       )}
@@ -116,7 +125,7 @@ export default function GroupEditPage({ params }: { params: Promise<{ gid: strin
         <div>
           <p className="text-sm font-semibold text-indigo-900 mb-0.5">그룹 수정 정책</p>
           <p className="text-xs text-indigo-800 leading-relaxed">
-            <strong>아티스트 변경</strong>은 EXTERNAL_ARTIST 권한 자에게 불가합니다(SUPER/OPERATOR만). ACTIVE 1개 제한 정책이 그대로 적용됩니다.
+            한 아티스트당 <strong>진행중 그룹은 1개만 허용</strong>됩니다. 다른 그룹을 진행중 상태로 두려면 현재 그룹을 종료해주세요.
             메인 이미지·다국어는 그룹이 아닌 <strong>에피소드(하위)</strong>에서 설정합니다.
           </p>
         </div>
@@ -138,17 +147,11 @@ export default function GroupEditPage({ params }: { params: Promise<{ gid: strin
               <option value="CELEBUS">CELEBUS</option>
             </select>
           </Field>
-          <Field label="상태" required hint="ACTIVE는 아티스트당 1개 제한">
-            <select
-              value={form.status}
-              onChange={(e) => update('status', e.target.value as EpisodeGroupStatus)}
-              disabled={!editableByStatus}
-              className="h-10 w-full px-3 border border-gray-200 rounded-lg text-sm bg-white disabled:bg-gray-50"
-            >
-              <option value="DRAFT">DRAFT</option>
-              <option value="ACTIVE">ACTIVE</option>
-              <option value="CLOSED">CLOSED</option>
-            </select>
+          {/* [CEB-BO-SQ-201-EDIT] §2-3 정합 — 상태는 본 화면에서 직접 수정 불가 (2026-05-21 sync 정정) */}
+          <Field label="상태" hint="그룹 상세의 [진행중 전환] / [종료 전환] 액션으로만 변경 가능">
+            <div className="h-10 w-full px-3 border border-gray-200 rounded-lg text-sm bg-gray-50 flex items-center text-gray-600">
+              {group.status === 'DRAFT' ? '임시저장' : group.status === 'ACTIVE' ? '진행중' : '종료'}
+            </div>
           </Field>
         </div>
         <Field label="타이틀" required>
