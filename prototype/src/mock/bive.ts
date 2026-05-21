@@ -235,7 +235,8 @@ export interface MintHistoryRecord {
 export function getMintHistory(campaignId: number, limit: number = 30): MintHistoryRecord[] {
   const c = getCampaignById(campaignId);
   if (!c) return [];
-  const nicknames = ['주영', '하루', '민지', '도윤', '서아', '예준', '지호', '윤서', '시우', '하린'];
+  // 회원 닉네임 규칙: 영문 소문자 + 숫자 + _ + . 만 사용 (mock/members.ts NICKNAMES 표준)
+  const nicknames = ['in.mycosmos', 'luna_jiyun_lee', 'manju', 'sohyun0105', 'suu.b1n', 'jjeom5jjang', 'celebus', 'joonk85', 'mooncat', 'lunaria'];
   const count = Math.min(limit, c.minted);
   return Array.from({ length: count }).map((_, i) => ({
     tokenId: `0x${(campaignId * 1000 + i).toString(16).padStart(8, '0')}`,
