@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>RFL — 래플</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.7</td></tr>
+<tr><td>버전</td><td>v1.8</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.13</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,7 +96,7 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-14 · 버전: <strong>v1.7</strong> (당첨자 명단 CSV 다운로드 신설)</p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v1.8</strong> (비고 아이콘 시각 분기 신설 — 저장된 비고가 있는 당첨자 행을 초록 톤으로 강조. 사용자 피드백 반영)</p>
 <p>화면 경로: <code>/raffle/{id}</code> (탭=추첨내역) · Breadcrumb: <code>홈 › 래플 › 래플 상세 › 추첨내역</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
@@ -176,7 +176,7 @@ p {
 <tr><td>누적 응모권</td><td>우측</td><td>추첨 당시의 누적 응모권 (가중치 기준)</td></tr>
 <tr><td>추첨 일시</td><td>우측</td><td>추첨이 실행된 시각</td></tr>
 <tr><td>보상 지급</td><td>우측</td><td><strong>토글 스위치 — 즉시 토글 (확인 다이얼로그 없음)</strong>. 운영자가 클릭하여 지급/미지급 상태를 한 번의 클릭으로 전환. <strong>당첨자만 활성</strong>, 미당첨자는 토글 비노출. 토글 변경 시 통계 카드의 "보상지급" 수치와 [CEB-BO-RFL-201] 기본정보 탭의 "지급 완료" 카드가 실시간 반영됨</td></tr>
-<tr><td>비고</td><td>중앙</td><td>메모 아이콘 버튼. <strong>당첨자만 활성</strong>, 미당첨자는 비활성. 클릭 시 비고 모달([CEB-BO-RFL-203-MD-NOTE]) 노출</td></tr>
+<tr><td>비고</td><td>중앙</td><td>메모 아이콘 버튼. <strong>당첨자만 활성</strong>, 미당첨자는 비활성. <strong>저장된 비고가 있는 당첨자 행은 초록 톤(emerald)으로 시각 강조</strong> (보더·배경·아이콘 모두). 비고가 비어 있으면 기본 회색 톤. 클릭 시 비고 모달([CEB-BO-RFL-203-MD-NOTE]) 노출</td></tr>
 </table>
 <h2>3. 화면에 노출되는 정보</h2>
 <table>
@@ -194,7 +194,7 @@ p {
 <tr><td>테이블 컬럼 4</td><td>누적 응모권</td><td>추첨 당시 응모권 가중치</td></tr>
 <tr><td>테이블 컬럼 5</td><td>추첨 일시</td><td>추첨 실행 시각</td></tr>
 <tr><td>테이블 컬럼 6</td><td>보상 지급 토글</td><td>운영자가 지급 상태 직접 관리</td></tr>
-<tr><td>테이블 컬럼 7</td><td>비고 아이콘</td><td>당첨자별 운영 메모 관리</td></tr>
+<tr><td>테이블 컬럼 7</td><td>비고 아이콘</td><td>당첨자별 운영 메모 관리. <strong>메모 작성 여부 시각 구분 (초록=작성됨 / 회색=비어있음)</strong></td></tr>
 </table>
 <h2>4. 상태별 동작 분기</h2>
 <table>
@@ -228,6 +228,7 @@ p {
 <h2>6. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.8</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>비고 아이콘 시각 분기 신설 (사용자 피드백 반영)</strong> — §2-3 결과 테이블 비고 컬럼·§3 노출 정보 표 컬럼 7에서 <strong>저장된 비고가 있는 당첨자 행을 초록 톤(emerald)으로 시각 강조</strong> (보더·배경·아이콘 모두). 비고가 비어 있으면 기본 회색 톤. 운영자가 어느 당첨자에게 메모를 남겼는지 한눈에 식별 가능</td></tr>
 <tr><td>v1.7</td><td>2026-05-14</td><td>@Nill Yoo</td><td><strong>§2-4-3-1 당첨자 명단 CSV 다운로드 기능 신설</strong> — 필터·검색 바 우측에 [당첨자 명단 다운로드] 버튼 추가. 종료 상태 + 당첨자 ≥ 1명일 때만 노출. CSV 컬럼 3종(유저 닉네임·전화번호·누적 응모권), 누적 응모권 내림차순, UTF-8 BOM 인코딩, 필터와 무관하게 전체 당첨자 다운로드</td></tr>
 <tr><td>v1.6</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>Page Properties 표 신규(13필드)</strong> — 본문 변경 없음</td></tr>
 <tr><td>v1.4</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>페이지네이션 정책 명시</strong> — §4-2 신설. 결과 테이블에 20건/페이지 + 항상 노출(1페이지일 때도 비활성 형태) + 운영 동일 윈도잉(≤7 전체, >7 윈도우). 상태 필터·검색 변경 시 1페이지 자동 리셋</td></tr>

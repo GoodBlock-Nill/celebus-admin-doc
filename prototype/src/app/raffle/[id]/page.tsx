@@ -873,13 +873,28 @@ function DrawsTab({
                   )}
                 </td>
                 <td className="px-4 py-3 text-center">
-                  <button
-                    onClick={() => onWinnerNote(w)}
-                    disabled={w.status !== '당첨'}
-                    className="w-8 h-8 inline-flex items-center justify-center rounded-md border border-gray-200 hover:bg-indigo-50 hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <ChatBubbleLeftEllipsisIcon className="w-4 h-4 text-gray-500" />
-                  </button>
+                  {/* [CEB-BO-RFL-203] §2-3 v1.1 정합 — 비고 저장 시 초록 톤 시각 강조 (2026-05-21 사용자 피드백 반영) */}
+                  {(() => {
+                    const hasNote = w.status === '당첨' && (w.note?.trim() ?? '').length > 0;
+                    const baseCls = 'w-8 h-8 inline-flex items-center justify-center rounded-md border transition-colors disabled:opacity-30 disabled:cursor-not-allowed';
+                    const stateCls = hasNote
+                      ? 'border-emerald-200 bg-emerald-50 hover:bg-emerald-100'
+                      : 'border-gray-200 hover:bg-indigo-50 hover:text-indigo-600';
+                    const tooltip = w.status !== '당첨'
+                      ? '당첨자만 작성 가능'
+                      : hasNote ? '비고 보기·수정' : '비고 작성';
+                    return (
+                      <button
+                        onClick={() => onWinnerNote(w)}
+                        disabled={w.status !== '당첨'}
+                        className={`${baseCls} ${stateCls}`}
+                        title={tooltip}
+                        aria-label={tooltip}
+                      >
+                        <ChatBubbleLeftEllipsisIcon className={`w-4 h-4 ${hasNote ? 'text-emerald-600' : 'text-gray-500'}`} />
+                      </button>
+                    );
+                  })()}
                 </td>
               </tr>
             ))}
