@@ -44,6 +44,17 @@ export default function QuestDetailPage({ params }: { params: Promise<{ id: stri
     ? (quest.completedMembers / quest.inProgressMembers) * 100
     : 0;
 
+  // [CEB-BO-SQ-204] §4 v3.4 — [수정하기] 버튼 분기: 종료 또는 (진행중 + 팬퀘스트)에서 비활성 (2026-05-21 정책 강화)
+  const status = story.status;
+  const isFanQuest = quest.type === 'FAN_QUEST';
+  const editDisabled = status === 'CLOSED' || (status === 'ACTIVE' && isFanQuest);
+  const editDisabledReason =
+    status === 'CLOSED'
+      ? '종료된 에피소드의 미션은 수정할 수 없습니다.'
+      : status === 'ACTIVE' && isFanQuest
+        ? '팬퀘스트 유형 미션은 진행중 상태에서 수정할 수 없습니다.'
+        : '';
+
   return (
     <div>
       <PageHeader
@@ -71,10 +82,12 @@ export default function QuestDetailPage({ params }: { params: Promise<{ id: stri
           <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-medium ${typeBadge.bg} ${typeBadge.text}`}>
             {typeBadge.label}
           </span>
-          {/* [CEB-BO-SQ-204] §4 v3.3 정합 — [수정하기] → [CEB-BO-SQ-204-EDIT] 진입 (2026-05-21 sync 정정) */}
+          {/* [CEB-BO-SQ-204] §4 v3.4 정합 — [수정하기] 조건부 비활성 (종료 또는 진행중+팬퀘스트) */}
           <button
-            onClick={() => router.push(`/sq/${storyId}/quests/${quest.id}/edit`)}
-            className="h-10 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+            onClick={() => !editDisabled && router.push(`/sq/${storyId}/quests/${quest.id}/edit`)}
+            disabled={editDisabled}
+            title={editDisabled ? editDisabledReason : undefined}
+            className="h-10 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed disabled:hover:bg-gray-100"
           >
             수정하기
           </button>

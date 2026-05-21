@@ -48,13 +48,17 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
   const quest = getEpisodeById(questId);
   const router = useRouter();
 
-  // [CEB-BO-SQ-204-EDIT] §2-2 v1.0 — 부모 에피소드 상태별 잠금 (회원 기대권 보호)
+  // [CEB-BO-SQ-204-EDIT] §2-2 v1.1 — 부모 에피소드 상태 + 유형별 잠금 (정책 강화: 진행중+팬퀘스트 진입 차단 / 진행중+PM/ST 다국어만 수정)
   const status = story?.status ?? 'DRAFT';
-  const isAllLocked = status === 'CLOSED';
-  const isRewardLocked = isAllLocked || status === 'ACTIVE';
-
   const isFanQuest = quest?.type === 'FAN_QUEST';
   const isGameType = quest?.type === 'PREDICTION_MARKET' || quest?.type === 'SURVIVAL_TRIVIA';
+  // 직접 URL 진입 방어: 진행중+팬퀘스트는 정상 흐름에서 진입 불가지만 URL 직진 시 전체 read-only
+  const isFanQuestActiveBlocked = status === 'ACTIVE' && isFanQuest;
+  const isAllLocked = status === 'CLOSED' || isFanQuestActiveBlocked;
+  // 진행중 + PM/ST: 다국어 타이틀만 수정 가능, 나머지 모두 read-only
+  const isTitleOnlyEditable = status === 'ACTIVE' && isGameType;
+  // 보상 read-only: 직전 v1.0 정책 유지 + 진행중 PM/ST에서도 적용 (isTitleOnlyEditable에 포함)
+  const isRewardLocked = isAllLocked || isTitleOnlyEditable;
 
   // [CEB-BO-SQ-204-EDIT] §2-6 v1.0 — 기존 미션 데이터 prefill
   const [titleLang, setTitleLang] = useState<Lang>('KO');
@@ -84,15 +88,15 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
   const typeBadge = TYPE_BADGE[quest.type];
   const isRepeatEpisode = story.episodeKind === 'REPEAT';
 
-  // [CEB-BO-SQ-204-EDIT] §5 v1.0 — 검증 규칙
+  // [CEB-BO-SQ-204-EDIT] §5 v1.1 — 검증 규칙 (진행중 PM/ST는 다국어만 검증, 그 외 필드는 prefill 그대로)
   const isValid =
     !isAllLocked &&
     // PM/ST: 다국어 3종 모두 필수 ([CEB-BO-011] §5 정합)
     (isFanQuest || isAllLangsFilled(title)) &&
-    // PM/ST: 판정 유형 + 기준값 필수
-    (isFanQuest || (completedType !== '' && completedValue >= 1)) &&
-    // PM/ST: BIVE ON 시 민팅 캠페인 필수
-    (isFanQuest || !biveRewardYn || mintingEventId !== '');
+    // PM/ST + DRAFT: 판정 유형 + 기준값 필수 (진행중에서는 read-only이므로 prefill 유지)
+    (isFanQuest || isTitleOnlyEditable || (completedType !== '' && completedValue >= 1)) &&
+    // PM/ST + DRAFT: BIVE ON 시 민팅 캠페인 필수 (진행중에서는 read-only)
+    (isFanQuest || isTitleOnlyEditable || !biveRewardYn || mintingEventId !== '');
 
   const handleCancel = () => {
     if (window.confirm('변경 사항이 사라집니다. 취소하시겠어요?')) {
@@ -140,26 +144,39 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
         </span>
       </div>
 
-      {/* [CEB-BO-SQ-204-EDIT] §2-2 v1.0 — 상태 배너 (진행중·종료 시만 노출) */}
-      {isAllLocked && (
+      {/* [CEB-BO-SQ-204-EDIT] §2-2 v1.1 — 상태 배너 (종료 / 진행중+팬퀘스트 차단 방어 / 진행중+PM/ST) */}
+      {status === 'CLOSED' && (
         <div className="bg-gray-100 border border-gray-300 rounded-xl p-4 mb-6 flex items-start gap-3">
           <LockClosedIcon className="w-5 h-5 text-gray-600 mt-0.5 shrink-0" />
           <div>
             <p className="text-sm font-semibold text-gray-900 mb-0.5">종료된 에피소드의 미션</p>
             <p className="text-xs text-gray-700 leading-relaxed">
               종료된 에피소드의 미션은 수정할 수 없습니다. 모든 필드가 read-only이며 [저장] 버튼이 비활성화됩니다.
+              (정상 흐름에서는 미션 상세의 [수정하기] 버튼이 비활성화되어 본 화면에 진입할 수 없습니다.)
             </p>
           </div>
         </div>
       )}
-      {!isAllLocked && isRewardLocked && (
+      {isFanQuestActiveBlocked && (
+        <div className="bg-gray-100 border border-gray-300 rounded-xl p-4 mb-6 flex items-start gap-3">
+          <LockClosedIcon className="w-5 h-5 text-gray-600 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-gray-900 mb-0.5">팬퀘스트 유형 미션은 진행중 상태에서 수정할 수 없습니다</p>
+            <p className="text-xs text-gray-700 leading-relaxed">
+              본 화면은 직접 URL 진입을 통한 방어 표시이며 모든 필드가 read-only입니다.
+              정상 흐름에서는 미션 상세의 [수정하기] 버튼이 비활성화되어 본 화면에 진입할 수 없습니다.
+            </p>
+          </div>
+        </div>
+      )}
+      {isTitleOnlyEditable && (
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex items-start gap-3">
           <ExclamationTriangleIcon className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
           <div>
             <p className="text-sm font-semibold text-amber-900 mb-0.5">진행중 에피소드의 미션</p>
             <p className="text-xs text-amber-800 leading-relaxed">
-              회원 기대권 보호를 위해 <strong>보상 필드(응모권·덕력·BIVE)</strong>는 수정할 수 없습니다.
-              다국어 타이틀·판정 유형·반복 메타는 정상 수정 가능합니다.
+              회원 기대권 보호를 위해 <strong>다국어 타이틀(KO·EN·JA)만 수정 가능</strong>합니다.
+              판정 유형·보상·반복 설정은 모두 read-only입니다.
             </p>
           </div>
         </div>
@@ -248,7 +265,7 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
               <select
                 value={completedType}
                 onChange={(e) => setCompletedType(e.target.value as EpisodeCompletedType)}
-                disabled={isAllLocked}
+                disabled={isAllLocked || isTitleOnlyEditable}
                 className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm bg-white disabled:bg-gray-50 disabled:text-gray-500"
               >
                 <option value="">판정 유형 선택...</option>
@@ -267,7 +284,7 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
                 min={1}
                 value={completedValue}
                 onChange={(e) => setCompletedValue(Math.max(1, parseInt(e.target.value || '1', 10)))}
-                disabled={isAllLocked}
+                disabled={isAllLocked || isTitleOnlyEditable}
                 className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
               />
             </div>
@@ -278,7 +295,7 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
               type="text"
               value={sourceRefName}
               onChange={(e) => setSourceRefName(e.target.value)}
-              disabled={isAllLocked}
+              disabled={isAllLocked || isTitleOnlyEditable}
               placeholder="예: 예측 마켓 #34 — 다음 컴백 시점"
               className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
             />
@@ -333,7 +350,7 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
                     type="checkbox"
                     checked={repeat}
                     onChange={(e) => setRepeat(e.target.checked)}
-                    disabled={isAllLocked}
+                    disabled={isAllLocked || isTitleOnlyEditable}
                     className="sr-only peer"
                   />
                   <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:bg-emerald-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5 peer-disabled:opacity-50" />
@@ -352,7 +369,7 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
                           key={cycle}
                           type="button"
                           onClick={() => setRepeatCycle(cycle)}
-                          disabled={isAllLocked}
+                          disabled={isAllLocked || isTitleOnlyEditable}
                           className={`h-10 px-4 text-sm font-medium rounded-lg border transition disabled:opacity-50 disabled:cursor-not-allowed ${
                             repeatCycle === cycle
                               ? 'bg-indigo-600 text-white border-indigo-600'
@@ -371,7 +388,7 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
                         type="datetime-local"
                         value={openDt}
                         onChange={(e) => setOpenDt(e.target.value)}
-                        disabled={isAllLocked}
+                        disabled={isAllLocked || isTitleOnlyEditable}
                         className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm disabled:bg-gray-50 disabled:text-gray-500"
                       />
                       <p className="text-[11px] text-gray-400 mt-1">비우면 그룹 시작일 상속</p>
@@ -382,7 +399,7 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
                         type="datetime-local"
                         value={closeDt}
                         onChange={(e) => setCloseDt(e.target.value)}
-                        disabled={isAllLocked}
+                        disabled={isAllLocked || isTitleOnlyEditable}
                         className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm disabled:bg-gray-50 disabled:text-gray-500"
                       />
                       <p className="text-[11px] text-gray-400 mt-1">비우면 그룹 종료일 상속. 그룹 기간 안에서만 허용</p>
