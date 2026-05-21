@@ -249,7 +249,7 @@ function BiveTab({
       </div>
       <SimpleTable<BenefitBive>
         columns={[
-          { key: 'biveName', label: 'BIVE 명칭', render: (r) => <span className="text-gray-900">{r.biveName}</span> },
+          { key: 'biveName', label: 'BIVE 명칭', wrap: true, render: (r) => <span className="text-gray-900">{r.biveName}</span> },
           { key: 'artistGroup', label: '아티스트 그룹', width: '130px' },
           { key: 'artist', label: '아티스트', width: '100px' },
           { key: 'grade', label: '등급', width: '80px' },

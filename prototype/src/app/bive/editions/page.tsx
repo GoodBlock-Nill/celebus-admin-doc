@@ -71,7 +71,7 @@ export default function EditionsPage() {
       <SimpleTable<Edition>
         columns={[
           { key: 'id', label: 'ID', width: '60px', render: (r) => <span className="font-medium">{r.id}</span> },
-          { key: 'nameKR', label: '에디션명(KR)', render: (r) => <span className="font-medium text-gray-900">{r.nameKR}</span> },
+          { key: 'nameKR', label: '에디션명(KR)', wrap: true, render: (r) => <span className="font-medium text-gray-900">{r.nameKR}</span> },
           { key: 'registeredBive', label: '등록된 BIVE', width: '120px' },
           { key: 'totalMinted', label: '총 발행', width: '100px', render: (r) => r.totalMinted.toLocaleString() },
           { key: 'createdAt', label: '생성일시', width: '180px' },

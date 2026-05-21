@@ -168,7 +168,7 @@ function CreateBenefitContent() {
           </div>
           <SimpleTable
             columns={[
-              { key: 'name', label: 'BIVE 명칭' },
+              { key: 'name', label: 'BIVE 명칭', wrap: true },
               { key: 'group', label: '아티스트 그룹', width: '130px' },
               { key: 'artist', label: '아티스트', width: '100px' },
               { key: 'grade', label: '등급', width: '80px' },

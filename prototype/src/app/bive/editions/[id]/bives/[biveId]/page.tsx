@@ -211,7 +211,7 @@ function MintingTab({ token }: { token: BiveToken }) {
           { key: 'status', label: '상태', width: '80px', render: (r: typeof linked[number]) => (
             <span className="inline-flex rounded-full px-2.5 py-1 text-xs font-medium bg-emerald-100 text-emerald-700">{r.status}</span>
           )},
-          { key: 'name', label: '캠페인 명', render: (r) => <span className="text-gray-900">{r.name}</span> },
+          { key: 'name', label: '캠페인 명', wrap: true, render: (r) => <span className="text-gray-900">{r.name}</span> },
           { key: 'linkedFeature', label: '연결 기능', width: '140px', render: (r) => <span className="text-indigo-600">{r.linkedFeature}</span> },
           { key: 'minted', label: '발행 수', width: '90px' },
           { key: 'createdAt', label: '생성일', width: '160px' },
@@ -256,7 +256,7 @@ function HistoryTab({ token }: { token: BiveToken }) {
         columns={[
           { key: 'tokenId', label: 'Token ID', width: '160px', render: (r: typeof paged[number]) => <span className="font-mono text-xs">{r.tokenId}</span> },
           { key: 'nickname', label: '닉네임' },
-          { key: 'walletAddress', label: '지갑주소', render: (r) => (
+          { key: 'walletAddress', label: '지갑주소', wrap: true, render: (r) => (
             <a href={`https://bscscan.com/address/${r.walletAddress}`} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline font-mono text-xs inline-flex items-center gap-1">
               {r.walletAddress}
               <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />

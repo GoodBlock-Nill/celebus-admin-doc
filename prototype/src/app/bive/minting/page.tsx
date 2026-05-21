@@ -116,7 +116,7 @@ export default function MintingPage() {
           { key: 'status', label: '상태', width: '90px', render: (r) => (
             <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[r.status]}`}>{r.status}</span>
           )},
-          { key: 'name', label: '캠페인 명', render: (r) => <span className="text-gray-900">{r.name}</span> },
+          { key: 'name', label: '캠페인 명', wrap: true, render: (r) => <span className="text-gray-900">{r.name}</span> },
           { key: 'linkedFeature', label: '연결 기능', width: '140px', render: (r) => <span className="text-indigo-600">{r.linkedFeature}</span> },
           { key: 'registeredBive', label: '등록된 BIVE 수', width: '130px', render: (r) => (r.registeredBive ? r.registeredBive : '-') },
           { key: 'minted', label: '발행 수', width: '90px', render: (r) => (r.minted ? r.minted.toLocaleString() : '-') },

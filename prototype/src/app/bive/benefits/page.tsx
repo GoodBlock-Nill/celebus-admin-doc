@@ -120,7 +120,7 @@ export default function BenefitsPage() {
           { key: 'status', label: '상태', width: '90px', render: (r) => (
             <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[r.status]}`}>{r.status}</span>
           )},
-          { key: 'name', label: '혜택 명칭', render: (r) => <span className="text-gray-900 font-medium">{r.name}</span> },
+          { key: 'name', label: '혜택 명칭', wrap: true, render: (r) => <span className="text-gray-900 font-medium">{r.name}</span> },
           { key: 'registeredBive', label: '등록된 BIVE', width: '110px' },
           { key: 'amount', label: tab === 'BP' ? 'BP수량' : '응모권수량', width: '110px', render: (r) => r.amount.toLocaleString() },
           { key: 'cycle', label: '지급 주기', width: '120px', render: (r) => CYCLE_LABEL[r.cycle] ?? r.cycle },

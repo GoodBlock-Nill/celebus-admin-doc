@@ -129,7 +129,7 @@ export default function EditionDetailPage({ params }: { params: Promise<{ id: st
               {r.status}
             </span>
           )},
-          { key: 'name', label: '명칭', render: (r) => <span className="font-medium text-gray-900">{r.name}</span> },
+          { key: 'name', label: '명칭', wrap: true, render: (r) => <span className="font-medium text-gray-900">{r.name}</span> },
           { key: 'artistGroup', label: '아티스트 그룹', width: '120px' },
           { key: 'artist', label: '아티스트', width: '110px' },
           { key: 'grade', label: '등급', width: '90px', render: (r: BiveToken) => r.grade as BiveGrade },

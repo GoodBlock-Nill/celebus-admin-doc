@@ -236,7 +236,7 @@ function BiveRewardTab({
       </div>
       <SimpleTable<CampaignRewardBive>
         columns={[
-          { key: 'biveName', label: 'BIVE 명칭', render: (r) => <span className="text-gray-900">{r.biveName}</span> },
+          { key: 'biveName', label: 'BIVE 명칭', wrap: true, render: (r) => <span className="text-gray-900">{r.biveName}</span> },
           { key: 'artistGroup', label: '아티스트 그룹', width: '130px' },
           { key: 'artist', label: '아티스트', width: '100px' },
           { key: 'grade', label: '등급', width: '80px' },
@@ -304,7 +304,7 @@ function HistoryTab({
         columns={[
           { key: 'tokenId', label: 'Token ID', width: '160px', render: (r: typeof paged[number]) => <span className="font-mono text-xs">{r.tokenId}</span> },
           { key: 'nickname', label: '닉네임' },
-          { key: 'walletAddress', label: '지갑주소', render: (r) => (
+          { key: 'walletAddress', label: '지갑주소', wrap: true, render: (r) => (
             <a href={`https://bscscan.com/address/${r.walletAddress}`} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline font-mono text-xs inline-flex items-center gap-1">
               {r.walletAddress}
               <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
