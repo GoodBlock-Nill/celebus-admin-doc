@@ -8,7 +8,7 @@ export default function CreateBenefitModal({ isOpen, onClose, type = 'BP' }: { i
   const [tab, setTab] = useState<'info' | 'bive'>('info');
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
-  const [cycle, setCycle] = useState('');
+  const [cycle, setCycle] = useState('DAILY');
   const [weekday, setWeekday] = useState('');
   const [startDate, setStartDate] = useState('');
   const [startTime, setStartTime] = useState('00:00');
@@ -65,8 +65,7 @@ export default function CreateBenefitModal({ isOpen, onClose, type = 'BP' }: { i
           {tab === 'info' ? (
             <>
               <div className="bg-indigo-50 text-indigo-700 px-4 py-3 rounded-lg text-sm">
-                <div className="font-semibold">캠페인 기본 정보</div>
-                <div>지급 로직을 식별할 수 있는 명칭과 검증액션을 선택하세요.</div>
+                지급 로직을 식별할 수 있는 명칭과 검증액션을 선택하세요
               </div>
 
               <div>
@@ -94,9 +93,9 @@ export default function CreateBenefitModal({ isOpen, onClose, type = 'BP' }: { i
                 <label className="block text-sm font-medium text-gray-900 mb-2">지급주기</label>
                 <div className="relative">
                   <select value={cycle} onChange={(e) => setCycle(e.target.value)} className="w-full h-11 pl-3 pr-9 border border-gray-200 rounded-lg text-sm appearance-none bg-white">
-                    <option value="">지급주기를 선택해주세요</option>
                     <option value="DAILY">일일</option>
                     <option value="WEEKLY">주간</option>
+                    <option value="ONCE">1회(획득 시)</option>
                   </select>
                   <ChevronUpDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 </div>
