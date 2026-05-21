@@ -8,7 +8,6 @@ import PageHeader from '@/components/layout/PageHeader';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import { mintCampaigns, type MintCampaign, type CampaignStatus, type CampaignType } from '@/mock/bive';
-import CreateCampaignModal from './CreateCampaignModal';
 
 const TABS: { key: CampaignType; label: string }[] = [
   { key: 'EVENT', label: 'Event' },
@@ -34,7 +33,6 @@ export default function MintingPage() {
   const [sort, setSort] = useState<SortKey>('fast');
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
-  const [createOpen, setCreateOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const base = mintCampaigns
@@ -105,8 +103,8 @@ export default function MintingPage() {
           className="h-10 px-4 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800"
         >초기화</button>
         <button
-          onClick={() => setCreateOpen(true)}
-          className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50"
+          onClick={() => router.push(`/bive/minting/create?type=${tab}`)}
+          className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
         >
           <PlusIcon className="w-4 h-4" />캠페인 생성
         </button>
@@ -122,7 +120,7 @@ export default function MintingPage() {
           { key: 'linkedFeature', label: '연결 기능', width: '140px', render: (r) => <span className="text-indigo-600">{r.linkedFeature}</span> },
           { key: 'registeredBive', label: '등록된 BIVE 수', width: '130px', render: (r) => (r.registeredBive ? r.registeredBive : '-') },
           { key: 'minted', label: '발행 수', width: '90px', render: (r) => (r.minted ? r.minted.toLocaleString() : '-') },
-          { key: 'createdAt', label: '생성일', width: '160px' },
+          { key: 'createdAt', label: '생성일', width: '180px' },
         ]}
         rows={paged}
         emptyMessage={paged.length === 0 && mintCampaigns.filter((c) => c.type === tab).length === 0
@@ -132,8 +130,6 @@ export default function MintingPage() {
       />
 
       <SimplePagination page={page} totalPages={totalPages || 1} onChange={setPage} />
-
-      <CreateCampaignModal isOpen={createOpen} onClose={() => setCreateOpen(false)} type={tab} />
     </div>
   );
 }

@@ -8,7 +8,6 @@ import PageHeader from '@/components/layout/PageHeader';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import { biveBenefits, type BiveBenefit, type BenefitStatus, type BenefitType } from '@/mock/bive';
-import CreateBenefitModal from './CreateBenefitModal';
 
 const TABS = [
   { key: 'BP' as BenefitType, label: 'Boost Point' },
@@ -34,7 +33,6 @@ export default function BenefitsPage() {
   const [cycleFilter, setCycleFilter] = useState('');
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
-  const [createOpen, setCreateOpen] = useState(false);
 
   const filtered = useMemo(() => {
     return biveBenefits
@@ -49,7 +47,7 @@ export default function BenefitsPage() {
 
   return (
     <div>
-      <PageHeader title="혜택 관리" breadcrumbItems={[{ label: 'BIVE' }, { label: '혜택 관리' }]} />
+      <PageHeader title="혜택" breadcrumbItems={[{ label: 'BIVE' }, { label: '혜택 관리' }]} />
 
       <div className="flex items-center justify-between mb-6">
         <div className="inline-flex bg-gray-100 rounded-lg p-1">
@@ -110,8 +108,8 @@ export default function BenefitsPage() {
           className="h-10 px-4 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800"
         >초기화</button>
         <button
-          onClick={() => setCreateOpen(true)}
-          className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50"
+          onClick={() => router.push(`/bive/benefits/create?type=${tab === 'BP' ? 'boostPoint' : 'ticket'}`)}
+          className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
         >
           <PlusIcon className="w-4 h-4" />혜택 생성
         </button>
@@ -124,9 +122,9 @@ export default function BenefitsPage() {
           )},
           { key: 'name', label: '혜택 명칭', render: (r) => <span className="text-gray-900 font-medium">{r.name}</span> },
           { key: 'registeredBive', label: '등록된 BIVE', width: '110px' },
-          { key: 'amount', label: tab === 'BP' ? 'BP 수량' : '응모권 수량', width: '110px', render: (r) => r.amount.toLocaleString() },
-          { key: 'cycle', label: '지급주기', width: '120px', render: (r) => CYCLE_LABEL[r.cycle] ?? r.cycle },
-          { key: 'weekday', label: '지급요일', width: '90px', render: (r) => r.weekday ?? '-' },
+          { key: 'amount', label: tab === 'BP' ? 'BP수량' : '응모권수량', width: '110px', render: (r) => r.amount.toLocaleString() },
+          { key: 'cycle', label: '지급 주기', width: '120px', render: (r) => CYCLE_LABEL[r.cycle] ?? r.cycle },
+          { key: 'weekday', label: '지급 요일', width: '90px', render: (r) => r.weekday ?? '-' },
           { key: 'startDate', label: '시작일', width: '110px' },
           { key: 'endDate', label: '종료일', width: '110px' },
         ]}
@@ -140,12 +138,6 @@ export default function BenefitsPage() {
       />
 
       <SimplePagination page={page} totalPages={totalPages || 1} onChange={setPage} />
-
-      <CreateBenefitModal
-        isOpen={createOpen}
-        onClose={() => setCreateOpen(false)}
-        type={tab}
-      />
     </div>
   );
 }

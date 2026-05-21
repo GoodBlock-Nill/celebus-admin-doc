@@ -11,15 +11,15 @@ interface Props<T> {
 
 export default function SimpleTable<T>({ columns, rows, emptyMessage = '데이터가 없습니다.', onRowClick }: Props<T>) {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+    <div className="bg-white overflow-hidden">
       <table className="w-full">
-        <thead className="bg-gray-50 border-b border-gray-200">
+        <thead className="bg-indigo-50/60 border-y border-indigo-100">
           <tr>
             {columns.map((c) => (
               <th
                 key={c.key}
                 style={c.width ? { width: c.width } : {}}
-                className={`px-4 py-3 text-${c.align || 'left'} text-xs font-semibold text-gray-600`}
+                className={`px-6 py-3.5 text-${c.align || 'left'} text-xs font-semibold text-gray-700`}
               >
                 {c.label}
               </th>
@@ -38,7 +38,7 @@ export default function SimpleTable<T>({ columns, rows, emptyMessage = '데이�
                   const raw = (row as Record<string, unknown>)[c.key];
                   const value = c.render ? c.render(row) : (raw as React.ReactNode);
                   return (
-                    <td key={c.key} className={`px-4 py-3 text-sm text-${c.align || 'left'} text-gray-700`}>
+                    <td key={c.key} className={`px-6 py-3.5 text-sm text-${c.align || 'left'} text-gray-700`}>
                       {value}
                     </td>
                   );

@@ -3,7 +3,7 @@
 import { use, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { TrashIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import { TrashIcon, ArrowTopRightOnSquareIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/layout/PageHeader';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
@@ -47,21 +47,32 @@ export default function BiveDetailPage({ params }: { params: Promise<{ id: strin
 
   const setTab = (k: string) => router.push(`/bive/editions/${editionId}/bives/${tokenId}?tab=${k}`);
   const canDelete = token.status === 'Draft' && token.mintedCount === 0;
-  // 활성 토글: Draft → Active, Active → Inactive(연결 캠페인 없을 때만), Inactive → Active
-  const activeLabel = token.status === 'Active' ? '비활성화' : token.status === 'Inactive' ? '활성화' : '활성화';
+  const activeLabel = token.status === 'Active' ? '비활성화' : '활성화';
 
   return (
     <div>
       <div className="flex items-start justify-between mb-6">
-        <PageHeader
-          title={token.name}
-          breadcrumbItems={[
-            { label: 'BIVE' },
-            { label: '에디션 관리', href: '/bive/editions' },
-            { label: '에디션 BIVE 관리', href: `/bive/editions/${editionId}` },
-            { label: token.name },
-          ]}
-        />
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => router.push(`/bive/editions/${editionId}`)}
+            className="w-8 h-8 inline-flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100"
+            aria-label="뒤로가기"
+          >
+            <ArrowLeftIcon className="w-5 h-5" />
+          </button>
+          <PageHeader
+            title="BIVE 상세"
+            breadcrumbItems={[
+              { label: 'BIVE' },
+              { label: '에디션 관리', href: '/bive/editions' },
+              { label: '에디션 BIVE 관리', href: `/bive/editions/${editionId}` },
+              { label: 'BIVE 상세' },
+            ]}
+          />
+          <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[token.status]}`}>
+            {token.status}
+          </span>
+        </div>
         <div className="flex items-center gap-2">
           {canDelete && (
             <button
@@ -73,27 +84,25 @@ export default function BiveDetailPage({ params }: { params: Promise<{ id: strin
           )}
           <button
             onClick={() => alert(`[Mock] ${activeLabel}`)}
-            className="h-10 px-4 text-sm font-medium text-indigo-600 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50"
+            className="h-10 px-5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg"
           >
             {activeLabel}
           </button>
         </div>
       </div>
 
-      <div className="border-b border-gray-200 mb-6">
-        <div className="flex gap-0">
-          {TABS.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              className={`px-6 py-3 text-sm font-medium border-b-2 ${
-                tab === t.key ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+      <div className="flex gap-1 mb-6">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={`px-5 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+              tab === t.key ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
       </div>
 
       {tab === 'info' && <InfoTab token={token} editionName={edition.nameKR} />}
@@ -118,40 +127,44 @@ export default function BiveDetailPage({ params }: { params: Promise<{ id: strin
 function InfoTab({ token, editionName }: { token: BiveToken; editionName: string }) {
   const readOnly = token.status !== 'Draft';
   return (
-    <div className="grid grid-cols-3 gap-6">
-      <div className="col-span-2 space-y-5">
-        <div className={`px-4 py-3 rounded-lg text-sm ${readOnly ? 'bg-amber-50 text-amber-700' : 'bg-indigo-50 text-indigo-700'}`}>
-          {readOnly
-            ? '활성 상태 BIVE는 기본정보를 수정할 수 없습니다. 비활성화 후 수정해주세요.'
-            : '기본정보 및 속성정보를 모두 입력해주세요'}
+    <div>
+      {readOnly && (
+        <div className="bg-amber-50 text-amber-700 px-4 py-3 rounded-lg text-sm mb-6">
+          Draft 상태에서만 정보를 수정할 수 있습니다.
         </div>
-        <Row label="에디션">{editionName}</Row>
-        <Row label="아티스트 그룹">{token.artistGroup}</Row>
-        <Row label="아티스트">{token.artist}</Row>
-        <Row label="등급">{token.grade}</Row>
-        <Row label="등급번호">{token.gradeNumber}</Row>
-        <Row label="설명(EN)">{token.description || <span className="text-gray-400">-</span>}</Row>
+      )}
+      <div className="grid grid-cols-3 gap-6 mb-6">
+        <div className="col-span-2 bg-white border border-gray-200 rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">BIVE 명칭</h3>
+          <div className="text-base font-semibold text-gray-900">{token.name}</div>
+          <p className="text-xs text-gray-500 mt-2">멤버명, 등급, 등급번호를 기반으로 자동 생성됩니다.</p>
+        </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-4">관리 정보</h3>
+          <div className="space-y-2.5 text-sm">
+            <Stat label="상태"><span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGE[token.status]}`}>{token.status}</span></Stat>
+            <Stat label="생성 관리자">nill</Stat>
+            <Stat label="생성 일시">{token.registeredAt} 15:44</Stat>
+            <Stat label="최근 수정자">nill</Stat>
+            <Stat label="최근 수정 일시">{token.registeredAt} 15:44</Stat>
+          </div>
+        </div>
       </div>
-      <div className="border border-gray-200 rounded-xl p-5 h-fit space-y-4">
-        <h4 className="text-sm font-semibold text-gray-900">관리 정보</h4>
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-500">상태</span>
-          <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[token.status]}`}>{token.status}</span>
+      <div className="grid grid-cols-3 gap-6">
+        <div className="col-span-2 bg-white border border-gray-200 rounded-xl p-5 space-y-4">
+          <h3 className="text-sm font-semibold text-gray-900">기본 정보</h3>
+          <ReadField label="에디션" value={editionName} />
+          <ReadField label="아티스트 그룹" required value={token.artistGroup} />
+          <ReadField label="아티스트" required value={token.artist} />
+          <ReadField label="등급" required value={token.grade} />
+          <ReadField label="등급번호" required value={token.gradeNumber} />
+          <ReadField label="설명 (영문)" value={token.description || ''} multiline />
         </div>
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-500">등록일시</span>
-          <span className="text-gray-900">{token.registeredAt}</span>
-        </div>
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-500">연결 민팅</span>
-          <span className="text-gray-900">{token.mintEvent}건</span>
-        </div>
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-500">누적 발행</span>
-          <span className="text-gray-900">{token.mintedCount.toLocaleString()}</span>
-        </div>
-        <div className="aspect-square border border-dashed border-gray-200 rounded-lg flex items-center justify-center text-xs text-gray-400">
-          미디어 미리보기
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">미디어 파일</h3>
+          <div className="aspect-square bg-gradient-to-br from-orange-100 to-pink-100 rounded-lg flex items-center justify-center text-xs text-gray-500">
+            미디어 미리보기
+          </div>
         </div>
       </div>
     </div>
@@ -169,15 +182,12 @@ function FeatureTab({ token }: { token: BiveToken }) {
         { key: 'mix', label: 'Mix', desc: 'BIVE 합성에 사용 가능 여부' },
         { key: 'pick', label: 'Pick', desc: 'BIVE 픽에 사용 가능 여부' },
       ] as const).map((row) => (
-        <div key={row.key} className="flex items-center justify-between border border-gray-200 rounded-lg px-4 py-3">
+        <div key={row.key} className="flex items-center justify-between border border-gray-200 rounded-lg px-4 py-3 bg-white">
           <div>
             <div className="text-sm font-medium text-gray-900">{row.label}</div>
             <div className="text-xs text-gray-500">{row.desc}</div>
           </div>
-          <span
-            className={`relative inline-flex h-6 w-11 rounded-full ${token.toggles[row.key] ? 'bg-indigo-600' : 'bg-gray-300'}`}
-            aria-label={row.label}
-          >
+          <span className={`relative inline-flex h-6 w-11 rounded-full ${token.toggles[row.key] ? 'bg-indigo-600' : 'bg-gray-300'}`}>
             <span className={`inline-block h-5 w-5 rounded-full bg-white mt-0.5 ${token.toggles[row.key] ? 'translate-x-5' : 'translate-x-0.5'}`} />
           </span>
         </div>
@@ -188,7 +198,6 @@ function FeatureTab({ token }: { token: BiveToken }) {
 
 function MintingTab({ token }: { token: BiveToken }) {
   const router = useRouter();
-  // BIVE에 연결된 캠페인을 mock으로 simulate (이름에 token.artist 포함하면 매칭)
   const linked = mintCampaigns.filter((c) => c.name.includes(token.artist) || c.name.includes(token.artistGroup)).slice(0, 5);
 
   return (
@@ -219,7 +228,6 @@ function HistoryTab({ token }: { token: BiveToken }) {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
-  // BIVE 단위 민팅 이력: token.mintedCount만큼 가짜 트랜잭션
   const all = getMintHistory(token.id + 100, Math.min(token.mintedCount, 50));
   const filtered = all.filter((h) => (keyword ? h.nickname.includes(keyword) || h.tokenId.includes(keyword) : true));
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
@@ -231,12 +239,6 @@ function HistoryTab({ token }: { token: BiveToken }) {
         본 BIVE의 회원 단위 민팅 발행 내역입니다. 지갑주소는 BSCScan 새 창에서 확인할 수 있습니다.
       </div>
       <div className="flex items-center justify-end gap-3 mb-4">
-        <div className="relative">
-          <select className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none min-w-[140px]">
-            <option>닉네임/토큰</option>
-          </select>
-          <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-        </div>
         <div className="relative">
           <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
@@ -270,11 +272,34 @@ function HistoryTab({ token }: { token: BiveToken }) {
   );
 }
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function ReadField({ label, value, required, multiline }: { label: string; value: string; required?: boolean; multiline?: boolean }) {
   return (
-    <div className="grid grid-cols-[120px_1fr] items-center gap-4 py-2 border-b border-gray-100">
-      <div className="text-sm text-gray-500">{label}</div>
-      <div className="text-sm text-gray-900">{children}</div>
+    <div>
+      <label className="block text-sm font-medium text-gray-900 mb-2">{label}{required && <span className="text-red-500 ml-0.5">*</span>}</label>
+      {multiline ? (
+        <textarea
+          value={value}
+          readOnly
+          rows={3}
+          className="w-full p-3 border border-gray-200 rounded-lg text-sm bg-gray-50 resize-none"
+          placeholder="-"
+        />
+      ) : (
+        <input
+          value={value}
+          readOnly
+          className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm bg-gray-50"
+        />
+      )}
+    </div>
+  );
+}
+
+function Stat({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-gray-500">{label}</span>
+      <span className="text-gray-900">{children}</span>
     </div>
   );
 }

@@ -41,11 +41,11 @@ function headerActionsFor(status: CampaignStatus): { label: string; tone: 'prima
         { label: '활성화', tone: 'primary', action: '초안 → 활성 (되돌리기 불가)' },
       ];
     case '활성':
-      return [{ label: '일시중지', tone: 'neutral', action: '활성 → 중지' }];
+      return [{ label: '일시중지', tone: 'danger', action: '활성 → 중지' }];
     case '중지':
       return [
         { label: '활성 재개', tone: 'primary', action: '중지 → 활성' },
-        { label: '종료 요청', tone: 'neutral', action: '개발팀 수동 처리 요청' },
+        { label: '종료 요청', tone: 'danger', action: '개발팀 수동 처리 요청' },
       ];
     case '종료':
       return [];
@@ -91,7 +91,7 @@ export default function MintingDetailPage({ params }: { params: Promise<{ id: st
               title={a.action}
               className={
                 a.tone === 'danger'
-                  ? 'h-10 px-4 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-lg hover:bg-red-50'
+                  ? 'h-10 px-4 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg border border-gray-200'
                   : a.tone === 'primary'
                   ? 'h-10 px-4 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700'
                   : 'h-10 px-4 text-sm font-medium text-indigo-600 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50'
@@ -103,20 +103,18 @@ export default function MintingDetailPage({ params }: { params: Promise<{ id: st
         </div>
       </div>
 
-      <div className="border-b border-gray-200 mb-6">
-        <div className="flex gap-0">
-          {TABS.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              className={`px-6 py-3 text-sm font-medium border-b-2 ${
-                tab === t.key ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+      <div className="flex gap-1 mb-6">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={`px-5 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+              tab === t.key ? 'bg-gray-900 text-white' : 'bg-white text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
       </div>
 
       {tab === 'info' && <InfoTab campaign={campaign} />}
@@ -251,11 +249,8 @@ function BiveRewardTab({
               className="w-20 h-9 px-2 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
             />
           )},
-          { key: 'pct', label: '비중', width: '120px', render: (r) => (
-            <span className="text-gray-700">
-              {r.weight}/{weightSum || 1}
-              <span className="text-gray-400 ml-1">({weightSum ? ((r.weight / weightSum) * 100).toFixed(1) : '0.0'}%)</span>
-            </span>
+          { key: 'pct', label: '가중치 비중', width: '120px', render: (r) => (
+            <span className="text-gray-700">{weightSum ? ((r.weight / weightSum) * 100).toFixed(1) : '0.0'}%</span>
           )},
           { key: 'manage', label: '관리', width: '60px', render: () => (
             editable

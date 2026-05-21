@@ -34,7 +34,7 @@ export default function EditionsPage() {
         <PageHeader title="에디션 관리" breadcrumbItems={[{ label: 'BIVE' }, { label: '에디션 관리' }]} />
         <button
           onClick={() => setCreateOpen(true)}
-          className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50"
+          className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
         >
           <PlusIcon className="w-4 h-4" />에디션 생성
         </button>
@@ -74,7 +74,7 @@ export default function EditionsPage() {
           { key: 'nameKR', label: '에디션명(KR)', render: (r) => <span className="font-medium text-gray-900">{r.nameKR}</span> },
           { key: 'registeredBive', label: '등록된 BIVE', width: '120px' },
           { key: 'totalMinted', label: '총 발행', width: '100px', render: (r) => r.totalMinted.toLocaleString() },
-          { key: 'createdAt', label: '생성일시', width: '160px' },
+          { key: 'createdAt', label: '생성일시', width: '180px' },
           { key: 'createdBy', label: '생성 관리자', width: '120px' },
           { key: 'manage', label: '관리', width: '70px', render: (r) => (
             <button

@@ -8,7 +8,6 @@ import PageHeader from '@/components/layout/PageHeader';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import { getEditionById, getEditionTokens, BIVE_GRADES, type BiveToken, type BiveStatus, type BiveGrade } from '@/mock/bive';
-import RegisterBiveModal from './RegisterBiveModal';
 
 const PAGE_SIZE = 20;
 
@@ -32,7 +31,6 @@ export default function EditionDetailPage({ params }: { params: Promise<{ id: st
   const [searchTarget, setSearchTarget] = useState<SearchTarget>('명칭');
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
-  const [registerOpen, setRegisterOpen] = useState(false);
 
   const filtered = useMemo(() => {
     return tokens
@@ -66,8 +64,8 @@ export default function EditionDetailPage({ params }: { params: Promise<{ id: st
           ]}
         />
         <button
-          onClick={() => setRegisterOpen(true)}
-          className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50"
+          onClick={() => router.push(`/bive/editions/${editionId}/create`)}
+          className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
         >
           <PlusIcon className="w-4 h-4" />BIVE 등록
         </button>
@@ -146,8 +144,6 @@ export default function EditionDetailPage({ params }: { params: Promise<{ id: st
       />
 
       <SimplePagination page={page} totalPages={totalPages || 1} onChange={setPage} />
-
-      <RegisterBiveModal isOpen={registerOpen} onClose={() => setRegisterOpen(false)} />
     </div>
   );
 }

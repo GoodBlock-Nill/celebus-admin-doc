@@ -20,7 +20,7 @@ export interface ArtistGroup {
 
 export const artistGroups: ArtistGroup[] = [
   { id: 1, name: '언더라이트', members: ['리아', '소율', '하나'] },
-  { id: 2, name: 'V01D', members: ['Mavin', 'Ji-A', 'Shaden', 'Misa', 'Lee'] },
+  { id: 2, name: 'V01D', members: ['송유찬', '정지섭', '케빈박', '신노스케', '조주연'] },
   { id: 3, name: 'CELEBUS', members: ['CELEBUS'] },
   { id: 4, name: 'MADEIN', members: ['윤하', '서윤', '도아', '나래'] },
   { id: 5, name: 'iKON', members: ['바비', '준회', '동혁', '진환', '구준'] },
@@ -78,11 +78,12 @@ export interface BiveToken {
 
 function makeV01dEditionTokens(): BiveToken[] {
   const v01dArtists = artistGroups.find((g) => g.name === 'V01D')!.members;
-  const grades: { grade: BiveGrade; num: string; mintRange: [number, number]; date: string }[] = [
-    { grade: 'Event', num: '004', mintRange: [29, 38], date: '2026.05.04' },
-    { grade: 'Event', num: '003', mintRange: [52, 177], date: '2026.04.27' },
-    { grade: 'Normal', num: '002', mintRange: [165, 186], date: '2026.04.09' },
-    { grade: 'Normal', num: '001', mintRange: [274, 287], date: '2026.02.19' },
+  // 운영 BO 정합: 모든 BIVE Event 등급, 등급번호 001~004 (5명 × 4 = 20건) + 등급 005 일부 (3건 = 23 총합)
+  const grades: { num: string; mintRange: [number, number]; date: string }[] = [
+    { num: '004', mintRange: [55, 66], date: '2026.05.04' },
+    { num: '003', mintRange: [58, 216], date: '2026.04.27' },
+    { num: '002', mintRange: [183, 216], date: '2026.04.09' },
+    { num: '001', mintRange: [311, 327], date: '2026.02.19' },
   ];
   let id = 1;
   const tokens: BiveToken[] = [];
@@ -94,10 +95,10 @@ function makeV01dEditionTokens(): BiveToken[] {
         id: id++,
         editionId: 1,
         status: 'Active',
-        name: `${artist} ${g.grade}-${g.num}`,
+        name: `${artist} Event-${g.num}`,
         artistGroup: 'V01D',
         artist,
-        grade: g.grade,
+        grade: 'Event',
         gradeNumber: g.num,
         mintEvent: 1,
         mintedCount: minted,
@@ -106,11 +107,11 @@ function makeV01dEditionTokens(): BiveToken[] {
       });
     });
   });
-  // 추가: Special / Wicked / Next 각 1개씩 데모용
+  // 추가 3건 (운영 등록된 BIVE=23 충족용 — Event 등급 005)
   tokens.push(
-    { id: id++, editionId: 1, status: 'Active', name: 'Mavin Special-001', artistGroup: 'V01D', artist: 'Mavin', grade: 'Special', gradeNumber: '001', mintEvent: 1, mintedCount: 12, registeredAt: '2026.05.10', toggles: { send: true, mix: false, pick: true } },
-    { id: id++, editionId: 1, status: 'Draft', name: 'Ji-A Wicked-001', artistGroup: 'V01D', artist: 'Ji-A', grade: 'Wicked', gradeNumber: '001', mintEvent: 0, mintedCount: 0, registeredAt: '2026.05.15', toggles: { send: true, mix: true, pick: true } },
-    { id: id++, editionId: 1, status: 'Inactive', name: 'Shaden Next-001', artistGroup: 'V01D', artist: 'Shaden', grade: 'Next', gradeNumber: '001', mintEvent: 0, mintedCount: 0, registeredAt: '2026.05.18', toggles: { send: true, mix: true, pick: true } },
+    { id: id++, editionId: 1, status: 'Active', name: '송유찬 Event-005', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 12, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true } },
+    { id: id++, editionId: 1, status: 'Active', name: '정지섭 Event-005', artistGroup: 'V01D', artist: '정지섭', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 8, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true } },
+    { id: id++, editionId: 1, status: 'Active', name: '케빈박 Event-005', artistGroup: 'V01D', artist: '케빈박', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 9, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true } },
   );
   return tokens;
 }
@@ -198,29 +199,29 @@ export interface CampaignRewardBive {
 export function getCampaignRewards(id: number): CampaignRewardBive[] {
   const v01d = artistGroups.find((g) => g.name === 'V01D')!.members;
   if (id === 24) {
-    return [{ biveId: 1, editionId: 1, biveName: 'Mavin Event-004', artistGroup: 'V01D', artist: 'Mavin', grade: 'Event', gradeNumber: '004', weight: 99, mintedCount: 29 }];
+    return [{ biveId: 1, editionId: 1, biveName: '송유찬 Event-004', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '004', weight: 99, mintedCount: 29 }];
   }
   if (id === 21) {
     return [
-      { biveId: 5, editionId: 1, biveName: 'Mavin Normal-001', artistGroup: 'V01D', artist: 'Mavin', grade: 'Normal', gradeNumber: '001', weight: 60, mintedCount: 188 },
-      { biveId: 6, editionId: 1, biveName: 'Ji-A Normal-001', artistGroup: 'V01D', artist: 'Ji-A', grade: 'Normal', gradeNumber: '001', weight: 40, mintedCount: 124 },
+      { biveId: 5, editionId: 1, biveName: '송유찬 Event-001', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '001', weight: 60, mintedCount: 188 },
+      { biveId: 6, editionId: 1, biveName: '정지섭 Event-001', artistGroup: 'V01D', artist: '정지섭', grade: 'Event', gradeNumber: '001', weight: 40, mintedCount: 124 },
     ];
   }
   if (id === 14) {
     return v01d.map((m, i) => ({ biveId: i + 1, editionId: 1, biveName: `${m} Event-003`, artistGroup: 'V01D', artist: m, grade: 'Event' as const, gradeNumber: '003', weight: 20, mintedCount: 100 + i * 30 }));
   }
   if (id === 8) {
-    return v01d.map((m, i) => ({ biveId: i + 1, editionId: 1, biveName: `${m} Normal-001`, artistGroup: 'V01D', artist: m, grade: 'Normal' as const, gradeNumber: '001', weight: 20, mintedCount: 180 + i * 5 }));
+    return v01d.map((m, i) => ({ biveId: i + 1, editionId: 1, biveName: `${m} Event-001`, artistGroup: 'V01D', artist: m, grade: 'Event' as const, gradeNumber: '001', weight: 20, mintedCount: 180 + i * 5 }));
   }
   if (id === 7) {
     return [{ biveId: 1, editionId: 2, biveName: 'CELEBUS Event-001', artistGroup: 'CELEBUS', artist: 'CELEBUS', grade: 'Event', gradeNumber: '001', weight: 100, mintedCount: 439 }];
   }
   if (id === 50) {
-    return [{ biveId: 5, editionId: 1, biveName: 'Mavin Normal-001', artistGroup: 'V01D', artist: 'Mavin', grade: 'Normal', gradeNumber: '001', weight: 100, mintedCount: 412 }];
+    return [{ biveId: 5, editionId: 1, biveName: '송유찬 Event-001', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '001', weight: 100, mintedCount: 412 }];
   }
   const c = getCampaignById(id);
   if (!c) return [];
-  return [{ biveId: 1, editionId: 1, biveName: 'Mavin Normal-001', artistGroup: 'V01D', artist: 'Mavin', grade: 'Normal', gradeNumber: '001', weight: 100, mintedCount: c.minted }];
+  return [{ biveId: 1, editionId: 1, biveName: '송유찬 Event-001', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '001', weight: 100, mintedCount: c.minted }];
 }
 
 // 민팅 이력 (회원 단위 발행 추적, §6 §10 BIVE 상세 4탭 §민팅이력)
@@ -285,7 +286,7 @@ export interface BenefitBive {
 export function getBenefitBives(id: number): BenefitBive[] {
   const v01d = artistGroups.find((g) => g.name === 'V01D')!.members;
   if (id === 3 || id === 2) {
-    return v01d.map((m, i) => ({ biveId: i + 5, editionId: 1, biveName: `${m} Normal-001`, artistGroup: 'V01D', artist: m, grade: 'Normal' as const, gradeNumber: '001' }));
+    return v01d.map((m, i) => ({ biveId: i + 5, editionId: 1, biveName: `${m} Event-001`, artistGroup: 'V01D', artist: m, grade: 'Event' as const, gradeNumber: '001' }));
   }
   if (id === 1) {
     return [{ biveId: 1, editionId: 2, biveName: 'CELEBUS Event-001', artistGroup: 'CELEBUS', artist: 'CELEBUS', grade: 'Event', gradeNumber: '001' }];
