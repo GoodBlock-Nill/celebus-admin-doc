@@ -104,24 +104,24 @@ p {
 <table>
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>화면 경로</td><td><code>/bive/editions/{editionId}</code></td></tr>
-<tr><td>Breadcrumb</td><td>홈 / BIVE / 에디션 관리 / {에디션명} BIVE 관리</td></tr>
-<tr><td>페이지 제목</td><td>"{에디션명} BIVE 관리"</td></tr>
+<tr><td>Breadcrumb</td><td>홈 / BIVE / 에디션 관리 / 에디션 BIVE 관리 (운영 BO 실제, 에디션명 미포함)</td></tr>
+<tr><td>페이지 제목</td><td>"BIVE 관리" (운영 BO 실제 — 에디션명 미포함)</td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-BIVE-101] 에디션 리스트의 행 클릭</td></tr>
 <tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다</td></tr>
 </table>
 <h2>2. 화면 구성</h2>
 <h3>2-1. 상단 바</h3>
 <ul>
-<li><strong>페이지 제목</strong>: "{에디션명} BIVE 관리"</li>
+<li><strong>페이지 제목</strong>: "BIVE 관리" (운영 BO 실제 — 에디션명 미포함, Breadcrumb으로 컨텍스트 제공)</li>
 <li><strong>[+ BIVE 등록] 버튼</strong> (우측 상단): 클릭 시 [CEB-BO-BIVE-202-CREATE] BIVE 등록 페이지로 이동</li>
 </ul>
 <h3>2-2. 필터·검색 영역</h3>
 <ul>
-<li><strong>상태 필터</strong> (드롭다운): <code>전체(기본) / Active / Inactive / Draft</code></li>
-<li><strong>등급 필터</strong> (드롭다운): <code>전체(기본) / Event / Normal / Special / Wicked / Next / Final</code></li>
-<li><strong>검색 대상 드롭다운</strong>: <code>명칭(기본) / 아티스트 그룹 / 아티스트</code></li>
-<li><strong>검색 입력</strong>: placeholder "검색어 입력"</li>
-<li><strong>[조회] 버튼</strong>: 현재 조건으로 테이블 재조회</li>
+<li><strong>상태 필터</strong> (드롭다운): <code>상태(전체) / Active / Inactive / Draft</code> (운영 BO 실제 표기)</li>
+<li><strong>등급 필터</strong> (드롭다운): <code>등급(전체) / Event / Normal / Special / Wicked / Next / Final</code> (운영 BO 실제 표기)</li>
+<li><strong>검색 대상 드롭다운</strong>: <code>명칭 / 아티스트 그룹 / 아티스트</code> (운영 BO 실제, 기본값 표기 없음)</li>
+<li><strong>검색 입력</strong>: placeholder <code>"명칭 입력"</code> (운영 BO 실제)</li>
+<li><strong>[조회] 버튼</strong>: 운영 BO는 별도 [조회] 버튼 없이 필터·검색 입력 즉시 자동 갱신</li>
 </ul>
 <h3>2-3. 데이터 테이블</h3>
 <table>
@@ -196,7 +196,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 B-101 v2 양식 이전</strong> ① v1 페이지 구조(상단 바·필터·테이블·페이지네이션)를 v2 표준 §1~§8로 재배치 ② BIVE 등급 6종 + 상태 3종 명세 정합 ③ 명칭 자동 생성 규칙 명시 ("{아티스트명} {등급}-{등급번호}") ④ v1 권한 4단계 → "[관리자 > 권한관리] 설정에 따른다" 단일 표기 ⑤ [CEB-BO-BIVE-101] 에디션 리스트 + [CEB-BO-BIVE-202] BIVE 상세 + [CEB-BO-BIVE-202-CREATE] BIVE 등록 연관 화면 정합</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 디테일 정합</strong> — ① 페이지 제목 "{에디션명} BIVE 관리" → 운영 BO 실제 <strong>"BIVE 관리"</strong> (에디션명 미포함) ② Breadcrumb 표기 정정 ("에디션 BIVE 관리"가 운영 BO 실제) ③ 필터 기본값 라벨 정확화: "전체(기본)" → 운영 <strong>"상태(전체)"·"등급(전체)"</strong> ④ 검색 placeholder "검색어 입력" → 운영 <strong>"명칭 입력"</strong> ⑤ [조회] 버튼 운영 BO 미존재 (필터·검색 즉시 갱신). §1·§2-1·§2-2·§3·§5 정합</td></tr>
+<tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 B-101 v2 양식 이전</strong> ① v1 페이지 구조(상단 바·필터·테이블·페이지네이션)를 v2 표준 §1~§8로 재배치 ② BIVE 등급 6종 + 상태 3종 명세 정합 ③ 명칭 자동 생성 규칙 명시 ("{아티스트명} {등급}-{등급번호}") ④ v1 권한 4단계 → "[관리자 > 권한관리] 설정에 따른다" 단일 표기 ⑤ [CEB-BO-BIVE-101] 에디션 리스트 + [CEB-BO-BIVE-202] BIVE 상세 + [CEB-BO-BIVE-202-CREATE] BIVE 등록 연관 화면 정합</td></tr>
 </table>
 
 </body>

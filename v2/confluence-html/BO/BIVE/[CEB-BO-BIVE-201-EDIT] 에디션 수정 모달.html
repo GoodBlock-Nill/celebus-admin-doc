@@ -125,12 +125,15 @@ p {
 <tr><td>영어</td><td>Text Input</td><td>placeholder "Edition name"</td><td>(동일)</td></tr>
 <tr><td>일본어</td><td>Text Input</td><td>placeholder "エディション名"</td><td>(동일)</td></tr>
 </table>
-<h3>2-4. 하단 액션 (좌측 [삭제] + 우측 [수정하기])</h3>
+<h3>2-4. 하단 액션 (단일 [수정하기])</h3>
 <ul>
-<li>좌측 [삭제] (빨강): 등록 BIVE > 0 또는 민팅 > 0이면 비활성</li>
-<li>우측 [수정하기] (인디고, 기본 비활성)</li>
-<li>입력 필드 1개라도 변경되면 활성화</li>
+<li><strong>[수정하기]</strong> (인디고, 우측 하단 단독, 기본 비활성)</li>
+<li>모든 필수 입력 유효 + 입력 필드 1개라도 변경되면 활성화</li>
+<li>등록 BIVE > 0 또는 민팅 > 0이면 입력 필드 자체가 disabled라 [수정하기]도 비활성 유지</li>
 </ul>
+<blockquote>
+<p><strong>운영 BO 실제 정합</strong>: v1 Confluence 명세는 [삭제] + [수정하기] 좌우 배치였으나 운영 BO는 [수정하기] 단독 노출. 에디션 삭제 기능은 운영 BO에서 본 모달로 제공되지 않으며 별도 처리 (혹은 미지원).</p>
+</blockquote>
 <h2>3. 화면에 노출되는 정보</h2>
 <table>
 <tr><th>위치</th><th>정보</th><th>의미</th></tr>
@@ -148,7 +151,7 @@ p {
 <tr><td>입력 필드 변경 없음</td><td>[수정하기] 비활성 유지</td></tr>
 <tr><td>[수정하기] 클릭 (정상)</td><td>토스트 "에디션이 수정되었습니다." → 모달 닫힘 → 리스트 갱신</td></tr>
 <tr><td>[수정하기] 클릭 (네트워크 오류)</td><td>토스트 "수정에 실패했습니다. 다시 시도해주세요." 모달 유지</td></tr>
-<tr><td>[삭제] 클릭</td><td>즉시 삭제 처리 → 토스트 "에디션이 삭제되었습니다." → 모달 닫힘 → 리스트 행 제거</td></tr>
+<tr><td>[삭제] 클릭</td><td>(운영 BO 미지원 — 본 모달에 [삭제] 버튼 없음)</td></tr>
 <tr><td>닫기 [X] / ESC / 오버레이 클릭</td><td>모달 닫힘 (변경 사항 폐기)</td></tr>
 </table>
 <h2>5. 검증 규칙</h2>
@@ -170,14 +173,15 @@ p {
 <table>
 <tr><th>액션</th><th>다음 화면</th></tr>
 <tr><td>[수정하기] 성공</td><td>[CEB-BO-BIVE-101] 에디션 리스트 (모달 닫힘 + 리스트 갱신)</td></tr>
-<tr><td>[삭제] 성공</td><td>[CEB-BO-BIVE-101] 에디션 리스트 (모달 닫힘 + 행 제거)</td></tr>
+<tr><td>[삭제] 성공</td><td>(운영 BO 미지원 — 본 모달에 [삭제] 버튼 없음)</td></tr>
 <tr><td>닫기 [X] / ESC</td><td>[CEB-BO-BIVE-101] 에디션 리스트 (변경 폐기)</td></tr>
 <tr><td>영역 가이드 참조</td><td>[CEB-BO-004] BIVE(NFT) 영역 가이드</td></tr>
 </table>
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 PJ-103 v2 양식 이전</strong> ① 모달 양식 §1~§8로 재배치 ② 수정 + 삭제 통합 모달 (좌측 [삭제] + 우측 [수정하기]) ③ 수정·삭제 가능 조건 (등록 BIVE 0 + 민팅 0) 명시 ④ 다국어 3종 prefill + 변경 시 활성화 정책 명시 ⑤ 권한 단일 표기</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 디테일 정합</strong> — §2-4 하단 액션 정정: v1 Confluence 명세의 좌측 [삭제] + 우측 [수정하기] 좌우 배치 → 운영 BO 실제 <strong>[수정하기] 단독 노출</strong>로 정정. 에디션 삭제 기능은 본 모달에서 운영 BO 미지원. §4 상태별 동작 분기·§7 연관 화면의 [삭제] 행을 "운영 BO 미지원" 표기로 정합</td></tr>
+<tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 PJ-103 v2 양식 이전</strong> ① 모달 양식 §1~§8로 재배치 ② 수정 + 삭제 통합 모달 (좌측 [삭제] + 우측 [수정하기]) ③ 수정·삭제 가능 조건 (등록 BIVE 0 + 민팅 0) 명시 ④ 다국어 3종 prefill + 변경 시 활성화 정책 명시 ⑤ 권한 단일 표기</td></tr>
 </table>
 
 </body>
