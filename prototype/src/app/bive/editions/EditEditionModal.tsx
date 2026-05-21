@@ -1,0 +1,107 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import type { Edition } from '@/mock/bive';
+
+// [CEB-BO-BIVE-201-EDIT] 에디션 수정 모달
+// - 등록 BIVE 0건 + 민팅 0건일 때만 수정 가능
+// - 운영 BO 실제는 [수정하기] 단독 노출 (삭제 미제공)
+
+export default function EditEditionModal({
+  isOpen,
+  edition,
+  onClose,
+}: {
+  isOpen: boolean;
+  edition: Edition | null;
+  onClose: () => void;
+}) {
+  const [ko, setKo] = useState('');
+  const [en, setEn] = useState('');
+  const [jp, setJp] = useState('');
+
+  useEffect(() => {
+    if (edition) {
+      setKo(edition.nameKR);
+      setEn(edition.nameEN);
+      setJp(edition.nameJP);
+    }
+  }, [edition]);
+
+  if (!isOpen || !edition) return null;
+
+  const locked = edition.registeredBive > 0 || edition.totalMinted > 0;
+  const allFilled = ko.trim() && en.trim() && jp.trim();
+  const changed = ko !== edition.nameKR || en !== edition.nameEN || jp !== edition.nameJP;
+  const canSubmit = !locked && allFilled && changed;
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4">
+          <h3 className="text-base font-semibold text-gray-900">에디션 수정</h3>
+          <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
+            <XMarkIcon className="w-4 h-4 text-gray-600" />
+          </button>
+        </div>
+        <div className="px-6 pb-6 space-y-5">
+          <p className="text-sm text-gray-500">
+            에디션에 BIVE가 등록되었거나 민팅되면 에디션 명칭은 수정할 수 없습니다.
+          </p>
+
+          {locked && (
+            <div className="bg-amber-50 text-amber-700 px-4 py-2.5 rounded-lg text-xs">
+              본 에디션은 등록된 BIVE {edition.registeredBive}건 / 누적 민팅 {edition.totalMinted.toLocaleString()}건이 있어 수정할 수 없습니다.
+            </div>
+          )}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-2">한국어</label>
+            <input
+              value={ko}
+              onChange={(e) => setKo(e.target.value)}
+              disabled={locked}
+              placeholder="에디션명 입력"
+              className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-400"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-2">영어</label>
+            <input
+              value={en}
+              onChange={(e) => setEn(e.target.value)}
+              disabled={locked}
+              placeholder="Edition name"
+              className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-400"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-2">일본어</label>
+            <input
+              value={jp}
+              onChange={(e) => setJp(e.target.value)}
+              disabled={locked}
+              placeholder="エディション名"
+              className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-400"
+            />
+          </div>
+
+          <button
+            disabled={!canSubmit}
+            onClick={() => {
+              alert(`[Mock] 에디션 수정\nKO: ${ko} / EN: ${en} / JP: ${jp}`);
+              onClose();
+            }}
+            className="w-full h-12 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-200"
+          >
+            수정하기
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

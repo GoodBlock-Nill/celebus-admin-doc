@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { PlusIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
@@ -9,14 +9,24 @@ import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import { editions, type Edition } from '@/mock/bive';
 import CreateEditionModal from './CreateEditionModal';
+import EditEditionModal from './EditEditionModal';
+
+type SortKey = 'latest' | 'oldest';
 
 export default function EditionsPage() {
   const router = useRouter();
   const [keyword, setKeyword] = useState('');
+  const [sort, setSort] = useState<SortKey>('latest');
   const [page, setPage] = useState(1);
   const [createOpen, setCreateOpen] = useState(false);
+  const [editTarget, setEditTarget] = useState<Edition | null>(null);
 
-  const filtered = editions.filter((e) => (keyword ? e.nameKR.toLowerCase().includes(keyword.toLowerCase()) : true));
+  const filtered = useMemo(() => {
+    const base = editions.filter((e) =>
+      keyword ? e.nameKR.toLowerCase().includes(keyword.toLowerCase()) : true,
+    );
+    return [...base].sort((a, b) => (sort === 'latest' ? b.id - a.id : a.id - b.id));
+  }, [keyword, sort]);
 
   return (
     <div>
@@ -32,8 +42,13 @@ export default function EditionsPage() {
 
       <div className="flex items-center gap-3 mb-4">
         <div className="relative">
-          <select className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[120px]">
-            <option>최신순</option>
+          <select
+            value={sort}
+            onChange={(e) => { setSort(e.target.value as SortKey); setPage(1); }}
+            className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[120px]"
+          >
+            <option value="latest">최신순</option>
+            <option value="oldest">오래된순</option>
           </select>
           <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
         </div>
@@ -61,8 +76,12 @@ export default function EditionsPage() {
           { key: 'totalMinted', label: '총 발행', width: '100px', render: (r) => r.totalMinted.toLocaleString() },
           { key: 'createdAt', label: '생성일시', width: '160px' },
           { key: 'createdBy', label: '생성 관리자', width: '120px' },
-          { key: 'manage', label: '관리', width: '70px', render: () => (
-            <button className="text-gray-400 hover:text-gray-600" onClick={(e) => e.stopPropagation()}>
+          { key: 'manage', label: '관리', width: '70px', render: (r) => (
+            <button
+              className="text-gray-400 hover:text-indigo-600"
+              onClick={(e) => { e.stopPropagation(); setEditTarget(r); }}
+              aria-label="에디션 수정"
+            >
               <Cog6ToothIcon className="w-5 h-5" />
             </button>
           ) },
@@ -75,6 +94,7 @@ export default function EditionsPage() {
       <SimplePagination page={page} totalPages={1} onChange={setPage} />
 
       <CreateEditionModal isOpen={createOpen} onClose={() => setCreateOpen(false)} />
+      <EditEditionModal isOpen={!!editTarget} edition={editTarget} onClose={() => setEditTarget(null)} />
     </div>
   );
 }

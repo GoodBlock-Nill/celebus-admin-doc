@@ -8,7 +8,7 @@ export default function CreateEditionModal({ isOpen, onClose }: { isOpen: boolea
   const [en, setEn] = useState('');
   const [jp, setJp] = useState('');
 
-  const canSubmit = ko.trim().length > 0;
+  const canSubmit = ko.trim().length > 0 && en.trim().length > 0 && jp.trim().length > 0;
 
   if (!isOpen) return null;
 
