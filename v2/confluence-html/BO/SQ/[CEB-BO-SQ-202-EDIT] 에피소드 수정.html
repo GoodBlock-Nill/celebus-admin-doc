@@ -159,7 +159,7 @@ p {
 <table>
 <tr><th>필드</th><th>입력 방식</th><th>진행중 잠금</th></tr>
 <tr><td>응모권 보상</td><td>정수 입력 (단위: 장)</td><td>★</td></tr>
-<tr><td>팬덤 포인트 보상</td><td>정수 입력</td><td>★</td></tr>
+<tr><td>덕력 보상</td><td>정수 입력</td><td>★</td></tr>
 <tr><td>BIVE 보상</td><td>토글 ON/OFF</td><td>★</td></tr>
 <tr><td>민팅 캠페인</td><td>드롭다운 (BIVE 토글 ON일 때만 노출)</td><td>★</td></tr>
 </table>
@@ -181,7 +181,7 @@ p {
 <tr><td>다국어</td><td>타이틀·설명 한국어/영어/일본어</td><td>회원 노출 콘텐츠</td></tr>
 <tr><td>메인 이미지</td><td>3:4 비율 이미지</td><td>회원 앱 카드 노출용</td></tr>
 <tr><td>상위 그룹 기간</td><td>시작·종료일자 (read-only)</td><td>그룹 SSOT 안내</td></tr>
-<tr><td>에피소드 완료 보상</td><td>응모권·팬덤 포인트·BIVE 토글·민팅 캠페인</td><td>모든 미션 완료 회원에게 자동 지급. 진행중 진입 시 read-only</td></tr>
+<tr><td>에피소드 완료 보상</td><td>응모권·덕력·BIVE 토글·민팅 캠페인</td><td>모든 미션 완료 회원에게 자동 지급. 진행중 진입 시 read-only</td></tr>
 <tr><td>관리 정보</td><td>생성자·생성일시·최근 수정자·최근 수정일시</td><td>4종 운영 메타</td></tr>
 </table>
 <h2>4. 상태별 동작 분기</h2>
@@ -201,7 +201,7 @@ p {
 <tr><td>다국어 미입력 (한 언어라도 비어있음)</td><td>[저장] 비활성</td></tr>
 <tr><td>메인 이미지 미등록</td><td>[저장] 비활성</td></tr>
 <tr><td>변경사항 없음 + 저장 시도</td><td>"변경사항이 없습니다" 토스트</td></tr>
-<tr><td>완료 보상 응모권·팬덤 포인트</td><td>0 이상 정수만 허용. 음수·소수·문자 입력 시 인라인 에러</td></tr>
+<tr><td>완료 보상 응모권·덕력</td><td>0 이상 정수만 허용. 음수·소수·문자 입력 시 인라인 에러</td></tr>
 <tr><td>완료 보상 BIVE 토글 ON</td><td>민팅 캠페인 드롭다운 선택 필수. 미선택 시 [저장] 비활성</td></tr>
 <tr><td>진행중 상태 + 완료 보상 수정 시도</td><td>모든 보상 필드 read-only. 변경 불가 (회원 기대권 보호)</td></tr>
 <tr><td>반복 에피소드 진입</td><td>완료 보상 섹션 자체 미노출</td></tr>
@@ -227,7 +227,7 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v3.1</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드 완료 보상 수정 섹션 추가 (메인 에피소드 전용) + 진행중 분기 정합 정정</strong> — ① §2-7 에피소드 완료 보상 섹션 신규 (응모권·팬덤 포인트·BIVE 토글·민팅 캠페인 4필드). 진행중 상태 진입 시 모든 필드 read-only로 잠금 (회원 기대권 보호) ② 기존 §2-7(관리 정보)·§2-8(하단 액션)을 §2-8·§2-9로 번호 이동 ③ §3 화면 노출 정보 표에 "에피소드 완료 보상" 행 추가 ④ §5 검증 규칙에 4행 추가 (정수 검증·BIVE ON 시 민팅 캠페인 필수·진행중 잠금·반복 에피소드 미노출) ⑤ §4 상태별 동작 분기 "진행중 진입" 행이 "모든 필드 수정 가능"으로 §2-7·§5 신설 정책과 충돌하던 부분 정정 — "다국어·이미지 등은 수정 가능, 완료 보상 섹션은 read-only 잠금"으로 명시 ⑥ [CEB-BO-011] v3.2 정합</td></tr>
+<tr><td><strong>v3.1</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드 완료 보상 수정 섹션 추가 (메인 에피소드 전용) + 진행중 분기 정합 정정</strong> — ① §2-7 에피소드 완료 보상 섹션 신규 (응모권·덕력·BIVE 토글·민팅 캠페인 4필드). 진행중 상태 진입 시 모든 필드 read-only로 잠금 (회원 기대권 보호) ② 기존 §2-7(관리 정보)·§2-8(하단 액션)을 §2-8·§2-9로 번호 이동 ③ §3 화면 노출 정보 표에 "에피소드 완료 보상" 행 추가 ④ §5 검증 규칙에 4행 추가 (정수 검증·BIVE ON 시 민팅 캠페인 필수·진행중 잠금·반복 에피소드 미노출) ⑤ §4 상태별 동작 분기 "진행중 진입" 행이 "모든 필드 수정 가능"으로 §2-7·§5 신설 정책과 충돌하던 부분 정정 — "다국어·이미지 등은 수정 가능, 완료 보상 섹션은 read-only 잠금"으로 명시 ⑥ [CEB-BO-011] v3.2 정합</td></tr>
 <tr><td>v3.0</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>한국어 도메인 용어 정합 + Page Properties 13필드</strong> — ① Page Properties 표 신설 ② §1 데이터 모델 코드 경로(<code>StoryQuest</code>·<code>prototype/src/mock/sq.ts</code>) 제거 ③ 유형 enum(MAIN/REPEAT)·상태 enum(DRAFT/ACTIVE/CLOSED) → 한국어 ④ 검증 함수 호출(<code>isAllLangsFilled</code>, <code>editableByStatus && isValid</code>) → 운영 동작 설명 ⑤ §3 화면 노출 정보 표 신설 ⑥ §4·§5 양식 정합 ⑦ 변경 이력 5칸 양식</td></tr>
 <tr><td>v2.2</td><td>2026-05-12</td><td>@Nill Yoo</td><td><strong>표시 순서 입력 제거</strong> → 그룹 상세 ↑↓ 전용. 헤더 상태 배지 제거 (그룹 상태 상속). 검증 규칙에서 표시 순서 항 삭제</td></tr>
 <tr><td>v2.0</td><td>2026-05-12</td><td>@Nill Yoo</td><td>신규 — 그룹 SSOT 기간, 다국어 필수, 상태 전환 분리 정책 반영</td></tr>

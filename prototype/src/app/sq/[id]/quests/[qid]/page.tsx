@@ -95,7 +95,7 @@ export default function QuestDetailPage({ params }: { params: Promise<{ id: stri
             <Row label="유형" value={typeBadge.label} />
             <Row label="반복 여부" value={quest.repeat ? '반복' : '단일'} />
             <Row label="응모권 보상" value={`${quest.rewardEntryTicket}장`} />
-            <Row label="팬덤 포인트 보상" value={quest.rewardFanPoint.toLocaleString('ko-KR')} />
+            <Row label="덕력 보상" value={quest.rewardFanPoint.toLocaleString('ko-KR')} />
           </div>
           <div className="border-t border-gray-100 pt-3 mt-3 text-[11px] text-gray-500 leading-relaxed">
             메인 이미지는 상위 <strong>에피소드</strong>에서 한 번 등록하여 모든 미션이 공통 사용합니다.

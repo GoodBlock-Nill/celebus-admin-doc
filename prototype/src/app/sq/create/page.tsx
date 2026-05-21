@@ -328,7 +328,7 @@ function SqCreateInner() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">팬덤 포인트 보상</label>
+              <label className="block text-sm font-medium text-gray-900 mb-2">덕력 보상</label>
               <input
                 type="number"
                 min={0}

@@ -191,7 +191,7 @@ export default function SqDetailPage({ params }: { params: Promise<{ id: string 
                 </div>
               </div>
               <div>
-                <div className="text-xs text-gray-500 mb-1">팬덤 포인트</div>
+                <div className="text-xs text-gray-500 mb-1">덕력</div>
                 <div className="text-base font-semibold text-gray-900">
                   {story.episodeReward.fanPoint > 0 ? story.episodeReward.fanPoint.toLocaleString('ko-KR') : '—'}
                 </div>
