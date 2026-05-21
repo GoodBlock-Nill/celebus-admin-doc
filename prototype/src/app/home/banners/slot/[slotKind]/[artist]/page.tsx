@@ -189,6 +189,12 @@ export default function SlotDetailPage({
                   · 대기 배너 [노출 시작] 시 기존이 자동 종료됩니다.
                 </span>
               )}
+              {/* 단일 슬롯 노출중 0건 + 대기 N건 ([CEB-BO-APP-202] §2-2, 2026-05-21 sync 정정) */}
+              {isSingleSlot && activeCount === 0 && draftCount > 0 && (
+                <span className="ml-2 text-xs opacity-70">
+                  · 운영자가 [노출 시작] 필요
+                </span>
+              )}
             </>
           )}
         </div>

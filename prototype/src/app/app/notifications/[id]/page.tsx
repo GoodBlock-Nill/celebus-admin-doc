@@ -95,6 +95,10 @@ function ActionButtons({ n }: { n: Notification }) {
         className="h-10 px-4 flex items-center gap-1.5 border border-rose-200 bg-white text-rose-600 text-sm font-medium rounded-lg hover:bg-rose-50">
         <TrashIcon className="w-4 h-4" />삭제
       </button>,
+      <button key="save" onClick={() => alert('수정 저장 (Mock)')}
+        className="h-10 px-4 border border-gray-300 bg-white text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-50">
+        수정 저장
+      </button>,
       <button key="schedule" onClick={() => alert('예약 발송 등록 (Mock)')}
         className="h-10 px-4 border border-amber-400 bg-amber-50 text-amber-700 text-sm font-medium rounded-lg hover:bg-amber-100">
         예약 발송
@@ -106,6 +110,10 @@ function ActionButtons({ n }: { n: Notification }) {
     );
   } else if (n.status === 'SCHEDULED') {
     buttons.push(
+      <button key="save" onClick={() => alert('수정 저장 (Mock)')}
+        className="h-10 px-4 border border-gray-300 bg-white text-gray-800 text-sm font-medium rounded-lg hover:bg-gray-50">
+        수정 저장
+      </button>,
       <button key="cancel" onClick={() => alert('예약 취소 (Mock)')}
         className="h-10 px-4 border border-gray-200 bg-white text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50">
         예약 취소
@@ -193,8 +201,10 @@ function ResultCard({
     danger: 'text-rose-700',
     default: 'text-gray-900',
   } as const;
+  // 커스텀 호버 툴팁 (2026-05-21 sync 정정 — 브라우저 기본 title 속성 → 커스텀 UI)
+  // [CEB-BO-APP-302] §3 정합
   return (
-    <div title={tooltip}>
+    <div className="relative group">
       <p className="text-xs text-gray-500 mb-1 inline-flex items-center gap-1">
         {label}
         {tooltip && <span className="text-gray-300 cursor-help">ⓘ</span>}
@@ -203,6 +213,11 @@ function ResultCard({
         {typeof value === 'number' ? value.toLocaleString('ko-KR') : value}
       </p>
       {hint && <p className="text-[10px] text-gray-400 mt-1">{hint}</p>}
+      {tooltip && (
+        <div className="invisible group-hover:visible absolute z-10 top-full left-0 mt-1 w-64 px-3 py-2 rounded-lg bg-gray-900 text-white text-xs whitespace-pre-line shadow-lg">
+          {tooltip}
+        </div>
+      )}
     </div>
   );
 }

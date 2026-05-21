@@ -45,6 +45,8 @@ function HomeBannersPageInner() {
   const [artistFilter, setArtistFilter] = useState('');
   const [slotKindFilter, setSlotKindFilter] = useState('');
   const [keyword, setKeyword] = useState('');
+  // 통계 카드 클릭 필터 (전체='', 그 외 BannerStatus 값) — [CEB-BO-APP-101] §2-4 정합
+  const [statusFilter, setStatusFilter] = useState<'' | 'ACTIVE' | 'DRAFT' | 'CLOSED'>('');
 
   const currentTab = TABS.find((t) => t.id === activeTab)!;
   const slots = useMemo(() => getSlotsForTab(activeTab), [activeTab]);
@@ -66,15 +68,21 @@ function HomeBannersPageInner() {
         const label = `${getSlotKindLabel(s.slotKind)} ${getArtistDisplay(s.artistGroup)}`.toLowerCase();
         if (!label.includes(q)) return false;
       }
+      // 통계 카드 상태 필터: 해당 상태의 배너가 1건 이상 포함된 슬롯만 통과
+      if (statusFilter) {
+        const hasStatus = s.banners.some((b) => b.status === statusFilter);
+        if (!hasStatus) return false;
+      }
       return true;
     });
-  }, [slots, artistFilter, slotKindFilter, keyword]);
+  }, [slots, artistFilter, slotKindFilter, keyword, statusFilter]);
 
   const handleTabChange = (id: TabId) => {
     setActiveTab(id);
     setArtistFilter('');
     setSlotKindFilter('');
     setKeyword('');
+    setStatusFilter('');
     const url = new URL(window.location.href);
     url.searchParams.set('placement', id);
     window.history.replaceState(null, '', url.toString());
@@ -84,6 +92,7 @@ function HomeBannersPageInner() {
     setArtistFilter('');
     setSlotKindFilter('');
     setKeyword('');
+    setStatusFilter('');
   };
 
   return (
@@ -132,12 +141,36 @@ function HomeBannersPageInner() {
         </div>
       </div>
 
-      {/* 통계 카드 4종 — 슬롯 내 배너 합산 */}
+      {/* 통계 카드 4종 — 슬롯 내 배너 합산. 클릭 시 상태 필터 적용 ([CEB-BO-APP-101] §2-4) */}
       <div className="grid grid-cols-4 gap-4 mb-6">
-        <StatCardWithBar label="전체 배너" count={tabCounts.total} variant="default" />
-        <StatCardWithBar label="노출중" count={tabCounts.active} variant="active" />
-        <StatCardWithBar label="임시저장" count={tabCounts.draft} variant="inactive" />
-        <StatCardWithBar label="노출 종료" count={tabCounts.closed} variant="default" />
+        <StatCardWithBar
+          label="전체 배너"
+          count={tabCounts.total}
+          variant="default"
+          onClick={() => setStatusFilter('')}
+          active={statusFilter === ''}
+        />
+        <StatCardWithBar
+          label="노출중"
+          count={tabCounts.active}
+          variant="active"
+          onClick={() => setStatusFilter('ACTIVE')}
+          active={statusFilter === 'ACTIVE'}
+        />
+        <StatCardWithBar
+          label="임시저장"
+          count={tabCounts.draft}
+          variant="inactive"
+          onClick={() => setStatusFilter('DRAFT')}
+          active={statusFilter === 'DRAFT'}
+        />
+        <StatCardWithBar
+          label="노출 종료"
+          count={tabCounts.closed}
+          variant="default"
+          onClick={() => setStatusFilter('CLOSED')}
+          active={statusFilter === 'CLOSED'}
+        />
       </div>
 
       {/* 필터 */}

@@ -49,6 +49,9 @@ export default function BannerForm({
   const [subtitleKO, setSubtitleKO] = useState(initial?.subtitleKO ?? '');
   const [subtitleEN, setSubtitleEN] = useState(initial?.subtitleEN ?? '');
   const [subtitleJP, setSubtitleJP] = useState(initial?.subtitleJP ?? '');
+  const [altTextKO, setAltTextKO] = useState(initial?.altTextKO ?? '');
+  const [altTextEN, setAltTextEN] = useState(initial?.altTextEN ?? '');
+  const [altTextJP, setAltTextJP] = useState(initial?.altTextJP ?? '');
   const [deeplink, setDeeplink] = useState<Deeplink>({
     sourceType: initial?.sourceType ?? '',
     url: initial?.linkUrl ?? '',
@@ -112,6 +115,17 @@ export default function BannerForm({
             onKO={setSubtitleKO}
             onEN={setSubtitleEN}
             onJP={setSubtitleJP}
+            disabled={readOnly}
+          />
+          <MultiLangRow
+            label="이미지 대체 텍스트"
+            max={100}
+            ko={altTextKO}
+            en={altTextEN}
+            jp={altTextJP}
+            onKO={setAltTextKO}
+            onEN={setAltTextEN}
+            onJP={setAltTextJP}
             disabled={readOnly}
           />
         </div>

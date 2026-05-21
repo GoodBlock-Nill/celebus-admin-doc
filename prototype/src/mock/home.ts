@@ -110,6 +110,13 @@ export interface HomeBanner {
   subtitleKO: string;
   subtitleEN: string;
   subtitleJP: string;
+  /**
+   * 이미지 대체 텍스트 (KO/EN/JP) — 접근성·다국어 운영용. 선택 입력, 각 100자.
+   * [CEB-BO-APP-201] §2-2 B / [CEB-BO-013] §7 정합 (2026-05-21 sync 정정).
+   */
+  altTextKO: string;
+  altTextEN: string;
+  altTextJP: string;
   imageUrl: string;
   linkUrl: string;
   displayOrder: number; // MULTI 슬롯만 의미
@@ -166,6 +173,9 @@ export const banners: HomeBanner[] = [
     subtitleKO: '응모하고 단독 무대에 함께해요',
     subtitleEN: 'Enter the raffle and join us live',
     subtitleJP: '応募して特別ステージへ',
+    altTextKO: '',
+    altTextEN: '',
+    altTextJP: '',
     imageUrl: '/home/banner-1.jpg',
     linkUrl: '/raffle/12',
     displayOrder: 1,
@@ -187,6 +197,9 @@ export const banners: HomeBanner[] = [
     subtitleKO: '1년의 여정에 감사를 담아',
     subtitleEN: 'Thank you for the year',
     subtitleJP: '1年間ありがとう',
+    altTextKO: '',
+    altTextEN: '',
+    altTextJP: '',
     imageUrl: '/home/banner-2.jpg',
     linkUrl: 'https://celebus.xyz/event/anniversary-2026',
     displayOrder: 2,
@@ -208,6 +221,9 @@ export const banners: HomeBanner[] = [
     subtitleKO: '5/15 02:00~04:00 서비스 일시 중지',
     subtitleEN: 'Service paused May 15, 02:00~04:00',
     subtitleJP: '5/15 02:00〜04:00 サービス一時停止',
+    altTextKO: '',
+    altTextEN: '',
+    altTextJP: '',
     imageUrl: '/home/banner-3.jpg',
     linkUrl: '/info/102',
     displayOrder: 3,
@@ -231,6 +247,9 @@ export const banners: HomeBanner[] = [
     subtitleKO: '100일 챌린지 미션 참여',
     subtitleEN: 'Join the 100-day challenge',
     subtitleJP: '100日チャレンジに参加',
+    altTextKO: '',
+    altTextEN: '',
+    altTextJP: '',
     imageUrl: '/home/todo-v01d.jpg',
     linkUrl: '/quest/15',
     displayOrder: 1,
@@ -254,6 +273,9 @@ export const banners: HomeBanner[] = [
     subtitleKO: '오늘 잘 알고 있는지 확인해보세요',
     subtitleEN: 'See how well you know V01D today',
     subtitleJP: '今日のV01Dクイズ',
+    altTextKO: '',
+    altTextEN: '',
+    altTextJP: '',
     imageUrl: '/home/together-v01d-1.jpg',
     linkUrl: '/quest/12',
     displayOrder: 1,
@@ -275,6 +297,9 @@ export const banners: HomeBanner[] = [
     subtitleKO: '이번 달 V01D 활동을 한눈에',
     subtitleEN: 'May activities at a glance',
     subtitleJP: '今月のV01D活動',
+    altTextKO: '',
+    altTextEN: '',
+    altTextJP: '',
     imageUrl: '/home/together-v01d-2.jpg',
     linkUrl: '/info/110',
     displayOrder: 2,
@@ -298,6 +323,9 @@ export const banners: HomeBanner[] = [
     subtitleKO: '서울 공연 안내와 굿즈 정보',
     subtitleEN: 'Seoul shows and merch',
     subtitleJP: 'ソウル公演とグッズ',
+    altTextKO: '',
+    altTextEN: '',
+    altTextJP: '',
     imageUrl: '/home/together-ikon.jpg',
     linkUrl: '/artists/ikon',
     displayOrder: 1,
@@ -321,6 +349,9 @@ export const banners: HomeBanner[] = [
     subtitleKO: '하루 1곡 듣고 응모권 받기',
     subtitleEN: 'Listen daily for tickets',
     subtitleJP: '毎日1曲で応募券',
+    altTextKO: '',
+    altTextEN: '',
+    altTextJP: '',
     imageUrl: '/home/mission-v01d.jpg',
     linkUrl: '/quest/16',
     displayOrder: 1,
@@ -344,6 +375,9 @@ export const banners: HomeBanner[] = [
     subtitleKO: '한정 굿즈 패키지 안내',
     subtitleEN: 'Limited goods package',
     subtitleJP: '限定グッズパッケージ',
+    altTextKO: '',
+    altTextEN: '',
+    altTextJP: '',
     imageUrl: '/home/mission-madein.jpg',
     linkUrl: 'https://celebus.xyz/event/madein-preorder',
     displayOrder: 1,

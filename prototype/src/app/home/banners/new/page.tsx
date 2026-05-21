@@ -30,15 +30,24 @@ function NewBannerPageInner() {
   const rawArtist = searchParams.get('artist');
 
   // 슬롯 컨텍스트가 없으면 배너 관리 리스트로 안전망 리다이렉트
+  // ([CEB-BO-APP-201] §4-2 정합 — 공통 토스트 규격 [CEB-BO-000] §16, 2026-05-21 sync 정정)
   useEffect(() => {
     if (!rawSlot && !rawArtist) {
-      alert('슬롯을 먼저 선택해 주세요. 배너 관리에서 슬롯 행을 클릭한 뒤 [+ 배너 추가]로 진입합니다.');
-      router.replace('/home/banners');
+      // 1초 뒤 리다이렉트 (안내 메시지가 보이도록 짧게 노출)
+      const timer = setTimeout(() => router.replace('/home/banners'), 1500);
+      return () => clearTimeout(timer);
     }
   }, [rawSlot, rawArtist, router]);
 
   if (!rawSlot && !rawArtist) {
-    return <div className="p-8 text-sm text-gray-500">슬롯 선택 화면으로 이동 중…</div>;
+    return (
+      <div className="p-8">
+        <div className="max-w-xl mx-auto rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 flex items-start gap-2 shadow-sm">
+          <span className="font-semibold">슬롯을 먼저 선택해 주세요.</span>
+          <span>배너 관리에서 슬롯 행을 클릭한 뒤 [+ 배너 추가]로 진입합니다. 잠시 후 이동합니다…</span>
+        </div>
+      </div>
+    );
   }
 
   const slotKind = parseSlot(rawSlot);
