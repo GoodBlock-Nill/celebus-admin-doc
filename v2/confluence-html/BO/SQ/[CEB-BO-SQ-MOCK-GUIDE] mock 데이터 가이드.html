@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-SQ-MOCK-GUIDE] SQ 영역 mock 데이터 가이드</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-SQ-MOCK-GUIDE] SQ 영역 mock 데이터 가이드</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-SQ-MOCK-GUIDE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드) · 참조 가이드</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
+<tr><td>API</td><td>— (프로토타입 mock 한정)</td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td><code>prototype/src/mock/sq.ts</code></td></tr>
+<tr><td>Breadcrumb</td><td>— (참조 가이드, 화면 진입 없음)</td></tr>
+<tr><td>비고</td><td>개발자·디자이너가 프로토타입 mock의 K-pop 시나리오·정책 매트릭스를 한눈에 파악하기 위한 SSOT 문서</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v1.0</strong> (신규 — SQ 영역 mock 데이터의 K-pop 시즌 스토리텔링 + 정책 매트릭스 6조합 매핑 SSOT)</p>
+<p>대상 파일: <code>prototype/src/mock/sq.ts</code> · 영역 가이드 정합: [CEB-BO-011] v3.8</p>
+</blockquote>
+<h2>1. 목적</h2>
+<p>프로토타입 <code>sq.ts</code> mock 데이터는 SQ 영역의 운영 시나리오·정책 검증을 시각화하는 단일 참조이다. 본 가이드는 다음을 한눈에 파악할 수 있도록 정리한다.</p>
+<ul>
+<li><strong>K-pop 시즌 스토리텔링</strong>: V01D / iKON / CELEBUS 3아티스트의 시즌별 그룹·에피소드·미션 구성</li>
+<li><strong>정책 매트릭스 6조합 커버</strong>: 부모 에피소드 상태(DRAFT/ACTIVE/CLOSED) × 미션 유형(팬퀘스트/PM/ST) 모든 조합을 mock으로 검증 가능</li>
+<li><strong>다국어 데이터 정합</strong>: PM/ST 미션의 KO/EN/JA 3종 입력값 일람 ([CEB-BO-011] §5 다국어 필수 정합)</li>
+<li><strong>반복 주기 3종</strong>: DAILY/WEEKLY/MONTHLY 미션 실장 위치</li>
+<li><strong>정책 검증 시나리오</strong>: SQ-204-EDIT v1.1 등 신규 정책을 검증할 mock id 안내</li>
+</ul>
+<blockquote>
+<p>⚠️ 본 문서는 <strong>운영 화면 명세가 아님</strong>. 개발·디자인·QA가 mock을 빠르게 이해하기 위한 참조 문서.</p>
+</blockquote>
+<h2>2. 아티스트·그룹 구성 매트릭스</h2>
+<h3>아티스트 (3종)</h3>
+<table>
+<tr><th>아티스트</th><th>컨셉</th><th>활성 그룹</th></tr>
+<tr><td><strong>V01D</strong></td><td>4세대 보이그룹 (자체 IP)</td><td>1개 (ACTIVE) — 정책 §5 "아티스트당 ACTIVE 1개" 한도 정합</td></tr>
+<tr><td><strong>iKON</strong></td><td>글로벌 K-pop 그룹</td><td>1개 (ACTIVE)</td></tr>
+<tr><td><strong>CELEBUS</strong></td><td>플랫폼 자체 캠페인</td><td>1개 (DRAFT)</td></tr>
+</table>
+<h3>에피소드 그룹 (6건)</h3>
+<table>
+<tr><th>그룹 ID</th><th>그룹 타이틀</th><th>아티스트</th><th>상태</th><th>기간</th><th>에피소드 수</th></tr>
+<tr><td>1</td><td>V01D — JOURNEY #01 컴백 시즌</td><td>V01D</td><td>ACTIVE</td><td>2026.05.01 ~ 2026.07.31</td><td>메인 5 + 반복 1 = 6</td></tr>
+<tr><td>2</td><td>V01D — 데뷔 1주년 기념 시즌</td><td>V01D</td><td>CLOSED</td><td>2025.10.01 ~ 2025.12.31</td><td>메인 4 + 반복 1 = 5</td></tr>
+<tr><td>3</td><td>V01D — 2026 가을 컴백 예비</td><td>V01D</td><td>DRAFT</td><td>2026.09.01 ~ 2026.11.30</td><td>메인 2 + 반복 1 = 3</td></tr>
+<tr><td>4</td><td>iKON — 데뷔 10주년 글로벌 투어</td><td>iKON</td><td>ACTIVE</td><td>2026.04.01 ~ 2026.06.30</td><td>메인 4 + 반복 1 = 5</td></tr>
+<tr><td>5</td><td>iKON — KCON 2025 종합 시즌</td><td>iKON</td><td>CLOSED</td><td>2025.07.01 ~ 2025.09.30</td><td>메인 3 = 3</td></tr>
+<tr><td>6</td><td>CELEBUS — 플랫폼 1주년 캠페인</td><td>CELEBUS</td><td>DRAFT</td><td>2026.06.01 ~ 2026.08.31</td><td>메인 2 = 2</td></tr>
+</table>
+<p>상태 분포: <strong>ACTIVE 2 / DRAFT 2 / CLOSED 2</strong> — 모든 상태가 각 2그룹 이상이라 운영 시나리오 시각화 가능.</p>
+<h2>3. 에피소드 분포 (총 24건)</h2>
+<table>
+<tr><th>그룹</th><th>에피소드 ID 범위</th><th>메인</th><th>반복</th></tr>
+<tr><td>Group 1 (V01D ACTIVE)</td><td>1 ~ 6</td><td>id 1~5</td><td>id 6</td></tr>
+<tr><td>Group 2 (V01D CLOSED)</td><td>7 ~ 11</td><td>id 7~10</td><td>id 11</td></tr>
+<tr><td>Group 3 (V01D DRAFT)</td><td>12 ~ 14</td><td>id 12~13</td><td>id 14</td></tr>
+<tr><td>Group 4 (iKON ACTIVE)</td><td>15 ~ 19</td><td>id 15~18</td><td>id 19</td></tr>
+<tr><td>Group 5 (iKON CLOSED)</td><td>20 ~ 22</td><td>id 20~22</td><td>—</td></tr>
+<tr><td>Group 6 (CELEBUS DRAFT)</td><td>23 ~ 24</td><td>id 23~24</td><td>—</td></tr>
+</table>
+<h2>4. 미션 — 정책 매트릭스 6조합 매핑표</h2>
+<p>각 부모 상태 × 미션 유형 조합마다 대표 mock id를 명시. SQ-204-EDIT v1.1 정책 검증 시 참조.</p>
+<table>
+<tr><th>부모 상태</th><th>팬퀘스트 미션 ID (예)</th><th>PM 미션 ID (예)</th><th>ST 미션 ID (예)</th></tr>
+<tr><td><strong>DRAFT</strong></td><td>1201, 1401</td><td>1202, 1301, 2301</td><td>1203, 2302, 2401</td></tr>
+<tr><td><strong>ACTIVE</strong></td><td>101, 201, 301, 401, 501, 601, 1501, 1601, 1701, 1801</td><td>102, 202, 1502, 1602, 1901</td><td>103, 302, 602, 1503</td></tr>
+<tr><td><strong>CLOSED</strong></td><td>701, 901, 1001, 1101, 2001, 2101</td><td>702, 2002</td><td>703, 801, 902, 2003, 2201</td></tr>
+</table>
+<p>총 미션 수:</p>
+<ul>
+<li><strong>팬퀘스트</strong>: 18건 (자체 상속이라 <code>titleEN</code>·<code>titleJA</code> 빈 문자열)</li>
+<li><strong>예측 마켓(PM)</strong>: 10건 (KO/EN/JA 3종 모두 입력)</li>
+<li><strong>서바이벌 트리비아(ST)</strong>: 12건 (KO/EN/JA 3종 모두 입력)</li>
+<li><strong>합계</strong>: 40건</li>
+</ul>
+<h3>미션 ID 규칙</h3>
+<p><code>storyQuestId * 100 + order</code> (예: 에피소드 ID 1의 1번째 미션 = 101, 3번째 미션 = 103)</p>
+<blockquote>
+<p><code>getEpisodeById(epId)</code>는 <code>storyEpisodes</code> 배열에서 id 직접 lookup. 구 EPISODE_DATA 단일 템플릿 구조는 v2.3에서 폐기.</p>
+</blockquote>
+<h2>5. 다국어 데이터 정합 표 (PM/ST 22건)</h2>
+<p>PM/ST 미션의 KO/EN/JA 3종 입력값 일람 — [CEB-BO-011] §5 "다국어 필수" 표준 정합.</p>
+<table>
+<tr><th>미션 ID</th><th>유형</th><th>부모 상태</th><th>KO</th><th>EN</th><th>JA</th></tr>
+<tr><td>102</td><td>PM</td><td>ACTIVE</td><td>신곡 멜론 차트 1위 진입 예측</td><td>Predict New Song #1 on Melon Chart</td><td>新曲メロンチャート1位入り予測</td></tr>
+<tr><td>103</td><td>ST</td><td>ACTIVE</td><td>신곡 "JOURNEY" 가사 트리비아 5회 정답</td><td>New Song "JOURNEY" Lyrics Trivia — 5 Correct</td><td>新曲「JOURNEY」歌詞トリビア5回正解</td></tr>
+<tr><td>202</td><td>PM</td><td>ACTIVE</td><td>뮤직비디오 1000만 뷰 달성 시점 예측</td><td>Predict When MV Reaches 10M Views</td><td>ミュージックビデオ1000万再生達成時期予測</td></tr>
+<tr><td>302</td><td>ST</td><td>ACTIVE</td><td>JOURNEY #01 콘서트 셋리스트 트리비아</td><td>JOURNEY #01 Concert Setlist Trivia</td><td>JOURNEY #01 コンサートセットリストトリビア</td></tr>
+<tr><td>602</td><td>ST (DAILY 반복)</td><td>ACTIVE</td><td>일일 V01D 트리비아 5회 정답</td><td>Daily V01D Trivia — 5 Correct</td><td>デイリーV01Dトリビア5回正解</td></tr>
+<tr><td>702</td><td>PM</td><td>CLOSED</td><td>1주년 기념 행사 참여수 예측</td><td>Predict 1st Anniversary Event Attendance</td><td>1周年記念イベント参加者数予測</td></tr>
+<tr><td>703</td><td>ST</td><td>CLOSED</td><td>1주년 추억 트리비아 7회 정답</td><td>1st Anniversary Memory Trivia — 7 Correct</td><td>1周年思い出トリビア7回正解</td></tr>
+<tr><td>801</td><td>ST</td><td>CLOSED</td><td>1주년 종합 트리비아 10회 정답</td><td>1st Anniversary Comprehensive Trivia — 10 Correct</td><td>1周年総合トリビア10回正解</td></tr>
+<tr><td>902</td><td>ST</td><td>CLOSED</td><td>행사 무대 셋리스트 트리비아</td><td>Event Stage Setlist Trivia</td><td>イベントステージセットリストトリビア</td></tr>
+<tr><td>1202</td><td>PM</td><td>DRAFT</td><td>컴백곡 차트 진입 순위 예측</td><td>Predict Comeback Song Chart Entry Rank</td><td>カムバック曲チャートイン順位予測</td></tr>
+<tr><td>1203</td><td>ST</td><td>DRAFT</td><td>컴백곡 티저 영상 트리비아 5회 정답</td><td>Comeback Teaser Trivia — 5 Correct</td><td>カムバックティザートリビア5回正解</td></tr>
+<tr><td>1301</td><td>PM</td><td>DRAFT</td><td>데뷔곡 차트 진입 순위 예측 (작성 중)</td><td>Debut Song Chart Entry Rank Prediction (Draft)</td><td>デビュー曲チャートイン順位予測(作成中)</td></tr>
+<tr><td>1502</td><td>PM</td><td>ACTIVE</td><td>iKON 컴백 앨범 1위 예측</td><td>Predict iKON Comeback Album #1</td><td>iKONカムバックアルバム1位予測</td></tr>
+<tr><td>1503</td><td>ST</td><td>ACTIVE</td><td>iKON 디스코그래피 마스터 트리비아</td><td>iKON Discography Master Trivia</td><td>iKONディスコグラフィーマスタートリビア</td></tr>
+<tr><td>1602</td><td>PM</td><td>ACTIVE</td><td>다음 발표 투어 도시 예측</td><td>Predict Next Announced Tour City</td><td>次に発表されるツアー都市予測</td></tr>
+<tr><td>1901</td><td>PM (WEEKLY 반복)</td><td>ACTIVE</td><td>주간 iKON 활동 예측 마라톤</td><td>Weekly iKON Activity Prediction Marathon</td><td>ウィークリーiKON活動予測マラソン</td></tr>
+<tr><td>2002</td><td>PM</td><td>CLOSED</td><td>최애 무대 1위 예측</td><td>Predict Favorite Stage #1</td><td>最推しステージ1位予測</td></tr>
+<tr><td>2003</td><td>ST</td><td>CLOSED</td><td>KCON 2025 무대 트리비아</td><td>KCON 2025 Stage Trivia</td><td>KCON 2025 ステージトリビア</td></tr>
+<tr><td>2201</td><td>ST</td><td>CLOSED</td><td>KCON 2025 종합 추억 트리비아 10회 정답</td><td>KCON 2025 Memory Trivia — 10 Correct</td><td>KCON 2025 思い出トリビア10回正解</td></tr>
+<tr><td>2301</td><td>PM</td><td>DRAFT</td><td>플랫폼 다음 캠페인 주제 예측 (작성 중)</td><td>Predict Platform's Next Campaign Topic (Draft)</td><td>プラットフォーム次のキャンペーンテーマ予測(作成中)</td></tr>
+<tr><td>2302</td><td>ST</td><td>DRAFT</td><td>CELEBUS 운영진 OX 퀴즈 5회 정답</td><td>CELEBUS Staff OX Quiz — 5 Correct</td><td>CELEBUS運営陣OXクイズ5回正解</td></tr>
+<tr><td>2401</td><td>ST</td><td>DRAFT</td><td>CELEBUS 1주년 추억 트리비아 (작성 중)</td><td>CELEBUS 1st Anniversary Memory Trivia (Draft)</td><td>CELEBUS 1周年思い出トリビア(作成中)</td></tr>
+</table>
+<p>다국어 정합 검증:</p>
+<pre><code># PM/ST 미션 중 titleEN 빈 문자열은 0건이어야 함
+grep -cE "type: 'PREDICTION_MARKET'|type: 'SURVIVAL_TRIVIA'" prototype/src/mock/sq.ts
+# 결과: 22 (전체 PM/ST 수)
+
+# titleEN 빈 문자열은 팬퀘스트 미션 수와 일치해야 함
+grep -c "titleEN: ''" prototype/src/mock/sq.ts
+# 결과: 18 (팬퀘스트 미션 수)
+</code></pre>
+<h2>6. 반복 주기 3종 매핑</h2>
+<p>[CEB-BO-011] §5 "반복 미션 반복 주기 일간/주간/월간" 정합 — 3종 모두 mock 실장.</p>
+<table>
+<tr><th>주기</th><th>미션 ID</th><th>유형</th><th>부모 그룹</th><th>반복 에피소드 ID</th></tr>
+<tr><td><strong>DAILY</strong></td><td>602</td><td>ST</td><td>Group 1 (V01D ACTIVE)</td><td>6</td></tr>
+<tr><td><strong>WEEKLY</strong></td><td>1401</td><td>FQ</td><td>Group 3 (V01D DRAFT)</td><td>14</td></tr>
+<tr><td><strong>WEEKLY</strong></td><td>1901</td><td>PM</td><td>Group 4 (iKON ACTIVE)</td><td>19</td></tr>
+<tr><td><strong>MONTHLY</strong></td><td>601</td><td>FQ</td><td>Group 1 (V01D ACTIVE)</td><td>6</td></tr>
+<tr><td><strong>MONTHLY</strong></td><td>1101</td><td>FQ</td><td>Group 2 (V01D CLOSED)</td><td>11</td></tr>
+</table>
+<h2>7. 정책 검증 시나리오 가이드</h2>
+<p>각 정책을 mock으로 검증할 때 사용할 진입 경로 + mock id 안내.</p>
+<h3>7-1. SQ-204-EDIT v1.1 — 진행중·종료 수정 정책</h3>
+<table>
+<tr><th>시나리오</th><th>사용할 mock</th><th>진입 경로</th><th>기대 결과</th></tr>
+<tr><td><strong>DRAFT + PM/ST</strong> — 전체 수정 가능</td><td>Story 12 + Mission 1202 (PM)</td><td><code>/sq/12/quests/1202/edit</code></td><td>다국어·판정·보상·반복 모두 수정 가능</td></tr>
+<tr><td><strong>DRAFT + 팬퀘스트</strong> — 메타만 수정</td><td>Story 12 + Mission 1201 (FQ)</td><td><code>/sq/12/quests/1201/edit</code></td><td>인디고 안내 박스 + BIVE·반복 메타만 활성</td></tr>
+<tr><td><strong>ACTIVE + PM/ST</strong> — 다국어만 수정</td><td>Story 1 + Mission 102 (PM)</td><td><code>/sq/1/quests/102/edit</code></td><td>노랑 배너 + 다국어 LangField만 활성, 나머지 disabled</td></tr>
+<tr><td><strong>ACTIVE + 팬퀘스트</strong> — [수정하기] 비활성</td><td>Story 1 + Mission 101 (FQ)</td><td><code>/sq/1/quests/101</code></td><td>[수정하기] 버튼 disabled + 툴팁 안내</td></tr>
+<tr><td><strong>CLOSED + 전 유형</strong> — [수정하기] 비활성</td><td>Story 7 + Mission 702 (PM) 또는 701 (FQ)</td><td><code>/sq/7/quests/702</code> 또는 <code>/sq/7/quests/701</code></td><td>[수정하기] 버튼 disabled + 툴팁 안내</td></tr>
+<tr><td><strong>CLOSED 직접 URL 진입 방어</strong></td><td>Story 7 + Mission 702</td><td><code>/sq/7/quests/702/edit</code> (직접 URL)</td><td>회색 차단 배너 + 전체 read-only + [저장] 비활성</td></tr>
+</table>
+<h3>7-2. SQ-204 v3.2 — 다국어 타이틀 노출 카드</h3>
+<table>
+<tr><th>시나리오</th><th>사용할 mock</th><th>기대 결과</th></tr>
+<tr><td>PM/ST 미션 다국어 카드 노출</td><td>Mission 102 (PM) 또는 103 (ST)</td><td>§2-3 다국어 타이틀 카드에 KO/EN/JA 3행 표시</td></tr>
+<tr><td>팬퀘스트 미션 다국어 카드 미노출</td><td>Mission 101 (FQ)</td><td>§2-3 카드 노출 없음 (자체 상속)</td></tr>
+</table>
+<h3>7-3. SQ-204-CREATE v3.3 — 다국어 필수 검증</h3>
+<table>
+<tr><th>시나리오</th><th>사용할 그룹</th><th>기대 결과</th></tr>
+<tr><td>메인 에피소드 미션 추가</td><td>Story 4 또는 5 (V01D ACTIVE)</td><td>단일 미션만 추가 가능 (반복 토글 미노출)</td></tr>
+<tr><td>반복 에피소드 미션 추가</td><td>Story 6 (V01D ACTIVE 반복)</td><td>반복 여부 토글 노출 + 주기 3종 선택</td></tr>
+<tr><td>PM/ST 다국어 미입력 시 [미션 추가] 비활성</td><td>Story 4 진입</td><td>유형 PM 선택 → 다국어 한 언어라도 비우면 [미션 추가] 비활성</td></tr>
+</table>
+<h3>7-4. [CEB-BO-011] §5 — 정책 상수 검증</h3>
+<table>
+<tr><th>정책</th><th>검증 mock</th><th>기대 결과</th></tr>
+<tr><td>아티스트당 ACTIVE 그룹 1개 한도</td><td>V01D는 Group 1만 ACTIVE</td><td>V01D 그룹 추가 시 ACTIVE 선택 불가</td></tr>
+<tr><td>그룹당 메인 5 + 반복 1 한도</td><td>Group 1 (V01D ACTIVE)</td><td>이미 메인 5 + 반복 1 모두 차있음 — 추가 불가</td></tr>
+<tr><td>에피소드당 미션 10개 한도</td><td>Story 1 (현재 미션 3건)</td><td>추가 가능</td></tr>
+<tr><td>팬퀘스트 ↔ 미션 1:1 매핑</td><td>Mission 101 (fanQuestId: 1)</td><td>미션 추가 화면에서 fanquest #1 드롭다운에서 자동 제외</td></tr>
+</table>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — SQ mock 데이터 풀 개선과 함께 신설</strong> ① K-pop 시즌 스토리텔링으로 그룹·에피소드·미션 타이틀 전면 재작성 (V01D + iKON + CELEBUS 3아티스트) ② 정책 매트릭스 6조합(DRAFT/ACTIVE/CLOSED × 팬퀘스트/PM/ST) 100% 커버 — SQ-204-EDIT v1.1 정책 검증 가능 ③ PM/ST 미션 22건 다국어 titleEN/titleJA 100% 입력 ([CEB-BO-011] §5 정합) ④ 반복 주기 DAILY/WEEKLY/MONTHLY 3종 실장 ⑤ <code>EPISODE_DATA</code> 단일 템플릿 구조 폐기 → <code>storyEpisodes</code> 직접 정의 배열 (각 미션이 storyQuestId 명시) ⑥ §7 정책 검증 시나리오 가이드 — 개발·디자인·QA가 mock id로 정책을 직접 검증 가능. [CEB-BO-011] v3.8 동시 정합</td></tr>
+</table>
+<h2>9. 관련 문서</h2>
+<ul>
+<li>[CEB-BO-011] 스토리 퀘스트(SQ) 영역 가이드 — 정책 상수 SSOT</li>
+<li>[CEB-BO-SQ-FLOW] 에피소드 영역 플로우 및 로직 — 운영 플로우 정의</li>
+<li>[CEB-BO-SQ-204-EDIT] 미션 수정 — 본 가이드 §7-1 정책 검증 대상</li>
+<li>[CEB-BO-SQ-204] 미션 상세 — 본 가이드 §7-2 다국어 카드 검증 대상</li>
+<li>[CEB-BO-SQ-204-CREATE] 미션 추가 — 본 가이드 §7-3 다국어 필수 검증 대상</li>
+</ul>
+
+</body>
+</html>

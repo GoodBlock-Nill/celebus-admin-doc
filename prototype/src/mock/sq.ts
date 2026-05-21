@@ -1,14 +1,20 @@
-// 스토리 퀘스트(SQ) v2.2 — [CEB-BO-011] v2.2 SSOT
+// 스토리 퀘스트(SQ) v2.3 — [CEB-BO-011] v3.8 + [CEB-BO-SQ-MOCK-GUIDE] v1.0 SSOT
 // 계층 v2.2: EpisodeGroup → StoryQuest(에피소드) → StoryEpisode(미션, 완료조건 흡수)
-// StoryMission 계층 완전 폐기 (chapter 자체에 완료 판정 필드 흡수)
 // 수량 제약: 그룹당 메인 5 + 반복 1 / 에피소드당 미션 10
+//
+// v2.3 mock 풀 개선 (2026-05-21):
+// - K-pop 시즌 스토리텔링으로 그룹·에피소드·미션 타이틀 전면 재작성
+// - 아티스트 V01D 단일 → V01D + iKON + CELEBUS 3종
+// - 정책 매트릭스 6조합(상태 DRAFT/ACTIVE/CLOSED × 유형 팬퀘스트/PM/ST) 100% 커버
+// - PM/ST 미션 다국어 titleEN/titleJA 100% 입력 ([CEB-BO-011] §5 정합)
+// - 반복 주기 DAILY/WEEKLY/MONTHLY 3종 실장
+// - EPISODE_DATA 단일 템플릿 → ALL_EPISODES 직접 정의 배열 구조 전환
 
 export type StoryQuestStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
 export type EpisodeGroupStatus = 'DRAFT' | 'ACTIVE' | 'CLOSED';
 export type ArtistGroup = 'V01D' | 'iKON' | 'CELEBUS';
 export type EpisodeType = 'FAN_QUEST' | 'PREDICTION_MARKET' | 'SURVIVAL_TRIVIA';
 export type EpisodeUserStatus = 'LOCK' | 'ACTIVE' | 'COMPLETED';
-// v2.2 — 미션(=chapter)이 완료 조건을 직접 흡수
 export type EpisodeCompletedType =
   | 'ADMIN_APPROVAL'
   | 'PM_PARTICIPATION'
@@ -16,17 +22,13 @@ export type EpisodeCompletedType =
   | 'TRIVIA_PARTICIPATION'
   | 'TRIVIA_CORRECT_COUNT';
 
-// 운영 용어 재매핑 (v2.2): 상위 "에피소드 그룹" → "에피소드"(StoryQuest, `story_quest`) → "미션"(StoryEpisode, `story_quest_chapter`)
-// 수량 제약 — 그룹당 메인 5 + 반복 1, 에피소드당 미션 최대 10
-export const MAX_EPISODES_PER_STORY = 10; // 에피소드당 미션 합계 상한
-export const MAX_MAIN_EPISODES = 5;       // 그룹당 메인 에피소드 5개
-export const MAX_REPEAT_EPISODES = 1;     // 그룹당 반복 에피소드 1개
-export const REPEAT_EPISODE_DISPLAY_ORDER = 6; // 메인 5개 다음 마지막 슬롯
+export const MAX_EPISODES_PER_STORY = 10;
+export const MAX_MAIN_EPISODES = 5;
+export const MAX_REPEAT_EPISODES = 1;
+export const REPEAT_EPISODE_DISPLAY_ORDER = 6;
 
 export type EpisodeKind = 'MAIN' | 'REPEAT';
 
-// 에피소드 그룹(최상위, v1.3 신규) — 아티스트별 시즌·큐레이션 묶음. ACTIVE는 아티스트당 1개 제한.
-// 입력 항목: 시작일자·종료일자·타이틀·아티스트 (메인 이미지·다국어·설명 없음).
 export interface EpisodeGroup {
   id: number;
   artistGroup: ArtistGroup;
@@ -41,25 +43,17 @@ export interface EpisodeGroup {
   updatedAt: string;
 }
 
-// 에피소드(중간, ERD: `story_quest`) — 메인 이미지 SSOT. 하위 퀘스트는 별도 이미지 없음.
-// v1.3: 상위에 `groupId` FK 추가 (어느 에피소드 그룹에 속하는지)
-// v1.4: `displayOrder` 추가 — 그룹 내 노출 순서 (운영자가 직접 설정, 1부터 시작)
-// v1.5: 기간(openDt/closeDt) 제거 → 그룹의 startDt/endDt를 단일 SSOT로 사용. 메인 이미지는 3:4 비율.
-//       설명 다국어 (descKO/descEN/descJA) 추가.
 export interface StoryQuest {
   id: number;
   groupId: number;
-  /** v1.6 신규 — 메인 / 반복 종류. 그룹당 MAIN ≤ 5, REPEAT ≤ 1 */
   episodeKind: EpisodeKind;
   displayOrder: number;
-  artistGroup: 'V01D' | 'iKON' | 'CELEBUS';
+  artistGroup: ArtistGroup;
   status: StoryQuestStatus;
   titleKO: string;
   titleEN: string;
   titleJA: string;
-  /** v1.2 신규 — 에피소드 메인 이미지 URL (3:4 권장, ≤5MB). ERD `story_quest.image_url` 추가 요청 예정 */
   imageUrl: string;
-  /** v1.5 신규 — 에피소드 설명 다국어 (선택) */
   descKO: string;
   descEN: string;
   descJA: string;
@@ -67,11 +61,6 @@ export interface StoryQuest {
   activeMembers: number;
   totalCompleted: number;
   pendingReview: number;
-  /**
-   * v3.2 신규 — 메인 에피소드 완료 보상 (메인 에피소드 전용).
-   * 에피소드 안의 모든 미션이 완료된 회원에게 자동 지급.
-   * REPEAT 에피소드에서는 null.
-   */
   episodeReward?: {
     entryTicket: number;
     fanPoint: number;
@@ -92,425 +81,891 @@ export interface StoryEpisode {
   type: EpisodeType;
   titleKO: string;
   /**
-   * v3.4 신규 — PM/ST 미션 다국어 타이틀 (KO 필수 + EN/JA 선택, 각 50자).
+   * v3.4 신규 — PM/ST 미션 다국어 타이틀 (KO/EN/JA 3종 모두 필수, 각 50자).
    * 팬퀘스트 미션은 fanQuestId로 자동 상속이라 빈 문자열 유지.
    * [CEB-BO-SQ-204-CREATE] §2-7 / [CEB-BO-011] §5 정합
    */
   titleEN: string;
   titleJA: string;
-  /** v1.1 신규 — 에피소드 메인 이미지 URL (ERD `story_quest_chapter.image_url` 추가 요청) */
   imageUrl: string;
   rewardEntryTicket: number;
   rewardFanPoint: number;
-  /** v1.1 신규 — BIVE 보상 토글 (ERD `bive_reward_yn` 추가 요청) */
   biveRewardYn: boolean;
-  /** ON 일 때만 의미 있음. OFF면 NULL */
   mintingEventId: number | null;
   mintingEventName: string | null;
   repeat: boolean;
   inProgressMembers: number;
   completedMembers: number;
-  /** type === 'FAN_QUEST'일 때 참조하는 FQ Quest id (역참조 enabler) */
   fanQuestId?: number;
-  // ── v2.2 흡수 필드 (구 StoryMission) — 미션 1개 = 완료 판정 1개
-  /** 완료 판정 유형. FAN_QUEST는 ADMIN_APPROVAL 고정 */
   completedType?: EpisodeCompletedType;
-  /** TRIVIA_CORRECT_COUNT 일 때만 의미 있음 (예: 7회 정답) */
   completedValue?: number;
-  /** PM/ST 미션의 출처 콘텐츠 표시명 (FAN_QUEST는 fanQuestId로 대체) */
   sourceRefName?: string;
-  /**
-   * REPEAT 에피소드 미션의 반복 주기.
-   * v3.2 — 'DAILY' 추가 (PM/ST 반복 미션 반복 주기 일간/주간/월간 3종 정합).
-   */
   repeatCycle?: 'DAILY' | 'MONTHLY' | 'WEEKLY' | null;
-  /** 운영 기간 — 비우면 그룹 기간 상속 */
   openDt?: string;
   closeDt?: string;
 }
 
-export const storyQuests: StoryQuest[] = [
-  // ── Group 1 (V01D 에피소드 #1, ACTIVE) — 메인 5 + 반복 1
-  {
-    id: 1,
-    groupId: 1,
-    episodeKind: 'MAIN',
-    displayOrder: 1,
-    artistGroup: 'V01D',
-    status: 'ACTIVE',
-    titleKO: 'V01D 에피소드 #1 — 메인 1',
-    titleEN: 'V01D Episode #1 — Main 1',
-    titleJA: 'V01D エピソード #1 — メイン 1',
-    imageUrl: '/sq/story-1-main.jpg',
-    descKO: 'V01D 에피소드 #1의 첫 번째 메인 에피소드.',
-    descEN: 'The first main episode of V01D Episode #1.',
-    descJA: 'V01D エピソード #1 の最初のメインエピソード。',
-    episodeCount: 5,
-    activeMembers: 240,
-    totalCompleted: 180,
-    pendingReview: 6,
-    episodeReward: {
-      entryTicket: 20,
-      fanPoint: 500,
-      biveRewardYn: true,
-      mintingEventId: 1,
-      mintingEventName: 'V01D Welcome ED',
-    },
-    createdBy: 'nill',
-    createdAt: '2024.12.22 10:00',
-    updatedBy: 'nill',
-    updatedAt: '2025.06.10 14:00',
-  },
-  {
-    id: 2,
-    groupId: 1,
-    episodeKind: 'MAIN',
-    displayOrder: 2,
-    artistGroup: 'V01D',
-    status: 'ACTIVE',
-    titleKO: 'V01D 에피소드 #1 — 메인 2',
-    titleEN: 'V01D Episode #1 — Main 2',
-    titleJA: 'V01D エピソード #1 — メイン 2',
-    imageUrl: '/sq/story-2-main.jpg',
-    descKO: 'V01D 에피소드 #1의 두 번째 메인 에피소드.',
-    descEN: 'The second main episode of V01D Episode #1.',
-    descJA: 'V01D エピソード #1 の二番目のメインエピソード。',
-    episodeCount: 6,
-    activeMembers: 215,
-    totalCompleted: 160,
-    pendingReview: 4,
-    createdBy: 'nill',
-    createdAt: '2024.12.22 10:10',
-    updatedBy: 'nill',
-    updatedAt: '2025.06.20 12:00',
-  },
-  {
-    id: 3,
-    groupId: 1,
-    episodeKind: 'MAIN',
-    displayOrder: 3,
-    artistGroup: 'V01D',
-    status: 'ACTIVE',
-    titleKO: 'V01D 에피소드 #1 — 메인 3',
-    titleEN: 'V01D Episode #1 — Main 3',
-    titleJA: 'V01D エピソード #1 — メイン 3',
-    imageUrl: '/sq/story-3-main.jpg',
-    descKO: 'V01D 에피소드 #1의 세 번째 메인 에피소드.',
-    descEN: 'The third main episode of V01D Episode #1.',
-    descJA: 'V01D エピソード #1 の三番目のメインエピソード。',
-    episodeCount: 4,
-    activeMembers: 198,
-    totalCompleted: 130,
-    pendingReview: 8,
-    createdBy: 'nill',
-    createdAt: '2024.12.22 10:20',
-    updatedBy: 'nill',
-    updatedAt: '2025.07.15 15:00',
-  },
-  {
-    id: 4,
-    groupId: 1,
-    episodeKind: 'MAIN',
-    displayOrder: 4,
-    artistGroup: 'V01D',
-    status: 'ACTIVE',
-    titleKO: 'V01D 에피소드 #1 — 메인 4',
-    titleEN: 'V01D Episode #1 — Main 4',
-    titleJA: 'V01D エピソード #1 — メイン 4',
-    imageUrl: '/sq/story-4-main.jpg',
-    descKO: 'V01D 에피소드 #1의 네 번째 메인 에피소드.',
-    descEN: 'The fourth main episode of V01D Episode #1.',
-    descJA: 'V01D エピソード #1 の四番目のメインエピソード。',
-    episodeCount: 5,
-    activeMembers: 176,
-    totalCompleted: 102,
-    pendingReview: 3,
-    createdBy: 'nill',
-    createdAt: '2024.12.22 10:30',
-    updatedBy: 'nill',
-    updatedAt: '2025.08.20 09:00',
-  },
-  {
-    id: 5,
-    groupId: 1,
-    episodeKind: 'MAIN',
-    displayOrder: 5,
-    artistGroup: 'V01D',
-    status: 'ACTIVE',
-    titleKO: 'V01D 에피소드 #1 — 메인 5',
-    titleEN: 'V01D Episode #1 — Main 5',
-    titleJA: 'V01D エピソード #1 — メイン 5',
-    imageUrl: '/sq/story-5-main.jpg',
-    descKO: 'V01D 에피소드 #1의 다섯 번째 메인 에피소드.',
-    descEN: 'The fifth main episode of V01D Episode #1.',
-    descJA: 'V01D エピソード #1 の五番目のメインエピソード。',
-    episodeCount: 7,
-    activeMembers: 152,
-    totalCompleted: 80,
-    pendingReview: 5,
-    createdBy: 'nill',
-    createdAt: '2024.12.22 10:40',
-    updatedBy: 'nill',
-    updatedAt: '2025.09.05 11:00',
-  },
-  {
-    id: 6,
-    groupId: 1,
-    episodeKind: 'REPEAT',
-    displayOrder: REPEAT_EPISODE_DISPLAY_ORDER,
-    artistGroup: 'V01D',
-    status: 'ACTIVE',
-    titleKO: 'V01D 에피소드 #1 — 반복 에피소드',
-    titleEN: 'V01D Episode #1 — Repeat',
-    titleJA: 'V01D エピソード #1 — 繰り返し',
-    imageUrl: '/sq/story-6-main.jpg',
-    descKO: 'V01D 에피소드 #1의 매월 반복 진행되는 에피소드.',
-    descEN: 'The monthly recurring episode of V01D Episode #1.',
-    descJA: 'V01D エピソード #1 の毎月繰り返しエピソード。',
-    episodeCount: 3,
-    activeMembers: 132,
-    totalCompleted: 68,
-    pendingReview: 2,
-    createdBy: 'nill',
-    createdAt: '2024.12.22 10:50',
-    updatedBy: 'nill',
-    updatedAt: '2025.10.10 16:30',
-  },
-  // ── Group 2 (V01D 에피소드 #2, DRAFT) — 메인 2
-  {
-    id: 7,
-    groupId: 2,
-    episodeKind: 'MAIN',
-    displayOrder: 1,
-    artistGroup: 'V01D',
-    status: 'DRAFT',
-    titleKO: 'V01D 에피소드 #2 — 메인 1 (작성 중)',
-    titleEN: '',
-    titleJA: '',
-    imageUrl: '/sq/story-7-main.jpg',
-    descKO: 'V01D 에피소드 #2의 첫 번째 메인 에피소드. (작성 중)',
-    descEN: '',
-    descJA: '',
-    episodeCount: 5,
-    activeMembers: 0,
-    totalCompleted: 0,
-    pendingReview: 0,
-    createdBy: 'nill',
-    createdAt: '2025.12.20 09:30',
-    updatedBy: 'nill',
-    updatedAt: '2026.01.10 16:00',
-  },
-  {
-    id: 8,
-    groupId: 2,
-    episodeKind: 'MAIN',
-    displayOrder: 2,
-    artistGroup: 'V01D',
-    status: 'DRAFT',
-    titleKO: 'V01D 에피소드 #2 — 메인 2 (작성 중)',
-    titleEN: '',
-    titleJA: '',
-    imageUrl: '/sq/story-8-main.jpg',
-    descKO: 'V01D 에피소드 #2의 두 번째 메인 에피소드. (작성 중)',
-    descEN: '',
-    descJA: '',
-    episodeCount: 4,
-    activeMembers: 0,
-    totalCompleted: 0,
-    pendingReview: 0,
-    createdBy: 'nill',
-    createdAt: '2025.12.20 09:40',
-    updatedBy: 'nill',
-    updatedAt: '2026.02.15 11:20',
-  },
-  // ── Group 3 (V01D 에피소드 #0, CLOSED) — 메인 5 + 반복 1
-  {
-    id: 9,
-    groupId: 3,
-    episodeKind: 'MAIN',
-    displayOrder: 1,
-    artistGroup: 'V01D',
-    status: 'CLOSED',
-    titleKO: 'V01D 에피소드 #0 — 메인 1',
-    titleEN: 'V01D Episode #0 — Main 1',
-    titleJA: 'V01D エピソード #0 — メイン 1',
-    imageUrl: '/sq/story-1-main.jpg',
-    descKO: 'V01D 에피소드 #0의 첫 번째 메인 에피소드. (종료)',
-    descEN: 'The first main episode of V01D Episode #0. (closed)',
-    descJA: 'V01D エピソード #0 の最初のメインエピソード。(終了)',
-    episodeCount: 5,
-    activeMembers: 410,
-    totalCompleted: 378,
-    pendingReview: 0,
-    createdBy: 'nill',
-    createdAt: '2023.12.18 09:00',
-    updatedBy: 'nill',
-    updatedAt: '2024.12.31 23:50',
-  },
-  {
-    id: 10,
-    groupId: 3,
-    episodeKind: 'MAIN',
-    displayOrder: 2,
-    artistGroup: 'V01D',
-    status: 'CLOSED',
-    titleKO: 'V01D 에피소드 #0 — 메인 2',
-    titleEN: 'V01D Episode #0 — Main 2',
-    titleJA: 'V01D エピソード #0 — メイン 2',
-    imageUrl: '/sq/story-2-main.jpg',
-    descKO: 'V01D 에피소드 #0의 두 번째 메인 에피소드. (종료)',
-    descEN: 'The second main episode of V01D Episode #0. (closed)',
-    descJA: 'V01D エピソード #0 の二番目のメインエピソード。(終了)',
-    episodeCount: 6,
-    activeMembers: 388,
-    totalCompleted: 350,
-    pendingReview: 0,
-    createdBy: 'nill',
-    createdAt: '2023.12.18 09:10',
-    updatedBy: 'nill',
-    updatedAt: '2024.12.31 23:50',
-  },
-  {
-    id: 11,
-    groupId: 3,
-    episodeKind: 'MAIN',
-    displayOrder: 3,
-    artistGroup: 'V01D',
-    status: 'CLOSED',
-    titleKO: 'V01D 에피소드 #0 — 메인 3',
-    titleEN: 'V01D Episode #0 — Main 3',
-    titleJA: 'V01D エピソード #0 — メイン 3',
-    imageUrl: '/sq/story-3-main.jpg',
-    descKO: 'V01D 에피소드 #0의 세 번째 메인 에피소드. (종료)',
-    descEN: 'The third main episode of V01D Episode #0. (closed)',
-    descJA: 'V01D エピソード #0 の三番目のメインエピソード。(終了)',
-    episodeCount: 4,
-    activeMembers: 360,
-    totalCompleted: 325,
-    pendingReview: 0,
-    createdBy: 'nill',
-    createdAt: '2023.12.18 09:20',
-    updatedBy: 'nill',
-    updatedAt: '2024.12.31 23:50',
-  },
-  {
-    id: 12,
-    groupId: 3,
-    episodeKind: 'MAIN',
-    displayOrder: 4,
-    artistGroup: 'V01D',
-    status: 'CLOSED',
-    titleKO: 'V01D 에피소드 #0 — 메인 4',
-    titleEN: 'V01D Episode #0 — Main 4',
-    titleJA: 'V01D エピソード #0 — メイン 4',
-    imageUrl: '/sq/story-4-main.jpg',
-    descKO: 'V01D 에피소드 #0의 네 번째 메인 에피소드. (종료)',
-    descEN: 'The fourth main episode of V01D Episode #0. (closed)',
-    descJA: 'V01D エピソード #0 の四番目のメインエピソード。(終了)',
-    episodeCount: 5,
-    activeMembers: 332,
-    totalCompleted: 298,
-    pendingReview: 0,
-    createdBy: 'nill',
-    createdAt: '2023.12.18 09:30',
-    updatedBy: 'nill',
-    updatedAt: '2024.12.31 23:50',
-  },
-  {
-    id: 13,
-    groupId: 3,
-    episodeKind: 'MAIN',
-    displayOrder: 5,
-    artistGroup: 'V01D',
-    status: 'CLOSED',
-    titleKO: 'V01D 에피소드 #0 — 메인 5',
-    titleEN: 'V01D Episode #0 — Main 5',
-    titleJA: 'V01D エピソード #0 — メイン 5',
-    imageUrl: '/sq/story-5-main.jpg',
-    descKO: 'V01D 에피소드 #0의 다섯 번째 메인 에피소드. (종료)',
-    descEN: 'The fifth main episode of V01D Episode #0. (closed)',
-    descJA: 'V01D エピソード #0 の五番目のメインエピソード。(終了)',
-    episodeCount: 7,
-    activeMembers: 305,
-    totalCompleted: 270,
-    pendingReview: 0,
-    createdBy: 'nill',
-    createdAt: '2023.12.18 09:40',
-    updatedBy: 'nill',
-    updatedAt: '2024.12.31 23:50',
-  },
-  {
-    id: 14,
-    groupId: 3,
-    episodeKind: 'REPEAT',
-    displayOrder: REPEAT_EPISODE_DISPLAY_ORDER,
-    artistGroup: 'V01D',
-    status: 'CLOSED',
-    titleKO: 'V01D 에피소드 #0 — 반복 에피소드',
-    titleEN: 'V01D Episode #0 — Repeat',
-    titleJA: 'V01D エピソード #0 — 繰り返し',
-    imageUrl: '/sq/story-6-main.jpg',
-    descKO: 'V01D 에피소드 #0의 매월 반복 에피소드. (종료)',
-    descEN: 'The monthly recurring episode of V01D Episode #0. (closed)',
-    descJA: 'V01D エピソード #0 の毎月繰り返しエピソード。(終了)',
-    episodeCount: 3,
-    activeMembers: 280,
-    totalCompleted: 245,
-    pendingReview: 0,
-    createdBy: 'nill',
-    createdAt: '2023.12.18 09:50',
-    updatedBy: 'nill',
-    updatedAt: '2024.12.31 23:50',
-  },
-];
-
-export function getStoryQuestById(id: number): StoryQuest | undefined {
-  return storyQuests.find((s) => s.id === id);
-}
-
-// 에피소드 그룹 — 3건 mock (V01D ACTIVE 1·DRAFT 1·CLOSED 1)
-// 정책: ACTIVE는 아티스트당 1개만 허용.
+// ============================================================
+// 에피소드 그룹 — 6건 (V01D 3 + iKON 2 + CELEBUS 1)
+// 상태 분포: ACTIVE 2 / DRAFT 2 / CLOSED 2 (아티스트당 ACTIVE 1개 한도 정합)
+// ============================================================
 export const episodeGroups: EpisodeGroup[] = [
   {
     id: 1,
     artistGroup: 'V01D',
     status: 'ACTIVE',
-    titleKO: 'V01D 에피소드 #1',
-    startDt: '2025.01.01 00:00',
-    endDt: '2025.12.31 23:59',
+    titleKO: 'V01D — JOURNEY #01 컴백 시즌',
+    startDt: '2026.05.01 00:00',
+    endDt: '2026.07.31 23:59',
     episodeCount: 6,
     createdBy: 'nill',
-    createdAt: '2024.12.20 14:00',
+    createdAt: '2026.04.20 14:00',
     updatedBy: 'nill',
-    updatedAt: '2025.06.15 11:30',
+    updatedAt: '2026.05.10 11:30',
   },
   {
     id: 2,
     artistGroup: 'V01D',
-    status: 'DRAFT',
-    titleKO: 'V01D 에피소드 #2',
-    startDt: '2026.01.01 00:00',
-    endDt: '2026.12.31 23:59',
-    episodeCount: 2,
+    status: 'CLOSED',
+    titleKO: 'V01D — 데뷔 1주년 기념 시즌',
+    startDt: '2025.10.01 00:00',
+    endDt: '2025.12.31 23:59',
+    episodeCount: 5,
     createdBy: 'nill',
-    createdAt: '2025.12.18 10:00',
+    createdAt: '2025.09.18 09:00',
     updatedBy: 'nill',
-    updatedAt: '2026.02.15 11:20',
+    updatedAt: '2026.01.05 10:00',
   },
   {
     id: 3,
     artistGroup: 'V01D',
-    status: 'CLOSED',
-    titleKO: 'V01D 에피소드 #0',
-    startDt: '2024.01.01 00:00',
-    endDt: '2024.12.31 23:59',
-    episodeCount: 6,
+    status: 'DRAFT',
+    titleKO: 'V01D — 2026 가을 컴백 예비',
+    startDt: '2026.09.01 00:00',
+    endDt: '2026.11.30 23:59',
+    episodeCount: 3,
     createdBy: 'nill',
-    createdAt: '2023.12.15 09:00',
+    createdAt: '2026.05.15 10:00',
     updatedBy: 'nill',
-    updatedAt: '2025.01.05 10:00',
+    updatedAt: '2026.05.20 16:00',
+  },
+  {
+    id: 4,
+    artistGroup: 'iKON',
+    status: 'ACTIVE',
+    titleKO: 'iKON — 데뷔 10주년 글로벌 투어',
+    startDt: '2026.04.01 00:00',
+    endDt: '2026.06.30 23:59',
+    episodeCount: 5,
+    createdBy: 'nill',
+    createdAt: '2026.03.20 09:00',
+    updatedBy: 'nill',
+    updatedAt: '2026.05.18 13:00',
+  },
+  {
+    id: 5,
+    artistGroup: 'iKON',
+    status: 'CLOSED',
+    titleKO: 'iKON — KCON 2025 종합 시즌',
+    startDt: '2025.07.01 00:00',
+    endDt: '2025.09.30 23:59',
+    episodeCount: 3,
+    createdBy: 'nill',
+    createdAt: '2025.06.20 10:00',
+    updatedBy: 'nill',
+    updatedAt: '2025.10.05 11:00',
+  },
+  {
+    id: 6,
+    artistGroup: 'CELEBUS',
+    status: 'DRAFT',
+    titleKO: 'CELEBUS — 플랫폼 1주년 캠페인',
+    startDt: '2026.06.01 00:00',
+    endDt: '2026.08.31 23:59',
+    episodeCount: 2,
+    createdBy: 'nill',
+    createdAt: '2026.05.18 11:00',
+    updatedBy: 'nill',
+    updatedAt: '2026.05.21 10:00',
   },
 ];
+
+// ============================================================
+// 에피소드(StoryQuest) — 총 24건 (그룹별 분포)
+// Group 1 V01D ACTIVE: 메인 5 + 반복 1 (id 1~6)
+// Group 2 V01D CLOSED: 메인 4 + 반복 1 (id 7~11)
+// Group 3 V01D DRAFT:  메인 2 + 반복 1 (id 12~14)
+// Group 4 iKON ACTIVE: 메인 4 + 반복 1 (id 15~19)
+// Group 5 iKON CLOSED: 메인 3 (id 20~22)
+// Group 6 CELEBUS DRAFT: 메인 2 (id 23~24)
+// ============================================================
+export const storyQuests: StoryQuest[] = [
+  // ── Group 1 (V01D ACTIVE — JOURNEY #01 컴백 시즌)
+  {
+    id: 1, groupId: 1, episodeKind: 'MAIN', displayOrder: 1,
+    artistGroup: 'V01D', status: 'ACTIVE',
+    titleKO: '컴백 D-DAY — 신곡 발매 인증',
+    titleEN: 'Comeback D-DAY — Title Track Release',
+    titleJA: 'カムバック D-DAY — タイトル曲リリース',
+    imageUrl: '/sq/v01d-journey-01.jpg',
+    descKO: 'JOURNEY #01 타이틀곡 발매일 — 스트리밍·SNS 인증·차트 예측·가사 트리비아로 컴백을 함께 축하합니다.',
+    descEN: 'JOURNEY #01 title track release day — celebrate the comeback through streaming proof, SNS posts, chart predictions, and lyrics trivia.',
+    descJA: 'JOURNEY #01 タイトル曲リリース日 — ストリーミング認証·SNS投稿·チャート予測·歌詞トリビアでカムバックを一緒にお祝いしましょう。',
+    episodeCount: 3,
+    activeMembers: 1240, totalCompleted: 820, pendingReview: 18,
+    episodeReward: {
+      entryTicket: 20, fanPoint: 500, biveRewardYn: true,
+      mintingEventId: 23, mintingEventName: 'V01D Welcome ED',
+    },
+    createdBy: 'nill', createdAt: '2026.04.20 14:10',
+    updatedBy: 'nill', updatedAt: '2026.05.01 09:00',
+  },
+  {
+    id: 2, groupId: 1, episodeKind: 'MAIN', displayOrder: 2,
+    artistGroup: 'V01D', status: 'ACTIVE',
+    titleKO: '뮤직비디오 1000만 뷰 달성',
+    titleEN: 'Reach 10M Views on Music Video',
+    titleJA: 'ミュージックビデオ1000万再生達成',
+    imageUrl: '/sq/v01d-journey-02.jpg',
+    descKO: '신곡 뮤직비디오 1000만 뷰까지 함께 달려가는 단계 미션.',
+    descEN: 'A milestone episode for reaching 10M views on the new music video together.',
+    descJA: '新曲ミュージックビデオ1000万再生まで一緒に走るマイルストーンエピソード。',
+    episodeCount: 2,
+    activeMembers: 980, totalCompleted: 540, pendingReview: 8,
+    episodeReward: {
+      entryTicket: 15, fanPoint: 300, biveRewardYn: false,
+      mintingEventId: null, mintingEventName: null,
+    },
+    createdBy: 'nill', createdAt: '2026.04.20 14:20',
+    updatedBy: 'nill', updatedAt: '2026.05.05 11:00',
+  },
+  {
+    id: 3, groupId: 1, episodeKind: 'MAIN', displayOrder: 3,
+    artistGroup: 'V01D', status: 'ACTIVE',
+    titleKO: '음악방송 1위 도전',
+    titleEN: 'Conquer Music Show #1',
+    titleJA: '音楽番組 1位 挑戦',
+    imageUrl: '/sq/v01d-journey-03.jpg',
+    descKO: '음악방송 1위를 위해 사전 투표·실시간 시청 인증·결과 예측까지 함께합니다.',
+    descEN: 'Pre-voting, live viewing proof, and result prediction for the #1 win on music shows.',
+    descJA: '音楽番組 1位のための事前投票·リアルタイム視聴認証·結果予測まで一緒にします。',
+    episodeCount: 2,
+    activeMembers: 720, totalCompleted: 380, pendingReview: 5,
+    episodeReward: {
+      entryTicket: 25, fanPoint: 600, biveRewardYn: true,
+      mintingEventId: 25, mintingEventName: 'V01D Final Boss',
+    },
+    createdBy: 'nill', createdAt: '2026.04.20 14:30',
+    updatedBy: 'nill', updatedAt: '2026.05.10 09:30',
+  },
+  {
+    id: 4, groupId: 1, episodeKind: 'MAIN', displayOrder: 4,
+    artistGroup: 'V01D', status: 'ACTIVE',
+    titleKO: '월드투어 응원 프로젝트',
+    titleEN: 'World Tour Cheering Project',
+    titleJA: 'ワールドツアー応援プロジェクト',
+    imageUrl: '/sq/v01d-journey-04.jpg',
+    descKO: '월드투어 개최를 위한 글로벌 팬덤 결집 단계.',
+    descEN: 'A stage to rally the global fandom for a world tour.',
+    descJA: 'ワールドツアー開催のためのグローバルファンダム結集段階。',
+    episodeCount: 1,
+    activeMembers: 550, totalCompleted: 210, pendingReview: 3,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2026.04.20 14:40',
+    updatedBy: 'nill', updatedAt: '2026.05.12 10:00',
+  },
+  {
+    id: 5, groupId: 1, episodeKind: 'MAIN', displayOrder: 5,
+    artistGroup: 'V01D', status: 'ACTIVE',
+    titleKO: '시즌 피날레 — 팬미팅 인증',
+    titleEN: 'Season Finale — Fan Meeting Proof',
+    titleJA: 'シーズンフィナーレ — ファンミーティング認証',
+    imageUrl: '/sq/v01d-journey-05.jpg',
+    descKO: 'JOURNEY #01 시즌 피날레 — 팬미팅 참여 인증 + 시즌 회고.',
+    descEN: 'JOURNEY #01 season finale — fan meeting proof + season retrospective.',
+    descJA: 'JOURNEY #01 シーズンフィナーレ — ファンミーティング参加認証 + シーズン回顧。',
+    episodeCount: 1,
+    activeMembers: 320, totalCompleted: 60, pendingReview: 1,
+    episodeReward: {
+      entryTicket: 30, fanPoint: 800, biveRewardYn: true,
+      mintingEventId: 25, mintingEventName: 'V01D Final Boss',
+    },
+    createdBy: 'nill', createdAt: '2026.04.20 14:50',
+    updatedBy: 'nill', updatedAt: '2026.05.15 14:00',
+  },
+  {
+    id: 6, groupId: 1, episodeKind: 'REPEAT', displayOrder: REPEAT_EPISODE_DISPLAY_ORDER,
+    artistGroup: 'V01D', status: 'ACTIVE',
+    titleKO: '매일 만나는 V01D — 일일·주간 미션',
+    titleEN: 'Daily V01D — Daily & Weekly Missions',
+    titleJA: '毎日会えるV01D — デイリー·ウィークリーミッション',
+    imageUrl: '/sq/v01d-journey-repeat.jpg',
+    descKO: '일일 트리비아·주간 라이브 시청 등 반복 미션으로 시즌 동안 매일 V01D를 만납니다.',
+    descEN: 'Daily trivia and weekly live viewing — recurring missions to meet V01D every day during the season.',
+    descJA: 'デイリートリビア·ウィークリーライブ視聴など繰り返しミッションでシーズン中毎日V01Dに会います。',
+    episodeCount: 2,
+    activeMembers: 1860, totalCompleted: 1240, pendingReview: 12,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2026.04.20 15:00',
+    updatedBy: 'nill', updatedAt: '2026.05.18 16:30',
+  },
+  // ── Group 2 (V01D CLOSED — 데뷔 1주년 기념 시즌)
+  {
+    id: 7, groupId: 2, episodeKind: 'MAIN', displayOrder: 1,
+    artistGroup: 'V01D', status: 'CLOSED',
+    titleKO: '데뷔 1주년 축하 메시지',
+    titleEN: '1st Anniversary Celebration Messages',
+    titleJA: 'デビュー1周年お祝いメッセージ',
+    imageUrl: '/sq/v01d-anniv-01.jpg',
+    descKO: '데뷔 1주년을 축하하는 팬들의 메시지 인증.',
+    descEN: 'Fans share celebration messages for the 1st debut anniversary.',
+    descJA: 'デビュー1周年をお祝いするファンのメッセージ認証。',
+    episodeCount: 3,
+    activeMembers: 2840, totalCompleted: 2680, pendingReview: 0,
+    episodeReward: {
+      entryTicket: 20, fanPoint: 500, biveRewardYn: true,
+      mintingEventId: 27, mintingEventName: 'V01D 100 Days',
+    },
+    createdBy: 'nill', createdAt: '2025.09.18 09:10',
+    updatedBy: 'nill', updatedAt: '2025.12.31 23:50',
+  },
+  {
+    id: 8, groupId: 2, episodeKind: 'MAIN', displayOrder: 2,
+    artistGroup: 'V01D', status: 'CLOSED',
+    titleKO: '1주년 추억 트리비아',
+    titleEN: '1st Anniversary Memory Trivia',
+    titleJA: '1周年思い出トリビア',
+    imageUrl: '/sq/v01d-anniv-02.jpg',
+    descKO: '데뷔 후 1년간의 활동을 돌아보는 추억 퀴즈.',
+    descEN: 'A trivia looking back at one year of activities since debut.',
+    descJA: 'デビュー後1年間の活動を振り返る思い出クイズ。',
+    episodeCount: 1,
+    activeMembers: 2510, totalCompleted: 2380, pendingReview: 0,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2025.09.18 09:20',
+    updatedBy: 'nill', updatedAt: '2025.12.31 23:50',
+  },
+  {
+    id: 9, groupId: 2, episodeKind: 'MAIN', displayOrder: 3,
+    artistGroup: 'V01D', status: 'CLOSED',
+    titleKO: '1주년 기념 행사 참여',
+    titleEN: '1st Anniversary Event Participation',
+    titleJA: '1周年記念イベント参加',
+    imageUrl: '/sq/v01d-anniv-03.jpg',
+    descKO: '1주년 오프라인 팬 행사 참여 인증 + 행사 참여수 예측.',
+    descEN: '1st anniversary offline fan event participation proof + attendance prediction.',
+    descJA: '1周年オフラインファンイベント参加認証 + 参加者数予測。',
+    episodeCount: 2,
+    activeMembers: 2200, totalCompleted: 2050, pendingReview: 0,
+    episodeReward: {
+      entryTicket: 15, fanPoint: 300, biveRewardYn: false,
+      mintingEventId: null, mintingEventName: null,
+    },
+    createdBy: 'nill', createdAt: '2025.09.18 09:30',
+    updatedBy: 'nill', updatedAt: '2025.12.31 23:50',
+  },
+  {
+    id: 10, groupId: 2, episodeKind: 'MAIN', displayOrder: 4,
+    artistGroup: 'V01D', status: 'CLOSED',
+    titleKO: '시즌 종료 — 새해 응원 메시지',
+    titleEN: 'Season Closing — New Year Cheering',
+    titleJA: 'シーズン終了 — 新年応援メッセージ',
+    imageUrl: '/sq/v01d-anniv-04.jpg',
+    descKO: '1주년 시즌을 마무리하며 다음 해 활동을 응원하는 메시지.',
+    descEN: 'Closing the 1st anniversary season with cheering messages for next year.',
+    descJA: '1周年シーズンを終え、次年の活動を応援するメッセージ。',
+    episodeCount: 1,
+    activeMembers: 1890, totalCompleted: 1720, pendingReview: 0,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2025.09.18 09:40',
+    updatedBy: 'nill', updatedAt: '2025.12.31 23:50',
+  },
+  {
+    id: 11, groupId: 2, episodeKind: 'REPEAT', displayOrder: REPEAT_EPISODE_DISPLAY_ORDER,
+    artistGroup: 'V01D', status: 'CLOSED',
+    titleKO: '1주년 시즌 월간 인증 (종료)',
+    titleEN: '1st Anniversary Monthly Proof (Closed)',
+    titleJA: '1周年シーズン月間認証(終了)',
+    imageUrl: '/sq/v01d-anniv-repeat.jpg',
+    descKO: '1주년 시즌 3개월 동안 월 1회 진행됐던 반복 미션. (종료)',
+    descEN: 'Recurring mission that ran monthly during the 3-month 1st anniversary season. (closed)',
+    descJA: '1周年シーズン3か月間月1回行われた繰り返しミッション。(終了)',
+    episodeCount: 1,
+    activeMembers: 1640, totalCompleted: 1480, pendingReview: 0,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2025.09.18 09:50',
+    updatedBy: 'nill', updatedAt: '2025.12.31 23:50',
+  },
+  // ── Group 3 (V01D DRAFT — 2026 가을 컴백 예비)
+  {
+    id: 12, groupId: 3, episodeKind: 'MAIN', displayOrder: 1,
+    artistGroup: 'V01D', status: 'DRAFT',
+    titleKO: '컴백 티저 영상 시청 (작성 중)',
+    titleEN: 'Comeback Teaser Video (Draft)',
+    titleJA: 'カムバックティザー映像(作成中)',
+    imageUrl: '/sq/v01d-fall-01.jpg',
+    descKO: '2026 가을 컴백 첫 티저 영상 시청 인증 단계. (작성 중)',
+    descEN: 'Episode for watching the first teaser of the 2026 fall comeback. (draft)',
+    descJA: '2026年秋カムバック最初のティザー映像視聴認証段階。(作成中)',
+    episodeCount: 3,
+    activeMembers: 0, totalCompleted: 0, pendingReview: 0,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2026.05.15 10:10',
+    updatedBy: 'nill', updatedAt: '2026.05.18 14:00',
+  },
+  {
+    id: 13, groupId: 3, episodeKind: 'MAIN', displayOrder: 2,
+    artistGroup: 'V01D', status: 'DRAFT',
+    titleKO: '데뷔곡 차트 진입 예측 (작성 중)',
+    titleEN: 'Debut Song Chart Entry Prediction (Draft)',
+    titleJA: 'デビュー曲チャートイン予測(作成中)',
+    imageUrl: '/sq/v01d-fall-02.jpg',
+    descKO: '2026 가을 신곡의 차트 진입 순위 예측 미션. (작성 중)',
+    descEN: 'Mission to predict chart entry rank of the 2026 fall new song. (draft)',
+    descJA: '2026年秋新曲のチャートイン順位予測ミッション。(作成中)',
+    episodeCount: 1,
+    activeMembers: 0, totalCompleted: 0, pendingReview: 0,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2026.05.15 10:20',
+    updatedBy: 'nill', updatedAt: '2026.05.20 16:00',
+  },
+  {
+    id: 14, groupId: 3, episodeKind: 'REPEAT', displayOrder: REPEAT_EPISODE_DISPLAY_ORDER,
+    artistGroup: 'V01D', status: 'DRAFT',
+    titleKO: '가을 시즌 주간 반복 (작성 중)',
+    titleEN: 'Fall Season Weekly Recurring (Draft)',
+    titleJA: '秋シーズンウィークリー(作成中)',
+    imageUrl: '/sq/v01d-fall-repeat.jpg',
+    descKO: '가을 시즌 동안 주 1회 진행될 반복 미션 (작성 중).',
+    descEN: 'Recurring mission planned to run weekly during the fall season (draft).',
+    descJA: '秋シーズン中週1回行われる繰り返しミッション(作成中)。',
+    episodeCount: 1,
+    activeMembers: 0, totalCompleted: 0, pendingReview: 0,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2026.05.15 10:30',
+    updatedBy: 'nill', updatedAt: '2026.05.20 16:30',
+  },
+  // ── Group 4 (iKON ACTIVE — 데뷔 10주년 글로벌 투어)
+  {
+    id: 15, groupId: 4, episodeKind: 'MAIN', displayOrder: 1,
+    artistGroup: 'iKON', status: 'ACTIVE',
+    titleKO: '10주년 시작 — 멤버 메시지 영상',
+    titleEN: '10th Anniversary Kickoff — Member Messages',
+    titleJA: '10周年スタート — メンバーメッセージ映像',
+    imageUrl: '/sq/ikon-tour-01.jpg',
+    descKO: 'iKON 데뷔 10주년 — 각 멤버의 시작 메시지 영상 시청 + 추억 트리비아.',
+    descEN: 'iKON 10th anniversary — watch each member message video and answer memory trivia.',
+    descJA: 'iKONデビュー10周年 — 各メンバーのスタートメッセージ映像視聴 + 思い出トリビア。',
+    episodeCount: 3,
+    activeMembers: 950, totalCompleted: 620, pendingReview: 14,
+    episodeReward: {
+      entryTicket: 20, fanPoint: 500, biveRewardYn: true,
+      mintingEventId: 23, mintingEventName: 'V01D Welcome ED',
+    },
+    createdBy: 'nill', createdAt: '2026.03.20 09:10',
+    updatedBy: 'nill', updatedAt: '2026.04.05 11:00',
+  },
+  {
+    id: 16, groupId: 4, episodeKind: 'MAIN', displayOrder: 2,
+    artistGroup: 'iKON', status: 'ACTIVE',
+    titleKO: '글로벌 투어 도시 예측',
+    titleEN: 'Global Tour City Prediction',
+    titleJA: 'グローバルツアー都市予測',
+    imageUrl: '/sq/ikon-tour-02.jpg',
+    descKO: '추가 발표될 글로벌 투어 도시 + 셋리스트 예측.',
+    descEN: 'Predict the next announced global tour cities and setlist.',
+    descJA: '追加発表されるグローバルツアー都市 + セットリスト予測。',
+    episodeCount: 2,
+    activeMembers: 780, totalCompleted: 420, pendingReview: 9,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2026.03.20 09:20',
+    updatedBy: 'nill', updatedAt: '2026.04.10 13:00',
+  },
+  {
+    id: 17, groupId: 4, episodeKind: 'MAIN', displayOrder: 3,
+    artistGroup: 'iKON', status: 'ACTIVE',
+    titleKO: '투어 굿즈 사전 예약 인증',
+    titleEN: 'Tour Goods Pre-order Proof',
+    titleJA: 'ツアーグッズ事前予約認証',
+    imageUrl: '/sq/ikon-tour-03.jpg',
+    descKO: '글로벌 투어 공식 굿즈 사전 예약 인증샷 업로드.',
+    descEN: 'Upload pre-order proof screenshot for global tour official goods.',
+    descJA: 'グローバルツアー公式グッズ事前予約認証スクリーンショットをアップロード。',
+    episodeCount: 1,
+    activeMembers: 540, totalCompleted: 280, pendingReview: 6,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2026.03.20 09:30',
+    updatedBy: 'nill', updatedAt: '2026.04.15 10:00',
+  },
+  {
+    id: 18, groupId: 4, episodeKind: 'MAIN', displayOrder: 4,
+    artistGroup: 'iKON', status: 'ACTIVE',
+    titleKO: '투어 후기 공유',
+    titleEN: 'Tour Review Sharing',
+    titleJA: 'ツアー後記共有',
+    imageUrl: '/sq/ikon-tour-04.jpg',
+    descKO: '직관한 투어 공연의 후기를 SNS에 공유 + 해시태그 인증.',
+    descEN: 'Share tour concert reviews on SNS + hashtag proof.',
+    descJA: '直接観覧したツアー公演の後記をSNSに共有 + ハッシュタグ認証。',
+    episodeCount: 1,
+    activeMembers: 320, totalCompleted: 140, pendingReview: 4,
+    episodeReward: {
+      entryTicket: 15, fanPoint: 300, biveRewardYn: false,
+      mintingEventId: null, mintingEventName: null,
+    },
+    createdBy: 'nill', createdAt: '2026.03.20 09:40',
+    updatedBy: 'nill', updatedAt: '2026.04.20 14:00',
+  },
+  {
+    id: 19, groupId: 4, episodeKind: 'REPEAT', displayOrder: REPEAT_EPISODE_DISPLAY_ORDER,
+    artistGroup: 'iKON', status: 'ACTIVE',
+    titleKO: '주간 예측 마라톤 (반복)',
+    titleEN: 'Weekly Prediction Marathon (Recurring)',
+    titleJA: 'ウィークリー予測マラソン(繰り返し)',
+    imageUrl: '/sq/ikon-tour-repeat.jpg',
+    descKO: '주 1회 진행되는 PM 예측 미션 — 시즌 동안 주간으로 반복.',
+    descEN: 'PM prediction mission running once a week — recurring weekly during the season.',
+    descJA: '週1回行われるPM予測ミッション — シーズン中ウィークリーで繰り返し。',
+    episodeCount: 1,
+    activeMembers: 680, totalCompleted: 410, pendingReview: 0,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2026.03.20 09:50',
+    updatedBy: 'nill', updatedAt: '2026.05.18 16:30',
+  },
+  // ── Group 5 (iKON CLOSED — KCON 2025 종합 시즌)
+  {
+    id: 20, groupId: 5, episodeKind: 'MAIN', displayOrder: 1,
+    artistGroup: 'iKON', status: 'CLOSED',
+    titleKO: 'KCON 2025 무대 인증',
+    titleEN: 'KCON 2025 Stage Proof',
+    titleJA: 'KCON 2025 ステージ認証',
+    imageUrl: '/sq/ikon-kcon-01.jpg',
+    descKO: 'KCON 2025 무대 관람 인증 + 최애 무대 투표.',
+    descEN: 'KCON 2025 stage attendance proof + favorite stage vote.',
+    descJA: 'KCON 2025 ステージ観覧認証 + 最推しステージ投票。',
+    episodeCount: 3,
+    activeMembers: 1520, totalCompleted: 1450, pendingReview: 0,
+    episodeReward: {
+      entryTicket: 20, fanPoint: 400, biveRewardYn: true,
+      mintingEventId: 24, mintingEventName: 'V01D Trivia Master',
+    },
+    createdBy: 'nill', createdAt: '2025.06.20 10:10',
+    updatedBy: 'nill', updatedAt: '2025.10.05 11:00',
+  },
+  {
+    id: 21, groupId: 5, episodeKind: 'MAIN', displayOrder: 2,
+    artistGroup: 'iKON', status: 'CLOSED',
+    titleKO: 'KCON 굿즈 인증',
+    titleEN: 'KCON Goods Proof',
+    titleJA: 'KCONグッズ認証',
+    imageUrl: '/sq/ikon-kcon-02.jpg',
+    descKO: 'KCON 2025 공식 굿즈 구매 인증샷.',
+    descEN: 'KCON 2025 official goods purchase proof.',
+    descJA: 'KCON 2025 公式グッズ購入認証。',
+    episodeCount: 1,
+    activeMembers: 1280, totalCompleted: 1180, pendingReview: 0,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2025.06.20 10:20',
+    updatedBy: 'nill', updatedAt: '2025.10.05 11:00',
+  },
+  {
+    id: 22, groupId: 5, episodeKind: 'MAIN', displayOrder: 3,
+    artistGroup: 'iKON', status: 'CLOSED',
+    titleKO: 'KCON 추억 트리비아',
+    titleEN: 'KCON Memory Trivia',
+    titleJA: 'KCON 思い出トリビア',
+    imageUrl: '/sq/ikon-kcon-03.jpg',
+    descKO: 'KCON 2025 종료 후 추억을 돌아보는 종합 트리비아.',
+    descEN: 'A comprehensive trivia looking back at KCON 2025 after the season.',
+    descJA: 'KCON 2025 終了後に思い出を振り返る総合トリビア。',
+    episodeCount: 1,
+    activeMembers: 1120, totalCompleted: 980, pendingReview: 0,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2025.06.20 10:30',
+    updatedBy: 'nill', updatedAt: '2025.10.05 11:00',
+  },
+  // ── Group 6 (CELEBUS DRAFT — 플랫폼 1주년 캠페인)
+  {
+    id: 23, groupId: 6, episodeKind: 'MAIN', displayOrder: 1,
+    artistGroup: 'CELEBUS', status: 'DRAFT',
+    titleKO: '플랫폼 1주년 — 운영진 OX 퀴즈 (작성 중)',
+    titleEN: 'Platform 1st Anniversary — Staff OX Quiz (Draft)',
+    titleJA: 'プラットフォーム1周年 — 運営陣OXクイズ(作成中)',
+    imageUrl: '/sq/celebus-anniv-01.jpg',
+    descKO: '플랫폼 1주년 기념 — 운영진 OX 퀴즈 + 다음 캠페인 주제 예측. (작성 중)',
+    descEN: 'Platform 1st anniversary — staff OX quiz + next campaign topic prediction. (draft)',
+    descJA: 'プラットフォーム1周年記念 — 運営陣OXクイズ + 次のキャンペーンテーマ予測。(作成中)',
+    episodeCount: 2,
+    activeMembers: 0, totalCompleted: 0, pendingReview: 0,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2026.05.18 11:10',
+    updatedBy: 'nill', updatedAt: '2026.05.21 10:00',
+  },
+  {
+    id: 24, groupId: 6, episodeKind: 'MAIN', displayOrder: 2,
+    artistGroup: 'CELEBUS', status: 'DRAFT',
+    titleKO: '플랫폼 1주년 — 응원 메시지 캠페인 (작성 중)',
+    titleEN: 'Platform 1st Anniversary — Cheering Message Campaign (Draft)',
+    titleJA: 'プラットフォーム1周年 — 応援メッセージキャンペーン(作成中)',
+    imageUrl: '/sq/celebus-anniv-02.jpg',
+    descKO: '플랫폼을 이용해주신 팬들에게 보내는 응원 메시지 캠페인. (작성 중)',
+    descEN: 'Cheering message campaign for fans who have used the platform. (draft)',
+    descJA: 'プラットフォームを利用してくれたファンに送る応援メッセージキャンペーン。(作成中)',
+    episodeCount: 1,
+    activeMembers: 0, totalCompleted: 0, pendingReview: 0,
+    episodeReward: null,
+    createdBy: 'nill', createdAt: '2026.05.18 11:20',
+    updatedBy: 'nill', updatedAt: '2026.05.21 10:00',
+  },
+];
+
+// ============================================================
+// 미션(StoryEpisode) — 약 36건 직접 정의 (v2.3 — 구 EPISODE_DATA 단일 템플릿 폐기)
+// ID 규칙: storyQuestId * 100 + order (예: story 1의 1번째 미션 = 101)
+// 정책 매트릭스 6조합(DRAFT/ACTIVE/CLOSED × 팬퀘스트/PM/ST) 100% 커버
+// PM/ST 미션 titleEN/titleJA 100% 입력 ([CEB-BO-011] §5 정합)
+// ============================================================
+export const storyEpisodes: StoryEpisode[] = [
+  // ── Story 1: V01D ACTIVE — 컴백 D-DAY (FQ + PM + ST 3종)
+  { id: 101, storyQuestId: 1, order: 1, type: 'FAN_QUEST',
+    titleKO: '신곡 멜론 100% 듣기 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/101.jpg',
+    rewardEntryTicket: 5, rewardFanPoint: 100, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 1240, completedMembers: 1180,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 1 },
+  { id: 102, storyQuestId: 1, order: 2, type: 'PREDICTION_MARKET',
+    titleKO: '신곡 멜론 차트 1위 진입 예측',
+    titleEN: 'Predict New Song #1 on Melon Chart',
+    titleJA: '新曲メロンチャート1位入り予測',
+    imageUrl: '/sq/ep/102.jpg',
+    rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: true, mintingEventId: 26, mintingEventName: 'V01D Prophet',
+    repeat: false, inProgressMembers: 980, completedMembers: 720,
+    completedType: 'PM_CORRECT', sourceRefName: 'PM #34 — 다음 컴백 시점' },
+  { id: 103, storyQuestId: 1, order: 3, type: 'SURVIVAL_TRIVIA',
+    titleKO: '신곡 "JOURNEY" 가사 트리비아 5회 정답',
+    titleEN: 'New Song "JOURNEY" Lyrics Trivia — 5 Correct',
+    titleJA: '新曲「JOURNEY」歌詞トリビア5回正解',
+    imageUrl: '/sq/ep/103.jpg',
+    rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: true, mintingEventId: 24, mintingEventName: 'V01D Trivia Master',
+    repeat: false, inProgressMembers: 820, completedMembers: 580,
+    completedType: 'TRIVIA_CORRECT_COUNT', completedValue: 5, sourceRefName: 'ST #12 데뷔곡 가사 퀴즈' },
+
+  // ── Story 2: V01D ACTIVE — 뮤직비디오 1000만 뷰 (FQ + PM)
+  { id: 201, storyQuestId: 2, order: 1, type: 'FAN_QUEST',
+    titleKO: 'V01D 뮤직비디오 시청·공유 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/201.jpg',
+    rewardEntryTicket: 6, rewardFanPoint: 120, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 980, completedMembers: 640,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 2 },
+  { id: 202, storyQuestId: 2, order: 2, type: 'PREDICTION_MARKET',
+    titleKO: '뮤직비디오 1000만 뷰 달성 시점 예측',
+    titleEN: 'Predict When MV Reaches 10M Views',
+    titleJA: 'ミュージックビデオ1000万再生達成時期予測',
+    imageUrl: '/sq/ep/202.jpg',
+    rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 720, completedMembers: 410,
+    completedType: 'PM_PARTICIPATION', sourceRefName: 'PM #35 신규 멤버 발표 시점' },
+
+  // ── Story 3: V01D ACTIVE — 음악방송 1위 (FQ + ST)
+  { id: 301, storyQuestId: 3, order: 1, type: 'FAN_QUEST',
+    titleKO: '음악방송 사전 투표 참여 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/301.jpg',
+    rewardEntryTicket: 7, rewardFanPoint: 130, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 720, completedMembers: 480,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 3 },
+  { id: 302, storyQuestId: 3, order: 2, type: 'SURVIVAL_TRIVIA',
+    titleKO: 'JOURNEY #01 콘서트 셋리스트 트리비아',
+    titleEN: 'JOURNEY #01 Concert Setlist Trivia',
+    titleJA: 'JOURNEY #01 コンサートセットリストトリビア',
+    imageUrl: '/sq/ep/302.jpg',
+    rewardEntryTicket: 9, rewardFanPoint: 180, biveRewardYn: true, mintingEventId: 24, mintingEventName: 'V01D Trivia Master',
+    repeat: false, inProgressMembers: 560, completedMembers: 320,
+    completedType: 'TRIVIA_PARTICIPATION', sourceRefName: 'ST #13 멤버 MBTI 퀴즈' },
+
+  // ── Story 4: V01D ACTIVE — 월드투어 응원 (FQ)
+  { id: 401, storyQuestId: 4, order: 1, type: 'FAN_QUEST',
+    titleKO: '월드투어 응원 SNS 포스팅 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/401.jpg',
+    rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 550, completedMembers: 320,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 4 },
+
+  // ── Story 5: V01D ACTIVE — 시즌 피날레 (FQ)
+  { id: 501, storyQuestId: 5, order: 1, type: 'FAN_QUEST',
+    titleKO: '팬미팅 참여 인증샷 업로드', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/501.jpg',
+    rewardEntryTicket: 20, rewardFanPoint: 500, biveRewardYn: true, mintingEventId: 25, mintingEventName: 'V01D Final Boss',
+    repeat: false, inProgressMembers: 320, completedMembers: 60,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 5 },
+
+  // ── Story 6: V01D ACTIVE 반복 — 일일·주간 (FQ MONTHLY + ST DAILY)
+  { id: 601, storyQuestId: 6, order: 1, type: 'FAN_QUEST',
+    titleKO: '월간 V01D 라이브 시청 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/601.jpg',
+    rewardEntryTicket: 5, rewardFanPoint: 100, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: true, inProgressMembers: 1860, completedMembers: 1240,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 10, repeatCycle: 'MONTHLY' },
+  { id: 602, storyQuestId: 6, order: 2, type: 'SURVIVAL_TRIVIA',
+    titleKO: '일일 V01D 트리비아 5회 정답',
+    titleEN: 'Daily V01D Trivia — 5 Correct',
+    titleJA: 'デイリーV01Dトリビア5回正解',
+    imageUrl: '/sq/ep/602.jpg',
+    rewardEntryTicket: 3, rewardFanPoint: 50, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: true, inProgressMembers: 1240, completedMembers: 820,
+    completedType: 'TRIVIA_CORRECT_COUNT', completedValue: 5, sourceRefName: 'ST #12 데뷔곡 가사 퀴즈', repeatCycle: 'DAILY' },
+
+  // ── Story 7: V01D CLOSED — 1주년 축하 (FQ + PM + ST)
+  { id: 701, storyQuestId: 7, order: 1, type: 'FAN_QUEST',
+    titleKO: '데뷔 1주년 축하 메시지 SNS 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/701.jpg',
+    rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: true, mintingEventId: 27, mintingEventName: 'V01D 100 Days',
+    repeat: false, inProgressMembers: 2840, completedMembers: 2810,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 1 },
+  { id: 702, storyQuestId: 7, order: 2, type: 'PREDICTION_MARKET',
+    titleKO: '1주년 기념 행사 참여수 예측',
+    titleEN: 'Predict 1st Anniversary Event Attendance',
+    titleJA: '1周年記念イベント参加者数予測',
+    imageUrl: '/sq/ep/702.jpg',
+    rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 2510, completedMembers: 2380,
+    completedType: 'PM_PARTICIPATION', sourceRefName: 'PM #34 — 1주년 행사 참여수' },
+  { id: 703, storyQuestId: 7, order: 3, type: 'SURVIVAL_TRIVIA',
+    titleKO: '1주년 추억 트리비아 7회 정답',
+    titleEN: '1st Anniversary Memory Trivia — 7 Correct',
+    titleJA: '1周年思い出トリビア7回正解',
+    imageUrl: '/sq/ep/703.jpg',
+    rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: true, mintingEventId: 24, mintingEventName: 'V01D Trivia Master',
+    repeat: false, inProgressMembers: 2310, completedMembers: 2180,
+    completedType: 'TRIVIA_CORRECT_COUNT', completedValue: 7, sourceRefName: 'ST #12 데뷔곡 가사 퀴즈' },
+
+  // ── Story 8: V01D CLOSED — 1주년 추억 트리비아 단독 에피소드 (ST)
+  { id: 801, storyQuestId: 8, order: 1, type: 'SURVIVAL_TRIVIA',
+    titleKO: '1주년 종합 트리비아 10회 정답',
+    titleEN: '1st Anniversary Comprehensive Trivia — 10 Correct',
+    titleJA: '1周年総合トリビア10回正解',
+    imageUrl: '/sq/ep/801.jpg',
+    rewardEntryTicket: 12, rewardFanPoint: 250, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 2510, completedMembers: 2380,
+    completedType: 'TRIVIA_CORRECT_COUNT', completedValue: 10, sourceRefName: 'ST #13 멤버 MBTI 퀴즈' },
+
+  // ── Story 9: V01D CLOSED — 1주년 행사 (FQ + ST)
+  { id: 901, storyQuestId: 9, order: 1, type: 'FAN_QUEST',
+    titleKO: '1주년 오프라인 행사 참여 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/901.jpg',
+    rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 2200, completedMembers: 2080,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 2 },
+  { id: 902, storyQuestId: 9, order: 2, type: 'SURVIVAL_TRIVIA',
+    titleKO: '행사 무대 셋리스트 트리비아',
+    titleEN: 'Event Stage Setlist Trivia',
+    titleJA: 'イベントステージセットリストトリビア',
+    imageUrl: '/sq/ep/902.jpg',
+    rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 2050, completedMembers: 1920,
+    completedType: 'TRIVIA_PARTICIPATION', sourceRefName: 'ST #12 데뷔곡 가사 퀴즈' },
+
+  // ── Story 10: V01D CLOSED — 새해 응원 (FQ)
+  { id: 1001, storyQuestId: 10, order: 1, type: 'FAN_QUEST',
+    titleKO: '새해 응원 SNS 포스팅 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/1001.jpg',
+    rewardEntryTicket: 6, rewardFanPoint: 120, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 1890, completedMembers: 1720,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 3 },
+
+  // ── Story 11: V01D CLOSED 반복 — 월간 인증 (FQ MONTHLY)
+  { id: 1101, storyQuestId: 11, order: 1, type: 'FAN_QUEST',
+    titleKO: '월간 V01D 활동 정리 인증 (종료)', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/1101.jpg',
+    rewardEntryTicket: 5, rewardFanPoint: 100, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: true, inProgressMembers: 1640, completedMembers: 1480,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 5, repeatCycle: 'MONTHLY' },
+
+  // ── Story 12: V01D DRAFT — 컴백 티저 (FQ + PM + ST)
+  { id: 1201, storyQuestId: 12, order: 1, type: 'FAN_QUEST',
+    titleKO: '컴백 티저 영상 시청 인증 (작성 중)', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/1201.jpg',
+    rewardEntryTicket: 5, rewardFanPoint: 100, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 0, completedMembers: 0,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 4 },
+  { id: 1202, storyQuestId: 12, order: 2, type: 'PREDICTION_MARKET',
+    titleKO: '컴백곡 차트 진입 순위 예측',
+    titleEN: 'Predict Comeback Song Chart Entry Rank',
+    titleJA: 'カムバック曲チャートイン順位予測',
+    imageUrl: '/sq/ep/1202.jpg',
+    rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 0, completedMembers: 0,
+    completedType: 'PM_PARTICIPATION', sourceRefName: 'PM #34 — 다음 컴백 시점' },
+  { id: 1203, storyQuestId: 12, order: 3, type: 'SURVIVAL_TRIVIA',
+    titleKO: '컴백곡 티저 영상 트리비아 5회 정답',
+    titleEN: 'Comeback Teaser Trivia — 5 Correct',
+    titleJA: 'カムバックティザートリビア5回正解',
+    imageUrl: '/sq/ep/1203.jpg',
+    rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 0, completedMembers: 0,
+    completedType: 'TRIVIA_CORRECT_COUNT', completedValue: 5, sourceRefName: 'ST #12 데뷔곡 가사 퀴즈' },
+
+  // ── Story 13: V01D DRAFT — 차트 진입 예측 (PM)
+  { id: 1301, storyQuestId: 13, order: 1, type: 'PREDICTION_MARKET',
+    titleKO: '데뷔곡 차트 진입 순위 예측 (작성 중)',
+    titleEN: 'Debut Song Chart Entry Rank Prediction (Draft)',
+    titleJA: 'デビュー曲チャートイン順位予測(作成中)',
+    imageUrl: '/sq/ep/1301.jpg',
+    rewardEntryTicket: 12, rewardFanPoint: 250, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 0, completedMembers: 0,
+    completedType: 'PM_CORRECT', sourceRefName: 'PM #35 신규 멤버 발표 시점' },
+
+  // ── Story 14: V01D DRAFT 반복 — 가을 주간 (FQ WEEKLY)
+  { id: 1401, storyQuestId: 14, order: 1, type: 'FAN_QUEST',
+    titleKO: '주간 가을 시즌 인증 (작성 중)', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/1401.jpg',
+    rewardEntryTicket: 5, rewardFanPoint: 100, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: true, inProgressMembers: 0, completedMembers: 0,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 10, repeatCycle: 'WEEKLY' },
+
+  // ── Story 15: iKON ACTIVE — 10주년 시작 (FQ + PM + ST)
+  { id: 1501, storyQuestId: 15, order: 1, type: 'FAN_QUEST',
+    titleKO: '멤버 메시지 영상 시청 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/1501.jpg',
+    rewardEntryTicket: 6, rewardFanPoint: 120, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 950, completedMembers: 720,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 6 },
+  { id: 1502, storyQuestId: 15, order: 2, type: 'PREDICTION_MARKET',
+    titleKO: 'iKON 컴백 앨범 1위 예측',
+    titleEN: 'Predict iKON Comeback Album #1',
+    titleJA: 'iKONカムバックアルバム1位予測',
+    imageUrl: '/sq/ep/1502.jpg',
+    rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: true, mintingEventId: 26, mintingEventName: 'V01D Prophet',
+    repeat: false, inProgressMembers: 780, completedMembers: 540,
+    completedType: 'PM_CORRECT', sourceRefName: 'PM #36 iKON 컴백 앨범 1위 차트인' },
+  { id: 1503, storyQuestId: 15, order: 3, type: 'SURVIVAL_TRIVIA',
+    titleKO: 'iKON 디스코그래피 마스터 트리비아',
+    titleEN: 'iKON Discography Master Trivia',
+    titleJA: 'iKONディスコグラフィーマスタートリビア',
+    imageUrl: '/sq/ep/1503.jpg',
+    rewardEntryTicket: 9, rewardFanPoint: 180, biveRewardYn: true, mintingEventId: 24, mintingEventName: 'V01D Trivia Master',
+    repeat: false, inProgressMembers: 640, completedMembers: 420,
+    completedType: 'TRIVIA_PARTICIPATION', sourceRefName: 'ST #14 iKON 디스코그래피 마스터 퀴즈' },
+
+  // ── Story 16: iKON ACTIVE — 글로벌 투어 도시 (FQ + PM)
+  { id: 1601, storyQuestId: 16, order: 1, type: 'FAN_QUEST',
+    titleKO: '#iKON_TOUR 해시태그 포스팅 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/1601.jpg',
+    rewardEntryTicket: 7, rewardFanPoint: 130, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 780, completedMembers: 510,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 8 },
+  { id: 1602, storyQuestId: 16, order: 2, type: 'PREDICTION_MARKET',
+    titleKO: '다음 발표 투어 도시 예측',
+    titleEN: 'Predict Next Announced Tour City',
+    titleJA: '次に発表されるツアー都市予測',
+    imageUrl: '/sq/ep/1602.jpg',
+    rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 620, completedMembers: 380,
+    completedType: 'PM_PARTICIPATION', sourceRefName: 'PM #36 iKON 컴백 앨범 1위 차트인' },
+
+  // ── Story 17: iKON ACTIVE — 굿즈 사전 예약 (FQ)
+  { id: 1701, storyQuestId: 17, order: 1, type: 'FAN_QUEST',
+    titleKO: '투어 굿즈 사전 예약 인증샷', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/1701.jpg',
+    rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 540, completedMembers: 280,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 7 },
+
+  // ── Story 18: iKON ACTIVE — 투어 후기 (FQ)
+  { id: 1801, storyQuestId: 18, order: 1, type: 'FAN_QUEST',
+    titleKO: '직관 후기 SNS 공유 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/1801.jpg',
+    rewardEntryTicket: 15, rewardFanPoint: 300, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 320, completedMembers: 140,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 9 },
+
+  // ── Story 19: iKON ACTIVE 반복 — 주간 PM (PM WEEKLY)
+  { id: 1901, storyQuestId: 19, order: 1, type: 'PREDICTION_MARKET',
+    titleKO: '주간 iKON 활동 예측 마라톤',
+    titleEN: 'Weekly iKON Activity Prediction Marathon',
+    titleJA: 'ウィークリーiKON活動予測マラソン',
+    imageUrl: '/sq/ep/1901.jpg',
+    rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: true, inProgressMembers: 680, completedMembers: 410,
+    completedType: 'PM_PARTICIPATION', sourceRefName: 'PM #36 iKON 컴백 앨범 1위 차트인', repeatCycle: 'WEEKLY' },
+
+  // ── Story 20: iKON CLOSED — KCON 무대 (FQ + PM + ST)
+  { id: 2001, storyQuestId: 20, order: 1, type: 'FAN_QUEST',
+    titleKO: 'KCON 2025 무대 관람 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/2001.jpg',
+    rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: true, mintingEventId: 24, mintingEventName: 'V01D Trivia Master',
+    repeat: false, inProgressMembers: 1520, completedMembers: 1480,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 6 },
+  { id: 2002, storyQuestId: 20, order: 2, type: 'PREDICTION_MARKET',
+    titleKO: '최애 무대 1위 예측',
+    titleEN: 'Predict Favorite Stage #1',
+    titleJA: '最推しステージ1位予測',
+    imageUrl: '/sq/ep/2002.jpg',
+    rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 1380, completedMembers: 1320,
+    completedType: 'PM_CORRECT', sourceRefName: 'PM #36 iKON 컴백 앨범 1위 차트인' },
+  { id: 2003, storyQuestId: 20, order: 3, type: 'SURVIVAL_TRIVIA',
+    titleKO: 'KCON 2025 무대 트리비아',
+    titleEN: 'KCON 2025 Stage Trivia',
+    titleJA: 'KCON 2025 ステージトリビア',
+    imageUrl: '/sq/ep/2003.jpg',
+    rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 1280, completedMembers: 1180,
+    completedType: 'TRIVIA_PARTICIPATION', sourceRefName: 'ST #14 iKON 디스코그래피 마스터 퀴즈' },
+
+  // ── Story 21: iKON CLOSED — KCON 굿즈 (FQ)
+  { id: 2101, storyQuestId: 21, order: 1, type: 'FAN_QUEST',
+    titleKO: 'KCON 공식 굿즈 구매 인증', titleEN: '', titleJA: '',
+    imageUrl: '/sq/ep/2101.jpg',
+    rewardEntryTicket: 6, rewardFanPoint: 120, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 1280, completedMembers: 1180,
+    completedType: 'ADMIN_APPROVAL', fanQuestId: 7 },
+
+  // ── Story 22: iKON CLOSED — 추억 트리비아 (ST)
+  { id: 2201, storyQuestId: 22, order: 1, type: 'SURVIVAL_TRIVIA',
+    titleKO: 'KCON 2025 종합 추억 트리비아 10회 정답',
+    titleEN: 'KCON 2025 Memory Trivia — 10 Correct',
+    titleJA: 'KCON 2025 思い出トリビア10回正解',
+    imageUrl: '/sq/ep/2201.jpg',
+    rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 1120, completedMembers: 980,
+    completedType: 'TRIVIA_CORRECT_COUNT', completedValue: 10, sourceRefName: 'ST #14 iKON 디스코그래피 마스터 퀴즈' },
+
+  // ── Story 23: CELEBUS DRAFT — 운영진 OX 퀴즈 (PM + ST)
+  { id: 2301, storyQuestId: 23, order: 1, type: 'PREDICTION_MARKET',
+    titleKO: '플랫폼 다음 캠페인 주제 예측 (작성 중)',
+    titleEN: "Predict Platform's Next Campaign Topic (Draft)",
+    titleJA: 'プラットフォーム次のキャンペーンテーマ予測(作成中)',
+    imageUrl: '/sq/ep/2301.jpg',
+    rewardEntryTicket: 5, rewardFanPoint: 100, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 0, completedMembers: 0,
+    completedType: 'PM_PARTICIPATION', sourceRefName: 'PM #37 CELEBUS 1주년 다음 캠페인 주제' },
+  { id: 2302, storyQuestId: 23, order: 2, type: 'SURVIVAL_TRIVIA',
+    titleKO: 'CELEBUS 운영진 OX 퀴즈 5회 정답',
+    titleEN: 'CELEBUS Staff OX Quiz — 5 Correct',
+    titleJA: 'CELEBUS運営陣OXクイズ5回正解',
+    imageUrl: '/sq/ep/2302.jpg',
+    rewardEntryTicket: 5, rewardFanPoint: 100, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 0, completedMembers: 0,
+    completedType: 'TRIVIA_CORRECT_COUNT', completedValue: 5, sourceRefName: 'ST #15 CELEBUS 운영진 OX 퀴즈' },
+
+  // ── Story 24: CELEBUS DRAFT — 응원 메시지 (ST)
+  { id: 2401, storyQuestId: 24, order: 1, type: 'SURVIVAL_TRIVIA',
+    titleKO: 'CELEBUS 1주년 추억 트리비아 (작성 중)',
+    titleEN: 'CELEBUS 1st Anniversary Memory Trivia (Draft)',
+    titleJA: 'CELEBUS 1周年思い出トリビア(作成中)',
+    imageUrl: '/sq/ep/2401.jpg',
+    rewardEntryTicket: 5, rewardFanPoint: 100, biveRewardYn: false, mintingEventId: null, mintingEventName: null,
+    repeat: false, inProgressMembers: 0, completedMembers: 0,
+    completedType: 'TRIVIA_PARTICIPATION', sourceRefName: 'ST #15 CELEBUS 운영진 OX 퀴즈' },
+];
+
+// ============================================================
+// 헬퍼 함수 — v2.3에서 시그니처 유지 (화면 코드 의존성 보호)
+// ============================================================
+
+export function getStoryQuestById(id: number): StoryQuest | undefined {
+  return storyQuests.find((s) => s.id === id);
+}
 
 export function getGroupById(id: number): EpisodeGroup | undefined {
   return episodeGroups.find((g) => g.id === id);
@@ -522,7 +977,6 @@ export function getEpisodesByGroupId(groupId: number): StoryQuest[] {
     .sort((a, b) => a.displayOrder - b.displayOrder);
 }
 
-// v1.6 신규 — 메인/반복 분리 조회
 export function getMainEpisodesByGroupId(groupId: number): StoryQuest[] {
   return storyQuests
     .filter((s) => s.groupId === groupId && s.episodeKind === 'MAIN')
@@ -541,7 +995,6 @@ export function canAddRepeatEpisode(groupId: number): boolean {
   return getRepeatEpisodeByGroupId(groupId) === undefined;
 }
 
-// ACTIVE 제한 검증: 해당 아티스트에 이미 ACTIVE 그룹이 있는지 (현재 그룹 제외)
 export function hasActiveGroupForArtist(artist: ArtistGroup, excludeGroupId?: number): boolean {
   return episodeGroups.some(
     (g) => g.artistGroup === artist && g.status === 'ACTIVE' && g.id !== excludeGroupId,
@@ -555,70 +1008,26 @@ export const groupStats = {
   closed: episodeGroups.filter((g) => g.status === 'CLOSED').length,
 };
 
-// EPISODE_DATA — 운영 용어상 "미션" (ERD: `story_quest_chapter`). 에피소드(상위)당 최대 10개.
-// v2.2: 완료 조건 필드(completedType / sourceRefName / completedValue / repeatCycle / openDt / closeDt)를 직접 흡수.
-// 정책: 1개 FQ Quest는 1개 미션에만 매핑된다 (CHAPTER_FAN_QUEST_ASSIGNMENT 참조).
-const EPISODE_DATA: Omit<StoryEpisode, 'storyQuestId'>[] = [
-  { id: 101, order: 1, type: 'FAN_QUEST', titleKO: '미션 1: 첫 만남 — 데뷔 인증샷 공유', titleEN: '', titleJA: '', imageUrl: '/sq/ep1.jpg', rewardEntryTicket: 5, rewardFanPoint: 100, biveRewardYn: true, mintingEventId: 23, mintingEventName: 'V01D Welcome ED', repeat: false, inProgressMembers: 234, completedMembers: 234, completedType: 'ADMIN_APPROVAL' },
-  { id: 102, order: 2, type: 'PREDICTION_MARKET', titleKO: '미션 2: 무대 뒤 — 다음 활동 예측', titleEN: '', titleJA: '', imageUrl: '/sq/ep2.jpg', rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: false, inProgressMembers: 220, completedMembers: 195, completedType: 'PM_PARTICIPATION', sourceRefName: 'PM #34 — 다음 컴백 시점' },
-  { id: 103, order: 3, type: 'SURVIVAL_TRIVIA', titleKO: '미션 3: 데뷔곡 퀴즈', titleEN: '', titleJA: '', imageUrl: '/sq/ep3.jpg', rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: true, mintingEventId: 24, mintingEventName: 'V01D Trivia Master', repeat: false, inProgressMembers: 200, completedMembers: 178, completedType: 'TRIVIA_CORRECT_COUNT', completedValue: 7, sourceRefName: 'ST #12 데뷔곡 가사 퀴즈' },
-  { id: 104, order: 4, type: 'FAN_QUEST', titleKO: '미션 4: 응원 메시지', titleEN: '', titleJA: '', imageUrl: '/sq/ep4.jpg', rewardEntryTicket: 6, rewardFanPoint: 120, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: true, inProgressMembers: 150, completedMembers: 90, completedType: 'ADMIN_APPROVAL', repeatCycle: 'MONTHLY' },
-  { id: 105, order: 5, type: 'FAN_QUEST', titleKO: '미션 5: 멤버 응원 SNS', titleEN: '', titleJA: '', imageUrl: '/sq/ep5.jpg', rewardEntryTicket: 7, rewardFanPoint: 130, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: false, inProgressMembers: 120, completedMembers: 75, completedType: 'ADMIN_APPROVAL' },
-  { id: 106, order: 6, type: 'PREDICTION_MARKET', titleKO: '미션 6: 컴백 무대 예측', titleEN: '', titleJA: '', imageUrl: '/sq/ep6.jpg', rewardEntryTicket: 12, rewardFanPoint: 220, biveRewardYn: true, mintingEventId: 26, mintingEventName: 'V01D Prophet', repeat: false, inProgressMembers: 90, completedMembers: 55, completedType: 'PM_CORRECT', sourceRefName: 'PM #35 컴백 앨범 1위 적중' },
-  { id: 107, order: 7, type: 'SURVIVAL_TRIVIA', titleKO: '미션 7: 멤버 MBTI 퀴즈', titleEN: '', titleJA: '', imageUrl: '/sq/ep7.jpg', rewardEntryTicket: 9, rewardFanPoint: 160, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: true, inProgressMembers: 70, completedMembers: 40, completedType: 'TRIVIA_PARTICIPATION', sourceRefName: 'ST #13 MBTI 시리즈', repeatCycle: 'WEEKLY' },
-  { id: 108, order: 8, type: 'FAN_QUEST', titleKO: '미션 8: 데뷔 100일 축전', titleEN: '', titleJA: '', imageUrl: '/sq/ep8.jpg', rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: true, mintingEventId: 27, mintingEventName: 'V01D 100 Days', repeat: false, inProgressMembers: 45, completedMembers: 22, completedType: 'ADMIN_APPROVAL' },
-  { id: 109, order: 9, type: 'FAN_QUEST', titleKO: '미션 9: 콘서트 추억 공유', titleEN: '', titleJA: '', imageUrl: '/sq/ep9.jpg', rewardEntryTicket: 10, rewardFanPoint: 180, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: false, inProgressMembers: 30, completedMembers: 10, completedType: 'ADMIN_APPROVAL' },
-  { id: 110, order: 10, type: 'FAN_QUEST', titleKO: '미션 10: 최종 — 팬덤 대모험', titleEN: '', titleJA: '', imageUrl: '/sq/ep10.jpg', rewardEntryTicket: 20, rewardFanPoint: 500, biveRewardYn: true, mintingEventId: 25, mintingEventName: 'V01D Final Boss', repeat: false, inProgressMembers: 0, completedMembers: 0, completedType: 'ADMIN_APPROVAL' },
-];
-
-// chapter id (storyId*100 + order) ↔ fanquest id — 1:1 unique
-// 한 fanquest는 정확히 하나의 chapter에만 묶일 수 있다 (운영 정책).
-const CHAPTER_FAN_QUEST_ASSIGNMENT: Record<number, number> = {
-  101: 1,   // story 1 ch1 (V01D #1 메인1) → GUESS JOURNEY (일반)
-  104: 10,  // story 1 ch4                → TikTok 팔로우 (반복 일간)
-  105: 2,   // story 1 ch5                → 인스타 응원 (반복 주간)
-  204: 3,   // story 2 ch4 (V01D #1 메인2) → X 응원 (반복 주간)
-  401: 4,   // story 4 ch1 (V01D #1 메인4) → 인스타 래플 (일반)
-  504: 5,   // story 5 ch4 (V01D #1 메인5) → X 래플 (일반)
-  1301: 12, // story 13 ch1 (V01D #0 메인5, CLOSED 그룹) → 송유찬 (종료)
-};
-
 export function getEpisodesByStoryId(storyId: number): StoryEpisode[] {
-  const story = getStoryQuestById(storyId);
-  if (!story) return [];
-  return EPISODE_DATA.slice(0, story.episodeCount).map((c, i) => {
-    const epId = storyId * 100 + i + 1;
-    return {
-      ...c,
-      id: epId,
-      storyQuestId: storyId,
-      fanQuestId: c.type === 'FAN_QUEST' ? CHAPTER_FAN_QUEST_ASSIGNMENT[epId] : undefined,
-    };
-  });
+  return storyEpisodes
+    .filter((e) => e.storyQuestId === storyId)
+    .sort((a, b) => a.order - b.order);
 }
 
 export function getEpisodeById(epId: number): StoryEpisode | undefined {
-  // epId = storyId * 100 + order — 역산하여 매핑
-  const storyId = Math.floor(epId / 100);
-  const order = epId % 100;
-  const story = getStoryQuestById(storyId);
-  if (!story || order < 1 || order > story.episodeCount) return undefined;
-  const tpl = EPISODE_DATA[order - 1];
-  if (!tpl) return undefined;
-  return {
-    ...tpl,
-    id: epId,
-    storyQuestId: storyId,
-    fanQuestId: tpl.type === 'FAN_QUEST' ? CHAPTER_FAN_QUEST_ASSIGNMENT[epId] : undefined,
-  };
+  return storyEpisodes.find((e) => e.id === epId);
 }
 
 /**
- * SQ Quest 생성 화면에서 사용 — 이미 다른 chapter에 묶여 있는 fanquest는 드롭다운에서 제외해야 함.
+ * SQ 미션 추가 화면에서 사용 — 이미 다른 미션에 묶여 있는 fanquest는 드롭다운에서 제외해야 함.
  * @returns 현재 묶인 fanQuestId 집합
  */
 export function getAssignedFanQuestIds(): Set<number> {
-  return new Set(Object.values(CHAPTER_FAN_QUEST_ASSIGNMENT));
+  return new Set(
+    storyEpisodes
+      .filter((e) => e.type === 'FAN_QUEST' && e.fanQuestId != null)
+      .map((e) => e.fanQuestId!),
+  );
 }
 
 export const storyStats = {
@@ -630,7 +1039,7 @@ export const storyStats = {
 };
 
 // ============================================================
-// 퀘스트 추가 화면용 — 외부 콘텐츠(FanQuest / PM / ST) 참조 리스트
+// 미션 추가 화면용 — 외부 콘텐츠(FanQuest / PM / ST) 참조 리스트
 // 에피소드 그룹의 아티스트로 필터링하여 사용
 // ============================================================
 
@@ -639,12 +1048,9 @@ export interface ExternalContent {
   title: string;
   artistGroup: ArtistGroup;
   status: '진행중' | '예정' | '종료';
-  /** v1.6 신규 — 팬퀘스트의 반복 설정 (REPEAT 에피소드 필터링용) */
   repeat: boolean;
 }
 
-// 팬퀘스트 — fanquest.ts의 데이터를 SQ 영역에서도 참조용으로 노출
-// repeat=true: 반복 가능한 팬퀘스트 (월간/주간 인증류) — REPEAT 에피소드에서 사용
 const FAN_QUESTS: ExternalContent[] = [
   { id: 1, title: "V01D 'GUESS JOURNEY #01 SETLIST' 이벤트 참여 인증", artistGroup: 'V01D', status: '진행중', repeat: false },
   { id: 2, title: "인스타에서 V01D 'journey #01' 응원하기", artistGroup: 'V01D', status: '진행중', repeat: true },
@@ -659,7 +1065,6 @@ const FAN_QUESTS: ExternalContent[] = [
   { id: 20, title: 'CELEBUS 1주년 기념 응원 메시지', artistGroup: 'CELEBUS', status: '진행중', repeat: false },
 ];
 
-// PM(Prediction Market) — 운영 휴면이지만 mock 시연용
 const PREDICTION_MARKETS: ExternalContent[] = [
   { id: 34, title: 'V01D 다음 컴백 시점 예측', artistGroup: 'V01D', status: '진행중', repeat: false },
   { id: 35, title: 'V01D 신규 멤버 발표 시점 예측', artistGroup: 'V01D', status: '예정', repeat: false },
@@ -667,7 +1072,6 @@ const PREDICTION_MARKETS: ExternalContent[] = [
   { id: 37, title: 'CELEBUS 1주년 다음 캠페인 주제', artistGroup: 'CELEBUS', status: '예정', repeat: false },
 ];
 
-// ST(Survival Trivia) — 운영 휴면이지만 mock 시연용
 const SURVIVAL_TRIVIA: ExternalContent[] = [
   { id: 12, title: 'V01D 데뷔곡 가사 퀴즈', artistGroup: 'V01D', status: '진행중', repeat: false },
   { id: 13, title: 'V01D 멤버 MBTI 퀴즈', artistGroup: 'V01D', status: '예정', repeat: false },
@@ -679,7 +1083,6 @@ export function getFanQuestsByArtist(artist: ArtistGroup): ExternalContent[] {
   return FAN_QUESTS.filter((q) => q.artistGroup === artist);
 }
 
-// v1.6 신규 — REPEAT 에피소드에서만 노출 (반복 설정된 팬퀘스트만)
 export function getRepeatFanQuestsByArtist(artist: ArtistGroup): ExternalContent[] {
   return FAN_QUESTS.filter((q) => q.artistGroup === artist && q.repeat);
 }

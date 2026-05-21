@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.7</td></tr>
+<tr><td>버전</td><td>v3.8</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,7 +96,7 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v3.7</strong> (미션 수정 상태별 잠금 정책 강화 — 진행중+팬퀘스트 진입 차단 / 진행중+PM/ST 다국어만 / 종료 진입 차단. [CEB-BO-SQ-204-EDIT] v1.1 정합)</p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v3.8</strong> (mock 데이터 풀 개선 + 가이드 명세 신규 — K-pop 시즌 스토리텔링 + 정책 매트릭스 6조합 100% 커버. [CEB-BO-SQ-MOCK-GUIDE] v1.0 신규)</p>
 <p>본 문서는 사이드바 "에피소드" 그룹 전체를 다룬다. 화면별 상세 명세는 [CEB-BO-SQ-FLOW] 및 각 화면 문서 참조.</p>
 </blockquote>
 <h2>1. 영역 개요</h2>
@@ -165,6 +165,7 @@ p {
 <tr><td>(모달)</td><td>반려사유 추가 (구 FQ-101-MD-ADD)</td><td>[CEB-BO-SQ-501-MD-ADD]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
 <tr><td>(모달)</td><td>반려사유 수정 (구 FQ-101-MD-EDIT)</td><td>[CEB-BO-SQ-501-MD-EDIT]</td><td>✅ v1.0 (v3.1 신규)</td></tr>
 <tr><td>(통합 플로우 문서)</td><td>에피소드 영역 플로우 및 로직</td><td>[CEB-BO-SQ-FLOW]</td><td>✅ v3.2</td></tr>
+<tr><td>(참조 가이드)</td><td>mock 데이터 가이드 (v3.8 신규)</td><td>[CEB-BO-SQ-MOCK-GUIDE]</td><td>✅ v1.0</td></tr>
 </table>
 <h3>4-2. 폐지된 화면 (이력 보존)</h3>
 <table>
@@ -257,7 +258,8 @@ p {
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v3.7</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>미션 수정 상태별 잠금 정책 강화 (사용자 정정 반영)</strong> ① §5 "미션 수정 상태별 잠금" 정책 상수 재작성 — 부모 에피소드 상태 + 미션 유형 매트릭스로 확장 (4분기) ② <strong>진행중 + 팬퀘스트</strong>: 미션 상세 [수정하기] 비활성 (EDIT 진입 차단). 직접 URL 진입 시 전체 read-only 방어 ③ <strong>진행중 + PM/ST</strong>: 다국어 타이틀(KO·EN·JA)만 수정 가능, 판정·보상·반복 모두 read-only (v3.6의 "보상만 read-only" → 강화) ④ <strong>종료 + 전 유형</strong>: 미션 상세 [수정하기] 비활성 (v3.6의 "진입 후 전체 read-only" → 진입 차단으로 UX 일관화) ⑤ [CEB-BO-SQ-204-EDIT] v1.1·[CEB-BO-SQ-204] v3.4·[CEB-BO-SQ-FLOW] v3.7 동시 정합</td></tr>
+<tr><td><strong>v3.8</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>SQ mock 데이터 풀 개선 + 가이드 명세 신규 (사용자 피드백 반영)</strong> ① <code>prototype/src/mock/sq.ts</code> 전면 재작성 — 그룹 3→6건 (V01D 3 + iKON 2 + CELEBUS 1), 에피소드 14→24건, 미션 10→40건 ② K-pop 시즌 스토리텔링으로 모든 타이틀 재작성 — "V01D 에피소드 #1" → "V01D — JOURNEY #01 컴백 시즌" 등 ③ 정책 매트릭스 6조합(DRAFT/ACTIVE/CLOSED × 팬퀘스트/PM/ST) 100% 커버 — SQ-204-EDIT v1.1 정책 검증 시각 가능 ④ PM/ST 미션 22건 다국어 titleEN/titleJA 100% 입력 (본 §5 다국어 필수 정합) ⑤ 반복 주기 DAILY/WEEKLY/MONTHLY 3종 실장 ⑥ <code>EPISODE_DATA</code> 단일 템플릿 폐기 → <code>storyEpisodes</code> 직접 정의 배열 ⑦ §4 화면 인벤토리에 [CEB-BO-SQ-MOCK-GUIDE] v1.0 참조 가이드 행 추가. [CEB-BO-SQ-MOCK-GUIDE] v1.0 동시 신규</td></tr>
+<tr><td>v3.7</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>미션 수정 상태별 잠금 정책 강화 (사용자 정정 반영)</strong> ① §5 "미션 수정 상태별 잠금" 정책 상수 재작성 — 부모 에피소드 상태 + 미션 유형 매트릭스로 확장 (4분기) ② <strong>진행중 + 팬퀘스트</strong>: 미션 상세 [수정하기] 비활성 (EDIT 진입 차단). 직접 URL 진입 시 전체 read-only 방어 ③ <strong>진행중 + PM/ST</strong>: 다국어 타이틀(KO·EN·JA)만 수정 가능, 판정·보상·반복 모두 read-only (v3.6의 "보상만 read-only" → 강화) ④ <strong>종료 + 전 유형</strong>: 미션 상세 [수정하기] 비활성 (v3.6의 "진입 후 전체 read-only" → 진입 차단으로 UX 일관화) ⑤ [CEB-BO-SQ-204-EDIT] v1.1·[CEB-BO-SQ-204] v3.4·[CEB-BO-SQ-FLOW] v3.7 동시 정합</td></tr>
 <tr><td>v3.6</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>미션 수정 정책 표준화 — [CEB-BO-SQ-204-EDIT] v1.0 신규 정합</strong> ① §5 정책 상수에 "미션 수정 상태별 잠금" 행 신규 — 부모 에피소드 상태별 잠금 (임시저장=전체 수정 / 진행중=보상 read-only 회원 기대권 보호 / 종료=전체 read-only + [저장] 비활성). [CEB-BO-SQ-202-EDIT] 진행중 잠금 원칙 차용 ② §5 정책 상수에 "미션 수정 — 유형·팬퀘스트 매핑 변경 불가" 행 신규 — 변경 시 미션 삭제 후 재생성. 팬퀘스트 유형 미션은 타이틀·보상 read-only, 미션 고유 메타만 수정 가능 ③ [CEB-BO-SQ-204] v3.3·[CEB-BO-SQ-FLOW] v3.6 동시 정합</td></tr>
 <tr><td>v3.5</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>PM/ST 미션 다국어 타이틀 검증 정정 — KO·EN·JA 3종 모두 필수 (사용자 정정 반영)</strong> — v3.4에서 "KO 필수 + EN/JA 선택"으로 디폴트 적었으나 사용자 정정: 본 §5 "다국어 필수 — 한국어/영어/일본어 3개 언어 모두 입력 필수" 표준에 통일. §5 정책 상수 "PM/ST 미션 다국어 타이틀" 행 정정. [CEB-BO-SQ-204-CREATE] v3.3·[CEB-BO-SQ-FLOW] v3.5 동시 정합</td></tr>
 <tr><td>v3.4</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>PM/ST 미션 다국어 타이틀 정책 신규 (사용자 피드백 반영)</strong> — §5 정책 상수에 "PM/ST 미션 다국어 타이틀: KO/EN/JP 3종, 각 50자. KO 필수 + EN/JA 선택 (저장 시점). 게시는 부모 에피소드 검증으로 일괄. 팬퀘스트는 매핑 팬퀘스트 타이틀 자동 상속" 행 추가. 데이터 모델(<code>StoryEpisode.titleEN</code>·<code>titleJA</code> 신규) + 프로토타입(SQ-204-CREATE PM/ST 분기 LangField 입력) + 명세 SQ-204-CREATE v3.2·SQ-FLOW v3.4 동시 정정</td></tr>
