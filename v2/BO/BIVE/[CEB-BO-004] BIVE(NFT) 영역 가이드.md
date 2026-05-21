@@ -10,7 +10,7 @@
 | 개발담당자 |  |
 | 기능영역(Epic) | BIVE — NFT 발행·민팅·혜택 |
 | 상태 | Draft |
-| 버전 | v1.0 |
+| 버전 | v1.1 |
 | 최근 업데이트 | 2026.05.21 |
 | API |  |
 | 피그마 링크 |  |
@@ -20,7 +20,7 @@
 
 ---
 
-> 작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: **v1.0** (신규 — v1 BIVE Confluence 33건을 v2 표준 양식으로 이전. 영역 가이드 + 메뉴별 메인 4건 + 플로우 = 6건 1차 작성)
+> 작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: **v1.1** (2차 명세 10건 추가 작성 정합 — 에디션/BIVE/캠페인/혜택 CREATE/EDIT/상세/모달 통합)
 > 영역 경로: `/bive/*` · 사이드바: BIVE
 
 ## 1. 영역 개요
@@ -79,45 +79,38 @@ BIVE
 
 ## 4. 화면 인벤토리
 
-### 4-1. v2 1차 작성 (6건)
+### 4-1. v2 작성 완료 (16건 — 1차 6 + 2차 10)
 
 | 라우트 | 운영 화면명 | 문서 ID | 상태 |
 |---|---|---|---|
-| /bive/editions | 에디션 리스트 | [CEB-BO-BIVE-101] | ✅ v1.0 (v3.0 신규) |
-| /bive/editions/{id} | BIVE 관리 (에디션 하위) | [CEB-BO-BIVE-102] | ✅ v1.0 (v3.0 신규) |
-| /bive/minting | 민팅 캠페인 리스트 | [CEB-BO-BIVE-103] | ✅ v1.0 (v3.0 신규) |
-| /bive/benefits | 혜택 리스트 | [CEB-BO-BIVE-104] | ✅ v1.0 (v3.0 신규) |
-| (통합 플로우 문서) | BIVE 영역 플로우 및 로직 | [CEB-BO-BIVE-FLOW] | ✅ v1.0 |
-| (참조 가이드) | BIVE(NFT) 영역 가이드 | [CEB-BO-004] | ✅ v1.0 |
+| /bive/editions | 에디션 리스트 | [CEB-BO-BIVE-101] | ✅ v1.0 (1차) |
+| (모달) | 에디션 생성 모달 | [CEB-BO-BIVE-201-CREATE] | ✅ v1.0 (2차) |
+| (모달) | 에디션 수정/삭제 모달 | [CEB-BO-BIVE-201-EDIT] | ✅ v1.0 (2차) |
+| /bive/editions/{id} | BIVE 관리 (에디션 하위) | [CEB-BO-BIVE-102] | ✅ v1.0 (1차) |
+| /bive/editions/{id}/bive/create | BIVE 등록 (2탭) | [CEB-BO-BIVE-202-CREATE] | ✅ v1.0 (2차) |
+| /bive/editions/{id}/bive/{biveId} | BIVE 상세 (4탭) | [CEB-BO-BIVE-202] | ✅ v1.0 (2차) |
+| /bive/minting | 민팅 캠페인 리스트 (4탭) | [CEB-BO-BIVE-103] | ✅ v1.0 (1차) |
+| /bive/minting/{type}/{id} | 민팅 캠페인 상세 (3탭) | [CEB-BO-BIVE-203] | ✅ v1.0 (2차) |
+| /bive/minting/{type}/create | 민팅 캠페인 생성 (2탭) | [CEB-BO-BIVE-203-CREATE] | ✅ v1.0 (2차) |
+| (모달) | BIVE 보상 추가 모달 | [CEB-BO-BIVE-203-MD-ADD] | ✅ v1.0 (2차) |
+| /bive/benefits | 혜택 리스트 (2탭) | [CEB-BO-BIVE-104] | ✅ v1.0 (1차) |
+| /bive/benefits/{type}/{id} | 혜택 상세 (2탭) | [CEB-BO-BIVE-204] | ✅ v1.0 (2차) |
+| /bive/benefits/{type}/create | 혜택 생성 (2탭) | [CEB-BO-BIVE-204-CREATE] | ✅ v1.0 (2차) |
+| (모달) | BIVE 추가 모달 | [CEB-BO-BIVE-204-MD-ADD] | ✅ v1.0 (2차) |
+| (통합 플로우 문서) | BIVE 영역 플로우 및 로직 | [CEB-BO-BIVE-FLOW] | ✅ v1.0 (1차) |
+| (참조 가이드) | BIVE(NFT) 영역 가이드 | [CEB-BO-004] | ✅ v1.1 |
 
-### 4-2. v2 후속 작성 예정 (27건 — v1 ID 매핑)
+### 4-2. v1 → v2 매핑 (v2 통합 결과)
 
-| v1 ID | v2 ID (예정) | 화면명 | 종류 |
-|---|---|---|---|
-| PJ-102 | [CEB-BO-BIVE-201-CREATE] | 에디션 생성 모달 | 모달 |
-| PJ-103 | [CEB-BO-BIVE-201-EDIT] | 에디션 수정/삭제 모달 | 모달 |
-| B-201+202 | [CEB-BO-BIVE-202-CREATE] | BIVE 등록 (기본정보·기능설정 2탭) | Page |
-| B-301+302 | [CEB-BO-BIVE-202] | BIVE 상세 (기본정보·기능설정) | Page |
-| B-303 | [CEB-BO-BIVE-202] (탭) | BIVE 상세 (민팅관리 탭) | Tab |
-| B-304 | [CEB-BO-BIVE-202] (탭) | BIVE 상세 (민팅이력 탭) | Tab |
-| Mint-102 | [CEB-BO-BIVE-203] | Event 캠페인 상세 (기본정보) | Page |
-| Mint-103 | [CEB-BO-BIVE-203] (탭) | Event 캠페인 상세 (BIVE 보상 탭) | Tab |
-| Mint-104 | [CEB-BO-BIVE-203-CREATE] | Event 캠페인 생성 (기본정보) | Page |
-| Mint-105 | [CEB-BO-BIVE-203-CREATE] (탭) | Event 캠페인 생성 (BIVE 보상 탭) | Tab |
-| Mint-106 | [CEB-BO-BIVE-203] (탭) | Event 캠페인 상세 (보상내역 탭) | Tab |
-| Mint-500 | [CEB-BO-BIVE-203-MD-ADD] | BIVE 보상 추가 모달 | 모달 |
-| Mint-201 | [CEB-BO-BIVE-103] (탭) | Ticket 캠페인 리스트 | Tab |
-| Mint-202~206 | [CEB-BO-BIVE-203] / [CEB-BO-BIVE-203-CREATE] (Ticket 변형) | Ticket 캠페인 상세·생성·보상·내역 | Page/Tab |
-| Perks-102 | [CEB-BO-BIVE-204] | BP 혜택 상세 (기본정보) | Page |
-| Perks-103 | [CEB-BO-BIVE-204] (탭) | BP 혜택 상세 (BIVE 추가 탭) | Tab |
-| Perks-104 | [CEB-BO-BIVE-204-CREATE] | BP 혜택 생성 (기본정보) | Page |
-| Perks-105 | [CEB-BO-BIVE-204-CREATE] (탭) | BP 혜택 생성 (BIVE 추가 탭) | Tab |
-| Perks-106 | [CEB-BO-BIVE-204-MD-ADD] | BIVE 추가 모달 | 모달 |
-| Perks-201 | [CEB-BO-BIVE-104] (탭) | Raffle Ticket 혜택 리스트 | Tab |
-| Perks-202~205 | [CEB-BO-BIVE-204] / [CEB-BO-BIVE-204-CREATE] (RT 변형) | RT 혜택 상세·생성 | Page/Tab |
-| PJ-101·B-101·Mint-101·Perks-101 | (1차 작성 완료) | — | — |
+v1 33건이 v2 16건의 통합 명세에 매핑됨 (Event/Ticket → 4탭 단일 페이지, BP/RT → 2탭 단일 페이지, 4탭 BIVE 상세 등). 상세 매핑표는 L4 매트릭스 `v2/sync-matrix/CEB-BO-004-BIVE.md` 참조.
 
-### 4-3. 화면 ID 번호 규칙 (v2 표준)
+### 4-3. v2 후속 작성 예정 (별도)
+
+- BIVE mock 데이터 + [CEB-BO-BIVE-MOCK-GUIDE] 가이드 명세 (mock 작성 후)
+- SQ mock의 `mintingEventName` 6종이 BIVE-103 활성 캠페인 마스터와 정합 검증·정정
+- 운영 BO 실제 화면 캡처 기반 정정 (별도 자료 수집 후)
+
+### 4-4. 화면 ID 번호 규칙 (v2 표준)
 
 | 번호 | 용도 |
 |---|---|
@@ -237,7 +230,8 @@ Draft(초안) → Active(활성) → Inactive(비활성)
 
 | 버전 | 일자 | 작성자 | 변경 |
 |---|---|---|---|
-| **v1.0** | **2026-05-21** | **@Nill Yoo** | **신규 작성 — v1 BIVE Confluence 33건을 v2 표준 양식으로 1차 이전** ① 영역 가이드 [CEB-BO-004] 신규 — §1~§10 표준 양식. v1 화면 인벤토리 + v2 매핑표 + 정책 상수 + 4종 상태 머신 ② 메뉴별 메인 4건 신규 — [CEB-BO-BIVE-101] 에디션 리스트 / [102] BIVE 관리 / [103] 민팅 캠페인 리스트 / [104] 혜택 리스트 ③ 플로우 [CEB-BO-BIVE-FLOW] 신규 — 자동 민팅 트리거 + 혜택 자동 지급 배치 + 상태 전환 매트릭스 ④ 도메인 용어 v2 표준 정립 — 에디션 / BIVE / 민팅 캠페인 (v1 "Event/Ticket/Mix/Pick" 4유형 유지) / 혜택 (BP/RT) / 자동 민팅 / 가중치·비중 ⑤ SQ/RFL/FQ 영역과의 연동 정합 — 본 영역이 민팅 캠페인 SSOT (외부 영역은 활성 캠페인 참조만) ⑥ 권한 정책 일원화 — v1의 4단계 권한 매트릭스를 "[관리자 > 권한관리] 설정에 따른다" 단일 표기로 통합 ⑦ 후속 작업: 27건 v1 → v2 ID 매핑표만 §4-2에 등록 (실제 명세 후속) |
+| **v1.1** | **2026-05-21** | **@Nill Yoo** | **2차 명세 10건 추가 작성 정합** ① §4-1 화면 인벤토리에 2차 10건 추가 — [201-CREATE] 에디션 생성 모달 / [201-EDIT] 에디션 수정/삭제 모달 / [202-CREATE] BIVE 등록 2탭 / [202] BIVE 상세 4탭 / [203] 민팅 캠페인 상세 3탭 / [203-CREATE] 캠페인 생성 2탭 / [203-MD-ADD] BIVE 보상 추가 모달 / [204] 혜택 상세 2탭 / [204-CREATE] 혜택 생성 2탭 / [204-MD-ADD] BIVE 추가 모달 ② §4-2 → "v1 → v2 매핑" 간단 표기로 정리 (상세는 L4 매트릭스 참조) ③ §4-3 후속 작성 예정 (mock + SQ 정합)으로 재구성 ④ §4-3 → §4-4 번호 시프트 (화면 ID 번호 규칙) ⑤ v1 33건 → v2 16건 통합 결과 명시 (Event/Ticket 4탭, BP/RT 2탭, BIVE 4탭 등 통합) |
+| v1.0 | 2026-05-21 | @Nill Yoo | **신규 작성 — v1 BIVE Confluence 33건을 v2 표준 양식으로 1차 이전** ① 영역 가이드 [CEB-BO-004] 신규 — §1~§10 표준 양식. v1 화면 인벤토리 + v2 매핑표 + 정책 상수 + 4종 상태 머신 ② 메뉴별 메인 4건 신규 — [CEB-BO-BIVE-101] 에디션 리스트 / [102] BIVE 관리 / [103] 민팅 캠페인 리스트 / [104] 혜택 리스트 ③ 플로우 [CEB-BO-BIVE-FLOW] 신규 — 자동 민팅 트리거 + 혜택 자동 지급 배치 + 상태 전환 매트릭스 ④ 도메인 용어 v2 표준 정립 — 에디션 / BIVE / 민팅 캠페인 (v1 "Event/Ticket/Mix/Pick" 4유형 유지) / 혜택 (BP/RT) / 자동 민팅 / 가중치·비중 ⑤ SQ/RFL/FQ 영역과의 연동 정합 — 본 영역이 민팅 캠페인 SSOT (외부 영역은 활성 캠페인 참조만) ⑥ 권한 정책 일원화 — v1의 4단계 권한 매트릭스를 "[관리자 > 권한관리] 설정에 따른다" 단일 표기로 통합 ⑦ 후속 작업: 27건 v1 → v2 ID 매핑표만 §4-2에 등록 (실제 명세 후속) |
 
 ## 10. 관련 문서
 

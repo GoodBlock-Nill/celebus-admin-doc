@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-BIVE-202] BIVE 상세</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-BIVE-202] BIVE 상세</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-BIVE-202</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>BIVE — 에디션·BIVE</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > BIVE > 에디션 관리 > BIVE 관리 > BIVE 상세</td></tr>
+<tr><td>비고</td><td>v1 [CEB-BO-BIVE-B-301+302] 기본·기능 + [B-303] 민팅관리 + [B-304] 민팅이력 4탭 통합</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v1.0</strong> (v1 B-301~304 4탭 통합 v2 이전. 상태별 잠금·삭제·활성/비활성 정책 포함)</p>
+<p>화면 경로: <code>/bive/editions/{editionId}/bive/{biveId}</code> · Breadcrumb: <code>홈 › BIVE › 에디션 관리 › {에디션명} › BIVE 상세</code></p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>특정 <strong>BIVE</strong>의 기본 메타·기능 설정·연결 캠페인·민팅 이력을 4개 탭으로 조회·수정한다. 상태(Draft/Active/Inactive)에 따라 헤더 액션과 필드 잠금이 분기된다. BIVE 명칭은 <code>{멤버명} {등급}-{등급번호}</code> 자동 생성.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/bive/editions/{editionId}/bive/{biveId}</code></td></tr>
+<tr><td>Breadcrumb</td><td>홈 / BIVE / 에디션 관리 / {에디션명} / BIVE 상세</td></tr>
+<tr><td>페이지 제목</td><td><code>{BIVE 명칭}</code> (예: "하시모토 칸나 Normal-001")</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-BIVE-102] BIVE 관리의 행 클릭</td></tr>
+<tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더 (상태별 액션 분기)</h3>
+<ul>
+<li>좌측: 탭 네비게이션 "기본정보 | 기능설정 | 민팅관리 | 민팅이력"</li>
+<li>우측 액션 (상태별 분기):</li>
+</ul>
+<table>
+<tr><th>상태</th><th>헤더 액션</th></tr>
+<tr><td><strong>Draft (초안)</strong></td><td>[삭제] (BIVE 삭제 모달) + [저장] (저장 토스트) + [활성화] (활성화 모달)</td></tr>
+<tr><td><strong>Active (활성)</strong></td><td>[비활성화] (조건부)</td></tr>
+<tr><td><strong>Inactive (비활성)</strong></td><td>[활성화]</td></tr>
+</table>
+<h3>2-2. 기본정보 탭 (Draft에서 수정 가능, Active/Inactive에서 read-only)</h3>
+<ul>
+<li><strong>BIVE 명칭</strong> (Read-only): <code>{멤버명} {등급}-{등급번호}</code> 자동 생성/갱신</li>
+<li>나머지 필드는 [CEB-BO-BIVE-202-CREATE] 등록 화면과 동일 (아티스트·멤버·등급·등급번호·설명·미디어)</li>
+</ul>
+<p><strong>관리 정보 카드</strong> (우측 하단):</p>
+<table>
+<tr><th>라벨</th><th>값</th></tr>
+<tr><td>상태</td><td>Draft / Active / Inactive 배지</td></tr>
+<tr><td>생성 관리자</td><td>최초 생성 관리자 (수정 불가)</td></tr>
+<tr><td>생성 일시</td><td>YYYY.MM.DD hh:mm (수정 불가)</td></tr>
+<tr><td>최근 수정자</td><td>저장/활성화 시 갱신</td></tr>
+<tr><td>최근 수정 일시</td><td>저장/활성화 시 갱신</td></tr>
+</table>
+<h3>2-3. 기능설정 탭 (Draft에서 수정 가능, Active/Inactive에서 read-only)</h3>
+<ul>
+<li>보내기 (Send) ON/OFF</li>
+<li>Mix ON/OFF</li>
+<li>Pick ON/OFF</li>
+</ul>
+<h3>2-4. 민팅관리 탭 (모든 상태에서 조회만)</h3>
+<p>본 BIVE가 보상으로 연결된 민팅 캠페인 현황 조회.</p>
+<p><strong>필터 바</strong>:</p>
+<ul>
+<li>상태 (전체/초안/활성/중지/종료)</li>
+<li>민팅 타입 (전체/Event/Ticket/Mix/Pick/상품)</li>
+<li>연결 일시 정렬 (빠른순 기본 / 오래된 순)</li>
+<li>검색 입력 "캠페인명 입력" + [조회]</li>
+</ul>
+<p><strong>테이블</strong>:</p>
+<table>
+<tr><th>컬럼</th><th>설명</th></tr>
+<tr><td>상태</td><td>배지 — 초안(amber)/활성(green)/중지(red)/종료(gray)</td></tr>
+<tr><td>민팅 타입</td><td>Event / Ticket / Mix / Pick / 상품</td></tr>
+<tr><td>캠페인명</td><td>클릭 시 캠페인 상세 새 창</td></tr>
+<tr><td>민팅 횟수</td><td>본 캠페인을 통한 BIVE 누적 발행 수 (없으면 "-")</td></tr>
+<tr><td>캠페인 연결 일시</td><td>YYYY.MM.DD hh:mm (기본 정렬 내림차순)</td></tr>
+</table>
+<p>빈 상태: "연결된 캠페인이 없습니다."</p>
+<h3>2-5. 민팅이력 탭 (모든 상태에서 조회만)</h3>
+<p>본 BIVE의 실제 발행 결과(회원·지갑 단위) 조회.</p>
+<p><strong>요약 영역</strong>: "총 발행: {수량}" + 가이드 "연결된 캠페인에서 BIVE의 민팅 이력을 보여줍니다."</p>
+<p><strong>필터 영역</strong>:</p>
+<ul>
+<li>검색 기준 드롭다운: 닉네임(기본) / 지갑주소</li>
+<li>검색 입력: placeholder 선택값에 따라 변경</li>
+<li>정렬: 민팅일시 최근 순 (기본)</li>
+<li>[조회] 버튼</li>
+</ul>
+<p><strong>테이블</strong>:</p>
+<table>
+<tr><th>컬럼</th><th>설명</th></tr>
+<tr><td>Token ID</td><td>NFT 식별값</td></tr>
+<tr><td>닉네임</td><td>파란색 하이퍼링크. 클릭 시 회원 상세 새 창</td></tr>
+<tr><td>지갑주소</td><td>클릭 시 BSCScan 새 창 (<code>https://bscscan.com/address/{address}</code>)</td></tr>
+<tr><td>민팅일시</td><td>YYYY.MM.DD hh:mm 로컬</td></tr>
+</table>
+<p>빈 상태: "민팅 이력이 없습니다."</p>
+<p>페이지네이션 하단 20행/페이지.</p>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>헤더</td><td>4탭 네비게이션 + 상태별 액션</td><td>운영 흐름</td></tr>
+<tr><td>기본정보 탭</td><td>BIVE 명칭(자동)·아티스트·멤버·등급·등급번호·설명·미디어·관리 정보</td><td>BIVE 정체성</td></tr>
+<tr><td>기능설정 탭</td><td>보내기·Mix·Pick 토글 3종</td><td>앱 사용 가능 기능</td></tr>
+<tr><td>민팅관리 탭</td><td>연결 캠페인 현황 + 필터·테이블</td><td>본 BIVE 운영 컨텍스트</td></tr>
+<tr><td>민팅이력 탭</td><td>총 발행 + 회원·지갑 단위 발행 이력</td><td>실제 발행 추적</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상태</th><th>기본정보·기능</th><th>헤더 액션</th><th>민팅 캠페인 보상 등록</th></tr>
+<tr><td><strong>Draft</strong></td><td>✏️ 수정 가능</td><td>[삭제] + [저장] + [활성화]</td><td>불가 (Active만 가능)</td></tr>
+<tr><td><strong>Active</strong></td><td>🔒 read-only</td><td>[비활성화] (조건부)</td><td>가능</td></tr>
+<tr><td><strong>Inactive</strong></td><td>🔒 read-only</td><td>[활성화]</td><td>불가 (신규 등록 차단, 기존 활성 캠페인은 유지)</td></tr>
+</table>
+<p><strong>Active → Inactive 전환 조건</strong>:</p>
+<ul>
+<li>본 BIVE가 보상으로 연결된 민팅 캠페인이 <strong>없거나 모두 종료 상태</strong>여야 함</li>
+<li>활성/중지 상태 캠페인에 연결되어 있으면 비활성 불가 (토스트로 안내)</li>
+</ul>
+<h2>5. 검증 규칙</h2>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>활성화 검증</td><td>Draft 상태에서 저장된 데이터와 입력 데이터가 다른 경우 활성화 실패 ("등급번호 001 저장 후 002로 수정 + 활성화" 등) → 토스트 "활성화 실패"</td></tr>
+<tr><td>등급/등급번호 고유성</td><td>동일 에디션 내 (멤버, 등급, 등급번호) 조합 유니크 (서버 검증)</td></tr>
+<tr><td>비활성화 조건</td><td>연결된 캠페인이 모두 종료 상태일 때만 비활성화 가능</td></tr>
+<tr><td>권한</td><td>[관리자 > 권한관리] BIVE 쓰기 권한 보유자만 헤더 액션 노출</td></tr>
+</table>
+<h2>6. 외부 영역 연동</h2>
+<table>
+<tr><th>영역</th><th>운영 동작</th><th>사용처</th></tr>
+<tr><td>아티스트·멤버 관리</td><td>자동 채움 (기본정보 탭)</td><td>등록 시 사용</td></tr>
+<tr><td>민팅 캠페인 (BIVE-103/203)</td><td>본 BIVE가 보상으로 연결된 캠페인 + 민팅 카운트 집계</td><td>민팅관리 탭</td></tr>
+<tr><td>회원 (USR)</td><td>닉네임 → 회원 상세 새 창</td><td>민팅이력 탭 닉네임 컬럼</td></tr>
+<tr><td>외부 블록체인 (BSC)</td><td>지갑주소 → BSCScan 새 창</td><td>민팅이력 탭 지갑주소 컬럼</td></tr>
+</table>
+<h2>7. 연관 화면</h2>
+<table>
+<tr><th>액션</th><th>다음 화면</th></tr>
+<tr><td>← 뒤로가기</td><td>[CEB-BO-BIVE-102] BIVE 관리</td></tr>
+<tr><td>[삭제] (Draft만)</td><td>BIVE 삭제 모달 → 삭제 후 [CEB-BO-BIVE-102] 이동</td></tr>
+<tr><td>[활성화]</td><td>활성화 모달 → 본 화면 상태 갱신</td></tr>
+<tr><td>[비활성화]</td><td>본 화면 상태 갱신</td></tr>
+<tr><td>민팅관리 탭의 캠페인명 클릭</td><td>[CEB-BO-BIVE-203] 캠페인 상세 (새 창)</td></tr>
+<tr><td>민팅이력 탭의 닉네임 클릭</td><td>회원 상세 (새 창)</td></tr>
+<tr><td>민팅이력 탭의 지갑주소 클릭</td><td>BSCScan (새 창)</td></tr>
+<tr><td>영역 가이드 참조</td><td>[CEB-BO-004] BIVE(NFT) 영역 가이드</td></tr>
+</table>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 B-301+302+303+304 4탭 통합 v2 이전</strong> ① v1 별도 4개 화면을 단일 [CEB-BO-BIVE-202]의 4탭 구조로 통합 (기본정보 / 기능설정 / 민팅관리 / 민팅이력) ② 상태 3종(Draft/Active/Inactive) + 상태별 헤더 액션·필드 잠금 매트릭스 ③ Active → Inactive 전환 조건 (연결된 캠페인 모두 종료) ④ BIVE 명칭 자동 생성 규칙 ⑤ 민팅이력 탭 — 회원/BSCScan 새 창 링크 ⑥ 권한 단일 표기</td></tr>
+</table>
+
+</body>
+</html>
