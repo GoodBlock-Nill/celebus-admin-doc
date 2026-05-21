@@ -134,6 +134,24 @@ export default function QuestDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
+      {/* [CEB-BO-SQ-204] §2-3 v3.2 신규 — 예측 마켓·서바이벌 트리비아 미션 다국어 타이틀 노출 카드 (2026-05-21 sync 정정) */}
+      {quest.type !== 'FAN_QUEST' && (
+        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <h4 className="text-sm font-semibold text-gray-900">다국어 타이틀</h4>
+            <span className="text-[11px] text-gray-500">(예측 마켓·서바이벌 트리비아 한정 · 노출 전용)</span>
+          </div>
+          <div className="space-y-3 text-sm">
+            <Row label="한국어 (KO)" value={quest.titleKO || '—'} />
+            <Row label="영어 (EN)" value={quest.titleEN || '—'} />
+            <Row label="일본어 (JA)" value={quest.titleJA || '—'} />
+          </div>
+          <div className="border-t border-gray-100 pt-3 mt-4 text-[11px] text-gray-500 leading-relaxed">
+            본 카드는 <strong>노출 전용</strong>입니다. 수정은 [수정하기] 버튼으로 [CEB-BO-SQ-204-EDIT]에서 진행하며, KO·EN·JA <strong>3종 모두 입력 필수</strong>입니다 ([CEB-BO-011] §5 다국어 필수 표준 정합).
+          </div>
+        </div>
+      )}
+
       {/* 섹션 2 — 완료 판정 정보 (chapter 흡수 필드) */}
       <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6">
         <h4 className="text-sm font-semibold text-gray-900 mb-4">완료 판정</h4>

@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.1</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>버전</td><td>v3.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -96,7 +96,7 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v3.1</strong> (반복 주기 표시 옵션 4종으로 확장 — 일간/주간/월간/없음)</p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v3.2</strong> (예측 마켓/서바이벌 트리비아 미션 한정 다국어 타이틀 노출 카드 신규 — 운영자 검토용)</p>
 <p>화면 경로: <code>/sq/{id}/quests/{qid}</code> · Breadcrumb: <code>홈 › 에피소드 › {그룹명} › {에피소드명} › 미션 N</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
@@ -132,13 +132,25 @@ p {
 <tr><td>응모권 보상</td><td>지급 응모권 수량</td></tr>
 <tr><td>덕력 보상</td><td>지급 덕력 수량</td></tr>
 </table>
-<h3>2-3. BIVE 보상 카드 (토글형)</h3>
+<h3>2-3. 다국어 타이틀 카드 (v3.2 신규 — 예측 마켓·서바이벌 트리비아 한정)</h3>
+<p>미션 작성/수정 시 입력된 한국어/영어/일본어 타이틀 3종을 운영자가 검토할 수 있도록 별도 카드로 노출.</p>
+<table>
+<tr><th>라벨</th><th>값</th></tr>
+<tr><td>한국어 타이틀</td><td>titleKO 입력값</td></tr>
+<tr><td>영어 타이틀</td><td>titleEN 입력값</td></tr>
+<tr><td>일본어 타이틀</td><td>titleJA 입력값</td></tr>
+</table>
+<blockquote>
+<p>⚠️ 본 화면은 <strong>노출 전용</strong> (read-only). 수정은 [CEB-BO-SQ-204-CREATE] / [CEB-BO-SQ-204-EDIT]에서 처리한다.</p>
+<p>팬퀘스트 유형 미션은 팬퀘스트 자체에서 다국어 타이틀을 상속받으므로 본 카드를 <strong>미노출</strong>한다 ([CEB-BO-011] §5 다국어 필수 표준 정합).</p>
+</blockquote>
+<h3>2-4. BIVE 보상 카드 (토글형)</h3>
 <table>
 <tr><th>상태</th><th>표시</th></tr>
 <tr><td>ON</td><td>민팅 캠페인 명 + 캠페인 식별값</td></tr>
 <tr><td>OFF</td><td>"BIVE 보상 비활성" 안내</td></tr>
 </table>
-<h3>2-4. 완료 판정 카드 (v2.2 신규 — 흡수 필드)</h3>
+<h3>2-5. 완료 판정 카드 (v2.2 신규 — 흡수 필드)</h3>
 <p>미션 자체에 흡수된 완료 판정 정보를 좌·우 2열로 표시.</p>
 <table>
 <tr><th>좌측</th><th>값</th></tr>
@@ -162,7 +174,7 @@ p {
 <tr><td>예측 마켓</td><td>"예측 참여" / "예측 정답" 중 선택</td><td>없음</td></tr>
 <tr><td>서바이벌 트리비아</td><td>"트리비아 참여" / "트리비아 N회 정답" 중 선택</td><td>"N회 정답" 선택 시 횟수 입력</td></tr>
 </table>
-<h3>2-5. 진행 통계 카드 (가로 3개, 파스텔 톤)</h3>
+<h3>2-6. 진행 통계 카드 (가로 3개, 파스텔 톤)</h3>
 <p>v2.2부터 "완료 조건 수" 카드는 폐기 (완료 조건 계층 폐기 정합).</p>
 <table>
 <tr><th>카드</th><th>값</th><th>톤</th></tr>
@@ -170,7 +182,7 @@ p {
 <tr><td>완료 회원</td><td>완료한 회원 수</td><td>활성 (에메랄드)</td></tr>
 <tr><td>완료율</td><td>(완료 회원 / 진행 회원) × 100%</td><td>커스텀 (에메랄드 막대 + 에메랄드 배지)</td></tr>
 </table>
-<h3>2-6. 팬퀘스트 참조 패널 (유형이 팬퀘스트일 때만 노출)</h3>
+<h3>2-7. 팬퀘스트 참조 패널 (유형이 팬퀘스트일 때만 노출)</h3>
 <ul>
 <li>연결된 팬퀘스트 Quest 정보 노출 (매핑된 식별값으로 조회)</li>
 <li>안내: "본 미션의 타이틀·설명·이미지·보상은 [팬퀘스트 영역](/fanquest/{팬퀘스트 식별값})에서 관리됩니다."</li>
@@ -179,8 +191,9 @@ p {
 <h2>3. 화면에 노출되는 정보</h2>
 <table>
 <tr><th>위치</th><th>정보</th><th>의미</th></tr>
-<tr><td>헤더</td><td>타이틀·유형 배지·액션 버튼</td><td>미션 컨텍스트 한눈에</td></tr>
+<tr><td>헤더</td><td>한국어 타이틀·유형 배지·액션 버튼</td><td>미션 컨텍스트 한눈에 (페이지 제목은 한국어 식별용)</td></tr>
 <tr><td>기본 정보 카드</td><td>순서·유형·반복·보상 2종</td><td>미션 핵심 메타</td></tr>
+<tr><td>다국어 타이틀 카드 (v3.2 신규)</td><td>한국어·영어·일본어 타이틀 3종</td><td>예측 마켓·서바이벌 트리비아 한정. 팬퀘스트는 자체 상속이라 미노출</td></tr>
 <tr><td>BIVE 보상 카드</td><td>ON/OFF + 민팅 캠페인</td><td>추가 보상 정보</td></tr>
 <tr><td>완료 판정 카드</td><td>판정 유형·기준값·조건 내용·반복 주기·기간</td><td>미션 흡수 필드 (v2.2 신규)</td></tr>
 <tr><td>진행 통계 카드</td><td>진행 / 완료 / 완료율</td><td>운영 지표</td></tr>
@@ -199,7 +212,7 @@ p {
 <table>
 <tr><th>규칙</th><th>내용</th></tr>
 <tr><td>팬퀘스트 유형 미션의 보상·이미지·타이틀 수정</td><td>본 화면에서 수정 불가 → 팬퀘스트 영역에서만 가능. 본 화면에서는 매핑(팬퀘스트 식별값)만 관리</td></tr>
-<tr><td>완료 판정 유형</td><td>미션 유형별 매트릭스에 따라 분기 (§2-4 매트릭스 참조)</td></tr>
+<tr><td>완료 판정 유형</td><td>미션 유형별 매트릭스에 따라 분기 (§2-5 매트릭스 참조)</td></tr>
 <tr><td>기준값 입력</td><td>"트리비아 N회 정답" 선택 시에만 활성</td></tr>
 <tr><td>시작·종료일</td><td>비우면 부모 그룹 기간 상속. 입력 시 부모 그룹 기간 안에 포함 권장</td></tr>
 </table>
@@ -218,7 +231,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v3.1</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>반복 주기 표시 옵션 4종 확장</strong> — §2-4 완료 판정 카드 우측 "반복 주기" 행 옵션을 기존 (월간/주간/없음 3종) → <strong>일간/주간/월간/없음 4종</strong>으로 확장. [CEB-BO-SQ-204-CREATE] v3.1에서 일간/주간/월간 3종 버튼 그룹을 도입함에 따라 상세 표시도 4종 노출하도록 정합. 팬퀘스트 유형 미션은 팬퀘스트 자체 설정 상속 표시. [CEB-BO-011] v3.2 정합</td></tr>
+<tr><td><strong>v3.2</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>예측 마켓·서바이벌 트리비아 미션 다국어 타이틀 노출 카드 신규</strong> — ① §2-3 "다국어 타이틀 카드" 신규 (한국어·영어·일본어 3행, 읽기 전용). 작성/수정은 [CEB-BO-SQ-204-CREATE]·[CEB-BO-SQ-204-EDIT]에서 처리하고 본 화면은 노출만 담당 ② 팬퀘스트 유형 미션은 팬퀘스트 자체 상속이므로 본 카드 미노출 ③ 기존 §2-3(BIVE)·§2-4(완료 판정)·§2-5(진행 통계)·§2-6(팬퀘스트 참조)을 §2-4·§2-5·§2-6·§2-7로 번호 시프트 ④ §3 화면 노출 정보 표에 "다국어 타이틀 카드" 행 신규 ⑤ §5 검증 규칙 §2-4 매트릭스 참조를 §2-5로 시프트 정합 — [CEB-BO-SQ-204-CREATE] v3.3 (KO·EN·JA 3종 모두 필수) 정합</td></tr>
+<tr><td>v3.1</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>반복 주기 표시 옵션 4종 확장</strong> — §2-4 완료 판정 카드 우측 "반복 주기" 행 옵션을 기존 (월간/주간/없음 3종) → <strong>일간/주간/월간/없음 4종</strong>으로 확장. [CEB-BO-SQ-204-CREATE] v3.1에서 일간/주간/월간 3종 버튼 그룹을 도입함에 따라 상세 표시도 4종 노출하도록 정합. 팬퀘스트 유형 미션은 팬퀘스트 자체 설정 상속 표시. [CEB-BO-011] v3.2 정합</td></tr>
 <tr><td>v3.0</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>한국어 도메인 용어 정합 + Page Properties 13필드</strong> — ① Page Properties 표 신설 ② §3 데이터 모델 표(<code>StoryEpisode</code>·<code>StoryMission</code> 영문 인터페이스 + 영문 필드명 + 코드 경로) 폐기 → §3 화면 노출 정보 표로 재구성 ③ 유형 enum(FAN_QUEST/PREDICTION_MARKET/SURVIVAL_TRIVIA) → 한국어(팬퀘스트/예측 마켓/서바이벌 트리비아) ④ 판정 유형 enum(ADMIN_APPROVAL/PM_PARTICIPATION/PM_CORRECT/TRIVIA_PARTICIPATION/TRIVIA_CORRECT_COUNT) → 한국어 라벨 ⑤ 반복 주기 영문 상수 표기 제거 → 월간/주간 한국어 변환 ⑥ 헬퍼 함수(<code>getFanQuestUsages</code>) 제거 → 운영 동작 설명 ⑦ §2-4 매트릭스 신설로 유형별 분기 명확화 ⑧ §4 상태별 동작·§5 검증 규칙 양식 정합 ⑨ 변경 이력 5칸 양식</td></tr>
 <tr><td>v2.2</td><td>2026-05-12</td><td>@Nill Yoo</td><td><strong>완료 조건 계층 폐기</strong> — 완료 판정 필드 미션에 직접 흡수. 완료 조건 테이블 섹션 + "완료 조건 추가" 버튼 + "완료 조건 수" 통계 카드 제거. 새 "완료 판정 카드" 추가. 통계 4→3 카드, 파스텔 톤</td></tr>
 <tr><td>v2.1</td><td>2026-05-12</td><td>@Nill Yoo</td><td>용어 통일 — 챕터→미션, 완료 조건 분리</td></tr>
