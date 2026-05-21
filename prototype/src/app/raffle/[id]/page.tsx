@@ -83,12 +83,8 @@ export default function RaffleDetailPage({ params }: { params: Promise<{ id: str
   const confirmExec = () => {
     if (!confirmKind || !raffle) return;
     if (confirmKind === 'publish') {
-      const allLangs = raffle.titleKO && raffle.titleEN && raffle.titleJA && raffle.descKO && raffle.descEN && raffle.descJA;
-      if (!allLangs) {
-        alert('게시 차단 — 다국어(KO/EN/JA) 필수 입력이 누락되었습니다.');
-        setConfirmKind(null);
-        return;
-      }
+      // [CEB-BO-RFL-201-MD-OPEN] v1.7 정합 — 모달 진입 시점에 canPublish로 다국어 검증 완료 보장
+      // (모달 내부 alert 차단 로직 제거, 2026-05-21 sync 정정)
       setRaffle({ ...raffle, status: '진행중', startAt: new Date().toISOString().slice(0, 16).replace('T', ' ') });
     } else if (confirmKind === 'close') {
       // 응모자 0건이면 추첨대기 단계 건너뛰고 즉시 종료 (입상자 없음)
@@ -153,7 +149,7 @@ export default function RaffleDetailPage({ params }: { params: Promise<{ id: str
     <div>
       <PageHeader
         title=""
-        breadcrumbItems={[{ label: '래플', href: '/raffle' }, { label: 'Raffle 상세' }]}
+        breadcrumbItems={[{ label: '래플', href: '/raffle' }, { label: '래플 상세' }]}
       />
 
       {/* 헤더 */}
@@ -357,10 +353,10 @@ function InfoTab({ raffle, onImageClick }: { raffle: Raffle; onImageClick: () =>
         <StatCard icon={<GiftIcon className="w-5 h-5 text-indigo-500" />} label="지급 완료" value={isEnded ? (raffle.winnerPaid ?? 0) : 0} />
       </div>
 
-      {/* Raffle 정보 + 관리 정보 */}
+      {/* 래플 정보 + 관리 정보 ([CEB-BO-012] §1 정합, 2026-05-21 sync 정정) */}
       <div className="grid grid-cols-2 gap-5 mb-5">
         <div className="bg-white border border-gray-200 rounded-xl p-5">
-          <h3 className="text-sm font-semibold text-gray-900 mb-4">Raffle 정보</h3>
+          <h3 className="text-sm font-semibold text-gray-900 mb-4">래플 정보</h3>
           <div className="space-y-3 text-sm">
             <Row label="아티스트" value={raffle.artist} />
             <Row label="당첨 인원" value={`${raffle.winnerCount}명`} />
@@ -391,9 +387,9 @@ function InfoTab({ raffle, onImageClick }: { raffle: Raffle; onImageClick: () =>
         </div>
       </div>
 
-      {/* 다국어 섹션 */}
-      <LangSection title="Raffle 타이틀" ko={raffle.titleKO} en={raffle.titleEN} ja={raffle.titleJA} />
-      <LangSection title="Raffle 설명" ko={raffle.descKO} en={raffle.descEN} ja={raffle.descJA} />
+      {/* 다국어 섹션 ([CEB-BO-012] §1 정합 — Raffle → 래플, 2026-05-21 sync 정정) */}
+      <LangSection title="래플 타이틀" ko={raffle.titleKO} en={raffle.titleEN} ja={raffle.titleJA} />
+      <LangSection title="래플 설명" ko={raffle.descKO} en={raffle.descEN} ja={raffle.descJA} />
       <LangSection title="경품 상세" ko={raffle.prizeKO} en={raffle.prizeEN} ja={raffle.prizeJA} />
 
       {/* v2.2 — 추가 보상 (BIVE) */}

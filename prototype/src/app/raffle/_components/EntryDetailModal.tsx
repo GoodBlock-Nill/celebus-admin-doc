@@ -76,7 +76,7 @@ export default function EntryDetailModal({ entry, onClose }: Props) {
               </tbody>
               <tfoot className="bg-gray-50 border-t border-gray-100">
                 <tr>
-                  <td className="px-3 py-2 text-[11px] font-semibold text-gray-700 whitespace-nowrap" colSpan={1}>합계 (전체)</td>
+                  <td className="px-3 py-2 text-[11px] font-semibold text-gray-700 whitespace-nowrap" colSpan={1}>합계</td>
                   <td className="px-3 py-2 text-xs text-right font-semibold text-indigo-700">{sum}</td>
                   <td />
                 </tr>
@@ -84,6 +84,8 @@ export default function EntryDetailModal({ entry, onClose }: Props) {
             </table>
           </div>
 
+          {/* [CEB-BO-RFL-202-MD-DETAIL] §2-3 정합 — 0건일 때만 페이지네이션 미노출 (2026-05-21 sync 정정) */}
+          {events.length > 0 && (
           <div className="mt-3 flex items-center justify-center gap-1.5 text-xs">
             <button
               type="button"
@@ -118,6 +120,7 @@ export default function EntryDetailModal({ entry, onClose }: Props) {
               <ChevronRightIcon className="w-3.5 h-3.5" />
             </button>
           </div>
+          )}
         </div>
 
         <div className="flex items-center justify-end gap-2 px-6 py-3 border-t border-gray-100 bg-gray-50">

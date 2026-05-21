@@ -28,7 +28,7 @@ export default function RaffleEditPage({ params }: { params: Promise<{ id: strin
 
   const handleSubmit = () => {
     if (!valid || isClosed) return;
-    alert(`[Mock] Raffle 수정 저장 — '${values.titleKO}'`);
+    alert(`[Mock] 래플 수정 저장 — '${values.titleKO}'`);
     router.push(`/raffle/${raffleId}`);
   };
 
@@ -38,7 +38,7 @@ export default function RaffleEditPage({ params }: { params: Promise<{ id: strin
         title=""
         breadcrumbItems={[
           { label: '래플', href: '/raffle' },
-          { label: 'Raffle 상세', href: `/raffle/${raffleId}` },
+          { label: '래플 상세', href: `/raffle/${raffleId}` },
           { label: '수정' },
         ]}
       />
@@ -47,7 +47,8 @@ export default function RaffleEditPage({ params }: { params: Promise<{ id: strin
         <div className="flex items-center gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-[22px] font-bold text-gray-900">Raffle 수정</h1>
+              {/* [CEB-BO-012] §1 정합 — Raffle → 래플 (2026-05-21 sync 정정) */}
+              <h1 className="text-[22px] font-bold text-gray-900">래플 수정</h1>
               <span className="text-sm text-gray-500">·</span>
               <span className="text-sm text-gray-700 max-w-[460px] truncate">{raffle.titleKO}</span>
               <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${RAFFLE_STATUS_BADGE[raffle.status]}`}>
@@ -74,7 +75,8 @@ export default function RaffleEditPage({ params }: { params: Promise<{ id: strin
         <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-5 flex items-start gap-3">
           <InformationCircleIcon className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
           <p className="text-sm text-amber-800 leading-relaxed">
-            <strong>진행중 상태</strong>에서는 응모자 보호를 위해 <strong>아티스트 · 마감일시 · 당첨 추첨 수 · 보상지급 타입</strong> 변경이 차단됩니다.
+            {/* [CEB-BO-RFL-201-EDIT] §2-2 정합 — 추가 보상(BIVE) 잠금 명시 (2026-05-21 sync 정정) */}
+            <strong>진행중 상태</strong>에서는 응모자 보호를 위해 <strong>아티스트 · 마감일시 · 당첨 추첨 수 · 보상지급 타입 · 추가 보상(BIVE)</strong> 변경이 차단됩니다.
             이미지·타이틀·설명·경품 상세·수령 가이드·유의사항만 수정 가능합니다.
           </p>
         </div>

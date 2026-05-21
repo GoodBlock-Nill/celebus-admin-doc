@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { ArrowPathIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, XMarkIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import {
   generateMockSeed,
   type Raffle,
@@ -68,14 +68,28 @@ export default function DrawModal({ raffle, entries, onCancel, onConfirm }: Prop
     [seed, eligibleEntries, raffle.winnerCount],
   );
 
-  const reshuffle = () => setSeed(generateMockSeed(raffle.id));
+  const reshuffle = () => {
+    setSeed(generateMockSeed(raffle.id));
+    setPreviewPage(1);
+  };
+
+  // [CEB-BO-RFL-203-MD-DRAW] §2-4 정합 — 당첨자 미리보기 10건/페이지 페이지네이션 (2026-05-21 sync 정정)
+  const PREVIEW_PAGE_SIZE = 10;
+  const [previewPage, setPreviewPage] = useState(1);
+  const previewTotalPages = Math.max(1, Math.ceil(winners.length / PREVIEW_PAGE_SIZE));
+  const previewSafePage = Math.min(previewPage, previewTotalPages);
+  const pagedWinners = winners.slice(
+    (previewSafePage - 1) * PREVIEW_PAGE_SIZE,
+    previewSafePage * PREVIEW_PAGE_SIZE,
+  );
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
           <div>
-            <h3 className="text-base font-semibold text-gray-900">Raffle 추첨하기</h3>
+            {/* [CEB-BO-012] §1 정합 — Raffle → 래플 (2026-05-21 sync 정정) */}
+            <h3 className="text-base font-semibold text-gray-900">래플 추첨하기</h3>
             <p className="text-xs text-gray-500 mt-0.5 truncate max-w-[480px]">{raffle.titleKO}</p>
           </div>
           <button onClick={onCancel} className="w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center">
@@ -114,9 +128,9 @@ export default function DrawModal({ raffle, entries, onCancel, onConfirm }: Prop
             </div>
           )}
 
-          <div className="border border-gray-200 rounded-lg overflow-hidden max-h-[280px] overflow-y-auto">
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-100 sticky top-0">
+              <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>
                   <th className="text-left px-3 py-2 text-[11px] font-semibold text-gray-700 w-12">#</th>
                   <th className="text-left px-3 py-2 text-[11px] font-semibold text-gray-700">닉네임</th>
@@ -127,9 +141,9 @@ export default function DrawModal({ raffle, entries, onCancel, onConfirm }: Prop
               <tbody className="divide-y divide-gray-100">
                 {winners.length === 0 ? (
                   <tr><td colSpan={4} className="px-3 py-6 text-center text-xs text-gray-400">응모자가 없어 추첨이 불가능합니다.</td></tr>
-                ) : winners.map((w, i) => (
+                ) : pagedWinners.map((w, i) => (
                   <tr key={w.userId}>
-                    <td className="px-3 py-2 text-xs text-gray-400">{i + 1}</td>
+                    <td className="px-3 py-2 text-xs text-gray-400">{(previewSafePage - 1) * PREVIEW_PAGE_SIZE + i + 1}</td>
                     <td className="px-3 py-2 text-xs text-gray-900">{w.nickname}</td>
                     <td className="px-3 py-2 text-xs text-gray-700 font-mono">{w.phone}</td>
                     <td className="px-3 py-2 text-xs text-right text-gray-700">{w.cumulativeTickets}</td>
@@ -138,6 +152,29 @@ export default function DrawModal({ raffle, entries, onCancel, onConfirm }: Prop
               </tbody>
             </table>
           </div>
+
+          {/* [CEB-BO-RFL-203-MD-DRAW] §2-4 정합 — 미리보기 페이지네이션 (2026-05-21 sync 정정) */}
+          {winners.length > 0 && (
+            <div className="mt-3 flex items-center justify-center gap-1.5 text-xs">
+              <button
+                type="button"
+                onClick={() => setPreviewPage((p) => Math.max(1, p - 1))}
+                disabled={previewSafePage === 1}
+                className="w-7 h-7 inline-flex items-center justify-center rounded border border-gray-200 disabled:opacity-30 hover:bg-gray-50"
+              >
+                <ChevronLeftIcon className="w-3.5 h-3.5" />
+              </button>
+              <span className="text-xs text-gray-700 px-2">‹ {previewSafePage} / {previewTotalPages} ›</span>
+              <button
+                type="button"
+                onClick={() => setPreviewPage((p) => Math.min(previewTotalPages, p + 1))}
+                disabled={previewSafePage === previewTotalPages}
+                className="w-7 h-7 inline-flex items-center justify-center rounded border border-gray-200 disabled:opacity-30 hover:bg-gray-50"
+              >
+                <ChevronRightIcon className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-gray-100 bg-gray-50">

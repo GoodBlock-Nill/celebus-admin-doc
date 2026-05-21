@@ -155,9 +155,9 @@ export default function RaffleForm({ values, onChange, activeLocks = false, clos
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-      {/* 좌 — Raffle 정보 */}
+      {/* 좌 — 래플 정보 ([CEB-BO-012] §1 정합 — Raffle → 래플, 2026-05-21 sync 정정) */}
       <div className="bg-white border border-gray-200 rounded-xl p-5">
-        <h3 className="text-base font-semibold text-gray-900 mb-4">Raffle 정보</h3>
+        <h3 className="text-base font-semibold text-gray-900 mb-4">래플 정보</h3>
 
         <div className="space-y-5">
           <Field label="아티스트" required>

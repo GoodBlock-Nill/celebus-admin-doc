@@ -12,7 +12,17 @@ interface Props {
 
 export default function WinnerNoteModal({ winner, onCancel, onSave }: Props) {
   const [note, setNote] = useState(winner.note);
+  const [showNoChangeWarn, setShowNoChangeWarn] = useState(false);
   const valid = winner.status === '당첨';
+
+  // [CEB-BO-RFL-203-MD-NOTE] §4 정합 — 변경사항 없음 안내 후 모달 유지 (2026-05-21 sync 정정)
+  const handleSave = () => {
+    if (note === winner.note) {
+      setShowNoChangeWarn(true);
+      return;
+    }
+    onSave(note);
+  };
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40" onClick={(e) => { if (e.target === e.currentTarget) onCancel(); }}>
@@ -47,6 +57,11 @@ export default function WinnerNoteModal({ winner, onCancel, onSave }: Props) {
                 placeholder="비고사항을 입력하세요"
               />
               <div className="text-right text-[11px] text-gray-400 mt-1">{note.length}/200</div>
+              {showNoChangeWarn && (
+                <div className="mt-3 px-3 py-2 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
+                  변경사항이 없습니다
+                </div>
+              )}
             </>
           )}
         </div>
@@ -54,7 +69,7 @@ export default function WinnerNoteModal({ winner, onCancel, onSave }: Props) {
         <div className="flex items-center justify-end gap-2 px-6 py-3 border-t border-gray-100 bg-gray-50">
           <button onClick={onCancel} className="h-10 px-5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50">취소</button>
           {valid && (
-            <button onClick={() => onSave(note)} className="h-10 px-5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
+            <button onClick={handleSave} className="h-10 px-5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">
               저장
             </button>
           )}
