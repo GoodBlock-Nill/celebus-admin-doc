@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — NFT 발행·민팅·혜택</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>버전</td><td>v1.2</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,15 +96,15 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v1.1</strong> (2차 명세 10건 추가 작성 정합 — 에디션/BIVE/캠페인/혜택 CREATE/EDIT/상세/모달 통합)</p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v1.2</strong> (운영 BO 실제 화면 캡처 기반 Critical 용어 3건 정정 — 민팅 캠페인→민팅 이벤트 / 아티스트→아티스트 그룹 / 멤버→아티스트)</p>
 <p>영역 경로: <code>/bive/*</code> · 사이드바: BIVE</p>
 </blockquote>
 <h2>1. 영역 개요</h2>
 <p>CELEBUS 플랫폼의 <strong>BIVE(NFT)</strong> 영역은 회원에게 발행되는 디지털 자산(BIVE NFT)의 마스터·민팅 트리거·혜택 정책을 관리한다. SQ 미션 보상·RFL 당첨자 보상·앱 내 보상 이벤트 등에서 <strong>자동 민팅의 SSOT</strong>로 동작한다.</p>
 <p><strong>핵심 계층</strong> (v1 기준 그대로):</p>
 <pre><code>에디션 (=프로젝트) — 다국어 명칭만 보유
-  └─ BIVE N개 — 멤버 × 등급 × 등급번호 + 보내기/Mix/Pick 기능 ON/OFF
-       └─ 민팅 캠페인 N:M — Event/Ticket/Mix/Pick 4유형
+  └─ BIVE N개 — 아티스트 × 등급 × 등급번호 + 보내기/Mix/Pick 기능 ON/OFF
+       └─ 민팅 이벤트 N:M — Event/Ticket/Mix/Pick 4유형
               └─ 회원 자동 민팅 (캠페인 "연결 기능" 트리거)
 
 별도 흐름:
@@ -113,8 +113,8 @@ p {
 <p><strong>운영 의도</strong>:</p>
 <ul>
 <li><strong>에디션</strong>은 BIVE 묶음의 큐레이션 단위 (예: V01D 시즌 1 에디션 등). 다국어 명칭만 등록</li>
-<li><strong>BIVE</strong>는 실제 NFT 자체. 멤버·등급·등급번호 조합으로 식별 (예: "하시모토 칸나 Normal-001"). 등록 후 활성화하면 민팅 캠페인에 보상으로 등록 가능</li>
-<li><strong>민팅 캠페인</strong>은 회원의 특정 액션(연결 기능)이 발생하면 자동으로 등록된 BIVE 중 가중치 기반 추첨으로 1개를 발행</li>
+<li><strong>BIVE</strong>는 실제 NFT 자체. 아티스트·등급·등급번호 조합으로 식별 (예: "하시모토 칸나 Normal-001"). 등록 후 활성화하면 민팅 이벤트에 보상으로 등록 가능</li>
+<li><strong>민팅 이벤트</strong>은 회원의 특정 액션(연결 기능)이 발생하면 자동으로 등록된 BIVE 중 가중치 기반 추첨으로 1개를 발행</li>
 <li><strong>혜택</strong>은 BIVE 보유자에게 별도로 지급되는 Boost Point(BP) 또는 Raffle Ticket(RT). 일일/주간/1회 자동 지급</li>
 </ul>
 <h2>2. 메뉴 구조</h2>
@@ -128,7 +128,7 @@ p {
 │       └── BIVE 삭제 모달  → [CEB-BO-BIVE-202-MD-DELETE]
 │
 ├── 민팅 관리            → /bive/minting
-│   ├── 민팅 캠페인 리스트   → [CEB-BO-BIVE-103] (Event/Ticket/Mix/Pick 4탭)
+│   ├── 민팅 이벤트 리스트   → [CEB-BO-BIVE-103] (Event/Ticket/Mix/Pick 4탭)
 │   ├── 캠페인 생성        → [CEB-BO-BIVE-203-CREATE] (기본정보·BIVE보상 2탭)
 │   ├── 캠페인 상세        → [CEB-BO-BIVE-203] (기본정보·BIVE보상·보상내역 3탭)
 │   └── BIVE 보상 추가 모달 → [CEB-BO-BIVE-203-MD-ADD]
@@ -154,9 +154,9 @@ p {
 <tr><td>/bive/editions/{id}</td><td>BIVE 관리 (에디션 하위)</td><td>[CEB-BO-BIVE-102]</td><td>✅ v1.0 (1차)</td></tr>
 <tr><td>/bive/editions/{id}/bive/create</td><td>BIVE 등록 (2탭)</td><td>[CEB-BO-BIVE-202-CREATE]</td><td>✅ v1.0 (2차)</td></tr>
 <tr><td>/bive/editions/{id}/bive/{biveId}</td><td>BIVE 상세 (4탭)</td><td>[CEB-BO-BIVE-202]</td><td>✅ v1.0 (2차)</td></tr>
-<tr><td>/bive/minting</td><td>민팅 캠페인 리스트 (4탭)</td><td>[CEB-BO-BIVE-103]</td><td>✅ v1.0 (1차)</td></tr>
-<tr><td>/bive/minting/{type}/{id}</td><td>민팅 캠페인 상세 (3탭)</td><td>[CEB-BO-BIVE-203]</td><td>✅ v1.0 (2차)</td></tr>
-<tr><td>/bive/minting/{type}/create</td><td>민팅 캠페인 생성 (2탭)</td><td>[CEB-BO-BIVE-203-CREATE]</td><td>✅ v1.0 (2차)</td></tr>
+<tr><td>/bive/minting</td><td>민팅 이벤트 리스트 (4탭)</td><td>[CEB-BO-BIVE-103]</td><td>✅ v1.0 (1차)</td></tr>
+<tr><td>/bive/minting/{type}/{id}</td><td>민팅 이벤트 상세 (3탭)</td><td>[CEB-BO-BIVE-203]</td><td>✅ v1.0 (2차)</td></tr>
+<tr><td>/bive/minting/{type}/create</td><td>민팅 이벤트 생성 (2탭)</td><td>[CEB-BO-BIVE-203-CREATE]</td><td>✅ v1.0 (2차)</td></tr>
 <tr><td>(모달)</td><td>BIVE 보상 추가 모달</td><td>[CEB-BO-BIVE-203-MD-ADD]</td><td>✅ v1.0 (2차)</td></tr>
 <tr><td>/bive/benefits</td><td>혜택 리스트 (2탭)</td><td>[CEB-BO-BIVE-104]</td><td>✅ v1.0 (1차)</td></tr>
 <tr><td>/bive/benefits/{type}/{id}</td><td>혜택 상세 (2탭)</td><td>[CEB-BO-BIVE-204]</td><td>✅ v1.0 (2차)</td></tr>
@@ -191,16 +191,16 @@ p {
 <tr><td><strong>에디션 수정·삭제 조건</strong></td><td>등록된 BIVE 0건 + 민팅 기록 0건일 때만 수정 또는 삭제 가능</td></tr>
 <tr><td><strong>BIVE 등급</strong></td><td><strong>6종 고정</strong>: Event / Normal / Special / Wicked / Next / Final</td></tr>
 <tr><td><strong>BIVE 등급번호</strong></td><td>최대 5자리 숫자 (예: 001, 12345)</td></tr>
-<tr><td><strong>BIVE 고유성</strong></td><td>동일 에디션 내에서 (멤버, 등급, 등급번호) 조합은 유니크</td></tr>
+<tr><td><strong>BIVE 고유성</strong></td><td>동일 에디션 내에서 (아티스트, 등급, 등급번호) 조합은 유니크</td></tr>
 <tr><td><strong>BIVE 상태</strong></td><td><strong>3상태</strong>: Draft(초안) / Active(활성) / Inactive(비활성). Active 후 정보 수정 불가</td></tr>
 <tr><td><strong>BIVE 미디어</strong></td><td>PNG·JPG·GIF·MP4 / 최대 20MB / 등록 시 필수</td></tr>
 <tr><td><strong>BIVE 기능 토글</strong></td><td>보내기(Send) / Mix / Pick — 3종 모두 기본 ON. 운영자가 개별 ON/OFF</td></tr>
-<tr><td><strong>민팅 캠페인 유형</strong></td><td><strong>4종 고정</strong>: Event / Ticket / Mix / Pick</td></tr>
-<tr><td><strong>민팅 캠페인 상태</strong></td><td><strong>4상태</strong>: 초안 / 활성 / 중지 / 종료. 활성→초안 되돌리기 불가. 종료는 개발팀 수동 처리</td></tr>
-<tr><td><strong>민팅 캠페인 연결 기능</strong></td><td>캠페인 ↔ 연결 기능은 <strong>1:1</strong>. 개발 프리셋에서 내려주는 목록만 사용 (예: 회원가입 보상 받기 / 출석체크 5일 보상 / 아이콘 티켓 검증)</td></tr>
-<tr><td><strong>민팅 캠페인 활성화 선행 조건</strong></td><td>기본정보 + BIVE 보상 모두 저장 완료 + BIVE 보상 ≥ 1건</td></tr>
+<tr><td><strong>민팅 이벤트 유형</strong></td><td><strong>4종 고정</strong>: Event / Ticket / Mix / Pick</td></tr>
+<tr><td><strong>민팅 이벤트 상태</strong></td><td><strong>4상태</strong>: 초안 / 활성 / 중지 / 종료. 활성→초안 되돌리기 불가. 종료는 개발팀 수동 처리</td></tr>
+<tr><td><strong>민팅 이벤트 연결 기능</strong></td><td>캠페인 ↔ 연결 기능은 <strong>1:1</strong>. 개발 프리셋에서 내려주는 목록만 사용 (예: 회원가입 보상 받기 / 출석체크 5일 보상 / 아이콘 티켓 검증)</td></tr>
+<tr><td><strong>민팅 이벤트 활성화 선행 조건</strong></td><td>기본정보 + BIVE 보상 모두 저장 완료 + BIVE 보상 ≥ 1건</td></tr>
 <tr><td><strong>민팅 BIVE 보상 가중치</strong></td><td><strong>정수 1~999</strong>. 비중 = 가중치 / 가중치합. 확률 분포 추첨</td></tr>
-<tr><td><strong>민팅 캠페인 보상 BIVE 제거 (활성 이력 존재)</strong></td><td>보상 내역 테이블에서 행 유지 + 가중치/비중 "-" 표시 (민팅 수 0이면 행 제거)</td></tr>
+<tr><td><strong>민팅 이벤트 보상 BIVE 제거 (활성 이력 존재)</strong></td><td>보상 내역 테이블에서 행 유지 + 가중치/비중 "-" 표시 (민팅 수 0이면 행 제거)</td></tr>
 <tr><td><strong>혜택 유형</strong></td><td><strong>2종</strong>: Boost Point (BP) / Raffle Ticket (RT)</td></tr>
 <tr><td><strong>혜택 상태</strong></td><td><strong>5상태</strong>: 초안 / 대기 / 활성 / 중지 / 종료. 대기는 시작일시 도달 시 자동 활성화</td></tr>
 <tr><td><strong>혜택 지급주기</strong></td><td><strong>3종</strong>: 일일 / 주간 / 1회(획득 시)</td></tr>
@@ -210,7 +210,7 @@ p {
 <tr><td><strong>혜택 시작일 검증</strong></td><td>오늘 이후. 시작일이 오늘이면 시작시간은 현재 시간 이후</td></tr>
 <tr><td><strong>혜택 종료일 검증</strong></td><td>시작일 + 1일 이후</td></tr>
 <tr><td><strong>혜택 중지 상태 수정 범위</strong></td><td>종료일·종료시간만 수정 가능 (다른 필드 잠금)</td></tr>
-<tr><td><strong>민팅 캠페인 SSOT</strong></td><td>BIVE 영역 [CEB-BO-BIVE-103]에서 마스터 관리. SQ/RFL/FQ 등 다른 영역은 "활성" 상태 캠페인을 참조만 함 (외부 영역이 캠페인 정의 불가)</td></tr>
+<tr><td><strong>민팅 이벤트 SSOT</strong></td><td>BIVE 영역 [CEB-BO-BIVE-103]에서 마스터 관리. SQ/RFL/FQ 등 다른 영역은 "활성" 상태 캠페인을 참조만 함 (외부 영역이 캠페인 정의 불가)</td></tr>
 <tr><td><strong>자동 민팅 트리거</strong></td><td>캠페인 "연결 기능" 발생 시점에 자동. 예: 회원가입 → 회원가입 보상 캠페인 / 티켓 검증 → 티켓 캠페인</td></tr>
 <tr><td><strong>회원 단위 발행 추적</strong></td><td>BIVE 상세 §민팅이력 탭에서 Token ID·닉네임·지갑주소·민팅일시 조회. 지갑주소는 BSCScan 새 창 링크</td></tr>
 </table>
@@ -226,10 +226,10 @@ p {
 </code></pre>
 <ul>
 <li><strong>Draft</strong>: 등록 직후. 기본·기능·이미지 모두 수정 가능. 삭제 가능</li>
-<li><strong>Active</strong>: 활성화 후. 기본·기능 모두 수정 불가. 민팅 캠페인에 보상으로 등록 가능. 비활성 전환 가능 (연결된 캠페인이 없거나 모두 종료 상태일 때만)</li>
-<li><strong>Inactive</strong>: 비활성. 민팅 캠페인에 보상으로 등록 불가. 활성 전환 가능</li>
+<li><strong>Active</strong>: 활성화 후. 기본·기능 모두 수정 불가. 민팅 이벤트에 보상으로 등록 가능. 비활성 전환 가능 (연결된 캠페인이 없거나 모두 종료 상태일 때만)</li>
+<li><strong>Inactive</strong>: 비활성. 민팅 이벤트에 보상으로 등록 불가. 활성 전환 가능</li>
 </ul>
-<h3>6-3. 민팅 캠페인 상태 — 4상태</h3>
+<h3>6-3. 민팅 이벤트 상태 — 4상태</h3>
 <pre><code>초안 → 활성 ⇄ 중지 → 종료
   ↓                  ↑
   └─→ 삭제(초안만)    └── 개발팀 수동 처리
@@ -266,18 +266,19 @@ p {
 <table>
 <tr><th>분류</th><th>메시지 형식</th></tr>
 <tr><td>에디션 생성/수정/삭제</td><td>"에디션 '{한국어명}'을(를) {생성/수정/삭제}했습니다."</td></tr>
-<tr><td>BIVE 등록/저장/활성/비활성/삭제</td><td>"BIVE '{멤버명} {등급}-{등급번호}'을(를) {등록/저장/활성화/비활성화/삭제}했습니다."</td></tr>
-<tr><td>민팅 캠페인 생성/저장/활성/일시중지/종료/삭제</td><td>"민팅 캠페인 '{캠페인명}'을(를) {생성/저장/활성화/일시중지/종료/삭제}했습니다."</td></tr>
+<tr><td>BIVE 등록/저장/활성/비활성/삭제</td><td>"BIVE '{아티스트명} {등급}-{등급번호}'을(를) {등록/저장/활성화/비활성화/삭제}했습니다."</td></tr>
+<tr><td>민팅 이벤트 생성/저장/활성/일시중지/종료/삭제</td><td>"민팅 이벤트 '{캠페인명}'을(를) {생성/저장/활성화/일시중지/종료/삭제}했습니다."</td></tr>
 <tr><td>캠페인 BIVE 보상 추가/제거/가중치 변경</td><td>"캠페인 '{캠페인명}' BIVE 보상을 변경했습니다. (추가/제거: N건, 가중치 변경: N건)"</td></tr>
-<tr><td>자동 민팅 발생</td><td>"민팅 캠페인 '{캠페인명}' 자동 민팅 — 트리거: {연결 기능명}, 대상 회원: {닉네임 또는 회원 ID}, 발행 BIVE: '{BIVE 명칭}'"</td></tr>
+<tr><td>자동 민팅 발생</td><td>"민팅 이벤트 '{캠페인명}' 자동 민팅 — 트리거: {연결 기능명}, 대상 회원: {닉네임 또는 회원 ID}, 발행 BIVE: '{BIVE 명칭}'"</td></tr>
 <tr><td>혜택 생성/저장/활성대기/대기취소/일시중지/활성/종료/삭제</td><td>"{BP/RT} 혜택 '{혜택명}'을(를) {액션}했습니다."</td></tr>
 <tr><td>혜택 자동 지급 (배치)</td><td>"{BP/RT} 혜택 '{혜택명}' {일일/주간/1회} 지급 — 대상: {n}명, 총 {수량}"</td></tr>
 </table>
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.1</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>2차 명세 10건 추가 작성 정합</strong> ① §4-1 화면 인벤토리에 2차 10건 추가 — [201-CREATE] 에디션 생성 모달 / [201-EDIT] 에디션 수정/삭제 모달 / [202-CREATE] BIVE 등록 2탭 / [202] BIVE 상세 4탭 / [203] 민팅 캠페인 상세 3탭 / [203-CREATE] 캠페인 생성 2탭 / [203-MD-ADD] BIVE 보상 추가 모달 / [204] 혜택 상세 2탭 / [204-CREATE] 혜택 생성 2탭 / [204-MD-ADD] BIVE 추가 모달 ② §4-2 → "v1 → v2 매핑" 간단 표기로 정리 (상세는 L4 매트릭스 참조) ③ §4-3 후속 작성 예정 (mock + SQ 정합)으로 재구성 ④ §4-3 → §4-4 번호 시프트 (화면 ID 번호 규칙) ⑤ v1 33건 → v2 16건 통합 결과 명시 (Event/Ticket 4탭, BP/RT 2탭, BIVE 4탭 등 통합)</td></tr>
-<tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 BIVE Confluence 33건을 v2 표준 양식으로 1차 이전</strong> ① 영역 가이드 [CEB-BO-004] 신규 — §1~§10 표준 양식. v1 화면 인벤토리 + v2 매핑표 + 정책 상수 + 4종 상태 머신 ② 메뉴별 메인 4건 신규 — [CEB-BO-BIVE-101] 에디션 리스트 / [102] BIVE 관리 / [103] 민팅 캠페인 리스트 / [104] 혜택 리스트 ③ 플로우 [CEB-BO-BIVE-FLOW] 신규 — 자동 민팅 트리거 + 혜택 자동 지급 배치 + 상태 전환 매트릭스 ④ 도메인 용어 v2 표준 정립 — 에디션 / BIVE / 민팅 캠페인 (v1 "Event/Ticket/Mix/Pick" 4유형 유지) / 혜택 (BP/RT) / 자동 민팅 / 가중치·비중 ⑤ SQ/RFL/FQ 영역과의 연동 정합 — 본 영역이 민팅 캠페인 SSOT (외부 영역은 활성 캠페인 참조만) ⑥ 권한 정책 일원화 — v1의 4단계 권한 매트릭스를 "[관리자 > 권한관리] 설정에 따른다" 단일 표기로 통합 ⑦ 후속 작업: 27건 v1 → v2 ID 매핑표만 §4-2에 등록 (실제 명세 후속)</td></tr>
+<tr><td><strong>v1.2</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 실제 화면 캡처 기반 Critical 용어 3건 일괄 정정</strong> ① 운영 BO 6화면 캡처 (에디션 리스트·BIVE 관리·BIVE 상세·민팅 Event 리스트·캠페인 상세·혜택 BP) 후 명세와 차이 분석 ② <strong>"민팅 캠페인" → "민팅 이벤트"</strong> 일괄 정정 (운영 BO 컬럼·라벨 정합. v1 페이지 제목 "Event 캠페인 상세"는 운영 BO에서도 유지됨에 따라 표기 혼용은 그대로 유지) ③ <strong>"아티스트" → "아티스트 그룹"</strong> 정정 (BIVE 등록·상세·관리·민팅 보상·혜택 BIVE 추가의 표·필드. 운영 BO 라벨 정합) ④ <strong>"멤버" → "아티스트"</strong> 정정 (동일 영역. 운영 BO에서 BIVE의 식별 키로 사용) ⑤ 파일명 3건 git mv: [103/203/203-CREATE] 민팅 캠페인 → 민팅 이벤트 ⑥ 메뉴 트리·정책 상수·상태 머신·플로우 본문 모든 표기 정합 ⑦ Important 2건(관리 정보 5필드 vs 운영 3필드 / 페이지 제목 "혜택 관리" vs "혜택")은 후속 작업으로 유지</td></tr>
+<tr><td>v1.1</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>2차 명세 10건 추가 작성 정합</strong> ① §4-1 화면 인벤토리에 2차 10건 추가 — [201-CREATE] 에디션 생성 모달 / [201-EDIT] 에디션 수정/삭제 모달 / [202-CREATE] BIVE 등록 2탭 / [202] BIVE 상세 4탭 / [203] 민팅 이벤트 상세 3탭 / [203-CREATE] 캠페인 생성 2탭 / [203-MD-ADD] BIVE 보상 추가 모달 / [204] 혜택 상세 2탭 / [204-CREATE] 혜택 생성 2탭 / [204-MD-ADD] BIVE 추가 모달 ② §4-2 → "v1 → v2 매핑" 간단 표기로 정리 (상세는 L4 매트릭스 참조) ③ §4-3 후속 작성 예정 (mock + SQ 정합)으로 재구성 ④ §4-3 → §4-4 번호 시프트 (화면 ID 번호 규칙) ⑤ v1 33건 → v2 16건 통합 결과 명시 (Event/Ticket 4탭, BP/RT 2탭, BIVE 4탭 등 통합)</td></tr>
+<tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 BIVE Confluence 33건을 v2 표준 양식으로 1차 이전</strong> ① 영역 가이드 [CEB-BO-004] 신규 — §1~§10 표준 양식. v1 화면 인벤토리 + v2 매핑표 + 정책 상수 + 4종 상태 머신 ② 메뉴별 메인 4건 신규 — [CEB-BO-BIVE-101] 에디션 리스트 / [102] BIVE 관리 / [103] 민팅 이벤트 리스트 / [104] 혜택 리스트 ③ 플로우 [CEB-BO-BIVE-FLOW] 신규 — 자동 민팅 트리거 + 혜택 자동 지급 배치 + 상태 전환 매트릭스 ④ 도메인 용어 v2 표준 정립 — 에디션 / BIVE / 민팅 이벤트 (v1 "Event/Ticket/Mix/Pick" 4유형 유지) / 혜택 (BP/RT) / 자동 민팅 / 가중치·비중 ⑤ SQ/RFL/FQ 영역과의 연동 정합 — 본 영역이 민팅 이벤트 SSOT (외부 영역은 활성 캠페인 참조만) ⑥ 권한 정책 일원화 — v1의 4단계 권한 매트릭스를 "[관리자 > 권한관리] 설정에 따른다" 단일 표기로 통합 ⑦ 후속 작업: 27건 v1 → v2 ID 매핑표만 §4-2에 등록 (실제 명세 후속)</td></tr>
 </table>
 <h2>10. 관련 문서</h2>
 <ul>

@@ -100,7 +100,7 @@ p {
 <p>진입 경로: [CEB-BO-BIVE-204] 혜택 상세 BIVE 추가 탭 또는 [CEB-BO-BIVE-204-CREATE] 혜택 생성 BIVE 추가 탭의 [+ 추가하기] 버튼</p>
 </blockquote>
 <h2>1. 모달 개요</h2>
-<p>혜택을 받을 수 있는 <strong>BIVE를 다중 선택</strong>하여 추가한다. 에디션·아티스트·멤버·등급 필터로 BIVE 목록을 좁혀가며, 이미 추가된 BIVE는 중복 방지된다.</p>
+<p>혜택을 받을 수 있는 <strong>BIVE를 다중 선택</strong>하여 추가한다. 에디션·아티스트·아티스트·등급 필터로 BIVE 목록을 좁혀가며, 이미 추가된 BIVE는 중복 방지된다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>트리거</td><td>[CEB-BO-BIVE-204] / [CEB-BO-BIVE-204-CREATE]의 BIVE 추가 탭 [+ 추가하기] 버튼</td></tr>
@@ -124,8 +124,8 @@ p {
 <table>
 <tr><th>필드</th><th>입력 방식</th><th>옵션</th><th>필수</th></tr>
 <tr><td>에디션</td><td>Select</td><td>등록된 에디션 목록</td><td>★</td></tr>
+<tr><td>아티스트 그룹</td><td>Select (기본: 전체)</td><td>선택한 에디션의 BIVE 아티스트 목록 (에디션 선택 전 비활성)</td><td>—</td></tr>
 <tr><td>아티스트</td><td>Select (기본: 전체)</td><td>선택한 에디션의 BIVE 아티스트 목록 (에디션 선택 전 비활성)</td><td>—</td></tr>
-<tr><td>멤버</td><td>Select (기본: 전체)</td><td>선택한 에디션의 BIVE 멤버 목록 (에디션 선택 전 비활성)</td><td>—</td></tr>
 <tr><td>등급</td><td>Select (기본: 전체)</td><td>선택한 에디션의 등급 목록 (에디션 선택 전 비활성)</td><td>—</td></tr>
 </table>
 <ul>
@@ -135,9 +135,9 @@ p {
 <table>
 <tr><th>컬럼</th><th>설명</th></tr>
 <tr><td>[선택]</td><td>체크박스. 이미 혜택에 포함된 BIVE는 체크 + 비활성</td></tr>
-<tr><td>BIVE 명칭</td><td><code>{멤버명} {등급}-{등급번호}</code></td></tr>
+<tr><td>BIVE 명칭</td><td><code>{아티스트명} {등급}-{등급번호}</code></td></tr>
+<tr><td>아티스트 그룹</td><td>아티스트명</td></tr>
 <tr><td>아티스트</td><td>아티스트명</td></tr>
-<tr><td>멤버</td><td>멤버명</td></tr>
 <tr><td>등급</td><td>Event/Normal/Special/Wicked/Next/Final</td></tr>
 <tr><td>등급번호</td><td>5자리 숫자</td></tr>
 </table>
@@ -158,14 +158,14 @@ p {
 <table>
 <tr><th>위치</th><th>정보</th><th>의미</th></tr>
 <tr><td>모달 헤더</td><td>타이틀·닫기·[추가하기]</td><td>액션 진입</td></tr>
-<tr><td>필터 영역</td><td>에디션·아티스트·멤버·등급</td><td>검색 범위 좁히기</td></tr>
-<tr><td>테이블</td><td>체크박스·명칭·아티스트·멤버·등급·등급번호</td><td>BIVE 선택</td></tr>
+<tr><td>필터 영역</td><td>에디션·아티스트·아티스트·등급</td><td>검색 범위 좁히기</td></tr>
+<tr><td>테이블</td><td>체크박스·명칭·아티스트·아티스트·등급·등급번호</td><td>BIVE 선택</td></tr>
 </table>
 <h2>4. 상태별 동작 분기</h2>
 <table>
 <tr><th>상황</th><th>동작</th></tr>
 <tr><td>모달 오픈 (에디션 미선택)</td><td>테이블 빈 상태 + 안내</td></tr>
-<tr><td>에디션 선택</td><td>아티스트·멤버·등급 필터 활성 + 테이블 데이터 로드</td></tr>
+<tr><td>에디션 선택</td><td>아티스트·아티스트·등급 필터 활성 + 테이블 데이터 로드</td></tr>
 <tr><td>필터 변경</td><td>테이블 즉시 갱신</td></tr>
 <tr><td>체크박스 선택</td><td>[추가하기] 활성 (1건 이상 선택 시)</td></tr>
 <tr><td>이미 혜택에 포함된 BIVE</td><td>체크박스 비활성 (체크된 상태 + 회색)</td></tr>

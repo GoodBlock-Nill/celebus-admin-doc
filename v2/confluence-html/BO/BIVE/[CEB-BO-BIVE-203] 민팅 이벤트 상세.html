@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>[CEB-BO-BIVE-203] 민팅 캠페인 상세</title>
+  <title>[CEB-BO-BIVE-203] 민팅 이벤트 상세</title>
   <style>
     body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -76,7 +76,7 @@ p {
   </style>
 </head>
 <body>
-<h1>[CEB-BO-BIVE-203] 민팅 캠페인 상세</h1>
+<h1>[CEB-BO-BIVE-203] 민팅 이벤트 상세</h1>
 <h2>Page Properties</h2>
 <table>
 <tr><th>Key</th><th>Value</th></tr>
@@ -100,13 +100,13 @@ p {
 <p>화면 경로: <code>/bive/minting/{type}/{campaignId}</code> (type = event / ticket / mix / pick)</p>
 </blockquote>
 <h2>1. 화면 개요</h2>
-<p>특정 <strong>민팅 캠페인</strong>의 상세를 조회·관리한다. 4상태(초안/활성/중지/종료) × 4유형(Event/Ticket/Mix/Pick) 매트릭스 적용. 3탭(기본정보·BIVE 보상·보상내역) 구조이며, 상태에 따라 헤더 액션·필드 잠금이 분기된다.</p>
+<p>특정 <strong>민팅 이벤트</strong>의 상세를 조회·관리한다. 4상태(초안/활성/중지/종료) × 4유형(Event/Ticket/Mix/Pick) 매트릭스 적용. 3탭(기본정보·BIVE 보상·보상내역) 구조이며, 상태에 따라 헤더 액션·필드 잠금이 분기된다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>화면 경로</td><td><code>/bive/minting/{type}/{campaignId}</code></td></tr>
 <tr><td>Breadcrumb</td><td>홈 / BIVE / 민팅 관리 / {Event 또는 Ticket} / 캠페인 상세</td></tr>
 <tr><td>페이지 제목</td><td><code>{캠페인명}</code></td></tr>
-<tr><td>진입 경로</td><td>[CEB-BO-BIVE-103] 민팅 캠페인 리스트의 행 클릭</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-BIVE-103] 민팅 이벤트 리스트의 행 클릭</td></tr>
 <tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다</td></tr>
 </table>
 <h2>2. 화면 구성</h2>
@@ -146,9 +146,9 @@ p {
 <p><strong>BIVE 보상 목록 테이블</strong>:</p>
 <table>
 <tr><th>컬럼</th><th>설명</th></tr>
-<tr><td>BIVE 명칭</td><td>자동 생성 <code>{멤버명} {등급}-{등급번호}</code></td></tr>
+<tr><td>BIVE 명칭</td><td>자동 생성 <code>{아티스트명} {등급}-{등급번호}</code></td></tr>
+<tr><td>아티스트 그룹</td><td>아티스트명</td></tr>
 <tr><td>아티스트</td><td>아티스트명</td></tr>
-<tr><td>멤버</td><td>멤버명</td></tr>
 <tr><td>등급</td><td>Event/Normal/Special/Wicked/Next/Final</td></tr>
 <tr><td>등급번호</td><td>5자리 숫자</td></tr>
 <tr><td>가중치</td><td>정수 1~999. 입력 가능 여부 상태에 따라 분기. placeholder "1-999"</td></tr>
@@ -224,7 +224,7 @@ p {
 <h2>7. 연관 화면</h2>
 <table>
 <tr><th>액션</th><th>다음 화면</th></tr>
-<tr><td>← 뒤로가기</td><td>[CEB-BO-BIVE-103] 민팅 캠페인 리스트</td></tr>
+<tr><td>← 뒤로가기</td><td>[CEB-BO-BIVE-103] 민팅 이벤트 리스트</td></tr>
 <tr><td>[삭제] (초안만)</td><td>캠페인 삭제 모달 → [CEB-BO-BIVE-103] 이동</td></tr>
 <tr><td>[활성화]</td><td>활성화 모달 → 본 화면 상태 갱신</td></tr>
 <tr><td>[일시중지]</td><td>일시중지 모달 → 본 화면 상태 갱신</td></tr>

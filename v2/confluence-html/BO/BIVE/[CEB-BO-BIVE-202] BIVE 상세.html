@@ -100,7 +100,7 @@ p {
 <p>화면 경로: <code>/bive/editions/{editionId}/bive/{biveId}</code> · Breadcrumb: <code>홈 › BIVE › 에디션 관리 › {에디션명} › BIVE 상세</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
-<p>특정 <strong>BIVE</strong>의 기본 메타·기능 설정·연결 캠페인·민팅 이력을 4개 탭으로 조회·수정한다. 상태(Draft/Active/Inactive)에 따라 헤더 액션과 필드 잠금이 분기된다. BIVE 명칭은 <code>{멤버명} {등급}-{등급번호}</code> 자동 생성.</p>
+<p>특정 <strong>BIVE</strong>의 기본 메타·기능 설정·연결 캠페인·민팅 이력을 4개 탭으로 조회·수정한다. 상태(Draft/Active/Inactive)에 따라 헤더 액션과 필드 잠금이 분기된다. BIVE 명칭은 <code>{아티스트명} {등급}-{등급번호}</code> 자동 생성.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>화면 경로</td><td><code>/bive/editions/{editionId}/bive/{biveId}</code></td></tr>
@@ -123,8 +123,8 @@ p {
 </table>
 <h3>2-2. 기본정보 탭 (Draft에서 수정 가능, Active/Inactive에서 read-only)</h3>
 <ul>
-<li><strong>BIVE 명칭</strong> (Read-only): <code>{멤버명} {등급}-{등급번호}</code> 자동 생성/갱신</li>
-<li>나머지 필드는 [CEB-BO-BIVE-202-CREATE] 등록 화면과 동일 (아티스트·멤버·등급·등급번호·설명·미디어)</li>
+<li><strong>BIVE 명칭</strong> (Read-only): <code>{아티스트명} {등급}-{등급번호}</code> 자동 생성/갱신</li>
+<li>나머지 필드는 [CEB-BO-BIVE-202-CREATE] 등록 화면과 동일 (아티스트·아티스트·등급·등급번호·설명·미디어)</li>
 </ul>
 <p><strong>관리 정보 카드</strong> (우측 하단):</p>
 <table>
@@ -142,7 +142,7 @@ p {
 <li>Pick ON/OFF</li>
 </ul>
 <h3>2-4. 민팅관리 탭 (모든 상태에서 조회만)</h3>
-<p>본 BIVE가 보상으로 연결된 민팅 캠페인 현황 조회.</p>
+<p>본 BIVE가 보상으로 연결된 민팅 이벤트 현황 조회.</p>
 <p><strong>필터 바</strong>:</p>
 <ul>
 <li>상태 (전체/초안/활성/중지/종료)</li>
@@ -184,36 +184,36 @@ p {
 <table>
 <tr><th>위치</th><th>정보</th><th>의미</th></tr>
 <tr><td>헤더</td><td>4탭 네비게이션 + 상태별 액션</td><td>운영 흐름</td></tr>
-<tr><td>기본정보 탭</td><td>BIVE 명칭(자동)·아티스트·멤버·등급·등급번호·설명·미디어·관리 정보</td><td>BIVE 정체성</td></tr>
+<tr><td>기본정보 탭</td><td>BIVE 명칭(자동)·아티스트·아티스트·등급·등급번호·설명·미디어·관리 정보</td><td>BIVE 정체성</td></tr>
 <tr><td>기능설정 탭</td><td>보내기·Mix·Pick 토글 3종</td><td>앱 사용 가능 기능</td></tr>
 <tr><td>민팅관리 탭</td><td>연결 캠페인 현황 + 필터·테이블</td><td>본 BIVE 운영 컨텍스트</td></tr>
 <tr><td>민팅이력 탭</td><td>총 발행 + 회원·지갑 단위 발행 이력</td><td>실제 발행 추적</td></tr>
 </table>
 <h2>4. 상태별 동작 분기</h2>
 <table>
-<tr><th>상태</th><th>기본정보·기능</th><th>헤더 액션</th><th>민팅 캠페인 보상 등록</th></tr>
+<tr><th>상태</th><th>기본정보·기능</th><th>헤더 액션</th><th>민팅 이벤트 보상 등록</th></tr>
 <tr><td><strong>Draft</strong></td><td>✏️ 수정 가능</td><td>[삭제] + [저장] + [활성화]</td><td>불가 (Active만 가능)</td></tr>
 <tr><td><strong>Active</strong></td><td>🔒 read-only</td><td>[비활성화] (조건부)</td><td>가능</td></tr>
 <tr><td><strong>Inactive</strong></td><td>🔒 read-only</td><td>[활성화]</td><td>불가 (신규 등록 차단, 기존 활성 캠페인은 유지)</td></tr>
 </table>
 <p><strong>Active → Inactive 전환 조건</strong>:</p>
 <ul>
-<li>본 BIVE가 보상으로 연결된 민팅 캠페인이 <strong>없거나 모두 종료 상태</strong>여야 함</li>
+<li>본 BIVE가 보상으로 연결된 민팅 이벤트가 <strong>없거나 모두 종료 상태</strong>여야 함</li>
 <li>활성/중지 상태 캠페인에 연결되어 있으면 비활성 불가 (토스트로 안내)</li>
 </ul>
 <h2>5. 검증 규칙</h2>
 <table>
 <tr><th>규칙</th><th>내용</th></tr>
 <tr><td>활성화 검증</td><td>Draft 상태에서 저장된 데이터와 입력 데이터가 다른 경우 활성화 실패 ("등급번호 001 저장 후 002로 수정 + 활성화" 등) → 토스트 "활성화 실패"</td></tr>
-<tr><td>등급/등급번호 고유성</td><td>동일 에디션 내 (멤버, 등급, 등급번호) 조합 유니크 (서버 검증)</td></tr>
+<tr><td>등급/등급번호 고유성</td><td>동일 에디션 내 (아티스트, 등급, 등급번호) 조합 유니크 (서버 검증)</td></tr>
 <tr><td>비활성화 조건</td><td>연결된 캠페인이 모두 종료 상태일 때만 비활성화 가능</td></tr>
 <tr><td>권한</td><td>[관리자 > 권한관리] BIVE 쓰기 권한 보유자만 헤더 액션 노출</td></tr>
 </table>
 <h2>6. 외부 영역 연동</h2>
 <table>
 <tr><th>영역</th><th>운영 동작</th><th>사용처</th></tr>
-<tr><td>아티스트·멤버 관리</td><td>자동 채움 (기본정보 탭)</td><td>등록 시 사용</td></tr>
-<tr><td>민팅 캠페인 (BIVE-103/203)</td><td>본 BIVE가 보상으로 연결된 캠페인 + 민팅 카운트 집계</td><td>민팅관리 탭</td></tr>
+<tr><td>아티스트 그룹·아티스트</td><td>자동 채움 (기본정보 탭)</td><td>등록 시 사용</td></tr>
+<tr><td>민팅 이벤트 (BIVE-103/203)</td><td>본 BIVE가 보상으로 연결된 캠페인 + 민팅 카운트 집계</td><td>민팅관리 탭</td></tr>
 <tr><td>회원 (USR)</td><td>닉네임 → 회원 상세 새 창</td><td>민팅이력 탭 닉네임 컬럼</td></tr>
 <tr><td>외부 블록체인 (BSC)</td><td>지갑주소 → BSCScan 새 창</td><td>민팅이력 탭 지갑주소 컬럼</td></tr>
 </table>

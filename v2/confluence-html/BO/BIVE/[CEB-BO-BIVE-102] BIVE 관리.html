@@ -100,7 +100,7 @@ p {
 <p>화면 경로: <code>/bive/editions/{editionId}</code> · Breadcrumb: <code>홈 › BIVE › 에디션 관리 › {에디션명} BIVE 관리</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
-<p>특정 <strong>에디션</strong>에 속한 BIVE 목록을 조회·검색·필터링하고, 신규 BIVE 등록 진입 및 개별 BIVE 상세로 이동하는 인덱스 역할. 운영 중인 상태(Active/Inactive/Draft) 항목을 한눈에 파악하고, 민팅 캠페인 연결 수 + 발행 수 등 핵심 지표를 확인한다.</p>
+<p>특정 <strong>에디션</strong>에 속한 BIVE 목록을 조회·검색·필터링하고, 신규 BIVE 등록 진입 및 개별 BIVE 상세로 이동하는 인덱스 역할. 운영 중인 상태(Active/Inactive/Draft) 항목을 한눈에 파악하고, 민팅 이벤트 연결 수 + 발행 수 등 핵심 지표를 확인한다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>화면 경로</td><td><code>/bive/editions/{editionId}</code></td></tr>
@@ -119,7 +119,7 @@ p {
 <ul>
 <li><strong>상태 필터</strong> (드롭다운): <code>전체(기본) / Active / Inactive / Draft</code></li>
 <li><strong>등급 필터</strong> (드롭다운): <code>전체(기본) / Event / Normal / Special / Wicked / Next / Final</code></li>
-<li><strong>검색 대상 드롭다운</strong>: <code>명칭(기본) / 아티스트 / 멤버</code></li>
+<li><strong>검색 대상 드롭다운</strong>: <code>명칭(기본) / 아티스트 그룹 / 아티스트</code></li>
 <li><strong>검색 입력</strong>: placeholder "검색어 입력"</li>
 <li><strong>[조회] 버튼</strong>: 현재 조건으로 테이블 재조회</li>
 </ul>
@@ -127,12 +127,12 @@ p {
 <table>
 <tr><th>컬럼</th><th>설명</th></tr>
 <tr><td>상태</td><td>배지 — Active(녹색) / Inactive(빨강) / Draft(노랑)</td></tr>
-<tr><td>명칭</td><td><code>{멤버명} {등급}-{등급번호}</code> 자동 생성 (예: "하시모토 칸나 Normal-001")</td></tr>
-<tr><td>아티스트</td><td>아티스트 그룹명</td></tr>
-<tr><td>멤버</td><td>멤버명</td></tr>
+<tr><td>명칭</td><td><code>{아티스트명} {등급}-{등급번호}</code> 자동 생성 (예: "하시모토 칸나 Normal-001")</td></tr>
+<tr><td>아티스트 그룹</td><td>아티스트 그룹명</td></tr>
+<tr><td>아티스트</td><td>아티스트명</td></tr>
 <tr><td>등급</td><td>Event / Normal / Special / Wicked / Next / Final</td></tr>
 <tr><td>등급번호</td><td>최대 5자리 숫자</td></tr>
-<tr><td>민팅 캠페인</td><td>본 BIVE에 연결된 민팅 캠페인 수 (없으면 "-")</td></tr>
+<tr><td>민팅 이벤트</td><td>본 BIVE에 연결된 민팅 이벤트 수 (없으면 "-")</td></tr>
 <tr><td>발행 수</td><td>누적 발행량 (없으면 "-")</td></tr>
 <tr><td>등록일시</td><td><code>YYYY.MM.DD</code></td></tr>
 </table>
@@ -154,7 +154,7 @@ p {
 <tr><th>위치</th><th>정보</th><th>의미</th></tr>
 <tr><td>상단 바</td><td>페이지 제목·[+ BIVE 등록]</td><td>에디션 컨텍스트 + 운영 액션 진입</td></tr>
 <tr><td>필터·검색</td><td>상태·등급·검색 대상·검색어·조회</td><td>다양한 조건 탐색</td></tr>
-<tr><td>테이블</td><td>상태·명칭·아티스트·멤버·등급·등급번호·민팅 캠페인·발행 수·등록일시</td><td>BIVE 핵심 메타 + 운영 지표</td></tr>
+<tr><td>테이블</td><td>상태·명칭·아티스트·아티스트·등급·등급번호·민팅 이벤트·발행 수·등록일시</td><td>BIVE 핵심 메타 + 운영 지표</td></tr>
 <tr><td>페이지네이션</td><td>페이지 이동</td><td>대량 데이터 탐색</td></tr>
 </table>
 <h2>4. 상태별 동작 분기</h2>
@@ -170,9 +170,9 @@ p {
 <h2>5. 검증 규칙</h2>
 <table>
 <tr><th>검증</th><th>내용</th></tr>
-<tr><td>검색 — 명칭</td><td><code>{멤버명} {등급}-{등급번호}</code> 전체 텍스트 부분 일치</td></tr>
+<tr><td>검색 — 명칭</td><td><code>{아티스트명} {등급}-{등급번호}</code> 전체 텍스트 부분 일치</td></tr>
 <tr><td>검색 — 아티스트</td><td>아티스트명 부분 일치</td></tr>
-<tr><td>검색 — 멤버</td><td>멤버명 부분 일치</td></tr>
+<tr><td>검색 — 아티스트</td><td>아티스트명 부분 일치</td></tr>
 <tr><td>필터 결합</td><td>상태 × 등급 × 검색 = AND 조건</td></tr>
 <tr><td>정렬</td><td>등록일시 내림차순 (최신순)</td></tr>
 <tr><td>권한</td><td>[관리자 > 권한관리] BIVE 쓰기 권한 보유자에게만 [+ BIVE 등록] 노출. 읽기 권한만 있으면 행 클릭(상세 이동)만 가능</td></tr>
@@ -181,8 +181,8 @@ p {
 <table>
 <tr><th>영역</th><th>운영 동작</th><th>사용처</th></tr>
 <tr><td>아티스트 관리</td><td>아티스트 활성 목록 조회</td><td>BIVE 등록 시 드롭다운</td></tr>
-<tr><td>멤버 관리</td><td>멤버 활성 목록 조회</td><td>BIVE 등록 시 드롭다운</td></tr>
-<tr><td>민팅 캠페인 (BIVE-103)</td><td>BIVE별 연결 캠페인 수 집계</td><td>테이블 컬럼 "민팅 캠페인"</td></tr>
+<tr><td>아티스트 > 멤버 리스트</td><td>아티스트 활성 목록 조회</td><td>BIVE 등록 시 드롭다운</td></tr>
+<tr><td>민팅 이벤트 (BIVE-103)</td><td>BIVE별 연결 캠페인 수 집계</td><td>테이블 컬럼 "민팅 이벤트"</td></tr>
 <tr><td>발행 트랜잭션</td><td>BIVE별 누적 민팅 카운트</td><td>테이블 컬럼 "발행 수"</td></tr>
 </table>
 <h2>7. 연관 화면</h2>
@@ -196,7 +196,7 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 B-101 v2 양식 이전</strong> ① v1 페이지 구조(상단 바·필터·테이블·페이지네이션)를 v2 표준 §1~§8로 재배치 ② BIVE 등급 6종 + 상태 3종 명세 정합 ③ 명칭 자동 생성 규칙 명시 ("{멤버명} {등급}-{등급번호}") ④ v1 권한 4단계 → "[관리자 > 권한관리] 설정에 따른다" 단일 표기 ⑤ [CEB-BO-BIVE-101] 에디션 리스트 + [CEB-BO-BIVE-202] BIVE 상세 + [CEB-BO-BIVE-202-CREATE] BIVE 등록 연관 화면 정합</td></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 B-101 v2 양식 이전</strong> ① v1 페이지 구조(상단 바·필터·테이블·페이지네이션)를 v2 표준 §1~§8로 재배치 ② BIVE 등급 6종 + 상태 3종 명세 정합 ③ 명칭 자동 생성 규칙 명시 ("{아티스트명} {등급}-{등급번호}") ④ v1 권한 4단계 → "[관리자 > 권한관리] 설정에 따른다" 단일 표기 ⑤ [CEB-BO-BIVE-101] 에디션 리스트 + [CEB-BO-BIVE-202] BIVE 상세 + [CEB-BO-BIVE-202-CREATE] BIVE 등록 연관 화면 정합</td></tr>
 </table>
 
 </body>

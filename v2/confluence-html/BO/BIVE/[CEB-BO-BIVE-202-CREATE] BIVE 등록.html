@@ -100,7 +100,7 @@ p {
 <p>화면 경로: <code>/bive/editions/{editionId}/bive/create</code> · Breadcrumb: <code>홈 › BIVE › 에디션 관리 › {에디션명} › BIVE 등록</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
-<p>에디션 하위에 신규 <strong>BIVE</strong>(NFT)를 등록한다. 등록 시 운영자가 사전에 생성한 아티스트·멤버 리소스를 사용하며, 등록 직후 Draft 상태로 [CEB-BO-BIVE-102] 리스트에 추가된다. 등록은 2탭 구조(기본정보 / 기능설정)로 모두 입력 후 [등록] 클릭.</p>
+<p>에디션 하위에 신규 <strong>BIVE</strong>(NFT)를 등록한다. 등록 시 운영자가 사전에 생성한 아티스트 그룹·아티스트 리소스를 사용하며, 등록 직후 Draft 상태로 [CEB-BO-BIVE-102] 리스트에 추가된다. 등록은 2탭 구조(기본정보 / 기능설정)로 모두 입력 후 [등록] 클릭.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>화면 경로</td><td><code>/bive/editions/{editionId}/bive/create</code></td></tr>
@@ -122,10 +122,10 @@ p {
 <p><strong>왼쪽 폼</strong>:</p>
 <table>
 <tr><th>필드</th><th>입력 방식</th><th>검증·옵션</th><th>필수</th></tr>
-<tr><td>아티스트 선택</td><td>Select</td><td>아티스트 관리에서 "활성" 상태만 옵션 노출</td><td>★</td></tr>
+<tr><td>아티스트 그룹 선택</td><td>Select</td><td>아티스트 관리에서 "활성" 상태만 옵션 노출</td><td>★</td></tr>
+<tr><td>아티스트 그룹 (KR/EN/JP)</td><td>Read-only</td><td>아티스트 그룹 선택 시 자동 채움</td><td>—</td></tr>
+<tr><td>아티스트 선택</td><td>Select</td><td>아티스트 > 멤버 리스트에서 "활성" 상태만 옵션 노출</td><td>★</td></tr>
 <tr><td>아티스트 (KR/EN/JP)</td><td>Read-only</td><td>아티스트 선택 시 자동 채움</td><td>—</td></tr>
-<tr><td>멤버 선택</td><td>Select</td><td>멤버 관리에서 "활성" 상태만 옵션 노출</td><td>★</td></tr>
-<tr><td>멤버 (KR/EN/JP)</td><td>Read-only</td><td>멤버 선택 시 자동 채움</td><td>—</td></tr>
 <tr><td>설명 (EN)</td><td>Textarea</td><td>영문 설명 자유 입력</td><td>—</td></tr>
 </table>
 <p><strong>속성정보 섹션</strong>:</p>
@@ -156,7 +156,7 @@ p {
 <table>
 <tr><th>위치</th><th>정보</th><th>의미</th></tr>
 <tr><td>헤더</td><td>페이지 제목·탭·[취소]·[등록]</td><td>운영자 액션 진입</td></tr>
-<tr><td>기본정보 탭 왼쪽 폼</td><td>아티스트·멤버 선택 + 자동 채움 KR/EN/JP + 설명</td><td>BIVE 정체성 정의</td></tr>
+<tr><td>기본정보 탭 왼쪽 폼</td><td>아티스트·아티스트 선택 + 자동 채움 KR/EN/JP + 설명</td><td>BIVE 정체성 정의</td></tr>
 <tr><td>기본정보 탭 속성정보</td><td>등급·등급번호·에디션명</td><td>BIVE 분류 키</td></tr>
 <tr><td>기본정보 탭 오른쪽 패널</td><td>미디어 파일</td><td>NFT 대표 자산</td></tr>
 <tr><td>기능설정 탭</td><td>보내기·Mix·Pick 토글 3종</td><td>앱 사용 가능 기능</td></tr>
@@ -165,23 +165,23 @@ p {
 <table>
 <tr><th>상황</th><th>동작</th></tr>
 <tr><td>진입 직후</td><td>기본정보 탭 활성, 아티스트 Select 포커스</td></tr>
+<tr><td>아티스트 그룹 선택</td><td>아티스트(KR/EN/JP) Read-only 필드 자동 채움</td></tr>
 <tr><td>아티스트 선택</td><td>아티스트(KR/EN/JP) Read-only 필드 자동 채움</td></tr>
-<tr><td>멤버 선택</td><td>멤버(KR/EN/JP) Read-only 필드 자동 채움</td></tr>
 <tr><td>미디어 파일 등록</td><td>미리보기 갱신, [파일 제거] 활성</td></tr>
 <tr><td>미디어 파일 제거</td><td>미디어 비우기, [파일 제거] 비활성</td></tr>
 <tr><td>기능설정 탭 클릭</td><td>탭 전환, 입력값 유지</td></tr>
 <tr><td>[등록] 클릭 (필수 모두 입력)</td><td>토스트 "등록 완료" → [CEB-BO-BIVE-102] 이동 + Draft 행 추가</td></tr>
 <tr><td>[등록] 클릭 (필수 누락)</td><td>토스트 "등록 실패: 설정되지 않은 정보가 있습니다." 화면 유지</td></tr>
-<tr><td>[등록] 클릭 (중복 조합)</td><td>토스트 "등록 실패: 동일 (에디션+아티스트+멤버+등급+등급번호) 조합이 이미 존재합니다."</td></tr>
+<tr><td>[등록] 클릭 (중복 조합)</td><td>토스트 "등록 실패: 동일 (에디션+아티스트+아티스트+등급+등급번호) 조합이 이미 존재합니다."</td></tr>
 <tr><td>[취소] 클릭</td><td>변경 사항 폐기 → [CEB-BO-BIVE-102] 이동</td></tr>
 </table>
 <h2>5. 검증 규칙</h2>
 <table>
 <tr><th>검증</th><th>내용</th></tr>
-<tr><td>필수 입력 (기본정보)</td><td>아티스트 선택·멤버 선택·등급·등급번호·미디어 모두 필수</td></tr>
+<tr><td>필수 입력 (기본정보)</td><td>아티스트 그룹 선택·아티스트 선택·등급·등급번호·미디어 모두 필수</td></tr>
 <tr><td>등급번호 검증</td><td>숫자만, 최대 5자리 (1~99999)</td></tr>
 <tr><td>미디어 검증</td><td>확장자 PNG·JPG·GIF·MP4 + 크기 ≤ 20MB</td></tr>
-<tr><td>중복 방지</td><td>동일 (에디션, 아티스트, 멤버, 등급, 등급번호) 조합 중복 등록 불가. 서버 검증</td></tr>
+<tr><td>중복 방지</td><td>동일 (에디션, 아티스트, 아티스트, 등급, 등급번호) 조합 중복 등록 불가. 서버 검증</td></tr>
 <tr><td>기능설정</td><td>토글 3종은 기본 ON. 등록 검증과 무관 (기본정보만 검증)</td></tr>
 <tr><td>권한</td><td>[관리자 > 권한관리] BIVE 쓰기 권한 보유자만 진입</td></tr>
 </table>
@@ -189,7 +189,7 @@ p {
 <table>
 <tr><th>영역</th><th>운영 동작</th><th>사용처</th></tr>
 <tr><td>아티스트 관리</td><td>"활성" 상태 아티스트 목록 + KR/EN/JP 명칭 조회</td><td>아티스트 Select + 자동 채움</td></tr>
-<tr><td>멤버 관리</td><td>"활성" 상태 멤버 목록 + KR/EN/JP 명칭 조회</td><td>멤버 Select + 자동 채움</td></tr>
+<tr><td>아티스트 > 멤버 리스트</td><td>"활성" 상태 아티스트 목록 + KR/EN/JP 명칭 조회</td><td>아티스트 Select + 자동 채움</td></tr>
 <tr><td>에디션 (상위 컨텍스트)</td><td>에디션명 KR/EN/JP 조회</td><td>에디션명 Read-only 자동 채움</td></tr>
 </table>
 <h2>7. 연관 화면</h2>
@@ -203,7 +203,7 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 B-201 + B-202 통합 v2 양식 이전</strong> ① v1 별도 2개 화면을 단일 [CEB-BO-BIVE-202-CREATE]의 2탭 구조로 통합 ② §2 화면 구성 — 기본정보 탭 (왼쪽 폼 + 속성정보 + 오른쪽 미디어) / 기능설정 탭 (토글 3종) ③ 자동 채움 규칙 (아티스트→KR/EN/JP, 멤버→KR/EN/JP) 명시 ④ 미디어 확장자·크기 제약 명시 (PNG·JPG·GIF·MP4 / 20MB) ⑤ 중복 방지 정책 (에디션+아티스트+멤버+등급+등급번호 유니크) ⑥ 권한 단일 표기</td></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 B-201 + B-202 통합 v2 양식 이전</strong> ① v1 별도 2개 화면을 단일 [CEB-BO-BIVE-202-CREATE]의 2탭 구조로 통합 ② §2 화면 구성 — 기본정보 탭 (왼쪽 폼 + 속성정보 + 오른쪽 미디어) / 기능설정 탭 (토글 3종) ③ 자동 채움 규칙 (아티스트→KR/EN/JP, 멤버→KR/EN/JP) 명시 ④ 미디어 확장자·크기 제약 명시 (PNG·JPG·GIF·MP4 / 20MB) ⑤ 중복 방지 정책 (에디션+아티스트+아티스트+등급+등급번호 유니크) ⑥ 권한 단일 표기</td></tr>
 </table>
 
 </body>

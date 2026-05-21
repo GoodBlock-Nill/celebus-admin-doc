@@ -106,7 +106,7 @@ p {
 <tr><th>라우트</th><th>운영 화면명</th><th>문서 ID</th></tr>
 <tr><td>/bive/editions</td><td>에디션 리스트</td><td>[CEB-BO-BIVE-101]</td></tr>
 <tr><td>/bive/editions/{id}</td><td>BIVE 관리</td><td>[CEB-BO-BIVE-102]</td></tr>
-<tr><td>/bive/minting</td><td>민팅 캠페인 리스트 (Event/Ticket/Mix/Pick 4탭)</td><td>[CEB-BO-BIVE-103]</td></tr>
+<tr><td>/bive/minting</td><td>민팅 이벤트 리스트 (Event/Ticket/Mix/Pick 4탭)</td><td>[CEB-BO-BIVE-103]</td></tr>
 <tr><td>/bive/benefits</td><td>혜택 리스트 (BP/RT 2탭)</td><td>[CEB-BO-BIVE-104]</td></tr>
 <tr><td>(통합 플로우 문서)</td><td>BIVE 영역 플로우 및 로직</td><td>[CEB-BO-BIVE-FLOW]</td></tr>
 <tr><td>(참조 가이드)</td><td>BIVE(NFT) 영역 가이드</td><td>[CEB-BO-004]</td></tr>
@@ -125,16 +125,16 @@ p {
 <h3>3-2. BIVE (NFT)</h3>
 <table>
 <tr><th>항목</th><th>정의</th></tr>
-<tr><td>정의</td><td>실제 NFT 단위. 멤버 × 등급 × 등급번호로 식별</td></tr>
-<tr><td>명칭</td><td><code>{멤버명} {등급}-{등급번호}</code> 자동 생성 (예: 하시모토 칸나 Normal-001)</td></tr>
+<tr><td>정의</td><td>실제 NFT 단위. 아티스트 × 등급 × 등급번호로 식별</td></tr>
+<tr><td>명칭</td><td><code>{아티스트명} {등급}-{등급번호}</code> 자동 생성 (예: 하시모토 칸나 Normal-001)</td></tr>
 <tr><td>등급 6종</td><td>Event / Normal / Special / Wicked / Next / Final (고정)</td></tr>
 <tr><td>등급번호</td><td>최대 5자리 숫자 (예: 001, 12345)</td></tr>
-<tr><td>고유성</td><td>동일 에디션 내 (멤버, 등급, 등급번호) 조합 유니크</td></tr>
+<tr><td>고유성</td><td>동일 에디션 내 (아티스트, 등급, 등급번호) 조합 유니크</td></tr>
 <tr><td>미디어</td><td>PNG·JPG·GIF·MP4 / 최대 20MB / 필수</td></tr>
 <tr><td>기능 토글 3종</td><td>보내기(Send) / Mix / Pick — 기본 ON, 개별 ON/OFF</td></tr>
 <tr><td>상태 3종</td><td>Draft / Active / Inactive</td></tr>
 </table>
-<h3>3-3. 민팅 캠페인 (Mint Campaign)</h3>
+<h3>3-3. 민팅 이벤트 (Mint Campaign)</h3>
 <table>
 <tr><th>항목</th><th>정의</th></tr>
 <tr><td>정의</td><td>회원 액션 발생 시 자동으로 BIVE를 발행하는 트리거 단위</td></tr>
@@ -177,12 +177,12 @@ p {
 
 조건:
 - Draft → Active: 운영자 활성화 (필수 정보 모두 입력)
-- Active → Inactive: 연결된 민팅 캠페인이 없거나 모두 종료 상태일 때만
+- Active → Inactive: 연결된 민팅 이벤트가 없거나 모두 종료 상태일 때만
 - Inactive → Active: 운영자 재활성화
 - Active 후 기본정보·기능 수정 불가 (모두 잠금)
-- Inactive 상태 BIVE는 민팅 캠페인 보상으로 신규 선택 불가
+- Inactive 상태 BIVE는 민팅 이벤트 보상으로 신규 선택 불가
 </code></pre>
-<h3>4-3. 민팅 캠페인 상태 (4상태)</h3>
+<h3>4-3. 민팅 이벤트 상태 (4상태)</h3>
 <pre><code>┌────────┐   활성화    ┌────────┐  일시중지  ┌────────┐
 │  초안  │ ─────────► │  활성  │ ─────────► │  중지  │
 │        │            │        │            │        │
@@ -227,8 +227,8 @@ p {
 - 종료: 완전 읽기 전용
 </code></pre>
 <h2>5. 정책</h2>
-<h3>5-1. 민팅 캠페인 SSOT 정책</h3>
-<p>본 영역 [CEB-BO-BIVE-103]에서 모든 민팅 캠페인을 마스터 관리한다. 외부 영역(SQ/RFL/FQ)은 다음을 따른다:</p>
+<h3>5-1. 민팅 이벤트 SSOT 정책</h3>
+<p>본 영역 [CEB-BO-BIVE-103]에서 모든 민팅 이벤트를 마스터 관리한다. 외부 영역(SQ/RFL/FQ)은 다음을 따른다:</p>
 <ul>
 <li>외부 영역에서 캠페인을 신규 정의할 수 없음</li>
 <li>외부 영역은 본 영역에 등록된 <strong>"활성"</strong> 상태 캠페인만 드롭다운으로 참조</li>
@@ -271,7 +271,7 @@ p {
 <h3>5-5. BIVE 비활성화 조건</h3>
 <p>활성 상태 BIVE를 비활성으로 전환하려면:</p>
 <ul>
-<li>본 BIVE가 보상으로 연결된 모든 민팅 캠페인이 <strong>"종료" 상태</strong>여야 함</li>
+<li>본 BIVE가 보상으로 연결된 모든 민팅 이벤트가 <strong>"종료" 상태</strong>여야 함</li>
 <li>활성 캠페인 또는 중지 캠페인에 연결되어 있으면 비활성 불가</li>
 <li>비활성된 BIVE는 신규 캠페인의 BIVE 보상 추가 모달에서 선택 불가 (단, 기존 활성 캠페인에는 계속 사용 가능)</li>
 </ul>
@@ -289,18 +289,18 @@ p {
    → 에디션 초기 상태로 리스트 추가
 3. 에디션 행 클릭 → [CEB-BO-BIVE-102] BIVE 관리 진입
 4. [+ BIVE 등록] 클릭 → [CEB-BO-BIVE-202-CREATE] BIVE 등록 진입
-   → 아티스트·멤버·등급·등급번호·미디어·기능 토글 입력 → 등록
+   → 아티스트·아티스트·등급·등급번호·미디어·기능 토글 입력 → 등록
    → Draft 상태로 BIVE 리스트 추가
 5. BIVE 행 클릭 → [CEB-BO-BIVE-202] BIVE 상세 진입 → 기본정보·기능 확인
 6. [활성화] 버튼 클릭 → 활성화 모달 → Active 상태 전환
-   → 이 시점부터 민팅 캠페인 BIVE 보상으로 등록 가능
+   → 이 시점부터 민팅 이벤트 BIVE 보상으로 등록 가능
 </code></pre>
-<h3>6-2. 민팅 캠페인 생성 → BIVE 보상 추가 → 활성화 플로우</h3>
+<h3>6-2. 민팅 이벤트 생성 → BIVE 보상 추가 → 활성화 플로우</h3>
 <pre><code>1. 운영자 사이드바 → BIVE &gt; 민팅 관리 → [CEB-BO-BIVE-103]
 2. Event 탭에서 [+ 캠페인 생성] 클릭 → [CEB-BO-BIVE-203-CREATE] 진입
 3. 기본정보 탭에서 캠페인명 + 연결 기능 입력 → BIVE 보상 탭 이동
 4. [+ 추가하기] 클릭 → [CEB-BO-BIVE-203-MD-ADD] 모달 오픈
-   → 에디션·아티스트·멤버·등급 필터 선택 → 활성 BIVE 다중 선택 → 추가하기
+   → 에디션·아티스트·아티스트·등급 필터 선택 → 활성 BIVE 다중 선택 → 추가하기
    → 본 화면 테이블에 BIVE 행 추가
 5. 각 BIVE의 가중치 1~999 정수 입력 → 비중 자동 계산
 6. [생성하기] 클릭 → 캠페인 초안 상태로 [CEB-BO-BIVE-103] 리스트 추가
@@ -315,7 +315,7 @@ p {
 3. 캠페인 BIVE 보상 목록 + 가중치 조회
 4. 가중치 기반 추첨 → 1개 BIVE 선택
 5. 회원 지갑주소로 BIVE NFT 트랜잭션 발행 (BSC)
-6. 활동 로그 기록: "민팅 캠페인 '{캠페인명}' 자동 민팅 — 트리거: {연결 기능명}, 대상 회원: {닉네임}, 발행 BIVE: '{BIVE 명칭}'"
+6. 활동 로그 기록: "민팅 이벤트 '{캠페인명}' 자동 민팅 — 트리거: {연결 기능명}, 대상 회원: {닉네임}, 발행 BIVE: '{BIVE 명칭}'"
 7. BIVE 상세 §민팅이력 탭에 신규 행 추가 (Token ID·닉네임·지갑주소·민팅일시)
 </code></pre>
 <h3>6-4. 혜택 생성 → 활성대기 → 자동 활성 플로우</h3>
@@ -352,7 +352,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — BIVE 영역 운영 플로우 SSOT</strong> ① v1 33건의 상태 전이·자동 민팅·혜택 배치·캠페인 활성화 조건 등 모든 운영 로직을 본 단일 문서로 종합 ② 4종 상태 머신 명세 (에디션·BIVE·민팅 캠페인·혜택) 다이어그램 + 전이 조건 ③ 자동 민팅 추첨 로직 + 혜택 자동 지급 배치 로직 명세 ④ BIVE 비활성화 조건 + 캠페인 BIVE 보상 제거 정책 ⑤ 6가지 핵심 사용자 플로우 (에디션 생성·BIVE 등록·캠페인 생성·자동 민팅·혜택 생성·혜택 배치·캠페인 종료) ⑥ [CEB-BO-004] 영역 가이드 + 메뉴별 메인 4건과 정합. 모든 외부 영역(SQ/RFL/FQ) 연동의 SSOT</td></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — BIVE 영역 운영 플로우 SSOT</strong> ① v1 33건의 상태 전이·자동 민팅·혜택 배치·캠페인 활성화 조건 등 모든 운영 로직을 본 단일 문서로 종합 ② 4종 상태 머신 명세 (에디션·BIVE·민팅 이벤트·혜택) 다이어그램 + 전이 조건 ③ 자동 민팅 추첨 로직 + 혜택 자동 지급 배치 로직 명세 ④ BIVE 비활성화 조건 + 캠페인 BIVE 보상 제거 정책 ⑤ 6가지 핵심 사용자 플로우 (에디션 생성·BIVE 등록·캠페인 생성·자동 민팅·혜택 생성·혜택 배치·캠페인 종료) ⑥ [CEB-BO-004] 영역 가이드 + 메뉴별 메인 4건과 정합. 모든 외부 영역(SQ/RFL/FQ) 연동의 SSOT</td></tr>
 </table>
 
 </body>
