@@ -98,7 +98,8 @@ function HistoryInner() {
             <option value="V01D">V01D</option>
             <option value="iKON">iKON</option>
             <option value="CELEBUS">CELEBUS</option>
-            <option value="전역">전역(NULL)</option>
+            {/* [CEB-BO-RFT-201] §2-1 정합 — "전역" 라벨 (2026-05-21 sync 정정, 구 "전역(NULL)") */}
+            <option value="전역">전역</option>
           </select>
           <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
         </div>
@@ -144,19 +145,27 @@ function HistoryInner() {
         columns={[
           { key: 'occurredAt', label: '일시', width: '130px' },
           { key: 'nickname', label: '회원', width: '160px', render: (r) => (
-            <a
-              href={`/members/${r.memberId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-900 font-medium hover:text-indigo-600 hover:underline inline-flex items-center gap-1"
-              onClick={(e) => e.stopPropagation()}
-              title="새 탭으로 회원 상세 진입"
-            >
-              {r.nickname}
-              <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
+            // [CEB-BO-RFT-201] §2-3·§4 정합 — 삭제 회원 클릭 비활성 + "(삭제됨)" 라벨 (2026-05-21 sync 정정)
+            r.memberDeleted ? (
+              <span className="text-gray-400 inline-flex items-center gap-1.5" title="삭제된 회원">
+                {r.nickname}
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">삭제됨</span>
+              </span>
+            ) : (
+              <a
+                href={`/members/${r.memberId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-900 font-medium hover:text-indigo-600 hover:underline inline-flex items-center gap-1"
+                onClick={(e) => e.stopPropagation()}
+                title="새 탭으로 회원 상세 진입"
+              >
+                {r.nickname}
+                <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            )
           )},
           { key: 'status', label: '상태', width: '80px', render: (r) => (
             <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
@@ -173,9 +182,16 @@ function HistoryInner() {
           { key: 'balanceAfter', label: '잔액', width: '80px', align: 'right', render: (r) => (
             <span className="text-gray-700">{r.balanceAfter}장</span>
           )},
-          { key: 'sourceFeature', label: '출처', width: '160px', render: (r) => (
-            <span className="text-gray-700">{sourceLabelMap[r.sourceFeature] ?? r.sourceFeature}</span>
-          )},
+          { key: 'sourceFeature', label: '출처', width: '160px', render: (r) => {
+            // [CEB-BO-RFT-201] §2-3 정합 — 운영 카테고리 행은 "(운영) {유형}" 표기로 식별 (2026-05-21 sync 정정)
+            const isAdminCategory = r.sourceFeature === 'RAFFLE_CANCEL_REFUND' || r.sourceFeature === 'ADMIN_CORRECTION' || r.sourceFeature === 'ADMIN_RECLAIM';
+            const label = sourceLabelMap[r.sourceFeature] ?? r.sourceFeature;
+            return (
+              <span className={`text-gray-700 ${isAdminCategory ? 'text-xs' : ''}`} title={label}>
+                {isAdminCategory ? `(운영) ${label}` : label}
+              </span>
+            );
+          }},
           { key: 'sourceArtistContext', label: '아티스트 컨텍스트', width: '150px', render: (r) => (
             <span className={r.sourceArtistContext ? 'inline-flex rounded-full px-2.5 py-1 text-xs font-medium bg-indigo-50 text-indigo-700' : 'text-gray-400 text-xs'}>
               {r.sourceArtistContext ?? '전역'}

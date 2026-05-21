@@ -72,19 +72,39 @@ export default function RftPolicyPage() {
       lines.push(`앱내 응모권 구매를 ${prev} → ${next}으로 전환합니다.${reasonLine}`);
     }
     if (gameRewardChanged) {
-      lines.push('PM·ST 게임별 응모권 지급 기본 정책을 변경합니다.');
+      // [CEB-BO-RFT-301] §2-5 정합 — 모달 메시지에 변경 필드 목록 명시 (2026-05-21 sync 정정)
+      const changedFields = gameRewardInput
+        .map((row, idx) => {
+          const prev = gameReward.rows[idx];
+          if (!prev) return null;
+          const enabledChanged = row.enabled !== prev.enabled;
+          const amountChanged = row.defaultAmount !== prev.defaultAmount;
+          if (!enabledChanged && !amountChanged) return null;
+          return row.label;
+        })
+        .filter(Boolean);
+      const fieldList = changedFields.length > 0 ? ` (변경 항목: ${changedFields.join(', ')})` : '';
+      lines.push(`PM·ST 게임별 응모권 지급 기본 정책을 변경합니다.${fieldList}`);
     }
     return lines.join('\n');
-  }, [rateChanged, limitChanged, buyEnabledChanged, gameRewardChanged, policy.rate, rateNum, policy.dailyLimitPerMember, newDailyLimit, buyToggle.enabled, buyEnabledInput, buyReasonInput]);
+  }, [rateChanged, limitChanged, buyEnabledChanged, gameRewardChanged, policy.rate, rateNum, policy.dailyLimitPerMember, newDailyLimit, buyToggle.enabled, buyEnabledInput, buyReasonInput, gameRewardInput]);
+
+  // [CEB-BO-RFT-301] §2-7·§4 정합 — 토글 ON+수량 0 안내 (2026-05-21 sync 정정 — 구 브라우저 confirm() → 인라인 확인 모달)
+  const [zeroAmountWarnOpen, setZeroAmountWarnOpen] = useState(false);
 
   const handleSave = () => {
     if (!canSave) return;
     // 토글 ON + 수량 0 안내
     const zeroOnRows = gameRewardInput.filter((r) => r.enabled && r.defaultAmount === 0);
     if (zeroOnRows.length > 0 && gameRewardChanged) {
-      const ok = confirm('0매 지급은 OFF와 동일합니다. 진행하시겠습니까?');
-      if (!ok) return;
+      setZeroAmountWarnOpen(true);
+      return;
     }
+    setConfirmOpen(true);
+  };
+
+  const handleZeroWarnConfirm = () => {
+    setZeroAmountWarnOpen(false);
     setConfirmOpen(true);
   };
 
@@ -118,13 +138,14 @@ export default function RftPolicyPage() {
 
   return (
     <div>
+      {/* [CEB-BO-RFT-301] §1, Page Properties 정합 — Breadcrumb 및 부제 v3.3 (2026-05-21 sync 정정) */}
       <PageHeader
         title="응모권 발급 정책"
-        breadcrumbItems={[{ label: '래플' }, { label: '응모권 관리' }]}
+        breadcrumbItems={[{ label: '래플' }, { label: '응모권 발급 정책' }]}
       />
 
       <p className="text-sm text-gray-600 -mt-2 mb-5">
-        GP를 응모권으로 교환할 때 적용되는 환율과 회원당 1일 교환 한도를 운영자가 직접 조정합니다.
+        GP → 응모권 환율, 회원당 1일 교환 한도, 앱내 응모권 구매 운영 토글, PM·ST 게임별 응모권 지급 기본 정책을 운영자가 직접 조정합니다.
       </p>
 
       {/* 1일 기준 안내 박스 */}
@@ -225,11 +246,10 @@ export default function RftPolicyPage() {
         </p>
       </div>
 
-      {/* 카드 3 — 앱내 응모권 구매 운영 토글 (Phase 13) */}
+      {/* 카드 3 — 앱내 응모권 구매 (Buy-RF-Ticket-001) [CEB-BO-RFT-301] §2-6 정합 (2026-05-21 sync 정정) */}
       <div className="bg-white border border-gray-200 rounded-xl p-5 mb-4">
         <div className="flex items-baseline justify-between mb-1">
-          <h3 className="text-sm font-semibold text-gray-900">앱내 응모권 구매 운영 토글</h3>
-          <span className="text-xs text-gray-400">Buy-RF-Ticket-001</span>
+          <h3 className="text-sm font-semibold text-gray-900">앱내 응모권 구매 (Buy-RF-Ticket-001)</h3>
         </div>
         <p className="text-xs text-gray-500 mb-3">
           회원이 앱에서 GP를 사용해 응모권을 직접 구매할 수 있는 기능의 운영 상태입니다.
@@ -328,10 +348,10 @@ export default function RftPolicyPage() {
                     </label>
                   </td>
                   <td className="px-3 py-3 text-center">
+                    {/* [CEB-BO-RFT-301] §2-7 / RFT-302 §3 정합 — 수량 상한 없음, 0 이상 정수만 (2026-05-21 sync 정정) */}
                     <input
                       type="number"
                       min="0"
-                      max="100"
                       step="1"
                       disabled={!row.enabled}
                       value={row.defaultAmount}
@@ -381,6 +401,18 @@ export default function RftPolicyPage() {
           size="md"
           onCancel={() => setConfirmOpen(false)}
           onConfirm={handleConfirm}
+        />
+      )}
+
+      {/* [CEB-BO-RFT-301] §4 정합 — 토글 ON+수량 0 안내 모달 (2026-05-21 sync 정정 — 구 confirm() 대체) */}
+      {zeroAmountWarnOpen && (
+        <ConfirmModal
+          title="0매 지급은 OFF와 동일합니다"
+          message="활성화된 게임 유형 중 지급 수량이 0매인 행이 있습니다. 진행하시겠습니까?"
+          confirmLabel="진행"
+          size="sm"
+          onCancel={() => setZeroAmountWarnOpen(false)}
+          onConfirm={handleZeroWarnConfirm}
         />
       )}
     </div>

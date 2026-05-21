@@ -26,8 +26,25 @@ export default function RftCurrentPage() {
   const router = useRouter();
   const [period, setPeriod] = useState<typeof PERIODS[number]['key']>('month');
 
-  const earnDist = getSourceDistribution();
-  const useDist = getUseDistribution();
+  // [CEB-BO-RFT-101] §2-1, §5 정합 — 기간 필터 연동 (2026-05-21 sync 정정)
+  // mock 환경에서는 결정적 계수로 수치 변동을 시뮬레이션 (실제 API 연동 시 period 파라미터로 집계)
+  const periodMultiplier = {
+    today: 0.1,
+    week: 0.35,
+    month: 1,
+    year: 2.4,
+    all: 3.2,
+  }[period];
+
+  const rawEarnDist = getSourceDistribution();
+  const rawUseDist = getUseDistribution();
+  const earnDist = Object.fromEntries(
+    Object.entries(rawEarnDist).map(([k, v]) => [k, Math.round(v * periodMultiplier)])
+  );
+  const useDist = Object.fromEntries(
+    Object.entries(rawUseDist).map(([k, v]) => [k, Math.round(v * periodMultiplier)])
+  );
+
   const recentIssued = rftLogs.filter((l) => l.delta > 0).slice(0, 5);
   const recentUsed = rftLogs.filter((l) => l.delta < 0).slice(0, 5);
 
@@ -36,6 +53,10 @@ export default function RftCurrentPage() {
   );
   const earnTotal = Object.values(earnDist).reduce((a, b) => a + b, 0);
   const useTotal = Object.values(useDist).reduce((a, b) => a + b, 0);
+
+  // 총 발급·사용도 기간 필터 적용. 총 보유는 명세 §2-2에 따라 기간 필터 영향 없음
+  const periodTotalIssued = Math.round(rftStats.totalIssued * periodMultiplier);
+  const periodTotalUsed = Math.round(rftStats.totalUsed * periodMultiplier);
 
   return (
     <div>
@@ -60,9 +81,10 @@ export default function RftCurrentPage() {
       </div>
 
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <StatCardWithBar label="총 발급" count={rftStats.totalIssued} variant="active" />
+        {/* [CEB-BO-RFT-101] §2-2 정합 — 총 발급·총 사용은 기간 필터 영향, 총 보유는 영향 없음 (2026-05-21 sync 정정) */}
+        <StatCardWithBar label="총 발급" count={periodTotalIssued} variant="active" />
         <StatCardWithBar label="총 보유" count={rftStats.totalHeld} variant="default" />
-        <StatCardWithBar label="총 사용" count={rftStats.totalUsed} variant="inactive" />
+        <StatCardWithBar label="총 사용" count={periodTotalUsed} variant="inactive" />
       </div>
 
       <div className="mb-6">
