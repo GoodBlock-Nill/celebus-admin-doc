@@ -78,6 +78,8 @@ export default function CreateCampaignModal({ isOpen, onClose, type = 'EVENT' }:
                   >
                     <option value="">연결 기능을 선택해주세요</option>
                     <option value="회원가입 보상">회원가입 보상</option>
+                    <option value="출석체크 보상">출석체크 보상</option>
+                    <option value="래플 보상">래플 보상</option>
                     <option value="팬퀘스트 보상">팬퀘스트 보상</option>
                   </select>
                   <ChevronUpDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
