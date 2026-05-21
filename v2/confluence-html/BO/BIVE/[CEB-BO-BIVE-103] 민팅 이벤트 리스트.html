@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 민팅</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -115,17 +115,17 @@ p {
 <p>4종 캠페인 유형별 탭으로 화면 분리. 본 명세는 공통 구조 정의 (각 탭별 차이는 §4-2에 명시).</p>
 <table>
 <tr><th>탭</th><th>의미</th><th>연결 기능 예시</th></tr>
-<tr><td><strong>Event</strong> (기본)</td><td>일반 이벤트형 자동 민팅</td><td>회원가입 보상 받기 / 출석체크 5일 보상</td></tr>
-<tr><td><strong>Ticket</strong></td><td>티켓 검증 기반 민팅</td><td>아이콘 서울콘서트 티켓 검증 / 지하돌 방청 티켓 검증 (공연 종료 다음날 자동 에어드랍)</td></tr>
+<tr><td><strong>Event</strong> (기본)</td><td>일반 이벤트형 자동 민팅</td><td>운영 BO 실제 4종 — 회원가입 보상 / 출석체크 보상 / 래플 보상 / 팬퀘스트 보상</td></tr>
+<tr><td><strong>Ticket</strong></td><td>티켓 검증 기반 민팅</td><td>공연·이벤트 티켓 검증 후 자동 에어드랍 (운영 프리셋 별도)</td></tr>
 <tr><td><strong>Mix</strong></td><td>회원이 BIVE를 합성(Mix)할 때 자동 민팅</td><td>(개발 프리셋)</td></tr>
 <tr><td><strong>Pick</strong></td><td>회원이 BIVE를 픽(Pick)할 때 자동 민팅</td><td>(개발 프리셋)</td></tr>
 </table>
 <h3>2-2. 필터·검색 영역</h3>
 <ul>
-<li><strong>정렬 드롭다운</strong>: 생성일 (빠른순 기본 / 오래된 순)</li>
-<li><strong>상태 필터</strong> (드롭다운): <code>전체(기본) / 초안 / 활성 / 중지 / 종료</code></li>
+<li><strong>정렬 드롭다운</strong>: <code>생성일(빠른순) / 생성일(오래된순)</code> (운영 BO 실제 표기, 기본값 "생성일(빠른순)")</li>
+<li><strong>상태 필터</strong> (드롭다운): <code>상태(전체) / 초안 / 활성 / 중지 / 종료</code> (운영 BO 실제 표기, 기본값 "상태(전체)")</li>
 <li><strong>검색 입력</strong>: placeholder "캠페인명 입력" — 키워드 부분 일치</li>
-<li><strong>[조회] 버튼</strong>: 현재 탭 + 조건으로 재조회</li>
+<li><strong>[조회] 버튼</strong>: 운영 BO는 별도 [조회] 버튼 없이 필터·검색 입력 즉시 자동 갱신</li>
 <li><strong>[+ 캠페인 생성] 버튼</strong> (우측 상단): 현재 탭의 캠페인 생성 페이지로 이동</li>
 <li>Event 탭 → [CEB-BO-BIVE-203-CREATE] (Event 변형)</li>
 <li>Ticket 탭 → [CEB-BO-BIVE-203-CREATE] (Ticket 변형)</li>
@@ -182,7 +182,7 @@ p {
 <table>
 <tr><th>검증</th><th>내용</th></tr>
 <tr><td>검색</td><td>캠페인명 키워드 부분 일치</td></tr>
-<tr><td>정렬</td><td>생성일 (빠른순 기본 또는 오래된 순)</td></tr>
+<tr><td>정렬</td><td><code>생성일(빠른순)</code> 기본 또는 <code>생성일(오래된순)</code> (운영 BO 실제 표기)</td></tr>
 <tr><td>캠페인 활성화 선행 조건 (상세에서 검증)</td><td>기본정보 + BIVE 보상 모두 저장 완료 + BIVE 보상 ≥ 1건 ([CEB-BO-BIVE-203]에서 검증)</td></tr>
 <tr><td>권한</td><td>[관리자 > 권한관리] BIVE 쓰기 권한 보유자에게만 [+ 캠페인 생성] 노출</td></tr>
 <tr><td>SSOT 정책</td><td>외부 영역(SQ/RFL/FQ)은 본 화면에 등록된 "활성" 상태 캠페인만 참조. 캠페인 정의는 본 영역에서만 가능</td></tr>
@@ -208,7 +208,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 Mint-101(Event) + Mint-201(Ticket) 통합 v2 양식 이전</strong> ① v1 Event 탭 페이지 + Ticket 탭 페이지를 단일 [CEB-BO-BIVE-103]로 통합 (4종 캠페인 유형 탭 구조) ② v1 페이지 구조(탭·필터·테이블·페이지네이션)를 v2 표준 §1~§8로 재배치 ③ 캠페인 상태 4종(초안/활성/중지/종료) + 전이 규칙 명시 ④ <strong>민팅 이벤트 SSOT 정책 §5에 명시</strong> — 외부 영역(SQ/RFL/FQ)은 활성 상태 캠페인만 참조 ⑤ v1 권한 4단계 → "[관리자 > 권한관리] 설정에 따른다" 단일 표기 ⑥ 연결 기능 1:1 정책 명시 ([CEB-BO-004] §5 정합) ⑦ Mix/Pick 탭은 후속 정의 (v1에서 별도 페이지 없음)</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 디테일 정합 — 드롭다운 옵션 정정</strong> ① §2-2 정렬 드롭다운 "생성일 (빠른순 기본 / 오래된 순)" → 운영 BO 실제 <strong><code>생성일(빠른순) / 생성일(오래된순)</code></strong> (괄호 표기, 띄어쓰기 없음) ② §2-2 상태 필터 기본 라벨 "전체(기본)" → 운영 BO 실제 <strong><code>상태(전체)</code></strong> ③ [조회] 버튼 운영 BO 미존재 (필터·검색 즉시 갱신) ④ §2-1 Event 탭 연결 기능 예시 — v1 가설("회원가입 보상 받기 / 출석체크 5일 보상") → 운영 BO 실제 4종 (회원가입 보상 / 출석체크 보상 / 래플 보상 / 팬퀘스트 보상) ⑤ Ticket 탭 예시 일반화</td></tr>
+<tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 Mint-101(Event) + Mint-201(Ticket) 통합 v2 양식 이전</strong> ① v1 Event 탭 페이지 + Ticket 탭 페이지를 단일 [CEB-BO-BIVE-103]로 통합 (4종 캠페인 유형 탭 구조) ② v1 페이지 구조(탭·필터·테이블·페이지네이션)를 v2 표준 §1~§8로 재배치 ③ 캠페인 상태 4종(초안/활성/중지/종료) + 전이 규칙 명시 ④ <strong>민팅 이벤트 SSOT 정책 §5에 명시</strong> — 외부 영역(SQ/RFL/FQ)은 활성 상태 캠페인만 참조 ⑤ v1 권한 4단계 → "[관리자 > 권한관리] 설정에 따른다" 단일 표기 ⑥ 연결 기능 1:1 정책 명시 ([CEB-BO-004] §5 정합) ⑦ Mix/Pick 탭은 후속 정의 (v1에서 별도 페이지 없음)</td></tr>
 </table>
 
 </body>

@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 혜택</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -105,7 +105,7 @@ p {
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>화면 경로</td><td><code>/bive/benefits/{type}/create</code></td></tr>
 <tr><td>Breadcrumb</td><td>홈 / BIVE / 혜택 관리 / {Boost Point 또는 Raffle Ticket} / 혜택 생성</td></tr>
-<tr><td>페이지 제목</td><td><code>{Boost point / Raffle Ticket} 혜택 생성</code></td></tr>
+<tr><td>페이지 제목</td><td>BP 탭: "Boost point 혜택 생성" / RT 탭: "Raffle Ticket 혜택 생성" (운영 BO 실제 표기)</td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-BIVE-104] 혜택 리스트의 [+ 혜택 생성] 버튼</td></tr>
 <tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다</td></tr>
 </table>
@@ -119,16 +119,19 @@ p {
 <li>탭 네비게이션: "기본정보 | BIVE 추가"</li>
 </ul>
 <h3>2-2. 기본정보 탭</h3>
+<ul>
+<li>안내 문구: "지급 로직을 식별할 수 있는 명칭과 검증액션을 선택하세요" (운영 BO 실제)</li>
+</ul>
 <table>
 <tr><th>필드</th><th>입력 방식</th><th>검증·옵션</th><th>필수</th></tr>
-<tr><td>혜택 명칭</td><td>Text Input</td><td>placeholder "혜택 명칭을 입력해 주세요". 공백 제외 1자 이상</td><td>★</td></tr>
-<tr><td>수량</td><td>Number Input</td><td>BP 탭: "BP 수량" 단위 "BP" / RT 탭: "Raffle ticket 수량". 정수 ≥ 1. 숫자 외 입력 제거</td><td>★</td></tr>
-<tr><td>지급주기</td><td>Select</td><td><strong>일일 / 주간 / 1회</strong></td><td>★</td></tr>
-<tr><td>지급 요일 (주간)</td><td>Select 단일선택</td><td>주간 선택 시에만 활성. 월~일 중 택1. 일일/1회는 비활성·회색</td><td>★ (주간일 때)</td></tr>
+<tr><td>혜택 명칭</td><td>Text Input</td><td>placeholder "명칭을 입력해주세요" (운영 BO 실제). 공백 제외 1자 이상</td><td>★</td></tr>
+<tr><td>수량</td><td>Number Input</td><td>BP 탭: "BP 수량" 단위 "BP", placeholder "지급 수량을 입력해주세요" (운영 BO 실제) / RT 탭: "Raffle ticket 수량". 정수 ≥ 1. 숫자 외 입력 제거</td><td>★</td></tr>
+<tr><td>지급주기</td><td>Select</td><td><strong>일일 / 주간 / 1회(획득 시)</strong> (운영 BO 실제 표기, 기본값 "일일")</td><td>★</td></tr>
+<tr><td>지급 요일 (주간)</td><td>Select 단일선택</td><td>"지급주기 = 주간" 선택 시에만 활성. 월~일 중 택1. 일일/1회는 비활성·회색</td><td>★ (주간일 때)</td></tr>
 <tr><td>시작일</td><td>Date</td><td>YYYY.MM.DD. <strong>오늘 이후</strong></td><td>★</td></tr>
-<tr><td>시작시간</td><td>Time</td><td>hh:mm. 시작일 입력 후 활성. 시작일이 오늘이면 현재 시간 이후만 허용</td><td>★</td></tr>
+<tr><td>시작시간</td><td>Time</td><td>hh:mm. 시작일 입력 후 활성. 기본 "00:00" (운영 BO 실제). 시작일이 오늘이면 현재 시간 이후만 허용</td><td>★</td></tr>
 <tr><td>종료일</td><td>Date</td><td>YYYY.MM.DD. <strong>시작일 + 1일 이후</strong></td><td>★</td></tr>
-<tr><td>종료시간</td><td>Time</td><td>hh:mm. 종료일 입력 후 활성. 유효성 조건 없음</td><td>—</td></tr>
+<tr><td>종료시간</td><td>Time</td><td>hh:mm. 종료일 입력 후 활성. 기본 "23:59" (운영 BO 실제). 유효성 조건 없음</td><td>—</td></tr>
 </table>
 <blockquote>
 <p>필드 배치: 주기/요일은 한 줄. 날짜/시간은 "시작일+시작시간" / "종료일+종료시간" 2열 구성.</p>
@@ -197,7 +200,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 Perks-104+105 (BP 생성 2탭) + Perks-204+205 (RT 생성 2탭) 4건 통합 v2 이전</strong> ① BP/RT 공통 명세 (유형은 라우트로 분리) ② 2탭 구조 (기본정보 / BIVE 추가) ③ 지급주기 3종 + 주간 시 지급 요일 활성 정책 ④ 시작일·시작시간·종료일 검증 규칙 (오늘 이후, 시작일+1일 이후, 현재 시간 이후) ⑤ BIVE ≥ 1건 + 중복 방지 ⑥ 생성 직후 초안 상태로 리스트 추가 ⑦ 권한 단일 표기</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 디테일 정합 — 페이지 제목·placeholder·지급주기·시간 기본값 정정</strong> ① 페이지 제목 — 운영 BO 실제 <strong>"Boost point 혜택 생성" / "Raffle Ticket 혜택 생성"</strong> 명시 ② §2-2 안내 문구 추가 ("지급 로직을 식별할 수 있는 명칭과 검증액션을 선택하세요") ③ 혜택 명칭 placeholder "혜택 명칭을 입력해 주세요" → 운영 BO 실제 <strong>"명칭을 입력해주세요"</strong> ④ BP 수량 placeholder 운영 BO 실제 <strong>"지급 수량을 입력해주세요"</strong> 추가 ⑤ 지급주기 옵션 "일일 / 주간 / 1회" → 운영 BO 실제 <strong>"일일 / 주간 / 1회(획득 시)"</strong> 정합 + 기본값 "일일" 명시 ⑥ 시작시간 기본 <strong>"00:00"</strong> / 종료시간 기본 <strong>"23:59"</strong> (운영 BO 실제) 추가</td></tr>
+<tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 Perks-104+105 (BP 생성 2탭) + Perks-204+205 (RT 생성 2탭) 4건 통합 v2 이전</strong> ① BP/RT 공통 명세 (유형은 라우트로 분리) ② 2탭 구조 (기본정보 / BIVE 추가) ③ 지급주기 3종 + 주간 시 지급 요일 활성 정책 ④ 시작일·시작시간·종료일 검증 규칙 (오늘 이후, 시작일+1일 이후, 현재 시간 이후) ⑤ BIVE ≥ 1건 + 중복 방지 ⑥ 생성 직후 초안 상태로 리스트 추가 ⑦ 권한 단일 표기</td></tr>
 </table>
 
 </body>
