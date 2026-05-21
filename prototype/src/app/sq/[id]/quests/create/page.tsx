@@ -4,6 +4,7 @@ import { use, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeftIcon, InformationCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/layout/PageHeader';
+import { LangField, type Lang } from '@/components/clone/LangField';
 import {
   getStoryQuestById,
   getGroupById,
@@ -44,6 +45,9 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
   const artist = group?.artistGroup;
 
   const [type, setType] = useState<EpisodeType | ''>('');
+  // [CEB-BO-SQ-204-CREATE] §2-7 v3.2 — PM/ST 미션 다국어 타이틀 (KO/EN/JP, 각 50자, KO 필수, 2026-05-21 신규)
+  const [titleLang, setTitleLang] = useState<Lang>('KO');
+  const [title, setTitle] = useState<{ KO: string; EN: string; JA: string }>({ KO: '', EN: '', JA: '' });
   const [sourceRefId, setSourceRefId] = useState<string>('');
   const [gameCondition, setGameCondition] = useState<GameCondition>('PARTICIPATION_COUNT');
   const [conditionValue, setConditionValue] = useState<number>(1);
@@ -83,7 +87,9 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
     (isFanQuest ? sourceRefId !== '' : true) &&
     // PM·ST만 보상·조건 검증
     (!isGameType || (rewardEntryTicket >= 0 && rewardFanPoint >= 0 && conditionValue >= 1)) &&
-    (!isGameType || !biveRewardYn || mintingEventId !== '');
+    (!isGameType || !biveRewardYn || mintingEventId !== '') &&
+    // [CEB-BO-SQ-204-CREATE] §2-7 v3.2 — PM/ST 타이틀 KO 필수 (EN/JA 선택, 게시 시점 부모 검증으로 일괄)
+    (!isGameType || title.KO.trim() !== '');
 
   const handleCancel = () => {
     if (window.confirm('작성 중인 내용이 사라집니다. 취소하시겠어요?')) {
@@ -259,6 +265,27 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
           </div>
         )}
       </div>
+
+      {/* [CEB-BO-SQ-204-CREATE] §2-7 v3.2 — PM/ST 미션 기본 정보 (다국어 타이틀, 2026-05-21 신규 — 사용자 피드백) */}
+      {isGameType && type && (
+        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
+          <h4 className="text-base font-semibold text-gray-900 mb-1">기본 정보 (PM/ST 직접 입력)</h4>
+          <p className="text-[11px] text-gray-500 mb-4">
+            PM/ST 미션은 외부 콘텐츠를 참조하지 않고 직접 입력합니다. <strong>한국어는 필수</strong>, 영어·일본어는 선택 (게시 시점에 부모 에피소드 검증으로 일괄 처리).
+          </p>
+          <LangField
+            label="타이틀"
+            required
+            lang={titleLang}
+            onLangChange={setTitleLang}
+            value={title[titleLang]}
+            onChange={(v) => setTitle({ ...title, [titleLang]: v })}
+            placeholder="미션 타이틀을 입력하세요"
+            maxLength={50}
+            values={title}
+          />
+        </div>
+      )}
 
       {/* 섹션 2 — PM/ST 완료 조건 (게임 유형만) — [CEB-BO-SQ-204-CREATE] §2-7 정합 유형별 분기 (2026-05-21 sync 정정) */}
       {isGameType && type && (

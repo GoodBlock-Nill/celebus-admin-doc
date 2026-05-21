@@ -91,6 +91,13 @@ export interface StoryEpisode {
   order: number;
   type: EpisodeType;
   titleKO: string;
+  /**
+   * v3.4 신규 — PM/ST 미션 다국어 타이틀 (KO 필수 + EN/JA 선택, 각 50자).
+   * 팬퀘스트 미션은 fanQuestId로 자동 상속이라 빈 문자열 유지.
+   * [CEB-BO-SQ-204-CREATE] §2-7 / [CEB-BO-011] §5 정합
+   */
+  titleEN: string;
+  titleJA: string;
   /** v1.1 신규 — 에피소드 메인 이미지 URL (ERD `story_quest_chapter.image_url` 추가 요청) */
   imageUrl: string;
   rewardEntryTicket: number;
@@ -552,16 +559,16 @@ export const groupStats = {
 // v2.2: 완료 조건 필드(completedType / sourceRefName / completedValue / repeatCycle / openDt / closeDt)를 직접 흡수.
 // 정책: 1개 FQ Quest는 1개 미션에만 매핑된다 (CHAPTER_FAN_QUEST_ASSIGNMENT 참조).
 const EPISODE_DATA: Omit<StoryEpisode, 'storyQuestId'>[] = [
-  { id: 101, order: 1, type: 'FAN_QUEST', titleKO: '미션 1: 첫 만남 — 데뷔 인증샷 공유', imageUrl: '/sq/ep1.jpg', rewardEntryTicket: 5, rewardFanPoint: 100, biveRewardYn: true, mintingEventId: 23, mintingEventName: 'V01D Welcome ED', repeat: false, inProgressMembers: 234, completedMembers: 234, completedType: 'ADMIN_APPROVAL' },
-  { id: 102, order: 2, type: 'PREDICTION_MARKET', titleKO: '미션 2: 무대 뒤 — 다음 활동 예측', imageUrl: '/sq/ep2.jpg', rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: false, inProgressMembers: 220, completedMembers: 195, completedType: 'PM_PARTICIPATION', sourceRefName: 'PM #34 — 다음 컴백 시점' },
-  { id: 103, order: 3, type: 'SURVIVAL_TRIVIA', titleKO: '미션 3: 데뷔곡 퀴즈', imageUrl: '/sq/ep3.jpg', rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: true, mintingEventId: 24, mintingEventName: 'V01D Trivia Master', repeat: false, inProgressMembers: 200, completedMembers: 178, completedType: 'TRIVIA_CORRECT_COUNT', completedValue: 7, sourceRefName: 'ST #12 데뷔곡 가사 퀴즈' },
-  { id: 104, order: 4, type: 'FAN_QUEST', titleKO: '미션 4: 응원 메시지', imageUrl: '/sq/ep4.jpg', rewardEntryTicket: 6, rewardFanPoint: 120, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: true, inProgressMembers: 150, completedMembers: 90, completedType: 'ADMIN_APPROVAL', repeatCycle: 'MONTHLY' },
-  { id: 105, order: 5, type: 'FAN_QUEST', titleKO: '미션 5: 멤버 응원 SNS', imageUrl: '/sq/ep5.jpg', rewardEntryTicket: 7, rewardFanPoint: 130, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: false, inProgressMembers: 120, completedMembers: 75, completedType: 'ADMIN_APPROVAL' },
-  { id: 106, order: 6, type: 'PREDICTION_MARKET', titleKO: '미션 6: 컴백 무대 예측', imageUrl: '/sq/ep6.jpg', rewardEntryTicket: 12, rewardFanPoint: 220, biveRewardYn: true, mintingEventId: 26, mintingEventName: 'V01D Prophet', repeat: false, inProgressMembers: 90, completedMembers: 55, completedType: 'PM_CORRECT', sourceRefName: 'PM #35 컴백 앨범 1위 적중' },
-  { id: 107, order: 7, type: 'SURVIVAL_TRIVIA', titleKO: '미션 7: 멤버 MBTI 퀴즈', imageUrl: '/sq/ep7.jpg', rewardEntryTicket: 9, rewardFanPoint: 160, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: true, inProgressMembers: 70, completedMembers: 40, completedType: 'TRIVIA_PARTICIPATION', sourceRefName: 'ST #13 MBTI 시리즈', repeatCycle: 'WEEKLY' },
-  { id: 108, order: 8, type: 'FAN_QUEST', titleKO: '미션 8: 데뷔 100일 축전', imageUrl: '/sq/ep8.jpg', rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: true, mintingEventId: 27, mintingEventName: 'V01D 100 Days', repeat: false, inProgressMembers: 45, completedMembers: 22, completedType: 'ADMIN_APPROVAL' },
-  { id: 109, order: 9, type: 'FAN_QUEST', titleKO: '미션 9: 콘서트 추억 공유', imageUrl: '/sq/ep9.jpg', rewardEntryTicket: 10, rewardFanPoint: 180, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: false, inProgressMembers: 30, completedMembers: 10, completedType: 'ADMIN_APPROVAL' },
-  { id: 110, order: 10, type: 'FAN_QUEST', titleKO: '미션 10: 최종 — 팬덤 대모험', imageUrl: '/sq/ep10.jpg', rewardEntryTicket: 20, rewardFanPoint: 500, biveRewardYn: true, mintingEventId: 25, mintingEventName: 'V01D Final Boss', repeat: false, inProgressMembers: 0, completedMembers: 0, completedType: 'ADMIN_APPROVAL' },
+  { id: 101, order: 1, type: 'FAN_QUEST', titleKO: '미션 1: 첫 만남 — 데뷔 인증샷 공유', titleEN: '', titleJA: '', imageUrl: '/sq/ep1.jpg', rewardEntryTicket: 5, rewardFanPoint: 100, biveRewardYn: true, mintingEventId: 23, mintingEventName: 'V01D Welcome ED', repeat: false, inProgressMembers: 234, completedMembers: 234, completedType: 'ADMIN_APPROVAL' },
+  { id: 102, order: 2, type: 'PREDICTION_MARKET', titleKO: '미션 2: 무대 뒤 — 다음 활동 예측', titleEN: '', titleJA: '', imageUrl: '/sq/ep2.jpg', rewardEntryTicket: 10, rewardFanPoint: 200, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: false, inProgressMembers: 220, completedMembers: 195, completedType: 'PM_PARTICIPATION', sourceRefName: 'PM #34 — 다음 컴백 시점' },
+  { id: 103, order: 3, type: 'SURVIVAL_TRIVIA', titleKO: '미션 3: 데뷔곡 퀴즈', titleEN: '', titleJA: '', imageUrl: '/sq/ep3.jpg', rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: true, mintingEventId: 24, mintingEventName: 'V01D Trivia Master', repeat: false, inProgressMembers: 200, completedMembers: 178, completedType: 'TRIVIA_CORRECT_COUNT', completedValue: 7, sourceRefName: 'ST #12 데뷔곡 가사 퀴즈' },
+  { id: 104, order: 4, type: 'FAN_QUEST', titleKO: '미션 4: 응원 메시지', titleEN: '', titleJA: '', imageUrl: '/sq/ep4.jpg', rewardEntryTicket: 6, rewardFanPoint: 120, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: true, inProgressMembers: 150, completedMembers: 90, completedType: 'ADMIN_APPROVAL', repeatCycle: 'MONTHLY' },
+  { id: 105, order: 5, type: 'FAN_QUEST', titleKO: '미션 5: 멤버 응원 SNS', titleEN: '', titleJA: '', imageUrl: '/sq/ep5.jpg', rewardEntryTicket: 7, rewardFanPoint: 130, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: false, inProgressMembers: 120, completedMembers: 75, completedType: 'ADMIN_APPROVAL' },
+  { id: 106, order: 6, type: 'PREDICTION_MARKET', titleKO: '미션 6: 컴백 무대 예측', titleEN: '', titleJA: '', imageUrl: '/sq/ep6.jpg', rewardEntryTicket: 12, rewardFanPoint: 220, biveRewardYn: true, mintingEventId: 26, mintingEventName: 'V01D Prophet', repeat: false, inProgressMembers: 90, completedMembers: 55, completedType: 'PM_CORRECT', sourceRefName: 'PM #35 컴백 앨범 1위 적중' },
+  { id: 107, order: 7, type: 'SURVIVAL_TRIVIA', titleKO: '미션 7: 멤버 MBTI 퀴즈', titleEN: '', titleJA: '', imageUrl: '/sq/ep7.jpg', rewardEntryTicket: 9, rewardFanPoint: 160, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: true, inProgressMembers: 70, completedMembers: 40, completedType: 'TRIVIA_PARTICIPATION', sourceRefName: 'ST #13 MBTI 시리즈', repeatCycle: 'WEEKLY' },
+  { id: 108, order: 8, type: 'FAN_QUEST', titleKO: '미션 8: 데뷔 100일 축전', titleEN: '', titleJA: '', imageUrl: '/sq/ep8.jpg', rewardEntryTicket: 8, rewardFanPoint: 150, biveRewardYn: true, mintingEventId: 27, mintingEventName: 'V01D 100 Days', repeat: false, inProgressMembers: 45, completedMembers: 22, completedType: 'ADMIN_APPROVAL' },
+  { id: 109, order: 9, type: 'FAN_QUEST', titleKO: '미션 9: 콘서트 추억 공유', titleEN: '', titleJA: '', imageUrl: '/sq/ep9.jpg', rewardEntryTicket: 10, rewardFanPoint: 180, biveRewardYn: false, mintingEventId: null, mintingEventName: null, repeat: false, inProgressMembers: 30, completedMembers: 10, completedType: 'ADMIN_APPROVAL' },
+  { id: 110, order: 10, type: 'FAN_QUEST', titleKO: '미션 10: 최종 — 팬덤 대모험', titleEN: '', titleJA: '', imageUrl: '/sq/ep10.jpg', rewardEntryTicket: 20, rewardFanPoint: 500, biveRewardYn: true, mintingEventId: 25, mintingEventName: 'V01D Final Boss', repeat: false, inProgressMembers: 0, completedMembers: 0, completedType: 'ADMIN_APPROVAL' },
 ];
 
 // chapter id (storyId*100 + order) ↔ fanquest id — 1:1 unique

@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.2</td></tr>
+<tr><td>버전</td><td>v3.4</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,7 +96,7 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v3.3</strong> (용어 정정 — "팬덤 포인트" → "덕력(DUK)" 영역 가이드 표준 정합)</p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v3.4</strong> (§5 정책 상수에 "PM/ST 미션 다국어 타이틀 KO/EN/JP 각 50자" 정책 신규 — 사용자 피드백 반영)</p>
 <p>본 문서는 사이드바 "에피소드" 그룹 전체를 다룬다. 화면별 상세 명세는 [CEB-BO-SQ-FLOW] 및 각 화면 문서 참조.</p>
 </blockquote>
 <h2>1. 영역 개요</h2>
@@ -191,6 +191,7 @@ p {
 <tr><td>메인 에피소드 완료 보상</td><td>응모권 + 덕력 + BIVE (구조는 미션 보상과 동일). 에피소드 안 <strong>모든 미션이 완료된 회원에게 자동 지급</strong>. 모든 값이 0 또는 OFF여도 저장 가능 (보상 없는 에피소드 허용)</td></tr>
 <tr><td>반복 미션 반복 주기</td><td><strong>일간 / 주간 / 월간</strong> 3종. 예측 마켓·서바이벌 트리비아 미션이 반복 ON일 때 본 화면에서 설정. 팬퀘스트 유형은 팬퀘스트 자체 설정 상속(본 영역에서 별도 설정 불가)</td></tr>
 <tr><td>반복 미션 운영 기간</td><td>시작·종료일 자유 입력. <strong>그룹 기간 안에서만 허용</strong> (벗어나면 인라인 에러). 비우면 그룹 기간 상속</td></tr>
+<tr><td>PM/ST 미션 다국어 타이틀 (v3.4 신규)</td><td><strong>KO/EN/JP 3종</strong>, 각 <strong>50자</strong>. <strong>KO 필수 + EN/JA 선택</strong> (저장 시점). 게시는 부모 에피소드 다국어 검증으로 일괄. 팬퀘스트 유형은 본 정책 적용 없음 — 매핑된 팬퀘스트의 타이틀이 자동 상속됨</td></tr>
 <tr><td>메인 이미지</td><td>에피소드 레벨에서만 설정. 권장 비율 <strong>3:4</strong></td></tr>
 <tr><td>다국어 필수</td><td>타이틀·설명·가이드는 한국어/영어/일본어 3개 언어 모두 입력 필수</td></tr>
 <tr><td>임시저장 검증</td><td>1개 언어 이상 입력이면 임시저장 가능</td></tr>
@@ -254,6 +255,7 @@ p {
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v3.4</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>PM/ST 미션 다국어 타이틀 정책 신규 (사용자 피드백 반영)</strong> — §5 정책 상수에 "PM/ST 미션 다국어 타이틀: KO/EN/JP 3종, 각 50자. KO 필수 + EN/JA 선택 (저장 시점). 게시는 부모 에피소드 검증으로 일괄. 팬퀘스트는 매핑 팬퀘스트 타이틀 자동 상속" 행 추가. 데이터 모델(<code>StoryEpisode.titleEN</code>·<code>titleJA</code> 신규) + 프로토타입(SQ-204-CREATE PM/ST 분기 LangField 입력) + 명세 SQ-204-CREATE v3.2·SQ-FLOW v3.4 동시 정정</td></tr>
 <tr><td>v3.3</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>용어 정정 — "팬덤 포인트" → "덕력(DUK)"</strong> ([CEB-BO-DUK-000] 영역 가이드 표준 정합) — §5 정책 상수·§8 활동 로그·§9 변경 이력의 보상 화폐 라벨 일괄 정정. SQ 화면별 명세 6개 + 프로토타입 4개 + 매트릭스 3개 동시 정정</td></tr>
 <tr><td><strong>v3.2</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드·미션 정책 4건 갱신 + 정합 정정 보완</strong> — ① 메인 에피소드 완료 보상 정책 신설 (에피소드 안 모든 미션 완료 시 자동 지급. 응모권 + 덕력 + BIVE 구조) ② 메인 에피소드 미션 유형 제한 — <strong>단일 미션만</strong> 추가 가능 ③ 반복 에피소드 미션 유형 — 단일·반복 모두 가능 (팬퀘스트는 반복 종류만) ④ PM·ST 반복 미션 반복 주기·기간 설정 신설 — 반복 ON일 때 일간/주간/월간 3종 + 시작·종료일 자유 입력 (그룹 기간 안에서만 허용). 팬퀘스트 유형은 팬퀘스트 자체 설정 상속. §5 정책 상수 5행 추가 ⑤ <strong>정합 보완(같은 날 추가 정정)</strong>: §1·§4 헤더 인벤토리 카운트를 활성 30개·폐지 7개로 정정(v3.1 흡수 17개 본문 반영 후 카운트 누락분 보완). §4-1 인벤토리 버전 표기를 실제 화면 명세 버전으로 갱신(SQ-FLOW v3.2, SQ-202·SQ-202-CREATE·SQ-202-EDIT·SQ-204·SQ-204-CREATE v3.1). §8 활동 로그 "미션 추가" 메시지에 "반복(단일/반복)" + "반복 주기" 필드 추가. §10 관련 문서 섹션에 v3.1 흡수 17개 화면 목록 보충</td></tr>
 <tr><td>v3.1</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>팬퀘스트(Quest) 17개 화면 SQ 영역 흡수 (FQ → SQ 신규 ID 이전 + 프로토타입 1:1 정합)</strong> — ① §2 메뉴 구조에 "반려사유 설정" 메뉴 추가 (사이드바 3개 → 4개) ② §4-1 활성 화면 인벤토리에 17개 신규 행 추가 (SQ-302·302-CREATE·302-MD-CANCEL·302-MD-COMPLE·303·303-EDIT·303-MD-OPEN·303-MD-CLOSE·303-MD-DELETE·303-MD-CANCEL·303-MD-COMPLE·304·304-MD-REJECT·305·501·501-MD-ADD·501-MD-EDIT). 외부 영역 (외부) 팬퀘스트 Quest 리스트 행 제거 ③ 기존 FQ 원본 17개([CEB-BO-FQ-101] 등)는 DEPRECATED 표기로 이력 보존 ④ 프로토타입(<code>src/app/sq/quests/page.tsx</code> + <code>src/app/fanquest/*</code>) 1:1 정합 검증</td></tr>
