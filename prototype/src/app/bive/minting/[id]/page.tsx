@@ -15,6 +15,7 @@ import {
   type CampaignStatus,
   type MintCampaign,
   type RewardMethod,
+  LINKED_FEATURES,
 } from '@/mock/bive';
 import AddBiveRewardModal from '../AddBiveRewardModal';
 
@@ -23,8 +24,6 @@ const TABS = [
   { key: 'bive', label: 'BIVE 보상' },
   { key: 'history', label: '보상내역' },
 ] as const;
-
-const LINKED_FEATURES = ['회원가입 보상', '출석체크 보상', '래플 보상', '팬퀘스트 보상'];
 
 const STATUS_BADGE: Record<CampaignStatus, string> = {
   '초안': 'bg-amber-100 text-amber-700',

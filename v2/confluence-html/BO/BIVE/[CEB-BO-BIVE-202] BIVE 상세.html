@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 에디션·BIVE</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.7</td></tr>
+<tr><td>버전</td><td>v1.8</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -135,13 +135,23 @@ p {
 <h3>2-2. 기본정보 탭 (Draft에서 수정 가능, Active/Inactive에서 read-only)</h3>
 <ul>
 <li><strong>BIVE 명칭</strong> (Read-only): <code>{아티스트명} {등급}-{등급번호}</code> 자동 생성/갱신</li>
-<li>나머지 필드는 [CEB-BO-BIVE-202-CREATE] 등록 화면과 동일 (아티스트 그룹·아티스트·등급·등급번호·설명·미디어 앞면·미디어 뒷면)</li>
+<li>나머지 필드는 [CEB-BO-BIVE-202-CREATE] 등록 화면과 동일 (아티스트 그룹·아티스트·등급·등급번호·설명 + <strong>미디어 타입</strong> + 타입별 메인·보조 파일)</li>
 </ul>
-<p><strong>미디어 카드 (우측, v1.3 — 앞면·뒷면 세로 스택 / 1열 1장)</strong>:</p>
+<p><strong>미디어 카드 (우측, v1.8 — 미디어 타입 분기)</strong>:</p>
 <ul>
-<li>우측 패널에 미디어 카드 컨테이너 + 세로 스택 (각 정사각형 카드 1열 1장씩, 앞면 위·뒷면 아래)</li>
-<li>각 카드 하단 라벨: "앞면" / "뒷면"</li>
-<li>뒷면 미등록 시: 회색 dashed border placeholder + "뒷면 미등록" 안내</li>
+<li>우측 패널 상단에 <strong>미디어 타입 배지</strong> (<code>이미지</code> / <code>영상</code> / <code>음성</code>, 회색 알약형) 노출</li>
+<li>카드 컨테이너 안에 <strong>세로 스택 2장</strong> (각 박스 1열 1장씩, 메인 위·보조 아래)</li>
+<li>카드 하단 라벨은 타입별로 분기:</li>
+</ul>
+<table>
+<tr><th>타입</th><th>메인 카드 라벨</th><th>보조 카드 라벨</th><th>미리보기 UI</th></tr>
+<tr><td>이미지</td><td>"메인 이미지"</td><td>"서브 이미지"</td><td>정사각형 이미지 미리보기 (둘 다)</td></tr>
+<tr><td>영상</td><td>"영상 (MP4)"</td><td>"썸네일"</td><td>메인은 16:9 비디오 플레이스홀더 ("▶ 영상 미리보기"), 썸네일은 정사각형 이미지 미리보기</td></tr>
+<tr><td>음성</td><td>"음성 (MP3)"</td><td>"썸네일"</td><td>메인은 가로 막대 오디오 플레이스홀더 ("♪ 음성 재생 미리보기"), 썸네일은 정사각형 이미지 미리보기</td></tr>
+</table>
+<ul>
+<li><strong>보조 카드 미등록 시</strong>: 회색 dashed border placeholder + 안내 ("서브 이미지 미등록 (선택)" / "썸네일 미등록")</li>
+<li>이미지 타입 서브 이미지는 미등록 허용. 영상·음성 타입 썸네일은 등록 화면에서 필수 검증되므로 정상 데이터에서는 항상 표시</li>
 <li>카드 크기가 우측 패널 폭 전체로 충분히 크게 노출되어 미리보기 가시성 확보</li>
 </ul>
 <p><strong>관리 정보 카드</strong> (우측 하단):</p>
@@ -253,7 +263,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.7</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§2-1 헤더 — ← 뒤로가기 버튼 복구 (v1.6 롤백·정정)</strong> 직전 v1.6에서 잘못 제거한 ← 뒤로가기 버튼을 복구. 운영 BO 재검증(chrome-devtools 실접속) 결과 페이지 제목 좌측에 ChevronLeftIcon 형태의 뒤로가기 버튼이 실제로 존재함을 확인 (v1.6 작성 시 캡처 이미지 오독). 최종 헤더 레이아웃 = Breadcrumb(상단) + (← 뒤로가기 + 페이지 제목 "BIVE 상세" + 작은 알약형 인라인 상태 배지) + 우측 액션. 뒤로가기 클릭 시 [CEB-BO-BIVE-102] 에디션 BIVE 관리로 이동</td></tr>
+<tr><td><strong>v1.8</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§2-2 InfoTab 미디어 카드 — 미디어 타입 분기 (이미지/영상/음성)</strong> ① 미디어 카드 상단에 미디어 타입 배지 노출 ② 카드 라벨이 타입별로 분기: 이미지(메인 이미지/서브 이미지) / 영상(영상 MP4/썸네일) / 음성(음성 MP3/썸네일) ③ 미리보기 UI 분기 — 이미지는 정사각형, 영상은 16:9 비디오 플레이스홀더("▶ 영상 미리보기"), 음성은 가로 막대 오디오 플레이스홀더("♪ 음성 재생 미리보기"). 보조 카드 미등록 시 회색 dashed placeholder. v1.3 "앞면·뒷면 세로 스택" 구조는 본 타입 분기로 대체. ([CEB-BO-004] v1.12 + [202-CREATE] v1.5 정합)</td></tr>
+<tr><td>v1.7</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§2-1 헤더 — ← 뒤로가기 버튼 복구 (v1.6 롤백·정정)</strong> 직전 v1.6에서 잘못 제거한 ← 뒤로가기 버튼을 복구. 운영 BO 재검증(chrome-devtools 실접속) 결과 페이지 제목 좌측에 ChevronLeftIcon 형태의 뒤로가기 버튼이 실제로 존재함을 확인 (v1.6 작성 시 캡처 이미지 오독). 최종 헤더 레이아웃 = Breadcrumb(상단) + (← 뒤로가기 + 페이지 제목 "BIVE 상세" + 작은 알약형 인라인 상태 배지) + 우측 액션. 뒤로가기 클릭 시 [CEB-BO-BIVE-102] 에디션 BIVE 관리로 이동</td></tr>
 <tr><td>v1.6</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§2-1 헤더 표현 정정 — 운영 BO 정합</strong> ① 좌측 뒤로가기 ArrowLeft 버튼 제거 (Breadcrumb으로 충분, 운영 BO 미존재) ② 상태 배지 사이즈 축소: 큰 rounded-full → 작은 알약형 <code>px-2 py-0.5 text-[11px]</code>. 페이지 제목 우측 인라인 baseline 정렬 ③ 상태 배지 디자인 표준 명시 (Active emerald / Draft amber / Inactive red)</td></tr>
 <tr><td>v1.5</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§2-4 민팅관리 탭 — "보상 방식"·"연결 기능" 컬럼 제거 (운영 BO 정합)</strong> 운영 BO는 BIVE 단위 인덱스 역할만 수행하며 캠페인 단위 속성은 표시하지 않음. 사이클 #2(v1.2)에서 추가한 보상 방식 컬럼 + 기존 연결 기능 컬럼 둘 다 제거. 캠페인 단위 상세 속성은 캠페인명 클릭 → [203] 캠페인 상세에서 확인</td></tr>
 <tr><td>v1.4</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§2-3 기능설정 탭 — Draft 상태에서만 토글 수정 가능 (운영 BO 정합)</strong> 프로토타입이 모든 상태에서 read-only로 표시되던 문제 정정. Draft = 토글 button (인디고 활성/회색 비활성, 클릭 전환) / Active·Inactive = 토글 span (opacity 60%, 클릭 불가, 안내 tooltip). 안내 박스 분기 — Draft: "Draft 상태에서만 수정할 수 있습니다" (indigo) / Active·Inactive: "Draft 상태에서만 기능설정을 수정할 수 있습니다. 활성·비활성 상태에서는 조회만 가능합니다." (amber)</td></tr>

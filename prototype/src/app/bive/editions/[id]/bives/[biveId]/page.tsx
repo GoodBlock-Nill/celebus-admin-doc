@@ -203,23 +203,13 @@ function InfoTab({ token, editionName }: { token: BiveToken; editionName: string
           <ReadField label="설명 (영문)" value={token.description || ''} multiline />
         </div>
         <div className="bg-white border border-gray-200 rounded-xl p-5">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">미디어 파일</h3>
-          <div className="space-y-4">
-            {/* 앞면 */}
-            <div>
-              <div className={`aspect-square rounded-lg flex items-center justify-center text-xs ${token.mediaFrontUrl ? 'bg-gradient-to-br from-orange-100 to-pink-100 text-gray-600' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
-                {token.mediaFrontUrl ? '앞면 미리보기' : '앞면 미등록'}
-              </div>
-              <div className="text-xs text-center mt-2 text-gray-600">앞면</div>
-            </div>
-            {/* 뒷면 */}
-            <div>
-              <div className={`aspect-square rounded-lg flex items-center justify-center text-xs ${token.mediaBackUrl ? 'bg-gradient-to-br from-indigo-100 to-purple-100 text-gray-600' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
-                {token.mediaBackUrl ? '뒷면 미리보기' : '뒷면 미등록'}
-              </div>
-              <div className="text-xs text-center mt-2 text-gray-600">뒷면</div>
-            </div>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-gray-900">미디어 파일</h3>
+            <span className="inline-flex items-center rounded px-2 py-0.5 text-[11px] font-medium bg-gray-100 text-gray-700">
+              {token.mediaType === 'image' ? '이미지' : token.mediaType === 'video' ? '영상' : '음성'}
+            </span>
           </div>
+          <MediaPreview token={token} />
         </div>
       </div>
     </div>
@@ -352,6 +342,63 @@ function HistoryTab({ token }: { token: BiveToken }) {
         emptyMessage="민팅 이력이 없습니다."
       />
       <SimplePagination page={page} totalPages={totalPages || 1} onChange={setPage} />
+    </div>
+  );
+}
+
+// 미디어 미리보기 — 타입별 분기 (v1.5 / [CEB-BO-BIVE-202] v1.6)
+function MediaPreview({ token }: { token: BiveToken }) {
+  if (token.mediaType === 'image') {
+    return (
+      <div className="space-y-4">
+        <div>
+          <div className={`aspect-square rounded-lg flex items-center justify-center text-xs ${token.mediaUrl ? 'bg-gradient-to-br from-orange-100 to-pink-100 text-gray-600' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
+            {token.mediaUrl ? '메인 이미지 미리보기' : '메인 이미지 미등록'}
+          </div>
+          <div className="text-xs text-center mt-2 text-gray-600">메인 이미지</div>
+        </div>
+        <div>
+          <div className={`aspect-square rounded-lg flex items-center justify-center text-xs ${token.mediaAltUrl ? 'bg-gradient-to-br from-indigo-100 to-purple-100 text-gray-600' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
+            {token.mediaAltUrl ? '서브 이미지 미리보기' : '서브 이미지 미등록 (선택)'}
+          </div>
+          <div className="text-xs text-center mt-2 text-gray-600">서브 이미지</div>
+        </div>
+      </div>
+    );
+  }
+  if (token.mediaType === 'video') {
+    return (
+      <div className="space-y-4">
+        <div>
+          <div className={`aspect-video rounded-lg flex items-center justify-center text-xs ${token.mediaUrl ? 'bg-gradient-to-br from-emerald-100 to-cyan-100 text-gray-700' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
+            {token.mediaUrl ? '▶ 영상 미리보기' : '영상 미등록'}
+          </div>
+          <div className="text-xs text-center mt-2 text-gray-600">영상 (MP4)</div>
+        </div>
+        <div>
+          <div className={`aspect-square rounded-lg flex items-center justify-center text-xs ${token.mediaAltUrl ? 'bg-gradient-to-br from-indigo-100 to-purple-100 text-gray-600' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
+            {token.mediaAltUrl ? '썸네일 미리보기' : '썸네일 미등록'}
+          </div>
+          <div className="text-xs text-center mt-2 text-gray-600">썸네일</div>
+        </div>
+      </div>
+    );
+  }
+  // audio
+  return (
+    <div className="space-y-4">
+      <div>
+        <div className={`aspect-square rounded-lg flex items-center justify-center text-xs ${token.mediaAltUrl ? 'bg-gradient-to-br from-indigo-100 to-purple-100 text-gray-600' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
+          {token.mediaAltUrl ? '썸네일 미리보기' : '썸네일 미등록'}
+        </div>
+        <div className="text-xs text-center mt-2 text-gray-600">썸네일</div>
+      </div>
+      <div>
+        <div className={`h-16 rounded-lg flex items-center justify-center gap-2 text-xs ${token.mediaUrl ? 'bg-gradient-to-r from-amber-100 to-rose-100 text-gray-700' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
+          {token.mediaUrl ? '♪ 음성 재생 미리보기' : '음성 미등록'}
+        </div>
+        <div className="text-xs text-center mt-2 text-gray-600">음성 (MP3)</div>
+      </div>
     </div>
   );
 }

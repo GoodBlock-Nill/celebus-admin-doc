@@ -12,17 +12,17 @@ import {
   editions,
   getEditionTokens,
   type BiveToken,
+  LINKED_FEATURES,
 } from '@/mock/bive';
 
-// [CEB-BO-BIVE-203-CREATE] 캠페인 생성 v1.3 (운영 BO 풀페이지 정합 + 보상 방식 이분화)
+// [CEB-BO-BIVE-203-CREATE] 캠페인 생성 v1.6 — 연결 기능 7종 (운영 BO 정합)
 // 라우트: /bive/minting/create?type=EVENT|TICKET|MIX|PICK
+// 모든 캠페인 유형 공통 7종 연결 기능 (LINKED_FEATURES @/mock/bive)
 
 const TABS = [
   { key: 'info', label: '기본정보' },
   { key: 'bive', label: 'BIVE 보상' },
 ] as const;
-
-const LINKED_FEATURES = ['회원가입 보상', '출석체크 보상', '래플 보상', '팬퀘스트 보상'];
 
 function CreateCampaignContent() {
   const router = useRouter();

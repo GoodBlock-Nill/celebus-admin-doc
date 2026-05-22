@@ -10,15 +10,23 @@ import {
   getArtistsByGroup,
   BIVE_GRADES,
   getEditionById,
+  MEDIA_POLICY,
+  type MediaType,
 } from '@/mock/bive';
 
-// [CEB-BO-BIVE-202-CREATE] BIVE 등록 (운영 BO 풀페이지 정합)
+// [CEB-BO-BIVE-202-CREATE] BIVE 등록 (운영 BO 풀페이지 정합 + 미디어 타입 분기 v1.12)
 // 라우트: /bive/editions/{editionId}/create
 
 const TABS = [
   { key: 'info', label: '기본정보' },
   { key: 'feature', label: '기능설정' },
 ] as const;
+
+const MEDIA_TYPE_OPTIONS: { key: MediaType; label: string; desc: string }[] = [
+  { key: 'image', label: '이미지', desc: '메인 이미지(필수) + 서브 이미지(선택)' },
+  { key: 'video', label: '영상', desc: '영상(필수) + 썸네일(필수)' },
+  { key: 'audio', label: '음성', desc: '음성(필수) + 썸네일(필수)' },
+];
 
 export default function BiveCreatePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -32,17 +40,29 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
   const [descEN, setDescEN] = useState('');
   const [grade, setGrade] = useState('');
   const [gradeNum, setGradeNum] = useState('');
-  // BIVE 미디어 — 앞면(필수) + 뒷면(선택) ([CEB-BO-BIVE-202-CREATE] §2-2 v1.3)
-  const [mediaFront, setMediaFront] = useState('');
-  const [mediaBack, setMediaBack] = useState('');
+  // BIVE 미디어 — 타입 분기 ([CEB-BO-BIVE-202-CREATE] §2-2 v1.5)
+  const [mediaType, setMediaType] = useState<MediaType>('image');
+  const [mediaMain, setMediaMain] = useState('');
+  const [mediaAlt, setMediaAlt] = useState('');
   const [toggles, setToggles] = useState({ send: true, mix: true, pick: true });
 
   if (!edition) {
     return <div className="p-8 text-sm text-gray-500">에디션을 찾을 수 없습니다.</div>;
   }
 
-  const canSubmit = group && artist && grade && gradeNum && mediaFront; // 앞면만 필수
+  const policy = MEDIA_POLICY[mediaType];
+  const altRequired = policy.altRequired;
+  const mediaValid = !!mediaMain && (altRequired ? !!mediaAlt : true);
+  const canSubmit = group && artist && grade && gradeNum && mediaValid;
   const availableArtists = group ? getArtistsByGroup(group) : [];
+
+  // 타입 전환 시 파일값 초기화 (확장자 호환 안 됨)
+  const handleTypeChange = (t: MediaType) => {
+    if (t === mediaType) return;
+    setMediaType(t);
+    setMediaMain('');
+    setMediaAlt('');
+  };
 
   return (
     <div>
@@ -66,7 +86,7 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
           <button
             disabled={!canSubmit}
             onClick={() => {
-              alert(`[Mock] BIVE 등록\n그룹: ${group} / 아티스트: ${artist} / 등급: ${grade}-${gradeNum}\n앞면: ${mediaFront} / 뒷면: ${mediaBack || '(미등록)'}\n기능: 보내기=${toggles.send} Mix=${toggles.mix} Pick=${toggles.pick}`);
+              alert(`[Mock] BIVE 등록\n그룹: ${group} / 아티스트: ${artist} / 등급: ${grade}-${gradeNum}\n미디어 타입: ${mediaType}\n${policy.mainName}: ${mediaMain} / ${policy.altName}: ${mediaAlt || '(미등록)'}\n기능: 보내기=${toggles.send} Mix=${toggles.mix} Pick=${toggles.pick}`);
               router.push(`/bive/editions/${editionId}`);
             }}
             className="h-10 px-5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-indigo-300"
@@ -165,23 +185,65 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
             </div>
             <div>
               <h3 className="text-sm font-semibold text-gray-900 mb-2">미디어 파일</h3>
-              <p className="text-xs text-gray-500 mb-4">허용 확장자: PNG, JPG, GIF, WebP, MP4 (각 최대 20MB)</p>
+
+              {/* 미디어 타입 선택 — 라디오 카드 3종 (v1.5) */}
+              <div className="mb-4">
+                <label className="block text-xs font-medium text-gray-700 mb-2">미디어 타입 <span className="text-red-500">*</span></label>
+                <div className="grid grid-cols-3 gap-2">
+                  {MEDIA_TYPE_OPTIONS.map((opt) => {
+                    const selected = mediaType === opt.key;
+                    return (
+                      <button
+                        key={opt.key}
+                        type="button"
+                        onClick={() => handleTypeChange(opt.key)}
+                        className={`text-left p-3 rounded-lg border transition-colors ${
+                          selected ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className={`text-sm font-medium ${selected ? 'text-indigo-700' : 'text-gray-900'}`}>{opt.label}</div>
+                        <div className="text-[11px] text-gray-500 mt-0.5 leading-tight">{opt.desc}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 타입별 업로드 필드 (메인 + 서브/썸네일) */}
               <div className="grid grid-cols-2 gap-3">
-                {/* 앞면 (필수) */}
+                {/* 메인 (필수) */}
                 <div>
                   <div className="flex items-center gap-1.5 mb-2">
-                    <span className="text-sm font-medium text-gray-900">앞면</span>
+                    <span className="text-sm font-medium text-gray-900">{policy.mainName}</span>
                     <span className="text-red-500">*</span>
                   </div>
-                  <MediaDropzone value={mediaFront} onChange={setMediaFront} />
+                  <MediaDropzone
+                    value={mediaMain}
+                    onChange={setMediaMain}
+                    accept={policy.mainAccept}
+                    acceptLabel={policy.mainLabel}
+                    maxSizeMB={policy.mainMaxMB}
+                  />
+                  <p className="text-[11px] text-gray-500 mt-1.5">{policy.mainLabel} · 최대 {policy.mainMaxMB}MB</p>
                 </div>
-                {/* 뒷면 (선택) */}
+                {/* 서브/썸네일 (필수성은 타입별) */}
                 <div>
                   <div className="flex items-center gap-1.5 mb-2">
-                    <span className="text-sm font-medium text-gray-900">뒷면</span>
-                    <span className="text-xs text-gray-400">(선택)</span>
+                    <span className="text-sm font-medium text-gray-900">{policy.altName}</span>
+                    {altRequired ? (
+                      <span className="text-red-500">*</span>
+                    ) : (
+                      <span className="text-xs text-gray-400">(선택)</span>
+                    )}
                   </div>
-                  <MediaDropzone value={mediaBack} onChange={setMediaBack} />
+                  <MediaDropzone
+                    value={mediaAlt}
+                    onChange={setMediaAlt}
+                    accept={policy.altAccept}
+                    acceptLabel={policy.altLabel}
+                    maxSizeMB={policy.altMaxMB}
+                  />
+                  <p className="text-[11px] text-gray-500 mt-1.5">{policy.altLabel} · 최대 {policy.altMaxMB}MB</p>
                 </div>
               </div>
             </div>

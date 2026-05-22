@@ -5,7 +5,69 @@ export type BiveGrade = 'Event' | 'Normal' | 'Special' | 'Wicked' | 'Next' | 'Fi
 export type BiveStatus = 'Draft' | 'Active' | 'Inactive';
 export type CampaignStatus = '초안' | '활성' | '중지' | '종료';
 export type CampaignType = 'EVENT' | 'TICKET' | 'MIX' | 'PICK';
-export type LinkedFeature = '회원가입 보상' | '출석체크 보상' | '래플 보상' | '팬퀘스트 보상';
+export type LinkedFeature =
+  | '회원가입 보상'
+  | '출석체크 보상'
+  | '래플 보상'
+  | '팬퀘스트 보상'
+  | '에피소드 보상'
+  | '덕력랭킹 보상'
+  | '아티스트 키우기 보상';
+
+// 연결 기능 7종 — 캠페인 생성/상세 드롭다운 단일 소스
+// [CEB-BO-004] v1.12 §5 정책 상수 정합 (모든 캠페인 유형 공통)
+export const LINKED_FEATURES: LinkedFeature[] = [
+  '회원가입 보상',
+  '출석체크 보상',
+  '래플 보상',
+  '팬퀘스트 보상',
+  '에피소드 보상',
+  '덕력랭킹 보상',
+  '아티스트 키우기 보상',
+];
+
+// 미디어 타입 — BIVE 등록 시 운영자 선택
+export type MediaType = 'image' | 'video' | 'audio';
+
+// 미디어 타입별 파일 정책 ([CEB-BO-004] v1.12 §5 정합)
+export const MEDIA_POLICY: Record<MediaType, { mainAccept: string; mainLabel: string; mainMaxMB: number; altAccept: string; altLabel: string; altMaxMB: number; mainRequired: true; altRequired: boolean; mainName: string; altName: string }> = {
+  image: {
+    mainName: '메인 이미지',
+    mainAccept: '.png,.jpg,.jpeg,.gif,.webp',
+    mainLabel: 'PNG, JPG, GIF, WebP',
+    mainMaxMB: 20,
+    mainRequired: true,
+    altName: '서브 이미지',
+    altAccept: '.png,.jpg,.jpeg,.gif,.webp',
+    altLabel: 'PNG, JPG, GIF, WebP',
+    altMaxMB: 20,
+    altRequired: false,
+  },
+  video: {
+    mainName: '영상',
+    mainAccept: '.mp4',
+    mainLabel: 'MP4',
+    mainMaxMB: 50,
+    mainRequired: true,
+    altName: '썸네일',
+    altAccept: '.png,.jpg,.jpeg,.gif,.webp',
+    altLabel: 'PNG, JPG, GIF, WebP',
+    altMaxMB: 20,
+    altRequired: true,
+  },
+  audio: {
+    mainName: '음성',
+    mainAccept: '.mp3',
+    mainLabel: 'MP3',
+    mainMaxMB: 10,
+    mainRequired: true,
+    altName: '썸네일',
+    altAccept: '.png,.jpg,.jpeg,.gif,.webp',
+    altLabel: 'PNG, JPG, GIF, WebP',
+    altMaxMB: 20,
+    altRequired: true,
+  },
+};
 export type BenefitStatus = '초안' | '대기' | '활성' | '중지' | '종료';
 export type BenefitType = 'BP' | 'TICKET';
 export type BenefitCycle = 'DAILY' | 'WEEKLY' | 'ONCE';
@@ -76,8 +138,10 @@ export interface BiveToken {
   mintedCount: number;
   registeredAt: string;
   description?: string;
-  mediaFrontUrl?: string; // 앞면 (필수 — 등록 시 검증)
-  mediaBackUrl?: string;  // 뒷면 (선택)
+  // 미디어 (v1.12 — 타입 분기) — [CEB-BO-004] v1.12 §5 정합
+  mediaType: MediaType; // 'image' | 'video' | 'audio'
+  mediaUrl?: string;    // 메인 파일 (이미지: 메인 이미지 / 영상 / 음성) — 등록 시 필수
+  mediaAltUrl?: string; // 서브 파일 (이미지: 서브 이미지(선택) / 영상·음성: 썸네일(필수))
   toggles: { send: boolean; mix: boolean; pick: boolean };
 }
 
@@ -109,36 +173,40 @@ function makeV01dEditionTokens(): BiveToken[] {
         mintedCount: minted,
         registeredAt: g.date,
         toggles: { send: true, mix: true, pick: true },
+        mediaType: 'image',
       });
     });
   });
   // 추가 3건 (운영 등록된 BIVE=23 충족용 — Event 등급 005, 양면 데모 포함)
   tokens.push(
-    { id: id++, editionId: 1, status: 'Active', name: '송유찬 Event-005', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 12, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaFrontUrl: '/mock/bive/v01d-005-songyuchan-front.webp', mediaBackUrl: '/mock/bive/v01d-005-songyuchan-back.webp' },
-    { id: id++, editionId: 1, status: 'Active', name: '정지섭 Event-005', artistGroup: 'V01D', artist: '정지섭', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 8, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaFrontUrl: '/mock/bive/v01d-005-jeongjiseop-front.webp' },
-    { id: id++, editionId: 1, status: 'Active', name: '케빈박 Event-005', artistGroup: 'V01D', artist: '케빈박', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 9, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaFrontUrl: '/mock/bive/v01d-005-kevinpark-front.webp', mediaBackUrl: '/mock/bive/v01d-005-kevinpark-back.webp' },
+    // 이미지 타입 데모 (메인 + 서브)
+    { id: id++, editionId: 1, status: 'Active', name: '송유찬 Event-005', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 12, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaType: 'image', mediaUrl: '/mock/bive/v01d-005-songyuchan-main.webp', mediaAltUrl: '/mock/bive/v01d-005-songyuchan-sub.webp' },
+    // 영상 타입 데모 (MP4 + 썸네일)
+    { id: id++, editionId: 1, status: 'Active', name: '정지섭 Event-005', artistGroup: 'V01D', artist: '정지섭', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 8, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaType: 'video', mediaUrl: '/mock/bive/v01d-005-jeongjiseop.mp4', mediaAltUrl: '/mock/bive/v01d-005-jeongjiseop-thumb.webp' },
+    // 음성 타입 데모 (MP3 + 썸네일)
+    { id: id++, editionId: 1, status: 'Active', name: '케빈박 Event-005', artistGroup: 'V01D', artist: '케빈박', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 9, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaType: 'audio', mediaUrl: '/mock/bive/v01d-005-kevinpark.mp3', mediaAltUrl: '/mock/bive/v01d-005-kevinpark-thumb.webp' },
   );
   return tokens;
 }
 
 function makeCelebusEditionTokens(): BiveToken[] {
   return [
-    { id: 1, editionId: 2, status: 'Active', name: 'CELEBUS Event-001', artistGroup: 'CELEBUS', artist: 'CELEBUS', grade: 'Event', gradeNumber: '001', mintEvent: 1, mintedCount: 439, registeredAt: '2026.02.19', toggles: { send: true, mix: true, pick: true }, description: 'CELEBUS 1st Welcome Edition', mediaFrontUrl: '/mock/bive/celebus-1-front.webp', mediaBackUrl: '/mock/bive/celebus-1-back.webp' },
+    { id: 1, editionId: 2, status: 'Active', name: 'CELEBUS Event-001', artistGroup: 'CELEBUS', artist: 'CELEBUS', grade: 'Event', gradeNumber: '001', mintEvent: 1, mintedCount: 439, registeredAt: '2026.02.19', toggles: { send: true, mix: true, pick: true }, description: 'CELEBUS 1st Welcome Edition', mediaType: 'image', mediaUrl: '/mock/bive/celebus-1-main.webp', mediaAltUrl: '/mock/bive/celebus-1-sub.webp' },
   ];
 }
 
 function makeUnderlightEditionTokens(): BiveToken[] {
   return [
-    { id: 1, editionId: 3, status: 'Active', name: '리아 Normal-001', artistGroup: '언더라이트', artist: '리아', grade: 'Normal', gradeNumber: '001', mintEvent: 1, mintedCount: 18, registeredAt: '2026.03.12', toggles: { send: true, mix: true, pick: true } },
-    { id: 2, editionId: 3, status: 'Active', name: '소율 Normal-001', artistGroup: '언더라이트', artist: '소율', grade: 'Normal', gradeNumber: '001', mintEvent: 1, mintedCount: 16, registeredAt: '2026.03.12', toggles: { send: true, mix: true, pick: true } },
-    { id: 3, editionId: 3, status: 'Active', name: '하나 Normal-001', artistGroup: '언더라이트', artist: '하나', grade: 'Normal', gradeNumber: '001', mintEvent: 1, mintedCount: 13, registeredAt: '2026.03.12', toggles: { send: true, mix: true, pick: true } },
+    { id: 1, editionId: 3, status: 'Active', name: '리아 Normal-001', artistGroup: '언더라이트', artist: '리아', grade: 'Normal', gradeNumber: '001', mintEvent: 1, mintedCount: 18, registeredAt: '2026.03.12', toggles: { send: true, mix: true, pick: true }, mediaType: 'image' },
+    { id: 2, editionId: 3, status: 'Active', name: '소율 Normal-001', artistGroup: '언더라이트', artist: '소율', grade: 'Normal', gradeNumber: '001', mintEvent: 1, mintedCount: 16, registeredAt: '2026.03.12', toggles: { send: true, mix: true, pick: true }, mediaType: 'image' },
+    { id: 3, editionId: 3, status: 'Active', name: '하나 Normal-001', artistGroup: '언더라이트', artist: '하나', grade: 'Normal', gradeNumber: '001', mintEvent: 1, mintedCount: 13, registeredAt: '2026.03.12', toggles: { send: true, mix: true, pick: true }, mediaType: 'image' },
   ];
 }
 
 function makeMadeinEditionTokens(): BiveToken[] {
   return [
-    { id: 1, editionId: 4, status: 'Active', name: '윤하 Normal-001', artistGroup: 'MADEIN', artist: '윤하', grade: 'Normal', gradeNumber: '001', mintEvent: 0, mintedCount: 10, registeredAt: '2026.04.30', toggles: { send: true, mix: true, pick: true } },
-    { id: 2, editionId: 4, status: 'Draft', name: '서윤 Normal-001', artistGroup: 'MADEIN', artist: '서윤', grade: 'Normal', gradeNumber: '001', mintEvent: 0, mintedCount: 8, registeredAt: '2026.04.30', toggles: { send: true, mix: true, pick: true } },
+    { id: 1, editionId: 4, status: 'Active', name: '윤하 Normal-001', artistGroup: 'MADEIN', artist: '윤하', grade: 'Normal', gradeNumber: '001', mintEvent: 0, mintedCount: 10, registeredAt: '2026.04.30', toggles: { send: true, mix: true, pick: true }, mediaType: 'image' },
+    { id: 2, editionId: 4, status: 'Draft', name: '서윤 Normal-001', artistGroup: 'MADEIN', artist: '서윤', grade: 'Normal', gradeNumber: '001', mintEvent: 0, mintedCount: 8, registeredAt: '2026.04.30', toggles: { send: true, mix: true, pick: true }, mediaType: 'image' },
   ];
 }
 

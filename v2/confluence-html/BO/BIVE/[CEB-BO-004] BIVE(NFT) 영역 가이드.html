@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — NFT 발행·민팅·혜택</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.11</td></tr>
+<tr><td>버전</td><td>v1.12</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -196,12 +196,15 @@ p {
 <tr><td><strong>BIVE 등급번호</strong></td><td>최대 5자리 숫자 (예: 001, 12345)</td></tr>
 <tr><td><strong>BIVE 고유성</strong></td><td>동일 에디션 내에서 (아티스트, 등급, 등급번호) 조합은 유니크</td></tr>
 <tr><td><strong>BIVE 상태</strong></td><td><strong>3상태</strong>: Draft(초안) / Active(활성) / Inactive(비활성). Active 후 정보 수정 불가</td></tr>
-<tr><td><strong>BIVE 미디어</strong> (v1.10)</td><td><strong>앞면(필수) + 뒷면(선택) 2장 분리</strong>. 각 PNG·JPG·GIF·WebP·MP4 / 최대 20MB. NFT 카드 양면 표준 패턴 (앞면 일러스트 + 뒷면 패턴/스토리). [202-CREATE] §2-2 우측 패널 grid-cols-2 (좌우 박스 2개, 입력 효율). [202] InfoTab 미디어 카드 세로 스택 (1열 1장씩, 미리보기 가시성 우선)</td></tr>
+<tr><td><strong>BIVE 미디어 타입</strong> (v1.12)</td><td>운영자가 BIVE 등록 시 <strong>3가지 미디어 타입</strong> 중 하나를 라디오로 선택한다 — <strong>이미지 / 영상 / 음성</strong>. 타입을 선택하면 타입별로 정해진 메인·보조 필드 2종이 노출된다. 타입 변경 시 기존 업로드 파일 초기화 (확장자 호환 불가). v1.10의 "앞면·뒷면 2장 분리" 정책은 v1.12에서 본 타입 분기 정책으로 대체</td></tr>
+<tr><td><strong>BIVE 미디어 — 이미지 타입</strong> (v1.12)</td><td>메인 이미지(★) + 서브 이미지(선택). 둘 다 PNG·JPG·GIF·WebP, 최대 20MB</td></tr>
+<tr><td><strong>BIVE 미디어 — 영상 타입</strong> (v1.12)</td><td>영상(★) + 썸네일(★). 영상은 MP4만, 최대 50MB. 썸네일은 PNG·JPG·GIF·WebP, 최대 20MB (리스트·앱 미리보기 표시용)</td></tr>
+<tr><td><strong>BIVE 미디어 — 음성 타입</strong> (v1.12)</td><td>음성(★) + 썸네일(★). 음성은 MP3만, 최대 10MB. 썸네일은 PNG·JPG·GIF·WebP, 최대 20MB</td></tr>
 <tr><td><strong>미디어 업로드 UI 표준</strong> (v1.9)</td><td><strong>클릭 + 드래그&드롭</strong> 둘 다 지원. 빈 박스 안내 "클릭하거나 파일을 드래그하세요". 드래그 오버 시 인디고 테두리·배경 시각 피드백. 확장자·크기 검증 실패 시 alert. 공통 컴포넌트 <code>MediaDropzone</code> (<code>prototype/src/components/clone/MediaDropzone.tsx</code>)으로 추출 — BIVE 외 영역에서 미디어 업로드 시 동일 컴포넌트 재사용</td></tr>
 <tr><td><strong>BIVE 기능 토글</strong></td><td>보내기(Send) / Mix / Pick — 3종 모두 기본 ON. 운영자가 개별 ON/OFF</td></tr>
 <tr><td><strong>민팅 이벤트 유형</strong></td><td><strong>4종 고정</strong>: Event / Ticket / Mix / Pick</td></tr>
 <tr><td><strong>민팅 이벤트 상태</strong></td><td><strong>4상태</strong>: 초안 / 활성 / 중지 / 종료. 활성→초안 되돌리기 불가. 종료는 개발팀 수동 처리</td></tr>
-<tr><td><strong>민팅 이벤트 연결 기능</strong></td><td>캠페인 ↔ 연결 기능은 <strong>1:1</strong>. 개발 프리셋에서 내려주는 목록만 사용. 운영 BO 실제 Event 탭 4종 — <strong>회원가입 보상 / 출석체크 보상 / 래플 보상 / 팬퀘스트 보상</strong>. Ticket·Mix·Pick 탭은 별도 프리셋</td></tr>
+<tr><td><strong>민팅 이벤트 연결 기능</strong> (v1.12)</td><td>캠페인 ↔ 연결 기능은 <strong>1:1</strong>. 개발 프리셋에서 내려주는 목록만 사용. <strong>모든 캠페인 유형(Event·Ticket·Mix·Pick) 공통 7종</strong> — <strong>회원가입 보상 / 출석체크 보상 / 래플 보상 / 팬퀘스트 보상 / 에피소드 보상 / 덕력랭킹 보상 / 아티스트 키우기 보상</strong>. 캠페인 유형별 옵션 분리 없음 (v1.4 "Event 탭 4종 / Ticket·Mix·Pick 별도 프리셋" 정책은 v1.12에서 공통 7종으로 통합)</td></tr>
 <tr><td><strong>민팅 이벤트 보상 방식</strong> (v1.6 신규)</td><td><strong>2종 XOR</strong> — <code>WEIGHTED</code>(가중치 보상) / <code>FIXED</code>(지정 보상). 캠페인당 1개만 선택. 초안·중지에서만 전환 가능. 활성·종료 read-only</td></tr>
 <tr><td><strong>WEIGHTED (가중치 보상)</strong></td><td>트리거 → 가중치 분포 추첨 → BIVE <strong>1개</strong> 발행. 가중치 1~999 정수, 비중 = 가중치/가중치합</td></tr>
 <tr><td><strong>FIXED (지정 보상)</strong></td><td>트리거 → 등록된 모든 BIVE(1~10종) <strong>동시</strong> 발행. 가중치·비중 무관. <strong>최대 10종</strong> (<code>FIXED_REWARD_MAX = 10</code>)</td></tr>
@@ -288,7 +291,8 @@ p {
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.11</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§5 보상 방식 배지 노출 표준 정정 — [202] BIVE 상세 §민팅관리 제외 (운영 BO 정합)</strong> ([202] v1.4→v1.5) BIVE 상세 §민팅관리 탭은 BIVE 단위 인덱스 역할만 수행하며 캠페인 단위 속성(보상 방식·연결 기능)은 표시하지 않음. 운영자가 캠페인 속성을 확인하려면 캠페인명 클릭 → [203] 상세에서 조회. 노출 위치 = <strong>[103] 민팅 이벤트 리스트 + [203] 캠페인 상세 §BIVE 보상 탭 라디오</strong>로 한정</td></tr>
+<tr><td><strong>v1.12</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§5 BIVE 미디어 타입 분기 + 연결 기능 7종 통합</strong> ① <strong>BIVE 미디어 타입 분기</strong> — 운영자가 등록 시 3가지 타입(이미지/영상/음성) 라디오 선택. 타입별 메인·보조 필드 2종 + 타입별 확장자·크기 정책 (이미지: 메인★+서브 PNG/JPG/GIF/WebP 20MB / 영상: MP4★ 50MB + 썸네일★ / 음성: MP3★ 10MB + 썸네일★). v1.10 "앞면·뒷면 2장 분리" 정책은 본 타입 분기로 대체 ② <strong>연결 기능 7종 통합</strong> — v1.4 "Event 탭 4종 / Ticket·Mix·Pick 별도 프리셋" 정책 폐기. 모든 캠페인 유형 공통 7종(회원가입·출석체크·래플·팬퀘스트 + 신규: 에피소드·덕력랭킹·아티스트 키우기 보상) ③ 영향 명세: [202-CREATE] v1.4→v1.5 / [202] v1.5→v1.6 / [203-CREATE] v1.5→v1.6 / [203]</td></tr>
+<tr><td>v1.11</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§5 보상 방식 배지 노출 표준 정정 — [202] BIVE 상세 §민팅관리 제외 (운영 BO 정합)</strong> ([202] v1.4→v1.5) BIVE 상세 §민팅관리 탭은 BIVE 단위 인덱스 역할만 수행하며 캠페인 단위 속성(보상 방식·연결 기능)은 표시하지 않음. 운영자가 캠페인 속성을 확인하려면 캠페인명 클릭 → [203] 상세에서 조회. 노출 위치 = <strong>[103] 민팅 이벤트 리스트 + [203] 캠페인 상세 §BIVE 보상 탭 라디오</strong>로 한정</td></tr>
 <tr><td>v1.10</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§5 BIVE 미디어 표준 정정 — [202] InfoTab 미디어 카드 배치 좌우 그리드 → 세로 스택</strong> ([202] v1.2→v1.3) 카드 크기를 우측 패널 폭 전체로 확대 → 미리보기 가시성 향상. 등록 화면([202-CREATE])은 입력 효율 위해 좌우 그리드 유지 (배치 차이 의도)</td></tr>
 <tr><td>v1.9</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§5 정책 상수 신규 — 미디어 업로드 UI 표준 (클릭 + 드래그&드롭)</strong> ① 빈 박스 안내 "클릭하거나 파일을 드래그하세요" ② 드래그 오버 시 인디고 시각 피드백 ③ 확장자·크기 검증 실패 시 alert ④ 공통 컴포넌트 <code>MediaDropzone</code> 추출 — BIVE 외 영역에서 미디어 업로드 시 동일 컴포넌트 재사용. 영향: [202-CREATE] v1.3 → v1.4 (§2-2 업로드 동작 정정) + 프로토타입 <code>prototype/src/components/clone/MediaDropzone.tsx</code> 신규</td></tr>
 <tr><td>v1.8</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§5 정책 상수 2건 보강 — BIVE 미디어 앞면·뒷면 분리 + 보상 방식 배지 노출 표준</strong> ① BIVE 미디어 정책 — 단일 → <strong>앞면(필수) + 뒷면(선택) 2장</strong> (NFT 카드 양면 표준). 영향: [202-CREATE] v1.2→v1.3 ([CEB-BO-004] §5 미디어 정책 정합) / [202] v1.1→v1.2 (InfoTab 미디어 카드 grid-cols-2) ② 보상 방식 배지 노출 표준 신규 — 가중치 indigo / 지정 emerald, 노출 위치 [103]·[202] §민팅관리. 영향: [103] v1.1→v1.2 (테이블 컬럼 추가) / [202] v1.2 §민팅관리 컬럼 추가. 사이클 #1 보상 방식 이분화 운영 가시성 향상</td></tr>
