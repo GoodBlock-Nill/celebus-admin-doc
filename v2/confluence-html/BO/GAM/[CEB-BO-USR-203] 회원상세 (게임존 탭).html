@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-USR-203] 회원상세 (게임존 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-USR-203] 회원상세 (게임존 탭)</h1>
+<blockquote>
+<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>v2/BO/USR/[CEB-BO-USR-201] 회원 상세 (9탭).md 의 '게임존' 탭 (Phase 6 흡수)</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-USR-203</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>USR(회원) / GAM — 게임존</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.4</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 회원 > 회원 상세</td></tr>
+<tr><td>비고</td><td>DEPRECATED 라벨 유지 + 본문은 운영 BO 정합(v1.4, 회원 id=10890 실측). 양식 표준화 (RFT/RFL 정합)</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-22 · 버전: <strong>v1.4</strong> (양식 표준화 — RFT/RFL 정합 + 운영 BO 실측 정합)</p>
+<p>화면 경로: <code>/members/{userId}?tab=gamezone</code> · Breadcrumb: <code>홈 › 회원 › 회원 상세</code></p>
+</blockquote>
+<blockquote>
+<p><strong>공통 정책 참조</strong>: 게임 상태/액션, 보상 계산, GP 변동 유형, 권한, UI 상태, 토스트/포맷 규격은 <strong>[CEB-BO-GZ-000] 공통 정책</strong>을 참조한다.</p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>회원상세 페이지 내 <strong>"게임존" 탭</strong>으로, 특정 회원의 게임존 활동 전체(GP 보유·획득·사용, 게임 참여 이력, 보상·환급, GP 변동)를 한눈에 파악하는 <strong>조회 전용</strong> 화면.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/members/{userId}?tab=gamezone</code></td></tr>
+<tr><td>Breadcrumb</td><td>홈 › 회원 › 회원 상세</td></tr>
+<tr><td>페이지 제목</td><td>"회원상세" (공통, h1) + "{유저명}님의 상세 정보를 관리합니다." 안내</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-USR-201] 회원상세 페이지에서 "게임존" 탭 클릭, 또는 [CEB-BO-GZ-401] 랭킹·[CEB-BO-GZ-202] 게임 참여내역·[CEB-BO-GZ-601] GP 변동 내역에서 닉네임 클릭</td></tr>
+<tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다 (회원 읽기 + 게임존 읽기)</td></tr>
+<tr><td>용도</td><td>회원별 게임존 활동 모니터링, 분석, CS 대응</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<p>회원상세 페이지의 9개 탭 중 <strong>3번째 탭 "게임존"</strong>. 탭 구조는 [USR-201]에 정의되어 있으며 본 문서는 게임존 탭 본문만 다룬다.</p>
+<p>전체 탭 (운영 정합): 기본정보 / 참여내역 / <strong>게임존</strong> / BIVE / 프로젝트 / Fans / 티켓 / 지갑 / 활동내역</p>
+<h3>2-1. GP 요약 (Summary Cards, 가로 4열)</h3>
+<table>
+<tr><th>Card</th><th>Label</th><th>Value</th><th>보조 텍스트</th></tr>
+<tr><td>1</td><td>현재 GP 잔액</td><td>{숫자} GP</td><td>—</td></tr>
+<tr><td>2</td><td>누적 획득 GP</td><td>{숫자} GP</td><td>"보상+환급+충전+환불"</td></tr>
+<tr><td>3</td><td>누적 사용 GP</td><td>{숫자} GP</td><td>"참여+부스팅+출금"</td></tr>
+<tr><td>4</td><td>랭킹</td><td>{숫자}위 / {전체}명 또는 "-"</td><td>랭킹 미참여 시 "랭킹 없음"</td></tr>
+</table>
+<blockquote>
+<p>운영 BO 표기 — 보조 텍스트 순서 "보상+환급+충전+환불" (v1.3의 "보상+환급+환불+충전"에서 운영 정합 갱신, <strong>충전</strong> vs <strong>환불</strong> 자리 정정).</p>
+</blockquote>
+<h3>2-2. 게임 성과 요약 (h3, 가로 4열 Summary Cards)</h3>
+<table>
+<tr><th>Card</th><th>Label</th><th>Value</th><th>설명</th></tr>
+<tr><td>1</td><td>PM 참여</td><td>{숫자}회</td><td>Prediction Market 참여 게임 수</td></tr>
+<tr><td>2</td><td>PM 승률</td><td>{숫자}% 또는 "-"</td><td>정답률: (정답 수 / PM 결과 확정 게임 수) × 100, 정수 반올림</td></tr>
+<tr><td>3</td><td>ST 참여</td><td>{숫자}회</td><td>Survival Trivia 참여 게임 수</td></tr>
+<tr><td>4</td><td>ST 생존율</td><td>{숫자}% 또는 "-"</td><td>최종 생존률: (생존 수 / ST 종료 게임 수) × 100, 정수 반올림</td></tr>
+</table>
+<p>각 게임유형별 참여 이력 없을 시: 참여 "0회", 승률/생존율 "-".</p>
+<h3>2-3. 게임 참여 내역 (h2)</h3>
+<h4>게임유형 Segmented Control</h4>
+<table>
+<tr><th>항목</th><th>설명</th></tr>
+<tr><td>위치</td><td>섹션 상단 좌측</td></tr>
+<tr><td>옵션</td><td>Prediction Market / Survival Trivia</td></tr>
+<tr><td>기본 선택</td><td>Prediction Market</td></tr>
+<tr><td>동작</td><td>변경 시 즉시 테이블 컬럼·데이터 교체, 게임상태 필터 옵션 변경, 페이지 1로 리셋</td></tr>
+</table>
+<h4>필터 (드롭다운 2종)</h4>
+<table>
+<tr><th>필터</th><th>PM 옵션</th><th>ST 옵션</th><th>기본값</th></tr>
+<tr><td>게임 상태</td><td>전체 / 진행중 / 결과대기 / 결과확정 / 종료 (한국어 한글)</td><td>전체 / 진행중 / 종료</td><td>전체</td></tr>
+<tr><td>기간</td><td>(공통) 전체 / 오늘 / 최근 7일 / 최근 30일 / 커스텀</td><td>(공통)</td><td>전체</td></tr>
+</table>
+<ul>
+<li>커스텀 기간: DateRangePicker (최대 90일)</li>
+<li>게임유형 변경 시 게임상태 필터는 "전체"로 리셋, 기간 필터는 유지</li>
+</ul>
+<h4>PM 테이블 (9 컬럼)</h4>
+<table>
+<tr><th>컬럼</th><th>설명</th><th>너비</th><th>정렬</th></tr>
+<tr><td>게임타이틀</td><td>KO 타이틀 텍스트 링크 → [CEB-BO-GZ-202] 새 탭 진입</td><td>220px</td><td>-</td></tr>
+<tr><td>참여일시</td><td>YYYY.MM.DD HH:mm</td><td>140px</td><td>O (기본 내림차순)</td></tr>
+<tr><td>선택</td><td>YES/NO Badge</td><td>70px</td><td>O</td></tr>
+<tr><td>참여GP</td><td>{숫자} GP</td><td>90px</td><td>O</td></tr>
+<tr><td>부스팅GP</td><td>{숫자} GP (0이면 "0 GP")</td><td>90px</td><td>O</td></tr>
+<tr><td>게임결과</td><td>정답({YES/NO}) / 오답({YES/NO}) / "-"</td><td>100px</td><td>-</td></tr>
+<tr><td>보상GP</td><td>{숫자} GP</td><td>90px</td><td>O</td></tr>
+<tr><td>환급GP</td><td>{숫자} GP</td><td>90px</td><td>O</td></tr>
+<tr><td>게임상태</td><td>Badge (진행중/결과대기/결과확정/종료)</td><td>90px</td><td>-</td></tr>
+</table>
+<p>PM 게임 결과 표기:</p>
+<table>
+<tr><th>상황</th><th>표시</th><th>색상</th></tr>
+<tr><td>정답 (회원 선택 = 게임 결과)</td><td>"정답(YES)" 또는 "정답(NO)"</td><td>초록</td></tr>
+<tr><td>오답 (회원 선택 ≠ 게임 결과)</td><td>"오답(YES)" 또는 "오답(NO)"</td><td>빨강</td></tr>
+<tr><td>미확정</td><td>"-"</td><td>회색</td></tr>
+</table>
+<h4>ST 테이블 (8 컬럼)</h4>
+<table>
+<tr><th>컬럼</th><th>설명</th><th>너비</th><th>정렬</th></tr>
+<tr><td>게임타이틀</td><td>KO 타이틀 텍스트 링크 → [CEB-BO-GZ-202] 새 탭</td><td>220px</td><td>-</td></tr>
+<tr><td>참여일시</td><td>YYYY.MM.DD HH:mm</td><td>140px</td><td>O</td></tr>
+<tr><td>생존스테이지</td><td>"{N}/10"</td><td>100px</td><td>O</td></tr>
+<tr><td>참여GP</td><td>{숫자} GP</td><td>90px</td><td>O</td></tr>
+<tr><td>하트사용</td><td>{숫자}개</td><td>90px</td><td>O</td></tr>
+<tr><td>게임결과</td><td>생존 / 탈락({N}스테이지) / "-"</td><td>120px</td><td>-</td></tr>
+<tr><td>보상GP</td><td>{숫자} GP</td><td>90px</td><td>O</td></tr>
+<tr><td>게임상태</td><td>Badge (진행중/종료)</td><td>90px</td><td>-</td></tr>
+</table>
+<h4>빈 상태 + 페이지네이션</h4>
+<ul>
+<li>빈 상태: "게임 참여 내역이 없습니다."</li>
+<li>우측 하단: "총 N건" + Previous / 1 / Next 페이지네이션 (운영 정합 영문)</li>
+</ul>
+<h3>2-4. GP 변동 내역 (h2)</h3>
+<h4>필터 (드롭다운 2종)</h4>
+<table>
+<tr><th>필터</th><th>옵션</th><th>기본값</th></tr>
+<tr><td>변동유형</td><td>전체 / 참여 / 부스팅 / 보상 / 환급 / 환불 / GP 충전 / GP 출금</td><td>전체</td></tr>
+<tr><td>기간</td><td>전체 / 오늘 / 최근 7일 / 최근 30일 / 커스텀</td><td>전체</td></tr>
+</table>
+<blockquote>
+<p>운영 BO 표기: "충전/출금"이 [GZ-000] 표준의 "GP 가져오기/CELB으로 보내기"와 충돌 — <strong>운영 표기 우선</strong> (GAM 종결 사이클 일괄 정정 대상, [project_gam_terminology_decision] 메모리 참조).</p>
+</blockquote>
+<h4>테이블 (5 컬럼)</h4>
+<table>
+<tr><th>컬럼</th><th>설명</th><th>너비</th></tr>
+<tr><td>변동일시</td><td>YYYY.MM.DD HH:mm</td><td>160px</td></tr>
+<tr><td>유형</td><td>Badge (참여/부스팅/보상/환급/환불/GP 충전/GP 출금)</td><td>110px</td></tr>
+<tr><td>GP 변동량</td><td>+/-{숫자} GP (증가 초록, 감소 빨강)</td><td>110px</td></tr>
+<tr><td>변동후잔액</td><td>{숫자} GP</td><td>110px</td></tr>
+<tr><td>비고</td><td>자유 텍스트 (예: "GP 출석체크", "예측 성공 보상", "CELB → GP 교환")</td><td>-</td></tr>
+</table>
+<h4>빈 상태 + 페이지네이션</h4>
+<ul>
+<li>빈 상태: "GP 변동 내역이 없습니다."</li>
+<li>"총 N건" + Previous / N / Next</li>
+</ul>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>탭 헤더</td><td>9탭 중 "게임존" 활성</td><td>화면 위치</td></tr>
+<tr><td>GP 요약 카드 4종</td><td>현재 잔액·획득·사용·랭킹</td><td>회원 GP 활동 요약</td></tr>
+<tr><td>게임 성과 카드 4종</td><td>PM 참여·승률 / ST 참여·생존율</td><td>게임 성과 요약</td></tr>
+<tr><td>게임 참여 내역 테이블</td><td>PM/ST 분기 컬럼 + 필터 + 페이지네이션</td><td>참여 이력 상세</td></tr>
+<tr><td>GP 변동 내역 테이블</td><td>5컬럼 + 필터 + 페이지네이션</td><td>GP 거래 이력 상세</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>탭 진입</td><td>URL <code>?tab=gamezone</code> 동기화 + 본문 즉시 로드</td></tr>
+<tr><td>게임유형 Segmented 변경</td><td>테이블 컬럼·데이터 교체 + 게임상태 필터 리셋 + 페이지 1</td></tr>
+<tr><td>필터 변경</td><td>즉시 테이블 갱신 + 페이지 1</td></tr>
+<tr><td>게임타이틀 클릭</td><td>[CEB-BO-GZ-202] 게임 상세 새 탭 진입</td></tr>
+<tr><td>페이지네이션</td><td>페이지 이동 + 필터 유지</td></tr>
+<tr><td>데이터 없음</td><td>테이블 영역 빈 메시지 표시</td></tr>
+<tr><td>로딩 중</td><td>카드/테이블 Skeleton</td></tr>
+<tr><td>권한 없음</td><td>"게임존" 탭 자체 미노출 또는 진입 차단</td></tr>
+<tr><td>API 실패</td><td>카드/테이블 영역별 "조회 실패" + 재시도</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>조회 전용</td><td>본 탭에는 데이터 수정 액션 없음 (관리자가 회원 GP·이력을 직접 수정 불가)</td></tr>
+<tr><td>정렬 기준</td><td>게임 참여 내역: 참여일시 내림차순(기본). GP 변동 내역: 변동일시 내림차순</td></tr>
+<tr><td>페이지당</td><td>20건 (운영 표준)</td></tr>
+<tr><td>숫자 포맷</td><td>천 단위 콤마. GP는 "{숫자} GP"</td></tr>
+<tr><td>시간 포맷</td><td>YYYY.MM.DD HH:mm 또는 :ss</td></tr>
+<tr><td>회원 미참여 시</td><td>게임 성과 카드 "0회·-", 테이블 빈 메시지</td></tr>
+<tr><td>권한</td><td>[관리자 > 권한관리] 설정 (회원 읽기 + 게임존 읽기 모두 필요)</td></tr>
+<tr><td>캐시</td><td>GP 요약·성과 = 5분 캐시 / 게임 참여·GP 변동 = 0분 (실시간)</td></tr>
+</table>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>부모 화면</td><td>[CEB-BO-USR-201] 회원상세 (9탭 부모)</td></tr>
+<tr><td>게임타이틀 클릭</td><td>[CEB-BO-GZ-202] 게임 상세 (새 탭)</td></tr>
+<tr><td>닉네임 클릭(역방향)</td><td>[CEB-BO-GZ-202] 게임 상세 참여내역 / [CEB-BO-GZ-401] 랭킹 / [CEB-BO-GZ-601] GP 변동 내역 / [CEB-BO-GZ-501] 교환 내역에서 본 화면 진입</td></tr>
+<tr><td>공통 정책 참조</td><td>[CEB-BO-GZ-000] 공통 정책</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.4</strong></td><td><strong>2026.05.22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합</strong> ① 양식 표준화: Page Properties 비고 필드, §1 화면 개요 표(경로/Breadcrumb/제목/진입/권한/용도), §2 하이픈 표기(§2-1~§2-4), §3 노출 정보, §4 상태별 동작 분기, §5 검증 규칙, §6 연관 화면, §7 변경 이력 — RFT/RFL 양식 정합 ② 운영 BO 정합(회원 id=10890 실측): 라우트 <code>/members/{userId}?tab=gamezone</code> 명시, h1 "회원상세" + 안내 표기, 탭 9종 명시, GP 요약 보조 텍스트 순서 "<strong>보상+환급+충전+환불</strong>" 정정 (v1.3 "환불+충전"에서 운영 정합), GP 변동 내역 컬럼 5종 (변동일시/유형/GP 변동량/변동후잔액/비고), 비고 자유 텍스트 ("GP 출석체크" 등) ③ 페이지네이션 영문 "Previous/Next" 명시 ④ DEPRECATED 라벨 유지</td></tr>
+<tr><td>v1.3</td><td>2026.02.26</td><td>@Nill Yoo</td><td>(v1 이력 — git history 참조)</td></tr>
+<tr><td>v1.x</td><td>—</td><td>—</td><td>(v1 이력)</td></tr>
+</table>
+
+</body>
+</html>
