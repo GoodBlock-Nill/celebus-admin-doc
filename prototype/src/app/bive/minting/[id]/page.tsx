@@ -10,7 +10,6 @@ import SimplePagination from '@/components/clone/SimplePagination';
 import {
   getCampaignById,
   getCampaignRewards,
-  getMintHistory,
   type CampaignRewardBive,
   type CampaignStatus,
   type MintCampaign,
@@ -275,16 +274,28 @@ function HistoryTab({
   setKeyword: (s: string) => void;
 }) {
   const [page, setPage] = useState(1);
-  const PAGE_SIZE = 10;
-  const all = getMintHistory(campaign.id, Math.min(campaign.minted, 50));
-  const filtered = all.filter((h) => (keyword ? h.nickname.includes(keyword) || h.tokenId.includes(keyword) : true));
+  const PAGE_SIZE = 20;
+  // [CEB-BO-BIVE-203] §2-4 보상내역 탭: BIVE별 발행 현황 (BIVE 명칭 / 민팅 수 / 가중치 / 가중치 비중)
+  // 활성·중지·종료 상태에서만 의미. 초안 상태는 빈 안내.
+  const rewards = getCampaignRewards(campaign.id);
+  const weightSum = rewards.reduce((s, r) => s + r.weight, 0);
+  const sorted = [...rewards].sort((a, b) => a.weight - b.weight || a.gradeNumber.localeCompare(b.gradeNumber));
+  const filtered = sorted.filter((r) => (keyword ? r.biveName.toLowerCase().includes(keyword.toLowerCase()) : true));
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  if (campaign.status === '초안') {
+    return (
+      <div className="bg-amber-50 text-amber-700 px-4 py-3 rounded-lg text-sm">
+        초안 상태에서는 보상내역이 표시되지 않습니다. 캠페인 활성화 후 발행 내역이 누적됩니다.
+      </div>
+    );
+  }
 
   return (
     <div>
       <div className="bg-indigo-50 text-indigo-700 px-4 py-3 rounded-lg text-sm mb-4">
-        본 캠페인의 회원 단위 민팅 발행 내역입니다. 지갑주소는 BSCScan 새 창에서 확인할 수 있습니다.
+        본 캠페인의 BIVE별 실제 민팅 발행 현황입니다. BIVE 명칭을 클릭하면 BIVE 상세 §민팅이력 탭이 새 창으로 열립니다.
       </div>
       <div className="flex items-center justify-end gap-3 mb-4">
         <div className="relative">
@@ -292,7 +303,7 @@ function HistoryTab({
           <input
             value={keyword}
             onChange={(e) => { setKeyword(e.target.value); setPage(1); }}
-            placeholder="닉네임 또는 토큰 ID"
+            placeholder="BIVE명칭 입력"
             className="h-10 pl-9 pr-3 border border-gray-200 rounded-lg text-sm w-[240px] focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
@@ -300,20 +311,42 @@ function HistoryTab({
           초기화
         </button>
       </div>
-      <SimpleTable
+      <SimpleTable<typeof paged[number]>
         columns={[
-          { key: 'tokenId', label: 'Token ID', width: '160px', render: (r: typeof paged[number]) => <span className="font-mono text-xs">{r.tokenId}</span> },
-          { key: 'nickname', label: '닉네임' },
-          { key: 'walletAddress', label: '지갑주소', wrap: true, render: (r) => (
-            <a href={`https://bscscan.com/address/${r.walletAddress}`} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline font-mono text-xs inline-flex items-center gap-1">
-              {r.walletAddress}
-              <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
-            </a>
-          )},
-          { key: 'mintedAt', label: '민팅일시', width: '160px' },
+          {
+            key: 'biveName',
+            label: 'BIVE 명칭',
+            wrap: true,
+            render: (r) => (
+              <a
+                href={`/bive/editions/${r.editionId}/bives/${r.biveId}?tab=history`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-indigo-600 hover:underline inline-flex items-center gap-1"
+              >
+                {r.biveName}
+                <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+              </a>
+            ),
+          },
+          { key: 'mintedCount', label: '민팅 수', width: '110px', render: (r) => r.mintedCount.toLocaleString() },
+          {
+            key: 'weight',
+            label: '가중치',
+            width: '110px',
+            render: (r) => (r.weight > 0 ? r.weight : <span className="text-gray-400">-</span>),
+          },
+          {
+            key: 'pct',
+            label: '가중치 비중',
+            width: '120px',
+            render: (r) => (r.weight > 0 && weightSum > 0
+              ? `${((r.weight / weightSum) * 100).toFixed(1)}%`
+              : <span className="text-gray-400">-</span>),
+          },
         ]}
         rows={paged}
-        emptyMessage="민팅 이력이 없습니다."
+        emptyMessage="등록된 BIVE 보상이 없습니다."
       />
       <SimplePagination page={page} totalPages={totalPages || 1} onChange={setPage} />
     </div>

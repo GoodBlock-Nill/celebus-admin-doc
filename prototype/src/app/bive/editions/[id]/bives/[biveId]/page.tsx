@@ -46,8 +46,22 @@ export default function BiveDetailPage({ params }: { params: Promise<{ id: strin
   }
 
   const setTab = (k: string) => router.push(`/bive/editions/${editionId}/bives/${tokenId}?tab=${k}`);
-  const canDelete = token.status === 'Draft' && token.mintedCount === 0;
-  const activeLabel = token.status === 'Active' ? '비활성화' : '활성화';
+
+  // [CEB-BO-BIVE-202] §4 상태별 헤더 액션 매트릭스
+  // Draft: [삭제] + [저장] + [활성화]
+  // Active: [비활성화] (연결 캠페인이 모두 종료된 경우만)
+  // Inactive: [활성화]
+  const linkedActiveCampaigns = mintCampaigns.filter(
+    (c) => (c.name.includes(token.artist) || c.name.includes(token.artistGroup)) && (c.status === '활성' || c.status === '중지'),
+  );
+  const canDeactivate = token.status === 'Active' && linkedActiveCampaigns.length === 0;
+  const handleDeactivate = () => {
+    if (linkedActiveCampaigns.length > 0) {
+      alert(`[Mock] 비활성화 실패: 활성/중지 상태 캠페인 ${linkedActiveCampaigns.length}건이 연결되어 있습니다. 모두 종료 후 다시 시도해주세요.`);
+      return;
+    }
+    alert('[Mock] 비활성화');
+  };
 
   return (
     <div>
@@ -74,20 +88,46 @@ export default function BiveDetailPage({ params }: { params: Promise<{ id: strin
           </span>
         </div>
         <div className="flex items-center gap-2">
-          {canDelete && (
+          {token.status === 'Draft' && (
+            <>
+              <button
+                onClick={() => setDeleteOpen(true)}
+                className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-lg hover:bg-red-50"
+              >
+                <TrashIcon className="w-4 h-4" />삭제
+              </button>
+              <button
+                onClick={() => alert('[Mock] 저장')}
+                className="h-10 px-5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+              >
+                저장
+              </button>
+              <button
+                onClick={() => alert('[Mock] 활성화')}
+                className="h-10 px-5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+              >
+                활성화
+              </button>
+            </>
+          )}
+          {token.status === 'Active' && (
             <button
-              onClick={() => setDeleteOpen(true)}
-              className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-lg hover:bg-red-50"
+              onClick={handleDeactivate}
+              disabled={!canDeactivate}
+              title={canDeactivate ? '비활성화' : `활성/중지 캠페인 ${linkedActiveCampaigns.length}건 연결됨`}
+              className="h-10 px-5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg border border-gray-200 disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:bg-white"
             >
-              <TrashIcon className="w-4 h-4" />삭제
+              비활성화
             </button>
           )}
-          <button
-            onClick={() => alert(`[Mock] ${activeLabel}`)}
-            className="h-10 px-5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg"
-          >
-            {activeLabel}
-          </button>
+          {token.status === 'Inactive' && (
+            <button
+              onClick={() => alert('[Mock] 활성화')}
+              className="h-10 px-5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+            >
+              활성화
+            </button>
+          )}
         </div>
       </div>
 
@@ -197,13 +237,13 @@ function FeatureTab({ token }: { token: BiveToken }) {
 }
 
 function MintingTab({ token }: { token: BiveToken }) {
-  const router = useRouter();
+  // [CEB-BO-BIVE-202] §2-4·§7: 캠페인명 클릭 시 [203] 캠페인 상세 새 창 (target=_blank)
   const linked = mintCampaigns.filter((c) => c.name.includes(token.artist) || c.name.includes(token.artistGroup)).slice(0, 5);
 
   return (
     <div>
       <div className="bg-indigo-50 text-indigo-700 px-4 py-3 rounded-lg text-sm mb-4">
-        본 BIVE가 보상으로 등록된 민팅 이벤트 목록입니다. 캠페인 이름을 클릭하면 상세로 이동합니다.
+        본 BIVE가 보상으로 등록된 민팅 이벤트 목록입니다. 캠페인 이름을 클릭하면 캠페인 상세가 새 창으로 열립니다.
       </div>
       <SimpleTable
         columns={[
@@ -211,14 +251,23 @@ function MintingTab({ token }: { token: BiveToken }) {
           { key: 'status', label: '상태', width: '80px', render: (r: typeof linked[number]) => (
             <span className="inline-flex rounded-full px-2.5 py-1 text-xs font-medium bg-emerald-100 text-emerald-700">{r.status}</span>
           )},
-          { key: 'name', label: '캠페인 명', wrap: true, render: (r) => <span className="text-gray-900">{r.name}</span> },
-          { key: 'linkedFeature', label: '연결 기능', width: '140px', render: (r) => <span className="text-indigo-600">{r.linkedFeature}</span> },
+          { key: 'name', label: '캠페인 명', wrap: true, render: (r) => (
+            <a
+              href={`/bive/minting/${r.id}?tab=info`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-indigo-600 hover:underline inline-flex items-center gap-1"
+            >
+              {r.name}
+              <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+            </a>
+          )},
+          { key: 'linkedFeature', label: '연결 기능', width: '140px', render: (r) => <span className="text-gray-700">{r.linkedFeature}</span> },
           { key: 'minted', label: '발행 수', width: '90px' },
           { key: 'createdAt', label: '생성일', width: '160px' },
         ]}
         rows={linked}
-        emptyMessage="연결된 민팅 이벤트가 없습니다."
-        onRowClick={(c) => router.push(`/bive/minting/${c.id}?tab=info`)}
+        emptyMessage="연결된 캠페인이 없습니다."
       />
     </div>
   );
