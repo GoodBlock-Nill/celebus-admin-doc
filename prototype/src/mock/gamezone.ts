@@ -86,6 +86,73 @@ export function getGameById(id: number): Game | undefined {
   return games.find((g) => g.id === id);
 }
 
+// PM 참여자 mock (게임 ID별)
+export interface PMEntry {
+  no: number;
+  nickname: string;
+  enteredAt: string;
+  selection: 'YES' | 'NO';
+  usedGP: number;
+  boostingGP: number;
+  status: '참여완료';
+}
+
+export function getPMEntries(gameId: number): PMEntry[] {
+  const game = getGameById(gameId);
+  if (!game || game.type !== 'PM') return [];
+  // mock — 참여자 수만큼 자동 생성 (최대 20명만)
+  const count = Math.min(game.participants, 20);
+  const seed = ['nanananna1', 'sunday1', 'zziong', 'from_june', 'stay.yourself.skz', 'ygfam', 'yewon1640', 'yoon', 'skdud', 'hyeonny', 'mozzi1118', 'haeul22', '1311', 'su_suy', 'hhhh', 'sssssouffleeeee', 'sxlvxr', 'manju', 'sally410504', 'yebin'];
+  return Array.from({ length: count }, (_, i) => ({
+    no: i + 1,
+    nickname: seed[i % seed.length],
+    enteredAt: `2026.05.${20 + (i % 4)} ${10 + (i % 12)}:${String((i * 7) % 60).padStart(2, '0')}:${String((i * 13) % 60).padStart(2, '0')}`,
+    selection: (i % 2 === 0 ? 'YES' : 'NO') as 'YES' | 'NO',
+    usedGP: game.participationCost,
+    boostingGP: i % 3 === 0 ? game.boostingCost * game.boostingMultiplier : 0,
+    status: '참여완료' as const,
+  }));
+}
+
+// PM 결과·보상 정보 (Closed/Ended 상태만)
+export interface PMResultReward {
+  resultTitle: { KO: string; EN: string; JP: string } | null;
+  result: 'YES' | 'NO' | null;
+  resultDescription: { KO: string; EN: string; JP: string } | null;
+  resultLink: { text: string; url: string } | null;
+  totalPrize: number;
+  correctCount: number;
+  undistributed: number;
+  withdrawnUserUnpaid: number;
+  perShareGP: number;
+  rewardStatus: '미지급' | '지급 완료';
+  rewardPaidAt: string | null;
+}
+
+export function getPMResultReward(gameId: number): PMResultReward {
+  const game = getGameById(gameId);
+  if (!game || game.type !== 'PM') {
+    return { resultTitle: null, result: null, resultDescription: null, resultLink: null, totalPrize: 0, correctCount: 0, undistributed: 0, withdrawnUserUnpaid: 0, perShareGP: 0, rewardStatus: '미지급', rewardPaidAt: null };
+  }
+  if (game.status === '결과확정' || game.status === '종료') {
+    const correct = Math.floor(game.participants * 0.45);
+    return {
+      resultTitle: { KO: '결과 발표', EN: 'Result', JP: '結果発表' },
+      result: 'YES',
+      resultDescription: { KO: '공식 발표에 따라 YES로 확정되었습니다.', EN: 'Confirmed YES per official announcement.', JP: '公式発表に基づきYESに確定。' },
+      resultLink: { text: '공식 차트 확인', url: 'https://example.com/chart' },
+      totalPrize: game.totalPrize,
+      correctCount: correct,
+      undistributed: 0,
+      withdrawnUserUnpaid: 0,
+      perShareGP: correct > 0 ? Math.floor(game.totalPrize / correct) : 0,
+      rewardStatus: game.status === '종료' ? '지급 완료' : '미지급',
+      rewardPaidAt: game.status === '종료' ? '2026.05.17 14:00' : null,
+    };
+  }
+  return { resultTitle: null, result: null, resultDescription: null, resultLink: null, totalPrize: game.totalPrize, correctCount: 0, undistributed: game.totalPrize, withdrawnUserUnpaid: 0, perShareGP: 0, rewardStatus: '미지급', rewardPaidAt: null };
+}
+
 // GP 변동 내역 — 운영 화면 실제 데이터 (2026.05.06)
 export interface GPHistoryEntry {
   id: number;
