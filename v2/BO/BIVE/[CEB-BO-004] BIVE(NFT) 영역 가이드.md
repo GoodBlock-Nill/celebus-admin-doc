@@ -10,7 +10,7 @@
 | 개발담당자 |  |
 | 기능영역(Epic) | BIVE — NFT 발행·민팅·혜택 |
 | 상태 | Draft |
-| 버전 | v1.8 |
+| 버전 | v1.9 |
 | 최근 업데이트 | 2026.05.22 |
 | API |  |
 | 피그마 링크 |  |
@@ -136,6 +136,7 @@ v1 33건이 v2 16건의 통합 명세에 매핑됨 (Event/Ticket → 4탭 단일
 | **BIVE 고유성** | 동일 에디션 내에서 (아티스트, 등급, 등급번호) 조합은 유니크 |
 | **BIVE 상태** | **3상태**: Draft(초안) / Active(활성) / Inactive(비활성). Active 후 정보 수정 불가 |
 | **BIVE 미디어** (v1.8) | **앞면(필수) + 뒷면(선택) 2장 분리**. 각 PNG·JPG·GIF·WebP·MP4 / 최대 20MB. NFT 카드 양면 표준 패턴 (앞면 일러스트 + 뒷면 패턴/스토리). [202-CREATE] §2-2 우측 패널 grid-cols-2, [202] InfoTab 미디어 카드 좌우 그리드 |
+| **미디어 업로드 UI 표준** (v1.9) | **클릭 + 드래그&드롭** 둘 다 지원. 빈 박스 안내 "클릭하거나 파일을 드래그하세요". 드래그 오버 시 인디고 테두리·배경 시각 피드백. 확장자·크기 검증 실패 시 alert. 공통 컴포넌트 `MediaDropzone` (`prototype/src/components/clone/MediaDropzone.tsx`)으로 추출 — BIVE 외 영역에서 미디어 업로드 시 동일 컴포넌트 재사용 |
 | **BIVE 기능 토글** | 보내기(Send) / Mix / Pick — 3종 모두 기본 ON. 운영자가 개별 ON/OFF |
 | **민팅 이벤트 유형** | **4종 고정**: Event / Ticket / Mix / Pick |
 | **민팅 이벤트 상태** | **4상태**: 초안 / 활성 / 중지 / 종료. 활성→초안 되돌리기 불가. 종료는 개발팀 수동 처리 |
@@ -240,7 +241,8 @@ Draft(초안) → Active(활성) → Inactive(비활성)
 
 | 버전 | 일자 | 작성자 | 변경 |
 |---|---|---|---|
-| **v1.8** | **2026-05-22** | **@Nill Yoo** | **§5 정책 상수 2건 보강 — BIVE 미디어 앞면·뒷면 분리 + 보상 방식 배지 노출 표준** ① BIVE 미디어 정책 — 단일 → **앞면(필수) + 뒷면(선택) 2장** (NFT 카드 양면 표준). 영향: [202-CREATE] v1.2→v1.3 ([CEB-BO-004] §5 미디어 정책 정합) / [202] v1.1→v1.2 (InfoTab 미디어 카드 grid-cols-2) ② 보상 방식 배지 노출 표준 신규 — 가중치 indigo / 지정 emerald, 노출 위치 [103]·[202] §민팅관리. 영향: [103] v1.1→v1.2 (테이블 컬럼 추가) / [202] v1.2 §민팅관리 컬럼 추가. 사이클 #1 보상 방식 이분화 운영 가시성 향상 |
+| **v1.9** | **2026-05-22** | **@Nill Yoo** | **§5 정책 상수 신규 — 미디어 업로드 UI 표준 (클릭 + 드래그&드롭)** ① 빈 박스 안내 "클릭하거나 파일을 드래그하세요" ② 드래그 오버 시 인디고 시각 피드백 ③ 확장자·크기 검증 실패 시 alert ④ 공통 컴포넌트 `MediaDropzone` 추출 — BIVE 외 영역에서 미디어 업로드 시 동일 컴포넌트 재사용. 영향: [202-CREATE] v1.3 → v1.4 (§2-2 업로드 동작 정정) + 프로토타입 `prototype/src/components/clone/MediaDropzone.tsx` 신규 |
+| v1.8 | 2026-05-22 | @Nill Yoo | **§5 정책 상수 2건 보강 — BIVE 미디어 앞면·뒷면 분리 + 보상 방식 배지 노출 표준** ① BIVE 미디어 정책 — 단일 → **앞면(필수) + 뒷면(선택) 2장** (NFT 카드 양면 표준). 영향: [202-CREATE] v1.2→v1.3 ([CEB-BO-004] §5 미디어 정책 정합) / [202] v1.1→v1.2 (InfoTab 미디어 카드 grid-cols-2) ② 보상 방식 배지 노출 표준 신규 — 가중치 indigo / 지정 emerald, 노출 위치 [103]·[202] §민팅관리. 영향: [103] v1.1→v1.2 (테이블 컬럼 추가) / [202] v1.2 §민팅관리 컬럼 추가. 사이클 #1 보상 방식 이분화 운영 가시성 향상 |
 | v1.7 | 2026-05-22 | @Nill Yoo | **§5 정책 상수 보강 — 보상 방식 선택 UI 패턴 명시** ("두 가지 방식 중 한 가지를 선택하여 캠페인을 활성화" 흐름을 정확히 표현하기 위해 세그먼티드 컨트롤(탭 형태) → **라디오 + 설명 박스** UI 패턴으로 정정. 영향: [203] v1.2→v1.3 / [203-CREATE] v1.3→v1.4 + 프로토타입 동일 적용. "두 방식 모두 활성화" 혼란 방지) |
 | v1.6 | 2026-05-22 | @Nill Yoo | **민팅 이벤트 BIVE 보상 방식 이분화 — WEIGHTED / FIXED** ① §5 정책 상수 5건 신규 — 보상 방식 2종 XOR, WEIGHTED 정의, FIXED 정의 + 최대 10종, 전환 정책 ② 영향 명세 5건: [203] v1.1→v1.2 (§2-3 세그먼티드 컨트롤 + §2-4 보상내역 분기 + §5 검증 추가) / [203-CREATE] v1.2→v1.3 (§2-3 세그먼티드 컨트롤) / [203-MD-ADD] v1.0→v1.1 (maxCount 컨텍스트) ③ FIXED 데모 캠페인 id=7 "CELEBUS 1st Welcome ED 세트" (V01D 5명 + CELEBUS 1종 = 6종 동시 발행) ④ 프로토타입 mock `MintCampaign.rewardMethod` + `CampaignRewardBive.weight` optional 정합 |
 | v1.5 | 2026-05-22 | @Nill Yoo | **운영 BO 라우트 구조 정합** — 명세 6건의 화면 경로를 운영 BO 실제 형식으로 일괄 정정 ① [202-CREATE] BIVE 등록 `/bive/editions/{id}/bive/create` → **`/bive/editions/{id}/create`** ('bive' 세그먼트 제거) ② [202] BIVE 상세 `/bive/editions/{id}/bive/{biveId}` → **`/bive/editions/{id}/bives/{biveId}`** ('bive' 단수 → 'bives' 복수) ③ [203-CREATE] 캠페인 생성 `/bive/minting/{type}/create` → **`/bive/minting/create?type=...`** (type 경로 변수 → 쿼리 파라미터, 대문자 EVENT/TICKET/MIX/PICK) ④ [203] 캠페인 상세 `/bive/minting/{type}/{id}` → **`/bive/minting/{id}`** (type 경로 변수 제거, 헤더 페이지 제목으로 유형 구분) ⑤ [204-CREATE] 혜택 생성 `/bive/benefits/{type}/create` → **`/bive/benefits/create?type=...`** (boostPoint/ticket) ⑥ [204] 혜택 상세 `/bive/benefits/{type}/{id}` → **`/bive/benefits/{id}`** ⑦ §2 메뉴 구조에 6건 실제 라우트 명시 + 운영 BO 정합 주석 추가 |

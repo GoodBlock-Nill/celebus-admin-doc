@@ -2,9 +2,9 @@
 
 import { use, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowUpTrayIcon } from '@heroicons/react/24/outline';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import PageHeader from '@/components/layout/PageHeader';
+import MediaDropzone from '@/components/clone/MediaDropzone';
 import {
   artistGroups,
   getArtistsByGroup,
@@ -43,11 +43,6 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
 
   const canSubmit = group && artist && grade && gradeNum && mediaFront; // 앞면만 필수
   const availableArtists = group ? getArtistsByGroup(group) : [];
-
-  const handleFile = (setter: (name: string) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (f) setter(f.name);
-  };
 
   return (
     <div>
@@ -178,26 +173,7 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
                     <span className="text-sm font-medium text-gray-900">앞면</span>
                     <span className="text-red-500">*</span>
                   </div>
-                  <label className="block w-full aspect-square border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:border-indigo-300 bg-white">
-                    {mediaFront ? (
-                      <>
-                        <span className="text-sm text-gray-700 font-medium text-center px-3 break-all">{mediaFront}</span>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.preventDefault(); setMediaFront(''); }}
-                          className="mt-3 text-xs text-red-500 hover:underline"
-                        >
-                          파일 제거
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <ArrowUpTrayIcon className="w-8 h-8 mb-2" />
-                        <span className="text-sm">파일 등록</span>
-                      </>
-                    )}
-                    <input type="file" accept=".png,.jpg,.jpeg,.gif,.webp,.mp4" className="hidden" onChange={handleFile(setMediaFront)} />
-                  </label>
+                  <MediaDropzone value={mediaFront} onChange={setMediaFront} />
                 </div>
                 {/* 뒷면 (선택) */}
                 <div>
@@ -205,26 +181,7 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
                     <span className="text-sm font-medium text-gray-900">뒷면</span>
                     <span className="text-xs text-gray-400">(선택)</span>
                   </div>
-                  <label className="block w-full aspect-square border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:border-indigo-300 bg-white">
-                    {mediaBack ? (
-                      <>
-                        <span className="text-sm text-gray-700 font-medium text-center px-3 break-all">{mediaBack}</span>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.preventDefault(); setMediaBack(''); }}
-                          className="mt-3 text-xs text-red-500 hover:underline"
-                        >
-                          파일 제거
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <ArrowUpTrayIcon className="w-8 h-8 mb-2" />
-                        <span className="text-sm">파일 등록</span>
-                      </>
-                    )}
-                    <input type="file" accept=".png,.jpg,.jpeg,.gif,.webp,.mp4" className="hidden" onChange={handleFile(setMediaBack)} />
-                  </label>
+                  <MediaDropzone value={mediaBack} onChange={setMediaBack} />
                 </div>
               </div>
             </div>
