@@ -109,30 +109,40 @@ function CreateCampaignContent() {
         </div>
       ) : (
         <div>
-          {/* 보상 방식 세그먼티드 컨트롤 ([CEB-BO-BIVE-203-CREATE] §2-3 v1.3) */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="inline-flex bg-gray-100 rounded-lg p-1">
-              {([
-                { key: 'WEIGHTED' as const, label: '가중치 보상' },
-                { key: 'FIXED' as const, label: '지정 보상' },
-              ]).map((m) => (
-                <button
-                  key={m.key}
-                  onClick={() => setRewardMethod(m.key)}
-                  className={`px-5 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                    rewardMethod === m.key ? 'bg-gray-900 text-white' : 'text-gray-600 hover:text-gray-800'
-                  }`}
-                >
-                  {m.label}
-                </button>
-              ))}
+          {/* 보상 방식 선택 — 라디오 + 설명 ([CEB-BO-BIVE-203-CREATE] §2-3 v1.4) */}
+          <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6">
+            <div className="mb-4">
+              <h4 className="text-sm font-semibold text-gray-900">보상 방식 선택</h4>
+              <p className="text-xs text-gray-500 mt-0.5">두 가지 방식 중 한 가지를 선택하여 캠페인을 활성화합니다.</p>
             </div>
-          </div>
-
-          <div className="bg-indigo-50 text-indigo-700 px-4 py-3 rounded-lg text-sm mb-4">
-            {rewardMethod === 'FIXED'
-              ? `캠페인 트리거 시 등록된 모든 BIVE가 동시에 지급됩니다. 최대 ${FIXED_REWARD_MAX}종까지 등록 가능합니다.`
-              : '보상으로 지급되는 BIVE를 추가하고 각 항목에 가중치를 입력하세요.'}
+            <div className="space-y-2">
+              {([
+                { key: 'WEIGHTED' as const, label: '가중치 보상', desc: '등록된 BIVE 중 가중치 확률로 1개를 추첨하여 회원에게 발행합니다.' },
+                { key: 'FIXED' as const, label: '지정 보상', desc: `등록된 모든 BIVE를 회원에게 동시에 발행합니다. 최대 ${FIXED_REWARD_MAX}종까지 등록 가능합니다.` },
+              ]).map((m) => {
+                const selected = rewardMethod === m.key;
+                return (
+                  <label
+                    key={m.key}
+                    className={`flex items-start gap-3 p-4 rounded-lg border transition-colors cursor-pointer ${
+                      selected ? 'border-indigo-500 bg-indigo-50/50' : 'border-gray-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="rewardMethod"
+                      checked={selected}
+                      onChange={() => setRewardMethod(m.key)}
+                      className="mt-1 w-4 h-4 accent-indigo-600"
+                    />
+                    <div>
+                      <div className={`text-sm font-medium ${selected ? 'text-indigo-700' : 'text-gray-900'}`}>{m.label}</div>
+                      <div className="text-xs text-gray-500 mt-0.5">{m.desc}</div>
+                    </div>
+                  </label>
+                );
+              })}
+            </div>
           </div>
           <div className="flex items-center justify-between mb-3">
             <div className="text-sm text-gray-500">캠페인 생성 후 BIVE 보상을 추가할 수 있습니다.</div>

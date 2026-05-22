@@ -10,7 +10,7 @@
 | 개발담당자 |  |
 | 기능영역(Epic) | BIVE — NFT 발행·민팅·혜택 |
 | 상태 | Draft |
-| 버전 | v1.6 |
+| 버전 | v1.7 |
 | 최근 업데이트 | 2026.05.22 |
 | API |  |
 | 피그마 링크 |  |
@@ -239,7 +239,8 @@ Draft(초안) → Active(활성) → Inactive(비활성)
 
 | 버전 | 일자 | 작성자 | 변경 |
 |---|---|---|---|
-| **v1.6** | **2026-05-22** | **@Nill Yoo** | **민팅 이벤트 BIVE 보상 방식 이분화 — WEIGHTED / FIXED** ① §5 정책 상수 5건 신규 — 보상 방식 2종 XOR, WEIGHTED 정의, FIXED 정의 + 최대 10종, 전환 정책 ② 영향 명세 5건: [203] v1.1→v1.2 (§2-3 세그먼티드 컨트롤 + §2-4 보상내역 분기 + §5 검증 추가) / [203-CREATE] v1.2→v1.3 (§2-3 세그먼티드 컨트롤) / [203-MD-ADD] v1.0→v1.1 (maxCount 컨텍스트) ③ FIXED 데모 캠페인 id=7 "CELEBUS 1st Welcome ED 세트" (V01D 5명 + CELEBUS 1종 = 6종 동시 발행) ④ 프로토타입 mock `MintCampaign.rewardMethod` + `CampaignRewardBive.weight` optional 정합 |
+| **v1.7** | **2026-05-22** | **@Nill Yoo** | **§5 정책 상수 보강 — 보상 방식 선택 UI 패턴 명시** ("두 가지 방식 중 한 가지를 선택하여 캠페인을 활성화" 흐름을 정확히 표현하기 위해 세그먼티드 컨트롤(탭 형태) → **라디오 + 설명 박스** UI 패턴으로 정정. 영향: [203] v1.2→v1.3 / [203-CREATE] v1.3→v1.4 + 프로토타입 동일 적용. "두 방식 모두 활성화" 혼란 방지) |
+| v1.6 | 2026-05-22 | @Nill Yoo | **민팅 이벤트 BIVE 보상 방식 이분화 — WEIGHTED / FIXED** ① §5 정책 상수 5건 신규 — 보상 방식 2종 XOR, WEIGHTED 정의, FIXED 정의 + 최대 10종, 전환 정책 ② 영향 명세 5건: [203] v1.1→v1.2 (§2-3 세그먼티드 컨트롤 + §2-4 보상내역 분기 + §5 검증 추가) / [203-CREATE] v1.2→v1.3 (§2-3 세그먼티드 컨트롤) / [203-MD-ADD] v1.0→v1.1 (maxCount 컨텍스트) ③ FIXED 데모 캠페인 id=7 "CELEBUS 1st Welcome ED 세트" (V01D 5명 + CELEBUS 1종 = 6종 동시 발행) ④ 프로토타입 mock `MintCampaign.rewardMethod` + `CampaignRewardBive.weight` optional 정합 |
 | v1.5 | 2026-05-22 | @Nill Yoo | **운영 BO 라우트 구조 정합** — 명세 6건의 화면 경로를 운영 BO 실제 형식으로 일괄 정정 ① [202-CREATE] BIVE 등록 `/bive/editions/{id}/bive/create` → **`/bive/editions/{id}/create`** ('bive' 세그먼트 제거) ② [202] BIVE 상세 `/bive/editions/{id}/bive/{biveId}` → **`/bive/editions/{id}/bives/{biveId}`** ('bive' 단수 → 'bives' 복수) ③ [203-CREATE] 캠페인 생성 `/bive/minting/{type}/create` → **`/bive/minting/create?type=...`** (type 경로 변수 → 쿼리 파라미터, 대문자 EVENT/TICKET/MIX/PICK) ④ [203] 캠페인 상세 `/bive/minting/{type}/{id}` → **`/bive/minting/{id}`** (type 경로 변수 제거, 헤더 페이지 제목으로 유형 구분) ⑤ [204-CREATE] 혜택 생성 `/bive/benefits/{type}/create` → **`/bive/benefits/create?type=...`** (boostPoint/ticket) ⑥ [204] 혜택 상세 `/bive/benefits/{type}/{id}` → **`/bive/benefits/{id}`** ⑦ §2 메뉴 구조에 6건 실제 라우트 명시 + 운영 BO 정합 주석 추가 |
 | v1.4 | 2026-05-21 | @Nill Yoo | **BIVE 영역 모든 화면 드롭다운 옵션 운영 BO 전수 정합** ① §5 정책 상수 — **민팅 이벤트 연결 기능**의 운영 BO 실제 Event 탭 옵션 4종 명시 (회원가입 보상 / 출석체크 보상 / 래플 보상 / 팬퀘스트 보상). v1 가설 "회원가입 보상 받기 / 출석체크 5일 보상 / 아이콘 티켓 검증"에서 정정 ② §5 **BIVE 미디어** 확장자 PNG·JPG·GIF·MP4 → **PNG·JPG·GIF·WebP·MP4** (WebP 추가) ③ §5 **혜택 지급주기** 기본값 "일일" 명시 + **혜택 시작·종료 시간 기본값** 신규 항목 추가 (시작 "00:00" / 종료 "23:59") ④ §5 **운영 BO 드롭다운 표기 SSOT** 신규 항목 추가 — 모든 필터·검색 드롭다운 운영 BO 실제 라벨 1:1 일치 원칙 + 기본값 "{컬럼명}(전체)" 표기 + [조회] 버튼 미존재 정책 ⑤ §5 **BIVE 등록 옵션 (운영 데이터 기준)** 신규 항목 추가 — 아티스트 그룹 5종 (언더라이트 / V01D / CELEBUS / MADEIN / iKON) + 아티스트 동적 노출 + 등급번호 placeholder ⑥ 영향 명세 4건: [102](이전 v1.3에서 정합)·[202-CREATE]·[103]·[203-CREATE]·[204-CREATE] |
 | v1.3 | 2026-05-21 | @Nill Yoo | **운영 BO 전수 디테일 분석 + 명세 정합 (v1.2 Critical 정정 다음 단계)** ① 에디션 리스트 정렬 옵션 "오름차순/내림차순" → 운영 실제 **"최신순 / 오래된순"** (단일 드롭다운 2종) ② 에디션 리스트 검색 placeholder "에디션명 입력" → **"에디션 명 입력"** (띄어쓰기) ③ 에디션 리스트 [조회] → 운영 실제 **[초기화] 버튼** ④ 에디션 생성 모달 안내 문구 2줄 → **1줄 통합** ("없을때" 띄어쓰기 없음) ⑤ 에디션 수정 모달 좌측 [삭제] → 운영 실제 **[수정하기] 단독 노출** (운영 BO는 본 모달에서 [삭제] 미제공) ⑥ BIVE 관리 페이지 제목 "{에디션명} BIVE 관리" → 운영 실제 **"BIVE 관리"** (에디션명 미포함, Breadcrumb으로 컨텍스트) ⑦ BIVE 관리 검색 placeholder "검색어 입력" → **"명칭 입력"** ⑧ BIVE 관리 필터 기본 라벨 "전체(기본)" → **"상태(전체)"·"등급(전체)"** ⑨ BIVE 관리 [조회] 버튼 미존재 (필터 즉시 갱신) ⑩ 영향 명세 4건: [101]·[102]·[201-CREATE]·[201-EDIT] |
