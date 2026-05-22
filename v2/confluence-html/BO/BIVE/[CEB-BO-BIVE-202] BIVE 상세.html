@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 에디션·BIVE</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.5</td></tr>
+<tr><td>버전</td><td>v1.6</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -112,7 +112,11 @@ p {
 <h2>2. 화면 구성</h2>
 <h3>2-1. 헤더 (상태별 액션 분기)</h3>
 <ul>
-<li>좌측: 탭 네비게이션 "기본정보 | 기능설정 | 민팅관리 | 민팅이력"</li>
+<li><strong>좌측 (운영 BO 정합, v1.6)</strong>:</li>
+<li>Breadcrumb (상단 라인): 홈 › BIVE › 에디션 관리 › 에디션 BIVE 관리 › BIVE 상세</li>
+<li>페이지 제목 "BIVE 상세" + 인라인 작은 상태 배지 (<code>px-2 py-0.5 text-[11px]</code>, 알약형) — 페이지 제목 우측에 자연스럽게 흐름</li>
+<li><strong>뒤로가기 버튼 없음</strong> (Breadcrumb로 충분)</li>
+<li>탭 네비게이션 (헤더 아래): "기본정보 | 기능설정 | 민팅관리 | 민팅이력"</li>
 <li>우측 액션 (상태별 분기):</li>
 </ul>
 <table>
@@ -121,6 +125,13 @@ p {
 <tr><td><strong>Active (활성)</strong></td><td>[비활성화] (조건부)</td></tr>
 <tr><td><strong>Inactive (비활성)</strong></td><td>[활성화]</td></tr>
 </table>
+<p><strong>상태 배지 디자인 표준</strong> (운영 BO 정합):</p>
+<ul>
+<li>Active: <code>bg-emerald-100 text-emerald-700</code></li>
+<li>Draft: <code>bg-amber-100 text-amber-700</code></li>
+<li>Inactive: <code>bg-red-100 text-red-700</code></li>
+<li>사이즈: 작은 알약형 (페이지 제목 옆 자연스러운 인라인 배치, 페이지 제목과 비슷한 높이로 baseline 정렬)</li>
+</ul>
 <h3>2-2. 기본정보 탭 (Draft에서 수정 가능, Active/Inactive에서 read-only)</h3>
 <ul>
 <li><strong>BIVE 명칭</strong> (Read-only): <code>{아티스트명} {등급}-{등급번호}</code> 자동 생성/갱신</li>
@@ -242,7 +253,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.5</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§2-4 민팅관리 탭 — "보상 방식"·"연결 기능" 컬럼 제거 (운영 BO 정합)</strong> 운영 BO는 BIVE 단위 인덱스 역할만 수행하며 캠페인 단위 속성은 표시하지 않음. 사이클 #2(v1.2)에서 추가한 보상 방식 컬럼 + 기존 연결 기능 컬럼 둘 다 제거. 캠페인 단위 상세 속성은 캠페인명 클릭 → [203] 캠페인 상세에서 확인</td></tr>
+<tr><td><strong>v1.6</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§2-1 헤더 표현 정정 — 운영 BO 정합</strong> ① 좌측 뒤로가기 ArrowLeft 버튼 제거 (Breadcrumb으로 충분, 운영 BO 미존재) ② 상태 배지 사이즈 축소: 큰 rounded-full → 작은 알약형 <code>px-2 py-0.5 text-[11px]</code>. 페이지 제목 우측 인라인 baseline 정렬 ③ 상태 배지 디자인 표준 명시 (Active emerald / Draft amber / Inactive red)</td></tr>
+<tr><td>v1.5</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§2-4 민팅관리 탭 — "보상 방식"·"연결 기능" 컬럼 제거 (운영 BO 정합)</strong> 운영 BO는 BIVE 단위 인덱스 역할만 수행하며 캠페인 단위 속성은 표시하지 않음. 사이클 #2(v1.2)에서 추가한 보상 방식 컬럼 + 기존 연결 기능 컬럼 둘 다 제거. 캠페인 단위 상세 속성은 캠페인명 클릭 → [203] 캠페인 상세에서 확인</td></tr>
 <tr><td>v1.4</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§2-3 기능설정 탭 — Draft 상태에서만 토글 수정 가능 (운영 BO 정합)</strong> 프로토타입이 모든 상태에서 read-only로 표시되던 문제 정정. Draft = 토글 button (인디고 활성/회색 비활성, 클릭 전환) / Active·Inactive = 토글 span (opacity 60%, 클릭 불가, 안내 tooltip). 안내 박스 분기 — Draft: "Draft 상태에서만 수정할 수 있습니다" (indigo) / Active·Inactive: "Draft 상태에서만 기능설정을 수정할 수 있습니다. 활성·비활성 상태에서는 조회만 가능합니다." (amber)</td></tr>
 <tr><td>v1.3</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§2-2 미디어 카드 배치 정정 — 좌우 그리드(1열 2장) → 세로 스택(1열 1장)</strong> 카드 크기를 우측 패널 폭 전체로 확대해 미리보기 가시성 향상. 앞면 위·뒷면 아래 순서</td></tr>
 <tr><td>v1.2</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>미디어 카드 앞면·뒷면 좌우 동시 표시 + §2-4 민팅관리 탭 "보상 방식" 컬럼 신규</strong> ① §2-2 InfoTab 미디어 카드 단일 → 우측 grid-cols-2 (앞면·뒷면 동시) ② 뒷면 미등록 시 회색 dashed placeholder + "뒷면 미등록" ③ §2-4 민팅관리 테이블에 "보상 방식" 컬럼 추가 (가중치 indigo / 지정 emerald 배지) — 사이클 #1 보상 방식 이분화 정합</td></tr>

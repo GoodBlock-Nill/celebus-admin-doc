@@ -3,7 +3,7 @@
 import { use, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { TrashIcon, ArrowTopRightOnSquareIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { TrashIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/layout/PageHeader';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
@@ -66,14 +66,7 @@ export default function BiveDetailPage({ params }: { params: Promise<{ id: strin
   return (
     <div>
       <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => router.push(`/bive/editions/${editionId}`)}
-            className="w-8 h-8 inline-flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100"
-            aria-label="뒤로가기"
-          >
-            <ArrowLeftIcon className="w-5 h-5" />
-          </button>
+        <div className="flex items-end gap-2.5">
           <PageHeader
             title="BIVE 상세"
             breadcrumbItems={[
@@ -83,7 +76,7 @@ export default function BiveDetailPage({ params }: { params: Promise<{ id: strin
               { label: 'BIVE 상세' },
             ]}
           />
-          <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[token.status]}`}>
+          <span className={`inline-flex rounded px-2 py-0.5 text-[11px] font-medium mb-1 ${STATUS_BADGE[token.status]}`}>
             {token.status}
           </span>
         </div>
