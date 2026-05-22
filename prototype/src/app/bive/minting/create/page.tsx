@@ -6,8 +6,9 @@ import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/soli
 import { PlusIcon } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/layout/PageHeader';
 import SimpleTable from '@/components/clone/SimpleTable';
+import { FIXED_REWARD_MAX, type RewardMethod } from '@/mock/bive';
 
-// [CEB-BO-BIVE-203-CREATE] 캠페인 생성 (운영 BO 풀페이지 정합)
+// [CEB-BO-BIVE-203-CREATE] 캠페인 생성 v1.3 (운영 BO 풀페이지 정합 + 보상 방식 이분화)
 // 라우트: /bive/minting/create?type=EVENT|TICKET|MIX|PICK
 
 const TABS = [
@@ -26,6 +27,7 @@ function CreateCampaignContent() {
   const [tab, setTab] = useState<'info' | 'bive'>('info');
   const [name, setName] = useState('');
   const [linked, setLinked] = useState('');
+  const [rewardMethod, setRewardMethod] = useState<RewardMethod>('WEIGHTED');
 
   const canSubmit = !!name.trim() && !!linked;
 
@@ -107,8 +109,30 @@ function CreateCampaignContent() {
         </div>
       ) : (
         <div>
+          {/* 보상 방식 세그먼티드 컨트롤 ([CEB-BO-BIVE-203-CREATE] §2-3 v1.3) */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="inline-flex bg-gray-100 rounded-lg p-1">
+              {([
+                { key: 'WEIGHTED' as const, label: '가중치 보상' },
+                { key: 'FIXED' as const, label: '지정 보상' },
+              ]).map((m) => (
+                <button
+                  key={m.key}
+                  onClick={() => setRewardMethod(m.key)}
+                  className={`px-5 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    rewardMethod === m.key ? 'bg-gray-900 text-white' : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="bg-indigo-50 text-indigo-700 px-4 py-3 rounded-lg text-sm mb-4">
-            보상으로 지급되는 BIVE를 추가하고 각 항목에 가중치를 입력하세요.
+            {rewardMethod === 'FIXED'
+              ? `캠페인 트리거 시 등록된 모든 BIVE가 동시에 지급됩니다. 최대 ${FIXED_REWARD_MAX}종까지 등록 가능합니다.`
+              : '보상으로 지급되는 BIVE를 추가하고 각 항목에 가중치를 입력하세요.'}
           </div>
           <div className="flex items-center justify-between mb-3">
             <div className="text-sm text-gray-500">캠페인 생성 후 BIVE 보상을 추가할 수 있습니다.</div>
@@ -126,8 +150,10 @@ function CreateCampaignContent() {
               { key: 'artist', label: '아티스트', width: '100px' },
               { key: 'grade', label: '등급', width: '80px' },
               { key: 'gradeNumber', label: '등급번호', width: '90px' },
-              { key: 'weight', label: '가중치', width: '110px' },
-              { key: 'pct', label: '가중치 비중', width: '110px' },
+              ...(rewardMethod === 'WEIGHTED' ? [
+                { key: 'weight', label: '가중치', width: '110px' },
+                { key: 'pct', label: '가중치 비중', width: '110px' },
+              ] : []),
               { key: 'manage', label: '관리', width: '60px' },
             ]}
             rows={[]}

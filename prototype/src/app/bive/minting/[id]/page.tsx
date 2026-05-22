@@ -10,9 +10,11 @@ import SimplePagination from '@/components/clone/SimplePagination';
 import {
   getCampaignById,
   getCampaignRewards,
+  FIXED_REWARD_MAX,
   type CampaignRewardBive,
   type CampaignStatus,
   type MintCampaign,
+  type RewardMethod,
 } from '@/mock/bive';
 import AddBiveRewardModal from '../AddBiveRewardModal';
 
@@ -66,10 +68,22 @@ export default function MintingDetailPage({ params }: { params: Promise<{ id: st
     return <div className="p-8 text-sm text-gray-500">캠페인을 찾을 수 없습니다.</div>;
   }
 
-  const weightSum = rewards.reduce((s, r) => s + r.weight, 0);
+  const weightSum = rewards.reduce((s, r) => s + (r.weight ?? 0), 0);
   const setTab = (k: string) => router.push(`/bive/minting/${campaignId}?tab=${k}`);
   const actions = headerActionsFor(campaign.status);
   const typeLabel = campaign.type.charAt(0) + campaign.type.slice(1).toLowerCase();
+
+  // [CEB-BO-BIVE-203] §2-3 보상 방식 — WEIGHTED / FIXED 세그먼티드 컨트롤
+  // 초안·중지 상태에서 전환 가능. 활성·종료는 read-only (campaign.rewardMethod 표시만)
+  const editable = campaign.status === '초안' || campaign.status === '중지';
+  const [rewardMethod, setRewardMethod] = useState<RewardMethod>(campaign.rewardMethod);
+  const handleMethodChange = (next: RewardMethod) => {
+    if (!editable) return;
+    if (next === 'FIXED' && rewards.length > FIXED_REWARD_MAX) {
+      alert(`[Mock] 지정 보상은 최대 ${FIXED_REWARD_MAX}종까지 등록 가능합니다. 현재 ${rewards.length}종 → 상위 ${FIXED_REWARD_MAX}종만 유지됩니다.`);
+    }
+    setRewardMethod(next);
+  };
 
   return (
     <div>
@@ -121,17 +135,25 @@ export default function MintingDetailPage({ params }: { params: Promise<{ id: st
         <BiveRewardTab
           rewards={rewards}
           weightSum={weightSum}
-          editable={campaign.status === '초안' || campaign.status === '중지'}
+          editable={editable}
+          rewardMethod={rewardMethod}
+          onMethodChange={handleMethodChange}
           onAdd={() => setAddOpen(true)}
         />
       )}
       {tab === 'history' && (
-        <HistoryTab campaign={campaign} keyword={historyKeyword} setKeyword={setHistoryKeyword} />
+        <HistoryTab
+          campaign={campaign}
+          rewardMethod={rewardMethod}
+          keyword={historyKeyword}
+          setKeyword={setHistoryKeyword}
+        />
       )}
 
       <AddBiveRewardModal
         isOpen={addOpen}
         existingBiveIds={rewards.map((r) => r.biveId)}
+        maxCount={rewardMethod === 'FIXED' ? FIXED_REWARD_MAX : undefined}
         onClose={() => setAddOpen(false)}
         onAdd={(selected) => {
           alert(`[Mock] BIVE 보상 ${selected.length}건 추가`);
@@ -207,56 +229,112 @@ function BiveRewardTab({
   rewards,
   weightSum,
   editable,
+  rewardMethod,
+  onMethodChange,
   onAdd,
 }: {
   rewards: CampaignRewardBive[];
   weightSum: number;
   editable: boolean;
+  rewardMethod: RewardMethod;
+  onMethodChange: (m: RewardMethod) => void;
   onAdd: () => void;
 }) {
+  const isFixed = rewardMethod === 'FIXED';
+  const fixedReachedLimit = isFixed && rewards.length >= FIXED_REWARD_MAX;
+  const canAdd = editable && !fixedReachedLimit;
+
+  // 컬럼 분기 — 가중치 보상: 가중치/비중 표시 / 지정 보상: 가중치·비중 컬럼 숨김
+  const columns: React.ComponentProps<typeof SimpleTable<CampaignRewardBive>>['columns'] = [
+    { key: 'biveName', label: 'BIVE 명칭', wrap: true, render: (r) => <span className="text-gray-900">{r.biveName}</span> },
+    { key: 'artistGroup', label: '아티스트 그룹', width: '130px' },
+    { key: 'artist', label: '아티스트', width: '100px' },
+    { key: 'grade', label: '등급', width: '80px' },
+    { key: 'gradeNumber', label: '등급번호', width: '90px' },
+  ];
+  if (!isFixed) {
+    columns.push(
+      { key: 'weight', label: '가중치', width: '110px', render: (r) => (
+        <input
+          type="number"
+          defaultValue={r.weight ?? 0}
+          disabled={!editable}
+          className="w-20 h-9 px-2 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
+        />
+      )},
+      { key: 'pct', label: '가중치 비중', width: '120px', render: (r) => (
+        <span className="text-gray-700">{weightSum && r.weight ? ((r.weight / weightSum) * 100).toFixed(1) : '0.0'}%</span>
+      )},
+    );
+  }
+  columns.push({ key: 'manage', label: '관리', width: '60px', render: () => (
+    editable
+      ? <button className="text-red-500 text-xs hover:underline">삭제</button>
+      : <span className="text-gray-300 text-xs">-</span>
+  )});
+
   return (
     <div>
-      <div className="bg-indigo-50 text-indigo-700 px-4 py-3 rounded-lg text-sm mb-4">
-        보상으로 지급되는 BIVE를 추가하고 각 항목에 가중치를 입력하세요.
+      {/* 보상 방식 세그먼티드 컨트롤 ([CEB-BO-BIVE-203] §2-3 v1.2) */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="inline-flex bg-gray-100 rounded-lg p-1">
+          {([
+            { key: 'WEIGHTED' as const, label: '가중치 보상' },
+            { key: 'FIXED' as const, label: '지정 보상' },
+          ]).map((m) => (
+            <button
+              key={m.key}
+              onClick={() => onMethodChange(m.key)}
+              disabled={!editable}
+              className={`px-5 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                rewardMethod === m.key ? 'bg-gray-900 text-white' : 'text-gray-600 hover:text-gray-800'
+              } disabled:cursor-not-allowed disabled:opacity-70`}
+              title={editable ? '' : '활성·종료 상태에서는 보상 방식을 변경할 수 없습니다.'}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+        {!editable && (
+          <span className="text-xs text-gray-400">활성·종료 상태에서는 변경할 수 없습니다</span>
+        )}
       </div>
+
+      <div className="bg-indigo-50 text-indigo-700 px-4 py-3 rounded-lg text-sm mb-4">
+        {isFixed
+          ? `캠페인 트리거 시 등록된 모든 BIVE가 동시에 지급됩니다. 최대 ${FIXED_REWARD_MAX}종까지 등록 가능 (${rewards.length}/${FIXED_REWARD_MAX}).`
+          : '보상으로 지급되는 BIVE를 추가하고 각 항목에 가중치를 입력하세요.'}
+      </div>
+
       <div className="flex items-center justify-between mb-3">
         <div className="text-sm">
-          <span className="text-gray-500 mr-2">가중치 합:</span>
-          <span className="text-indigo-600 font-semibold">{weightSum}</span>
+          {isFixed ? (
+            <>
+              <span className="text-gray-500 mr-2">등록 BIVE:</span>
+              <span className="text-indigo-600 font-semibold">{rewards.length}</span>
+              <span className="text-gray-400 ml-1">/ {FIXED_REWARD_MAX}</span>
+            </>
+          ) : (
+            <>
+              <span className="text-gray-500 mr-2">가중치 합:</span>
+              <span className="text-indigo-600 font-semibold">{weightSum}</span>
+            </>
+          )}
         </div>
         {editable && (
           <button
             onClick={onAdd}
-            className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50"
+            disabled={!canAdd}
+            title={fixedReachedLimit ? `최대 ${FIXED_REWARD_MAX}종까지 등록 가능합니다.` : ''}
+            className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed disabled:hover:bg-white"
           >
             <PlusIcon className="w-4 h-4" />추가하기
           </button>
         )}
       </div>
+
       <SimpleTable<CampaignRewardBive>
-        columns={[
-          { key: 'biveName', label: 'BIVE 명칭', wrap: true, render: (r) => <span className="text-gray-900">{r.biveName}</span> },
-          { key: 'artistGroup', label: '아티스트 그룹', width: '130px' },
-          { key: 'artist', label: '아티스트', width: '100px' },
-          { key: 'grade', label: '등급', width: '80px' },
-          { key: 'gradeNumber', label: '등급번호', width: '90px' },
-          { key: 'weight', label: '가중치', width: '110px', render: (r) => (
-            <input
-              type="number"
-              defaultValue={r.weight}
-              disabled={!editable}
-              className="w-20 h-9 px-2 border border-gray-200 rounded text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
-            />
-          )},
-          { key: 'pct', label: '가중치 비중', width: '120px', render: (r) => (
-            <span className="text-gray-700">{weightSum ? ((r.weight / weightSum) * 100).toFixed(1) : '0.0'}%</span>
-          )},
-          { key: 'manage', label: '관리', width: '60px', render: () => (
-            editable
-              ? <button className="text-red-500 text-xs hover:underline">삭제</button>
-              : <span className="text-gray-300 text-xs">-</span>
-          )},
-        ]}
+        columns={columns}
         rows={rewards}
         emptyMessage="+ 추가 버튼을 눌러 BIVE를 등록하세요."
       />
@@ -266,20 +344,25 @@ function BiveRewardTab({
 
 function HistoryTab({
   campaign,
+  rewardMethod,
   keyword,
   setKeyword,
 }: {
   campaign: MintCampaign;
+  rewardMethod: RewardMethod;
   keyword: string;
   setKeyword: (s: string) => void;
 }) {
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 20;
-  // [CEB-BO-BIVE-203] §2-4 보상내역 탭: BIVE별 발행 현황 (BIVE 명칭 / 민팅 수 / 가중치 / 가중치 비중)
+  const isFixed = rewardMethod === 'FIXED';
+  // [CEB-BO-BIVE-203] §2-4 보상내역 탭: BIVE별 발행 현황
+  // 가중치 보상: BIVE 명칭 / 민팅 수 / 가중치 / 가중치 비중
+  // 지정 보상: BIVE 명칭 / 민팅 수 (가중치·비중 컬럼 "-" 표시)
   // 활성·중지·종료 상태에서만 의미. 초안 상태는 빈 안내.
   const rewards = getCampaignRewards(campaign.id);
-  const weightSum = rewards.reduce((s, r) => s + r.weight, 0);
-  const sorted = [...rewards].sort((a, b) => a.weight - b.weight || a.gradeNumber.localeCompare(b.gradeNumber));
+  const weightSum = rewards.reduce((s, r) => s + (r.weight ?? 0), 0);
+  const sorted = [...rewards].sort((a, b) => (a.weight ?? 0) - (b.weight ?? 0) || a.gradeNumber.localeCompare(b.gradeNumber));
   const filtered = sorted.filter((r) => (keyword ? r.biveName.toLowerCase().includes(keyword.toLowerCase()) : true));
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -295,7 +378,9 @@ function HistoryTab({
   return (
     <div>
       <div className="bg-indigo-50 text-indigo-700 px-4 py-3 rounded-lg text-sm mb-4">
-        본 캠페인의 BIVE별 실제 민팅 발행 현황입니다. BIVE 명칭을 클릭하면 BIVE 상세 §민팅이력 탭이 새 창으로 열립니다.
+        {isFixed
+          ? '본 캠페인은 지정 보상 방식입니다. 트리거 1회당 등록된 모든 BIVE가 동시 발행됩니다. BIVE 명칭을 클릭하면 BIVE 상세 §민팅이력 탭이 새 창으로 열립니다.'
+          : '본 캠페인의 BIVE별 실제 민팅 발행 현황입니다. BIVE 명칭을 클릭하면 BIVE 상세 §민팅이력 탭이 새 창으로 열립니다.'}
       </div>
       <div className="flex items-center justify-end gap-3 mb-4">
         <div className="relative">
@@ -334,15 +419,17 @@ function HistoryTab({
             key: 'weight',
             label: '가중치',
             width: '110px',
-            render: (r) => (r.weight > 0 ? r.weight : <span className="text-gray-400">-</span>),
+            render: (r) => (isFixed || !r.weight
+              ? <span className="text-gray-400">-</span>
+              : r.weight),
           },
           {
             key: 'pct',
             label: '가중치 비중',
             width: '120px',
-            render: (r) => (r.weight > 0 && weightSum > 0
-              ? `${((r.weight / weightSum) * 100).toFixed(1)}%`
-              : <span className="text-gray-400">-</span>),
+            render: (r) => (isFixed || !r.weight || !weightSum
+              ? <span className="text-gray-400">-</span>
+              : `${((r.weight / weightSum) * 100).toFixed(1)}%`),
           },
         ]}
         rows={paged}

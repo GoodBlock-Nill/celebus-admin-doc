@@ -11,17 +11,20 @@ import {
   type BiveToken,
 } from '@/mock/bive';
 
-// [CEB-BO-BIVE-203-MD-ADD] BIVE 보상 추가 모달
+// [CEB-BO-BIVE-203-MD-ADD] BIVE 보상 추가 모달 v1.1
 // 활성 상태 BIVE만 선택 가능. 이미 등록된 BIVE는 체크박스 비활성
+// maxCount: 지정 보상(FIXED) 호출 시 잔여 가능 수량 전달. 초과 선택 차단.
 
 export default function AddBiveRewardModal({
   isOpen,
   existingBiveIds,
+  maxCount,
   onClose,
   onAdd,
 }: {
   isOpen: boolean;
   existingBiveIds: number[];
+  maxCount?: number; // 지정 보상 호출 시 잔여 가능 수량 (existing + selected ≤ maxCount)
   onClose: () => void;
   onAdd: (selected: BiveToken[]) => void;
 }) {
@@ -62,18 +65,29 @@ export default function AddBiveRewardModal({
 
   const handleClose = () => { reset(); onClose(); };
 
+  const selectedCount = Object.keys(selected).length;
+  const existingCount = existingBiveIds.length;
+  const remainingSlots = maxCount !== undefined ? Math.max(0, maxCount - existingCount) : Infinity;
+  const reachedLimit = selectedCount >= remainingSlots;
+
   const toggle = (t: BiveToken) => {
     if (existingBiveIds.includes(t.id)) return;
     setSelected((p) => {
       const next = { ...p };
-      if (next[t.id]) delete next[t.id];
-      else next[t.id] = t;
+      if (next[t.id]) {
+        delete next[t.id];
+      } else {
+        if (Object.keys(next).length >= remainingSlots) {
+          alert(`[Mock] 최대 ${maxCount}종까지 등록 가능합니다. (현재 등록 ${existingCount}종 + 선택 ${Object.keys(next).length}종)`);
+          return next;
+        }
+        next[t.id] = t;
+      }
       return next;
     });
   };
 
   if (!isOpen) return null;
-  const selectedCount = Object.keys(selected).length;
 
   return (
     <div
@@ -82,7 +96,14 @@ export default function AddBiveRewardModal({
     >
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl mx-4 max-h-[90vh] flex flex-col overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-          <h3 className="text-base font-semibold text-gray-900">BIVE 보상 추가</h3>
+          <div className="flex items-center gap-3">
+            <h3 className="text-base font-semibold text-gray-900">BIVE 보상 추가</h3>
+            {maxCount !== undefined && (
+              <span className={`text-xs px-2 py-0.5 rounded ${reachedLimit ? 'bg-amber-50 text-amber-700' : 'bg-gray-100 text-gray-600'}`}>
+                지정 보상 — 잔여 {Math.max(0, remainingSlots - selectedCount)}/{remainingSlots}
+              </span>
+            )}
+          </div>
           <div className="flex items-center gap-2">
             <button onClick={handleClose} className="h-9 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50">
               취소

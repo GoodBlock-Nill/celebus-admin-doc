@@ -9,6 +9,10 @@ export type LinkedFeature = '회원가입 보상' | '출석체크 보상' | '래
 export type BenefitStatus = '초안' | '대기' | '활성' | '중지' | '종료';
 export type BenefitType = 'BP' | 'TICKET';
 export type BenefitCycle = 'DAILY' | 'WEEKLY' | 'ONCE';
+export type RewardMethod = 'WEIGHTED' | 'FIXED'; // WEIGHTED: 가중치 확률 추첨 / FIXED: 등록 BIVE 동시 발행 (최대 10종)
+
+// [CEB-BO-004] §5 정책 상수
+export const FIXED_REWARD_MAX = 10; // FIXED 보상 최대 BIVE 종류 수
 
 // ---------- 아티스트 그룹·아티스트 마스터 ----------
 
@@ -161,23 +165,25 @@ export interface MintCampaign {
   minted: number;
   createdAt: string;
   updatedAt?: string;
+  rewardMethod: RewardMethod; // 보상 방식 — WEIGHTED(가중치 추첨) / FIXED(지정 동시 발행)
 }
 
 export const mintCampaigns: MintCampaign[] = [
   // Event 탭 — 4종 연결 기능 분포
-  { id: 24, status: '활성', type: 'EVENT', name: "V01D 'GUESS JOURNEY #01 SETLIST' 이벤트 참여 인증", linkedFeature: '팬퀘스트 보상', registeredBive: 1, minted: 22, createdAt: '2026.05.04 15:47' },
-  { id: 23, status: '활성', type: 'EVENT', name: "인스타에서 V01D 'journey #01' 응원하기", linkedFeature: '팬퀘스트 보상', registeredBive: 1, minted: 30, createdAt: '2026.05.04 15:46' },
-  { id: 22, status: '활성', type: 'EVENT', name: "X에서 V01D 'journey #01' 응원하기", linkedFeature: '팬퀘스트 보상', registeredBive: 1, minted: 33, createdAt: '2026.05.04 15:46' },
-  { id: 21, status: '활성', type: 'EVENT', name: 'V01D 7일 출석체크 보상', linkedFeature: '출석체크 보상', registeredBive: 2, minted: 312, createdAt: '2026.04.27 12:35' },
-  { id: 20, status: '활성', type: 'EVENT', name: 'V01D journey 래플 응모자 보상', linkedFeature: '래플 보상', registeredBive: 1, minted: 88, createdAt: '2026.04.20 09:11' },
-  { id: 14, status: '활성', type: 'EVENT', name: '"LUNA" 스트리밍 인증', linkedFeature: '팬퀘스트 보상', registeredBive: 5, minted: 705, createdAt: '2026.04.09 16:41' },
-  { id: 8, status: '활성', type: 'EVENT', name: 'V01D 공식 X 팔로우 퀘스트', linkedFeature: '팬퀘스트 보상', registeredBive: 5, minted: 960, createdAt: '2026.02.24 14:15' },
-  { id: 7, status: '활성', type: 'EVENT', name: 'CELEBUS 1st Welcome ED', linkedFeature: '회원가입 보상', registeredBive: 1, minted: 439, createdAt: '2026.02.19 14:41' },
-  { id: 6, status: '초안', type: 'EVENT', name: 'iKON 데뷔 출석체크 보상', linkedFeature: '출석체크 보상', registeredBive: 0, minted: 0, createdAt: '2026.05.18 10:20' },
-  { id: 5, status: '중지', type: 'EVENT', name: '구버전 회원가입 보상 (중단)', linkedFeature: '회원가입 보상', registeredBive: 1, minted: 1240, createdAt: '2025.12.01 09:00' },
+  { id: 24, status: '활성', type: 'EVENT', name: "V01D 'GUESS JOURNEY #01 SETLIST' 이벤트 참여 인증", linkedFeature: '팬퀘스트 보상', registeredBive: 1, minted: 22, createdAt: '2026.05.04 15:47', rewardMethod: 'WEIGHTED' },
+  { id: 23, status: '활성', type: 'EVENT', name: "인스타에서 V01D 'journey #01' 응원하기", linkedFeature: '팬퀘스트 보상', registeredBive: 1, minted: 30, createdAt: '2026.05.04 15:46', rewardMethod: 'WEIGHTED' },
+  { id: 22, status: '활성', type: 'EVENT', name: "X에서 V01D 'journey #01' 응원하기", linkedFeature: '팬퀘스트 보상', registeredBive: 1, minted: 33, createdAt: '2026.05.04 15:46', rewardMethod: 'WEIGHTED' },
+  { id: 21, status: '활성', type: 'EVENT', name: 'V01D 7일 출석체크 보상', linkedFeature: '출석체크 보상', registeredBive: 2, minted: 312, createdAt: '2026.04.27 12:35', rewardMethod: 'WEIGHTED' },
+  { id: 20, status: '활성', type: 'EVENT', name: 'V01D journey 래플 응모자 보상', linkedFeature: '래플 보상', registeredBive: 1, minted: 88, createdAt: '2026.04.20 09:11', rewardMethod: 'WEIGHTED' },
+  { id: 14, status: '활성', type: 'EVENT', name: '"LUNA" 스트리밍 인증', linkedFeature: '팬퀘스트 보상', registeredBive: 5, minted: 705, createdAt: '2026.04.09 16:41', rewardMethod: 'WEIGHTED' },
+  { id: 8, status: '활성', type: 'EVENT', name: 'V01D 공식 X 팔로우 퀘스트', linkedFeature: '팬퀘스트 보상', registeredBive: 5, minted: 960, createdAt: '2026.02.24 14:15', rewardMethod: 'WEIGHTED' },
+  // FIXED 데모: 회원가입 환영 세트 (V01D 5명 + CELEBUS 1종 = 6종 동시 발행)
+  { id: 7, status: '활성', type: 'EVENT', name: 'CELEBUS 1st Welcome ED 세트', linkedFeature: '회원가입 보상', registeredBive: 6, minted: 439, createdAt: '2026.02.19 14:41', rewardMethod: 'FIXED' },
+  { id: 6, status: '초안', type: 'EVENT', name: 'iKON 데뷔 출석체크 보상', linkedFeature: '출석체크 보상', registeredBive: 0, minted: 0, createdAt: '2026.05.18 10:20', rewardMethod: 'WEIGHTED' },
+  { id: 5, status: '중지', type: 'EVENT', name: '구버전 회원가입 보상 (중단)', linkedFeature: '회원가입 보상', registeredBive: 1, minted: 1240, createdAt: '2025.12.01 09:00', rewardMethod: 'WEIGHTED' },
   // Ticket 탭 — 예시 2건
-  { id: 50, status: '활성', type: 'TICKET', name: "V01D 'journey #01' 콘서트 티켓 검증", linkedFeature: '티켓 검증', registeredBive: 1, minted: 412, createdAt: '2026.04.15 10:00' },
-  { id: 51, status: '초안', type: 'TICKET', name: 'MADEIN 데뷔 쇼케이스 티켓 검증', linkedFeature: '티켓 검증', registeredBive: 0, minted: 0, createdAt: '2026.05.10 14:30' },
+  { id: 50, status: '활성', type: 'TICKET', name: "V01D 'journey #01' 콘서트 티켓 검증", linkedFeature: '티켓 검증', registeredBive: 1, minted: 412, createdAt: '2026.04.15 10:00', rewardMethod: 'WEIGHTED' },
+  { id: 51, status: '초안', type: 'TICKET', name: 'MADEIN 데뷔 쇼케이스 티켓 검증', linkedFeature: '티켓 검증', registeredBive: 0, minted: 0, createdAt: '2026.05.10 14:30', rewardMethod: 'WEIGHTED' },
 ];
 
 export function getCampaignById(id: number): MintCampaign | undefined {
@@ -192,7 +198,7 @@ export interface CampaignRewardBive {
   artist: string;
   grade: BiveGrade;
   gradeNumber: string;
-  weight: number;
+  weight?: number; // FIXED 보상에서는 사용 안 함 (가중치·비중 컬럼 숨김)
   mintedCount: number;
 }
 
@@ -213,8 +219,12 @@ export function getCampaignRewards(id: number): CampaignRewardBive[] {
   if (id === 8) {
     return v01d.map((m, i) => ({ biveId: i + 1, editionId: 1, biveName: `${m} Event-001`, artistGroup: 'V01D', artist: m, grade: 'Event' as const, gradeNumber: '001', weight: 20, mintedCount: 180 + i * 5 }));
   }
+  // id=7: FIXED 데모 — V01D 5명 + CELEBUS 1종 = 6종 동시 발행 세트 (가중치 미설정)
   if (id === 7) {
-    return [{ biveId: 1, editionId: 2, biveName: 'CELEBUS Event-001', artistGroup: 'CELEBUS', artist: 'CELEBUS', grade: 'Event', gradeNumber: '001', weight: 100, mintedCount: 439 }];
+    return [
+      ...v01d.map((m, i) => ({ biveId: i + 1, editionId: 1, biveName: `${m} Event-001`, artistGroup: 'V01D', artist: m, grade: 'Event' as const, gradeNumber: '001', mintedCount: 80 + i * 4 })),
+      { biveId: 1, editionId: 2, biveName: 'CELEBUS Event-001', artistGroup: 'CELEBUS', artist: 'CELEBUS', grade: 'Event', gradeNumber: '001', mintedCount: 39 },
+    ];
   }
   if (id === 50) {
     return [{ biveId: 5, editionId: 1, biveName: '송유찬 Event-001', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '001', weight: 100, mintedCount: 412 }];
