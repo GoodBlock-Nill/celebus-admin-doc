@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-GZ-201] 게임 리스트</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-GZ-201] 게임 리스트</h1>
+<blockquote>
+<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) Phase 1·2 PM/ST 운영 중단. 재개 시 v2/BO/GAM/[CEB-BO-GZ-201] 신규</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-GZ-201</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.6</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 게임존 > 게임 관리</td></tr>
+<tr><td>비고</td><td>DEPRECATED 라벨 유지 + 본문은 운영 BO 정합(v1.6, chrome-devtools 실접속 검증). 양식 표준화 (RFT/RFL 정합)</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-22 · 버전: <strong>v1.6</strong> (양식 표준화 — RFT/RFL 정합 + 운영 BO 실측 정합)</p>
+<p>화면 경로: <code>/gamezone/games</code> (직접 진입 시 기본 <code>?type=PREDICTION_MARKET</code> 자동 리다이렉트) · Breadcrumb: <code>홈 › 게임존 › 게임 관리</code></p>
+</blockquote>
+<blockquote>
+<p><strong>공통 정책 참조</strong>: 게임 상태/액션, 보상 계산, GP 변동 유형, 권한, UI 상태, 토스트/포맷 규격은 <strong>[CEB-BO-GZ-000] 공통 정책</strong>을 참조한다.</p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>게임존의 모든 게임을 조회하고 관리하는 <strong>메인 리스트 화면</strong>. 관리자는 게임 유형·상태 필터와 타이틀 검색으로 게임을 좁힌 뒤, 신규 게임을 생성하거나 기존 게임의 상세로 이동한다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td>`/gamezone/games?type={PREDICTION_MARKET\</td><td>SURVIVAL_TRIVIA}`</td></tr>
+<tr><td>Breadcrumb</td><td>홈 › 게임존 › 게임 관리</td></tr>
+<tr><td>페이지 제목</td><td>"게임 관리"</td></tr>
+<tr><td>진입 경로</td><td>사이드바 "게임존 › 게임 관리", 또는 [CEB-BO-GZ-101] 게임존 메인의 PM/ST 카드 "바로가기"</td></tr>
+<tr><td>접근 권한</td><td>[관리자 > 권한관리]에 설정된 권한을 따름</td></tr>
+<tr><td>용도</td><td>게임 조회·검색, 생성 진입, 상세 진입</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<table>
+<tr><th>위치</th><th>요소</th><th>동작</th></tr>
+<tr><td>상단</td><td>Breadcrumb (3단)</td><td>홈 › 게임존 › 게임 관리</td></tr>
+<tr><td>좌</td><td>페이지 제목 (h1)</td><td>"게임 관리"</td></tr>
+<tr><td>우</td><td><strong>[+ 게임 생성]</strong> 링크</td><td><code>/gamezone/games/create</code> → [CEB-BO-GZ-201-CREATE]</td></tr>
+</table>
+<h3>2-2. 필터·검색 바 (한 줄 가로 배치)</h3>
+<table>
+<tr><th>위치</th><th>요소</th><th>옵션 / 동작</th></tr>
+<tr><td>좌</td><td>게임유형 드롭다운</td><td>"Prediction Market / Survival Trivia" (<strong>전체 옵션 없음</strong>, 기본값: Prediction Market). 변경 시 URL <code>?type</code> 갱신 + 테이블 컬럼 구성 재구성</td></tr>
+<tr><td>중</td><td>상태 드롭다운</td><td>"상태 전체 / <strong>임시저장 / 게시대기 / 진행중 / 결과대기 / 결과확정 / 종료</strong>" (기본값: 상태 전체)</td></tr>
+<tr><td>우</td><td>게임 타이틀 검색</td><td>텍스트박스, placeholder "게임 타이틀 검색". Enter 또는 검색 아이콘 클릭 시 부분 일치 검색 (대소문자 무시)</td></tr>
+</table>
+<blockquote>
+<p>운영 BO의 상태 옵션 라벨은 한국어이며, 내부 코드 대응은 <strong>임시저장=Draft / 게시대기=Ready / 진행중=Active / 결과대기=Pending / 결과확정=Closed / 종료=Ended</strong>.</p>
+</blockquote>
+<h3>2-3. 테이블 (게임유형별 컬럼 분기)</h3>
+<p>게임유형 필터에 따라 컬럼 구성이 다르다. 둘 다 공통적으로 ROW 클릭 시 [CEB-BO-GZ-202] 게임 상세로 이동.</p>
+<h4>Prediction Market 테이블 (7 컬럼)</h4>
+<table>
+<tr><th>#</th><th>컬럼</th><th>필드</th><th>정렬</th><th>너비</th><th>정렬기능</th><th>설명</th></tr>
+<tr><td>1</td><td>타이틀</td><td>title.ko</td><td>좌측</td><td>300px</td><td>-</td><td>최대 50자, 초과 시 말줄임</td></tr>
+<tr><td>2</td><td>상태</td><td>status</td><td>중앙</td><td>120px</td><td>-</td><td>Badge (임시저장/게시대기/진행중/결과대기/결과확정/종료)</td></tr>
+<tr><td>3</td><td>참여자 수</td><td>participantCount</td><td>우측</td><td>130px</td><td>O</td><td>천 단위 콤마</td></tr>
+<tr><td>4</td><td>총 상금 GP</td><td>totalPrizeGP</td><td>우측</td><td>130px</td><td>O</td><td>"{숫자} GP" 형식</td></tr>
+<tr><td>5</td><td><strong>참여기간</strong></td><td>publishedAt ~ endDate</td><td>좌측</td><td>220px</td><td>-</td><td>YYYY.MM.DD ~ YYYY.MM.DD (운영 표기 — 띄어쓰기 없음)</td></tr>
+<tr><td>6</td><td>생성일</td><td>createdAt</td><td>좌측</td><td>140px</td><td>O</td><td>YYYY.MM.DD HH:mm</td></tr>
+<tr><td>7</td><td>관리자</td><td>createdBy</td><td>좌측</td><td>120px</td><td>-</td><td>생성한 관리자 이름</td></tr>
+</table>
+<h4>Survival Trivia 테이블 (7 컬럼)</h4>
+<table>
+<tr><th>#</th><th>컬럼</th><th>필드</th><th>정렬</th><th>너비</th><th>정렬기능</th><th>설명</th></tr>
+<tr><td>1</td><td>타이틀</td><td>title.ko</td><td>좌측</td><td>300px</td><td>-</td><td>최대 50자, 초과 시 말줄임</td></tr>
+<tr><td>2</td><td>상태</td><td>status</td><td>중앙</td><td>100px</td><td>-</td><td>Badge (임시저장/게시대기/진행중/종료 — ST는 결과대기·결과확정 없음)</td></tr>
+<tr><td>3</td><td>참여자 / 정원</td><td>participantCount / maxParticipants</td><td>우측</td><td>130px</td><td>O</td><td>"{참여자} / {정원}" 형식. 무제한 시 "{참여자} / ∞"</td></tr>
+<tr><td>4</td><td><strong>최대 상금 GP</strong></td><td>maxPrizeGP</td><td>우측</td><td>130px</td><td>O</td><td>"{숫자} GP" 형식 (운영 표기 — PM의 "총 상금"과 구분)</td></tr>
+<tr><td>5</td><td>참여 비용</td><td>participationCost</td><td>우측</td><td>100px</td><td>-</td><td>"{숫자} GP" 형식</td></tr>
+<tr><td>6</td><td>시작일시</td><td>startDateTime</td><td>좌측</td><td>160px</td><td>O</td><td>YYYY.MM.DD HH:mm</td></tr>
+<tr><td>7</td><td>관리자</td><td>createdBy</td><td>좌측</td><td>100px</td><td>-</td><td>생성한 관리자 이름</td></tr>
+</table>
+<blockquote>
+<p><strong>PM 대비 ST 변경점:</strong></p>
+<p>></p>
+<p>- "참여기간" → "시작일시" (ST는 단일 일시)</p>
+<p>- "참여자 / 정원" 형식 (ST는 정원 정보가 중요, 무제한 시 ∞)</p>
+<p>- "총 상금 GP" → <strong>"최대 상금 GP"</strong> (ST는 실제 모집인원에 따라 적용 상금이 동적이므로 라벨 구분, 운영 표기)</p>
+<p>- "참여 비용" 신규 (ST는 게임별로 다름)</p>
+<p>- "생성일" 컬럼 없음 (시작일시가 더 중요, 생성일은 상세에서 확인)</p>
+</blockquote>
+<h3>2-4. 빈 상태</h3>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>필터·검색 미적용 (등록된 게임 없음)</td><td>"등록된 게임이 없습니다."</td></tr>
+<tr><td>필터·검색 적용 (결과 없음)</td><td>"검색 조건에 맞는 게임이 없습니다."</td></tr>
+</table>
+<p>쓰기 권한이 있는 관리자에게는 빈 상태 안내 아래 [+ 게임 생성] 버튼 강조 노출.</p>
+<h3>2-5. 페이지네이션</h3>
+<table>
+<tr><th>요소</th><th>설명</th></tr>
+<tr><td>표기</td><td>"Previous / 1 / Next" (운영 BO 영문 표기)</td></tr>
+<tr><td>페이지당 표시</td><td>20건</td></tr>
+<tr><td>이전 활성 조건</td><td>현재 페이지 > 1</td></tr>
+<tr><td>다음 활성 조건</td><td>현재 페이지 < 총 페이지 수</td></tr>
+<tr><td>페이지 이동 시</td><td>필터·검색 조건 유지</td></tr>
+<tr><td>잘못된 페이지 직접 접근</td><td>자동으로 1페이지로 보정 (URL 파라미터 정정)</td></tr>
+</table>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>헤더</td><td>Breadcrumb + 페이지 제목 "게임 관리"</td><td>화면 위치·정체성</td></tr>
+<tr><td>헤더 우</td><td>[+ 게임 생성]</td><td>신규 생성 진입</td></tr>
+<tr><td>필터</td><td>게임유형·상태·타이틀 검색</td><td>결과 좁히기</td></tr>
+<tr><td>테이블 (PM)</td><td>타이틀·상태·참여자 수·총 상금·참여기간·생성일·관리자</td><td>PM 게임 한 행 식별·진입</td></tr>
+<tr><td>테이블 (ST)</td><td>타이틀·상태·참여자/정원·최대 상금·참여 비용·시작일시·관리자</td><td>ST 게임 한 행 식별·진입</td></tr>
+<tr><td>페이지네이션</td><td>Previous · 페이지 번호 · Next</td><td>페이지 이동</td></tr>
+<tr><td>빈 상태</td><td>"등록된 게임이 없습니다." 또는 "검색 조건에 맞는 게임이 없습니다."</td><td>데이터 없음 안내</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>데이터/권한 조건</th><th>동작</th></tr>
+<tr><td>정상 조회 (1건 이상)</td><td>테이블 표시 + 페이지네이션</td></tr>
+<tr><td>등록된 게임 0건 + 필터 미적용</td><td>빈 상태 "등록된 게임이 없습니다." (Previous/Next 모두 disabled, 페이지 번호 "1")</td></tr>
+<tr><td>결과 0건 + 필터 적용</td><td>빈 상태 "검색 조건에 맞는 게임이 없습니다."</td></tr>
+<tr><td>로딩 중</td><td>테이블 영역 Skeleton</td></tr>
+<tr><td>API 실패</td><td>토스트 "게임 목록을 불러오는 데 실패했습니다. 다시 시도해주세요." + [다시 시도]</td></tr>
+<tr><td>권한 없이 URL 직접 접근</td><td>권한 오류 페이지 리다이렉트 + 메시지 "게임 관리 화면에 접근할 권한이 없습니다."</td></tr>
+<tr><td>게임유형 필터 변경</td><td>URL <code>?type</code> 갱신, 테이블 컬럼 구성 재구성, 페이지 1로 초기화</td></tr>
+<tr><td>상태 필터 변경</td><td>즉시 리스트 갱신, 페이지 1로 초기화</td></tr>
+<tr><td>검색어 입력 후 Enter / 검색 아이콘</td><td>즉시 리스트 갱신, 페이지 1로 초기화</td></tr>
+<tr><td>ROW 클릭</td><td>[CEB-BO-GZ-202] 게임 상세로 이동 (게임 ID 파라미터 전달)</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>기본 정렬</td><td>생성일 내림차순(최신순). 동일 생성일은 생성 시간 내림차순</td></tr>
+<tr><td>페이지당 표시</td><td>20건 (운영 표준)</td></tr>
+<tr><td>컬럼 헤더 정렬 토글</td><td>"정렬기능 O" 컬럼만 헤더 클릭으로 오름/내림 토글</td></tr>
+<tr><td>게임유형 필터 기본값</td><td>Prediction Market (URL <code>?type</code> 누락 시 자동 PM 리다이렉트)</td></tr>
+<tr><td>상태 필터 기본값</td><td>"상태 전체"</td></tr>
+<tr><td>검색 매칭</td><td>부분 일치, 대소문자 구분 없음, 한/영/일 모두 검색 가능</td></tr>
+<tr><td>참여자 수 집계</td><td>실시간 고유 회원 수 (중복 제거, 초기값 0)</td></tr>
+<tr><td>상금 GP 포맷</td><td>"{숫자} GP", 천 단위 콤마 (예: 100,000 GP)</td></tr>
+<tr><td>Badge 색상</td><td>[CEB-BO-GZ-000] §게임 상태 정의 참조</td></tr>
+<tr><td>페이지네이션 라벨</td><td>운영 BO 표기 "Previous / Next" (영문)</td></tr>
+</table>
+<h3>5-1. 게임유형별 상태 흐름 (보강)</h3>
+<table>
+<tr><th>게임 유형</th><th>가능 상태</th></tr>
+<tr><td>Prediction Market</td><td>임시저장 → 게시대기 → 진행중 → 결과대기 → 결과확정 → 종료</td></tr>
+<tr><td>Survival Trivia</td><td>임시저장 → 게시대기 → 진행중 → 종료 (결과대기·결과확정 없음 — 서버 자동 판정/보상)</td></tr>
+</table>
+<p>자세한 상태 정의·전이 규칙은 [CEB-BO-GZ-000] §게임 상태 정의 참조.</p>
+<h3>5-2. 권한별 기능</h3>
+<table>
+<tr><th>권한</th><th>가능 동작</th></tr>
+<tr><td>게임존 읽기</td><td>리스트 조회, 검색·필터, ROW 클릭으로 상세 진입</td></tr>
+<tr><td>게임존 쓰기</td><td>읽기 + [+ 게임 생성] 버튼 노출 및 사용</td></tr>
+<tr><td>권한 없음</td><td>사이드바 미노출 + URL 직접 접근 시 권한 오류 페이지</td></tr>
+</table>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>[+ 게임 생성] 클릭</td><td>[CEB-BO-GZ-201-CREATE] 게임 생성</td></tr>
+<tr><td>테이블 ROW 클릭</td><td>[CEB-BO-GZ-202] 게임 상세</td></tr>
+<tr><td>상위 화면 (Breadcrumb 게임존)</td><td>[CEB-BO-GZ-101] 게임존 메인</td></tr>
+<tr><td>공통 정책 참조</td><td>[CEB-BO-GZ-000] 공통 정책</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.6</strong></td><td><strong>2026.05.22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합</strong> ① 양식 표준화: Page Properties 비고 필드 추가, §1 화면 개요 표, §2 하이픈 표기, §3 노출 정보 표, §4 상태별 동작 분기, §5 검증 규칙(+5-1 상태 흐름, +5-2 권한), §6 연관 화면, §7 변경 이력 — RFT/RFL 양식과 일관 ② 운영 BO 정합(chrome-devtools 실접속 검증): 라우트 명시(<code>/gamezone/games?type={…}</code> 기본 PM 리다이렉트), Breadcrumb 3단 정합, <strong>상태 필터 옵션 영문 → 한국어</strong> (Draft/Ready/Active/Pending/Closed/Ended → 임시저장/게시대기/진행중/결과대기/결과확정/종료), PM 컬럼 "참여 기간" → "<strong>참여기간</strong>" (운영 표기 띄어쓰기 없음), ST 컬럼 "총 상금 GP" → <strong>"최대 상금 GP"</strong> (운영 표기), 페이지네이션 라벨 "이전/다음" → "<strong>Previous/Next</strong>" (운영 영문) ③ DEPRECATED 라벨 유지</td></tr>
+<tr><td>v1.5</td><td>2026.03.13</td><td>@Nill Yoo</td><td>공통 정책 중앙화: 상태별 Badge 색상 표 및 상태 흐름 설명을 [CEB-BO-GZ-000] 공통 정책서 참조로 대체</td></tr>
+<tr><td>v1.4</td><td>2026.02.26</td><td>@Nill Yoo</td><td>ST 테이블 컬럼 축소 (9→7): 생존자 수, 생성일 컬럼 제거 (상세 화면에서 확인 가능)</td></tr>
+<tr><td>v1.3</td><td>2026.02.25</td><td>@Nill Yoo</td><td>PM/ST 별도 테이블 분리: 게임유형별 전용 컬럼 구성, ST 테이블 신규 (참여자/정원, 생존자 수, 참여 비용, 시작일시)</td></tr>
+<tr><td>v1.2</td><td>2026.02.25</td><td>@Nill Yoo</td><td>Survival Trivia 활성화: ST 필터 동작, 게임유형 컬럼 추가, ST 상태 흐름 설명, 참여기간/시작일시 분기</td></tr>
+<tr><td>v1.1</td><td>2025.02.06</td><td>@Nill Yoo</td><td>기존 업데이트</td></tr>
+<tr><td>v1.0</td><td>2025.02.03</td><td>@Nill Yoo</td><td>초안 작성</td></tr>
+</table>
+
+</body>
+</html>
