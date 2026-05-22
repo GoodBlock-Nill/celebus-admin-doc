@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-GZ-202] 게임 상세</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-GZ-202] 게임 상세</h1>
+<blockquote>
+<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) Phase 1·2 PM/ST 운영 중단</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
+<p>></p>
+<p>📌 <strong>검증 환경 노트(v2.7)</strong>: 본 문서의 운영 BO 정합 검증은 <strong>테스트 백오피스(<code>https://celebus-backoffice.vercel.app</code>)</strong>의 PM Pending 상태 데이터(id=92, 결과대기)로 진행됨. ST 데이터는 테스트 BO에도 부재하여 ST 항목은 명세 보존 + 운영 검증 미실시 노트. 신규 ST 게임 생성을 통한 검증은 GAM 사이클 #2-3c(모달)에서 함께 처리.</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-GZ-202</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.7</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 게임존 > 게임 관리 > 게임 상세</td></tr>
+<tr><td>비고</td><td>DEPRECATED 라벨 유지 + 본문은 운영 BO 정합(v2.7, 테스트 BO 실접속 검증). 양식 표준화 (RFT/RFL 정합)</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-22 · 버전: <strong>v2.7</strong> (양식 표준화 — RFT/RFL 정합 + 테스트 BO 실측 정합 + PM 서브타입 제거)</p>
+<p>화면 경로: <code>/gamezone/games/{gameId}?tab={basic|entry-history|result-reward}</code> · Breadcrumb: <code>홈 › 게임존 › 게임 관리 › 게임 상세</code></p>
+</blockquote>
+<blockquote>
+<p><strong>공통 정책 참조</strong>: 게임 상태/액션, 보상 계산, GP 변동 유형, 권한, UI 상태, 토스트/포맷 규격은 <strong>[CEB-BO-GZ-000] 공통 정책</strong>을 참조한다.</p>
+<p><strong>PM 서브타입 정정 노트(v2.7)</strong>: 이전 v2.6의 "PM 타입 1 (유료 참가)" / "타입 2 (무료 참가) ※보류" 서브타입 구분은 <strong>운영 BO 미구현</strong>이 [201-CREATE] v3.1에서 확인됨. 본 명세도 PM 단일 타입으로 정정 (서브타입 분기 제거). 향후 서브타입 도입 시 별도 정정 명세.</p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>게임의 상세 정보를 <strong>3개 탭</strong>으로 조회하고, 게임 상태에 따른 액션(수정·게시·결과 입력·강제 종료·보상 지급 등)을 실행하는 화면. PM/ST 두 게임유형을 지원하며, 상태별로 헤더 우측 액션 버튼이 동적 분기된다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td>`/gamezone/games/{gameId}?tab={basic\</td><td>entry-history\</td><td>result-reward}<code> (기본 </code>tab=basic`)</td></tr>
+<tr><td>Breadcrumb</td><td>홈 › 게임존 › 게임 관리 › 게임 상세</td></tr>
+<tr><td>페이지 제목</td><td>"{게임 타이틀(KO)} {상태배지}" (h1 — 타이틀과 상태배지가 같은 라인에 인라인)</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-GZ-201] 게임 리스트의 행 클릭</td></tr>
+<tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다 (읽기 권한). 상태 변경 액션은 쓰기 권한</td></tr>
+<tr><td>용도</td><td>게임 정보 조회, 참여자 내역 조회, 결과/보상 정보 조회, 상태별 액션 실행</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<table>
+<tr><th>위치</th><th>요소</th></tr>
+<tr><td>상단</td><td>Breadcrumb 4단 (홈 › 게임존 › 게임 관리 › 게임 상세)</td></tr>
+<tr><td>좌</td><td>h1 — "{타이틀(KO)} {상태배지}" (타이틀 + 상태배지가 같은 h1 내 인라인)</td></tr>
+<tr><td>우</td><td>상태별 액션 버튼 그룹 (§2-2 참조)</td></tr>
+</table>
+<blockquote>
+<p>운영 BO 실측 — h1 내부에 타이틀 텍스트 + 상태 배지가 함께 노출 (별도 영역 분리 없음, 한 줄 인라인). 상태 색상은 [CEB-BO-GZ-000] §게임 상태 정의 참조.</p>
+</blockquote>
+<h3>2-2. 상태별 액션 버튼 (헤더 우측)</h3>
+<h4>Prediction Market (PM)</h4>
+<table>
+<tr><th>상태</th><th>액션 버튼</th></tr>
+<tr><td>임시저장 (Draft)</td><td>[삭제하기] [수정하기]</td></tr>
+<tr><td>게시대기 (Ready)</td><td>[삭제하기] [수정하기] [게시하기]</td></tr>
+<tr><td>진행중 (Active)</td><td>[수정하기] [강제 종료]</td></tr>
+<tr><td><strong>결과대기 (Pending)</strong></td><td><strong>[수정하기] [결과 입력] [강제 종료]</strong> (운영 실측, id=92 검증)</td></tr>
+<tr><td>결과확정 (Closed)</td><td>[결과 수정] [보상 지급]</td></tr>
+<tr><td>종료 (Ended)</td><td>(버튼 없음)</td></tr>
+</table>
+<h4>Survival Trivia (ST)</h4>
+<table>
+<tr><th>상태</th><th>액션 버튼</th></tr>
+<tr><td>임시저장 (Draft)</td><td>[삭제하기] [수정하기]</td></tr>
+<tr><td>게시대기 (Ready)</td><td>[삭제하기] [수정하기] [게시하기]</td></tr>
+<tr><td>진행중 (Active)</td><td>[수정하기] [강제 종료]</td></tr>
+<tr><td>종료 (Ended)</td><td>(버튼 없음)</td></tr>
+</table>
+<blockquote>
+<p>ST는 결과대기/결과확정 상태 없음 (게임 종료 즉시 서버 자동 판정·보상). ST의 Active 상태에서는 <strong>타이틀/상세설명만 수정 가능</strong> (퀴즈·보상·참여설정·게임 시작일시 수정 불가). ST는 "결과 입력", "보상 지급" 버튼 없음.</p>
+</blockquote>
+<h3>2-3. 탭 네비게이션</h3>
+<table>
+<tr><th>탭</th><th>키</th><th>URL 파라미터</th><th>설명</th></tr>
+<tr><td>기본정보</td><td>basic</td><td><code>?tab=basic</code> (기본)</td><td>게임 메타·보상·참여·일정·결과(PM) 정보</td></tr>
+<tr><td>참여내역</td><td>entry-history</td><td><code>?tab=entry-history</code></td><td>참여자 리스트 (PM은 선택·GP·부스팅 / ST는 생존 스테이지·하트·GP)</td></tr>
+<tr><td>결과/보상</td><td>result-reward</td><td><code>?tab=result-reward</code></td><td>결과 정보 + 보상 현황</td></tr>
+</table>
+<h3>2-4. 기본정보 탭</h3>
+<h4>2-4-1. PM 기본정보 탭 (운영 BO 정합 — 테스트 BO id=92 검증)</h4>
+<h5>기본정보 (h3)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>게임유형</td><td>"Prediction Market"</td></tr>
+<tr><td>타이틀 (KO/EN/JP)</td><td>각 언어별 라벨 + 값 라인 (3개 라벨이 세로로 별도 표시)</td></tr>
+<tr><td>상세설명 (KO/EN/JP)</td><td>각 언어별 라벨 + HTML 렌더링 본문</td></tr>
+<tr><td>힌트 링크</td><td>URL 또는 "-" (값 없을 시)</td></tr>
+<tr><td>배너 이미지</td><td><strong>[이미지 보기]</strong> 링크 (CDN URL 새 탭)</td></tr>
+<tr><td>상세 이미지</td><td><strong>[이미지 보기]</strong> 링크</td></tr>
+<tr><td>생성일</td><td>YYYY.MM.DD HH:mm</td></tr>
+<tr><td>생성자</td><td>{관리자 닉네임}</td></tr>
+</table>
+<h5>보상설정 (h3)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>총 상금 GP</td><td>{숫자} GP (천 단위 콤마)</td></tr>
+</table>
+<h5>참여설정 (h3)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>참여 정원</td><td>{숫자}명 또는 "무제한"</td></tr>
+<tr><td>참여 비용</td><td>{숫자} GP</td></tr>
+<tr><td>부스팅</td><td>"사용" 또는 "미사용"</td></tr>
+<tr><td>부스팅 비용</td><td>{숫자} GP (부스팅 미사용 시 노출 정책 별도 검증 필요)</td></tr>
+<tr><td>부스팅 배수</td><td>{숫자}배</td></tr>
+</table>
+<h5>일정설정 (h3)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>투표 시작일시</td><td>게시 후 YYYY.MM.DD HH:mm:ss / 게시 전 "(게시 시 설정)"</td></tr>
+<tr><td>투표 종료일시</td><td>YYYY.MM.DD HH:mm:ss</td></tr>
+<tr><td>결과 발표 예정일</td><td>YYYY.MM.DD</td></tr>
+</table>
+<h5>결과설정 (h3)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>결과 확인 기준 (KO/EN/JP)</td><td>각 언어별 라벨 + 본문 (게임 생성 시 입력값)</td></tr>
+</table>
+<h4>2-4-2. ST 기본정보 탭 (명세 보존 — 운영 검증 미실시)</h4>
+<blockquote>
+<p>ST 게임 데이터가 테스트 BO에도 부재하여 v2.7 시점에 운영 실측 정합 미진행. v2.6 명세 항목을 보존하며, 향후 ST 게임 생성 시 정합 재검증 필요.</p>
+</blockquote>
+<h5>기본정보 (h3) — PM과 공통</h5>
+<p>게임유형 / 타이틀 (KO/EN/JP) / 상세설명 (KO/EN/JP) / 배너 이미지 / 생성일 / 생성자</p>
+<h5>ST 보상설정 (h3)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>보상 유형</td><td>"단계별 보상" / "비율별 보상"</td></tr>
+<tr><td>최대 상금풀</td><td>{숫자} GP</td></tr>
+<tr><td>배수</td><td>{숫자}배</td></tr>
+<tr><td>참여비</td><td>{숫자} GP (자동 계산: floor(최대 상금풀 / 최대 모집인원 × 배수))</td></tr>
+<tr><td>모집인원별 상금 단계</td><td>단계별 보상 선택 시: 모집률% → 상금비율% 테이블</td></tr>
+<tr><td>적용 상금풀 공식</td><td>비율별 보상 선택 시: "적용 상금풀 = 실제 모집인원 / 최대 모집인원 × 최대 상금풀" 안내 박스</td></tr>
+<tr><td>탈락자 응모권</td><td>{숫자}장 (팬퀘스트 응모권)</td></tr>
+</table>
+<h5>ST 참여설정 (h3)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>최대 모집인원</td><td>{숫자}명</td></tr>
+</table>
+<blockquote>
+<p>ST는 부스팅 항목 없음. 참여비는 보상설정의 자동 계산 결과.</p>
+</blockquote>
+<h5>ST 일정설정 (h3)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>게임 시작일시</td><td>YYYY.MM.DD HH:mm</td></tr>
+<tr><td>게임 종료 예정시각</td><td>시작일시 + 게임 소요시간 자동 계산</td></tr>
+</table>
+<h5>ST 퀴즈설정 (h3)</h5>
+<ul>
+<li>문제 수: 10문제 / 문제당 제한시간: {숫자}초</li>
+<li>퀴즈 목록 테이블: No / 문제 텍스트(KO/EN/JP 탭) / 정답 / 선택지 1~4</li>
+</ul>
+<h5>ST 게임 시작 후 확정 정보 (Active 이후)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>실제 모집인원</td><td>{숫자}명</td></tr>
+<tr><td>적용 상금풀</td><td>{숫자} GP (모집률 기반 확정값)</td></tr>
+</table>
+<h3>2-5. 참여내역 탭</h3>
+<h4>2-5-1. PM 참여내역 (운영 BO 정합)</h4>
+<table>
+<tr><th>컬럼</th><th>내용</th></tr>
+<tr><td>No.</td><td>참여 순번 (정렬)</td></tr>
+<tr><td>유저명</td><td><strong>버튼 형태</strong> (클릭 시 회원 상세 진입 — 새 탭 정책 별도 검증)</td></tr>
+<tr><td>참여일시</td><td>YYYY.MM.DD HH:mm:ss</td></tr>
+<tr><td>선택값</td><td>"YES" / "NO" (PM은 양분 선택)</td></tr>
+<tr><td>사용 GP</td><td>{숫자} GP (참여 비용)</td></tr>
+<tr><td>부스팅 GP</td><td>{숫자} GP (미사용 시 "0 GP")</td></tr>
+<tr><td>참여 상태</td><td>"참여완료" (운영 표기)</td></tr>
+</table>
+<p>페이지네이션: "Previous / 1 / Next" (영문, 데이터 없으면 disabled)</p>
+<h4>2-5-2. ST 참여내역 (명세 보존 — 운영 검증 미실시)</h4>
+<table>
+<tr><th>컬럼</th><th>내용</th></tr>
+<tr><td>No.</td><td>참여 순번</td></tr>
+<tr><td>유저명</td><td>회원 닉네임</td></tr>
+<tr><td>참여일시</td><td>YYYY.MM.DD HH:mm:ss</td></tr>
+<tr><td>생존 스테이지</td><td>{N}/10 (탈락 시점)</td></tr>
+<tr><td>하트 사용</td><td>"사용" / "미사용"</td></tr>
+<tr><td>사용 GP</td><td>{숫자} GP</td></tr>
+<tr><td>참여 상태</td><td>"생존" / "탈락" / "관전"</td></tr>
+</table>
+<h3>2-6. 결과/보상 탭</h3>
+<h4>2-6-1. PM 결과/보상 탭 (운영 BO 정합)</h4>
+<h5>결과 정보 (h3)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>결과제목 (KO/EN/JP)</td><td>결과 입력 후 값 표시, 미입력 시 "-"</td></tr>
+<tr><td>결과</td><td>"YES" / "NO" (Closed 이후), 미입력 시 "-"</td></tr>
+<tr><td>결과설명 (KO/EN/JP)</td><td>결과 입력 후 본문, 미입력 시 "-"</td></tr>
+<tr><td>결과링크 (KO/EN/JP)</td><td>URL, 미입력 시 "-"</td></tr>
+</table>
+<h5>보상 현황 (h3)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>총 상금 GP</td><td>{숫자} GP</td></tr>
+<tr><td>정답자 수</td><td>{숫자}명</td></tr>
+<tr><td>미지급 보상 GP</td><td>{숫자} GP</td></tr>
+<tr><td>미지급보상자(탈퇴회원)</td><td>{숫자}명</td></tr>
+<tr><td>지분당 보상 GP</td><td>{숫자} GP (계산값)</td></tr>
+<tr><td>보상 지급 상태</td><td>"미지급" / "지급 완료"</td></tr>
+<tr><td>보상 지급일</td><td>YYYY.MM.DD HH:mm, 미지급 시 "-"</td></tr>
+</table>
+<h4>2-6-2. ST 결과/보상 탭 (명세 보존 — 운영 검증 미실시)</h4>
+<p>ST는 서버 자동 판정·보상이므로 본 탭 항목은 ST 종료 후 자동 채워진다. 핵심 항목: 최종 생존자 수 / 실제 적용 상금풀 / 1인당 보상 GP / 탈락자 응모권 지급 합계.</p>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>헤더</td><td>Breadcrumb + h1(타이틀+상태배지) + 상태별 액션 버튼</td><td>화면 위치·정체성·액션 진입</td></tr>
+<tr><td>탭 네비</td><td>기본정보 / 참여내역 / 결과/보상</td><td>정보 영역 전환</td></tr>
+<tr><td>기본정보 탭 (PM/ST)</td><td>게임 메타·보상·참여·일정·(PM 결과/ST 퀴즈)</td><td>게임 전체 설정 조회</td></tr>
+<tr><td>참여내역 탭</td><td>참여자 리스트 + 페이지네이션</td><td>참여자 분석</td></tr>
+<tr><td>결과/보상 탭</td><td>결과 정보 + 보상 현황</td><td>결과·보상 진행 상태 조회</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>화면 진입 (URL에 <code>?tab</code> 없음)</td><td><code>?tab=basic</code> 자동 적용, 기본정보 탭 표시</td></tr>
+<tr><td>탭 클릭</td><td>URL <code>?tab</code> 갱신 + 본문 영역 즉시 갱신</td></tr>
+<tr><td>액션 버튼 클릭 (상태별)</td><td>해당 모달 오픈 ([202-MD-PUBLISH/CLOSE/DELETE/RESULT/REWARD/EDIT-CANCEL] 등) 또는 [202-EDIT] 화면 진입 ([수정하기]/[결과 수정])</td></tr>
+<tr><td>Draft/Ready의 [삭제하기]</td><td>[202-MD-DELETE] 모달</td></tr>
+<tr><td>Ready의 [게시하기]</td><td>[202-MD-PUBLISH] 모달</td></tr>
+<tr><td>Active/Pending의 [강제 종료]</td><td>[202-MD-CLOSE] 모달</td></tr>
+<tr><td>Pending의 [결과 입력]</td><td>[202-MD-RESULT] 모달</td></tr>
+<tr><td>Closed의 [보상 지급]</td><td>[202-MD-REWARD] 모달</td></tr>
+<tr><td>Draft/Ready/Active/Pending의 [수정하기]</td><td>[CEB-BO-GZ-202-EDIT] 게임 수정 화면</td></tr>
+<tr><td>Closed의 [결과 수정]</td><td>[CEB-BO-GZ-202-EDIT] (결과만 수정 가능)</td></tr>
+<tr><td>참여자 유저명 클릭</td><td>회원 상세 진입 (새 탭 정책 별도 검증 필요)</td></tr>
+<tr><td>이미지 [이미지 보기] 클릭</td><td>CDN URL 새 탭 열기</td></tr>
+<tr><td>권한 없이 URL 직접 접근</td><td>권한 오류 페이지 리다이렉트</td></tr>
+<tr><td>API 실패</td><td>토스트 + 탭 본문에 "데이터를 불러오는 중입니다." 또는 에러 메시지</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>h1 합성 표기</td><td>"{타이틀(KO)} {상태배지}" — 같은 라인 인라인 (운영 정합)</td></tr>
+<tr><td>다국어 표시</td><td>KO/EN/JP 3개 라벨이 세로로 별도 표시 (운영 BO 실측 — 탭 전환 아님)</td></tr>
+<tr><td>상태 배지 디자인</td><td>[CEB-BO-GZ-000] §게임 상태 정의 참조</td></tr>
+<tr><td>액션 버튼 분기</td><td>§2-2 매트릭스 적용 (PM/ST 별도)</td></tr>
+<tr><td>탭 키</td><td>basic / entry-history / result-reward (URL 파라미터 표기)</td></tr>
+<tr><td>이미지 표시 방식</td><td>인라인 미리보기 없음, [이미지 보기] 링크로 CDN URL 새 탭</td></tr>
+<tr><td>참여자 페이지당</td><td>운영 실측 데이터 부족 (id=92는 2건) — 페이지당 표시 수는 [GZ-000] 또는 [201] 정합</td></tr>
+<tr><td>ST Active 수정 제약</td><td>타이틀·상세설명만 가능. 퀴즈·보상·참여·시작일시는 잠금</td></tr>
+<tr><td>결과/보상 탭 항목 (PM)</td><td>결과 정보 9개 항목 + 보상 현황 7개 항목 (운영 실측)</td></tr>
+<tr><td>권한</td><td>읽기 권한으로 진입. 상태 변경 액션은 쓰기 권한. 권한 없으면 액션 버튼 미노출</td></tr>
+</table>
+<h3>5-1. 결과 입력 사전 검증 (PM Pending)</h3>
+<p>[결과 입력] 클릭 시 [202-MD-RESULT] 모달에서 YES/NO 선택 + 결과 정보(KO/EN/JP) 입력 후 저장하면 상태가 Pending → <strong>Closed</strong>로 전이. 이후 [보상 지급] 가능. (자세한 동작은 사이클 #2-3c에서 [202-MD-RESULT]·[202-MD-REWARD] 명세에 보강)</p>
+<h3>5-2. 게임 종료 자동 전이 (Ended)</h3>
+<p>PM/ST 공통 — Closed 상태(PM) 또는 Active 종료 시점(ST)에서 일정 시간 경과 후 <strong>Ended</strong>로 자동 전이. 정확한 경과 시간 정책은 [CEB-BO-GZ-000] 참조.</p>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>부모 화면</td><td>[CEB-BO-GZ-201] 게임 리스트</td></tr>
+<tr><td>[수정하기] / [결과 수정]</td><td>[CEB-BO-GZ-202-EDIT] 게임 수정</td></tr>
+<tr><td>[삭제하기]</td><td>[CEB-BO-GZ-202-MD-DELETE] 삭제 확인 모달</td></tr>
+<tr><td>[게시하기]</td><td>[CEB-BO-GZ-202-MD-PUBLISH] 게시 확인 모달</td></tr>
+<tr><td>[강제 종료]</td><td>[CEB-BO-GZ-202-MD-CLOSE] 종료 확인 모달</td></tr>
+<tr><td>[결과 입력]</td><td>[CEB-BO-GZ-202-MD-RESULT] 결과 입력 모달</td></tr>
+<tr><td>[보상 지급]</td><td>[CEB-BO-GZ-202-MD-REWARD] 보상 지급 확인 모달</td></tr>
+<tr><td>참여자 유저명 클릭</td><td>회원 상세 (URL 정책 별도 검증)</td></tr>
+<tr><td>공통 정책 참조</td><td>[CEB-BO-GZ-000] 공통 정책</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v2.7</strong></td><td><strong>2026.05.22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합 + PM 서브타입 제거</strong> ① 양식 표준화: Page Properties 비고 필드 추가, §1 화면 개요 표, §2 하이픈 표기(§2-1~§2-6), §3 노출 정보, §4 상태별 동작 분기, §5 검증 규칙(+5-1 결과 입력, +5-2 자동 전이), §6 연관 화면, §7 변경 이력 — RFT/RFL 양식 정합 ② 운영 BO 정합(테스트 BO id=92 PM Pending 실측): 라우트 명시(<code>/gamezone/games/{id}?tab={…}</code>), h1 합성 표기(타이틀+상태배지 인라인), Pending 액션 버튼 [수정하기] [결과 입력] [강제 종료] 확정, 다국어 KO/EN/JP <strong>세로 별도 표시</strong> 명시(탭 전환 아님), 이미지 <strong>[이미지 보기] 링크</strong> 명시, 참여내역 탭 컬럼 운영 정합(No./유저명 버튼/참여일시/선택값/사용 GP/부스팅 GP/참여 상태), 결과/보상 탭 항목 운영 정합(결과 정보 9개 + 보상 현황 7개) ③ <strong>PM 서브타입("타입 1 (유료)" / "타입 2 (무료) ※보류") 제거</strong> — [201-CREATE] v3.1과 정합 ④ ST 항목은 명세 보존 + 운영 검증 미실시 노트 (테스트 BO ST 데이터 부재, 사이클 #2-3c에서 신규 ST 생성 시 재검증) ⑤ DEPRECATED 라벨 유지</td></tr>
+<tr><td>v2.6</td><td>2026.04.07</td><td>@Nill Yoo</td><td>PM 서브타입(타입1/타입2)·ST 결과/보상·퀴즈 미리보기 정의 — v2.7에서 PM 서브타입 부분은 운영 미구현으로 제거</td></tr>
+<tr><td>v2.x</td><td>—</td><td>—</td><td>(v2 이력은 git history 참조)</td></tr>
+<tr><td>v1.x</td><td>—</td><td>—</td><td>(v1 이력은 git history 참조)</td></tr>
+</table>
+
+</body>
+</html>
