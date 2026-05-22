@@ -15,16 +15,76 @@ export const gameZoneStats = {
   gpHistory: { todayCount: 17 },
 };
 
-export const games: Array<{
+// 게임 상태 — 운영 BO 표기 (한국어, [CEB-BO-GZ-201] v1.6 정합)
+export type GameStatus = '임시저장' | '게시대기' | '진행중' | '결과대기' | '결과확정' | '종료';
+export type GameType = 'PM' | 'ST';
+
+export interface PMGame {
   id: number;
-  title: string;
-  status: string;
+  type: 'PM';
+  title: string; // KO
+  titleEN: string;
+  titleJP: string;
+  description: string; // KO
+  status: GameStatus;
   participants: number;
-  totalPrize: number;
-  period: string;
+  totalPrize: number; // 총 상금 GP
+  participationCost: number;
+  boostingCost: number;
+  boostingMultiplier: number;
+  votingStart?: string; // 'YYYY.MM.DD' (게시 후만)
+  votingEnd: string; // 'YYYY.MM.DD'
+  resultAnnounceDate: string;
+  createdAt: string; // 'YYYY.MM.DD HH:mm'
+  admin: string;
+  hasParticipants?: boolean;
+}
+
+export interface STGame {
+  id: number;
+  type: 'ST';
+  title: string;
+  titleEN: string;
+  titleJP: string;
+  description: string;
+  status: GameStatus;
+  participants: number;
+  maxParticipants: number; // ∞ 표시는 -1
+  maxPrize: number; // 최대 상금 GP
+  participationCost: number; // 자동 계산
+  startDateTime: string; // 'YYYY.MM.DD HH:mm'
   createdAt: string;
   admin: string;
-}> = [];
+}
+
+export type Game = PMGame | STGame;
+
+// PM 게임 mock — 상태 다양 + 운영 BO 패턴 정합
+const PM_GAMES: PMGame[] = [
+  { id: 1, type: 'PM', title: 'V01D가 이번 주 인기가요 1위를 할까요?', titleEN: 'Will V01D take #1 on Inkigayo this week?', titleJP: 'V01Dが今週の人気歌謡で1位を取るか?', description: 'V01D의 신곡 컴백 1주차 인기가요 1위 예측', status: '진행중', participants: 234, totalPrize: 10000, participationCost: 1, boostingCost: 1, boostingMultiplier: 2, votingStart: '2026.05.20', votingEnd: '2026.05.24', resultAnnounceDate: '2026.05.25', createdAt: '2026.05.20 14:30', admin: 'nill', hasParticipants: true },
+  { id: 2, type: 'PM', title: '오늘 한국 vs 일본 야구 경기 결과는?', titleEN: 'Korea vs Japan baseball result today?', titleJP: '今日の韓国対日本野球の結果は?', description: '한일전 야구 경기 승리 팀 예측', status: '결과대기', participants: 421, totalPrize: 30000, participationCost: 5, boostingCost: 3, boostingMultiplier: 3, votingStart: '2026.05.21', votingEnd: '2026.05.22', resultAnnounceDate: '2026.05.23', createdAt: '2026.05.21 18:00', admin: 'superjay', hasParticipants: true },
+  { id: 3, type: 'PM', title: '신곡 음원 차트 진입 순위는?', titleEN: 'New song chart entry ranking?', titleJP: '新曲の音源チャート進入順位は?', description: '발매 첫날 멜론 톱100 진입 순위 예측', status: '결과확정', participants: 156, totalPrize: 5000, participationCost: 1, boostingCost: 1, boostingMultiplier: 2, votingStart: '2026.05.18', votingEnd: '2026.05.19', resultAnnounceDate: '2026.05.20', createdAt: '2026.05.18 10:00', admin: 'nill', hasParticipants: true },
+  { id: 4, type: 'PM', title: '콘서트 굿즈 매진 시간?', titleEN: 'Concert merch sold-out time?', titleJP: 'コンサートグッズ売り切れ時間?', description: '월드투어 굿즈 1차분 매진까지 걸린 시간', status: '종료', participants: 89, totalPrize: 3000, participationCost: 1, boostingCost: 1, boostingMultiplier: 2, votingStart: '2026.05.15', votingEnd: '2026.05.16', resultAnnounceDate: '2026.05.17', createdAt: '2026.05.15 09:00', admin: 'superjay' },
+  { id: 5, type: 'PM', title: '신규 게임 임시저장 테스트', titleEN: 'Draft test', titleJP: '一時保存テスト', description: '임시저장 상태 테스트용', status: '임시저장', participants: 0, totalPrize: 1000, participationCost: 1, boostingCost: 1, boostingMultiplier: 2, votingEnd: '2026.05.30', resultAnnounceDate: '2026.05.31', createdAt: '2026.05.22 11:00', admin: 'nill' },
+  { id: 6, type: 'PM', title: '게시대기 PM 테스트', titleEN: 'Ready test', titleJP: '掲示待機テスト', description: '게시대기 상태 테스트용', status: '게시대기', participants: 0, totalPrize: 2000, participationCost: 1, boostingCost: 1, boostingMultiplier: 2, votingEnd: '2026.05.28', resultAnnounceDate: '2026.05.29', createdAt: '2026.05.22 12:00', admin: 'nill' },
+];
+
+// ST 게임 mock
+const ST_GAMES: STGame[] = [
+  { id: 101, type: 'ST', title: '제 1회 V01D 모의고사', titleEN: 'V01D Mock Test #1', titleJP: 'V01D模擬試験 #1', description: 'V01D 팬덤 지식 10문제 트리비아', status: '진행중', participants: 312, maxParticipants: 500, maxPrize: 10000, participationCost: 50, startDateTime: '2026.05.22 13:00', createdAt: '2026.05.21 09:00', admin: 'nill' },
+  { id: 102, type: 'ST', title: 'K-pop 데뷔연도 퀴즈', titleEN: 'K-pop Debut Year Quiz', titleJP: 'K-popデビュー年クイズ', description: '주요 그룹 데뷔연도 트리비아', status: '게시대기', participants: 0, maxParticipants: 1000, maxPrize: 20000, participationCost: 40, startDateTime: '2026.05.24 20:00', createdAt: '2026.05.20 16:00', admin: 'superjay' },
+  { id: 103, type: 'ST', title: '신곡 가사 빈칸 채우기', titleEN: 'Fill the Lyrics', titleJP: '新曲歌詞穴埋め', description: '최신 컴백곡 가사 트리비아', status: '종료', participants: 478, maxParticipants: 500, maxPrize: 5000, participationCost: 25, startDateTime: '2026.05.18 21:00', createdAt: '2026.05.17 14:00', admin: 'nill' },
+];
+
+export const games: Game[] = [...PM_GAMES, ...ST_GAMES];
+
+export function getGamesByType(type: GameType): Game[] {
+  return games.filter((g) => g.type === type);
+}
+
+export function getGameById(id: number): Game | undefined {
+  return games.find((g) => g.id === id);
+}
 
 // GP 변동 내역 — 운영 화면 실제 데이터 (2026.05.06)
 export interface GPHistoryEntry {
