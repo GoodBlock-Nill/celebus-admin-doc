@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-GZ-202-EDIT] 게임 수정</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-GZ-202-EDIT] 게임 수정</h1>
+<blockquote>
+<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) Phase 1·2 PM/ST 운영 중단</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
+<p>></p>
+<p>📌 <strong>검증 환경 노트(v2.7)</strong>: 본 문서의 운영 BO 정합 검증은 <strong>테스트 백오피스(<code>https://celebus-backoffice.vercel.app</code>)</strong>의 PM <strong>Pending(결과대기)</strong> 상태 데이터(id=92)로 진행됨. 다른 상태(Draft/Ready/Active/Closed)의 수정 잠금 매트릭스는 v2.6 명세 본문 보존 + 검증 미실시 노트. ST 데이터는 부재.</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-GZ-202-EDIT</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.7</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 게임존 > 게임 관리 > 게임 생성 (운영 BO 정합 — 수정도 생성 페이지 재사용)</td></tr>
+<tr><td>비고</td><td>DEPRECATED 라벨 유지 + 본문은 운영 BO 정합(v2.7, 테스트 BO id=92 Pending 검증). 양식 표준화 (RFT/RFL 정합)</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-22 · 버전: <strong>v2.7</strong> (양식 표준화 — RFT/RFL 정합 + 테스트 BO 실측 정합 + 페이지 재사용 정정)</p>
+<p>화면 경로: <code>/gamezone/games/create?mode=edit&{predictionMarketId|survivalTriviaId}={gameId}</code> · Breadcrumb: <code>홈 › 게임존 › 게임 관리 › 게임 생성</code> (수정도 동일 표기)</p>
+</blockquote>
+<blockquote>
+<p><strong>공통 정책 참조</strong>: 게임 상태/액션, 보상 계산, GP 변동 유형, 권한, UI 상태, 토스트/포맷 규격은 <strong>[CEB-BO-GZ-000] 공통 정책</strong>을 참조한다.</p>
+<p><strong>페이지 재사용 정정 노트(v2.7)</strong>: 운영 BO는 [생성]·[수정]을 <strong>동일 페이지(<code>/gamezone/games/create</code>)</strong> 에서 <code>?mode=create</code>/<code>?mode=edit</code> 파라미터로 분기한다. 따라서 본 명세 [202-EDIT]는 [201-CREATE]와 <strong>같은 컴포넌트의 mode=edit 상태</strong>를 기술한다. Breadcrumb의 마지막 노드도 운영 표기 "게임 생성"이 그대로 유지된다.</p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>기존 게임의 정보를 수정하는 <strong>풀페이지 폼 화면</strong>. [201-CREATE] 게임 생성 화면과 같은 컴포넌트이며, <code>?mode=edit</code> 진입 시 페이지 제목·CTA·필드 잠금 매트릭스가 수정 모드로 전환된다. 게임 상태에 따라 수정 가능 필드가 동적 잠금된다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td>`/gamezone/games/create?mode=edit&{predictionMarketId\</td><td>survivalTriviaId}={gameId}`</td></tr>
+<tr><td>Breadcrumb</td><td>홈 › 게임존 › 게임 관리 › <strong>게임 생성</strong> (운영 표기 그대로 — 수정도 "게임 생성"으로 표시)</td></tr>
+<tr><td>페이지 제목</td><td>"<strong>게임 수정</strong>" (h1, mode=edit일 때만 차별화)</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-GZ-202] 게임 상세의 [수정하기] 또는 [결과 수정] 버튼</td></tr>
+<tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다 (쓰기 권한 필요)</td></tr>
+<tr><td>용도</td><td>기존 게임의 메타·보상·참여·일정·결과(PM) 또는 퀴즈(ST) 수정</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<table>
+<tr><th>위치</th><th>요소</th></tr>
+<tr><td>상단</td><td>Breadcrumb 4단 (홈 › 게임존 › 게임 관리 › 게임 생성)</td></tr>
+<tr><td>h1</td><td>"게임 수정"</td></tr>
+<tr><td>안내문 (상태별)</td><td>상태에 따른 수정 제약 안내문 (§2-2 매트릭스 참조)</td></tr>
+</table>
+<h3>2-2. 상태별 수정 잠금 매트릭스 (PM)</h3>
+<p>운영 BO 실측 (테스트 BO id=92, Pending 상태) 기준 + v2.6 명세 보존:</p>
+<table>
+<tr><th>상태</th><th>안내문</th><th>수정 가능 필드</th><th>잠금 필드</th></tr>
+<tr><td>Draft (임시저장)</td><td>없음 (모두 수정 가능)</td><td>게임유형 외 전부</td><td>게임유형(읽기 전용)</td></tr>
+<tr><td>Ready (게시대기)</td><td>(v2.6 명세 보존 — 운영 미검증)</td><td>타이틀·상세설명·이미지·힌트·보상·참여·일정·결과</td><td>게임유형</td></tr>
+<tr><td>Active (진행중)</td><td>(v2.6 명세 보존 — 운영 미검증)</td><td>타이틀·상세설명·결과 확인 기준</td><td>보상·참여·일정</td></tr>
+<tr><td><strong>Pending (결과대기)</strong></td><td><strong>"결과 대기 중인 게임은 결과 발표 예정일과 결과 확인 기준만 수정할 수 있습니다."</strong></td><td><strong>결과 발표 예정일·결과 확인 기준(KO/EN/JP)</strong></td><td><strong>나머지 전부 (게임유형/타이틀/상세설명/이미지/힌트/총 상금/참여 정원/참여 비용/부스팅/투표 종료일시)</strong></td></tr>
+<tr><td>Closed/Ended</td><td>진입 시 [202] 상세로 리다이렉트 (수정 불가)</td><td>—</td><td>—</td></tr>
+</table>
+<blockquote>
+<p>v2.7에서는 Pending 상태 실측만 확정. Draft/Ready/Active의 매트릭스는 v2.6 명세를 보존하며 향후 신규 게임 생성·전이 검증 시 재정합.</p>
+</blockquote>
+<h3>2-3. 상태별 수정 잠금 매트릭스 (ST)</h3>
+<p>(v2.6 명세 보존 — 운영 검증 미실시)</p>
+<table>
+<tr><th>상태</th><th>수정 가능 필드</th><th>잠금 필드</th></tr>
+<tr><td>Draft</td><td>게임유형 외 전부</td><td>게임유형</td></tr>
+<tr><td>Ready</td><td>타이틀·상세설명·이미지·보상·참여·퀴즈·일정</td><td>게임유형</td></tr>
+<tr><td>Active</td><td>타이틀·상세설명만</td><td>퀴즈·보상·참여·시작일시</td></tr>
+<tr><td>Ended</td><td>진입 불가</td><td>—</td></tr>
+</table>
+<p>ST는 Pending/Closed 상태 없음 (서버 자동 판정·보상).</p>
+<h3>2-4. 폼 본문</h3>
+<p>[201-CREATE] §2-3 (PM) / §2-4 (ST)와 <strong>동일한 폼 구조</strong>를 가지며, 차이점은:</p>
+<ul>
+<li>각 필드에 기존 값이 prefilled</li>
+<li>§2-2 / §2-3 매트릭스에 따라 일부 필드가 <code>disabled</code> 처리</li>
+<li>게임유형은 항상 텍스트로만 표시 (라디오 잠금)</li>
+<li>이미지 영역은 미리보기 + [변경] [제거] 버튼 형태 (Pending에서는 모두 disabled)</li>
+<li>다국어 탭(KO/EN/JP)도 해당 필드 잠금 시 함께 disabled</li>
+</ul>
+<p>폼 항목 상세는 [CEB-BO-GZ-201-CREATE] §2-3·§2-4 참조.</p>
+<h3>2-5. CTA 영역 (공통, 하단)</h3>
+<table>
+<tr><th>위치</th><th>요소</th><th>상태</th></tr>
+<tr><td>안내문 (좌)</td><td><strong>"변경된 내용이 있을 때만 저장할 수 있습니다."</strong> (운영 표기)</td><td>항상 표시</td></tr>
+<tr><td>버튼 1</td><td>[취소]</td><td>항상 활성. 클릭 시 [202-MD-EDIT-CANCEL] 모달 (변경 있을 때) 또는 즉시 [202] 상세로 이동 (변경 없을 때)</td></tr>
+<tr><td>버튼 2</td><td>[저장하기]</td><td>변경 사항 없으면 <strong>disabled</strong>. 변경 발생 시 활성</td></tr>
+</table>
+<blockquote>
+<p>운영 BO 실측 — Pending 상태 EDIT 진입 시 변경 전 [저장하기] disabled. 변경 즉시 활성 전환.</p>
+</blockquote>
+<h3>2-6. 앱 미리보기 사이드 패널 (공통, 우측)</h3>
+<p>[201-CREATE] §2-6과 동일 — 우측 complementary 영역에 게임 데이터 반영 카드. EDIT 모드에서는 <strong>현재 게임의 실제 데이터</strong>(타이틀·상태배지·종료일시 등)를 미리보기에 반영.</p>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>헤더</td><td>Breadcrumb + h1 "게임 수정" + 상태별 안내문</td><td>화면 위치·정체성·수정 제약 안내</td></tr>
+<tr><td>폼 (PM/ST)</td><td>[201-CREATE]와 동일 구조 + prefilled + 상태별 잠금</td><td>게임 데이터 표시·수정</td></tr>
+<tr><td>게임유형</td><td>텍스트 표시 (라디오 잠금)</td><td>변경 불가</td></tr>
+<tr><td>이미지 영역</td><td>미리보기 + [변경] [제거]</td><td>이미지 교체/제거 (상태별 잠금)</td></tr>
+<tr><td>CTA</td><td>안내문 + [취소] / [저장하기]</td><td>액션 진입</td></tr>
+<tr><td>우측 사이드</td><td>앱 미리보기 (현 게임 데이터 반영)</td><td>변경 즉시 미리보기 갱신</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>화면 진입 (mode=edit)</td><td>페이지 제목 "게임 수정"으로 표시 + 상태별 안내문 + 잠금 매트릭스 적용</td></tr>
+<tr><td>Closed/Ended 게임의 URL 직접 접근</td><td>[CEB-BO-GZ-202] 상세로 리다이렉트</td></tr>
+<tr><td>게임유형 라디오 클릭 시도</td><td>변화 없음 (잠금)</td></tr>
+<tr><td>잠금 필드 클릭 시도</td><td>disabled — 입력 불가</td></tr>
+<tr><td>활성 필드 입력 변경</td><td>[저장하기] disabled → 활성</td></tr>
+<tr><td>변경 후 [저장하기]</td><td>저장 + [CEB-BO-GZ-202] 상세로 이동 + 토스트 "저장되었습니다."</td></tr>
+<tr><td>[취소] (변경 없음)</td><td>즉시 [CEB-BO-GZ-202] 상세로 이동</td></tr>
+<tr><td>[취소] (변경 있음)</td><td>[CEB-BO-GZ-202-MD-EDIT-CANCEL] 수정 취소 확인 모달</td></tr>
+<tr><td>Pending 상태에서 결과 발표 예정일 변경</td><td>활성 (운영 실측)</td></tr>
+<tr><td>Pending 상태에서 결과 확인 기준 KO/EN/JP 변경</td><td>활성 (운영 실측)</td></tr>
+<tr><td>권한 없이 URL 직접 접근</td><td>권한 오류 페이지 리다이렉트</td></tr>
+<tr><td>API 실패</td><td>토스트 "저장에 실패했습니다. 다시 시도해주세요." + 입력값 보존</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>페이지 재사용</td><td>운영 BO는 [생성]·[수정]을 동일 페이지(<code>/gamezone/games/create</code>)에서 `?mode={create\</td><td>edit}` 파라미터로 분기</td></tr>
+<tr><td>URL 파라미터</td><td><code>mode=edit</code> + <code>predictionMarketId={id}</code> (PM) 또는 <code>survivalTriviaId={id}</code> (ST)</td></tr>
+<tr><td>게임유형 잠금</td><td>모든 상태에서 게임유형은 라디오 잠금 (텍스트 표시)</td></tr>
+<tr><td>상태별 잠금 매트릭스</td><td>§2-2 (PM) / §2-3 (ST) 적용</td></tr>
+<tr><td>Pending 상태 (PM)</td><td>결과 발표 예정일 + 결과 확인 기준(KO/EN/JP)만 수정 가능 (운영 실측)</td></tr>
+<tr><td>Closed/Ended 진입</td><td>자동으로 [202] 상세로 리다이렉트</td></tr>
+<tr><td>[저장하기] 활성 조건</td><td>변경 사항 1개 이상 (변경 없으면 disabled)</td></tr>
+<tr><td>안내문 표시</td><td>상태별 안내문 헤더 아래 노출 (없으면 미표시)</td></tr>
+<tr><td>다국어 입력</td><td>잠금 시 KO/EN/JP 탭 + 본문 모두 disabled</td></tr>
+<tr><td>권한</td><td>쓰기 권한 필요 (없으면 [수정하기] 버튼 자체 미노출)</td></tr>
+</table>
+<h3>5-1. ST Active 상태 수정 제약 (v2.6 보존)</h3>
+<p>ST는 Active 상태에서 <strong>타이틀·상세설명만</strong> 수정 가능. 퀴즈·보상·참여·게임 시작일시는 모두 잠금. 자세한 동작 정합은 향후 ST 신규 생성 검증 시 갱신.</p>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>부모 화면</td><td>[CEB-BO-GZ-202] 게임 상세 (수정 진입 트리거)</td></tr>
+<tr><td>동일 컴포넌트</td><td>[CEB-BO-GZ-201-CREATE] 게임 생성 (mode=create)</td></tr>
+<tr><td>[저장하기] 성공</td><td>[CEB-BO-GZ-202] 게임 상세 + 토스트</td></tr>
+<tr><td>[취소] (변경 없음)</td><td>[CEB-BO-GZ-202] 게임 상세</td></tr>
+<tr><td>[취소] (변경 있음)</td><td>[CEB-BO-GZ-202-MD-EDIT-CANCEL] 수정 취소 확인 모달</td></tr>
+<tr><td>Closed/Ended 진입 차단</td><td>[CEB-BO-GZ-202] 게임 상세 (리다이렉트)</td></tr>
+<tr><td>공통 정책 참조</td><td>[CEB-BO-GZ-000] 공통 정책</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v2.7</strong></td><td><strong>2026.05.22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합 + 페이지 재사용 정정</strong> ① 양식 표준화: Page Properties 비고 필드 추가, §1 화면 개요 표, §2 하이픈 표기(§2-1~§2-6), §3 노출 정보, §4 상태별 동작 분기, §5 검증 규칙(+5-1 ST Active), §6 연관 화면, §7 변경 이력 — RFT/RFL 양식 정합 ② 운영 BO 정합(테스트 BO id=92 PM Pending 실측): <strong>라우트 명시(<code>/gamezone/games/create?mode=edit&predictionMarketId={id}</code>)</strong>, <strong>Breadcrumb 마지막 노드 "게임 생성"</strong> (수정도 동일 표기), 페이지 제목 "게임 수정", <strong>Pending 안내문 "결과 대기 중인 게임은 결과 발표 예정일과 결과 확인 기준만 수정할 수 있습니다."</strong>, <strong>Pending 잠금 매트릭스 실측</strong> (결과 발표 예정일·결과 확인 기준만 활성), <strong>CTA 안내문 "변경된 내용이 있을 때만 저장할 수 있습니다."</strong>, [저장하기] 변경 없으면 disabled, 이미지 영역 미리보기+[변경]/[제거] 버튼, 우측 앱 미리보기 사이드 패널 §2-6 명시 ③ <strong>페이지 재사용 정정</strong> — 생성·수정이 동일 페이지(`?mode={create\</td><td>edit}` 분기)임을 명시. 별도 [202-EDIT] 라우트가 아님 ④ Draft/Ready/Active/Closed의 잠금 매트릭스는 v2.6 명세 보존 (운영 검증 미실시) ⑤ ST 폼은 명세 보존 + 검증 미실시 노트 ⑥ DEPRECATED 라벨 유지</td></tr>
+<tr><td>v2.6</td><td>2026.04.07</td><td>@Nill Yoo</td><td>PM 서브타입(타입1/타입2)·상태별 수정 가능 매트릭스 정의 — v2.7에서 PM 서브타입 부분은 운영 미구현으로 제거 ([202] v2.7과 정합)</td></tr>
+<tr><td>v2.x</td><td>—</td><td>—</td><td>(v2 이력은 git history 참조)</td></tr>
+<tr><td>v1.x</td><td>—</td><td>—</td><td>(v1 이력은 git history 참조)</td></tr>
+</table>
+
+</body>
+</html>
