@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-GZ-201-CREATE] 게임 생성</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-GZ-201-CREATE] 게임 생성</h1>
+<blockquote>
+<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) Phase 1·2 PM/ST 운영 중단</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
+<p>></p>
+<p>📌 <strong>응모권 지급 토글 정정 명세 (2026-05-14)</strong>: PM·ST 운영 재개 시점에 본 게임 생성 폼 §보상설정 하단에 <strong>응모권 지급 토글</strong> 추가가 예정됨. 정정 명세는 [CEB-BO-RFT-302] PM·ST 게임 생성 응모권 토글 정정 명세 참조. 기본 정책은 [CEB-BO-RFT-301] §2-7 매트릭스. <strong>운영 BO 현 시점에는 미적용 상태</strong> (chrome-devtools 실측 확인, 2026-05-22).</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-GZ-201-CREATE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v3.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 게임존 > 게임 관리 > 게임 생성</td></tr>
+<tr><td>비고</td><td>DEPRECATED 라벨 유지 + 본문은 운영 BO 정합(v3.1, chrome-devtools 실접속 검증, PM/ST 폼 별도 캡처). 양식 표준화 (RFT/RFL 정합)</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-22 · 버전: <strong>v3.1</strong> (양식 표준화 — RFT/RFL 정합 + 운영 BO 실측 정합 + PM 서브타입 제거)</p>
+<p>화면 경로: <code>/gamezone/games/create</code> (직접 진입 시 <code>?mode=create</code> 자동 추가) · Breadcrumb: <code>홈 › 게임존 › 게임 관리 › 게임 생성</code></p>
+</blockquote>
+<blockquote>
+<p><strong>공통 정책 참조</strong>: 게임 상태/액션, 보상 계산, GP 변동 유형, 권한, UI 상태, 토스트/포맷 규격은 <strong>[CEB-BO-GZ-000] 공통 정책</strong>을 참조한다.</p>
+<p><strong>PM 서브타입 정정 노트(v3.1)</strong>: 이전 v3.0의 "PM 타입 1 (유료 참가)" / "타입 2 (무료 참가) ※보류" 서브타입 라디오는 <strong>운영 BO 미구현 상태</strong>가 확인되어 본 명세에서 제거. 향후 PM 서브타입 도입 시 별도 정정 명세에서 다룸.</p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>새로운 게임을 생성하는 <strong>풀페이지 폼 화면</strong>. 관리자는 게임 유형(PM/ST)을 라디오로 선택한 뒤 기본정보·보상설정·참여설정·일정설정·(PM)결과설정 또는 (ST)퀴즈설정을 입력하여 [임시저장] 또는 [생성하기]를 실행한다. 게임유형에 따라 폼 항목이 조건부로 표시되며, 우측 사이드에 <strong>앱 미리보기 패널</strong>이 상시 노출되어 입력값을 실시간 반영한다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/gamezone/games/create?mode=create</code></td></tr>
+<tr><td>Breadcrumb</td><td>홈 › 게임존 › 게임 관리 › 게임 생성</td></tr>
+<tr><td>페이지 제목</td><td>"게임 생성"</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-GZ-201] 게임 리스트의 [+ 게임 생성] 클릭</td></tr>
+<tr><td>접근 권한</td><td>[관리자 > 권한관리]에 설정된 권한을 따른다 (쓰기 권한 필요)</td></tr>
+<tr><td>용도</td><td>신규 PM/ST 게임 생성 (임시저장 또는 즉시 게시 대기)</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<table>
+<tr><th>위치</th><th>요소</th></tr>
+<tr><td>상단</td><td>Breadcrumb 4단 (홈 › 게임존 › 게임 관리 › 게임 생성)</td></tr>
+<tr><td>h1</td><td>"게임 생성"</td></tr>
+</table>
+<h3>2-2. 게임유형 선택 (공통, 폼 최상단)</h3>
+<table>
+<tr><th>요소</th><th>내용</th></tr>
+<tr><td>라벨</td><td>"게임유형"</td></tr>
+<tr><td>라디오 옵션</td><td>"Prediction Market" (기본 선택) / "Survival Trivia"</td></tr>
+<tr><td>동작</td><td>선택 시 하위 폼 섹션 구성이 게임유형에 맞게 동적 전환 (서브타입 라디오 없음)</td></tr>
+</table>
+<h3>2-3. Prediction Market 폼 (PM 선택 시)</h3>
+<h4>2-3-1. 기본정보 (h3)</h4>
+<table>
+<tr><th>필드</th><th>타입</th><th>제약</th></tr>
+<tr><td>타이틀 (필수)</td><td>다국어 탭(KO/EN/JA) + textbox(multiline)</td><td><strong>최대 35자</strong> (운영 표기, 카운터 노출)</td></tr>
+<tr><td>상세설명 (필수)</td><td>다국어 탭(KO/EN/JA) + WYSIWYG</td><td>툴바: Bold / Italic / Underline / Bullet List / Ordered List / Align Left·Center·Right / Insert Link / Insert Image</td></tr>
+<tr><td><strong>배너 이미지</strong></td><td>드래그&드롭 업로드</td><td>비율 <strong>3:2</strong>, jpeg·png·jpg·webp, 최대 5MB. placeholder "클릭하거나 파일을 드래그하세요"</td></tr>
+<tr><td><strong>상세 이미지</strong></td><td>드래그&드롭 업로드</td><td>비율 <strong>1:1</strong>, jpeg·png·jpg·webp, 최대 5MB</td></tr>
+<tr><td>힌트 링크</td><td>Segmented "사용 / 미사용"</td><td>"사용" 선택 시에만 URL 입력 표시</td></tr>
+</table>
+<h4>2-3-2. 보상설정 (h3)</h4>
+<table>
+<tr><th>필드</th><th>타입</th><th>제약</th></tr>
+<tr><td>총 상금 GP (필수)</td><td>숫자 textbox</td><td>단위 "GP", 기본값 예시 10000</td></tr>
+</table>
+<h4>2-3-3. 참여설정 (h3)</h4>
+<table>
+<tr><th>필드</th><th>타입</th><th>제약</th></tr>
+<tr><td>참여 정원 제한</td><td>체크박스</td><td>체크 해제 시 "무제한" 표시</td></tr>
+<tr><td>참여 비용 (필수)</td><td>숫자 textbox</td><td>단위 "GP", 기본값 1</td></tr>
+<tr><td>부스팅 비용 (필수)</td><td>숫자 textbox</td><td>단위 "GP", 기본값 1</td></tr>
+<tr><td>부스팅 배수 (필수)</td><td>숫자 textbox</td><td>단위 "배", 기본값 2. 안내문: "부스팅 GP는 보상 계산 시 해당 배수만큼 가중치가 적용됩니다."</td></tr>
+</table>
+<h4>2-3-4. 일정설정 (h3)</h4>
+<table>
+<tr><th>필드</th><th>타입</th><th>제약</th></tr>
+<tr><td>투표 시작일시</td><td>자동</td><td>안내 "(게시 시점에 자동 설정)"</td></tr>
+<tr><td>투표 종료일시 (필수)</td><td>날짜 선택 + 시간 버튼 (기본 "00:00")</td><td>readonly textbox</td></tr>
+<tr><td>결과 발표 예정일 (필수)</td><td>날짜 선택</td><td>readonly textbox</td></tr>
+</table>
+<h4>2-3-5. 결과설정 (h3)</h4>
+<table>
+<tr><th>필드</th><th>타입</th><th>제약</th></tr>
+<tr><td>결과 확인 기준 (필수)</td><td>다국어 탭(KO/EN/JA) + textbox(multiline)</td><td><strong>최대 500자</strong> (카운터 노출)</td></tr>
+</table>
+<h3>2-4. Survival Trivia 폼 (ST 선택 시)</h3>
+<h4>2-4-1. 기본정보 (h3)</h4>
+<table>
+<tr><th>필드</th><th>타입</th><th>제약</th></tr>
+<tr><td>타이틀 (필수)</td><td>다국어 탭(KO/EN/JA) + textbox</td><td>최대 35자</td></tr>
+<tr><td>상세설명 (필수)</td><td>다국어 탭(KO/EN/JA) + WYSIWYG</td><td>PM과 동일 툴바</td></tr>
+<tr><td>배너 이미지</td><td>드래그&드롭 업로드</td><td>비율 3:2, jpeg·png·jpg·webp, 최대 5MB</td></tr>
+</table>
+<blockquote>
+<p>ST 폼은 <strong>상세 이미지·힌트 링크 항목 없음</strong> (운영 BO 실측 정합).</p>
+</blockquote>
+<h4>2-4-2. 퀴즈설정 (h3, ST 전용)</h4>
+<table>
+<tr><th>필드</th><th>타입</th><th>제약</th></tr>
+<tr><td>제한시간</td><td>spinbutton</td><td>단위 "초", 기본 10, 범위 <strong>10~60</strong></td></tr>
+<tr><td>정답 결과 노출시간</td><td>spinbutton</td><td>단위 "초", 기본 5, 범위 <strong>1~10</strong></td></tr>
+<tr><td>퀴즈 목록</td><td>카운터 + 다국어 탭(KO/EN/JA)</td><td>"퀴즈 목록 (n/10 문제)"</td></tr>
+</table>
+<p>각 문제(Q1, Q2, …):</p>
+<table>
+<tr><th>필드</th><th>타입</th><th>제약</th></tr>
+<tr><td>질문 텍스트 (필수)</td><td>textbox + 다국어 탭 + [상세] 버튼</td><td>placeholder "질문을 입력하세요 (KO)"</td></tr>
+<tr><td>선택지 1~N (필수)</td><td>textbox + 다국어 탭 + [정답] 라디오 + [삭제] 버튼</td><td>최대 4개. 4개 도달 시 [+ 선택지 추가] disabled</td></tr>
+<tr><td>[문제 추가]</td><td>버튼</td><td>10문제 도달 시 disabled</td></tr>
+</table>
+<h4>2-4-3. 참여설정 (h3)</h4>
+<table>
+<tr><th>필드</th><th>타입</th><th>제약</th></tr>
+<tr><td>최대 모집인원 (필수)</td><td>숫자 textbox</td><td>단위 "명"</td></tr>
+</table>
+<blockquote>
+<p>ST 폼은 <strong>참여 비용 직접 입력 없음</strong> (보상설정의 "참여비"가 자동 계산).</p>
+</blockquote>
+<h4>2-4-4. 보상설정 (h3, ST 전용)</h4>
+<table>
+<tr><th>필드</th><th>타입</th><th>제약</th></tr>
+<tr><td>최대 상금풀 (필수)</td><td>숫자 textbox</td><td>단위 "GP"</td></tr>
+<tr><td>배수 (필수)</td><td>숫자 textbox</td><td>기본 1.25 (placeholder "예: 1.25")</td></tr>
+<tr><td>참여비</td><td>readonly</td><td>"-" + "(자동 계산)" 표기 — 최대 상금풀·모집인원·배수로 산출</td></tr>
+<tr><td><strong>보상 유형</strong></td><td>Segmented "단계별 보상 / 비율별 보상"</td><td>운영 BO 정합 — 단계별/비율별 선택. 선택 시 하위 입력 영역(단계 테이블 또는 비율 입력) 동적 노출</td></tr>
+<tr><td>적용 상금풀 계산 공식 (안내 박스)</td><td>정적 텍스트</td><td>"적용 상금풀 = 실제 모집인원 / 최대 모집인원 × 최대 상금풀" + "게임 시작 시 실제 모집인원에 비례하여 상금풀이 자동 결정됩니다."</td></tr>
+<tr><td>탈락자 응모권 수량 (필수)</td><td>숫자 textbox</td><td>단위 "장", 기본값 1</td></tr>
+<tr><td>부스팅 안내</td><td>정적 텍스트</td><td>"부스팅은 Survival Trivia에서 지원하지 않습니다."</td></tr>
+</table>
+<h4>2-4-5. 일정설정 (h3)</h4>
+<table>
+<tr><th>필드</th><th>타입</th><th>제약</th></tr>
+<tr><td>게임 시작일시 (필수)</td><td>날짜 선택 + 시간 버튼 (기본 "00:00")</td><td>readonly textbox. 안내문: "최소 1시간 이전에 설정하는 것을 권장합니다."</td></tr>
+</table>
+<blockquote>
+<p>ST 폼은 <strong>결과설정 섹션 없음</strong> (서버 자동 판정/보상).</p>
+</blockquote>
+<h3>2-5. CTA 영역 (공통, 하단)</h3>
+<table>
+<tr><th>위치</th><th>요소</th><th>상태</th></tr>
+<tr><td>안내문 (좌)</td><td>"모든 필수값을 입력하면 생성하기가 활성화됩니다." (운영 BO 표기)</td><td>항상 표시</td></tr>
+<tr><td>버튼 1</td><td>[취소]</td><td>항상 활성. 클릭 시 [CEB-BO-GZ-201-MD-CANCEL] 모달 오픈</td></tr>
+<tr><td>버튼 2</td><td>[임시저장]</td><td>활성. 클릭 시 Draft 상태로 저장 + [CEB-BO-GZ-201] 리스트로 이동</td></tr>
+<tr><td>버튼 3</td><td>[생성하기]</td><td>필수값 충족 전 <strong>disabled</strong>. 충족 시 활성. 클릭 시 Draft 상태로 생성 후 [CEB-BO-GZ-202] 게임 상세로 이동 (운영 BO 실측은 disabled 기본)</td></tr>
+</table>
+<h3>2-6. 앱 미리보기 사이드 패널 (공통, 우측 complementary)</h3>
+<p>운영 BO 우측에 상시 노출되는 <strong>실시간 미리보기 영역</strong>. PM/ST에 따라 다른 카드 UI를 렌더링한다.</p>
+<table>
+<tr><th>게임유형</th><th>상단 라벨</th><th>카드 본문</th></tr>
+<tr><td>PM</td><td>"200명 참여중" (mock)</td><td>게임 이미지 + 타이틀(예: "Will V01D take #1 on Inkigayo this week?") + "진행중" 배지 + "2일 22:55:40 남음" + "10,000GP 획득 가능" + "최소 20GP 보상" + [참여하기] 버튼</td></tr>
+<tr><td>ST</td><td>"500명 참여중" (mock)</td><td>게임 이미지 + 타이틀(예: "제 1회 V01D 모의고사") + "시작전" 배지 + "오늘 13:00 (KST)" + [지금 입장하기]</td></tr>
+</table>
+<blockquote>
+<p>운영 BO 실측 — 앱 미리보기는 입력값 일부를 반영하나 mock 수치(참여중 인원·남은 시간 등)는 고정 샘플.</p>
+</blockquote>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>헤더</td><td>Breadcrumb 4단 + 페이지 제목</td><td>화면 위치·정체성</td></tr>
+<tr><td>게임유형 라디오</td><td>PM / ST</td><td>폼 분기 트리거</td></tr>
+<tr><td>PM 기본정보</td><td>타이틀·상세설명·배너·상세 이미지·힌트 링크</td><td>PM 메타 입력</td></tr>
+<tr><td>PM 보상설정</td><td>총 상금 GP</td><td>PM 보상 풀</td></tr>
+<tr><td>PM 참여설정</td><td>정원 제한·참여 비용·부스팅 비용/배수</td><td>PM 참여 규칙</td></tr>
+<tr><td>PM 일정설정</td><td>투표 시작(자동)·투표 종료·결과 발표 예정</td><td>PM 일정</td></tr>
+<tr><td>PM 결과설정</td><td>결과 확인 기준(KO/EN/JA, 500자)</td><td>PM 결과 판정 기준</td></tr>
+<tr><td>ST 기본정보</td><td>타이틀·상세설명·배너</td><td>ST 메타 입력</td></tr>
+<tr><td>ST 퀴즈설정</td><td>제한시간·정답 노출시간·퀴즈 목록(n/10)</td><td>ST 퀴즈</td></tr>
+<tr><td>ST 참여설정</td><td>최대 모집인원</td><td>ST 모집 규모</td></tr>
+<tr><td>ST 보상설정</td><td>최대 상금풀·배수·참여비 자동·보상 유형·적용 상금풀 공식·탈락자 응모권</td><td>ST 보상 풀 + 분배 방식</td></tr>
+<tr><td>ST 일정설정</td><td>게임 시작일시</td><td>ST 시작 시각</td></tr>
+<tr><td>CTA</td><td>안내문 + [취소]/[임시저장]/[생성하기]</td><td>액션 진입</td></tr>
+<tr><td>우측 사이드</td><td>앱 미리보기 카드</td><td>실시간 미리보기</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>화면 진입</td><td>게임유형 기본 PM 선택, [생성하기] disabled, [취소]/[임시저장]은 항상 활성</td></tr>
+<tr><td>게임유형 라디오 변경</td><td>하위 폼 섹션이 즉시 PM/ST 전환 (입력값은 공통 필드를 제외하면 초기화)</td></tr>
+<tr><td>필수값 입력 진행</td><td>[생성하기] disabled 유지. 모든 필수값 충족 시 활성 전환</td></tr>
+<tr><td>[임시저장] 클릭</td><td>현재까지 입력값으로 Draft 상태 게임 생성 + [CEB-BO-GZ-201] 리스트로 이동</td></tr>
+<tr><td>[생성하기] 클릭</td><td>Draft 상태 게임 생성 + [CEB-BO-GZ-202] 게임 상세로 이동 (후속 게시 액션은 상세 화면에서)</td></tr>
+<tr><td>[취소] 클릭</td><td>[CEB-BO-GZ-201-MD-CANCEL] 모달 오픈 (운영 BO 실측 — 입력 유무 무관 항상)</td></tr>
+<tr><td>다국어 탭 전환 (타이틀/상세설명/결과 확인 기준)</td><td>해당 언어 입력값 표시. 다른 언어 탭으로 전환해도 입력값 보존</td></tr>
+<tr><td>이미지 업로드 (PM 배너/상세, ST 배너)</td><td>drag&drop 또는 클릭 업로드. 허용 외 확장자/크기 초과 시 인라인 에러</td></tr>
+<tr><td>ST 퀴즈 [선택지 추가]</td><td>4개 도달 시 disabled</td></tr>
+<tr><td>ST [문제 추가]</td><td>10문제 도달 시 disabled</td></tr>
+<tr><td>권한 없이 URL 직접 접근</td><td>권한 오류 페이지 리다이렉트</td></tr>
+<tr><td>API 실패</td><td>토스트 "게임 생성에 실패했습니다. 다시 시도해주세요." + 입력값 보존</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>타이틀 글자수</td><td>최대 35자 (운영 BO 표기)</td></tr>
+<tr><td>결과 확인 기준 글자수 (PM)</td><td>최대 500자</td></tr>
+<tr><td>이미지 비율 (PM 배너 / 상세)</td><td>3:2 / 1:1</td></tr>
+<tr><td>이미지 비율 (ST 배너)</td><td>3:2</td></tr>
+<tr><td>이미지 사양</td><td>jpeg·png·jpg·webp, 각 최대 5MB</td></tr>
+<tr><td>다국어 입력</td><td>KO/EN/JA 3종. 운영 BO 실측은 필수 검증을 KO 위주로 적용 (EN/JA 검증 정책은 [CEB-BO-GZ-000] 참조)</td></tr>
+<tr><td>PM 부스팅</td><td>부스팅 GP × 배수만큼 보상 분배 가중치 적용 (보상 계산 공식은 [CEB-BO-GZ-000])</td></tr>
+<tr><td>ST 보상 유형</td><td>"단계별 보상" 또는 "비율별 보상" 중 1개 선택. 단계별 = 모집인원 구간별 비율 테이블, 비율별 = 단일 비율 분배</td></tr>
+<tr><td>ST 적용 상금풀 공식</td><td>적용 상금풀 = 실제 모집인원 / 최대 모집인원 × 최대 상금풀 (게임 시작 시 자동 결정)</td></tr>
+<tr><td>ST 부스팅</td><td>미지원 (안내문 노출)</td></tr>
+<tr><td>게임 시작 시각 (ST)</td><td>최소 1시간 이전 권장 (강제 아님, 안내문만)</td></tr>
+<tr><td>응모권 토글</td><td>운영 BO 미적용. 정정 명세 [CEB-BO-RFT-302] 참조 (재개 시점 도입)</td></tr>
+<tr><td>권한</td><td>쓰기 권한 필요. 권한 없으면 [+ 게임 생성] 진입 자체 차단</td></tr>
+</table>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>[취소] 클릭</td><td>[CEB-BO-GZ-201-MD-CANCEL] 생성 취소 확인 모달</td></tr>
+<tr><td>[임시저장] 클릭</td><td>[CEB-BO-GZ-201] 게임 리스트 (Draft 게임 추가)</td></tr>
+<tr><td>[생성하기] 클릭</td><td>[CEB-BO-GZ-202] 게임 상세 (Draft 상태 진입)</td></tr>
+<tr><td>Breadcrumb "게임 관리"</td><td>[CEB-BO-GZ-201] 게임 리스트</td></tr>
+<tr><td>응모권 토글 정정 명세</td><td>[CEB-BO-RFT-302] PM·ST 게임 생성 응모권 토글 정정 명세</td></tr>
+<tr><td>공통 정책 참조</td><td>[CEB-BO-GZ-000] 공통 정책</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v3.1</strong></td><td><strong>2026.05.22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합 + PM 서브타입 제거</strong> ① 양식 표준화: Page Properties 비고 필드 추가, §1 화면 개요 표, §2 하이픈 표기(§2-1~§2-6), §3 노출 정보, §4 상태별 동작 분기, §5 검증 규칙, §6 연관 화면, §7 변경 이력 — RFT/RFL 양식 정합 ② 운영 BO 정합(chrome-devtools 실접속, PM/ST 폼 각각 캡처): 타이틀 글자수 50자 → <strong>35자</strong>, PM <strong>배너 3:2 + 상세 1:1 이미지 입력</strong> 명시, PM 결과 확인 기준 <strong>500자</strong> 명시, ST <strong>제한시간 spinbutton 10~60초</strong>·<strong>정답 노출 1~10초</strong> 명시, ST <strong>보상 유형 segmented (단계별/비율별)</strong> 명시, ST 적용 상금풀 공식 안내 박스 명시, ST 부스팅 미지원 안내 명시, CTA 안내문 "모든 필수값을 입력하면 생성하기가 활성화됩니다." 명시, <strong>우측 앱 미리보기 사이드 패널 §2-6 신규</strong> ③ <strong>PM 서브타입 라디오("타입 1 (유료)" / "타입 2 (무료) ※보류") 제거</strong> — 운영 BO 미구현 확인. 향후 도입 시 별도 정정 명세 ④ 응모권 토글은 [RFT-302] 별도 명세 + 운영 미적용 상태 명시 ⑤ DEPRECATED 라벨 유지</td></tr>
+<tr><td>v3.0</td><td>2026.04.07</td><td>@Nill Yoo</td><td>PM 서브타입 구조 명세 (타입 1 유료 / 타입 2 무료 ※보류) 및 ST 퀴즈 설정 폼 정의 — v3.1에서 PM 서브타입 부분은 운영 미구현으로 제거</td></tr>
+<tr><td>v2.x</td><td>—</td><td>—</td><td>(v2 이력은 git history 참조)</td></tr>
+<tr><td>v1.x</td><td>—</td><td>—</td><td>(v1 이력은 git history 참조)</td></tr>
+</table>
+
+</body>
+</html>
