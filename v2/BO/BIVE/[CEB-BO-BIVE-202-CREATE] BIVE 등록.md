@@ -10,8 +10,8 @@
 | 개발담당자 |  |
 | 기능영역(Epic) | BIVE — 에디션·BIVE |
 | 상태 | Draft |
-| 버전 | v1.1 |
-| 최근 업데이트 | 2026.05.21 |
+| 버전 | v1.2 |
+| 최근 업데이트 | 2026.05.22 |
 | API |  |
 | 피그마 링크 |  |
 | 프로토타입 링크 |  |
@@ -21,7 +21,7 @@
 ---
 
 > 작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: **v1.0** (v1 B-201+202 통합 v2 양식 이전. 기본정보·기능설정 2탭 구조)
-> 화면 경로: `/bive/editions/{editionId}/bive/create` · Breadcrumb: `홈 › BIVE › 에디션 관리 › {에디션명} › BIVE 등록`
+> 화면 경로: `/bive/editions/{editionId}/create` · Breadcrumb: `홈 › BIVE › 에디션 관리 › {에디션명} › BIVE 등록`
 
 ## 1. 화면 개요
 
@@ -29,7 +29,7 @@
 
 | 항목 | 값 |
 |---|---|
-| 화면 경로 | `/bive/editions/{editionId}/bive/create` |
+| 화면 경로 | `/bive/editions/{editionId}/create` |
 | Breadcrumb | 홈 / BIVE / 에디션 관리 / {에디션명} / BIVE 등록 |
 | 페이지 제목 | "BIVE 등록" |
 | 진입 경로 | [CEB-BO-BIVE-102] BIVE 관리의 [+ BIVE 등록] 버튼 |
@@ -140,5 +140,6 @@
 
 | 버전 | 일자 | 작성자 | 변경 |
 |---|---|---|---|
-| **v1.1** | **2026-05-21** | **@Nill Yoo** | **운영 BO 디테일 정합 — 드롭다운·미디어·필드 구성 정정** ① §2-2 안내 문구 추가 ("기본정보 및 속성정보를 모두 입력해주세요") ② 아티스트 그룹/아티스트의 KR/EN/JP 자동 채움 Read-only 필드 제거 (운영 BO 미존재) ③ 에디션명 KR/EN/JP Read-only 자동 채움 필드 제거 (운영 BO 미존재 — Breadcrumb 컨텍스트로만 식별) ④ 아티스트 그룹 옵션 운영 BO 실제 5종 명시 (언더라이트 / V01D / CELEBUS / MADEIN / iKON) ⑤ 아티스트 옵션 — 선택 그룹의 멤버 동적 갱신 (V01D 예시 5명) ⑥ 미디어 확장자 — 운영 BO 실제 **WebP 포함** (PNG·JPG·GIF·WebP·MP4) ⑦ 등급번호 placeholder "등급번호 입력 예) 001" → 운영 BO 실제 **"숫자 5자리 이내"** ⑧ §3·§4·§6 정합 |
+| **v1.2** | **2026-05-22** | **@Nill Yoo** | **운영 BO 라우트 정합** — 화면 경로 `/bive/editions/{editionId}/bive/create` → 운영 BO 실제 **`/bive/editions/{editionId}/create`** ('bive' 세그먼트 제거) |
+| v1.1 | 2026-05-21 | @Nill Yoo | **운영 BO 디테일 정합 — 드롭다운·미디어·필드 구성 정정** ① §2-2 안내 문구 추가 ("기본정보 및 속성정보를 모두 입력해주세요") ② 아티스트 그룹/아티스트의 KR/EN/JP 자동 채움 Read-only 필드 제거 (운영 BO 미존재) ③ 에디션명 KR/EN/JP Read-only 자동 채움 필드 제거 (운영 BO 미존재 — Breadcrumb 컨텍스트로만 식별) ④ 아티스트 그룹 옵션 운영 BO 실제 5종 명시 (언더라이트 / V01D / CELEBUS / MADEIN / iKON) ⑤ 아티스트 옵션 — 선택 그룹의 멤버 동적 갱신 (V01D 예시 5명) ⑥ 미디어 확장자 — 운영 BO 실제 **WebP 포함** (PNG·JPG·GIF·WebP·MP4) ⑦ 등급번호 placeholder "등급번호 입력 예) 001" → 운영 BO 실제 **"숫자 5자리 이내"** ⑧ §3·§4·§6 정합 |
 | v1.0 | 2026-05-21 | @Nill Yoo | **신규 작성 — v1 B-201 + B-202 통합 v2 양식 이전** ① v1 별도 2개 화면을 단일 [CEB-BO-BIVE-202-CREATE]의 2탭 구조로 통합 ② §2 화면 구성 — 기본정보 탭 (왼쪽 폼 + 속성정보 + 오른쪽 미디어) / 기능설정 탭 (토글 3종) ③ 자동 채움 규칙 (아티스트→KR/EN/JP, 멤버→KR/EN/JP) 명시 ④ 미디어 확장자·크기 제약 명시 (PNG·JPG·GIF·MP4 / 20MB) ⑤ 중복 방지 정책 (에디션+아티스트+아티스트+등급+등급번호 유니크) ⑥ 권한 단일 표기 |

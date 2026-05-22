@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 에디션·BIVE</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.1</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
+<tr><td>버전</td><td>v1.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -97,13 +97,13 @@ p {
 <hr>
 <blockquote>
 <p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v1.0</strong> (v1 B-201+202 통합 v2 양식 이전. 기본정보·기능설정 2탭 구조)</p>
-<p>화면 경로: <code>/bive/editions/{editionId}/bive/create</code> · Breadcrumb: <code>홈 › BIVE › 에디션 관리 › {에디션명} › BIVE 등록</code></p>
+<p>화면 경로: <code>/bive/editions/{editionId}/create</code> · Breadcrumb: <code>홈 › BIVE › 에디션 관리 › {에디션명} › BIVE 등록</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
 <p>에디션 하위에 신규 <strong>BIVE</strong>(NFT)를 등록한다. 등록 시 운영자가 사전에 생성한 아티스트 그룹·아티스트 리소스를 사용하며, 등록 직후 Draft 상태로 [CEB-BO-BIVE-102] 리스트에 추가된다. 등록은 2탭 구조(기본정보 / 기능설정)로 모두 입력 후 [등록] 클릭.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>화면 경로</td><td><code>/bive/editions/{editionId}/bive/create</code></td></tr>
+<tr><td>화면 경로</td><td><code>/bive/editions/{editionId}/create</code></td></tr>
 <tr><td>Breadcrumb</td><td>홈 / BIVE / 에디션 관리 / {에디션명} / BIVE 등록</td></tr>
 <tr><td>페이지 제목</td><td>"BIVE 등록"</td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-BIVE-102] BIVE 관리의 [+ BIVE 등록] 버튼</td></tr>
@@ -206,7 +206,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.1</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 디테일 정합 — 드롭다운·미디어·필드 구성 정정</strong> ① §2-2 안내 문구 추가 ("기본정보 및 속성정보를 모두 입력해주세요") ② 아티스트 그룹/아티스트의 KR/EN/JP 자동 채움 Read-only 필드 제거 (운영 BO 미존재) ③ 에디션명 KR/EN/JP Read-only 자동 채움 필드 제거 (운영 BO 미존재 — Breadcrumb 컨텍스트로만 식별) ④ 아티스트 그룹 옵션 운영 BO 실제 5종 명시 (언더라이트 / V01D / CELEBUS / MADEIN / iKON) ⑤ 아티스트 옵션 — 선택 그룹의 멤버 동적 갱신 (V01D 예시 5명) ⑥ 미디어 확장자 — 운영 BO 실제 <strong>WebP 포함</strong> (PNG·JPG·GIF·WebP·MP4) ⑦ 등급번호 placeholder "등급번호 입력 예) 001" → 운영 BO 실제 <strong>"숫자 5자리 이내"</strong> ⑧ §3·§4·§6 정합</td></tr>
+<tr><td><strong>v1.2</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 라우트 정합</strong> — 화면 경로 <code>/bive/editions/{editionId}/bive/create</code> → 운영 BO 실제 <strong><code>/bive/editions/{editionId}/create</code></strong> ('bive' 세그먼트 제거)</td></tr>
+<tr><td>v1.1</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>운영 BO 디테일 정합 — 드롭다운·미디어·필드 구성 정정</strong> ① §2-2 안내 문구 추가 ("기본정보 및 속성정보를 모두 입력해주세요") ② 아티스트 그룹/아티스트의 KR/EN/JP 자동 채움 Read-only 필드 제거 (운영 BO 미존재) ③ 에디션명 KR/EN/JP Read-only 자동 채움 필드 제거 (운영 BO 미존재 — Breadcrumb 컨텍스트로만 식별) ④ 아티스트 그룹 옵션 운영 BO 실제 5종 명시 (언더라이트 / V01D / CELEBUS / MADEIN / iKON) ⑤ 아티스트 옵션 — 선택 그룹의 멤버 동적 갱신 (V01D 예시 5명) ⑥ 미디어 확장자 — 운영 BO 실제 <strong>WebP 포함</strong> (PNG·JPG·GIF·WebP·MP4) ⑦ 등급번호 placeholder "등급번호 입력 예) 001" → 운영 BO 실제 <strong>"숫자 5자리 이내"</strong> ⑧ §3·§4·§6 정합</td></tr>
 <tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 B-201 + B-202 통합 v2 양식 이전</strong> ① v1 별도 2개 화면을 단일 [CEB-BO-BIVE-202-CREATE]의 2탭 구조로 통합 ② §2 화면 구성 — 기본정보 탭 (왼쪽 폼 + 속성정보 + 오른쪽 미디어) / 기능설정 탭 (토글 3종) ③ 자동 채움 규칙 (아티스트→KR/EN/JP, 멤버→KR/EN/JP) 명시 ④ 미디어 확장자·크기 제약 명시 (PNG·JPG·GIF·MP4 / 20MB) ⑤ 중복 방지 정책 (에디션+아티스트+아티스트+등급+등급번호 유니크) ⑥ 권한 단일 표기</td></tr>
 </table>
 

@@ -10,8 +10,8 @@
 | 개발담당자 |  |
 | 기능영역(Epic) | BIVE — 에디션·BIVE |
 | 상태 | Draft |
-| 버전 | v1.0 |
-| 최근 업데이트 | 2026.05.21 |
+| 버전 | v1.1 |
+| 최근 업데이트 | 2026.05.22 |
 | API |  |
 | 피그마 링크 |  |
 | 프로토타입 링크 |  |
@@ -21,7 +21,7 @@
 ---
 
 > 작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: **v1.0** (v1 B-301~304 4탭 통합 v2 이전. 상태별 잠금·삭제·활성/비활성 정책 포함)
-> 화면 경로: `/bive/editions/{editionId}/bive/{biveId}` · Breadcrumb: `홈 › BIVE › 에디션 관리 › {에디션명} › BIVE 상세`
+> 화면 경로: `/bive/editions/{editionId}/bives/{biveId}` · Breadcrumb: `홈 › BIVE › 에디션 관리 › {에디션명} › BIVE 상세`
 
 ## 1. 화면 개요
 
@@ -29,7 +29,7 @@
 
 | 항목 | 값 |
 |---|---|
-| 화면 경로 | `/bive/editions/{editionId}/bive/{biveId}` |
+| 화면 경로 | `/bive/editions/{editionId}/bives/{biveId}` |
 | Breadcrumb | 홈 / BIVE / 에디션 관리 / {에디션명} / BIVE 상세 |
 | 페이지 제목 | `{BIVE 명칭}` (예: "하시모토 칸나 Normal-001") |
 | 진입 경로 | [CEB-BO-BIVE-102] BIVE 관리의 행 클릭 |
@@ -176,4 +176,5 @@
 
 | 버전 | 일자 | 작성자 | 변경 |
 |---|---|---|---|
-| **v1.0** | **2026-05-21** | **@Nill Yoo** | **신규 작성 — v1 B-301+302+303+304 4탭 통합 v2 이전** ① v1 별도 4개 화면을 단일 [CEB-BO-BIVE-202]의 4탭 구조로 통합 (기본정보 / 기능설정 / 민팅관리 / 민팅이력) ② 상태 3종(Draft/Active/Inactive) + 상태별 헤더 액션·필드 잠금 매트릭스 ③ Active → Inactive 전환 조건 (연결된 캠페인 모두 종료) ④ BIVE 명칭 자동 생성 규칙 ⑤ 민팅이력 탭 — 회원/BSCScan 새 창 링크 ⑥ 권한 단일 표기 |
+| **v1.1** | **2026-05-22** | **@Nill Yoo** | **운영 BO 라우트 정합** — 화면 경로 `/bive/editions/{editionId}/bive/{biveId}` → 운영 BO 실제 **`/bive/editions/{editionId}/bives/{biveId}`** ('bive' 단수 → 'bives' 복수) |
+| v1.0 | 2026-05-21 | @Nill Yoo | **신규 작성 — v1 B-301+302+303+304 4탭 통합 v2 이전** ① v1 별도 4개 화면을 단일 [CEB-BO-BIVE-202]의 4탭 구조로 통합 (기본정보 / 기능설정 / 민팅관리 / 민팅이력) ② 상태 3종(Draft/Active/Inactive) + 상태별 헤더 액션·필드 잠금 매트릭스 ③ Active → Inactive 전환 조건 (연결된 캠페인 모두 종료) ④ BIVE 명칭 자동 생성 규칙 ⑤ 민팅이력 탭 — 회원/BSCScan 새 창 링크 ⑥ 권한 단일 표기 |

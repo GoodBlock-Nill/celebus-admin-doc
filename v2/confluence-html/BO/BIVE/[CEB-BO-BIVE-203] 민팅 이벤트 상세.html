@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 민팅</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -97,13 +97,13 @@ p {
 <hr>
 <blockquote>
 <p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v1.0</strong> (v1 Event/Ticket 6건 통합 v2 이전. 기본정보 / BIVE 보상 / 보상내역 3탭)</p>
-<p>화면 경로: <code>/bive/minting/{type}/{campaignId}</code> (type = event / ticket / mix / pick)</p>
+<p>화면 경로: <code>/bive/minting/{campaignId}</code> (운영 BO는 type 경로 변수 없이 campaignId만 사용. 유형 구분은 진입 경로 + 헤더 페이지 제목으로 표시)</p>
 </blockquote>
 <h2>1. 화면 개요</h2>
 <p>특정 <strong>민팅 이벤트</strong>의 상세를 조회·관리한다. 4상태(초안/활성/중지/종료) × 4유형(Event/Ticket/Mix/Pick) 매트릭스 적용. 3탭(기본정보·BIVE 보상·보상내역) 구조이며, 상태에 따라 헤더 액션·필드 잠금이 분기된다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>화면 경로</td><td><code>/bive/minting/{type}/{campaignId}</code></td></tr>
+<tr><td>화면 경로</td><td><code>/bive/minting/{campaignId}</code></td></tr>
 <tr><td>Breadcrumb</td><td>홈 / BIVE / 민팅 관리 / {Event 또는 Ticket} / 캠페인 상세</td></tr>
 <tr><td>페이지 제목</td><td><code>{캠페인명}</code></td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-BIVE-103] 민팅 이벤트 리스트의 행 클릭</td></tr>
@@ -235,7 +235,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 Mint-102+103+106 (Event 3탭) + Mint-202+203+206 (Ticket 3탭) 6건 통합 v2 이전</strong> ① Event/Ticket을 공통 명세로 통합 (유형은 라우트 + 헤더로 분리) ② 3탭 구조(기본정보·BIVE 보상·보상내역) ③ 4상태 × 3탭 × 헤더 액션 매트릭스 ④ 가중치 1~999 정수 + 비중 분수 표기(10/55) ⑤ 활성화 선행 조건 (저장 완료 + BIVE ≥ 1) ⑥ 보상내역 — BIVE 제거 시 정책 (민팅 수 ≥ 1면 행 유지·가중치/비중 "-" 표시 / 0이면 행 제거) ⑦ 권한 단일 표기</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 라우트 정합</strong> — 화면 경로 <code>/bive/minting/{type}/{campaignId}</code> → 운영 BO 실제 <strong><code>/bive/minting/{campaignId}</code></strong> (type 경로 변수 없음. 유형 구분은 진입 경로 + 헤더 페이지 제목 "Event 캠페인 상세" 등으로 표시)</td></tr>
+<tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 Mint-102+103+106 (Event 3탭) + Mint-202+203+206 (Ticket 3탭) 6건 통합 v2 이전</strong> ① Event/Ticket을 공통 명세로 통합 (유형은 라우트 + 헤더로 분리) ② 3탭 구조(기본정보·BIVE 보상·보상내역) ③ 4상태 × 3탭 × 헤더 액션 매트릭스 ④ 가중치 1~999 정수 + 비중 분수 표기(10/55) ⑤ 활성화 선행 조건 (저장 완료 + BIVE ≥ 1) ⑥ 보상내역 — BIVE 제거 시 정책 (민팅 수 ≥ 1면 행 유지·가중치/비중 "-" 표시 / 0이면 행 제거) ⑦ 권한 단일 표기</td></tr>
 </table>
 
 </body>

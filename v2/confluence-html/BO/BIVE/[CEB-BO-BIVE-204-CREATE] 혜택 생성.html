@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 혜택</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.1</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
+<tr><td>버전</td><td>v1.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -97,13 +97,13 @@ p {
 <hr>
 <blockquote>
 <p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v1.0</strong> (v1 BP/RT 생성 4건 통합 v2 이전. 기본정보 / BIVE 추가 2탭)</p>
-<p>화면 경로: <code>/bive/benefits/{type}/create</code> (type = bp / rt)</p>
+<p>화면 경로: <code>/bive/benefits/create?type={boostPoint / ticket}</code> (type 쿼리 파라미터 — 운영 BO 실제)</p>
 </blockquote>
 <h2>1. 화면 개요</h2>
 <p>신규 <strong>혜택</strong>(BP 또는 RT)을 생성한다. 기본정보 + BIVE 추가 2탭 모두 입력 후 [생성하기] 클릭 시 <strong>초안</strong> 상태로 [CEB-BO-BIVE-104]에 추가된다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>화면 경로</td><td><code>/bive/benefits/{type}/create</code></td></tr>
+<tr><td>화면 경로</td><td><code>/bive/benefits/create?type={boostPoint / ticket}</code></td></tr>
 <tr><td>Breadcrumb</td><td>홈 / BIVE / 혜택 관리 / {Boost Point 또는 Raffle Ticket} / 혜택 생성</td></tr>
 <tr><td>페이지 제목</td><td>BP 탭: "Boost point 혜택 생성" / RT 탭: "Raffle Ticket 혜택 생성" (운영 BO 실제 표기)</td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-BIVE-104] 혜택 리스트의 [+ 혜택 생성] 버튼</td></tr>
@@ -200,7 +200,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.1</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 디테일 정합 — 페이지 제목·placeholder·지급주기·시간 기본값 정정</strong> ① 페이지 제목 — 운영 BO 실제 <strong>"Boost point 혜택 생성" / "Raffle Ticket 혜택 생성"</strong> 명시 ② §2-2 안내 문구 추가 ("지급 로직을 식별할 수 있는 명칭과 검증액션을 선택하세요") ③ 혜택 명칭 placeholder "혜택 명칭을 입력해 주세요" → 운영 BO 실제 <strong>"명칭을 입력해주세요"</strong> ④ BP 수량 placeholder 운영 BO 실제 <strong>"지급 수량을 입력해주세요"</strong> 추가 ⑤ 지급주기 옵션 "일일 / 주간 / 1회" → 운영 BO 실제 <strong>"일일 / 주간 / 1회(획득 시)"</strong> 정합 + 기본값 "일일" 명시 ⑥ 시작시간 기본 <strong>"00:00"</strong> / 종료시간 기본 <strong>"23:59"</strong> (운영 BO 실제) 추가</td></tr>
+<tr><td><strong>v1.2</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 라우트 정합</strong> — 화면 경로 <code>/bive/benefits/{type}/create</code> → 운영 BO 실제 <strong><code>/bive/benefits/create?type=...</code></strong> (type 경로 변수 → 쿼리 파라미터). type 값도 운영 실제 표기 (boostPoint / ticket) 정합</td></tr>
+<tr><td>v1.1</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>운영 BO 디테일 정합 — 페이지 제목·placeholder·지급주기·시간 기본값 정정</strong> ① 페이지 제목 — 운영 BO 실제 <strong>"Boost point 혜택 생성" / "Raffle Ticket 혜택 생성"</strong> 명시 ② §2-2 안내 문구 추가 ("지급 로직을 식별할 수 있는 명칭과 검증액션을 선택하세요") ③ 혜택 명칭 placeholder "혜택 명칭을 입력해 주세요" → 운영 BO 실제 <strong>"명칭을 입력해주세요"</strong> ④ BP 수량 placeholder 운영 BO 실제 <strong>"지급 수량을 입력해주세요"</strong> 추가 ⑤ 지급주기 옵션 "일일 / 주간 / 1회" → 운영 BO 실제 <strong>"일일 / 주간 / 1회(획득 시)"</strong> 정합 + 기본값 "일일" 명시 ⑥ 시작시간 기본 <strong>"00:00"</strong> / 종료시간 기본 <strong>"23:59"</strong> (운영 BO 실제) 추가</td></tr>
 <tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 Perks-104+105 (BP 생성 2탭) + Perks-204+205 (RT 생성 2탭) 4건 통합 v2 이전</strong> ① BP/RT 공통 명세 (유형은 라우트로 분리) ② 2탭 구조 (기본정보 / BIVE 추가) ③ 지급주기 3종 + 주간 시 지급 요일 활성 정책 ④ 시작일·시작시간·종료일 검증 규칙 (오늘 이후, 시작일+1일 이후, 현재 시간 이후) ⑤ BIVE ≥ 1건 + 중복 방지 ⑥ 생성 직후 초안 상태로 리스트 추가 ⑦ 권한 단일 표기</td></tr>
 </table>
 

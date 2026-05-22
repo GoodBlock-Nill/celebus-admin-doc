@@ -10,8 +10,8 @@
 | 개발담당자 |  |
 | 기능영역(Epic) | BIVE — NFT 발행·민팅·혜택 |
 | 상태 | Draft |
-| 버전 | v1.4 |
-| 최근 업데이트 | 2026.05.21 |
+| 버전 | v1.5 |
+| 최근 업데이트 | 2026.05.22 |
 | API |  |
 | 피그마 링크 |  |
 | 프로토타입 링크 |  |
@@ -20,7 +20,7 @@
 
 ---
 
-> 작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: **v1.4** (BIVE 영역 모든 화면 드롭다운 옵션 운영 BO 전수 정합 — 4건 명세 + 정책 상수 옵션 표기 정합)
+> 작성자: @Nill Yoo · 작성일: 2026-05-22 · 버전: **v1.5** (운영 BO 라우트 구조 정합 — 6건 명세 라우트를 운영 실제 형식으로 일괄 정정)
 > 영역 경로: `/bive/*` · 사이드바: BIVE
 
 ## 1. 영역 개요
@@ -48,28 +48,30 @@ CELEBUS 플랫폼의 **BIVE(NFT)** 영역은 회원에게 발행되는 디지털
 
 ## 2. 메뉴 구조
 
-```
+```text
 BIVE
 ├── 에디션 관리          → /bive/editions
-│   ├── 에디션 리스트       → [CEB-BO-BIVE-101]
-│   ├── 에디션 생성/수정 모달 → [CEB-BO-BIVE-201-CREATE] / [CEB-BO-BIVE-201-EDIT]
-│   └── BIVE 관리          → [CEB-BO-BIVE-102] (에디션 하위 BIVE 인덱스)
-│       ├── BIVE 등록      → [CEB-BO-BIVE-202-CREATE]
-│       ├── BIVE 상세      → [CEB-BO-BIVE-202] (기본·기능·민팅관리·민팅이력 4탭)
-│       └── BIVE 삭제 모달  → [CEB-BO-BIVE-202-MD-DELETE]
+│   ├── 에디션 리스트       → [CEB-BO-BIVE-101] /bive/editions
+│   ├── 에디션 생성/수정 모달 → [CEB-BO-BIVE-201-CREATE] / [CEB-BO-BIVE-201-EDIT] (모달)
+│   └── BIVE 관리          → [CEB-BO-BIVE-102] /bive/editions/{editionId}
+│       ├── BIVE 등록      → [CEB-BO-BIVE-202-CREATE] /bive/editions/{editionId}/create
+│       ├── BIVE 상세      → [CEB-BO-BIVE-202] /bive/editions/{editionId}/bives/{biveId} (기본·기능·민팅관리·민팅이력 4탭)
+│       └── BIVE 삭제 모달  → [CEB-BO-BIVE-202-MD-DELETE] (모달)
 │
 ├── 민팅 관리            → /bive/minting
-│   ├── 민팅 이벤트 리스트   → [CEB-BO-BIVE-103] (Event/Ticket/Mix/Pick 4탭)
-│   ├── 캠페인 생성        → [CEB-BO-BIVE-203-CREATE] (기본정보·BIVE보상 2탭)
-│   ├── 캠페인 상세        → [CEB-BO-BIVE-203] (기본정보·BIVE보상·보상내역 3탭)
-│   └── BIVE 보상 추가 모달 → [CEB-BO-BIVE-203-MD-ADD]
+│   ├── 민팅 이벤트 리스트   → [CEB-BO-BIVE-103] /bive/minting (Event/Ticket/Mix/Pick 4탭)
+│   ├── 캠페인 생성        → [CEB-BO-BIVE-203-CREATE] /bive/minting/create?type=EVENT (기본정보·BIVE보상 2탭)
+│   ├── 캠페인 상세        → [CEB-BO-BIVE-203] /bive/minting/{campaignId} (기본정보·BIVE보상·보상내역 3탭)
+│   └── BIVE 보상 추가 모달 → [CEB-BO-BIVE-203-MD-ADD] (모달)
 │
 └── 혜택 관리            → /bive/benefits
-    ├── 혜택 리스트         → [CEB-BO-BIVE-104] (Boost Point/Raffle Ticket 2탭)
-    ├── 혜택 생성          → [CEB-BO-BIVE-204-CREATE] (기본정보·BIVE추가 2탭)
-    ├── 혜택 상세          → [CEB-BO-BIVE-204] (기본정보·BIVE추가 2탭)
-    └── BIVE 추가 모달      → [CEB-BO-BIVE-204-MD-ADD]
+    ├── 혜택 리스트         → [CEB-BO-BIVE-104] /bive/benefits (Boost Point/Raffle Ticket 2탭)
+    ├── 혜택 생성          → [CEB-BO-BIVE-204-CREATE] /bive/benefits/create?type=boostPoint (기본정보·BIVE추가 2탭)
+    ├── 혜택 상세          → [CEB-BO-BIVE-204] /bive/benefits/{benefitId} (기본정보·BIVE추가 2탭)
+    └── BIVE 추가 모달      → [CEB-BO-BIVE-204-MD-ADD] (모달)
 ```
+
+> **운영 BO 라우트 정합 (v1.5)**: 모든 화면 경로는 운영 BO 실제 형식과 1:1 일치. 캠페인·혜택 유형(EVENT/TICKET/MIX/PICK, boostPoint/ticket)은 생성 시 쿼리 파라미터(`?type=`)로 전달하고, 상세 진입 후에는 ID만 사용 (유형 구분은 헤더 페이지 제목으로 표시).
 
 ## 3. 권한
 
@@ -233,7 +235,8 @@ Draft(초안) → Active(활성) → Inactive(비활성)
 
 | 버전 | 일자 | 작성자 | 변경 |
 |---|---|---|---|
-| **v1.4** | **2026-05-21** | **@Nill Yoo** | **BIVE 영역 모든 화면 드롭다운 옵션 운영 BO 전수 정합** ① §5 정책 상수 — **민팅 이벤트 연결 기능**의 운영 BO 실제 Event 탭 옵션 4종 명시 (회원가입 보상 / 출석체크 보상 / 래플 보상 / 팬퀘스트 보상). v1 가설 "회원가입 보상 받기 / 출석체크 5일 보상 / 아이콘 티켓 검증"에서 정정 ② §5 **BIVE 미디어** 확장자 PNG·JPG·GIF·MP4 → **PNG·JPG·GIF·WebP·MP4** (WebP 추가) ③ §5 **혜택 지급주기** 기본값 "일일" 명시 + **혜택 시작·종료 시간 기본값** 신규 항목 추가 (시작 "00:00" / 종료 "23:59") ④ §5 **운영 BO 드롭다운 표기 SSOT** 신규 항목 추가 — 모든 필터·검색 드롭다운 운영 BO 실제 라벨 1:1 일치 원칙 + 기본값 "{컬럼명}(전체)" 표기 + [조회] 버튼 미존재 정책 ⑤ §5 **BIVE 등록 옵션 (운영 데이터 기준)** 신규 항목 추가 — 아티스트 그룹 5종 (언더라이트 / V01D / CELEBUS / MADEIN / iKON) + 아티스트 동적 노출 + 등급번호 placeholder ⑥ 영향 명세 4건: [102](이전 v1.3에서 정합)·[202-CREATE]·[103]·[203-CREATE]·[204-CREATE] |
+| **v1.5** | **2026-05-22** | **@Nill Yoo** | **운영 BO 라우트 구조 정합** — 명세 6건의 화면 경로를 운영 BO 실제 형식으로 일괄 정정 ① [202-CREATE] BIVE 등록 `/bive/editions/{id}/bive/create` → **`/bive/editions/{id}/create`** ('bive' 세그먼트 제거) ② [202] BIVE 상세 `/bive/editions/{id}/bive/{biveId}` → **`/bive/editions/{id}/bives/{biveId}`** ('bive' 단수 → 'bives' 복수) ③ [203-CREATE] 캠페인 생성 `/bive/minting/{type}/create` → **`/bive/minting/create?type=...`** (type 경로 변수 → 쿼리 파라미터, 대문자 EVENT/TICKET/MIX/PICK) ④ [203] 캠페인 상세 `/bive/minting/{type}/{id}` → **`/bive/minting/{id}`** (type 경로 변수 제거, 헤더 페이지 제목으로 유형 구분) ⑤ [204-CREATE] 혜택 생성 `/bive/benefits/{type}/create` → **`/bive/benefits/create?type=...`** (boostPoint/ticket) ⑥ [204] 혜택 상세 `/bive/benefits/{type}/{id}` → **`/bive/benefits/{id}`** ⑦ §2 메뉴 구조에 6건 실제 라우트 명시 + 운영 BO 정합 주석 추가 |
+| v1.4 | 2026-05-21 | @Nill Yoo | **BIVE 영역 모든 화면 드롭다운 옵션 운영 BO 전수 정합** ① §5 정책 상수 — **민팅 이벤트 연결 기능**의 운영 BO 실제 Event 탭 옵션 4종 명시 (회원가입 보상 / 출석체크 보상 / 래플 보상 / 팬퀘스트 보상). v1 가설 "회원가입 보상 받기 / 출석체크 5일 보상 / 아이콘 티켓 검증"에서 정정 ② §5 **BIVE 미디어** 확장자 PNG·JPG·GIF·MP4 → **PNG·JPG·GIF·WebP·MP4** (WebP 추가) ③ §5 **혜택 지급주기** 기본값 "일일" 명시 + **혜택 시작·종료 시간 기본값** 신규 항목 추가 (시작 "00:00" / 종료 "23:59") ④ §5 **운영 BO 드롭다운 표기 SSOT** 신규 항목 추가 — 모든 필터·검색 드롭다운 운영 BO 실제 라벨 1:1 일치 원칙 + 기본값 "{컬럼명}(전체)" 표기 + [조회] 버튼 미존재 정책 ⑤ §5 **BIVE 등록 옵션 (운영 데이터 기준)** 신규 항목 추가 — 아티스트 그룹 5종 (언더라이트 / V01D / CELEBUS / MADEIN / iKON) + 아티스트 동적 노출 + 등급번호 placeholder ⑥ 영향 명세 4건: [102](이전 v1.3에서 정합)·[202-CREATE]·[103]·[203-CREATE]·[204-CREATE] |
 | v1.3 | 2026-05-21 | @Nill Yoo | **운영 BO 전수 디테일 분석 + 명세 정합 (v1.2 Critical 정정 다음 단계)** ① 에디션 리스트 정렬 옵션 "오름차순/내림차순" → 운영 실제 **"최신순 / 오래된순"** (단일 드롭다운 2종) ② 에디션 리스트 검색 placeholder "에디션명 입력" → **"에디션 명 입력"** (띄어쓰기) ③ 에디션 리스트 [조회] → 운영 실제 **[초기화] 버튼** ④ 에디션 생성 모달 안내 문구 2줄 → **1줄 통합** ("없을때" 띄어쓰기 없음) ⑤ 에디션 수정 모달 좌측 [삭제] → 운영 실제 **[수정하기] 단독 노출** (운영 BO는 본 모달에서 [삭제] 미제공) ⑥ BIVE 관리 페이지 제목 "{에디션명} BIVE 관리" → 운영 실제 **"BIVE 관리"** (에디션명 미포함, Breadcrumb으로 컨텍스트) ⑦ BIVE 관리 검색 placeholder "검색어 입력" → **"명칭 입력"** ⑧ BIVE 관리 필터 기본 라벨 "전체(기본)" → **"상태(전체)"·"등급(전체)"** ⑨ BIVE 관리 [조회] 버튼 미존재 (필터 즉시 갱신) ⑩ 영향 명세 4건: [101]·[102]·[201-CREATE]·[201-EDIT] |
 | v1.2 | 2026-05-21 | @Nill Yoo | **운영 BO 실제 화면 캡처 기반 Critical 용어 3건 일괄 정정** ① 운영 BO 6화면 캡처 (에디션 리스트·BIVE 관리·BIVE 상세·민팅 Event 리스트·캠페인 상세·혜택 BP) 후 명세와 차이 분석 ② **"민팅 캠페인" → "민팅 이벤트"** 일괄 정정 (운영 BO 컬럼·라벨 정합. v1 페이지 제목 "Event 캠페인 상세"는 운영 BO에서도 유지됨에 따라 표기 혼용은 그대로 유지) ③ **"아티스트" → "아티스트 그룹"** 정정 (BIVE 등록·상세·관리·민팅 보상·혜택 BIVE 추가의 표·필드. 운영 BO 라벨 정합) ④ **"멤버" → "아티스트"** 정정 (동일 영역. 운영 BO에서 BIVE의 식별 키로 사용) ⑤ 파일명 3건 git mv: [103/203/203-CREATE] 민팅 캠페인 → 민팅 이벤트 ⑥ 메뉴 트리·정책 상수·상태 머신·플로우 본문 모든 표기 정합 ⑦ Important 2건(관리 정보 5필드 vs 운영 3필드 / 페이지 제목 "혜택 관리" vs "혜택")은 후속 작업으로 유지 |
 | v1.1 | 2026-05-21 | @Nill Yoo | **2차 명세 10건 추가 작성 정합** ① §4-1 화면 인벤토리에 2차 10건 추가 — [201-CREATE] 에디션 생성 모달 / [201-EDIT] 에디션 수정/삭제 모달 / [202-CREATE] BIVE 등록 2탭 / [202] BIVE 상세 4탭 / [203] 민팅 이벤트 상세 3탭 / [203-CREATE] 캠페인 생성 2탭 / [203-MD-ADD] BIVE 보상 추가 모달 / [204] 혜택 상세 2탭 / [204-CREATE] 혜택 생성 2탭 / [204-MD-ADD] BIVE 추가 모달 ② §4-2 → "v1 → v2 매핑" 간단 표기로 정리 (상세는 L4 매트릭스 참조) ③ §4-3 후속 작성 예정 (mock + SQ 정합)으로 재구성 ④ §4-3 → §4-4 번호 시프트 (화면 ID 번호 규칙) ⑤ v1 33건 → v2 16건 통합 결과 명시 (Event/Ticket 4탭, BP/RT 2탭, BIVE 4탭 등 통합) |

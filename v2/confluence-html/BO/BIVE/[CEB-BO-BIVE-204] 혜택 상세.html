@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 혜택</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -97,13 +97,13 @@ p {
 <hr>
 <blockquote>
 <p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v1.0</strong> (v1 Perks-102/103/202/203 통합 v2 이전. 기본정보 / BIVE 추가 2탭)</p>
-<p>화면 경로: <code>/bive/benefits/{type}/{benefitId}</code> (type = bp / rt)</p>
+<p>화면 경로: <code>/bive/benefits/{benefitId}</code> (운영 BO는 type 경로 변수 없이 benefitId만 사용. 유형 구분은 진입 경로 + 헤더 페이지 제목으로 표시)</p>
 </blockquote>
 <h2>1. 화면 개요</h2>
 <p>특정 <strong>혜택</strong>(BP 또는 RT)의 상세를 조회·수정한다. 5상태(초안/대기/활성/중지/종료) × 2탭(기본정보·BIVE 추가) 매트릭스 적용. 상태에 따라 헤더 액션·필드 잠금이 분기된다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>화면 경로</td><td><code>/bive/benefits/{type}/{benefitId}</code></td></tr>
+<tr><td>화면 경로</td><td><code>/bive/benefits/{benefitId}</code></td></tr>
 <tr><td>Breadcrumb</td><td>홈 / BIVE / 혜택 관리 / {Boost Point 또는 Raffle Ticket} / 혜택 상세</td></tr>
 <tr><td>페이지 제목</td><td><code>{Boost point / Raffle Ticket} 혜택 상세</code></td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-BIVE-104] 혜택 리스트의 행 클릭</td></tr>
@@ -235,7 +235,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 Perks-102+103 (BP 2탭) + Perks-202+203 (RT 2탭) 4건 통합 v2 이전</strong> ① BP/RT 공통 명세 (유형은 라우트로 분리) ② 2탭 구조 (기본정보 / BIVE 추가) ③ 5상태 × 2탭 잠금 매트릭스 (대기·활성·종료 read-only / 중지는 종료일·종료시간만 + BIVE 추가 ✏️) ④ 상태 전이 규칙 (초안→대기→활성→중지→종료) ⑤ 헤더 액션 상태별 분기 매트릭스 ⑥ 활성대기 선행 조건 + 종료일 검증 ⑦ 권한 단일 표기</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 라우트 정합</strong> — 화면 경로 <code>/bive/benefits/{type}/{benefitId}</code> → 운영 BO 실제 <strong><code>/bive/benefits/{benefitId}</code></strong> (type 경로 변수 없음. 유형 구분은 진입 경로 + 헤더 페이지 제목 "Boost point / Raffle Ticket 혜택 상세"로 표시)</td></tr>
+<tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 Perks-102+103 (BP 2탭) + Perks-202+203 (RT 2탭) 4건 통합 v2 이전</strong> ① BP/RT 공통 명세 (유형은 라우트로 분리) ② 2탭 구조 (기본정보 / BIVE 추가) ③ 5상태 × 2탭 잠금 매트릭스 (대기·활성·종료 read-only / 중지는 종료일·종료시간만 + BIVE 추가 ✏️) ④ 상태 전이 규칙 (초안→대기→활성→중지→종료) ⑤ 헤더 액션 상태별 분기 매트릭스 ⑥ 활성대기 선행 조건 + 종료일 검증 ⑦ 권한 단일 표기</td></tr>
 </table>
 
 </body>

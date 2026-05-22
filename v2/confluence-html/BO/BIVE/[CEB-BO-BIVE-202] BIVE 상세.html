@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 에디션·BIVE</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -97,13 +97,13 @@ p {
 <hr>
 <blockquote>
 <p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v1.0</strong> (v1 B-301~304 4탭 통합 v2 이전. 상태별 잠금·삭제·활성/비활성 정책 포함)</p>
-<p>화면 경로: <code>/bive/editions/{editionId}/bive/{biveId}</code> · Breadcrumb: <code>홈 › BIVE › 에디션 관리 › {에디션명} › BIVE 상세</code></p>
+<p>화면 경로: <code>/bive/editions/{editionId}/bives/{biveId}</code> · Breadcrumb: <code>홈 › BIVE › 에디션 관리 › {에디션명} › BIVE 상세</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
 <p>특정 <strong>BIVE</strong>의 기본 메타·기능 설정·연결 캠페인·민팅 이력을 4개 탭으로 조회·수정한다. 상태(Draft/Active/Inactive)에 따라 헤더 액션과 필드 잠금이 분기된다. BIVE 명칭은 <code>{아티스트명} {등급}-{등급번호}</code> 자동 생성.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>화면 경로</td><td><code>/bive/editions/{editionId}/bive/{biveId}</code></td></tr>
+<tr><td>화면 경로</td><td><code>/bive/editions/{editionId}/bives/{biveId}</code></td></tr>
 <tr><td>Breadcrumb</td><td>홈 / BIVE / 에디션 관리 / {에디션명} / BIVE 상세</td></tr>
 <tr><td>페이지 제목</td><td><code>{BIVE 명칭}</code> (예: "하시모토 칸나 Normal-001")</td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-BIVE-102] BIVE 관리의 행 클릭</td></tr>
@@ -232,7 +232,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 작성 — v1 B-301+302+303+304 4탭 통합 v2 이전</strong> ① v1 별도 4개 화면을 단일 [CEB-BO-BIVE-202]의 4탭 구조로 통합 (기본정보 / 기능설정 / 민팅관리 / 민팅이력) ② 상태 3종(Draft/Active/Inactive) + 상태별 헤더 액션·필드 잠금 매트릭스 ③ Active → Inactive 전환 조건 (연결된 캠페인 모두 종료) ④ BIVE 명칭 자동 생성 규칙 ⑤ 민팅이력 탭 — 회원/BSCScan 새 창 링크 ⑥ 권한 단일 표기</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 라우트 정합</strong> — 화면 경로 <code>/bive/editions/{editionId}/bive/{biveId}</code> → 운영 BO 실제 <strong><code>/bive/editions/{editionId}/bives/{biveId}</code></strong> ('bive' 단수 → 'bives' 복수)</td></tr>
+<tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 B-301+302+303+304 4탭 통합 v2 이전</strong> ① v1 별도 4개 화면을 단일 [CEB-BO-BIVE-202]의 4탭 구조로 통합 (기본정보 / 기능설정 / 민팅관리 / 민팅이력) ② 상태 3종(Draft/Active/Inactive) + 상태별 헤더 액션·필드 잠금 매트릭스 ③ Active → Inactive 전환 조건 (연결된 캠페인 모두 종료) ④ BIVE 명칭 자동 생성 규칙 ⑤ 민팅이력 탭 — 회원/BSCScan 새 창 링크 ⑥ 권한 단일 표기</td></tr>
 </table>
 
 </body>
