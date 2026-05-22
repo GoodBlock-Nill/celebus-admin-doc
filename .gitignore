@@ -12,3 +12,4 @@ public/swe-worker-*.js
 public/workbox-*.js
 idol/ComfyUI
 .tmp-bive-bo/
+.tmp-gam-bo/
