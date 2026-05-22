@@ -4,7 +4,8 @@ import { use, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { TrashIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
-import PageHeader from '@/components/layout/PageHeader';
+import { ChevronLeftIcon } from '@heroicons/react/20/solid';
+import Breadcrumb from '@/components/layout/Breadcrumb';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import {
@@ -65,21 +66,28 @@ export default function BiveDetailPage({ params }: { params: Promise<{ id: strin
 
   return (
     <div>
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex items-end gap-2.5">
-          <PageHeader
-            title="BIVE 상세"
-            breadcrumbItems={[
-              { label: 'BIVE' },
-              { label: '에디션 관리', href: '/bive/editions' },
-              { label: '에디션 BIVE 관리', href: `/bive/editions/${editionId}` },
-              { label: 'BIVE 상세' },
-            ]}
-          />
-          <span className={`inline-flex rounded px-2 py-0.5 text-[11px] font-medium mb-1 ${STATUS_BADGE[token.status]}`}>
-            {token.status}
-          </span>
-        </div>
+      <div className="mb-6">
+        <Breadcrumb customItems={[
+          { label: 'BIVE' },
+          { label: '에디션 관리', href: '/bive/editions' },
+          { label: '에디션 BIVE 관리', href: `/bive/editions/${editionId}` },
+          { label: 'BIVE 상세' },
+        ]} />
+        {/* 운영 BO 정합 — 페이지 제목 라인: ← 뒤로가기 + "BIVE 상세" + 상태 배지 인라인 + 우측 액션 */}
+        <div className="flex items-center justify-between mt-2">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => router.push(`/bive/editions/${editionId}`)}
+              className="w-7 h-7 inline-flex items-center justify-center rounded text-gray-500 hover:bg-gray-100"
+              aria-label="뒤로가기"
+            >
+              <ChevronLeftIcon className="w-5 h-5" />
+            </button>
+            <h1 className="text-[28px] font-bold text-gray-900">BIVE 상세</h1>
+            <span className={`inline-flex items-center rounded px-2 py-0.5 text-xs font-medium ml-1 ${STATUS_BADGE[token.status]}`}>
+              {token.status}
+            </span>
+          </div>
         <div className="flex items-center gap-2">
           {token.status === 'Draft' && (
             <>
@@ -121,6 +129,7 @@ export default function BiveDetailPage({ params }: { params: Promise<{ id: strin
               활성화
             </button>
           )}
+        </div>
         </div>
       </div>
 
