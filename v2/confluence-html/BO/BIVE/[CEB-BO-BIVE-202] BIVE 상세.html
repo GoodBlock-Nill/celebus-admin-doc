@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 에디션·BIVE</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.4</td></tr>
+<tr><td>버전</td><td>v1.5</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -163,10 +163,12 @@ p {
 <tr><td>상태</td><td>배지 — 초안(amber)/활성(green)/중지(red)/종료(gray)</td></tr>
 <tr><td>민팅 타입</td><td>Event / Ticket / Mix / Pick / 상품</td></tr>
 <tr><td>캠페인명</td><td>클릭 시 캠페인 상세 새 창</td></tr>
-<tr><td>보상 방식 (v1.2)</td><td>배지 — 가중치(indigo) / 지정(emerald). 사이클 #1 보상 방식 이분화 정합</td></tr>
 <tr><td>민팅 횟수</td><td>본 캠페인을 통한 BIVE 누적 발행 수 (없으면 "-")</td></tr>
 <tr><td>캠페인 연결 일시</td><td>YYYY.MM.DD hh:mm (기본 정렬 내림차순)</td></tr>
 </table>
+<blockquote>
+<p><strong>운영 BO 정합 (v1.5)</strong>: 캠페인의 <strong>보상 방식</strong>·<strong>연결 기능</strong>은 본 화면(BIVE 상세 §민팅관리)에 표시하지 않음. 운영자가 캠페인 단위 상세 속성을 확인하려면 캠페인명 클릭 → [CEB-BO-BIVE-203] 캠페인 상세에서 조회. 본 화면은 BIVE 단위로 "어느 캠페인에 연결되었는지"만 보여주는 인덱스 역할</p>
+</blockquote>
 <p>빈 상태: "연결된 캠페인이 없습니다."</p>
 <h3>2-5. 민팅이력 탭 (모든 상태에서 조회만)</h3>
 <p>본 BIVE의 실제 발행 결과(회원·지갑 단위) 조회.</p>
@@ -240,7 +242,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.4</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§2-3 기능설정 탭 — Draft 상태에서만 토글 수정 가능 (운영 BO 정합)</strong> 프로토타입이 모든 상태에서 read-only로 표시되던 문제 정정. Draft = 토글 button (인디고 활성/회색 비활성, 클릭 전환) / Active·Inactive = 토글 span (opacity 60%, 클릭 불가, 안내 tooltip). 안내 박스 분기 — Draft: "Draft 상태에서만 수정할 수 있습니다" (indigo) / Active·Inactive: "Draft 상태에서만 기능설정을 수정할 수 있습니다. 활성·비활성 상태에서는 조회만 가능합니다." (amber)</td></tr>
+<tr><td><strong>v1.5</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§2-4 민팅관리 탭 — "보상 방식"·"연결 기능" 컬럼 제거 (운영 BO 정합)</strong> 운영 BO는 BIVE 단위 인덱스 역할만 수행하며 캠페인 단위 속성은 표시하지 않음. 사이클 #2(v1.2)에서 추가한 보상 방식 컬럼 + 기존 연결 기능 컬럼 둘 다 제거. 캠페인 단위 상세 속성은 캠페인명 클릭 → [203] 캠페인 상세에서 확인</td></tr>
+<tr><td>v1.4</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§2-3 기능설정 탭 — Draft 상태에서만 토글 수정 가능 (운영 BO 정합)</strong> 프로토타입이 모든 상태에서 read-only로 표시되던 문제 정정. Draft = 토글 button (인디고 활성/회색 비활성, 클릭 전환) / Active·Inactive = 토글 span (opacity 60%, 클릭 불가, 안내 tooltip). 안내 박스 분기 — Draft: "Draft 상태에서만 수정할 수 있습니다" (indigo) / Active·Inactive: "Draft 상태에서만 기능설정을 수정할 수 있습니다. 활성·비활성 상태에서는 조회만 가능합니다." (amber)</td></tr>
 <tr><td>v1.3</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§2-2 미디어 카드 배치 정정 — 좌우 그리드(1열 2장) → 세로 스택(1열 1장)</strong> 카드 크기를 우측 패널 폭 전체로 확대해 미리보기 가시성 향상. 앞면 위·뒷면 아래 순서</td></tr>
 <tr><td>v1.2</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>미디어 카드 앞면·뒷면 좌우 동시 표시 + §2-4 민팅관리 탭 "보상 방식" 컬럼 신규</strong> ① §2-2 InfoTab 미디어 카드 단일 → 우측 grid-cols-2 (앞면·뒷면 동시) ② 뒷면 미등록 시 회색 dashed placeholder + "뒷면 미등록" ③ §2-4 민팅관리 테이블에 "보상 방식" 컬럼 추가 (가중치 indigo / 지정 emerald 배지) — 사이클 #1 보상 방식 이분화 정합</td></tr>
 <tr><td>v1.1</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>운영 BO 라우트 정합</strong> — 화면 경로 <code>/bive/editions/{editionId}/bive/{biveId}</code> → 운영 BO 실제 <strong><code>/bive/editions/{editionId}/bives/{biveId}</code></strong> ('bive' 단수 → 'bives' 복수)</td></tr>

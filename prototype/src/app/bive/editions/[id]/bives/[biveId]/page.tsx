@@ -296,12 +296,6 @@ function MintingTab({ token }: { token: BiveToken }) {
               <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
             </a>
           )},
-          { key: 'rewardMethod', label: '보상 방식', width: '100px', render: (r) => (
-            r.rewardMethod === 'FIXED'
-              ? <span className="inline-flex rounded-full px-2 py-0.5 text-xs font-medium bg-emerald-100 text-emerald-700">지정</span>
-              : <span className="inline-flex rounded-full px-2 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700">가중치</span>
-          )},
-          { key: 'linkedFeature', label: '연결 기능', width: '140px', render: (r) => <span className="text-gray-700">{r.linkedFeature}</span> },
           { key: 'minted', label: '발행 수', width: '90px' },
           { key: 'createdAt', label: '생성일', width: '160px' },
         ]}
