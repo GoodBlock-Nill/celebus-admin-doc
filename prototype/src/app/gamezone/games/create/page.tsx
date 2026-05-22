@@ -4,6 +4,7 @@ import { Suspense, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PageHeader from '@/components/layout/PageHeader';
 import { getGameById, type GameType } from '@/mock/gamezone';
+import { ConfirmCreateCancelModal, ConfirmEditCancelModal } from '@/components/gamezone/GameModals';
 
 // [CEB-BO-GZ-201-CREATE] 게임 생성 + [CEB-BO-GZ-202-EDIT] 게임 수정 (공용 폼)
 // 운영 BO 정합: /gamezone/games/create?mode={create|edit}&predictionMarketId={id}|&survivalTriviaId={id}
@@ -74,23 +75,11 @@ function GameCreateContent() {
     : !!titleKo.trim() && !!description.trim() && !!stMaxParticipants && !!stMaxPrize && !!stStartDate;
   const canSubmit = isEdit ? (hasChanged && requiredFilled) : requiredFilled;
 
-  const handleCancel = () => {
-    if (isEdit && hasChanged) {
-      if (confirm('[Mock] 수정 취소 확인 모달 — #B-PT-4에서 구현 예정. 임시로 confirm.\n취소하시겠습니까?')) {
-        router.push(`/gamezone/games/${editId}`);
-      }
-      return;
-    }
-    if (!isEdit) {
-      if (confirm('[Mock] 생성 취소 확인 모달 — #B-PT-4에서 구현 예정.\n취소하시겠습니까?')) {
-        router.push('/gamezone/games');
-      }
-      return;
-    }
-    // EDIT인데 변경 없음 — 운영 정합: 그래도 모달 표시
-    if (confirm('[Mock] 수정 취소 확인 모달 — 변경 유무 무관 항상 표시 (운영 정합)')) {
-      router.push(`/gamezone/games/${editId}`);
-    }
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const handleCancel = () => setCancelOpen(true);
+  const onConfirmCancel = () => {
+    setCancelOpen(false);
+    router.push(isEdit ? `/gamezone/games/${editId}` : '/gamezone/games');
   };
 
   const handleSubmit = (asDraft = false) => {
@@ -286,6 +275,13 @@ function GameCreateContent() {
           </div>
         </aside>
       </div>
+
+      {/* 취소 확인 모달 */}
+      {isEdit ? (
+        <ConfirmEditCancelModal isOpen={cancelOpen} onClose={() => setCancelOpen(false)} onConfirm={onConfirmCancel} />
+      ) : (
+        <ConfirmCreateCancelModal isOpen={cancelOpen} onClose={() => setCancelOpen(false)} onConfirm={onConfirmCancel} />
+      )}
     </div>
   );
 }

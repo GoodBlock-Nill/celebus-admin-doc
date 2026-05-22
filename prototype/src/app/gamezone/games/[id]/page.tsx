@@ -13,6 +13,13 @@ import {
   type PMGame,
   type STGame,
 } from '@/mock/gamezone';
+import {
+  ConfirmDeleteModal,
+  ConfirmPublishModal,
+  ConfirmCloseModal,
+  ResultInputModal,
+  ConfirmRewardModal,
+} from '@/components/gamezone/GameModals';
 
 // [CEB-BO-GZ-202] 게임 상세 — 운영 BO 정합 v2.7 (RFT/RFL 양식)
 // 라우트: /gamezone/games/{id}?tab={basic|entry-history|result-reward}
@@ -72,6 +79,29 @@ function GameDetailContent({ id }: { id: string }) {
     router.replace(`/gamezone/games/${gameId}?tab=${next}`);
   };
 
+  // 모달 상태
+  const [modalDelete, setModalDelete] = useState(false);
+  const [modalPublish, setModalPublish] = useState(false);
+  const [modalClose, setModalClose] = useState(false);
+  const [modalResult, setModalResult] = useState(false);
+  const [modalReward, setModalReward] = useState(false);
+
+  const handleAction = (label: string) => {
+    if (label === '삭제하기') return setModalDelete(true);
+    if (label === '게시하기') return setModalPublish(true);
+    if (label === '강제 종료') return setModalClose(true);
+    if (label === '결과 입력' || label === '결과 수정') return setModalResult(true);
+    if (label === '보상 지급') return setModalReward(true);
+    if (label === '수정하기') {
+      router.push(`/gamezone/games/create?mode=edit&${game.type === 'PM' ? 'predictionMarketId' : 'survivalTriviaId'}=${gameId}`);
+      return;
+    }
+  };
+
+  const pmGame = game.type === 'PM' ? (game as PMGame) : null;
+  const refundGP = pmGame ? pmGame.participants * pmGame.participationCost : 0;
+  const resultData = pmGame ? getPMResultReward(pmGame.id) : null;
+
   return (
     <div>
       <div className="mb-6">
@@ -94,7 +124,7 @@ function GameDetailContent({ id }: { id: string }) {
             {actions.map((a) => (
               <button
                 key={a.label}
-                onClick={() => alert(`[Mock] ${a.label} — 모달은 #B-PT-4에서 구현 예정`)}
+                onClick={() => handleAction(a.label)}
                 className={
                   a.variant === 'primary'
                     ? 'h-10 px-5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700'
@@ -130,6 +160,50 @@ function GameDetailContent({ id }: { id: string }) {
       {tab === 'basic' && <BasicTab game={game} />}
       {tab === 'entry-history' && <EntryHistoryTab game={game} />}
       {tab === 'result-reward' && <ResultRewardTab game={game} />}
+
+      {/* 모달 7종 — [202-MD-*] */}
+      <ConfirmDeleteModal
+        isOpen={modalDelete}
+        onClose={() => setModalDelete(false)}
+        onConfirm={() => { alert(`[Mock] ${game.title} 삭제 완료`); setModalDelete(false); router.push('/gamezone/games'); }}
+        gameTitle={game.title}
+        status={game.status}
+      />
+      <ConfirmPublishModal
+        isOpen={modalPublish}
+        onClose={() => setModalPublish(false)}
+        onConfirm={() => { alert(`[Mock] ${game.title} 게시 완료 (Active 전이)`); setModalPublish(false); }}
+        gameTitle={game.title}
+      />
+      <ConfirmCloseModal
+        isOpen={modalClose}
+        onClose={() => setModalClose(false)}
+        onConfirm={() => { alert(`[Mock] ${game.title} 강제 종료 완료`); setModalClose(false); }}
+        gameTitle={game.title}
+        status={game.status}
+        participants={game.participants}
+        refundGP={refundGP}
+      />
+      {pmGame && (
+        <ResultInputModal
+          isOpen={modalResult}
+          onClose={() => setModalResult(false)}
+          onConfirm={() => { alert(`[Mock] ${pmGame.title} 결과 확정 (Closed 전이)`); setModalResult(false); }}
+          gameTitle={pmGame.title}
+          participants={pmGame.participants}
+          totalPrize={pmGame.totalPrize}
+        />
+      )}
+      {pmGame && resultData && (
+        <ConfirmRewardModal
+          isOpen={modalReward}
+          onClose={() => setModalReward(false)}
+          onConfirm={() => { alert(`[Mock] ${pmGame.title} 보상 지급 완료 (Ended 전이)`); setModalReward(false); }}
+          gameTitle={pmGame.title}
+          totalPrize={pmGame.totalPrize}
+          correctCount={resultData.correctCount}
+        />
+      )}
     </div>
   );
 }
