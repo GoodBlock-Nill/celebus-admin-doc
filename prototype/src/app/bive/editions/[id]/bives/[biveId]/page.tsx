@@ -225,10 +225,17 @@ function InfoTab({ token, editionName }: { token: BiveToken; editionName: string
 }
 
 function FeatureTab({ token }: { token: BiveToken }) {
+  // [CEB-BO-BIVE-202] §2-3: Draft 상태에서만 토글 수정 가능 (운영 BO 정합)
+  // Active/Inactive 상태에서는 read-only
+  const editable = token.status === 'Draft';
+  const [toggles, setToggles] = useState(token.toggles);
+
   return (
     <div className="max-w-xl space-y-5">
-      <div className="bg-indigo-50 text-indigo-700 px-4 py-3 rounded-lg text-sm">
-        BIVE의 사용 가능 기능을 ON/OFF 합니다. 활성 상태에서도 토글 변경이 가능합니다.
+      <div className={`px-4 py-3 rounded-lg text-sm ${editable ? 'bg-indigo-50 text-indigo-700' : 'bg-amber-50 text-amber-700'}`}>
+        {editable
+          ? 'BIVE의 사용 가능 기능을 ON/OFF 합니다. Draft 상태에서만 수정할 수 있습니다.'
+          : 'Draft 상태에서만 기능설정을 수정할 수 있습니다. 활성·비활성 상태에서는 조회만 가능합니다.'}
       </div>
       {([
         { key: 'send', label: '보내기 (Send)', desc: '회원 간 BIVE 양도 허용 여부' },
@@ -240,9 +247,23 @@ function FeatureTab({ token }: { token: BiveToken }) {
             <div className="text-sm font-medium text-gray-900">{row.label}</div>
             <div className="text-xs text-gray-500">{row.desc}</div>
           </div>
-          <span className={`relative inline-flex h-6 w-11 rounded-full ${token.toggles[row.key] ? 'bg-indigo-600' : 'bg-gray-300'}`}>
-            <span className={`inline-block h-5 w-5 rounded-full bg-white mt-0.5 ${token.toggles[row.key] ? 'translate-x-5' : 'translate-x-0.5'}`} />
-          </span>
+          {editable ? (
+            <button
+              type="button"
+              onClick={() => setToggles((p) => ({ ...p, [row.key]: !p[row.key] }))}
+              className={`relative inline-flex h-6 w-11 rounded-full transition-colors ${toggles[row.key] ? 'bg-indigo-600' : 'bg-gray-300'}`}
+              aria-label={`${row.label} 토글`}
+            >
+              <span className={`inline-block h-5 w-5 rounded-full bg-white transform transition-transform mt-0.5 ${toggles[row.key] ? 'translate-x-5' : 'translate-x-0.5'}`} />
+            </button>
+          ) : (
+            <span
+              className={`relative inline-flex h-6 w-11 rounded-full opacity-60 cursor-not-allowed ${toggles[row.key] ? 'bg-indigo-600' : 'bg-gray-300'}`}
+              title="Draft 상태에서만 수정할 수 있습니다"
+            >
+              <span className={`inline-block h-5 w-5 rounded-full bg-white mt-0.5 ${toggles[row.key] ? 'translate-x-5' : 'translate-x-0.5'}`} />
+            </span>
+          )}
         </div>
       ))}
     </div>
