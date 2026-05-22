@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-GZ-202-MD-CLOSE] 강제 종료 확인 모달</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-GZ-202-MD-CLOSE] 강제 종료 확인 모달</h1>
+<blockquote>
+<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) Phase 1·2 PM/ST 운영 중단</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-GZ-202-MD-CLOSE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.3</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>- (모달)</td></tr>
+<tr><td>비고</td><td>DEPRECATED 라벨 유지 + 본문은 운영 BO 정합(v1.3, 테스트 BO Active·Pending 실측). 양식 표준화 (RFT/RFL 정합)</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-22 · 버전: <strong>v1.3</strong> (양식 표준화 — RFT/RFL 정합 + 테스트 BO 실측 정합)</p>
+<p>진입 경로: [CEB-BO-GZ-202] 게임 상세의 [강제 종료] 버튼 (Active/Pending)</p>
+</blockquote>
+<blockquote>
+<p><strong>공통 정책 참조</strong>: [CEB-BO-GZ-000] 공통 정책 참조.</p>
+</blockquote>
+<h2>1. 모달 개요</h2>
+<p>진행중/결과대기 게임을 <strong>강제 종료</strong>하는 확인 모달. 강제 종료 시 참여 GP·부스팅 GP 전액 환급 + 보상 미지급 처리. 이 작업은 되돌릴 수 없다.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>트리거</td><td>[CEB-BO-GZ-202]의 [강제 종료] 버튼 (Active/Pending 상태)</td></tr>
+<tr><td>표시 조건</td><td>게임 상태가 Active 또는 Pending일 때</td></tr>
+<tr><td>영향 범위</td><td>게임 상태 → Ended / 모든 참여자 환급 / 보상 미지급</td></tr>
+<tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다 (쓰기 권한)</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 모달 헤더</h3>
+<ul>
+<li>타이틀 (h3): <strong>"게임을 강제 종료하시겠습니까?"</strong> (운영 정합)</li>
+</ul>
+<h3>2-2. 경고 본문</h3>
+<table>
+<tr><th>줄</th><th>내용</th></tr>
+<tr><td>1</td><td>"⚠️ 강제 종료 시 진행 중인 참여가 즉시 마감됩니다."</td></tr>
+<tr><td>2</td><td>"참여자에게는 참여 GP가 전액 환급됩니다."</td></tr>
+<tr><td>3</td><td>"이 작업은 되돌릴 수 없습니다."</td></tr>
+</table>
+<h3>2-3. 처리 내용 안내</h3>
+<p>소제목: "강제 종료 시 처리 내용"</p>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>게임 상태</td><td>"{현재 상태} → 강제종료" (Active=진행중 / Pending=결과대기)</td></tr>
+<tr><td>환급 1</td><td>모든 참여자 참여 GP 전액 환급</td></tr>
+<tr><td>환급 2</td><td>부스팅 GP도 전액 환급</td></tr>
+<tr><td>보상</td><td>보상 미지급 (결과 없이 종료)</td></tr>
+</table>
+<h3>2-4. 게임 정보</h3>
+<table>
+<tr><th>라벨</th><th>값</th></tr>
+<tr><td>타이틀</td><td>{게임 타이틀}</td></tr>
+<tr><td>현재 참여자</td><td>{N}명</td></tr>
+<tr><td>환급 예정 GP</td><td>{N} GP</td></tr>
+</table>
+<h3>2-5. 푸터</h3>
+<table>
+<tr><th>버튼</th><th>스타일</th><th>의미</th></tr>
+<tr><td>[취소]</td><td>Secondary</td><td>모달 닫기 (상태 유지)</td></tr>
+<tr><td>[강제 종료하기]</td><td>Danger</td><td>즉시 Ended 전이 + 환급 처리 + 토스트</td></tr>
+</table>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th></tr>
+<tr><td>헤더</td><td>타이틀</td></tr>
+<tr><td>경고 본문</td><td>3줄 경고</td></tr>
+<tr><td>처리 내용</td><td>게임 상태 전이·환급·보상 미지급 안내</td></tr>
+<tr><td>게임 정보</td><td>타이틀·현재 참여자·환급 예정 GP</td></tr>
+<tr><td>푸터</td><td>[취소] / [강제 종료하기]</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>[강제 종료하기] 클릭 (성공)</td><td>Ended 전이 + 토스트 "강제 종료 완료" + 본문 "게임이 강제 종료되었습니다." + 헤더 액션 버튼 사라짐</td></tr>
+<tr><td>[취소] / ESC / 배경</td><td>모달 닫기 (상태 유지)</td></tr>
+<tr><td>중복 클릭</td><td>첫 클릭 후 [강제 종료하기] disabled</td></tr>
+<tr><td>API 실패</td><td>토스트 "강제 종료에 실패했습니다." + 모달 유지</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<table>
+<tr><th>규칙</th><th>내용</th></tr>
+<tr><td>트리거 가능 상태</td><td>Active(진행중) 또는 Pending(결과대기)만</td></tr>
+<tr><td>환급 정책</td><td>참여 GP + 부스팅 GP 모두 전액 환급 ([CEB-BO-GZ-000] §GP 변동 유형 참조)</td></tr>
+<tr><td>보상 처리</td><td>보상 미지급 (Ended 전이 + 보상 GP는 시스템 귀속 아님 — 환급으로 처리)</td></tr>
+<tr><td>토스트</td><td>성공 시 "강제 종료 완료" / "게임이 강제 종료되었습니다." (운영 실측)</td></tr>
+</table>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>부모</td><td>[CEB-BO-GZ-202] 게임 상세</td></tr>
+<tr><td>성공</td><td>[CEB-BO-GZ-202] (Ended 상태로 갱신)</td></tr>
+<tr><td>취소</td><td>[CEB-BO-GZ-202] (상태 유지)</td></tr>
+<tr><td>공통 정책</td><td>[CEB-BO-GZ-000]</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.3</strong></td><td><strong>2026.05.22</strong></td><td><strong>@Nill Yoo</strong></td><td>양식 표준화(RFT/RFL 정합) + 운영 BO 정합. 타이틀 "게임을 강제 종료하시겠습니까?" 명시. 경고 본문 3줄·처리 내용 안내·게임 정보 (현재 참여자/환급 예정 GP) 명시. 토스트 "강제 종료 완료" 실측. DEPRECATED 라벨 유지</td></tr>
+<tr><td>v1.2</td><td>2026.02.26</td><td>@Nill Yoo</td><td>(v1 이력 — git history 참조)</td></tr>
+<tr><td>v1.x</td><td>—</td><td>—</td><td>(v1 이력)</td></tr>
+</table>
+
+</body>
+</html>
