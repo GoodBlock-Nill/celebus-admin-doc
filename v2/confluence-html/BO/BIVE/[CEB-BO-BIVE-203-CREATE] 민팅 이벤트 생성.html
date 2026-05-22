@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 민팅</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.4</td></tr>
+<tr><td>버전</td><td>v1.5</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -145,7 +145,7 @@ p {
 <ul>
 <li>가중치 보상: 카운터 "가중치 합: n"</li>
 <li>지정 보상: 카운터 "등록 BIVE: n / 10"</li>
-<li>[+ 추가하기]: 생성 화면 단계에서는 비활성 ("캠페인 생성 후 BIVE 보상을 추가할 수 있습니다." 안내). 캠페인 생성 직후 [CEB-BO-BIVE-203] §2-3에서 보상 방식에 맞춰 추가</li>
+<li><strong>[+ 추가하기]</strong> (v1.5, 운영 BO 정합): <strong>생성 화면에서도 항상 활성</strong>. 클릭 시 [CEB-BO-BIVE-203-MD-ADD] 모달 오픈. 선택된 BIVE는 보상 테이블에 행으로 추가되며, 캠페인 [생성하기] 시점에 함께 저장됨</li>
 </ul>
 <p><strong>테이블 컬럼</strong> (보상 방식에 따라 분기):</p>
 <ul>
@@ -211,7 +211,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.4</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§2-3 보상 방식 선택 UI 정정 — 세그먼티드 컨트롤 → 라디오 + 설명 박스</strong> ("두 방식 모두 활성화" 혼란 방지. [203] v1.3 정정과 동일 패턴 적용)</td></tr>
+<tr><td><strong>v1.5</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§2-3 BIVE 보상 탭 [+ 추가하기] 버튼 정정 — 운영 BO 정합</strong> 직전 v1.3/v1.4에서 "생성 화면 단계에서는 비활성"으로 잘못 명세된 부분을 정정. 운영 BO 직접 검증(chrome-devtools 실접속) 결과 캠페인 생성 시점에도 [+ 추가하기]가 항상 활성이며, 클릭 시 [CEB-BO-BIVE-203-MD-ADD] 모달이 오픈됨. 선택된 BIVE는 생성 시점 보상 테이블에 행으로 추가되고 [생성하기] 시 함께 저장. 빈 안내문 "캠페인 생성 후 BIVE 보상을 추가할 수 있습니다." 제거</td></tr>
+<tr><td>v1.4</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>§2-3 보상 방식 선택 UI 정정 — 세그먼티드 컨트롤 → 라디오 + 설명 박스</strong> ("두 방식 모두 활성화" 혼란 방지. [203] v1.3 정정과 동일 패턴 적용)</td></tr>
 <tr><td>v1.3</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>BIVE 보상 방식 이분화 — 가중치/지정 세그먼티드 컨트롤 신규</strong> ① §2-3 BIVE 보상 탭 최상단에 [가중치 보상 / 지정 보상] 세그먼티드 컨트롤 추가 ② 가중치 = 확률 분포 추첨 (BIVE 1개) / 지정 = 등록 BIVE 1~10종 동시 발행 ③ 안내 박스·카운터·테이블 컬럼 보상 방식별 분기 ④ 지정 보상 컬럼: 가중치·비중 컬럼 자체 숨김 ⑤ 캠페인 생성 시점 [+ 추가하기]는 비활성 유지 (생성 후 상세에서 추가) — 보상 방식 선택만 가능</td></tr>
 <tr><td>v1.2</td><td>2026-05-22</td><td>@Nill Yoo</td><td><strong>운영 BO 라우트 정합</strong> — 화면 경로 <code>/bive/minting/{type}/create</code> → 운영 BO 실제 <strong><code>/bive/minting/create?type=...</code></strong> (type 경로 변수 → 쿼리 파라미터). type 값도 운영 실제 대문자 (EVENT/TICKET/MIX/PICK) 표기 정합</td></tr>
 <tr><td>v1.1</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>운영 BO 디테일 정합 — 연결 기능 드롭다운 4종 정정</strong> ① §2-2 안내 문구 추가 ("캠페인 식별을 위한 캠페인 명을 입력하고, 연결기능을 선택해 주세요.") ② 캠페인명 placeholder "캠페인명을 입력해 주세요" → 운영 BO 실제 <strong>"캠페인 명을 입력하세요"</strong> ③ 연결 기능 placeholder "연결 기능을 선택해 주세요" → 운영 BO 실제 <strong>"연결 기능을 선택해주세요"</strong> ④ 연결 기능 옵션 — v1 가설(회원가입 보상 받기 / 출석체크 5일 보상 / 아이콘 티켓 검증) → 운영 BO 실제 <strong>4종</strong> (회원가입 보상 / 출석체크 보상 / 래플 보상 / 팬퀘스트 보상) ⑤ §6 외부 영역 연동의 연결 기능 프리셋 4종 명시</td></tr>
