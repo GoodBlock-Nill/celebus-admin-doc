@@ -202,20 +202,20 @@ function InfoTab({ token, editionName }: { token: BiveToken; editionName: string
         </div>
         <div className="bg-white border border-gray-200 rounded-xl p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-3">미디어 파일</h3>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-4">
             {/* 앞면 */}
             <div>
               <div className={`aspect-square rounded-lg flex items-center justify-center text-xs ${token.mediaFrontUrl ? 'bg-gradient-to-br from-orange-100 to-pink-100 text-gray-600' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
                 {token.mediaFrontUrl ? '앞면 미리보기' : '앞면 미등록'}
               </div>
-              <div className="text-xs text-center mt-1.5 text-gray-600">앞면</div>
+              <div className="text-xs text-center mt-2 text-gray-600">앞면</div>
             </div>
             {/* 뒷면 */}
             <div>
               <div className={`aspect-square rounded-lg flex items-center justify-center text-xs ${token.mediaBackUrl ? 'bg-gradient-to-br from-indigo-100 to-purple-100 text-gray-600' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
                 {token.mediaBackUrl ? '뒷면 미리보기' : '뒷면 미등록'}
               </div>
-              <div className="text-xs text-center mt-1.5 text-gray-600">뒷면</div>
+              <div className="text-xs text-center mt-2 text-gray-600">뒷면</div>
             </div>
           </div>
         </div>
