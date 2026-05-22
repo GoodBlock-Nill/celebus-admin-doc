@@ -76,7 +76,8 @@ export interface BiveToken {
   mintedCount: number;
   registeredAt: string;
   description?: string;
-  mediaUrl?: string;
+  mediaFrontUrl?: string; // 앞면 (필수 — 등록 시 검증)
+  mediaBackUrl?: string;  // 뒷면 (선택)
   toggles: { send: boolean; mix: boolean; pick: boolean };
 }
 
@@ -111,18 +112,18 @@ function makeV01dEditionTokens(): BiveToken[] {
       });
     });
   });
-  // 추가 3건 (운영 등록된 BIVE=23 충족용 — Event 등급 005)
+  // 추가 3건 (운영 등록된 BIVE=23 충족용 — Event 등급 005, 양면 데모 포함)
   tokens.push(
-    { id: id++, editionId: 1, status: 'Active', name: '송유찬 Event-005', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 12, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true } },
-    { id: id++, editionId: 1, status: 'Active', name: '정지섭 Event-005', artistGroup: 'V01D', artist: '정지섭', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 8, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true } },
-    { id: id++, editionId: 1, status: 'Active', name: '케빈박 Event-005', artistGroup: 'V01D', artist: '케빈박', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 9, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true } },
+    { id: id++, editionId: 1, status: 'Active', name: '송유찬 Event-005', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 12, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaFrontUrl: '/mock/bive/v01d-005-songyuchan-front.webp', mediaBackUrl: '/mock/bive/v01d-005-songyuchan-back.webp' },
+    { id: id++, editionId: 1, status: 'Active', name: '정지섭 Event-005', artistGroup: 'V01D', artist: '정지섭', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 8, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaFrontUrl: '/mock/bive/v01d-005-jeongjiseop-front.webp' },
+    { id: id++, editionId: 1, status: 'Active', name: '케빈박 Event-005', artistGroup: 'V01D', artist: '케빈박', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 9, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaFrontUrl: '/mock/bive/v01d-005-kevinpark-front.webp', mediaBackUrl: '/mock/bive/v01d-005-kevinpark-back.webp' },
   );
   return tokens;
 }
 
 function makeCelebusEditionTokens(): BiveToken[] {
   return [
-    { id: 1, editionId: 2, status: 'Active', name: 'CELEBUS Event-001', artistGroup: 'CELEBUS', artist: 'CELEBUS', grade: 'Event', gradeNumber: '001', mintEvent: 1, mintedCount: 439, registeredAt: '2026.02.19', toggles: { send: true, mix: true, pick: true }, description: 'CELEBUS 1st Welcome Edition' },
+    { id: 1, editionId: 2, status: 'Active', name: 'CELEBUS Event-001', artistGroup: 'CELEBUS', artist: 'CELEBUS', grade: 'Event', gradeNumber: '001', mintEvent: 1, mintedCount: 439, registeredAt: '2026.02.19', toggles: { send: true, mix: true, pick: true }, description: 'CELEBUS 1st Welcome Edition', mediaFrontUrl: '/mock/bive/celebus-1-front.webp', mediaBackUrl: '/mock/bive/celebus-1-back.webp' },
   ];
 }
 

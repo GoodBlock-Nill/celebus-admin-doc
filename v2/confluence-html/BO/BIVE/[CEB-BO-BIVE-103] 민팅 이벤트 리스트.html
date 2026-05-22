@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 민팅</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.1</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
+<tr><td>버전</td><td>v1.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -136,6 +136,7 @@ p {
 <tr><td>ID</td><td>내부 일련번호</td></tr>
 <tr><td>상태</td><td>배지 — 초안(노랑) / 활성(녹색) / 중지(빨강) / 종료(회색)</td></tr>
 <tr><td>캠페인명</td><td>운영자가 설정한 캠페인 이름</td></tr>
+<tr><td>보상 방식 (v1.2)</td><td>배지 — 가중치(indigo) / 지정(emerald). 사이클 #1 보상 방식 이분화 정합</td></tr>
 <tr><td>연결 기능</td><td>자동 민팅 트리거 (개발 프리셋, 캠페인:연결기능 = 1:1)</td></tr>
 <tr><td>등록된 BIVE 수</td><td>본 캠페인에 보상으로 연결된 BIVE 개수</td></tr>
 <tr><td>발행 수</td><td>본 캠페인을 통한 누적 민팅 수 (없으면 "-")</td></tr>
@@ -156,7 +157,7 @@ p {
 <tr><th>위치</th><th>정보</th><th>의미</th></tr>
 <tr><td>상단 탭</td><td>Event / Ticket / Mix / Pick</td><td>캠페인 유형 4종</td></tr>
 <tr><td>필터·검색</td><td>정렬·상태·검색·조회·[+ 캠페인 생성]</td><td>운영자 액션 진입</td></tr>
-<tr><td>테이블</td><td>ID·상태·캠페인명·연결 기능·등록 BIVE 수·발행 수·생성일</td><td>캠페인 핵심 메타 + 운영 지표</td></tr>
+<tr><td>테이블</td><td>ID·상태·캠페인명·보상 방식·연결 기능·등록 BIVE 수·발행 수·생성일</td><td>캠페인 핵심 메타 + 운영 지표</td></tr>
 <tr><td>페이지네이션</td><td>페이지 이동</td><td>대량 데이터 탐색</td></tr>
 </table>
 <h2>4. 상태별 동작 분기</h2>
@@ -208,7 +209,8 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.1</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 디테일 정합 — 드롭다운 옵션 정정</strong> ① §2-2 정렬 드롭다운 "생성일 (빠른순 기본 / 오래된 순)" → 운영 BO 실제 <strong><code>생성일(빠른순) / 생성일(오래된순)</code></strong> (괄호 표기, 띄어쓰기 없음) ② §2-2 상태 필터 기본 라벨 "전체(기본)" → 운영 BO 실제 <strong><code>상태(전체)</code></strong> ③ [조회] 버튼 운영 BO 미존재 (필터·검색 즉시 갱신) ④ §2-1 Event 탭 연결 기능 예시 — v1 가설("회원가입 보상 받기 / 출석체크 5일 보상") → 운영 BO 실제 4종 (회원가입 보상 / 출석체크 보상 / 래플 보상 / 팬퀘스트 보상) ⑤ Ticket 탭 예시 일반화</td></tr>
+<tr><td><strong>v1.2</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>테이블 "보상 방식" 컬럼 신규</strong> — 캠페인명 옆에 가중치(indigo) / 지정(emerald) 배지 컬럼 추가. 운영자가 리스트에서 한눈에 보상 방식 구별 가능. 사이클 #1 보상 방식 이분화([203] v1.2) 정합</td></tr>
+<tr><td>v1.1</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>운영 BO 디테일 정합 — 드롭다운 옵션 정정</strong> ① §2-2 정렬 드롭다운 "생성일 (빠른순 기본 / 오래된 순)" → 운영 BO 실제 <strong><code>생성일(빠른순) / 생성일(오래된순)</code></strong> (괄호 표기, 띄어쓰기 없음) ② §2-2 상태 필터 기본 라벨 "전체(기본)" → 운영 BO 실제 <strong><code>상태(전체)</code></strong> ③ [조회] 버튼 운영 BO 미존재 (필터·검색 즉시 갱신) ④ §2-1 Event 탭 연결 기능 예시 — v1 가설("회원가입 보상 받기 / 출석체크 5일 보상") → 운영 BO 실제 4종 (회원가입 보상 / 출석체크 보상 / 래플 보상 / 팬퀘스트 보상) ⑤ Ticket 탭 예시 일반화</td></tr>
 <tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 작성 — v1 Mint-101(Event) + Mint-201(Ticket) 통합 v2 양식 이전</strong> ① v1 Event 탭 페이지 + Ticket 탭 페이지를 단일 [CEB-BO-BIVE-103]로 통합 (4종 캠페인 유형 탭 구조) ② v1 페이지 구조(탭·필터·테이블·페이지네이션)를 v2 표준 §1~§8로 재배치 ③ 캠페인 상태 4종(초안/활성/중지/종료) + 전이 규칙 명시 ④ <strong>민팅 이벤트 SSOT 정책 §5에 명시</strong> — 외부 영역(SQ/RFL/FQ)은 활성 상태 캠페인만 참조 ⑤ v1 권한 4단계 → "[관리자 > 권한관리] 설정에 따른다" 단일 표기 ⑥ 연결 기능 1:1 정책 명시 ([CEB-BO-004] §5 정합) ⑦ Mix/Pick 탭은 후속 정의 (v1에서 별도 페이지 없음)</td></tr>
 </table>
 

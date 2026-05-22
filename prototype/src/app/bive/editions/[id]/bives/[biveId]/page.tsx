@@ -202,8 +202,21 @@ function InfoTab({ token, editionName }: { token: BiveToken; editionName: string
         </div>
         <div className="bg-white border border-gray-200 rounded-xl p-5">
           <h3 className="text-sm font-semibold text-gray-900 mb-3">미디어 파일</h3>
-          <div className="aspect-square bg-gradient-to-br from-orange-100 to-pink-100 rounded-lg flex items-center justify-center text-xs text-gray-500">
-            미디어 미리보기
+          <div className="grid grid-cols-2 gap-3">
+            {/* 앞면 */}
+            <div>
+              <div className={`aspect-square rounded-lg flex items-center justify-center text-xs ${token.mediaFrontUrl ? 'bg-gradient-to-br from-orange-100 to-pink-100 text-gray-600' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
+                {token.mediaFrontUrl ? '앞면 미리보기' : '앞면 미등록'}
+              </div>
+              <div className="text-xs text-center mt-1.5 text-gray-600">앞면</div>
+            </div>
+            {/* 뒷면 */}
+            <div>
+              <div className={`aspect-square rounded-lg flex items-center justify-center text-xs ${token.mediaBackUrl ? 'bg-gradient-to-br from-indigo-100 to-purple-100 text-gray-600' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
+                {token.mediaBackUrl ? '뒷면 미리보기' : '뒷면 미등록'}
+              </div>
+              <div className="text-xs text-center mt-1.5 text-gray-600">뒷면</div>
+            </div>
           </div>
         </div>
       </div>
@@ -261,6 +274,11 @@ function MintingTab({ token }: { token: BiveToken }) {
               {r.name}
               <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
             </a>
+          )},
+          { key: 'rewardMethod', label: '보상 방식', width: '100px', render: (r) => (
+            r.rewardMethod === 'FIXED'
+              ? <span className="inline-flex rounded-full px-2 py-0.5 text-xs font-medium bg-emerald-100 text-emerald-700">지정</span>
+              : <span className="inline-flex rounded-full px-2 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700">가중치</span>
           )},
           { key: 'linkedFeature', label: '연결 기능', width: '140px', render: (r) => <span className="text-gray-700">{r.linkedFeature}</span> },
           { key: 'minted', label: '발행 수', width: '90px' },

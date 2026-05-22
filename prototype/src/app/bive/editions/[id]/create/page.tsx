@@ -32,19 +32,21 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
   const [descEN, setDescEN] = useState('');
   const [grade, setGrade] = useState('');
   const [gradeNum, setGradeNum] = useState('');
-  const [media, setMedia] = useState('');
+  // BIVE 미디어 — 앞면(필수) + 뒷면(선택) ([CEB-BO-BIVE-202-CREATE] §2-2 v1.3)
+  const [mediaFront, setMediaFront] = useState('');
+  const [mediaBack, setMediaBack] = useState('');
   const [toggles, setToggles] = useState({ send: true, mix: true, pick: true });
 
   if (!edition) {
     return <div className="p-8 text-sm text-gray-500">에디션을 찾을 수 없습니다.</div>;
   }
 
-  const canSubmit = group && artist && grade && gradeNum && media;
+  const canSubmit = group && artist && grade && gradeNum && mediaFront; // 앞면만 필수
   const availableArtists = group ? getArtistsByGroup(group) : [];
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFile = (setter: (name: string) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
-    if (f) setMedia(f.name);
+    if (f) setter(f.name);
   };
 
   return (
@@ -69,7 +71,7 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
           <button
             disabled={!canSubmit}
             onClick={() => {
-              alert(`[Mock] BIVE 등록\n그룹: ${group} / 아티스트: ${artist} / 등급: ${grade}-${gradeNum} / 미디어: ${media}\n기능: 보내기=${toggles.send} Mix=${toggles.mix} Pick=${toggles.pick}`);
+              alert(`[Mock] BIVE 등록\n그룹: ${group} / 아티스트: ${artist} / 등급: ${grade}-${gradeNum}\n앞면: ${mediaFront} / 뒷면: ${mediaBack || '(미등록)'}\n기능: 보내기=${toggles.send} Mix=${toggles.mix} Pick=${toggles.pick}`);
               router.push(`/bive/editions/${editionId}`);
             }}
             className="h-10 px-5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-indigo-300"
@@ -167,28 +169,64 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
               </div>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-gray-900 mb-2">미디어 파일 <span className="text-red-500">*</span></h3>
-              <p className="text-xs text-gray-500 mb-3">허용 확장자: PNG, JPG, GIF, WebP, MP4 (최대 20MB)</p>
-              <label className="block w-full h-[680px] border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:border-indigo-300 bg-white">
-                {media ? (
-                  <>
-                    <span className="text-sm text-gray-700 font-medium">{media}</span>
-                    <button
-                      type="button"
-                      onClick={(e) => { e.preventDefault(); setMedia(''); }}
-                      className="mt-3 text-xs text-red-500 hover:underline"
-                    >
-                      파일 제거
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <ArrowUpTrayIcon className="w-8 h-8 mb-2" />
-                    <span className="text-sm">파일 등록</span>
-                  </>
-                )}
-                <input type="file" accept=".png,.jpg,.jpeg,.gif,.webp,.mp4" className="hidden" onChange={handleFile} />
-              </label>
+              <h3 className="text-sm font-semibold text-gray-900 mb-2">미디어 파일</h3>
+              <p className="text-xs text-gray-500 mb-4">허용 확장자: PNG, JPG, GIF, WebP, MP4 (각 최대 20MB)</p>
+              <div className="grid grid-cols-2 gap-3">
+                {/* 앞면 (필수) */}
+                <div>
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <span className="text-sm font-medium text-gray-900">앞면</span>
+                    <span className="text-red-500">*</span>
+                  </div>
+                  <label className="block w-full aspect-square border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:border-indigo-300 bg-white">
+                    {mediaFront ? (
+                      <>
+                        <span className="text-sm text-gray-700 font-medium text-center px-3 break-all">{mediaFront}</span>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.preventDefault(); setMediaFront(''); }}
+                          className="mt-3 text-xs text-red-500 hover:underline"
+                        >
+                          파일 제거
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <ArrowUpTrayIcon className="w-8 h-8 mb-2" />
+                        <span className="text-sm">파일 등록</span>
+                      </>
+                    )}
+                    <input type="file" accept=".png,.jpg,.jpeg,.gif,.webp,.mp4" className="hidden" onChange={handleFile(setMediaFront)} />
+                  </label>
+                </div>
+                {/* 뒷면 (선택) */}
+                <div>
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <span className="text-sm font-medium text-gray-900">뒷면</span>
+                    <span className="text-xs text-gray-400">(선택)</span>
+                  </div>
+                  <label className="block w-full aspect-square border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:border-indigo-300 bg-white">
+                    {mediaBack ? (
+                      <>
+                        <span className="text-sm text-gray-700 font-medium text-center px-3 break-all">{mediaBack}</span>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.preventDefault(); setMediaBack(''); }}
+                          className="mt-3 text-xs text-red-500 hover:underline"
+                        >
+                          파일 제거
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <ArrowUpTrayIcon className="w-8 h-8 mb-2" />
+                        <span className="text-sm">파일 등록</span>
+                      </>
+                    )}
+                    <input type="file" accept=".png,.jpg,.jpeg,.gif,.webp,.mp4" className="hidden" onChange={handleFile(setMediaBack)} />
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
