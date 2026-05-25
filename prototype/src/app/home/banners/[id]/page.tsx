@@ -54,9 +54,13 @@ export default function BannerDetailPage({
   const [modalStop, setModalStop] = useState(false);
   const [modalResume, setModalResume] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
-  const [modalEditCancel, setModalEditCancel] = useState(false);
-  // [← 슬롯으로] 의도된 액션 (수정 모드 변경 사항 있을 때 EditCancel 모달 호출 후 분기)
-  const [pendingNav, setPendingNav] = useState<null | 'back-to-slot' | 'exit-edit'>(null);
+  // v6.9 (B1): pendingNav state 제거 → EditCancel 모달의 onConfirm을 클로저로 매번 주입.
+  // editCancelAction이 null이면 모달 미오픈, 함수가 있으면 모달 오픈 + 확정 시 그 함수 실행.
+  const [editCancelAction, setEditCancelAction] = useState<null | (() => void)>(null);
+
+  // v6.9 (A2): "수정 후 재개" 흐름 자동 연결 — 사용자가 [수정 후 재개]를 누르면
+  // 이 플래그가 켜지고, 수정 [저장] 후 자동으로 노출 재개 모달이 다시 열린다.
+  const [pendingResumeAfterEdit, setPendingResumeAfterEdit] = useState(false);
 
   if (!banner) {
     return (
@@ -96,11 +100,8 @@ export default function BannerDetailPage({
   }, [closeDtStr]);
 
   // ─────────────── 핸들러 ───────────────
+  // v6.9 (B2): handleSubmit Toast 차단 제거 — [저장] 버튼 disabled로 이미 차단됨
   const handleSubmit = (action: 'save_draft' | 'create' | 'save') => {
-    if (action === 'save' && !hasChanged) {
-      bannerToast.info('변경 사항이 없습니다');
-      return;
-    }
     const msg =
       action === 'save' ? '저장되었습니다'
       : action === 'create' ? '배너가 생성되었습니다'
@@ -108,25 +109,32 @@ export default function BannerDetailPage({
     bannerToast.success(msg);
     setHasChanged(false);
     setMode('view');
-  };
 
-  // 수정 모드 [취소] — 변경 있으면 EditCancel 모달, 없으면 즉시 view 전환
-  const handleEditCancel = () => {
-    if (hasChanged) {
-      setPendingNav('exit-edit');
-      setModalEditCancel(true);
-    } else {
-      setMode('view');
+    // v6.9 (A2): "수정 후 재개" 의도가 있으면 저장 후 자동으로 노출 재개 모달 재오픈
+    if (action === 'save' && pendingResumeAfterEdit) {
+      setPendingResumeAfterEdit(false);
+      // 약간의 지연 후 재개 모달 — 저장 토스트 노출 시간 확보
+      setTimeout(() => setModalResume(true), 400);
     }
   };
 
-  // [← 슬롯으로] — 수정 모드 변경 있으면 모달, 아니면 즉시 이동
+  // v6.9 (B1): 수정 모드 [취소] — 클로저로 view 전환 액션 주입
+  const handleEditCancel = () => {
+    if (hasChanged) {
+      setEditCancelAction(() => () => { setMode('view'); setPendingResumeAfterEdit(false); });
+    } else {
+      setMode('view');
+      setPendingResumeAfterEdit(false);
+    }
+  };
+
+  // v6.9 (B1): [← 슬롯으로] — 클로저로 슬롯 이동 액션 주입
   const handleBackToSlot = () => {
     if (mode === 'edit' && hasChanged) {
-      setPendingNav('back-to-slot');
-      setModalEditCancel(true);
+      setEditCancelAction(() => () => { router.push(backUrl); setPendingResumeAfterEdit(false); });
     } else {
       router.push(backUrl);
+      setPendingResumeAfterEdit(false);
     }
   };
 
@@ -148,8 +156,11 @@ export default function BannerDetailPage({
     bannerToast.success('노출이 재개되었습니다 (CLOSED → ACTIVE)');
   };
 
+  // v6.9 (A2): "수정 후 재개" — 수정 모드 전환 + 의도 플래그 set
+  // 운영자가 수정 [저장] 후 자동으로 노출 재개 모달이 재오픈됨
   const handleResumeAfterEdit = () => {
     setModalResume(false);
+    setPendingResumeAfterEdit(true);
     setMode('edit');
   };
 
@@ -165,16 +176,12 @@ export default function BannerDetailPage({
     setTimeout(() => router.push(backUrl), 600);
   };
 
-  // EditCancel 모달 확정 시 — pendingNav에 따라 분기
+  // v6.9 (B1): EditCancel 모달 확정 시 — 저장된 클로저 실행
   const handleEditCancelConfirm = () => {
-    setModalEditCancel(false);
+    const action = editCancelAction;
+    setEditCancelAction(null);
     setHasChanged(false);
-    if (pendingNav === 'back-to-slot') {
-      router.push(backUrl);
-    } else {
-      setMode('view');
-    }
-    setPendingNav(null);
+    action?.();
   };
 
   return (
@@ -291,8 +298,8 @@ export default function BannerDetailPage({
         status={statusLabel}
       />
       <BannerEditCancelModal
-        isOpen={modalEditCancel}
-        onClose={() => { setModalEditCancel(false); setPendingNav(null); }}
+        isOpen={editCancelAction !== null}
+        onClose={() => setEditCancelAction(null)}
         onConfirm={handleEditCancelConfirm}
       />
     </div>

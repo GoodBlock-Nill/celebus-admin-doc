@@ -13,6 +13,9 @@ import {
   getSlotKindLabel,
   SLOT_KIND_META,
 } from '@/mock/home';
+// 변경 추적용 snapshot은 핵심 필드만 평탄화해 비교한다. 신규 입력 필드를 추가할 때는
+// 반드시 initialSnapshot/currentSnapshot 양쪽에 해당 필드를 함께 추가해야 false negative가
+// 발생하지 않는다. (v6.9 정합 노트 — B4 모니터링 항목)
 import DeeplinkPicker from '@/components/shared/DeeplinkPicker';
 import { type Deeplink } from '@/types/deeplink';
 
@@ -117,16 +120,15 @@ export default function BannerForm({
   const currentRatio = slotMeta.imageSpec.ratio;
   const ratioChanged = slotEditable && initialRatio !== currentRatio;
 
-  // 슬롯 변경 시 아티스트 타깃 모드 정합 — GLOBAL_ONLY 슬롯이면 아티스트 null로 강제
-  useEffect(() => {
-    if (!slotEditable) return;
-    if (slotMeta.targetMode === 'GLOBAL_ONLY' && editArtist !== null) {
-      setEditArtist(null);
-    } else if (slotMeta.targetMode === 'ARTIST_ONLY' && editArtist === null) {
-      setEditArtist(ACTIVE_ARTISTS[0]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editSlotKind, slotEditable]);
+  // v6.9 (A1): 슬롯 변경 시 자동 강제 useEffect 제거.
+  // 운영자가 명시적으로 아티스트를 선택하도록 강제 (잘못된 아티스트 자동 채움 방지).
+  // GLOBAL_ONLY 슬롯에서는 아티스트가 '전역'으로 고정되도록 옵션 1개만 노출하고 disabled.
+  // ARTIST_ONLY 슬롯에서 운영자가 아직 아티스트를 선택하지 않은 경우 [생성하기]/[저장] disabled로 차단.
+
+  // v6.9 (A1): ARTIST_ONLY 슬롯인데 아티스트가 null이면 미선택 상태 — 저장 차단
+  const artistMissing =
+    slotEditable && slotMeta.targetMode === 'ARTIST_ONLY' && editArtist === null;
+  const canSubmit = !artistMissing;
 
   return (
     <div className="space-y-6">
@@ -151,19 +153,30 @@ export default function BannerForm({
                 />
               </div>
               <div>
-                <div className="text-xs font-medium text-gray-600 mb-1">아티스트</div>
-                <SelectBox
-                  value={editArtist ?? 'GLOBAL'}
-                  onChange={(v) => setEditArtist(v === 'GLOBAL' ? null : (v as ArtistGroup))}
-                  disabled={slotMeta.targetMode === 'GLOBAL_ONLY' || slotMeta.targetMode === 'ARTIST_ONLY'}
-                  options={
-                    slotMeta.targetMode === 'GLOBAL_ONLY'
-                      ? [{ value: 'GLOBAL', label: '전역 (해당 슬롯은 전역만)' }]
-                      : slotMeta.targetMode === 'ARTIST_ONLY'
-                      ? ACTIVE_ARTISTS.map((a) => ({ value: a, label: a }))
-                      : [{ value: 'GLOBAL', label: '전역' }, ...ACTIVE_ARTISTS.map((a) => ({ value: a, label: a }))]
-                  }
-                />
+                <div className="text-xs font-medium text-gray-600 mb-1">아티스트 {artistMissing && <span className="text-rose-500">*</span>}</div>
+                {slotMeta.targetMode === 'GLOBAL_ONLY' ? (
+                  /* GLOBAL_ONLY 슬롯은 옵션 자체가 '전역' 하나뿐 — 자동 고정 표시 */
+                  <SelectBox
+                    value="GLOBAL"
+                    onChange={() => setEditArtist(null)}
+                    disabled
+                    options={[{ value: 'GLOBAL', label: '전역 (해당 슬롯은 전역만 지원)' }]}
+                  />
+                ) : (
+                  <SelectBox
+                    value={editArtist ?? ''}
+                    onChange={(v) => setEditArtist(v === '' ? null : v === 'GLOBAL' ? null : (v as ArtistGroup))}
+                    options={[
+                      { value: '', label: '아티스트를 선택해주세요' },
+                      ...(slotMeta.targetMode === 'ARTIST_ONLY'
+                        ? ACTIVE_ARTISTS.map((a) => ({ value: a, label: a }))
+                        : [{ value: 'GLOBAL', label: '전역' }, ...ACTIVE_ARTISTS.map((a) => ({ value: a, label: a }))]),
+                    ]}
+                  />
+                )}
+                {artistMissing && (
+                  <p className="mt-1 text-xs text-rose-600">아티스트를 선택해주세요. 선택하지 않으면 저장할 수 없습니다.</p>
+                )}
               </div>
             </>
           ) : (
@@ -263,15 +276,16 @@ export default function BannerForm({
             <label className="block text-xs font-medium text-gray-600 mb-1">
               공개일시 (KST) <span className="text-red-500">*</span>
             </label>
+            {/* v6.9 (A3): datetime-local 사용 — 브라우저 네이티브 검증으로 형식 오류 차단 */}
             <input
+              type="datetime-local"
               value={openDt}
               onChange={(e) => setOpenDt(e.target.value)}
               disabled={readOnly}
-              placeholder="2026.05.30 09:00"
               className="w-full h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
             />
             <p className="text-xs text-gray-500 mt-1">
-              지금 즉시 노출하려면 현재 시각(또는 ±몇 분)을 입력하세요.
+              브라우저 시간대를 KST(서울)로 가정합니다. 지금 즉시 노출하려면 현재 시각(또는 ±몇 분)을 선택하세요.
             </p>
           </div>
           <div>
@@ -290,10 +304,10 @@ export default function BannerForm({
             </div>
             {!closeUnlimited && (
               <input
+                type="datetime-local"
                 value={closeDt}
                 onChange={(e) => setCloseDt(e.target.value)}
                 disabled={readOnly}
-                placeholder="2026.06.30 23:59"
                 className="w-full h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
               />
             )}
@@ -330,7 +344,8 @@ export default function BannerForm({
             <button
               type="button"
               onClick={() => onSubmit('create')}
-              className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+              disabled={!canSubmit}
+              className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-indigo-300"
             >
               생성하기
             </button>
@@ -340,7 +355,7 @@ export default function BannerForm({
           <button
             type="button"
             onClick={() => onSubmit('save')}
-            disabled={!hasChanged}
+            disabled={!hasChanged || !canSubmit}
             className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-indigo-300"
           >
             저장

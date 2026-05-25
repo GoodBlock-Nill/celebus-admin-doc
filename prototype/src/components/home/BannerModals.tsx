@@ -82,10 +82,18 @@ export function BannerResumeExposureModal({
       <div className="space-y-3">
         <p className="text-sm text-gray-700">배너 <span className="font-medium text-gray-900">&apos;{bannerTitle}&apos;</span>의 노출을 재개하시겠습니까?</p>
         {isCarouselFull ? (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-xs text-red-800">
-            🚫 이 슬롯의 동시 노출이 한도(8개)에 도달했습니다.<br />
-            다른 배너를 먼저 종료한 뒤 재시도해 주세요.
-          </div>
+          <>
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-xs text-red-800">
+              🚫 이 슬롯의 동시 노출이 한도(8개)에 도달했습니다.<br />
+              다른 배너를 먼저 종료한 뒤 재시도해 주세요.
+            </div>
+            {/* v6.9 (A4): 한도 + 종료일 과거 동시 발생 시 종료일도 함께 안내 (재시도 시 놓치지 않도록) */}
+            {endDatePast && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
+                ⚠️ 또한 종료일이 과거({endDateText})입니다. 슬롯 정리 후 재시도할 때 종료일도 함께 수정해 주세요.
+              </div>
+            )}
+          </>
         ) : (
           <>
             <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3 text-xs text-indigo-800">
