@@ -92,7 +92,7 @@ export default function SlotDetailPage({
   const capacityLimit = meta.capacityLimit; // 캐러셀=8, 단일=1
   // 캐러셀은 ACTIVE 8개 도달 시 신규 ON 차단 (등록은 가능)
   const isCarouselFull = isCarousel && capacityLimit !== null && activeCount >= capacityLimit;
-  // 등록은 항상 가능 (단일 슬롯도 DRAFT 다수 등록 가능, [노출 시작] 시 자동 교체)
+  // 등록은 항상 가능 (단일 슬롯도 DRAFT 다수 등록 가능, 공개일 도달 시 시스템 자동 교체) — v6.7
   const canAddBanner = true;
 
   const slotLabel = getSlotKindLabel(slotKind);
@@ -182,17 +182,17 @@ export default function SlotDetailPage({
                 <span className="ml-3 text-xs opacity-70">대기 {draftCount}건</span>
               )}
               {isCarouselFull && (
-                <span className="ml-2">— 한도 도달. 신규 노출 시작 시 기존 1건을 종료해 주세요.</span>
+                <span className="ml-2">— 한도 도달. 공개일 도달한 대기 배너는 시스템이 자동 차단합니다. 기존 1건을 먼저 [노출 종료]해 주세요.</span>
               )}
               {isSingleSlot && activeCount === 1 && draftCount > 0 && (
                 <span className="ml-2 text-xs opacity-70">
-                  · 대기 배너 [노출 시작] 시 기존이 자동 종료됩니다.
+                  · 대기 배너 공개일 도달 시 기존이 자동 종료됩니다.
                 </span>
               )}
-              {/* 단일 슬롯 노출중 0건 + 대기 N건 ([CEB-BO-APP-202] §2-2, 2026-05-21 sync 정정) */}
+              {/* 단일 슬롯 노출중 0건 + 대기 N건 — v6.7: 공개일 도달 시 시스템 자동 활성화 */}
               {isSingleSlot && activeCount === 0 && draftCount > 0 && (
                 <span className="ml-2 text-xs opacity-70">
-                  · 운영자가 [노출 시작] 필요
+                  · 공개일 도달 시 자동 노출
                 </span>
               )}
             </>

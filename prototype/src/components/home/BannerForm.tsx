@@ -21,7 +21,7 @@ interface Props {
   // 슬롯 컨텍스트 — 신규 진입 시 슬롯 상세에서 prefill
   slotKind?: SlotKind;
   artistGroup?: ArtistGroup | null;
-  onSubmit: (action: 'save_draft' | 'start_now' | 'save') => void;
+  onSubmit: (action: 'save_draft' | 'create' | 'save') => void;
   onCancel: () => void;
 }
 
@@ -239,10 +239,10 @@ export default function BannerForm({
             </button>
             <button
               type="button"
-              onClick={() => onSubmit('start_now')}
+              onClick={() => onSubmit('create')}
               className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
             >
-              저장 + 즉시 노출 시작
+              생성하기
             </button>
           </>
         )}

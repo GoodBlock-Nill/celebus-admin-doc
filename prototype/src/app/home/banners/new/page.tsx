@@ -59,12 +59,14 @@ function NewBannerPageInner() {
 
   const backUrl = `/home/banners/slot/${slotKind}/${artist ?? 'GLOBAL'}`;
 
-  const handleSubmit = (action: 'save_draft' | 'start_now' | 'save') => {
+  // v6.7: 신규 생성은 항상 DRAFT 진입. 공개일 도달 시 시스템 자동 ACTIVE 전이.
+  // 운영자가 "지금 노출"을 원하면 공개일을 현재 시각으로 설정하면 됨 (트리거 일원화).
+  const handleSubmit = (action: 'save_draft' | 'create' | 'save') => {
     const msg =
       action === 'save_draft'
-        ? '[Mock] 임시저장 완료. 슬롯으로 돌아갑니다.'
-        : action === 'start_now'
-        ? '[Mock] 저장 + 즉시 노출 시작. (실제 등록 처리는 미구현)'
+        ? '[Mock] 임시저장 완료. 메인 타이틀 KO 외 항목은 추후 보강 가능.'
+        : action === 'create'
+        ? '[Mock] 배너 생성 완료 (DRAFT). 공개일 도달 시 시스템이 자동으로 노출을 시작합니다.'
         : '[Mock] 저장 완료.';
     alert(msg);
     router.push(backUrl);

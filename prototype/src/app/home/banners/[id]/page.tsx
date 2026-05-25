@@ -6,7 +6,6 @@ import {
   ArrowLeftIcon,
   DocumentDuplicateIcon,
   PencilSquareIcon,
-  PlayIcon,
   StopIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
@@ -16,7 +15,6 @@ import {
   formatPeriod,
   getArtistDisplay,
   getBannerById,
-  getSlot,
   getSlotKindBadge,
   getSlotKindLabel,
   getStatusBadge,
@@ -64,23 +62,17 @@ export default function BannerDetailPage({
   const backUrl = `/home/banners/slot/${banner.slotKind}/${banner.artistGroup ?? 'GLOBAL'}`;
   const isArtistTarget = banner.artistGroup !== null;
 
-  const handleSubmit = (action: 'save_draft' | 'start_now' | 'save') => {
-    alert(`[Mock] ${action === 'save' ? '수정 저장' : action} 완료`);
+  // v6.7: action 시그니처 정정 ('start_now' 제거, 'create' 추가)
+  const handleSubmit = (action: 'save_draft' | 'create' | 'save') => {
+    alert(`[Mock] ${action === 'save' ? '수정 저장' : action === 'create' ? '생성' : '임시저장'} 완료`);
     setMode('view');
   };
 
-  const handleStartNow = () => {
-    if (slotMeta.capacity === 'SINGLE') {
-      const slot = getSlot(banner.slotKind, banner.artistGroup);
-      const existing = slot.banners.find((b) => b.status === 'ACTIVE' && b.id !== banner.id);
-      if (existing) {
-        if (!confirm(`이 슬롯의 기존 노출 배너 '${existing.titleKO}'이(가) 자동으로 종료됩니다. 진행하시겠습니까?`)) return;
-      }
-    }
-    alert('[Mock] 즉시 노출 시작');
+  // v6.7: [노출 종료]는 비상 차단 권한 — 확인 모달 후 즉시 CLOSED 전이
+  const handleStopExposure = () => {
+    if (!confirm(`배너 '${banner.titleKO}'의 노출을 종료하시겠습니까?\n운영자 수동 종료는 비상 차단 권한입니다 (활동 로그 기록).`)) return;
+    alert('[Mock] 노출 종료 (운영자 비상 차단)');
   };
-
-  const handleStopNow = () => alert('[Mock] 즉시 노출 종료');
   const handleClone = () => {
     alert('[Mock] 배너 복제 후 신규 작성 화면으로 이동');
     router.push(
@@ -130,22 +122,19 @@ export default function BannerDetailPage({
         <div className="flex items-center gap-2">
           {mode === 'view' && (
             <>
-              {banner.status === 'DRAFT' && (
-                <ActionBtn icon={<PlayIcon className="w-4 h-4" />} onClick={handleStartNow}>
-                  즉시 노출 시작
-                </ActionBtn>
-              )}
-              {banner.status === 'ACTIVE' && (
-                <ActionBtn icon={<StopIcon className="w-4 h-4" />} onClick={handleStopNow} variant="warning">
-                  즉시 노출 종료
-                </ActionBtn>
-              )}
+              {/* v6.7: DRAFT는 [즉시 노출 시작] 제거 — 공개일 도달 시 시스템 자동 활성화 */}
               <ActionBtn icon={<PencilSquareIcon className="w-4 h-4" />} onClick={() => setMode('edit')}>
                 수정
               </ActionBtn>
               {banner.status !== 'DRAFT' && (
                 <ActionBtn icon={<DocumentDuplicateIcon className="w-4 h-4" />} onClick={handleClone}>
                   복제
+                </ActionBtn>
+              )}
+              {/* v6.7: ACTIVE [노출 종료] (비상 차단 권한, "즉시" 단어 제거) */}
+              {banner.status === 'ACTIVE' && (
+                <ActionBtn icon={<StopIcon className="w-4 h-4" />} onClick={handleStopExposure} variant="warning">
+                  노출 종료
                 </ActionBtn>
               )}
               {banner.status !== 'ACTIVE' && (
