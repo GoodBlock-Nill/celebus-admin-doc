@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Modal from '@/components/ui/Modal';
+// v6.9 후속: Toast는 공용 컴포넌트로 분리됨 — 호환성 위해 re-export 유지.
+// 신규 코드는 `import { toast } from '@/components/ui/Toast'` 직접 사용 권장.
+export { toast as bannerToast } from '@/components/ui/Toast';
 
-// APP 배너 모달 4종 + Toast 헬퍼 — [CEB-BO-APP-201] v6.8 정합
+// APP 배너 모달 4종 — [CEB-BO-APP-201] v6.8 정합
 // 패턴: components/gamezone/GameModals.tsx (BIVE 게임 모달) 동일
 
 interface BaseModalProps {
@@ -173,60 +175,5 @@ export function BannerEditCancelModal({ isOpen, onClose, onConfirm }: BaseModalP
   );
 }
 
-// ─────────────── Toast 컴포넌트 (자체 구현, react-hot-toast 미사용) ───────────────
-// [CEB-BO-000] §공통 토스트 규격 정합 — 상단 중앙·3초 자동·페이드인/아웃
-export type ToastKind = 'success' | 'error' | 'info';
-export interface ToastMsg {
-  id: number;
-  kind: ToastKind;
-  message: string;
-}
-
-let toastId = 0;
-let setToastListener: ((items: ToastMsg[]) => void) | null = null;
-let toastItems: ToastMsg[] = [];
-
-function emit(kind: ToastKind, message: string) {
-  toastId += 1;
-  const next = { id: toastId, kind, message };
-  toastItems = [...toastItems.slice(-2), next]; // 최대 3개 스택
-  setToastListener?.(toastItems);
-  window.setTimeout(() => {
-    toastItems = toastItems.filter((t) => t.id !== next.id);
-    setToastListener?.(toastItems);
-  }, 3000);
-}
-
-export const bannerToast = {
-  success: (msg: string) => emit('success', msg),
-  error: (msg: string) => emit('error', msg),
-  info: (msg: string) => emit('info', msg),
-};
-
-export function BannerToastViewport() {
-  const [items, setItems] = useState<ToastMsg[]>([]);
-  useEffect(() => {
-    setToastListener = setItems;
-    return () => { setToastListener = null; };
-  }, []);
-  if (items.length === 0) return null;
-  return (
-    <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[200] flex flex-col gap-2 pointer-events-none">
-      {items.map((t) => (
-        <div
-          key={t.id}
-          className={`pointer-events-auto px-4 py-2.5 rounded-lg shadow-lg text-sm font-medium animate-[fadeIn_0.2s_ease-out] ${
-            t.kind === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
-            t.kind === 'error'   ? 'bg-red-50 text-red-700 border border-red-200' :
-                                   'bg-gray-50 text-gray-700 border border-gray-200'
-          }`}
-        >
-          {t.kind === 'success' && '✓ '}
-          {t.kind === 'error' && '✕ '}
-          {t.kind === 'info' && 'ℹ '}
-          {t.message}
-        </div>
-      ))}
-    </div>
-  );
-}
+// Toast·ToastViewport는 components/ui/Toast.tsx로 분리됨 (공용화).
+// 호환성을 위해 파일 상단에서 `bannerToast`를 re-export 한다.

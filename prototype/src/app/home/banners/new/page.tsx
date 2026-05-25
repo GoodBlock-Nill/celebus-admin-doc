@@ -12,7 +12,7 @@ import {
   type ArtistGroup,
   type SlotKind,
 } from '@/mock/home';
-import { bannerToast } from '@/components/home/BannerModals';
+import { toast } from '@/components/ui/Toast';
 
 const VALID_KINDS: SlotKind[] = ['MAIN', 'TODAY_TODO', 'TOGETHER', 'MISSION'];
 
@@ -87,7 +87,7 @@ function NewBannerPageInner() {
         : action === 'create'
         ? '배너가 생성되었습니다 (공개일 도달 시 자동 노출)'
         : '저장되었습니다';
-    bannerToast.success(msg);
+    toast.success(msg);
     setTimeout(() => router.push(backUrl), 600);
   };
 

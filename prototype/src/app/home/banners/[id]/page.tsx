@@ -30,8 +30,8 @@ import {
   BannerResumeExposureModal,
   BannerDeleteModal,
   BannerEditCancelModal,
-  bannerToast,
 } from '@/components/home/BannerModals';
+import { toast } from '@/components/ui/Toast';
 
 export default function BannerDetailPage({
   params,
@@ -106,7 +106,7 @@ export default function BannerDetailPage({
       action === 'save' ? '저장되었습니다'
       : action === 'create' ? '배너가 생성되었습니다'
       : '임시저장되었습니다';
-    bannerToast.success(msg);
+    toast.success(msg);
     setHasChanged(false);
     setMode('view');
 
@@ -140,20 +140,20 @@ export default function BannerDetailPage({
 
   const handleStopExposureConfirm = () => {
     setModalStop(false);
-    bannerToast.success('노출이 종료되었습니다 (운영자 비상 차단)');
+    toast.success('노출이 종료되었습니다 (운영자 비상 차단)');
   };
 
   // 노출 재개 — 한도 초과 시 차단, 그 외 ACTIVE 전이
   const handleResumeExposureConfirm = () => {
     if (isCarouselFull) {
-      bannerToast.error(`이 슬롯의 동시 노출이 한도(${slotMeta.capacityLimit}개)에 도달했습니다`);
+      toast.error(`이 슬롯의 동시 노출이 한도(${slotMeta.capacityLimit}개)에 도달했습니다`);
       return;
     }
     setModalResume(false);
     if (replaceTargetTitle) {
-      bannerToast.info(`기존 배너 '${replaceTargetTitle}'이(가) 자동 종료됩니다`);
+      toast.info(`기존 배너 '${replaceTargetTitle}'이(가) 자동 종료됩니다`);
     }
-    bannerToast.success('노출이 재개되었습니다 (CLOSED → ACTIVE)');
+    toast.success('노출이 재개되었습니다 (CLOSED → ACTIVE)');
   };
 
   // v6.9 (A2): "수정 후 재개" — 수정 모드 전환 + 의도 플래그 set
@@ -172,7 +172,7 @@ export default function BannerDetailPage({
 
   const handleDeleteConfirm = () => {
     setModalDelete(false);
-    bannerToast.success('배너가 삭제되었습니다');
+    toast.success('배너가 삭제되었습니다');
     setTimeout(() => router.push(backUrl), 600);
   };
 
