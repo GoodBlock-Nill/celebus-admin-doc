@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChevronUpDownIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import {
   type ArtistGroup,
   type BannerPeriod,
   type HomeBanner,
   type SlotKind,
+  ACTIVE_ARTISTS,
   getArtistDisplay,
   getSlotKindBadge,
   getSlotKindLabel,
@@ -21,23 +22,38 @@ interface Props {
   // 슬롯 컨텍스트 — 신규 진입 시 슬롯 상세에서 prefill
   slotKind?: SlotKind;
   artistGroup?: ArtistGroup | null;
+  // v6.8: 복제 모드 시 슬롯 컨텍스트 편집 가능
+  slotEditable?: boolean;
+  // v6.8: 변경 추적 통지 (수정 모드 [취소] 시 EditCancel 모달 트리거에 사용)
+  onHasChangedChange?: (hasChanged: boolean) => void;
   onSubmit: (action: 'save_draft' | 'create' | 'save') => void;
   onCancel: () => void;
 }
+
+const ALL_SLOT_KINDS: SlotKind[] = ['MAIN', 'TODAY_TODO', 'TOGETHER', 'MISSION'];
 
 export default function BannerForm({
   mode,
   initial,
   slotKind,
   artistGroup,
+  slotEditable = false,
+  onHasChangedChange,
   onSubmit,
   onCancel,
 }: Props) {
   const readOnly = mode === 'view';
 
   // 슬롯 컨텍스트는 initial 우선 → props 다음
-  const effectiveSlotKind = (initial?.slotKind ?? slotKind ?? 'MAIN') as SlotKind;
-  const effectiveArtist = initial?.artistGroup ?? artistGroup ?? null;
+  const initialSlotKind = (initial?.slotKind ?? slotKind ?? 'MAIN') as SlotKind;
+  const initialArtist = initial?.artistGroup ?? artistGroup ?? null;
+
+  // v6.8: 복제 모드 시 슬롯 컨텍스트도 state로 관리
+  const [editSlotKind, setEditSlotKind] = useState<SlotKind>(initialSlotKind);
+  const [editArtist, setEditArtist] = useState<ArtistGroup | null>(initialArtist);
+
+  const effectiveSlotKind = slotEditable ? editSlotKind : initialSlotKind;
+  const effectiveArtist = slotEditable ? editArtist : initialArtist;
   const slotMeta = SLOT_KIND_META[effectiveSlotKind];
   const slotLabel = getSlotKindLabel(effectiveSlotKind);
   const artistLabel = getArtistDisplay(effectiveArtist);
@@ -56,44 +72,131 @@ export default function BannerForm({
     sourceType: initial?.sourceType ?? '',
     url: initial?.linkUrl ?? '',
   });
+  // v6.7/v6.8 정합: 공개일 항상 필수 + 종료일만 무기한 옵션
   const initialPeriod: BannerPeriod = initial?.period ?? { type: 'CUSTOM', openDt: '', closeDt: '' };
-  const [periodType, setPeriodType] = useState<'UNLIMITED' | 'CUSTOM'>(initialPeriod.type);
   const [openDt, setOpenDt] = useState(
     initialPeriod.type === 'CUSTOM' ? initialPeriod.openDt : ''
   );
   const [closeDt, setCloseDt] = useState(
     initialPeriod.type === 'CUSTOM' ? initialPeriod.closeDt : ''
   );
+  const [closeUnlimited, setCloseUnlimited] = useState(
+    initialPeriod.type === 'UNLIMITED' || (initialPeriod.type === 'CUSTOM' && !initialPeriod.closeDt)
+  );
 
   const isCarousel = slotMeta.capacity === 'MULTI';
 
+  // v6.8: 변경 추적 — initialSnapshot vs currentSnapshot 핵심 필드 비교
+  const initialSnapshot = useMemo(() => JSON.stringify({
+    slotKind: initialSlotKind, artist: initialArtist,
+    titleKO: initial?.titleKO ?? '', titleEN: initial?.titleEN ?? '', titleJP: initial?.titleJP ?? '',
+    subtitleKO: initial?.subtitleKO ?? '', subtitleEN: initial?.subtitleEN ?? '', subtitleJP: initial?.subtitleJP ?? '',
+    altTextKO: initial?.altTextKO ?? '', altTextEN: initial?.altTextEN ?? '', altTextJP: initial?.altTextJP ?? '',
+    sourceType: initial?.sourceType ?? '', linkUrl: initial?.linkUrl ?? '',
+    openDt: initialPeriod.type === 'CUSTOM' ? initialPeriod.openDt : '',
+    closeDt: initialPeriod.type === 'CUSTOM' ? initialPeriod.closeDt : '',
+    closeUnlimited: initialPeriod.type === 'UNLIMITED' || (initialPeriod.type === 'CUSTOM' && !initialPeriod.closeDt),
+  }), [initial, initialSlotKind, initialArtist, initialPeriod]);
+
+  const currentSnapshot = JSON.stringify({
+    slotKind: effectiveSlotKind, artist: effectiveArtist,
+    titleKO, titleEN, titleJP, subtitleKO, subtitleEN, subtitleJP,
+    altTextKO, altTextEN, altTextJP,
+    sourceType: deeplink.sourceType, linkUrl: deeplink.url,
+    openDt, closeDt, closeUnlimited,
+  });
+
+  const hasChanged = currentSnapshot !== initialSnapshot;
+
+  useEffect(() => {
+    onHasChangedChange?.(hasChanged);
+  }, [hasChanged, onHasChangedChange]);
+
+  // v6.8: 슬롯 변경 시 권장 비율 안내 — 비율 변경된 경우만 표시
+  const initialRatio = SLOT_KIND_META[initialSlotKind].imageSpec.ratio;
+  const currentRatio = slotMeta.imageSpec.ratio;
+  const ratioChanged = slotEditable && initialRatio !== currentRatio;
+
+  // 슬롯 변경 시 아티스트 타깃 모드 정합 — GLOBAL_ONLY 슬롯이면 아티스트 null로 강제
+  useEffect(() => {
+    if (!slotEditable) return;
+    if (slotMeta.targetMode === 'GLOBAL_ONLY' && editArtist !== null) {
+      setEditArtist(null);
+    } else if (slotMeta.targetMode === 'ARTIST_ONLY' && editArtist === null) {
+      setEditArtist(ACTIVE_ARTISTS[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editSlotKind, slotEditable]);
+
   return (
     <div className="space-y-6">
-      {/* A. 슬롯 컨텍스트 — read-only */}
-      <Section title="A. 슬롯 컨텍스트" description="이 배너가 등록될 슬롯입니다. 슬롯은 슬롯 상세 화면에서 선택합니다.">
+      {/* A. 슬롯 컨텍스트 — slotEditable 분기 (v6.8) */}
+      <Section
+        title="A. 슬롯 컨텍스트"
+        description={
+          slotEditable
+            ? '복제 모드 — 다른 슬롯·아티스트에도 등록 가능합니다. 슬롯 변경 시 미디어 권장 비율이 변경될 수 있습니다.'
+            : '이 배너가 등록될 슬롯입니다. 슬롯은 슬롯 상세 화면에서 선택합니다.'
+        }
+      >
         <div className="grid grid-cols-2 gap-3">
-          <ReadOnlyBox label="배너 위치">
-            <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${kindBadge.bg} ${kindBadge.text}`}>
-              {slotLabel}
-            </span>
-            <span className="ml-2 text-xs text-gray-500">
-              {isCarousel ? `캐러셀 (최대 동시 ${slotMeta.capacityLimit}개)` : '단일'}
-            </span>
-          </ReadOnlyBox>
-          <ReadOnlyBox label="아티스트">
-            <span
-              className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
-                effectiveArtist === null ? 'bg-gray-100 text-gray-600' : 'bg-indigo-50 text-indigo-700'
-              }`}
-            >
-              {artistLabel}
-            </span>
-          </ReadOnlyBox>
+          {slotEditable ? (
+            <>
+              <div>
+                <div className="text-xs font-medium text-gray-600 mb-1">배너 위치</div>
+                <SelectBox
+                  value={editSlotKind}
+                  onChange={(v) => setEditSlotKind(v as SlotKind)}
+                  options={ALL_SLOT_KINDS.map((k) => ({ value: k, label: `${SLOT_KIND_META[k].label} (${SLOT_KIND_META[k].capacity === 'MULTI' ? `캐러셀 · 최대 ${SLOT_KIND_META[k].capacityLimit}개` : '단일'})` }))}
+                />
+              </div>
+              <div>
+                <div className="text-xs font-medium text-gray-600 mb-1">아티스트</div>
+                <SelectBox
+                  value={editArtist ?? 'GLOBAL'}
+                  onChange={(v) => setEditArtist(v === 'GLOBAL' ? null : (v as ArtistGroup))}
+                  disabled={slotMeta.targetMode === 'GLOBAL_ONLY' || slotMeta.targetMode === 'ARTIST_ONLY'}
+                  options={
+                    slotMeta.targetMode === 'GLOBAL_ONLY'
+                      ? [{ value: 'GLOBAL', label: '전역 (해당 슬롯은 전역만)' }]
+                      : slotMeta.targetMode === 'ARTIST_ONLY'
+                      ? ACTIVE_ARTISTS.map((a) => ({ value: a, label: a }))
+                      : [{ value: 'GLOBAL', label: '전역' }, ...ACTIVE_ARTISTS.map((a) => ({ value: a, label: a }))]
+                  }
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <ReadOnlyBox label="배너 위치">
+                <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${kindBadge.bg} ${kindBadge.text}`}>
+                  {slotLabel}
+                </span>
+                <span className="ml-2 text-xs text-gray-500">
+                  {isCarousel ? `캐러셀 (최대 동시 ${slotMeta.capacityLimit}개)` : '단일'}
+                </span>
+              </ReadOnlyBox>
+              <ReadOnlyBox label="아티스트">
+                <span
+                  className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
+                    effectiveArtist === null ? 'bg-gray-100 text-gray-600' : 'bg-indigo-50 text-indigo-700'
+                  }`}
+                >
+                  {artistLabel}
+                </span>
+              </ReadOnlyBox>
+            </>
+          )}
         </div>
+        {ratioChanged && (
+          <div className="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
+            ⚠️ 권장 비율이 변경되었습니다 ({initialRatio} → {currentRatio}). 이미지 재업로드를 권장합니다.
+          </div>
+        )}
       </Section>
 
       {/* B. 기본 정보 — 다국어 */}
-      <Section title="B. 기본 정보 (다국어)" description="노출 시작 전에 KO/EN/JP 3언어 모두 입력해야 합니다.">
+      <Section title="B. 기본 정보 (다국어)" description="공개일 도달 시점에 KO/EN/JP 3언어 모두 입력 + 이미지 검증. 미입력 시 자동 노출 차단.">
         <div className="space-y-4">
           <MultiLangRow
             label="메인 타이틀"
@@ -150,64 +253,51 @@ export default function BannerForm({
         <DeeplinkPicker value={deeplink} onChange={setDeeplink} disabled={readOnly} />
       </Section>
 
-      {/* E. 노출 기간 */}
+      {/* E. 노출 기간 (v6.7/v6.8 정합) — 공개일 항상 필수 + 종료일만 무기한 옵션 */}
       <Section
         title="E. 노출 기간"
-        description="무기한은 운영자가 [즉시 노출 시작/종료]로 수동 제어. 사용자 지정은 일정 도래 시 자동 시작·종료."
+        description="공개일은 항상 필수. 도달 시 시스템 자동 노출. 종료일은 '무기한' 또는 일정 지정. 도달 시 자동 종료 또는 운영자 [노출 종료] 비상 차단."
       >
         <div className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">
+              공개일시 (KST) <span className="text-red-500">*</span>
+            </label>
+            <input
+              value={openDt}
+              onChange={(e) => setOpenDt(e.target.value)}
               disabled={readOnly}
-              onClick={() => setPeriodType('UNLIMITED')}
-              className={`text-left p-3 rounded-lg border-2 transition ${
-                periodType === 'UNLIMITED'
-                  ? 'border-indigo-500 bg-indigo-50'
-                  : 'border-gray-200 bg-white hover:border-gray-300'
-              } ${readOnly ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
-            >
-              <div className="font-medium text-sm text-gray-900">무기한</div>
-              <div className="text-xs text-gray-500 mt-0.5">운영자가 직접 ON/OFF 제어</div>
-            </button>
-            <button
-              type="button"
-              disabled={readOnly}
-              onClick={() => setPeriodType('CUSTOM')}
-              className={`text-left p-3 rounded-lg border-2 transition ${
-                periodType === 'CUSTOM'
-                  ? 'border-indigo-500 bg-indigo-50'
-                  : 'border-gray-200 bg-white hover:border-gray-300'
-              } ${readOnly ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
-            >
-              <div className="font-medium text-sm text-gray-900">사용자 지정</div>
-              <div className="text-xs text-gray-500 mt-0.5">시작·종료일 자동 처리 + 수동 오버라이드 가능</div>
-            </button>
+              placeholder="2026.05.30 09:00"
+              className="w-full h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              지금 즉시 노출하려면 현재 시각(또는 ±몇 분)을 입력하세요.
+            </p>
           </div>
-          {periodType === 'CUSTOM' && (
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">공개일시 (KST)</label>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">종료일시 (KST)</label>
+            <div className="flex items-center gap-3 mb-2">
+              <label className="inline-flex items-center gap-2 cursor-pointer">
                 <input
-                  value={openDt}
-                  onChange={(e) => setOpenDt(e.target.value)}
+                  type="checkbox"
+                  checked={closeUnlimited}
+                  onChange={(e) => { setCloseUnlimited(e.target.checked); if (e.target.checked) setCloseDt(''); }}
                   disabled={readOnly}
-                  placeholder="2026.05.20 00:00"
-                  className="w-full h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
+                  className="w-4 h-4 accent-indigo-600"
                 />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">종료일시 (KST)</label>
-                <input
-                  value={closeDt}
-                  onChange={(e) => setCloseDt(e.target.value)}
-                  disabled={readOnly}
-                  placeholder="2026.06.20 23:59"
-                  className="w-full h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
-                />
-              </div>
+                <span className="text-sm text-gray-700">무기한 (운영자가 직접 [노출 종료]로 비상 차단)</span>
+              </label>
             </div>
-          )}
+            {!closeUnlimited && (
+              <input
+                value={closeDt}
+                onChange={(e) => setCloseDt(e.target.value)}
+                disabled={readOnly}
+                placeholder="2026.06.30 23:59"
+                className="w-full h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
+              />
+            )}
+          </div>
           {isCarousel && (
             <p className="text-xs text-gray-500 pt-1">
               ※ 캐러셀 슬롯 슬라이드 순서는 {initial?.displayOrder
@@ -250,7 +340,8 @@ export default function BannerForm({
           <button
             type="button"
             onClick={() => onSubmit('save')}
-            className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+            disabled={!hasChanged}
+            className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-indigo-300"
           >
             저장
           </button>

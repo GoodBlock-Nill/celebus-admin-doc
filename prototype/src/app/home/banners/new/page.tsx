@@ -1,16 +1,18 @@
 'use client';
 
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PageHeader from '@/components/layout/PageHeader';
 import BannerForm from '@/components/home/BannerForm';
 import {
   getArtistDisplay,
+  getBannerById,
   getSlotKindLabel,
   SLOT_KIND_META,
   type ArtistGroup,
   type SlotKind,
 } from '@/mock/home';
+import { bannerToast } from '@/components/home/BannerModals';
 
 const VALID_KINDS: SlotKind[] = ['MAIN', 'TODAY_TODO', 'TOGETHER', 'MISSION'];
 
@@ -28,12 +30,17 @@ function NewBannerPageInner() {
   const searchParams = useSearchParams();
   const rawSlot = searchParams.get('slot') ?? searchParams.get('slotKind');
   const rawArtist = searchParams.get('artist');
+  // v6.8: 복제 모드 식별 — `?from={원본 배너ID}`
+  const fromId = searchParams.get('from');
+  const isCloneMode = !!fromId;
+  const originalBanner = useMemo(
+    () => (fromId ? getBannerById(parseInt(fromId, 10)) : null),
+    [fromId],
+  );
 
   // 슬롯 컨텍스트가 없으면 배너 관리 리스트로 안전망 리다이렉트
-  // ([CEB-BO-APP-201] §4-2 정합 — 공통 토스트 규격 [CEB-BO-000] §16, 2026-05-21 sync 정정)
   useEffect(() => {
     if (!rawSlot && !rawArtist) {
-      // 1초 뒤 리다이렉트 (안내 메시지가 보이도록 짧게 노출)
       const timer = setTimeout(() => router.replace('/home/banners'), 1500);
       return () => clearTimeout(timer);
     }
@@ -59,35 +66,55 @@ function NewBannerPageInner() {
 
   const backUrl = `/home/banners/slot/${slotKind}/${artist ?? 'GLOBAL'}`;
 
-  // v6.7: 신규 생성은 항상 DRAFT 진입. 공개일 도달 시 시스템 자동 ACTIVE 전이.
-  // 운영자가 "지금 노출"을 원하면 공개일을 현재 시각으로 설정하면 됨 (트리거 일원화).
+  // v6.8: 복제 모드 — 원본 입력값 prefill (공개일·종료일·상태·통계는 초기화)
+  const initialForClone = useMemo(() => {
+    if (!isCloneMode || !originalBanner) return undefined;
+    return {
+      ...originalBanner,
+      period: { type: 'CUSTOM' as const, openDt: '', closeDt: '' },
+      status: 'DRAFT' as const,
+      displayOrder: undefined as unknown as number,
+    };
+  }, [isCloneMode, originalBanner]);
+
+  // 변경 추적은 신규 작성에서 사용하지 않으나 폼이 콜백을 요구할 수 있으므로 noop
+  const [, setHasChanged] = useState(false);
+
   const handleSubmit = (action: 'save_draft' | 'create' | 'save') => {
     const msg =
       action === 'save_draft'
-        ? '[Mock] 임시저장 완료. 메인 타이틀 KO 외 항목은 추후 보강 가능.'
+        ? '임시저장되었습니다 (메인 타이틀 KO 외 항목은 추후 보강 가능)'
         : action === 'create'
-        ? '[Mock] 배너 생성 완료 (DRAFT). 공개일 도달 시 시스템이 자동으로 노출을 시작합니다.'
-        : '[Mock] 저장 완료.';
-    alert(msg);
-    router.push(backUrl);
+        ? '배너가 생성되었습니다 (공개일 도달 시 자동 노출)'
+        : '저장되었습니다';
+    bannerToast.success(msg);
+    setTimeout(() => router.push(backUrl), 600);
   };
 
   return (
     <div>
       <PageHeader
-        title="새 배너 등록"
+        title={isCloneMode ? '배너 복제' : '새 배너 등록'}
         breadcrumbItems={[
           { label: '앱' },
           { label: '배너 관리', href: `/home/banners?placement=${meta.tab}` },
           { label: `${slotLabel} · ${artistLabel}`, href: backUrl },
-          { label: '새 배너' },
+          { label: isCloneMode ? '복제' : '새 배너' },
         ]}
       />
+      {isCloneMode && originalBanner && (
+        <div className="mt-3 rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-2.5 text-xs text-indigo-800">
+          ℹ️ 배너 <span className="font-semibold">&apos;{originalBanner.titleKO}&apos;</span>을(를) 복제 중입니다. 다른 슬롯에도 등록 가능합니다 (위치·아티스트 변경 허용).
+        </div>
+      )}
       <div className="mt-6">
         <BannerForm
           mode="create"
           slotKind={slotKind}
           artistGroup={artist}
+          initial={initialForClone}
+          slotEditable={isCloneMode}
+          onHasChangedChange={setHasChanged}
           onSubmit={handleSubmit}
           onCancel={() => router.push(backUrl)}
         />

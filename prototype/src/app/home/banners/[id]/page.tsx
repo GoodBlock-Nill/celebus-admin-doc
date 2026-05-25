@@ -1,11 +1,12 @@
 'use client';
 
-import { use, useState } from 'react';
+import { use, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   ArrowLeftIcon,
   DocumentDuplicateIcon,
   PencilSquareIcon,
+  PlayIcon,
   StopIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
@@ -15,6 +16,7 @@ import {
   formatPeriod,
   getArtistDisplay,
   getBannerById,
+  getSlot,
   getSlotKindBadge,
   getSlotKindLabel,
   getStatusBadge,
@@ -23,6 +25,13 @@ import {
   type BannerStatus,
   type SlotKind,
 } from '@/mock/home';
+import {
+  BannerStopExposureModal,
+  BannerResumeExposureModal,
+  BannerDeleteModal,
+  BannerEditCancelModal,
+  bannerToast,
+} from '@/components/home/BannerModals';
 
 export default function BannerDetailPage({
   params,
@@ -37,6 +46,17 @@ export default function BannerDetailPage({
   const banner = getBannerById(parseInt(id, 10));
   const initialMode = sp.mode === 'edit' ? 'edit' : 'view';
   const [mode, setMode] = useState<'view' | 'edit'>(initialMode);
+
+  // v6.8: 변경 추적
+  const [hasChanged, setHasChanged] = useState(false);
+
+  // v6.8: 모달 4종 state
+  const [modalStop, setModalStop] = useState(false);
+  const [modalResume, setModalResume] = useState(false);
+  const [modalDelete, setModalDelete] = useState(false);
+  const [modalEditCancel, setModalEditCancel] = useState(false);
+  // [← 슬롯으로] 의도된 액션 (수정 모드 변경 사항 있을 때 EditCancel 모달 호출 후 분기)
+  const [pendingNav, setPendingNav] = useState<null | 'back-to-slot' | 'exit-edit'>(null);
 
   if (!banner) {
     return (
@@ -60,29 +80,101 @@ export default function BannerDetailPage({
   const slotMeta = SLOT_KIND_META[banner.slotKind as SlotKind];
 
   const backUrl = `/home/banners/slot/${banner.slotKind}/${banner.artistGroup ?? 'GLOBAL'}`;
-  const isArtistTarget = banner.artistGroup !== null;
 
-  // v6.7: action 시그니처 정정 ('start_now' 제거, 'create' 추가)
+  // v6.8: [노출 재개] 사전 분기 — 슬롯 한도·단일 자동 교체·종료일 과거 계산
+  const slot = getSlot(banner.slotKind as SlotKind, banner.artistGroup);
+  const activeInSlot = slot.banners.filter((b) => b.status === 'ACTIVE' && b.id !== banner.id);
+  const isCarouselFull = slotMeta.capacity === 'MULTI' && activeInSlot.length >= (slotMeta.capacityLimit ?? 0);
+  const replaceTargetTitle = slotMeta.capacity === 'SINGLE' && activeInSlot.length >= 1
+    ? activeInSlot[0].titleKO
+    : undefined;
+  const closeDtStr = banner.period.type === 'CUSTOM' ? banner.period.closeDt : '';
+  const endDatePast = useMemo(() => {
+    if (!closeDtStr) return false;
+    const t = Date.parse(closeDtStr.replace(/\./g, '-').replace(' ', 'T'));
+    return Number.isFinite(t) && t < Date.now();
+  }, [closeDtStr]);
+
+  // ─────────────── 핸들러 ───────────────
   const handleSubmit = (action: 'save_draft' | 'create' | 'save') => {
-    alert(`[Mock] ${action === 'save' ? '수정 저장' : action === 'create' ? '생성' : '임시저장'} 완료`);
+    if (action === 'save' && !hasChanged) {
+      bannerToast.info('변경 사항이 없습니다');
+      return;
+    }
+    const msg =
+      action === 'save' ? '저장되었습니다'
+      : action === 'create' ? '배너가 생성되었습니다'
+      : '임시저장되었습니다';
+    bannerToast.success(msg);
+    setHasChanged(false);
     setMode('view');
   };
 
-  // v6.7: [노출 종료]는 비상 차단 권한 — 확인 모달 후 즉시 CLOSED 전이
-  const handleStopExposure = () => {
-    if (!confirm(`배너 '${banner.titleKO}'의 노출을 종료하시겠습니까?\n운영자 수동 종료는 비상 차단 권한입니다 (활동 로그 기록).`)) return;
-    alert('[Mock] 노출 종료 (운영자 비상 차단)');
+  // 수정 모드 [취소] — 변경 있으면 EditCancel 모달, 없으면 즉시 view 전환
+  const handleEditCancel = () => {
+    if (hasChanged) {
+      setPendingNav('exit-edit');
+      setModalEditCancel(true);
+    } else {
+      setMode('view');
+    }
   };
+
+  // [← 슬롯으로] — 수정 모드 변경 있으면 모달, 아니면 즉시 이동
+  const handleBackToSlot = () => {
+    if (mode === 'edit' && hasChanged) {
+      setPendingNav('back-to-slot');
+      setModalEditCancel(true);
+    } else {
+      router.push(backUrl);
+    }
+  };
+
+  const handleStopExposureConfirm = () => {
+    setModalStop(false);
+    bannerToast.success('노출이 종료되었습니다 (운영자 비상 차단)');
+  };
+
+  // 노출 재개 — 한도 초과 시 차단, 그 외 ACTIVE 전이
+  const handleResumeExposureConfirm = () => {
+    if (isCarouselFull) {
+      bannerToast.error(`이 슬롯의 동시 노출이 한도(${slotMeta.capacityLimit}개)에 도달했습니다`);
+      return;
+    }
+    setModalResume(false);
+    if (replaceTargetTitle) {
+      bannerToast.info(`기존 배너 '${replaceTargetTitle}'이(가) 자동 종료됩니다`);
+    }
+    bannerToast.success('노출이 재개되었습니다 (CLOSED → ACTIVE)');
+  };
+
+  const handleResumeAfterEdit = () => {
+    setModalResume(false);
+    setMode('edit');
+  };
+
   const handleClone = () => {
-    alert('[Mock] 배너 복제 후 신규 작성 화면으로 이동');
     router.push(
-      `/home/banners/new?slot=${banner.slotKind}&artist=${banner.artistGroup ?? 'GLOBAL'}`
+      `/home/banners/new?slot=${banner.slotKind}&artist=${banner.artistGroup ?? 'GLOBAL'}&from=${banner.id}`,
     );
   };
-  const handleDelete = () => {
-    if (!confirm('삭제하시겠습니까?')) return;
-    alert('[Mock] 삭제 완료');
-    router.push(backUrl);
+
+  const handleDeleteConfirm = () => {
+    setModalDelete(false);
+    bannerToast.success('배너가 삭제되었습니다');
+    setTimeout(() => router.push(backUrl), 600);
+  };
+
+  // EditCancel 모달 확정 시 — pendingNav에 따라 분기
+  const handleEditCancelConfirm = () => {
+    setModalEditCancel(false);
+    setHasChanged(false);
+    if (pendingNav === 'back-to-slot') {
+      router.push(backUrl);
+    } else {
+      setMode('view');
+    }
+    setPendingNav(null);
   };
 
   return (
@@ -96,6 +188,16 @@ export default function BannerDetailPage({
           { label: banner.titleKO || `#${banner.id}` },
         ]}
       />
+
+      {/* v6.8: [← 슬롯으로] 원터치 복귀 (view·edit 모두) */}
+      <div className="mt-3">
+        <button
+          onClick={handleBackToSlot}
+          className="text-sm text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1.5"
+        >
+          <ArrowLeftIcon className="w-4 h-4" /> {slotLabel} · {artistLabel} 슬롯으로
+        </button>
+      </div>
 
       <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center gap-2 flex-wrap">
@@ -122,7 +224,6 @@ export default function BannerDetailPage({
         <div className="flex items-center gap-2">
           {mode === 'view' && (
             <>
-              {/* v6.7: DRAFT는 [즉시 노출 시작] 제거 — 공개일 도달 시 시스템 자동 활성화 */}
               <ActionBtn icon={<PencilSquareIcon className="w-4 h-4" />} onClick={() => setMode('edit')}>
                 수정
               </ActionBtn>
@@ -131,14 +232,21 @@ export default function BannerDetailPage({
                   복제
                 </ActionBtn>
               )}
-              {/* v6.7: ACTIVE [노출 종료] (비상 차단 권한, "즉시" 단어 제거) */}
+              {/* ACTIVE: [노출 종료] (비상 차단) */}
               {banner.status === 'ACTIVE' && (
-                <ActionBtn icon={<StopIcon className="w-4 h-4" />} onClick={handleStopExposure} variant="warning">
+                <ActionBtn icon={<StopIcon className="w-4 h-4" />} onClick={() => setModalStop(true)} variant="warning">
                   노출 종료
                 </ActionBtn>
               )}
+              {/* v6.8: CLOSED → [노출 재개] 신규 (운영자 복구 권한) */}
+              {banner.status === 'CLOSED' && (
+                <ActionBtn icon={<PlayIcon className="w-4 h-4" />} onClick={() => setModalResume(true)} variant="primary">
+                  노출 재개
+                </ActionBtn>
+              )}
+              {/* DRAFT·CLOSED는 [삭제] 가능. ACTIVE는 [노출 종료] 먼저 */}
               {banner.status !== 'ACTIVE' && (
-                <ActionBtn icon={<TrashIcon className="w-4 h-4" />} onClick={handleDelete} variant="danger">
+                <ActionBtn icon={<TrashIcon className="w-4 h-4" />} onClick={() => setModalDelete(true)} variant="danger">
                   삭제
                 </ActionBtn>
               )}
@@ -151,10 +259,42 @@ export default function BannerDetailPage({
         <BannerForm
           mode={mode}
           initial={banner}
+          onHasChangedChange={setHasChanged}
           onSubmit={handleSubmit}
-          onCancel={mode === 'edit' ? () => setMode('view') : () => router.push(backUrl)}
+          onCancel={mode === 'edit' ? handleEditCancel : () => router.push(backUrl)}
         />
       </div>
+
+      {/* 모달 4종 — v6.8 */}
+      <BannerStopExposureModal
+        isOpen={modalStop}
+        onClose={() => setModalStop(false)}
+        onConfirm={handleStopExposureConfirm}
+        bannerTitle={banner.titleKO || `#${banner.id}`}
+      />
+      <BannerResumeExposureModal
+        isOpen={modalResume}
+        onClose={() => setModalResume(false)}
+        onConfirm={handleResumeExposureConfirm}
+        onConfirmAfterEdit={endDatePast ? handleResumeAfterEdit : undefined}
+        bannerTitle={banner.titleKO || `#${banner.id}`}
+        isCarouselFull={isCarouselFull}
+        replaceTargetTitle={replaceTargetTitle}
+        endDatePast={endDatePast}
+        endDateText={closeDtStr}
+      />
+      <BannerDeleteModal
+        isOpen={modalDelete}
+        onClose={() => setModalDelete(false)}
+        onConfirm={handleDeleteConfirm}
+        bannerTitle={banner.titleKO || `#${banner.id}`}
+        status={statusLabel}
+      />
+      <BannerEditCancelModal
+        isOpen={modalEditCancel}
+        onClose={() => { setModalEditCancel(false); setPendingNav(null); }}
+        onConfirm={handleEditCancelConfirm}
+      />
     </div>
   );
 }
@@ -168,13 +308,15 @@ function ActionBtn({
   icon: React.ReactNode;
   onClick: () => void;
   children: React.ReactNode;
-  variant?: 'danger' | 'warning';
+  variant?: 'danger' | 'warning' | 'primary';
 }) {
   const cls =
     variant === 'danger'
       ? 'text-rose-700 bg-white border-rose-200 hover:bg-rose-50'
       : variant === 'warning'
       ? 'text-amber-700 bg-white border-amber-200 hover:bg-amber-50'
+      : variant === 'primary'
+      ? 'text-white bg-indigo-600 border-indigo-600 hover:bg-indigo-700'
       : 'text-gray-700 bg-white border-gray-300 hover:bg-gray-50';
   return (
     <button
