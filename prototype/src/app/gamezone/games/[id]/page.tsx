@@ -244,7 +244,7 @@ function BasicTab({ game }: { game: PMGame | STGame }) {
               value={game.ticketReward > 0 ? `${game.ticketReward}장` : '미지급'}
             />
             <Field
-              label="덕력 보상 (정답자 1인당)"
+              label="덕력 보상 (참여자 1인당)"
               value={game.dukReward > 0 ? `${game.dukReward}점` : '미지급'}
             />
           </Section>
@@ -273,13 +273,16 @@ function BasicTab({ game }: { game: PMGame | STGame }) {
             <Field label="최대 상금풀" value={`${game.maxPrize.toLocaleString()} GP`} />
             <Field label="배수" value="1.25배" />
             <Field label="참여비 (자동 계산)" value={`${game.participationCost.toLocaleString()} GP`} />
-            <Field label="탈락자 응모권" value="1장 (팬퀘스트 응모권)" />
             <Field
               label="응모권 보상 (생존자 1인당)"
               value={game.ticketReward > 0 ? `${game.ticketReward}장` : '미지급'}
             />
             <Field
-              label="덕력 보상 (생존자 1인당)"
+              label="응모권 보상 (탈락자 1인당)"
+              value={game.eliminatedTicketReward > 0 ? `${game.eliminatedTicketReward}장` : '미지급'}
+            />
+            <Field
+              label="덕력 보상 (참여자 1인당)"
               value={game.dukReward > 0 ? `${game.dukReward}점` : '미지급'}
             />
           </Section>
@@ -362,12 +365,12 @@ function ResultRewardTab({ game }: { game: PMGame | STGame }) {
         <Field label="총 상금 GP" value={`${r.totalPrize.toLocaleString()} GP`} />
         <Field label="정답자 수" value={`${r.correctCount}명`} />
         <Field
-          label="응모권 분배 결과"
+          label="응모권 분배 결과 (정답자)"
           value={r.perShareTicket > 0 ? `${r.perShareTicket}장 × ${r.correctCount}명 = ${r.totalTicketDistributed}장` : '미지급'}
         />
         <Field
-          label="덕력 분배 결과"
-          value={r.perShareDuk > 0 ? `${r.perShareDuk}점 × ${r.correctCount}명 = ${r.totalDukDistributed}점` : '미지급'}
+          label="덕력 분배 결과 (참여자)"
+          value={r.perShareDuk > 0 ? `${r.perShareDuk}점 × ${game.participants}명 = ${r.totalDukDistributed}점` : '미지급'}
         />
         <Field label="미지급 보상 GP" value={`${r.undistributed.toLocaleString()} GP`} />
         <Field label="미지급보상자(탈퇴회원)" value={`${r.withdrawnUserUnpaid}명`} />

@@ -31,9 +31,15 @@ function GameCreateContent() {
   const [type, setType] = useState<GameType>(editGame?.type ?? 'PM');
   // 아티스트 그룹 (PM·ST 공통, 필수) — [GZ-000 v2.4] §5 신규
   const [artistGroup, setArtistGroup] = useState<ArtistGroup | ''>(editGame?.artistGroup ?? '');
-  // 응모권·덕력 보상 (PM·ST 공통, 0 = 미지급) — [GZ-000 v2.4] §5 신규
+  // 응모권·덕력 보상 (PM·ST 공통, 0 = 미지급) — [GZ-000 v2.5] §5
+  // - 응모권: 결과 기반 (정답자/생존자 1인당)
+  // - 덕력: 참여 기반 (참여자 전원 1인당)
   const [ticketReward, setTicketReward] = useState<string>(editGame ? String(editGame.ticketReward) : '0');
   const [dukReward, setDukReward] = useState<string>(editGame ? String(editGame.dukReward) : '0');
+  // ST 전용 — 탈락자 1인당 응모권 (선택, 기본 0)
+  const [eliminatedTicketReward, setEliminatedTicketReward] = useState<string>(
+    editGame?.type === 'ST' ? String(editGame.eliminatedTicketReward) : '0',
+  );
   const [titleKo, setTitleKo] = useState(editGame?.title ?? '');
   const [titleEn, setTitleEn] = useState(editGame?.titleEN ?? '');
   const [titleJa, setTitleJa] = useState(editGame?.titleJP ?? '');
@@ -72,8 +78,8 @@ function GameCreateContent() {
   };
 
   // [생성하기]/[저장하기] 활성 조건
-  const initialSnapshot = useMemo(() => JSON.stringify({ type, artistGroup, ticketReward, dukReward, titleKo, titleEn, titleJa, description, totalPrize, participationCost, boostingCost, boostingMultiplier, endDate, resultAnnounce, resultCriteria }), [editGame]);
-  const currentSnapshot = JSON.stringify({ type, artistGroup, ticketReward, dukReward, titleKo, titleEn, titleJa, description, totalPrize, participationCost, boostingCost, boostingMultiplier, endDate, resultAnnounce, resultCriteria });
+  const initialSnapshot = useMemo(() => JSON.stringify({ type, artistGroup, ticketReward, dukReward, eliminatedTicketReward, titleKo, titleEn, titleJa, description, totalPrize, participationCost, boostingCost, boostingMultiplier, endDate, resultAnnounce, resultCriteria }), [editGame]);
+  const currentSnapshot = JSON.stringify({ type, artistGroup, ticketReward, dukReward, eliminatedTicketReward, titleKo, titleEn, titleJa, description, totalPrize, participationCost, boostingCost, boostingMultiplier, endDate, resultAnnounce, resultCriteria });
   const hasChanged = currentSnapshot !== initialSnapshot;
   // 아티스트 필수 (PM·ST 공통). 응모권·덕력은 0 허용 — 입력만 되면 OK
   const requiredFilled = type === 'PM'
@@ -210,8 +216,8 @@ function GameCreateContent() {
             <>
               <Section title="보상설정">
                 <NumberField label="총 상금 GP" required unit="GP" value={totalPrize} onChange={setTotalPrize} disabled={isFieldLocked('all')} />
-                <NumberField label="응모권 보상 (정답자 1인당)" unit="장" value={ticketReward} onChange={setTicketReward} disabled={isFieldLocked('all')} hint="0 = 미지급. 결과 확정 후 정답자에게 자동 분배" />
-                <NumberField label="덕력 보상 (정답자 1인당)" unit="점" value={dukReward} onChange={setDukReward} disabled={isFieldLocked('all')} hint="0 = 미지급. DUK 단위" />
+                <NumberField label="응모권 보상 (정답자 1인당)" unit="장" value={ticketReward} onChange={setTicketReward} disabled={isFieldLocked('all')} hint="결과 기반 — 0 = 미지급. 결과 확정 후 정답자에게 자동 분배" />
+                <NumberField label="덕력 보상 (참여자 1인당)" unit="점" value={dukReward} onChange={setDukReward} disabled={isFieldLocked('all')} hint="참여 기반 — 참여자 전원(정답/오답 무관)에게 1인당 N점 균등 분배. 0 = 미지급. DUK 단위" />
               </Section>
               <Section title="참여설정">
                 <div className="mb-3">
@@ -262,9 +268,9 @@ function GameCreateContent() {
                   적용 상금풀 = 실제 모집인원 / 최대 모집인원 × 최대 상금풀<br />
                   게임 시작 시 실제 모집인원에 비례하여 상금풀이 자동 결정됩니다.
                 </div>
-                <NumberField label="탈락자 응모권 수량" required unit="장" value="1" onChange={() => {}} hint="팬퀘스트 응모권" />
-                <NumberField label="응모권 보상 (생존자 1인당)" unit="장" value={ticketReward} onChange={setTicketReward} hint="0 = 미지급. 결과 확정 후 생존자에게 자동 분배" />
-                <NumberField label="덕력 보상 (생존자 1인당)" unit="점" value={dukReward} onChange={setDukReward} hint="0 = 미지급. DUK 단위" />
+                <NumberField label="응모권 보상 (생존자 1인당)" unit="장" value={ticketReward} onChange={setTicketReward} hint="결과 기반 — 0 = 미지급. 결과 확정 후 최종 생존자에게 자동 분배" />
+                <NumberField label="응모권 보상 (탈락자 1인당)" unit="장" value={eliminatedTicketReward} onChange={setEliminatedTicketReward} hint="결과 기반 — 0 = 미지급. 결과 확정 후 탈락자 전원에게 자동 분배" />
+                <NumberField label="덕력 보상 (참여자 1인당)" unit="점" value={dukReward} onChange={setDukReward} hint="참여 기반 — 참여자 전원(생존/탈락 무관)에게 1인당 N점 균등 분배. 0 = 미지급. DUK 단위" />
                 <div className="text-xs text-gray-500 mt-2">부스팅은 Survival Trivia에서 지원하지 않습니다.</div>
               </Section>
               <Section title="ST 일정설정">

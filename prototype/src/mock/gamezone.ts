@@ -23,12 +23,13 @@ export type GameType = 'PM' | 'ST';
 export type ArtistGroup = 'V01D' | 'iKON' | 'CELEBUS' | 'MADEIN' | 'UNDER:LIGHT';
 export const ARTIST_GROUPS: ArtistGroup[] = ['V01D', 'iKON', 'CELEBUS', 'MADEIN', 'UNDER:LIGHT'];
 
-// 공통 보상 필드 — 모든 게임 유형 (PM·ST). 신규 기능 [GZ-000 v2.4] §5 정합
-// 응모권·덕력은 1인당 고정 개수 균등 분배. 0 = 미지급
+// 공통 보상 필드 — 모든 게임 유형 (PM·ST). [GZ-000 v2.5] §5 정합
+// - 응모권: 결과 기반 (정답자·생존자·탈락자 각 1인당 균등 분배)
+// - 덕력: 참여 기반 (참여자 전원 1인당 균등 분배. PM 정답/오답·ST 생존/탈락 무관)
+// - 모두 0 = 미지급 (분배·로그 건너뜀)
 export interface GameRewardExtra {
-  ticketReward: number;       // 정답자(PM)·생존자(ST) 1인당 지급 응모권 (장)
-  dukReward: number;          // 정답자·생존자 1인당 지급 덕력 (점, DUK 단위)
-  // ST 전용: 탈락자 응모권 — 기존 STGame.eliminatedTicket 통합 가능 (현재는 별도 필드 유지)
+  ticketReward: number;       // 결과자 1인당 응모권 (PM=정답자 / ST=생존자, 장)
+  dukReward: number;          // 참여자 1인당 덕력 (PM·ST 공통, 점, DUK 단위)
 }
 
 export interface PMGame extends GameRewardExtra {
@@ -56,7 +57,9 @@ export interface PMGame extends GameRewardExtra {
 export interface STGame extends GameRewardExtra {
   id: number;
   type: 'ST';
-  artistGroup: ArtistGroup;   // 신규 — 동일
+  artistGroup: ArtistGroup;   // 동일
+  // ST 전용 보상 — [GZ-000 v2.5] §5 탈락자 응모권 (선택, 0 = 미지급)
+  eliminatedTicketReward: number;
   title: string;
   titleEN: string;
   titleJP: string;
@@ -85,9 +88,9 @@ const PM_GAMES: PMGame[] = [
 
 // ST 게임 mock — 아티스트·응모권·덕력 보강
 const ST_GAMES: STGame[] = [
-  { id: 101, type: 'ST', artistGroup: 'V01D', title: '제 1회 V01D 모의고사', titleEN: 'V01D Mock Test #1', titleJP: 'V01D模擬試験 #1', description: 'V01D 팬덤 지식 10문제 트리비아', status: '진행중', participants: 312, maxParticipants: 500, maxPrize: 10000, participationCost: 50, startDateTime: '2026.05.22 13:00', createdAt: '2026.05.21 09:00', admin: 'nill', ticketReward: 3, dukReward: 200 },
-  { id: 102, type: 'ST', artistGroup: 'CELEBUS', title: 'K-pop 데뷔연도 퀴즈', titleEN: 'K-pop Debut Year Quiz', titleJP: 'K-popデビュー年クイズ', description: '주요 그룹 데뷔연도 트리비아', status: '게시대기', participants: 0, maxParticipants: 1000, maxPrize: 20000, participationCost: 40, startDateTime: '2026.05.24 20:00', createdAt: '2026.05.20 16:00', admin: 'superjay', ticketReward: 5, dukReward: 300 },
-  { id: 103, type: 'ST', artistGroup: 'iKON', title: '신곡 가사 빈칸 채우기', titleEN: 'Fill the Lyrics', titleJP: '新曲歌詞穴埋め', description: '최신 컴백곡 가사 트리비아', status: '종료', participants: 478, maxParticipants: 500, maxPrize: 5000, participationCost: 25, startDateTime: '2026.05.18 21:00', createdAt: '2026.05.17 14:00', admin: 'nill', ticketReward: 2, dukReward: 100 },
+  { id: 101, type: 'ST', artistGroup: 'V01D', title: '제 1회 V01D 모의고사', titleEN: 'V01D Mock Test #1', titleJP: 'V01D模擬試験 #1', description: 'V01D 팬덤 지식 10문제 트리비아', status: '진행중', participants: 312, maxParticipants: 500, maxPrize: 10000, participationCost: 50, startDateTime: '2026.05.22 13:00', createdAt: '2026.05.21 09:00', admin: 'nill', ticketReward: 3, dukReward: 200, eliminatedTicketReward: 1 },
+  { id: 102, type: 'ST', artistGroup: 'CELEBUS', title: 'K-pop 데뷔연도 퀴즈', titleEN: 'K-pop Debut Year Quiz', titleJP: 'K-popデビュー年クイズ', description: '주요 그룹 데뷔연도 트리비아', status: '게시대기', participants: 0, maxParticipants: 1000, maxPrize: 20000, participationCost: 40, startDateTime: '2026.05.24 20:00', createdAt: '2026.05.20 16:00', admin: 'superjay', ticketReward: 5, dukReward: 300, eliminatedTicketReward: 0 },
+  { id: 103, type: 'ST', artistGroup: 'iKON', title: '신곡 가사 빈칸 채우기', titleEN: 'Fill the Lyrics', titleJP: '新曲歌詞穴埋め', description: '최신 컴백곡 가사 트리비아', status: '종료', participants: 478, maxParticipants: 500, maxPrize: 5000, participationCost: 25, startDateTime: '2026.05.18 21:00', createdAt: '2026.05.17 14:00', admin: 'nill', ticketReward: 2, dukReward: 100, eliminatedTicketReward: 1 },
 ];
 
 export const games: Game[] = [...PM_GAMES, ...ST_GAMES];
@@ -129,7 +132,7 @@ export function getPMEntries(gameId: number): PMEntry[] {
 }
 
 // PM 결과·보상 정보 (Closed/Ended 상태만)
-// [GZ-000 v2.4] §5 — 응모권·덕력은 정답자 1인당 고정 개수 균등 분배
+// [GZ-000 v2.5] §5 — 응모권은 결과 기반(정답자 1인당), 덕력은 참여 기반(참여자 전원 1인당)
 export interface PMResultReward {
   resultTitle: { KO: string; EN: string; JP: string } | null;
   result: 'YES' | 'NO' | null;
@@ -168,8 +171,8 @@ export function getPMResultReward(gameId: number): PMResultReward {
       perShareGP: correct > 0 ? Math.floor(game.totalPrize / correct) : 0,
       perShareTicket: game.ticketReward,
       perShareDuk: game.dukReward,
-      totalTicketDistributed: game.ticketReward * correct,
-      totalDukDistributed: game.dukReward * correct,
+      totalTicketDistributed: game.ticketReward * correct,       // 결과 기반 — 정답자 수
+      totalDukDistributed: game.dukReward * game.participants,    // 참여 기반 — 참여자 전원
       rewardStatus: game.status === '종료' ? '지급 완료' : '미지급',
       rewardPaidAt: game.status === '종료' ? '2026.05.17 14:00' : null,
     };
