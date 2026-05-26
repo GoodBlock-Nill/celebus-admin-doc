@@ -415,3 +415,77 @@ export const EXCHANGE_SETTINGS_DEFAULT: ExchangeSettings = {
   chargeEnabled: true,
   withdrawEnabled: true,
 };
+
+// ─────────────── 지갑 관리 — [CEB-BO-GZ-503] ───────────────
+// 운영 BO 실측: 활성 지갑 [삭제] disabled, [대표] 지갑 [비활성화] 무반응 가능성.
+// 풍부한 가상 mock 5개 (충전·출금 [대표] + 비활성 1 + 일반 1 + 가스 부족 1)
+
+export type WalletType = '충전용' | '출금용';
+export type WalletStatus = '활성' | '비활성';
+
+export interface ManagedWallet {
+  id: number;
+  type: WalletType;
+  isPrimary: boolean;
+  address: string;
+  privateKeyMasked?: string; // 출금용은 표시 (e.g., "PK: 94d2....97ef")
+  celbBalance: number;
+  bnbBalance: number;
+  status: WalletStatus;
+  registeredAt: string; // YYYY.MM.DD HH:mm
+}
+
+export const managedWallets: ManagedWallet[] = [
+  {
+    id: 1,
+    type: '충전용',
+    isPrimary: true,
+    address: '0xF99f3d197f8f20b8f391CacC5b7b844884aC2DEE',
+    celbBalance: 4999999878,
+    bnbBalance: 0.99507429,
+    status: '활성',
+    registeredAt: '2026.03.25 11:20',
+  },
+  {
+    id: 2,
+    type: '출금용',
+    isPrimary: true,
+    address: '0xF99f3d197f8f20b8f391CacC5b7b844884aC2DEE',
+    privateKeyMasked: 'PK: 0xe3....adba',
+    celbBalance: 4999999878,
+    bnbBalance: 0.99507429,
+    status: '활성',
+    registeredAt: '2026.03.25 11:20',
+  },
+  {
+    id: 3,
+    type: '충전용',
+    isPrimary: false,
+    address: '0x4a47C57d5db6e3140FE964766117Ce740ab6fdDF',
+    celbBalance: 152000,
+    bnbBalance: 0.04500000,
+    status: '활성',
+    registeredAt: '2026.04.18 09:42',
+  },
+  {
+    id: 4,
+    type: '출금용',
+    isPrimary: false,
+    address: '0xCE24805AcB6f19be3E5145903EaB80D61F7ef3a9',
+    privateKeyMasked: 'PK: 0xa1....88ef',
+    celbBalance: 89000,
+    bnbBalance: 0.00350000,
+    status: '활성',
+    registeredAt: '2026.04.22 16:08',
+  },
+  {
+    id: 5,
+    type: '충전용',
+    isPrimary: false,
+    address: '0xBADf00DBADf00DBADf00DBADf00DBADf00DBADf00',
+    celbBalance: 0,
+    bnbBalance: 0,
+    status: '비활성',
+    registeredAt: '2026.05.10 14:55',
+  },
+];
