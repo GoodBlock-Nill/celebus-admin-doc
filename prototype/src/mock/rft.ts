@@ -219,13 +219,15 @@ function makeLog(
     GP_EXCHANGE: 'EXCHANGE',
     RAFFLE_ENTRY: 'RAFFLE',
   };
+  // [CEB-BO-RFT-201] v2.7 정합 — 참조 prefix 한국어 도메인 용어로 통일 (2026-05-26 정정)
+  // 기획자 언어 룰 정합 + GP 구매(구매-N)는 블록체인 트랜잭션 함의 없는 한국어 표기
   const refIdMap: Record<RftSourceFeature, string> = {
-    QUEST_REWARD: `Quest #${44 - (id % 8)}`,
-    GAME_REWARD: `Game #${20 - (id % 6)}`,
-    BIVE_BENEFIT: `BIVE #${3000 + (id % 500)}`,
-    DUK_RANKING_REWARD: `Season #${(id % 4) + 1}`,
-    GP_EXCHANGE: `Tx ${100000 + id}`,
-    RAFFLE_ENTRY: `Raffle #${12 - (id % 5)}`,
+    QUEST_REWARD: `퀘스트-${44 - (id % 8)}`,
+    GAME_REWARD: `게임-${20 - (id % 6)}`,
+    BIVE_BENEFIT: `BIVE-${3000 + (id % 500)}`,
+    DUK_RANKING_REWARD: `시즌-${(id % 4) + 1}`,
+    GP_EXCHANGE: `구매-${100000 + id}`,
+    RAFFLE_ENTRY: `래플-${12 - (id % 5)}`,
   };
   return {
     id,

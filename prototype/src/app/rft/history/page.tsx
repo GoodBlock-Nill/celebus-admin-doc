@@ -193,9 +193,22 @@ function HistoryInner() {
               {r.sourceArtistContext ?? '전역'}
             </span>
           )},
-          { key: 'sourceRefId', label: '참조', render: (r) => (
-            <span className="text-gray-500 text-xs">{r.sourceRefId}</span>
-          )},
+          // [CEB-BO-RFT-201] v2.7 §2-3-1 정합 — 출처별 참조 표기·이동 매트릭스 (2026-05-26 정정)
+          // GP_EXCHANGE는 별도 상세 화면 부재로 이동 없음(회색 평문). 그 외는 클릭 가능 시각 표기(파란 밑줄)
+          // 실제 router.push는 후속 사이클(영역별 상세 라우트 확정 후)
+          { key: 'sourceRefId', label: '참조', render: (r) => {
+            const navigable = r.sourceFeature !== 'GP_EXCHANGE';
+            return navigable ? (
+              <span
+                className="text-blue-600 underline cursor-pointer text-xs hover:text-blue-800"
+                title="출처 엔티티 상세로 이동 (라우트 후속 사이클)"
+              >
+                {r.sourceRefId}
+              </span>
+            ) : (
+              <span className="text-gray-500 text-xs">{r.sourceRefId}</span>
+            );
+          }},
         ]}
         rows={paged}
         emptyMessage="조건에 맞는 변동 내역이 없습니다."
