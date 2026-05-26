@@ -1,6 +1,6 @@
 # [CEB-BO-GZ-201] 게임 리스트
 
-> ⚠️ **DEPRECATED (Phase 10, 2026-05-06)**: 본 문서는 v1입니다. **v2 단일 진실원천(SSOT)**: `(휴면) Phase 1·2 PM/ST 운영 중단. 재개 시 v2/BO/GAM/[CEB-BO-GZ-201] 신규`. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.
+> ⚠️ **DEPRECATED (2026-05-06)**: 본 문서는 v1입니다. **v2 단일 진실원천(SSOT)**: `(휴면) PM/ST 운영 중단. 재개 시 v2/BO/GAM/[CEB-BO-GZ-201] 신규`. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.
 
 ## Page Properties
 
@@ -33,7 +33,7 @@
 
 | 항목 | 값 |
 |---|---|
-| 화면 경로 | `/gamezone/games?type={PREDICTION_MARKET\|SURVIVAL_TRIVIA}` |
+| 화면 경로 | `/gamezone/games?type={PREDICTION_MARKET|SURVIVAL_TRIVIA}` |
 | Breadcrumb | 홈 › 게임존 › 게임 관리 |
 | 페이지 제목 | "게임 관리" |
 | 진입 경로 | 사이드바 "게임존 › 게임 관리", 또는 [CEB-BO-GZ-101] 게임존 메인의 PM/ST 카드 "바로가기" |
@@ -70,11 +70,11 @@
 |---|---|---|---|---|---|---|
 | 1 | 타이틀 | title.ko | 좌측 | 300px | - | 최대 50자, 초과 시 말줄임 |
 | 2 | 상태 | status | 중앙 | 120px | - | Badge (임시저장/게시대기/진행중/결과대기/결과확정/종료) |
-| 3 | 참여자 수 | participantCount | 우측 | 130px | O | 천 단위 콤마 |
-| 4 | 총 상금 GP | totalPrizeGP | 우측 | 130px | O | "{숫자} GP" 형식 |
-| 5 | **참여기간** | publishedAt ~ endDate | 좌측 | 220px | - | YYYY.MM.DD ~ YYYY.MM.DD (운영 표기 — 띄어쓰기 없음) |
-| 6 | 생성일 | createdAt | 좌측 | 140px | O | YYYY.MM.DD HH:mm |
-| 7 | 관리자 | createdBy | 좌측 | 120px | - | 생성한 관리자 이름 |
+| 3 | 참여자 수 | `participantCount` | 우측 | 130px | O | 천 단위 콤마 |
+| 4 | 총 상금 GP | `totalPrizeGP` | 우측 | 130px | O | "{숫자} GP" 형식 |
+| 5 | **참여기간** | `publishedAt` ~ `endDate` | 좌측 | 220px | - | YYYY.MM.DD ~ YYYY.MM.DD (운영 표기 — 띄어쓰기 없음) |
+| 6 | 생성일 | `createdAt` | 좌측 | 140px | O | YYYY.MM.DD HH:mm |
+| 7 | 관리자 | `createdBy` | 좌측 | 120px | - | 생성한 관리자 이름 |
 
 #### Survival Trivia 테이블 (7 컬럼)
 
@@ -82,11 +82,11 @@
 |---|---|---|---|---|---|---|
 | 1 | 타이틀 | title.ko | 좌측 | 300px | - | 최대 50자, 초과 시 말줄임 |
 | 2 | 상태 | status | 중앙 | 100px | - | Badge (임시저장/게시대기/진행중/종료 — ST는 결과대기·결과확정 없음) |
-| 3 | 참여자 / 정원 | participantCount / maxParticipants | 우측 | 130px | O | "{참여자} / {정원}" 형식. 무제한 시 "{참여자} / ∞" |
-| 4 | **최대 상금 GP** | maxPrizeGP | 우측 | 130px | O | "{숫자} GP" 형식 (운영 표기 — PM의 "총 상금"과 구분) |
-| 5 | 참여 비용 | participationCost | 우측 | 100px | - | "{숫자} GP" 형식 |
-| 6 | 시작일시 | startDateTime | 좌측 | 160px | O | YYYY.MM.DD HH:mm |
-| 7 | 관리자 | createdBy | 좌측 | 100px | - | 생성한 관리자 이름 |
+| 3 | 참여자 / 정원 | `participantCount` / `maxParticipants` | 우측 | 130px | O | "{참여자} / {정원}" 형식. 무제한 시 "{참여자} / ∞" |
+| 4 | **최대 상금 GP** | `maxPrizeGP` | 우측 | 130px | O | "{숫자} GP" 형식 (운영 표기 — PM의 "총 상금"과 구분) |
+| 5 | 참여 비용 | `participationCost` | 우측 | 100px | - | "{숫자} GP" 형식 |
+| 6 | 시작일시 | `startDateTime` | 좌측 | 160px | O | YYYY.MM.DD HH:mm |
+| 7 | 관리자 | `createdBy` | 좌측 | 100px | - | 생성한 관리자 이름 |
 
 > **PM 대비 ST 변경점:**
 >

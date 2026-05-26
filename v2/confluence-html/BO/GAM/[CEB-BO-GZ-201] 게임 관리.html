@@ -78,7 +78,7 @@ p {
 <body>
 <h1>[CEB-BO-GZ-201] 게임 리스트</h1>
 <blockquote>
-<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) Phase 1·2 PM/ST 운영 중단. 재개 시 v2/BO/GAM/[CEB-BO-GZ-201] 신규</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
+<p>⚠️ <strong>DEPRECATED (2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) PM/ST 운영 중단. 재개 시 v2/BO/GAM/[CEB-BO-GZ-201] 신규</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
 </blockquote>
 <h2>Page Properties</h2>
 <table>
@@ -109,7 +109,7 @@ p {
 <p>게임존의 모든 게임을 조회하고 관리하는 <strong>메인 리스트 화면</strong>. 관리자는 게임 유형·상태 필터와 타이틀 검색으로 게임을 좁힌 뒤, 신규 게임을 생성하거나 기존 게임의 상세로 이동한다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>화면 경로</td><td>`/gamezone/games?type={PREDICTION_MARKET\</td><td>SURVIVAL_TRIVIA}`</td></tr>
+<tr><td>화면 경로</td><td>`/gamezone/games?type={PREDICTION_MARKET</td><td>SURVIVAL_TRIVIA}`</td></tr>
 <tr><td>Breadcrumb</td><td>홈 › 게임존 › 게임 관리</td></tr>
 <tr><td>페이지 제목</td><td>"게임 관리"</td></tr>
 <tr><td>진입 경로</td><td>사이드바 "게임존 › 게임 관리", 또는 [CEB-BO-GZ-101] 게임존 메인의 PM/ST 카드 "바로가기"</td></tr>
@@ -141,22 +141,22 @@ p {
 <tr><th>#</th><th>컬럼</th><th>필드</th><th>정렬</th><th>너비</th><th>정렬기능</th><th>설명</th></tr>
 <tr><td>1</td><td>타이틀</td><td>title.ko</td><td>좌측</td><td>300px</td><td>-</td><td>최대 50자, 초과 시 말줄임</td></tr>
 <tr><td>2</td><td>상태</td><td>status</td><td>중앙</td><td>120px</td><td>-</td><td>Badge (임시저장/게시대기/진행중/결과대기/결과확정/종료)</td></tr>
-<tr><td>3</td><td>참여자 수</td><td>participantCount</td><td>우측</td><td>130px</td><td>O</td><td>천 단위 콤마</td></tr>
-<tr><td>4</td><td>총 상금 GP</td><td>totalPrizeGP</td><td>우측</td><td>130px</td><td>O</td><td>"{숫자} GP" 형식</td></tr>
-<tr><td>5</td><td><strong>참여기간</strong></td><td>publishedAt ~ endDate</td><td>좌측</td><td>220px</td><td>-</td><td>YYYY.MM.DD ~ YYYY.MM.DD (운영 표기 — 띄어쓰기 없음)</td></tr>
-<tr><td>6</td><td>생성일</td><td>createdAt</td><td>좌측</td><td>140px</td><td>O</td><td>YYYY.MM.DD HH:mm</td></tr>
-<tr><td>7</td><td>관리자</td><td>createdBy</td><td>좌측</td><td>120px</td><td>-</td><td>생성한 관리자 이름</td></tr>
+<tr><td>3</td><td>참여자 수</td><td><code>participantCount</code></td><td>우측</td><td>130px</td><td>O</td><td>천 단위 콤마</td></tr>
+<tr><td>4</td><td>총 상금 GP</td><td><code>totalPrizeGP</code></td><td>우측</td><td>130px</td><td>O</td><td>"{숫자} GP" 형식</td></tr>
+<tr><td>5</td><td><strong>참여기간</strong></td><td><code>publishedAt</code> ~ <code>endDate</code></td><td>좌측</td><td>220px</td><td>-</td><td>YYYY.MM.DD ~ YYYY.MM.DD (운영 표기 — 띄어쓰기 없음)</td></tr>
+<tr><td>6</td><td>생성일</td><td><code>createdAt</code></td><td>좌측</td><td>140px</td><td>O</td><td>YYYY.MM.DD HH:mm</td></tr>
+<tr><td>7</td><td>관리자</td><td><code>createdBy</code></td><td>좌측</td><td>120px</td><td>-</td><td>생성한 관리자 이름</td></tr>
 </table>
 <h4>Survival Trivia 테이블 (7 컬럼)</h4>
 <table>
 <tr><th>#</th><th>컬럼</th><th>필드</th><th>정렬</th><th>너비</th><th>정렬기능</th><th>설명</th></tr>
 <tr><td>1</td><td>타이틀</td><td>title.ko</td><td>좌측</td><td>300px</td><td>-</td><td>최대 50자, 초과 시 말줄임</td></tr>
 <tr><td>2</td><td>상태</td><td>status</td><td>중앙</td><td>100px</td><td>-</td><td>Badge (임시저장/게시대기/진행중/종료 — ST는 결과대기·결과확정 없음)</td></tr>
-<tr><td>3</td><td>참여자 / 정원</td><td>participantCount / maxParticipants</td><td>우측</td><td>130px</td><td>O</td><td>"{참여자} / {정원}" 형식. 무제한 시 "{참여자} / ∞"</td></tr>
-<tr><td>4</td><td><strong>최대 상금 GP</strong></td><td>maxPrizeGP</td><td>우측</td><td>130px</td><td>O</td><td>"{숫자} GP" 형식 (운영 표기 — PM의 "총 상금"과 구분)</td></tr>
-<tr><td>5</td><td>참여 비용</td><td>participationCost</td><td>우측</td><td>100px</td><td>-</td><td>"{숫자} GP" 형식</td></tr>
-<tr><td>6</td><td>시작일시</td><td>startDateTime</td><td>좌측</td><td>160px</td><td>O</td><td>YYYY.MM.DD HH:mm</td></tr>
-<tr><td>7</td><td>관리자</td><td>createdBy</td><td>좌측</td><td>100px</td><td>-</td><td>생성한 관리자 이름</td></tr>
+<tr><td>3</td><td>참여자 / 정원</td><td><code>participantCount</code> / <code>maxParticipants</code></td><td>우측</td><td>130px</td><td>O</td><td>"{참여자} / {정원}" 형식. 무제한 시 "{참여자} / ∞"</td></tr>
+<tr><td>4</td><td><strong>최대 상금 GP</strong></td><td><code>maxPrizeGP</code></td><td>우측</td><td>130px</td><td>O</td><td>"{숫자} GP" 형식 (운영 표기 — PM의 "총 상금"과 구분)</td></tr>
+<tr><td>5</td><td>참여 비용</td><td><code>participationCost</code></td><td>우측</td><td>100px</td><td>-</td><td>"{숫자} GP" 형식</td></tr>
+<tr><td>6</td><td>시작일시</td><td><code>startDateTime</code></td><td>좌측</td><td>160px</td><td>O</td><td>YYYY.MM.DD HH:mm</td></tr>
+<tr><td>7</td><td>관리자</td><td><code>createdBy</code></td><td>좌측</td><td>100px</td><td>-</td><td>생성한 관리자 이름</td></tr>
 </table>
 <blockquote>
 <p><strong>PM 대비 ST 변경점:</strong></p>

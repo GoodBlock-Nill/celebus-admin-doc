@@ -1,6 +1,6 @@
 # [CEB-BO-GZ-501-MD-DETAIL] 교환 상세
 
-> ⚠️ **DEPRECATED (Phase 10, 2026-05-06)**: 본 문서는 v1입니다. **v2 단일 진실원천(SSOT)**: `(휴면 + 운영 정합 갱신) 부모 [CEB-BO-GZ-501] 차단 이슈 해제 확인. 본 문서는 운영 BO 실측 정합 갱신본이며 PM/ST 운영 재개 시 v2 정식 발행`. 본 문서는 보존 목적 + 운영 정합 동시 달성.
+> ⚠️ **DEPRECATED (2026-05-06)**: 본 문서는 v1입니다. **v2 단일 진실원천(SSOT)**: `(휴면 + 운영 정합 갱신) 부모 [CEB-BO-GZ-501] 차단 이슈 해제 확인. 본 문서는 운영 BO 실측 정합 갱신본이며 PM/ST 운영 재개 시 v2 정식 발행`. 본 문서는 보존 목적 + 운영 정합 동시 달성.
 
 ## Page Properties
 
@@ -55,10 +55,10 @@
 
 | # | 라벨 | 값 형식 | 비고 |
 |---|---|---|---|
-| 1 | Txid | 전체 hex 텍스트 + 복사 아이콘 | 블록체인 트랜잭션 해시 (`0x` + 64자). 클릭 시 **`https://testnet.bscscan.com/tx/{txid}` 새 탭 이동** (a 태그 target=_blank — 운영 BO 실측 확정. **testnet BSCScan 사용** — mainnet 아님) |
+| 1 | Txid | 전체 hex 텍스트 + 복사 아이콘 | 블록체인 트랜잭션 해시 (`0x` + 64자). 클릭 시 **`https://testnet.bscscan.com/tx/{txid}` 새 탭 이동** (a 태그 `target="_blank"` — 운영 BO 실측 확정. **testnet BSCScan 사용** — mainnet 아님) |
 | 2 | 교환일시 | YYYY.MM.DD HH:mm (운영 표기. 명세 v1.1 "HH:mm:ss" 정정) | 거래 완료/실패 시각 |
 | 3 | 닉네임 | button (indigo 텍스트) 또는 "-" | 클릭 시 **`/members/{id}?tab=basic` 같은 탭 이동** ([GZ-601-MD-DETAIL v1.5]와 동일 패턴 — 기본 탭은 basic, 게임존 탭은 [USR-203]에서 별도 진입) |
-| 4 | 지갑주소 | 전체 hex 텍스트 + 복사 아이콘 | BSC 지갑주소(`0x` + 40자). 클릭 시 **`https://testnet.bscscan.com/address/{address}` 새 탭 이동** (a 태그 target=_blank — 운영 BO 실측 확정. **testnet BSCScan 사용**) |
+| 4 | 지갑주소 | 전체 hex 텍스트 + 복사 아이콘 | BSC 지갑주소(`0x` + 40자). 클릭 시 **`https://testnet.bscscan.com/address/{address}` 새 탭 이동** (a 태그 `target="_blank"` — 운영 BO 실측 확정. **testnet BSCScan 사용**) |
 | 5 | 교환 방향 | Badge | **"GP로 충전"** (파란 톤) / "GP로 출금"(회색 톤). 부모 테이블 "GP 충전/GP 출금" Badge와 표기 차이 — 모달은 "GP로" 접속사 포함 (운영 실측) |
 | 6 | GP 수량 | "{N} GP" | 천 단위 콤마 |
 | 7 | CELB 수량 | "{N} CELB" | 천 단위 콤마 |
@@ -103,8 +103,8 @@
 | 데이터 로딩 실패 | 에러 토스트 "교환 상세를 불러올 수 없습니다." + 모달 닫기 |
 | Txid·지갑주소 [복사] 클릭 | 클립보드 복사 + Toast "복사되었습니다." |
 | 닉네임 클릭 | **`/members/{id}?tab=basic` 같은 탭 이동** (모달 닫히고 페이지 전환 — 운영 BO 실측) |
-| Txid hex 클릭 | **`https://testnet.bscscan.com/tx/{txid}` 새 탭** (target=_blank) |
-| 지갑주소 hex 클릭 | **`https://testnet.bscscan.com/address/{address}` 새 탭** (target=_blank) |
+| Txid hex 클릭 | **`https://testnet.bscscan.com/tx/{txid}` 새 탭** (`target="_blank"`) |
+| 지갑주소 hex 클릭 | **`https://testnet.bscscan.com/address/{address}` 새 탭** (`target="_blank"`) |
 | [X] · Esc · 백드롭 | 모달 닫기 |
 
 ## 5. 검증 규칙
@@ -158,7 +158,7 @@
 
 | 버전 | 일자 | 작성자 | 변경 |
 |---|---|---|---|
-| **v1.3** | **2026.05.26** | **@Nill Yoo** | **운영 BO 보강 검증 정합** — v1.2의 "추가 검증 시 보강" 항목 4건 확정 정정. ① **§2-2 Txid 링크 — testnet BSCScan 정정** — `https://bscscan.com/tx/{txid}` → `https://testnet.bscscan.com/tx/{txid}` (운영 BO는 **testnet 사용**, mainnet 아님). a 태그 target=_blank 새 탭 확정 ② **§2-2 지갑주소 링크 — testnet BSCScan 정정** — 동일 (`/address/{address}`) ③ **§2-2 닉네임 클릭 동작 정정** — `/members/{id}?tab=basic` 같은 탭 이동 ([GZ-601-MD-DETAIL v1.5] 동일 패턴). 명세 v1.2의 "[USR-203] 게임존 탭" 가정 정정 — 기본 탭은 basic ④ **§2-3 백드롭 닫기 동작 정정** — 모달 외부 클릭 시 닫히지 않음. Esc 또는 [X]만 동작 ([GZ-601-MD-DETAIL] 동일) ⑤ **§4 상태별 동작 분기** — 닉네임/Txid/지갑주소 클릭 동작 분리 명시 |
-| v1.2 | 2026.05.26 | @Nill Yoo | **양식 표준화(RFT/RFL 정합) + 운영 BO 정합** ① 양식 표준화: Page Properties 14필드(비고), §1 화면 개요 + 표, §2 화면 구성 하이픈(2-1 헤더 / 2-2 본문 / 2-3 푸터), §3 노출 정보 표, §4 상태별 동작 분기, §5 검증 규칙 4항목, §6 연관 화면, §7 변경 이력 — [GZ-501 v1.4] 동일 사이클 정합 ② 운영 BO 정합 (chrome-devtools + playwright 실접속 모달 캡처): **§2-2 교환 방향 Badge 라벨 정정** — 명세 v1.1 "GP 가져오기/CELB으로 보내기" → 운영 모달 표기 **"GP로 충전/GP로 출금"** (부모 테이블 "GP 충전/GP 출금"과 미세 차이 — 모달은 "GP로" 접속사 포함, 운영 우선 정책), **§2-2 상태 Badge 라벨 정정** — "완료" → **"성공"** (초록 톤, 운영 표기), **§2-2 교환일시 형식 정정** — "HH:mm:ss" → "HH:mm" (운영 BO 표기), **§2-2 적용 비율 표기 형태** — "1 GP = X CELB" 단일 → "1 CELB = X GP" / "1 GP = X CELB" 운영 표기 (충전·출금 의미 부각) ③ **§2-3 푸터 정정** — 명세 v1.1의 [닫기] 버튼 푸터 → 운영 BO에는 우상단 [X]만 노출. 푸터 [닫기] 버튼 제거 ④ **§3.4 실패 사유 코드 표 제거** — 백엔드 식별자(INSUFFICIENT_BALANCE 등) 기획자 언어 룰 위반. 한국어 메시지만 보강 ⑤ **§에러 코드 표(E_EXD_*) 제거** — 동일 룰 위반 ⑥ 권한 매트릭스 제거 → "부모 화면과 동일" 위임 ⑦ DEPRECATED 라벨 유지 + 본문 운영 정합 ⑧ 미확정 항목(BSCScan 링크 동작, 닉네임 클릭 동작, 실패 케이스 표기, 백드롭 닫기)은 "운영 BO 추가 검증 시 보강" 명시 |
+| **v1.3** | **2026.05.26** | **@Nill Yoo** | **운영 BO 보강 검증 정합** — v1.2의 "추가 검증 시 보강" 항목 4건 확정 정정. ① **§2-2 Txid 링크 — testnet BSCScan 정정** — `https://bscscan.com/tx/{txid}` → `https://testnet.bscscan.com/tx/{txid}` (운영 BO는 **testnet 사용**, mainnet 아님). a 태그 `target="_blank"` 새 탭 확정 ② **§2-2 지갑주소 링크 — testnet BSCScan 정정** — 동일 (`/address/{address}`) ③ **§2-2 닉네임 클릭 동작 정정** — `/members/{id}?tab=basic` 같은 탭 이동 ([GZ-601-MD-DETAIL v1.5] 동일 패턴). 명세 v1.2의 "[USR-203] 게임존 탭" 가정 정정 — 기본 탭은 basic ④ **§2-3 백드롭 닫기 동작 정정** — 모달 외부 클릭 시 닫히지 않음. Esc 또는 [X]만 동작 ([GZ-601-MD-DETAIL] 동일) ⑤ **§4 상태별 동작 분기** — 닉네임/Txid/지갑주소 클릭 동작 분리 명시 |
+| v1.2 | 2026.05.26 | @Nill Yoo | **양식 표준화(RFT/RFL 정합) + 운영 BO 정합** ① 양식 표준화: Page Properties 14필드(비고), §1 화면 개요 + 표, §2 화면 구성 하이픈(2-1 헤더 / 2-2 본문 / 2-3 푸터), §3 노출 정보 표, §4 상태별 동작 분기, §5 검증 규칙 4항목, §6 연관 화면, §7 변경 이력 — [GZ-501 v1.4] 동일 사이클 정합 ② 운영 BO 정합 (chrome-devtools + playwright 실접속 모달 캡처): **§2-2 교환 방향 Badge 라벨 정정** — 명세 v1.1 "GP 가져오기/CELB으로 보내기" → 운영 모달 표기 **"GP로 충전/GP로 출금"** (부모 테이블 "GP 충전/GP 출금"과 미세 차이 — 모달은 "GP로" 접속사 포함, 운영 우선 정책), **§2-2 상태 Badge 라벨 정정** — "완료" → **"성공"** (초록 톤, 운영 표기), **§2-2 교환일시 형식 정정** — "HH:mm:ss" → "HH:mm" (운영 BO 표기), **§2-2 적용 비율 표기 형태** — "1 GP = X CELB" 단일 → "1 CELB = X GP" / "1 GP = X CELB" 운영 표기 (충전·출금 의미 부각) ③ **§2-3 푸터 정정** — 명세 v1.1의 [닫기] 버튼 푸터 → 운영 BO에는 우상단 [X]만 노출. 푸터 [닫기] 버튼 제거 ④ **§3.4 실패 사유 코드 표 제거** — 백엔드 식별자(`INSUFFICIENT_BALANCE` 등) 기획자 언어 룰 위반. 한국어 메시지만 보강 ⑤ **§에러 코드 표(E_EXD_*) 제거** — 동일 룰 위반 ⑥ 권한 매트릭스 제거 → "부모 화면과 동일" 위임 ⑦ DEPRECATED 라벨 유지 + 본문 운영 정합 ⑧ 미확정 항목(BSCScan 링크 동작, 닉네임 클릭 동작, 실패 케이스 표기, 백드롭 닫기)은 "운영 BO 추가 검증 시 보강" 명시 |
 | v1.1 | 2026.02.24 | @Nill Yoo | 교환 방향 용어 통일 — GP 충전 → GP 가져오기, GP 출금 → CELB으로 보내기 (v1.2에서 운영 표기로 환원) |
 | v1.0 | 2025.02.03 | @Nill Yoo | 초안 작성 |

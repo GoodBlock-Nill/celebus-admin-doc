@@ -78,9 +78,9 @@ p {
 <body>
 <h1>[CEB-BO-GZ-202] 게임 상세</h1>
 <blockquote>
-<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) Phase 1·2 PM/ST 운영 중단</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
+<p>⚠️ <strong>DEPRECATED (2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) PM/ST 운영 중단</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
 <p>></p>
-<p>📌 <strong>검증 환경 노트(v2.7)</strong>: 본 문서의 운영 BO 정합 검증은 <strong>테스트 백오피스(<code>https://celebus-backoffice.vercel.app</code>)</strong>의 PM Pending 상태 데이터(id=92, 결과대기)로 진행됨. ST 데이터는 테스트 BO에도 부재하여 ST 항목은 명세 보존 + 운영 검증 미실시 노트. 신규 ST 게임 생성을 통한 검증은 GAM 사이클 #2-3c(모달)에서 함께 처리.</p>
+<p>📌 <strong>검증 환경 노트(v2.7)</strong>: 본 문서의 운영 BO 정합 검증은 <strong>테스트 백오피스(<code>https://celebus-backoffice.vercel.app</code>)</strong>의 PM Pending 상태 데이터(id=92, 결과대기)로 진행됨. ST 데이터는 테스트 BO에도 부재하여 ST 항목은 명세 보존 + 운영 검증 미실시 노트. 신규 ST 게임 생성을 통한 검증은 GAM <code>사이클 #2</code>-3c(모달)에서 함께 처리.</p>
 </blockquote>
 <h2>Page Properties</h2>
 <table>
@@ -290,8 +290,8 @@ p {
 <tr><td>지분당 보상 GP</td><td>{숫자} GP (계산값)</td></tr>
 <tr><td>보상 지급 상태</td><td>"미지급" / "지급 완료"</td></tr>
 <tr><td>보상 지급일</td><td>YYYY.MM.DD HH:mm, 미지급 시 "-"</td></tr>
-<tr><td><strong>응모권 분배 결과 (v2.8 신규)</strong></td><td>"{ticketReward}장 × 정답자 {N}명 = {총}장" — 응모권 보상 0이면 미노출</td></tr>
-<tr><td><strong>덕력 분배 결과 (v2.9 정정)</strong></td><td>"{dukReward} DUK × 참여자 {N}명 = {총} DUK" — 덕력 보상 0이면 미노출. 참여자 수 기반 균등 분배 (예: 30 DUK × 156명 = 4,680 DUK)</td></tr>
+<tr><td><strong>응모권 분배 결과 (v2.8 신규)</strong></td><td>"{<code>ticketReward</code>}장 × 정답자 {N}명 = {총}장" — 응모권 보상 0이면 미노출</td></tr>
+<tr><td><strong>덕력 분배 결과 (v2.9 정정)</strong></td><td>"{<code>dukReward</code>} DUK × 참여자 {N}명 = {총} DUK" — 덕력 보상 0이면 미노출. 참여자 수 기반 균등 분배 (예: 30 DUK × 156명 = 4,680 DUK)</td></tr>
 </table>
 <h4>2-6-2. ST 결과/보상 탭 (명세 보존 — 운영 검증 미실시)</h4>
 <p>ST는 서버 자동 판정·보상이므로 본 탭 항목은 ST 종료 후 자동 채워진다. 핵심 항목:</p>
@@ -343,7 +343,7 @@ p {
 <tr><td>권한</td><td>읽기 권한으로 진입. 상태 변경 액션은 쓰기 권한. 권한 없으면 액션 버튼 미노출</td></tr>
 </table>
 <h3>5-1. 결과 입력 사전 검증 (PM Pending)</h3>
-<p>[결과 입력] 클릭 시 [202-MD-RESULT] 모달에서 YES/NO 선택 + 결과 정보(KO/EN/JP) 입력 후 저장하면 상태가 Pending → <strong>Closed</strong>로 전이. 이후 [보상 지급] 가능. (자세한 동작은 사이클 #2-3c에서 [202-MD-RESULT]·[202-MD-REWARD] 명세에 보강)</p>
+<p>[결과 입력] 클릭 시 [202-MD-RESULT] 모달에서 YES/NO 선택 + 결과 정보(KO/EN/JP) 입력 후 저장하면 상태가 Pending → <strong>Closed</strong>로 전이. 이후 [보상 지급] 가능. (자세한 동작은 <code>사이클 #2</code>-3c에서 [202-MD-RESULT]·[202-MD-REWARD] 명세에 보강)</p>
 <h3>5-2. 게임 종료 자동 전이 (Ended)</h3>
 <p>PM/ST 공통 — Closed 상태(PM) 또는 Active 종료 시점(ST)에서 일정 시간 경과 후 <strong>Ended</strong>로 자동 전이. 정확한 경과 시간 정책은 [CEB-BO-GZ-000] 참조.</p>
 <h2>6. 연관 화면</h2>
@@ -365,7 +365,7 @@ p {
 <tr><td><strong>v2.10</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 기능 본문 보강 + 덕력 단위 'DUK' 통일</strong> — v2.8/v2.9 변경 이력에서 약속한 신규 필드를 §2 본문에 실제 명시 (사용자 점검 발견). ① §2-4-1 PM·§2-4-2 ST 기본정보에 아티스트 그룹 행 추가 ② PM 보상설정에 응모권 보상(정답자 1인당)·덕력 보상(참여자 1인당) 행 추가 ③ ST 보상설정에 응모권 보상(생존자/탈락자 1인당)·덕력 보상(참여자 1인당) 행 추가, 구 라벨 "탈락자 응모권" 폐기 ④ §2-6-1 PM 보상 현황에 응모권·덕력 분배 결과 2행 추가 (참여자 수 기반) ⑤ §2-6-2 ST 분배 결과 항목 보강 ⑥ §3·§5 정합 ⑦ <strong>덕력 단위 'DUK' 표기 통일</strong> — §7 v2.9 변경 이력 인용 "30점 × 156명 = 4680점" → "30 DUK × 156명 = 4,680 DUK". 모든 신규 본문 단위 'DUK' 적용. [CEB-BO-DUK-000] §단위·표기 SSOT 일치</td></tr>
 <tr><td>v2.9</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>보상 정책 정정 — 탈락자 응모권 통일 라벨 + 덕력 분배 결과 = 참여자 수 기반</strong> ① §기본정보 PM 보상설정 — "덕력 보상 (정답자 1인당)" → <strong>"덕력 보상 (참여자 1인당)"</strong> 라벨 정정 ② §기본정보 ST 보상설정 — "탈락자 응모권" → <strong>"응모권 보상 (탈락자 1인당)"</strong> (0 → "미지급") + "덕력 보상 (생존자 1인당)" → <strong>"덕력 보상 (참여자 1인당)"</strong> ③ §결과/보상 PM — "덕력 분배 결과" 계산 정정: 1인당 N DUK × <strong>참여자 수</strong> (기존 정답자 수). 예: "30 DUK × 156명 = 4,680 DUK" (기존 70명 정답자 → 156명 참여자) ④ [GZ-000 v2.5] §5 동일 사이클 정합</td></tr>
 <tr><td>v2.8</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 — 아티스트·응모권·덕력 표시 추가 (PM·ST 공통)</strong> ① §기본정보 탭 — 아티스트 Badge 표시 (게임유형 바로 아래). [GZ-000 v2.4] §5 단일 ArtistGroup 정합 ② §기본정보 탭 — PM 보상설정에 "응모권 보상 (정답자 1인당)" + "덕력 보상 (정답자 1인당)" 신규 (0 = "미지급") ③ §기본정보 탭 — ST 보상설정에 "응모권 보상 (생존자 1인당)" + "덕력 보상 (생존자 1인당)" 신규 ④ §결과/보상 탭 (PM) — 보상 현황에 "응모권 분배 결과" + "덕력 분배 결과" 신규 (예: "5장 × 70명 = 350장") ⑤ 결과 확정 후 잠금 정책 정합 ([202-EDIT v2.8]). 회원 앱 표시 정합은 별도 사이클</td></tr>
-<tr><td>v2.7</td><td>2026.05.22</td><td>@Nill Yoo</td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합 + PM 서브타입 제거</strong> ① 양식 표준화: Page Properties 비고 필드 추가, §1 화면 개요 표, §2 하이픈 표기(§2-1~§2-6), §3 노출 정보, §4 상태별 동작 분기, §5 검증 규칙(+5-1 결과 입력, +5-2 자동 전이), §6 연관 화면, §7 변경 이력 — RFT/RFL 양식 정합 ② 운영 BO 정합(테스트 BO id=92 PM Pending 실측): 라우트 명시(<code>/gamezone/games/{id}?tab={…}</code>), h1 합성 표기(타이틀+상태배지 인라인), Pending 액션 버튼 [수정하기] [결과 입력] [강제 종료] 확정, 다국어 KO/EN/JP <strong>세로 별도 표시</strong> 명시(탭 전환 아님), 이미지 <strong>[이미지 보기] 링크</strong> 명시, 참여내역 탭 컬럼 운영 정합(No./유저명 버튼/참여일시/선택값/사용 GP/부스팅 GP/참여 상태), 결과/보상 탭 항목 운영 정합(결과 정보 9개 + 보상 현황 7개) ③ <strong>PM 서브타입("타입 1 (유료)" / "타입 2 (무료) ※보류") 제거</strong> — [201-CREATE] v3.1과 정합 ④ ST 항목은 명세 보존 + 운영 검증 미실시 노트 (테스트 BO ST 데이터 부재, 사이클 #2-3c에서 신규 ST 생성 시 재검증) ⑤ DEPRECATED 라벨 유지</td></tr>
+<tr><td>v2.7</td><td>2026.05.22</td><td>@Nill Yoo</td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합 + PM 서브타입 제거</strong> ① 양식 표준화: Page Properties 비고 필드 추가, §1 화면 개요 표, §2 하이픈 표기(§2-1~§2-6), §3 노출 정보, §4 상태별 동작 분기, §5 검증 규칙(+5-1 결과 입력, +5-2 자동 전이), §6 연관 화면, §7 변경 이력 — RFT/RFL 양식 정합 ② 운영 BO 정합(테스트 BO id=92 PM Pending 실측): 라우트 명시(<code>/gamezone/games/{id}?tab={…}</code>), h1 합성 표기(타이틀+상태배지 인라인), Pending 액션 버튼 [수정하기] [결과 입력] [강제 종료] 확정, 다국어 KO/EN/JP <strong>세로 별도 표시</strong> 명시(탭 전환 아님), 이미지 <strong>[이미지 보기] 링크</strong> 명시, 참여내역 탭 컬럼 운영 정합(No./유저명 버튼/참여일시/선택값/사용 GP/부스팅 GP/참여 상태), 결과/보상 탭 항목 운영 정합(결과 정보 9개 + 보상 현황 7개) ③ <strong>PM 서브타입("타입 1 (유료)" / "타입 2 (무료) ※보류") 제거</strong> — [201-CREATE] v3.1과 정합 ④ ST 항목은 명세 보존 + 운영 검증 미실시 노트 (테스트 BO ST 데이터 부재, <code>사이클 #2</code>-3c에서 신규 ST 생성 시 재검증) ⑤ DEPRECATED 라벨 유지</td></tr>
 <tr><td>v2.6</td><td>2026.04.07</td><td>@Nill Yoo</td><td>PM 서브타입(타입1/타입2)·ST 결과/보상·퀴즈 미리보기 정의 — v2.7에서 PM 서브타입 부분은 운영 미구현으로 제거</td></tr>
 <tr><td>v2.x</td><td>—</td><td>—</td><td>(v2 이력은 git history 참조)</td></tr>
 <tr><td>v1.x</td><td>—</td><td>—</td><td>(v1 이력은 git history 참조)</td></tr>

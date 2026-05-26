@@ -78,7 +78,7 @@ p {
 <body>
 <h1>[CEB-BO-GZ-202-MD-REWARD] 보상 지급 확인 모달</h1>
 <blockquote>
-<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) Phase 1 PM 운영 중단</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
+<p>⚠️ <strong>DEPRECATED (2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) PM 운영 중단</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
 <p>></p>
 <p>📌 <strong>검증 상태(v2.2)</strong>: 본 모달은 Closed 상태 게임의 [보상 지급] 버튼에서 트리거되나, <strong>검증 라이프사이클이 비현실적</strong>이어서 운영 BO 실측 미실시 (Pending → 결과 입력 → Closed → 보상 지급 자동 흐름 + 실제 참여자 데이터 필요). v2.1 본문을 보존하며 양식만 RFT/RFL 표준에 맞춘다. 향후 운영 재개 시 실측 정합 재검증 필요.</p>
 </blockquote>
@@ -184,7 +184,7 @@ p {
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
 <tr><td><strong>v2.5</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>덕력 단위 'DUK' 표기 통일</strong> — §2-2 게임 정보·§3 노출 정보의 "덕력 총 지급 N점 (1인당 N점 × 참여자 N명)" → <strong>"덕력 총 지급 N DUK (1인당 N DUK × 참여자 N명)"</strong>. §7 v2.3 변경 이력 인용도 함께 정정. [CEB-BO-DUK-000] §단위·표기 SSOT("1,234 DUK") 일치. 모달 동작·정책 변경 없음</td></tr>
 <tr><td>v2.4</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 본문 보강</strong> — v2.3 변경 이력에서 약속한 응모권·덕력 보상 지급 항목을 §2-2 게임 정보 본문, §2-3 부연, §3 노출 정보 표에 실제 명시. v2.3은 변경 이력만 추가되고 §2 본문에 미반영된 상태였음(사용자 점검 발견). 응모권은 RFT 영역(PM·ST 보상)으로 자동 발급, 덕력은 DUK 영역(PM 참여 보상)으로 자동 적립 경로를 부연에 추가. 응모권 보상·덕력 보상 0이면 각각 미노출 정책 명시</td></tr>
-<tr><td>v2.3</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 — 응모권·덕력 보상 지급 항목 추가</strong> — §모달 본문에 보상 총량 표시 항목 확장: 기존 "총 상금 GP" + "지분당 보상 GP" 옆에 <strong>"응모권 총 지급 N장 (1인당 N장 × 대상 N명)"</strong> + <strong>"덕력 총 지급 N DUK (1인당 N DUK × 대상 N명)"</strong> 신규. 게임 생성 시 ticketReward·dukReward가 0이면 해당 항목 미노출. [지급] 클릭 시 분배 트리거 + Toast "보상이 지급되었습니다. (GP/응모권/덕력 총 N)" + 활동 로그 ([GZ-000 v2.4] §5 정합). 본 사이클은 명세 정의만 — 모달 UI 자체 변경은 운영 재개 시 v3.0 실측 정합과 함께</td></tr>
+<tr><td>v2.3</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 — 응모권·덕력 보상 지급 항목 추가</strong> — §모달 본문에 보상 총량 표시 항목 확장: 기존 "총 상금 GP" + "지분당 보상 GP" 옆에 <strong>"응모권 총 지급 N장 (1인당 N장 × 대상 N명)"</strong> + <strong>"덕력 총 지급 N DUK (1인당 N DUK × 대상 N명)"</strong> 신규. 게임 생성 시 <code>ticketReward</code>·<code>dukReward</code>가 0이면 해당 항목 미노출. [지급] 클릭 시 분배 트리거 + Toast "보상이 지급되었습니다. (GP/응모권/덕력 총 N)" + 활동 로그 ([GZ-000 v2.4] §5 정합). 본 사이클은 명세 정의만 — 모달 UI 자체 변경은 운영 재개 시 v3.0 실측 정합과 함께</td></tr>
 <tr><td>v2.2</td><td>2026.05.22</td><td>@Nill Yoo</td><td><strong>양식 표준화(RFT/RFL 정합) + v2.1 본문 보존 + 운영 실측 미실시 노트</strong> ① 양식 표준화: Page Properties 비고 필드, §1 모달 개요 표, §2 하이픈 표기, §3 노출 정보, §4 상태별 동작 분기, §5 검증 규칙, §6 연관 화면, §7 변경 이력 — RFT/RFL 양식 정합 ② 본문은 v2.1 명세 보존 (운영 BO 실측 라이프사이클 비현실적 — Pending→결과 입력→Closed→보상 지급 자동 흐름 + 실제 참여 데이터 필요) ③ 검증 미실시 노트 명시 — 향후 운영 재개 시 v3.0 실측 정합 ④ DEPRECATED 라벨 유지</td></tr>
 <tr><td>v2.1</td><td>2026.02.25</td><td>@Nill Yoo</td><td>(v2 이력 — git history 참조)</td></tr>
 <tr><td>v1.x</td><td>—</td><td>—</td><td>(v1 이력)</td></tr>

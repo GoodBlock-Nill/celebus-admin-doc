@@ -1,6 +1,6 @@
 # [CEB-BO-GZ-202-EDIT] 게임 수정
 
-> ⚠️ **DEPRECATED (Phase 10, 2026-05-06)**: 본 문서는 v1입니다. **v2 단일 진실원천(SSOT)**: `(휴면) Phase 1·2 PM/ST 운영 중단`. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.
+> ⚠️ **DEPRECATED (2026-05-06)**: 본 문서는 v1입니다. **v2 단일 진실원천(SSOT)**: `(휴면) PM/ST 운영 중단`. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.
 >
 > 📌 **검증 환경 노트(v2.7)**: 본 문서의 운영 BO 정합 검증은 **테스트 백오피스(`https://celebus-backoffice.vercel.app`)**의 PM **Pending(결과대기)** 상태 데이터(id=92)로 진행됨. 다른 상태(Draft/Ready/Active/Closed)의 수정 잠금 매트릭스는 v2.6 명세 본문 보존 + 검증 미실시 노트. ST 데이터는 부재.
 
@@ -36,7 +36,7 @@
 
 | 항목 | 값 |
 |---|---|
-| 화면 경로 | `/gamezone/games/create?mode=edit&{predictionMarketId\|survivalTriviaId}={gameId}` |
+| 화면 경로 | `/gamezone/games/create?mode=edit&{predictionMarketId|survivalTriviaId}={gameId}` |
 | Breadcrumb | 홈 › 게임존 › 게임 관리 › **게임 생성** (운영 표기 그대로 — 수정도 "게임 생성"으로 표시) |
 | 페이지 제목 | "**게임 수정**" (h1, mode=edit일 때만 차별화) |
 | 진입 경로 | [CEB-BO-GZ-202] 게임 상세의 [수정하기] 또는 [결과 수정] 버튼 |

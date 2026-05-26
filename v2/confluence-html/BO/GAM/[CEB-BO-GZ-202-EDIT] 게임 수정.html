@@ -78,7 +78,7 @@ p {
 <body>
 <h1>[CEB-BO-GZ-202-EDIT] 게임 수정</h1>
 <blockquote>
-<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) Phase 1·2 PM/ST 운영 중단</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
+<p>⚠️ <strong>DEPRECATED (2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) PM/ST 운영 중단</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
 <p>></p>
 <p>📌 <strong>검증 환경 노트(v2.7)</strong>: 본 문서의 운영 BO 정합 검증은 <strong>테스트 백오피스(<code>https://celebus-backoffice.vercel.app</code>)</strong>의 PM <strong>Pending(결과대기)</strong> 상태 데이터(id=92)로 진행됨. 다른 상태(Draft/Ready/Active/Closed)의 수정 잠금 매트릭스는 v2.6 명세 본문 보존 + 검증 미실시 노트. ST 데이터는 부재.</p>
 </blockquote>
@@ -112,7 +112,7 @@ p {
 <p>기존 게임의 정보를 수정하는 <strong>풀페이지 폼 화면</strong>. [201-CREATE] 게임 생성 화면과 같은 컴포넌트이며, <code>?mode=edit</code> 진입 시 페이지 제목·CTA·필드 잠금 매트릭스가 수정 모드로 전환된다. 게임 상태에 따라 수정 가능 필드가 동적 잠금된다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>화면 경로</td><td>`/gamezone/games/create?mode=edit&{predictionMarketId\</td><td>survivalTriviaId}={gameId}`</td></tr>
+<tr><td>화면 경로</td><td>`/gamezone/games/create?mode=edit&{predictionMarketId</td><td>survivalTriviaId}={gameId}`</td></tr>
 <tr><td>Breadcrumb</td><td>홈 › 게임존 › 게임 관리 › <strong>게임 생성</strong> (운영 표기 그대로 — 수정도 "게임 생성"으로 표시)</td></tr>
 <tr><td>페이지 제목</td><td>"<strong>게임 수정</strong>" (h1, mode=edit일 때만 차별화)</td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-GZ-202] 게임 상세의 [수정하기] 또는 [결과 수정] 버튼</td></tr>

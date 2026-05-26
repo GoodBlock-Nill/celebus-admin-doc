@@ -1,6 +1,6 @@
 # [CEB-BO-GZ-101] 게임존 메인
 
-> ⚠️ **DEPRECATED (Phase 10, 2026-05-06)**: 본 문서는 v1입니다. **v2 단일 진실원천(SSOT)**: `(휴면) Phase 1·2 PM/ST 게임존 운영 중단 (진행중 게임 0건). 재개 시 v2/BO/GAM/[CEB-BO-GZ-101] 신규 작성`. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.
+> ⚠️ **DEPRECATED (2026-05-06)**: 본 문서는 v1입니다. **v2 단일 진실원천(SSOT)**: `(휴면) PM/ST 게임존 운영 중단 (진행중 게임 0건). 재개 시 v2/BO/GAM/[CEB-BO-GZ-101] 신규 작성`. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.
 
 ## Page Properties
 
@@ -164,8 +164,8 @@
 
 게임 관리 섹션의 카드(PM, ST 등)는 **해당 게임 유형의 서비스 활성화 상태**에 따라 노출. 여기서 Active/Inactive는 개별 게임의 진행 상태가 아니라 **게임 유형 자체가 서비스에 오픈되었는지 여부**를 의미한다.
 
-- Phase 1: PM만 Active → PM 카드 1개만 노출
-- Phase 2: ST Active 전환 → PM, ST 2개 가로 배치
+- PM만 Active 상태일 때: PM 카드 1개만 노출
+- ST가 Active 전환되면: PM, ST 2개 가로 배치
 - 향후 신규 게임 유형 추가 시 Active 설정된 유형만 그리드에 자동 추가
 
 ### 5-2. 항목별 집계 기준
@@ -190,8 +190,8 @@
 | 진입 경로 | 다음 화면 |
 |---|---|
 | "전체 보기" (게임 관리 섹션) | [CEB-BO-GZ-201] 게임 리스트 (필터 없음) |
-| PM 카드 "바로가기" | [CEB-BO-GZ-201]?type=PREDICTION_MARKET |
-| ST 카드 "바로가기" | [CEB-BO-GZ-201]?type=SURVIVAL_TRIVIA |
+| PM 카드 "바로가기" | [CEB-BO-GZ-201]?type=`PREDICTION_MARKET` |
+| ST 카드 "바로가기" | [CEB-BO-GZ-201]?type=`SURVIVAL_TRIVIA` |
 | 랭킹 카드 "바로가기" | [CEB-BO-GZ-401] 랭킹 조회 |
 | GP 교환소 카드 "바로가기" | [CEB-BO-GZ-501] 교환 내역 |
 | GP 변동 내역 카드 "바로가기" | [CEB-BO-GZ-601] GP 변동 내역 |

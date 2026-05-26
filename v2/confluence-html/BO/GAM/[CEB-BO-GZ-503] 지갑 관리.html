@@ -78,7 +78,7 @@ p {
 <body>
 <h1>[CEB-BO-GZ-503] 지갑 관리</h1>
 <blockquote>
-<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면 + 운영 정합 갱신) 게임존 휴면 중. 본 문서는 운영 BO 실측 정합 갱신본이며 PM/ST 운영 재개 시 v2 정식 발행</code>. 본 문서는 보존 목적 + 운영 정합 동시 달성.</p>
+<p>⚠️ <strong>DEPRECATED (2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면 + 운영 정합 갱신) 게임존 휴면 중. 본 문서는 운영 BO 실측 정합 갱신본이며 PM/ST 운영 재개 시 v2 정식 발행</code>. 본 문서는 보존 목적 + 운영 정합 동시 달성.</p>
 </blockquote>
 <h2>Page Properties</h2>
 <table>
@@ -150,7 +150,7 @@ p {
 <ul>
 <li>BNB 잔고가 임계값(0.01 BNB) 미만이면 빨간색 + ⚠ 경고 아이콘 (가스비 부족 경고 — [GZ-501] §5-3 정합)</li>
 <li>활성 상태 지갑의 [삭제] 버튼은 <strong><code>disabled</code> 속성</strong> (운영 실측 정합 — 운영·테스트 BO 양쪽 확인). 비활성화 후에만 삭제 가능 — 비활성 케이스 미발생으로 흐름 직접 캡처 불가 (추가 검증 시 보강)</li>
-<li><strong>지갑 정보 컬럼의 주소는 BSCScan 새 탭 링크</strong> — 환경별 URL: 운영 BO = <code>https://testnet.bscscan.com/address/{address}</code> / 테스트 BO = <code>https://bscscan.com/address/{address}</code> (mainnet). a 태그 target=_blank</li>
+<li><strong>지갑 정보 컬럼의 주소는 BSCScan 새 탭 링크</strong> — 환경별 URL: 운영 BO = <code>https://testnet.bscscan.com/address/{address}</code> / 테스트 BO = <code>https://bscscan.com/address/{address}</code> (mainnet). a 태그 <code>target="_blank"</code></li>
 </ul>
 <h3>2-4. 빈 상태</h3>
 <p>지갑 0건 시: Empty State "등록된 지갑이 없습니다. [+ 지갑 등록] 버튼으로 추가해 주세요." (운영 BO 실측 시점에 0건 케이스 미발생 — 표기 추정. 추가 검증 시 보강)</p>
@@ -215,7 +215,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.7</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 보강 검증 정합</strong> — v1.6의 "추가 검증 시 보강" 항목 확정 정정. ① <strong>§2-3 지갑 정보 컬럼 BSCScan 링크 정합</strong> — 환경별 URL 차이 명시: 운영 BO = <code>https://testnet.bscscan.com/address/{address}</code> (testnet) / 테스트 BO = <code>https://bscscan.com/address/{address}</code> (mainnet). a 태그 target=_blank 새 탭 ② <strong>§4 [대표] 지갑 비활성화 불가 정책 가능성</strong> — 운영 + 테스트 BO 양쪽에서 [대표] 지갑의 [비활성화] 클릭 무반응 (Toast·에러·모달 모두 미발생). 정확한 정책(대표 해제 후 비활성화 가능 등)은 운영팀 확인 시 보강 ③ [삭제] 버튼 <code>disabled</code> 속성 양쪽 BO 확정 — 비활성 케이스 미발생으로 [GZ-503-MD-DELETE] 모달 흐름 직접 캡처 불가</td></tr>
+<tr><td><strong>v1.7</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>운영 BO 보강 검증 정합</strong> — v1.6의 "추가 검증 시 보강" 항목 확정 정정. ① <strong>§2-3 지갑 정보 컬럼 BSCScan 링크 정합</strong> — 환경별 URL 차이 명시: 운영 BO = <code>https://testnet.bscscan.com/address/{address}</code> (testnet) / 테스트 BO = <code>https://bscscan.com/address/{address}</code> (mainnet). a 태그 <code>target="_blank"</code> 새 탭 ② <strong>§4 [대표] 지갑 비활성화 불가 정책 가능성</strong> — 운영 + 테스트 BO 양쪽에서 [대표] 지갑의 [비활성화] 클릭 무반응 (Toast·에러·모달 모두 미발생). 정확한 정책(대표 해제 후 비활성화 가능 등)은 운영팀 확인 시 보강 ③ [삭제] 버튼 <code>disabled</code> 속성 양쪽 BO 확정 — 비활성 케이스 미발생으로 [GZ-503-MD-DELETE] 모달 흐름 직접 캡처 불가</td></tr>
 <tr><td>v1.6</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합</strong> ① 양식 표준화: Page Properties 14필드(비고), §1 화면 개요 + 표, §2 화면 구성 하이픈(2-1 헤더 / 2-2 통계 카드 4종 / 2-3 테이블 / 2-4 빈 상태), §3 노출 정보 표, §4 상태별 동작 분기, §5 검증 규칙 4항목, §6 연관 화면, §7 변경 이력 — Group A·B/C/D#1·#2 동일 양식 ② 운영 BO 정합 (chrome-devtools + playwright 실접속 검증): <strong>§2-1 헤더 버튼 라벨 정정</strong> — "[잔액 새로고침]" → <strong>"[지갑 목록 새로고침]"</strong> (운영 표기), <strong>§2-2 통계 카드 4종 신설</strong> — 충전용·출금용·활성·비활성 지갑 카운트 (명세 v1.5에 누락), <strong>§2-3 액션 정책 정정</strong> — 활성 지갑 [삭제] 버튼 <strong>disabled</strong> (운영 실측. 명세 v1.5의 "활성/비활성 무관 삭제 가능" 정정), <strong>§5-3 삭제 정책</strong> — "활성 → 비활성 → 삭제" 흐름 명시 ③ <strong>권한 매트릭스 제거</strong> → "[관리자 > 권한관리]에 설정된 권한" 단일화 (BO-013 v7.0 정합) ④ <strong>ASCII UI 다이어그램 제거 + 백엔드 식별자(WALLET_*) / JSON 로그 / HTTP 상태 코드 표 제거</strong> — 기획자 언어 룰. 활동 로그는 [CEB-BO-GZ-000] 위임 ⑤ 미확정 항목(비활성→활성 전환 모달 / 비활성→삭제 흐름 / Empty State 메시지) "운영 BO 추가 검증 시 보강" 명시 ⑥ DEPRECATED 라벨 유지</td></tr>
 <tr><td>v1.5</td><td>2026.02.24</td><td>@Nill Yoo</td><td>교환 방향 용어 통일 — GP 충전 → GP 가져오기, GP 출금 → CELB으로 보내기 (v1.6 본 사이클에서 운영 표기 환원)</td></tr>
 <tr><td>v1.4</td><td>2026.02.12</td><td>@Nill Yoo</td><td>충전/출금 PK 입력 정책 정합</td></tr>
