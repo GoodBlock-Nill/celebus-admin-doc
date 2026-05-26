@@ -265,3 +265,118 @@ export const RANKING_SETTINGS_DEFAULT: RankingSettings = {
   updateInterval: '1일마다',
   minPlayCount: 1,
 };
+
+// ─────────────── 교환 내역·운영 지갑·통계 — [CEB-BO-GZ-501] ───────────────
+// 운영 BO 실측: GP 충전/GP 출금 방향, 비율 표기 "1 CELB = 1 GP" 또는 "1 GP = 1 CELB",
+// 상태 "성공"(초록). BSCScan testnet 사용.
+
+export type ExchangeDirection = 'GP 충전' | 'GP 출금';
+export type ExchangeStatus = '성공' | '실패';
+
+export interface OperationWallet {
+  type: 'CHARGE' | 'WITHDRAW';
+  isPrimary: boolean;
+  celbBalance: number;       // 소수 8자리 표시
+  bnbBalance: number;        // 소수 8자리, < 0.01 시 경고
+  address: string;           // 0x... 풀 주소 (테이블·카드에서는 축약)
+  status: '활성' | '비활성';
+}
+
+export interface ExchangeEntry {
+  id: number;
+  occurredAt: string;          // YYYY.MM.DD HH:mm
+  nickname: string | null;
+  uid: number | null;
+  txid: string;                // 0x + 64자 풀
+  direction: ExchangeDirection;
+  gpAmount: number;
+  celbAmount: number;
+  ratioText: string;           // "1 CELB = 1 GP" / "1 GP = 1 CELB" 운영 표기
+  status: ExchangeStatus;
+  failReason?: string;
+  walletAddress: string;       // 풀 주소 (모달 표시용)
+  gpBalanceBefore: number;
+  gpBalanceAfter: number;
+}
+
+export interface ExchangeOverview {
+  todayCharge: number;          // 오늘 GP 충전 누계
+  todayWithdraw: number;        // 오늘 GP 출금 누계
+  todayCount: number;           // 오늘 교환 건수
+  totalActiveUserGp: number;    // 전체 유저 보유 GP
+  withdrawnUserGp: number;      // 탈퇴 유저 GP
+}
+
+export const operationWallets: OperationWallet[] = [
+  {
+    type: 'CHARGE',
+    isPrimary: true,
+    celbBalance: 4999999878,
+    bnbBalance: 0.99507429,
+    address: '0xF99f3d197f8f20b8f391CacC5b7b844884aC2DEE',
+    status: '활성',
+  },
+  {
+    type: 'WITHDRAW',
+    isPrimary: true,
+    celbBalance: 4999999878,
+    bnbBalance: 0.99507429,
+    address: '0xF99f3d197f8f20b8f391CacC5b7b844884aC2DEE',
+    status: '활성',
+  },
+];
+
+export const exchangeOverview: ExchangeOverview = {
+  todayCharge: 0,
+  todayWithdraw: 0,
+  todayCount: 0,
+  totalActiveUserGp: 2010,
+  withdrawnUserGp: 37,
+};
+
+// 30건 가상 거래. 절반은 충전, 절반은 출금. 거의 모두 "성공", 한 건만 "실패" 케이스.
+function genTxid(seed: number): string {
+  // 0x + 64자 hex. 결정적 생성으로 매 빌드 동일.
+  let s = '0x';
+  for (let i = 0; i < 64; i++) {
+    s += ((seed * 13 + i * 7) % 16).toString(16);
+  }
+  return s;
+}
+
+export const exchanges: ExchangeEntry[] = (() => {
+  const list: ExchangeEntry[] = [];
+  const startTs = new Date('2026-05-25T17:00:00+09:00').getTime();
+  const userPool = RANKING_NICKNAMES.slice(0, 20);
+  for (let i = 0; i < 30; i++) {
+    const ts = new Date(startTs - i * 3 * 60 * 60 * 1000 - i * 4 * 60 * 1000);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const occurredAt = `${ts.getFullYear()}.${pad(ts.getMonth() + 1)}.${pad(ts.getDate())} ${pad(ts.getHours())}:${pad(ts.getMinutes())}`;
+    const isCharge = i % 2 === 0;
+    const amount = (i % 5 + 1) * 5; // 5, 10, 15, 20, 25
+    const isFail = i === 7; // 1건 실패
+    const uid = 100 + (i % 20);
+    list.push({
+      id: 1000 + i,
+      occurredAt,
+      nickname: i % 6 === 0 ? null : userPool[i % userPool.length],
+      uid: i % 6 === 0 ? null : uid,
+      txid: genTxid(i + 1),
+      direction: isCharge ? 'GP 충전' : 'GP 출금',
+      gpAmount: amount,
+      celbAmount: amount,
+      ratioText: isCharge ? '1 CELB = 1 GP' : '1 GP = 1 CELB',
+      status: isFail ? '실패' : '성공',
+      failReason: isFail ? '잔액 부족' : undefined,
+      walletAddress: `0x${(i + 200).toString(16).padStart(40, '0')}`,
+      gpBalanceBefore: isCharge ? (i + 2) : (i + 10 + amount),
+      gpBalanceAfter: isFail ? (i + 10) : (isCharge ? (i + 2 + amount) : (i + 10)),
+    });
+  }
+  return list;
+})();
+
+export function truncateAddress(addr: string, head = 10, tail = 8): string {
+  if (!addr || addr.length < head + tail + 3) return addr;
+  return `${addr.slice(0, head)}...${addr.slice(-tail)}`;
+}
