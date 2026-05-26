@@ -89,7 +89,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.4</td></tr>
+<tr><td>버전</td><td>v1.5</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -107,6 +107,9 @@ p {
 </blockquote>
 <h2>1. 모달 개요</h2>
 <p>진행중/결과대기 게임을 <strong>강제 종료</strong>하는 확인 모달. 강제 종료 시 참여 GP·부스팅 GP 전액 환급 + 보상 미지급 처리. 이 작업은 되돌릴 수 없다.</p>
+<blockquote>
+<p>⚠️ <strong>흐름 분기</strong>: 본 모달은 <strong>[강제 종료]</strong> 액션 전용 (진행중·결과대기 상태에서 트리거). Pending → Closed 전이는 [강제 종료]가 아닌 <strong>[결과 입력]</strong> ([CEB-BO-GZ-202-MD-RESULT]) 액션이며, Closed → Ended 전이는 [보상 지급] ([CEB-BO-GZ-202-MD-REWARD]). 본 모달 확정 시 종료(Ended) 상태로 직접 전이 + 게임 리스트 필터에서 "강제종료"·"환불완료" 별도 옵션으로 노출 (게임 상세 헤더 배지는 "종료" 단일).</p>
+</blockquote>
 <table>
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>트리거</td><td>[CEB-BO-GZ-202]의 [강제 종료] 버튼 (Active/Pending 상태)</td></tr>
@@ -139,7 +142,7 @@ p {
 <table>
 <tr><th>라벨</th><th>값</th></tr>
 <tr><td>타이틀</td><td>{게임 타이틀}</td></tr>
-<tr><td>현재 참여자</td><td>{N}명</td></tr>
+<tr><td>총 참여자</td><td>{N}명</td></tr>
 <tr><td>환급 예정 GP</td><td>{N} GP</td></tr>
 </table>
 <h3>2-5. 푸터</h3>
@@ -154,7 +157,7 @@ p {
 <tr><td>헤더</td><td>타이틀</td></tr>
 <tr><td>경고 본문</td><td>3줄 경고</td></tr>
 <tr><td>처리 내용</td><td>게임 상태 전이·환급·보상 미지급 안내</td></tr>
-<tr><td>게임 정보</td><td>타이틀·현재 참여자·환급 예정 GP</td></tr>
+<tr><td>게임 정보</td><td>타이틀·총 참여자·환급 예정 GP</td></tr>
 <tr><td>푸터</td><td>[취소] / [강제 종료하기]</td></tr>
 </table>
 <h2>4. 상태별 동작 분기</h2>
@@ -184,7 +187,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.4</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>테스트 BO 강제 종료 직접 실측 정합</strong> — 테스트 BO PM Pending 게임 id=85 ("게임이여 내게 오라", 참여자 0명) 직접 [강제 종료] 실행. ① §2-1 헤더 타이틀 정정: "게임을 강제 종료하시겠습니까?" → <strong>"게임을 종료하시겠습니까?"</strong> (실측 정합) ② §4 [강제 종료하기] 클릭 결과 정합: 헤더 배지 "종료" 회색 + 액션 버튼 사라짐. 게임 리스트 상태 필터는 별도 "강제종료" 옵션 존재 (게임 상세 배지와 별개) ③ 강제 종료 후 [GZ-202] 상세 진입 가능 (Ended 게임과 동일 조회 흐름)</td></tr>
+<tr><td><strong>v1.5</strong></td><td><strong>2026.05.27</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>문서간 sync 정정</strong> — ① §2-4 게임 정보 표 "현재 참여자" → <strong>"총 참여자"</strong> 라벨 통일 ([GZ-202-MD-RESULT]·[GZ-202-MD-REWARD]와 정합). §3 노출 정보 표 동일 정정 ② §1 모달 개요에 <strong>흐름 분기 노트</strong> 추가 — 본 모달은 [강제 종료] 전용 (직접 종료/환불 전이). Pending → Closed는 [결과 입력]([GZ-202-MD-RESULT]), Closed → Ended는 [보상 지급]([GZ-202-MD-REWARD]) 흐름 명시</td></tr>
+<tr><td>v1.4</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>테스트 BO 강제 종료 직접 실측 정합</strong> — 테스트 BO PM Pending 게임 id=85 ("게임이여 내게 오라", 참여자 0명) 직접 [강제 종료] 실행. ① §2-1 헤더 타이틀 정정: "게임을 강제 종료하시겠습니까?" → <strong>"게임을 종료하시겠습니까?"</strong> (실측 정합) ② §4 [강제 종료하기] 클릭 결과 정합: 헤더 배지 "종료" 회색 + 액션 버튼 사라짐. 게임 리스트 상태 필터는 별도 "강제종료" 옵션 존재 (게임 상세 배지와 별개) ③ 강제 종료 후 [GZ-202] 상세 진입 가능 (Ended 게임과 동일 조회 흐름)</td></tr>
 <tr><td>v1.3</td><td>2026.05.22</td><td>@Nill Yoo</td><td>양식 표준화(RFT/RFL 정합) + 운영 BO 정합. 타이틀 "게임을 강제 종료하시겠습니까?" 명시. 경고 본문 3줄·처리 내용 안내·게임 정보 (현재 참여자/환급 예정 GP) 명시. 토스트 "강제 종료 완료" 실측. DEPRECATED 라벨 유지</td></tr>
 <tr><td>v1.2</td><td>2026.02.26</td><td>@Nill Yoo</td><td>(v1 이력 — git history 참조)</td></tr>
 <tr><td>v1.x</td><td>—</td><td>—</td><td>(v1 이력)</td></tr>

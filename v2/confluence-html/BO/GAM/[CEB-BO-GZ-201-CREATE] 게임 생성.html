@@ -91,7 +91,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.5</td></tr>
+<tr><td>버전</td><td>v3.6</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.26</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -139,8 +139,8 @@ p {
 <table>
 <tr><th>필드</th><th>타입</th><th>제약</th></tr>
 <tr><td><strong>아티스트 (필수, v3.2 신규)</strong></td><td>Select 단일 선택</td><td>옵션 5종: V01D / iKON / CELEBUS / MADEIN / UNDER:LIGHT ([CEB-BO-013] 정합). placeholder "아티스트 선택". 결과 확정 후 잠금 ([GZ-000 v2.4] §5)</td></tr>
-<tr><td>타이틀 (필수)</td><td>다국어 탭(KO/EN/JA) + textbox(multiline)</td><td><strong>최대 35자</strong> (운영 표기, 카운터 노출)</td></tr>
-<tr><td>상세설명 (필수)</td><td>다국어 탭(KO/EN/JA) + WYSIWYG</td><td>툴바: Bold / Italic / Underline / Bullet List / Ordered List / Align Left·Center·Right / Insert Link / Insert Image</td></tr>
+<tr><td>타이틀 (필수★ — KO/EN/JA 3개 모두)</td><td>다국어 탭(KO/EN/JA) + textbox(multiline). <strong>3개 언어 모두 입력 필요</strong> ([GZ-202-MD-RESULT v1.9] 결과 입력 시 동일 룰 실측 정합)</td><td><strong>최대 35자</strong> (운영 표기, 카운터 노출)</td></tr>
+<tr><td>상세설명 (필수★ — KO/EN/JA 3개 모두)</td><td>다국어 탭(KO/EN/JA) + WYSIWYG. <strong>3개 언어 모두 입력 필요</strong></td><td>툴바: Bold / Italic / Underline / Bullet List / Ordered List / Align Left·Center·Right / Insert Link / Insert Image</td></tr>
 <tr><td><strong>배너 이미지</strong></td><td>드래그&드롭 업로드</td><td>비율 <strong>3:2</strong>, jpeg·png·jpg·webp, 최대 5MB. placeholder "클릭하거나 파일을 드래그하세요"</td></tr>
 <tr><td><strong>상세 이미지</strong></td><td>드래그&드롭 업로드</td><td>비율 <strong>1:1</strong>, jpeg·png·jpg·webp, 최대 5MB</td></tr>
 <tr><td>힌트 링크</td><td>Segmented "사용 / 미사용"</td><td>"사용" 선택 시에만 URL 입력 표시</td></tr>
@@ -170,15 +170,15 @@ p {
 <h4>2-3-5. 결과설정 (h3)</h4>
 <table>
 <tr><th>필드</th><th>타입</th><th>제약</th></tr>
-<tr><td>결과 확인 기준 (필수)</td><td>다국어 탭(KO/EN/JA) + textbox(multiline)</td><td><strong>최대 500자</strong> (카운터 노출)</td></tr>
+<tr><td>결과 확인 기준 (필수★ — KO/EN/JA 3개 모두)</td><td>다국어 탭(KO/EN/JA) + textbox(multiline). <strong>3개 언어 모두 입력 필요</strong></td><td><strong>최대 500자</strong> (카운터 노출)</td></tr>
 </table>
 <h3>2-4. Survival Trivia 폼 (ST 선택 시)</h3>
 <h4>2-4-1. 기본정보 (h3)</h4>
 <table>
 <tr><th>필드</th><th>타입</th><th>제약</th></tr>
 <tr><td><strong>아티스트 (필수, v3.2 신규)</strong></td><td>Select 단일 선택</td><td>PM과 동일 — 5종 옵션. 결과 확정 후 잠금 ([GZ-000 v2.4] §5)</td></tr>
-<tr><td>타이틀 (필수)</td><td>다국어 탭(KO/EN/JA) + textbox</td><td>최대 35자</td></tr>
-<tr><td>상세설명 (필수)</td><td>다국어 탭(KO/EN/JA) + WYSIWYG</td><td>PM과 동일 툴바</td></tr>
+<tr><td>타이틀 (필수★ — KO/EN/JA 3개 모두)</td><td>다국어 탭(KO/EN/JA) + textbox. <strong>3개 언어 모두 입력 필요</strong></td><td>최대 35자</td></tr>
+<tr><td>상세설명 (필수★ — KO/EN/JA 3개 모두)</td><td>다국어 탭(KO/EN/JA) + WYSIWYG. <strong>3개 언어 모두 입력 필요</strong></td><td>PM과 동일 툴바</td></tr>
 <tr><td>배너 이미지</td><td>드래그&드롭 업로드</td><td>비율 3:2, jpeg·png·jpg·webp, 최대 5MB</td></tr>
 </table>
 <blockquote>
@@ -309,7 +309,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v3.5</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>테스트 BO 생성 라우트 실측 + ST 폼 정합</strong> — 테스트 BO 실측(2026-05-26): ① <strong>생성은 PM/ST 공용 페이지</strong> (<code>/gamezone/games/create?mode=create</code>) — ST 라디오 선택 시 URL 변경 없이 폼만 ST로 전환. ② <strong>수정 라우트와 비대칭</strong> — PM 수정은 <code>?mode=edit</code> 공용이나 ST 수정은 <code>/gamezone/games/st/{id}/edit</code> 별도 페이지 ([GZ-202-EDIT v2.11] 정합). ③ ST 폼 실측 추가 정합 — "상세 이미지" 필드 없음 (PM에만 존재), "힌트 링크" 필드 없음, "탈락자 응모권 수량 필수★ (기본 1)" (v2.5 명세 "선택 0=미지급"과 운영 구현 불일치), "부스팅은 Survival Trivia에서 지원하지 않습니다" 안내문</td></tr>
+<tr><td><strong>v3.6</strong></td><td><strong>2026.05.27</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>다국어 KO/EN/JA 필수★ 룰 명시 (문서간 sync 정합)</strong> — [GZ-202-MD-RESULT v1.9] 실측에서 확인된 "결과제목·결과설명 KO/EN/JP 3개 모두 필수★" 룰을 게임 생성 폼에도 명시. ① PM 타이틀·상세설명·결과 확인 기준 모두 "<strong>KO/EN/JA 3개 모두 필수★</strong> ([GZ-202-MD-RESULT v1.9] 정합)" 표기 ② ST 타이틀·상세설명 동일 정정. 본 룰은 명세상 일관성을 위해 추가 — 게임 생성 시 운영 실측은 사용자 추가 검증 가능</td></tr>
+<tr><td>v3.5</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>테스트 BO 생성 라우트 실측 + ST 폼 정합</strong> — 테스트 BO 실측(2026-05-26): ① <strong>생성은 PM/ST 공용 페이지</strong> (<code>/gamezone/games/create?mode=create</code>) — ST 라디오 선택 시 URL 변경 없이 폼만 ST로 전환. ② <strong>수정 라우트와 비대칭</strong> — PM 수정은 <code>?mode=edit</code> 공용이나 ST 수정은 <code>/gamezone/games/st/{id}/edit</code> 별도 페이지 ([GZ-202-EDIT v2.11] 정합). ③ ST 폼 실측 추가 정합 — "상세 이미지" 필드 없음 (PM에만 존재), "힌트 링크" 필드 없음, "탈락자 응모권 수량 필수★ (기본 1)" (v2.5 명세 "선택 0=미지급"과 운영 구현 불일치), "부스팅은 Survival Trivia에서 지원하지 않습니다" 안내문</td></tr>
 <tr><td>v3.4</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>덕력 단위 'DUK' 표기 통일</strong> — §2-3-2 PM 보상설정 + §2-4-4 ST 보상설정의 단위 라벨 "단위 '점' (DUK)" → <strong>"단위 'DUK'"</strong>. "1인당 N점 균등 분배" → <strong>"1인당 N DUK 균등 분배"</strong>. §7 v3.2 변경 이력 인용("덕력 보상 (정답자 1인당 N점)" → "(... N DUK)")도 함께 정정. [CEB-BO-DUK-000] §단위·표기 SSOT 일치. 폼 동작·정책 자체 변경 없음</td></tr>
 <tr><td>v3.3</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>보상 정책 정정 — 탈락자 응모권 선택화 + 덕력 = 참여자 균등 분배로 통일</strong> ① <strong>§2-4-4 ST 보상설정</strong> — "탈락자 응모권 수량 (필수)" → <strong>"응모권 보상 (탈락자 1인당)" (선택, 기본 0)</strong> 라벨 통일 + required 제거. 생존자·탈락자 응모권 모두 결과 기반 분배 ② <strong>덕력 정책 변경</strong> — PM·ST 모두 "정답자/생존자 1인당" → <strong>"참여자 1인당 (참여 기반)"</strong>. PM 정답/오답 무관, ST 생존/탈락 무관, 참여자 전원에게 균등 지급. DUK 영역 <code>PM_PARTICIPATION</code>/<code>TRIVIA_PARTICIPATION</code> enum의 "참여" 의미 정합. ③ §검증 룰 — ST [생성하기] 활성 조건에서 탈락자 응모권 필수 제외 ④ [GZ-000 v2.5] §5 보상 계산 동일 사이클 정합</td></tr>
 <tr><td>v3.2</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 — 아티스트 그룹 + 응모권·덕력 보상 필드 추가 (PM·ST 공통)</strong> ① §2-3-1 PM 기본정보 — 아티스트 (필수) Select 단일 선택 신규 (V01D/iKON/CELEBUS/MADEIN/UNDER:LIGHT 5종, [CEB-BO-013] 정합). 결과 확정 후 잠금 ② §2-3-2 PM 보상설정 — 응모권 보상 (정답자 1인당 N장) + 덕력 보상 (정답자 1인당 N DUK) 신규. 0 = 미지급. 결과 확정 후 잠금 ③ §2-4-1 ST 기본정보 — 아티스트 동일 신규 ④ §2-4-4 ST 보상설정 — 응모권 보상 + 덕력 보상 동일 신규 (생존자 1인당 N) ⑤ 검증 룰: 아티스트 미선택 시 [생성하기] disabled. 응모권·덕력은 0 이상 정수 (0 허용) ⑥ 분배 정책·활동 로그는 [GZ-000 v2.4] §5 정합 ⑦ 사용자 결정: 그룹 단일 선택 / 고정 개수 균등 분배 / BO 한정 (회원 앱은 별도 사이클)</td></tr>
