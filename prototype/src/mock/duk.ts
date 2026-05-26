@@ -148,6 +148,9 @@ export const memberHistory: DukHistory[] = [
   { id: 6, memberId: 1001, nickname: 'mooncat', artistGroup: 'V01D', historyType: 'EARN', sourceType: 'RANKING_REWARD', sourceRefName: '2026 Winter 시즌 1위', delta: +500, balanceAfter: 27940, createdAt: '2026.03.01 00:15' },
   { id: 7, memberId: 1001, nickname: 'mooncat', artistGroup: 'V01D', historyType: 'EARN', sourceType: 'BIVE_ACTIVITY', sourceRefName: 'V01D Welcome ED 민팅', delta: +100, balanceAfter: 27440, createdAt: '2026.02.20 16:00' },
   { id: 8, memberId: 1001, nickname: 'mooncat', artistGroup: 'V01D', historyType: 'EARN', sourceType: 'SUPPORT_PARTICIPATION', sourceRefName: '강남역 광고 응원 참여', delta: +60, balanceAfter: 27340, createdAt: '2026.02.10 19:20' },
+  // 사이클 5 신규 — [GZ-000 v2.4] §5 게임 보상 정합 (PM·ST 정답자/생존자 1인당 고정 분배)
+  { id: 9, memberId: 1001, nickname: 'mooncat', artistGroup: 'V01D', historyType: 'EARN', sourceType: 'PM_PARTICIPATION', sourceRefName: "PM 'V01D가 이번 주 인기가요 1위?' 정답 보상", delta: +50, balanceAfter: 28500, createdAt: '2026.05.25 10:00' },
+  { id: 10, memberId: 1001, nickname: 'mooncat', artistGroup: 'V01D', historyType: 'EARN', sourceType: 'TRIVIA_PARTICIPATION', sourceRefName: "ST '제 1회 V01D 모의고사' 최종 생존 보상", delta: +200, balanceAfter: 28700, createdAt: '2026.05.22 21:00' },
 ];
 
 export const dukStats = {

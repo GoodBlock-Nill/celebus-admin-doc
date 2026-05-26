@@ -246,18 +246,20 @@ const SAMPLE_LOGS: { d: number; h: number; m: number; f: RftSourceFeature; delta
   { d: 0, h: 14, m: 0, f: 'QUEST_REWARD', delta: 5, bal: 25 },
   { d: 0, h: 11, m: 1, f: 'GP_EXCHANGE', delta: 1, bal: 26 },
   { d: 0, h: 9, m: 2, f: 'RAFFLE_ENTRY', delta: -1, bal: 25 },
-  { d: 0, h: 12, m: 3, f: 'GAME_REWARD', delta: 2, bal: 24 },
+  { d: 0, h: 12, m: 3, f: 'GAME_REWARD', delta: 2, bal: 24 },          // PM 정답 보상
   { d: 1, h: 23, m: 4, f: 'QUEST_REWARD', delta: 5, bal: 22 },
   { d: 1, h: 23, m: 5, f: 'BIVE_BENEFIT', delta: 3, bal: 20 },
   { d: 1, h: 21, m: 6, f: 'RAFFLE_ENTRY', delta: -1, bal: 18 },
   { d: 2, h: 17, m: 7, f: 'QUEST_REWARD', delta: 5, bal: 17 },
   { d: 2, h: 17, m: 8, f: 'GP_EXCHANGE', delta: 1, bal: 12 },
   { d: 2, h: 17, m: 9, f: 'DUK_RANKING_REWARD', delta: 10, bal: 11 },
+  { d: 2, h: 20, m: 5, f: 'GAME_REWARD', delta: 3, bal: 14 },          // ST 생존자 보상 (사이클 5 신규)
   { d: 3, h: 16, m: 0, f: 'QUEST_REWARD', delta: 3, bal: 10 },
   { d: 3, h: 15, m: 1, f: 'BIVE_BENEFIT', delta: 5, bal: 7 },
   { d: 3, h: 15, m: 2, f: 'RAFFLE_ENTRY', delta: -1, bal: 2 },
+  { d: 3, h: 22, m: 3, f: 'GAME_REWARD', delta: 1, bal: 3 },           // ST 탈락자 응모권 (사이클 5 신규)
   { d: 4, h: 14, m: 3, f: 'GP_EXCHANGE', delta: 2, bal: 3 },
-  { d: 4, h: 12, m: 4, f: 'GAME_REWARD', delta: 1, bal: 1 },
+  { d: 4, h: 12, m: 4, f: 'GAME_REWARD', delta: 1, bal: 1 },           // PM 정답 보상
 ];
 
 // 12명 회원 × 약 10건 = 약 120건 변동 로그
