@@ -153,14 +153,23 @@ export function getPMResultReward(gameId: number): PMResultReward {
   return { resultTitle: null, result: null, resultDescription: null, resultLink: null, totalPrize: game.totalPrize, correctCount: 0, undistributed: game.totalPrize, withdrawnUserUnpaid: 0, perShareGP: 0, rewardStatus: '미지급', rewardPaidAt: null };
 }
 
-// GP 변동 내역 — 운영 화면 실제 데이터 (2026.05.06)
+// GP 변동 내역 — [CEB-BO-GZ-601] v1.6 정합
+// 변동 유형 7종 (전체 + 6): 참여 / 부스팅 / 환불 / 보상 / GP 충전 / GP 출금
+// 게임유형: '' (게임 외) / PM / ST
+// 운영 BO 실측 시점 환급은 PM 자동 환불에 통합. 본 mock은 운영 분류대로 환불만 노출.
+export type GPHistoryType = '' | '참여' | '부스팅' | '환불' | '보상' | 'GP 충전' | 'GP 출금';
+export type GPHistoryGameType = '' | 'PM' | 'ST';
+
 export interface GPHistoryEntry {
   id: number;
-  occurredAt: string; // YYYY.MM.DD HH:mm:ss
-  nickname: string;
-  type: '' | 'GP 충전' | 'GP 출금';
-  gameType: '' | 'PM' | 'ST';
-  amount: number; // +/- GP
+  historyId: string;          // 변동 ID (예: GPC000605)
+  occurredAt: string;         // YYYY.MM.DD HH:mm:ss
+  nickname: string | null;
+  uid: number | null;
+  walletAddress: string;      // 풀 주소 (모달 표시용)
+  type: GPHistoryType;
+  gameType: GPHistoryGameType;
+  amount: number;             // +/- GP
   balanceAfter: number;
   notes: string;
 }
@@ -172,22 +181,50 @@ const SEED_NICKNAMES = [
   'sssssouffleeeee', 'sxlvxr', 'manju', 'sally410504', 'yebin',
 ];
 
+// 변동 유형별 가상 데이터 생성. 운영 실측 패턴 + 게임 변동 다양화 (PM/ST 보상·참여·부스팅·환불)
 export const gpHistory: GPHistoryEntry[] = (() => {
   const list: GPHistoryEntry[] = [];
-  const startTs = new Date('2026-05-06T15:25:32+09:00').getTime();
-  for (let i = 0; i < SEED_NICKNAMES.length; i++) {
-    const ts = new Date(startTs - i * 60 * 60 * 1000 - i * 7 * 60 * 1000);
+  const startTs = new Date('2026-05-26T06:41:00+09:00').getTime();
+  // 분포: GP 출석체크 30 + PM/ST 변동 50 + 충전/출금 20 = 100
+  const patterns: { type: GPHistoryType; gameType: GPHistoryGameType; amount: number; notes: string }[] = [];
+  for (let i = 0; i < 30; i++) patterns.push({ type: '', gameType: '', amount: 5, notes: 'GP 출석체크' });
+  for (let i = 0; i < 12; i++) patterns.push({ type: '참여', gameType: 'PM', amount: -((i % 5 + 1) * 2), notes: 'PM 게임 참여' });
+  for (let i = 0; i < 8; i++) patterns.push({ type: '부스팅', gameType: 'PM', amount: -((i % 3 + 1) * 2), notes: 'PM 부스팅' });
+  for (let i = 0; i < 10; i++) patterns.push({ type: '보상', gameType: 'PM', amount: ((i % 4 + 1) * 20), notes: 'PM 정답 보상' });
+  for (let i = 0; i < 6; i++) patterns.push({ type: '환불', gameType: 'PM', amount: ((i % 3 + 1) * 5), notes: 'PM 환불' });
+  for (let i = 0; i < 8; i++) patterns.push({ type: '참여', gameType: 'ST', amount: -((i % 5 + 1) * 3), notes: 'ST 게임 참여' });
+  for (let i = 0; i < 6; i++) patterns.push({ type: '보상', gameType: 'ST', amount: ((i % 3 + 1) * 50), notes: 'ST 최종 생존 보상' });
+  for (let i = 0; i < 12; i++) patterns.push({ type: 'GP 충전', gameType: '', amount: ((i % 4 + 1) * 5), notes: 'CELB → GP 교환' });
+  for (let i = 0; i < 8; i++) patterns.push({ type: 'GP 출금', gameType: '', amount: -((i % 4 + 1) * 5), notes: 'GP → CELB 교환' });
+
+  // 닉네임 풀: SEED 20 + 추가 20 (RANKING_NICKNAMES는 아래에 정의되어 순환 참조 회피)
+  const extraNicks = [
+    'lily', 'cromatica', 'holly', 'lajkdream', 'dding',
+    'oliver', '4nellie2', 'chia', 'sara', '3xwoh_s',
+    'yumyelim', 'nieumi', 'rex17', 'sohyun', 'starlight99',
+    'pink_blink42', 'carat_love77', 'wishful28', 'kepler_fan15', 'love_guys60',
+  ];
+  const nickPool = [...SEED_NICKNAMES, ...extraNicks];
+  let runningBalance = 100;
+  for (let i = 0; i < patterns.length; i++) {
+    const p = patterns[i];
+    const ts = new Date(startTs - i * 60 * 60 * 1000 - i * 13 * 60 * 1000);
     const pad = (n: number) => String(n).padStart(2, '0');
     const dateStr = `${ts.getFullYear()}.${pad(ts.getMonth() + 1)}.${pad(ts.getDate())} ${pad(ts.getHours())}:${pad(ts.getMinutes())}:${pad(ts.getSeconds())}`;
+    runningBalance = Math.max(0, runningBalance + p.amount + (i % 7));
+    const uid = 100 + (i % nickPool.length);
     list.push({
       id: i + 1,
+      historyId: `GPC${(600 + i).toString().padStart(6, '0')}`,
       occurredAt: dateStr,
-      nickname: SEED_NICKNAMES[i],
-      type: '',
-      gameType: '',
-      amount: 5,
-      balanceAfter: (i % 8) * 5 + 5,
-      notes: 'GP 출석체크',
+      nickname: nickPool[i % nickPool.length],
+      uid,
+      walletAddress: `0x${((i + 0x4a47c) * 0x100).toString(16).padStart(40, '0').slice(0, 40)}`,
+      type: p.type,
+      gameType: p.gameType,
+      amount: p.amount,
+      balanceAfter: runningBalance,
+      notes: p.notes,
     });
   }
   return list;
