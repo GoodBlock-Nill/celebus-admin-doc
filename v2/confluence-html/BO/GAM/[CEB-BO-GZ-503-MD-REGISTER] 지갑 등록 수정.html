@@ -89,7 +89,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.4</td></tr>
+<tr><td>버전</td><td>v1.5</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.26</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -133,7 +133,8 @@ p {
 <p><strong>[Private Key 필드 제거 — 운영 정합]</strong></p>
 <ul>
 <li>명세 v1.3은 Private Key 필드를 등록·수정 모달에서 필수 노출했으나, 운영 BO 실측 결과 PK 입력 UI 자체가 모달에 <strong>비노출</strong></li>
-<li>백엔드 키 관리 정책으로 별도 처리되는 것으로 추정 — 정확한 PK 입력·교체 흐름은 운영팀 정책 확인 시 보강</li>
+<li><strong>사이드바·라우트 전수 탐색 결과 PK 관리 별도 화면도 존재하지 않음</strong> (2026-05-26 운영 + 테스트 BO 양쪽 확인). 백엔드 키 관리 정책에서 직접 처리되는 것으로 확정 — BO 운영자는 PK 입력·교체에 관여하지 않음</li>
+<li><strong>운영팀 핑 대기</strong> 항목: 백엔드 PK 등록·교체·로테이션 정책 문서화 필요 (BO 화면 외 별도 운영 절차)</li>
 </ul>
 <h3>2-3. 모달 푸터</h3>
 <table>
@@ -203,7 +204,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.4</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합 — 본 모달 명세 v1.3 대비 본문 구성 큰 변경</strong> ① 양식 표준화: Page Properties 14필드(비고), §1 화면 개요 + 표, §2 화면 구성 하이픈(2-1 헤더 / 2-2 본문 / 2-3 푸터), §3 노출 정보 표, §4 상태별 동작 분기, §5 검증 규칙 4항목, §6 연관 화면, §7 변경 이력 — Group A·B/C/D#1·#2 및 [GZ-503 v1.6] 동일 양식 ② 운영 BO 정합 (chrome-devtools + playwright 등록 + 수정 모달 직접 캡처): <strong>§2-2 지갑 유형 컨트롤 정정</strong> — 명세 v1.3의 Toggle Button → 운영 BO <strong>Dropdown</strong>, <strong>§2-2 Private Key 필드 제거</strong> — 명세 v1.3의 PK 입력 필드(필수·마스킹·도움말)는 운영 BO 모달에 <strong>비노출</strong>. 백엔드 키 관리 정책으로 별도 처리 추정. 정확한 PK 흐름은 추가 검증 시 보강 ③ <strong>§출금용 BNB 안내 박스 제거</strong> — 명세 v1.3의 출금용 선택 시 "가스비(BNB) 잔고" 안내 박스는 운영 BO 모달에 미노출 (정책은 [GZ-501] §5-3 가스비 부족 경고로 일원화) ④ <strong>권한 매트릭스 제거</strong> → "부모 화면과 동일" 위임 ⑤ <strong>ASCII UI 다이어그램 제거 + 백엔드 식별자(WALLET_CREATE/UPDATE) / JSON 로그 / HTTP 상태 코드 표 제거</strong> — 기획자 언어 룰. 한국어 활동 로그 메시지만 보존 (GZ-000 위임) ⑥ DEPRECATED 라벨 유지 ⑦ 미확정 항목(백드롭 닫기 동작 / PK 입력·교체 흐름) "운영 BO 추가 검증 시 보강" 명시</td></tr>
+<tr><td><strong>v1.5</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>PK 별도 화면 부재 확정 + 운영팀 핑 명확화</strong> — 테스트 BO 사이드바·라우트 전수 탐색 결과 PK 관리 별도 화면도 존재하지 않음 확정. <strong>BO 운영자는 PK 입력·교체에 관여하지 않음</strong> (백엔드 키 관리 정책에서 직접 처리). §2-2 [Private Key 필드 제거 — 운영 정합] 섹션에 "운영팀 핑 대기 — 백엔드 PK 등록·교체·로테이션 정책 문서화 필요" 명시. [GZ-000 v2.3] §13 3자 정합 매트릭스 신규 부록과 동일 사이클</td></tr>
+<tr><td>v1.4</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합 — 본 모달 명세 v1.3 대비 본문 구성 큰 변경</strong> ① 양식 표준화: Page Properties 14필드(비고), §1 화면 개요 + 표, §2 화면 구성 하이픈(2-1 헤더 / 2-2 본문 / 2-3 푸터), §3 노출 정보 표, §4 상태별 동작 분기, §5 검증 규칙 4항목, §6 연관 화면, §7 변경 이력 — Group A·B/C/D#1·#2 및 [GZ-503 v1.6] 동일 양식 ② 운영 BO 정합 (chrome-devtools + playwright 등록 + 수정 모달 직접 캡처): <strong>§2-2 지갑 유형 컨트롤 정정</strong> — 명세 v1.3의 Toggle Button → 운영 BO <strong>Dropdown</strong>, <strong>§2-2 Private Key 필드 제거</strong> — 명세 v1.3의 PK 입력 필드(필수·마스킹·도움말)는 운영 BO 모달에 <strong>비노출</strong>. 백엔드 키 관리 정책으로 별도 처리 추정. 정확한 PK 흐름은 추가 검증 시 보강 ③ <strong>§출금용 BNB 안내 박스 제거</strong> — 명세 v1.3의 출금용 선택 시 "가스비(BNB) 잔고" 안내 박스는 운영 BO 모달에 미노출 (정책은 [GZ-501] §5-3 가스비 부족 경고로 일원화) ④ <strong>권한 매트릭스 제거</strong> → "부모 화면과 동일" 위임 ⑤ <strong>ASCII UI 다이어그램 제거 + 백엔드 식별자(WALLET_CREATE/UPDATE) / JSON 로그 / HTTP 상태 코드 표 제거</strong> — 기획자 언어 룰. 한국어 활동 로그 메시지만 보존 (GZ-000 위임) ⑥ DEPRECATED 라벨 유지 ⑦ 미확정 항목(백드롭 닫기 동작 / PK 입력·교체 흐름) "운영 BO 추가 검증 시 보강" 명시</td></tr>
 <tr><td>v1.3</td><td>2026.02.24</td><td>@Nill Yoo</td><td>교환 방향 용어 통일 — GP 충전 → GP 가져오기, GP 출금 → CELB으로 보내기 (v1.4 본 사이클에서 부모 화면과 동일 환원)</td></tr>
 <tr><td>v1.2</td><td>2026.02.12</td><td>@Nill Yoo</td><td>Private Key 입력 필수화 (출금용 전용 → 유형 무관) — v1.4에서 운영 BO 비노출로 제거</td></tr>
 <tr><td>v1.1</td><td>2025.02.12</td><td>@Nill Yoo</td><td>출금용 PK + BNB 안내 박스 추가</td></tr>
