@@ -74,6 +74,7 @@ const ADMIN_MENU: MenuItem[] = [
     icon: DevicePhoneMobileIcon,
     children: [
       { label: '배너 관리', href: '/home/banners', icon: PhotoIcon },
+      { label: '배너 미리보기', href: '/home/banners/preview', icon: PhotoIcon },
       { label: '알림 관리', href: '/app/notifications', icon: BellAlertIcon },
     ],
   },
