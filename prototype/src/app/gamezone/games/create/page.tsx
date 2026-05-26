@@ -3,7 +3,7 @@
 import { Suspense, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PageHeader from '@/components/layout/PageHeader';
-import { getGameById, type GameType } from '@/mock/gamezone';
+import { ARTIST_GROUPS, getGameById, type ArtistGroup, type GameType } from '@/mock/gamezone';
 import { ConfirmCreateCancelModal, ConfirmEditCancelModal } from '@/components/gamezone/GameModals';
 
 // [CEB-BO-GZ-201-CREATE] 게임 생성 + [CEB-BO-GZ-202-EDIT] 게임 수정 (공용 폼)
@@ -29,6 +29,11 @@ function GameCreateContent() {
 
   // 폼 상태
   const [type, setType] = useState<GameType>(editGame?.type ?? 'PM');
+  // 아티스트 그룹 (PM·ST 공통, 필수) — [GZ-000 v2.4] §5 신규
+  const [artistGroup, setArtistGroup] = useState<ArtistGroup | ''>(editGame?.artistGroup ?? '');
+  // 응모권·덕력 보상 (PM·ST 공통, 0 = 미지급) — [GZ-000 v2.4] §5 신규
+  const [ticketReward, setTicketReward] = useState<string>(editGame ? String(editGame.ticketReward) : '0');
+  const [dukReward, setDukReward] = useState<string>(editGame ? String(editGame.dukReward) : '0');
   const [titleKo, setTitleKo] = useState(editGame?.title ?? '');
   const [titleEn, setTitleEn] = useState(editGame?.titleEN ?? '');
   const [titleJa, setTitleJa] = useState(editGame?.titleJP ?? '');
@@ -67,12 +72,13 @@ function GameCreateContent() {
   };
 
   // [생성하기]/[저장하기] 활성 조건
-  const initialSnapshot = useMemo(() => JSON.stringify({ type, titleKo, titleEn, titleJa, description, totalPrize, participationCost, boostingCost, boostingMultiplier, endDate, resultAnnounce, resultCriteria }), [editGame]);
-  const currentSnapshot = JSON.stringify({ type, titleKo, titleEn, titleJa, description, totalPrize, participationCost, boostingCost, boostingMultiplier, endDate, resultAnnounce, resultCriteria });
+  const initialSnapshot = useMemo(() => JSON.stringify({ type, artistGroup, ticketReward, dukReward, titleKo, titleEn, titleJa, description, totalPrize, participationCost, boostingCost, boostingMultiplier, endDate, resultAnnounce, resultCriteria }), [editGame]);
+  const currentSnapshot = JSON.stringify({ type, artistGroup, ticketReward, dukReward, titleKo, titleEn, titleJa, description, totalPrize, participationCost, boostingCost, boostingMultiplier, endDate, resultAnnounce, resultCriteria });
   const hasChanged = currentSnapshot !== initialSnapshot;
+  // 아티스트 필수 (PM·ST 공통). 응모권·덕력은 0 허용 — 입력만 되면 OK
   const requiredFilled = type === 'PM'
-    ? !!titleKo.trim() && !!description.trim() && !!totalPrize && !!endDate && !!resultAnnounce && !!resultCriteria.trim()
-    : !!titleKo.trim() && !!description.trim() && !!stMaxParticipants && !!stMaxPrize && !!stStartDate;
+    ? !!artistGroup && !!titleKo.trim() && !!description.trim() && !!totalPrize && !!endDate && !!resultAnnounce && !!resultCriteria.trim()
+    : !!artistGroup && !!titleKo.trim() && !!description.trim() && !!stMaxParticipants && !!stMaxPrize && !!stStartDate;
   const canSubmit = isEdit ? (hasChanged && requiredFilled) : requiredFilled;
 
   const [cancelOpen, setCancelOpen] = useState(false);
@@ -149,6 +155,25 @@ function GameCreateContent() {
               )}
             </div>
 
+            {/* 아티스트 그룹 (PM·ST 공통, 필수) — [GZ-000 v2.4] §5 */}
+            <div className="mb-5">
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                아티스트 <span className="text-red-500">*</span>
+              </label>
+              <select
+                value={artistGroup}
+                onChange={(e) => setArtistGroup(e.target.value as ArtistGroup | '')}
+                disabled={isFieldLocked('all')}
+                className="h-10 w-full max-w-sm px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
+              >
+                <option value="">아티스트 선택</option>
+                {ARTIST_GROUPS.map((g) => (
+                  <option key={g} value={g}>{g}</option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1">게임이 귀속되는 아티스트 그룹 (결과 확정 후 변경 불가)</p>
+            </div>
+
             <I18nField label="타이틀" required maxLength={TITLE_MAX} values={{ KO: titleKo, EN: titleEn, JA: titleJa }} onChange={(lang, v) => { if (lang === 'KO') setTitleKo(v); if (lang === 'EN') setTitleEn(v); if (lang === 'JA') setTitleJa(v); }} disabled={isFieldLocked('all')} />
 
             <div className="mt-5">
@@ -185,6 +210,8 @@ function GameCreateContent() {
             <>
               <Section title="보상설정">
                 <NumberField label="총 상금 GP" required unit="GP" value={totalPrize} onChange={setTotalPrize} disabled={isFieldLocked('all')} />
+                <NumberField label="응모권 보상 (정답자 1인당)" unit="장" value={ticketReward} onChange={setTicketReward} disabled={isFieldLocked('all')} hint="0 = 미지급. 결과 확정 후 정답자에게 자동 분배" />
+                <NumberField label="덕력 보상 (정답자 1인당)" unit="점" value={dukReward} onChange={setDukReward} disabled={isFieldLocked('all')} hint="0 = 미지급. DUK 단위" />
               </Section>
               <Section title="참여설정">
                 <div className="mb-3">
@@ -236,6 +263,8 @@ function GameCreateContent() {
                   게임 시작 시 실제 모집인원에 비례하여 상금풀이 자동 결정됩니다.
                 </div>
                 <NumberField label="탈락자 응모권 수량" required unit="장" value="1" onChange={() => {}} hint="팬퀘스트 응모권" />
+                <NumberField label="응모권 보상 (생존자 1인당)" unit="장" value={ticketReward} onChange={setTicketReward} hint="0 = 미지급. 결과 확정 후 생존자에게 자동 분배" />
+                <NumberField label="덕력 보상 (생존자 1인당)" unit="점" value={dukReward} onChange={setDukReward} hint="0 = 미지급. DUK 단위" />
                 <div className="text-xs text-gray-500 mt-2">부스팅은 Survival Trivia에서 지원하지 않습니다.</div>
               </Section>
               <Section title="ST 일정설정">
