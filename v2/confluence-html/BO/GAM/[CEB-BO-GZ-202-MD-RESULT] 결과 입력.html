@@ -89,7 +89,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.8</td></tr>
+<tr><td>버전</td><td>v1.9</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.26</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -193,7 +193,7 @@ p {
 <table>
 <tr><th>규칙</th><th>내용</th></tr>
 <tr><td>트리거 상태</td><td>PM + Pending(결과대기)만</td></tr>
-<tr><td>필수 항목</td><td>결과제목 KO + 결과 선택 + 결과설명 KO (테스트 BO 실측 2026-05-26: KO 단독 입력 후 [결과 확정] disabled 유지 — 다국어 EN/JP 필수일 가능성 또는 React 상태 동기화 이슈, 운영팀 확인 필요)</td></tr>
+<tr><td>필수 항목 (실측 확정)</td><td><strong>결과제목 KO/EN/JP 3개 모두 + 결과 선택 + 결과설명 KO/EN/JP 3개 모두</strong> (테스트 BO 실측 2026-05-27 id=79 "한겜 더" 직접 입력 검증). KO만 입력 시 [결과 확정] disabled 유지 → 다국어 3개 모두 입력 후 활성화 확인. 결과링크는 선택 (필수 아님)</td></tr>
 <tr><td>글자수 제한</td><td>결과제목 50자 / 결과설명 500자 (테스트 BO 실측 id=79 "한겜 더" 카운터 "0/50" "0/500" 확인)</td></tr>
 <tr><td>결과 변경 가능</td><td>Closed 상태에서 [결과 수정]으로 재진입 가능 (보상 지급 전까지)</td></tr>
 <tr><td>보상 계산</td><td>[CEB-BO-GZ-000] §보상 계산 로직 (PM 비율 배분) 적용</td></tr>
@@ -209,7 +209,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.8</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>테스트 BO [결과 입력] 모달 UI 실측 정합</strong> — 테스트 BO PM Pending 게임 id=79 "한겜 더" [결과 입력] 모달 직접 실측. ① 모달 구조 명세 일치 확인: 헤더 "결과 입력" / 게임 정보(타이틀·총 참여자·총 상금 GP 3개) / 결과제목 KO·EN·JP 50자 / <strong>결과 선택 YES/NO 큰 박스 + "예상 정답자: N명" 표기</strong> / 결과설명 KO·EN·JP 500자 / 결과링크 선택(텍스트+URL) / 푸터 [취소]·[결과 확정 disabled] ② <strong>분배 미리보기 텍스트 (v1.5에서 약속한 "응모권 N장 × 정답자 M명" / "덕력 N DUK × 참여자 K명") 미노출 확인</strong> — 본 게임에 응모권·덕력 보상 0 또는 [RFT-302] 토글 미적용으로 추정. 운영팀 확인 필요 ③ §5 필수 항목 활성 조건 노트 추가 — KO만 입력 시 [결과 확정] disabled 유지 (다국어 EN/JP 필수 가능성 또는 React 동기화 이슈) ④ [결과 확정] 클릭 후 Closed 전이 실측은 향후 다국어 필수 룰 확인 후 재시도 필요</td></tr>
+<tr><td><strong>v1.9</strong></td><td><strong>2026.05.27</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>다국어 필수★ 룰 직접 검증 + Closed 전이 실측 완료</strong> — 테스트 BO PM Pending id=79 "한겜 더" [결과 입력] 모달에 결과제목 KO/EN/JP 3개 + YES 선택 + 결과설명 KO/EN/JP 3개 모두 입력 후 [결과 확정] 활성화 확인. ① §5 필수 항목 정정: KO 단독이 아니라 <strong>결과제목 KO/EN/JP 3개 + 결과설명 KO/EN/JP 3개 모두 필수★</strong> ② [결과 확정] 클릭 후 PM Pending → <strong>결과확정(Closed) 전이 성공</strong> — 헤더 배지 "결과확정" 보라색 + 액션 [결과 수정] [보상 지급]으로 변경 ③ Closed 상태가 운영 BO에 명시적으로 노출됨 확인 (이전 가정 "Ready/Closed는 짧은 전이"와 다름 — 명시적 단계). [GZ-000 v2.7] 노트 정정 필요</td></tr>
+<tr><td>v1.8</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>테스트 BO [결과 입력] 모달 UI 실측 정합</strong> — 테스트 BO PM Pending 게임 id=79 "한겜 더" [결과 입력] 모달 직접 실측. ① 모달 구조 명세 일치 확인: 헤더 "결과 입력" / 게임 정보(타이틀·총 참여자·총 상금 GP 3개) / 결과제목 KO·EN·JP 50자 / <strong>결과 선택 YES/NO 큰 박스 + "예상 정답자: N명" 표기</strong> / 결과설명 KO·EN·JP 500자 / 결과링크 선택(텍스트+URL) / 푸터 [취소]·[결과 확정 disabled] ② <strong>분배 미리보기 텍스트 (v1.5에서 약속한 "응모권 N장 × 정답자 M명" / "덕력 N DUK × 참여자 K명") 미노출 확인</strong> — 본 게임에 응모권·덕력 보상 0 또는 [RFT-302] 토글 미적용으로 추정. 운영팀 확인 필요 ③ §5 필수 항목 활성 조건 노트 추가 — KO만 입력 시 [결과 확정] disabled 유지 (다국어 EN/JP 필수 가능성 또는 React 동기화 이슈) ④ [결과 확정] 클릭 후 Closed 전이 실측은 향후 다국어 필수 룰 확인 후 재시도 필요</td></tr>
 <tr><td>v1.7</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>덕력 단위 'DUK' 표기 통일</strong> — §2-4 분배 미리보기 규칙의 "덕력 {<code>dukReward</code>}점 × 참여자 {M}명 = {N}점" → <strong>"덕력 {<code>dukReward</code>} DUK × 참여자 {M}명 = {N} DUK"</strong>. §7 v1.5·v1.6 변경 이력 인용도 함께 정정 (예: "100점 × 70명 = 7000점" → "100 DUK × 70명 = 7,000 DUK"). [CEB-BO-DUK-000] §단위·표기 SSOT("1,234 DUK") 일치. 정책·동작 변경 없음</td></tr>
 <tr><td>v1.6</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 본문 보강</strong> — v1.5 변경 이력에서 약속한 응모권·덕력 분배 미리보기 텍스트를 §2-4 결과 선택 본문, §3 노출 정보 표에 실제 명시. v1.5는 변경 이력만 추가되고 §2 본문에 미반영된 상태였음(사용자 점검 발견). 운영자가 결과 확정 전에 분배될 보상 총량(응모권 N장 × 정답자 M명 / 덕력 N DUK × 참여자 K명)을 사전 확인할 수 있도록 본문 보강. 응모권 보상·덕력 보상 0이면 각 줄 미노출 정책 명시</td></tr>
 <tr><td>v1.5</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 — 응모권·덕력 분배 미리보기 안내</strong> — 결과 [YES/NO] 선택 후 "예상 정답자: N명" 옆에 <strong>분배 미리보기 텍스트</strong> 추가 권장 (예: "응모권 5장 × 70명 = 350장, 덕력 100 DUK × 70명 = 7,000 DUK"). 게임 생성 시 입력한 <code>ticketReward</code>·<code>dukReward</code>가 0이면 해당 줄 미노출. 실제 분배는 [202-MD-REWARD]에서 [지급] 클릭 시 트리거. [GZ-000 v2.4] §5 정합. 본 사이클은 안내 문구만 정의 — 모달 UI 자체 변경 없음</td></tr>
