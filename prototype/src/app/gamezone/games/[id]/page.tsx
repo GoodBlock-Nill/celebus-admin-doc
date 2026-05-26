@@ -214,6 +214,14 @@ function BasicTab({ game }: { game: PMGame | STGame }) {
     <div className="space-y-6">
       <Section title="기본정보">
         <Field label="게임유형" value={game.type === 'PM' ? 'Prediction Market' : 'Survival Trivia'} />
+        <Field
+          label="아티스트"
+          value={
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+              {game.artistGroup}
+            </span>
+          }
+        />
         <Field label="타이틀 (KO)" value={game.title} />
         <Field label="타이틀 (EN)" value={game.titleEN} />
         <Field label="타이틀 (JP)" value={game.titleJP} />
@@ -231,6 +239,14 @@ function BasicTab({ game }: { game: PMGame | STGame }) {
         <>
           <Section title="보상설정">
             <Field label="총 상금 GP" value={`${game.totalPrize.toLocaleString()} GP`} />
+            <Field
+              label="응모권 보상 (정답자 1인당)"
+              value={game.ticketReward > 0 ? `${game.ticketReward}장` : '미지급'}
+            />
+            <Field
+              label="덕력 보상 (정답자 1인당)"
+              value={game.dukReward > 0 ? `${game.dukReward}점` : '미지급'}
+            />
           </Section>
           <Section title="참여설정">
             <Field label="참여 정원" value="무제한" />
@@ -258,6 +274,14 @@ function BasicTab({ game }: { game: PMGame | STGame }) {
             <Field label="배수" value="1.25배" />
             <Field label="참여비 (자동 계산)" value={`${game.participationCost.toLocaleString()} GP`} />
             <Field label="탈락자 응모권" value="1장 (팬퀘스트 응모권)" />
+            <Field
+              label="응모권 보상 (생존자 1인당)"
+              value={game.ticketReward > 0 ? `${game.ticketReward}장` : '미지급'}
+            />
+            <Field
+              label="덕력 보상 (생존자 1인당)"
+              value={game.dukReward > 0 ? `${game.dukReward}점` : '미지급'}
+            />
           </Section>
           <Section title="ST 참여설정">
             <Field label="최대 모집인원" value={`${game.maxParticipants.toLocaleString()}명`} />
@@ -337,6 +361,14 @@ function ResultRewardTab({ game }: { game: PMGame | STGame }) {
       <Section title="보상 현황">
         <Field label="총 상금 GP" value={`${r.totalPrize.toLocaleString()} GP`} />
         <Field label="정답자 수" value={`${r.correctCount}명`} />
+        <Field
+          label="응모권 분배 결과"
+          value={r.perShareTicket > 0 ? `${r.perShareTicket}장 × ${r.correctCount}명 = ${r.totalTicketDistributed}장` : '미지급'}
+        />
+        <Field
+          label="덕력 분배 결과"
+          value={r.perShareDuk > 0 ? `${r.perShareDuk}점 × ${r.correctCount}명 = ${r.totalDukDistributed}점` : '미지급'}
+        />
         <Field label="미지급 보상 GP" value={`${r.undistributed.toLocaleString()} GP`} />
         <Field label="미지급보상자(탈퇴회원)" value={`${r.withdrawnUserUnpaid}명`} />
         <Field label="지분당 보상 GP" value={`${r.perShareGP.toLocaleString()} GP`} />
