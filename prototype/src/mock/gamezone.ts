@@ -192,3 +192,76 @@ export const gpHistory: GPHistoryEntry[] = (() => {
   }
   return list;
 })();
+
+// ─────────────── 랭킹 (Ranking) — [CEB-BO-GZ-401] / [CEB-BO-GZ-402] ───────────────
+// 운영 BO는 PM/ST 통합 누적 GP 기준. 통합 운영 BO 실측 시점 데이터 0건이라
+// 풍부한 가상 mock 50명으로 필터·페이지네이션·카드 디자인 검증 가능하게 구성.
+
+export interface RankingEntry {
+  rank: number;
+  uid: number;            // 회원 상세(`/members/{uid}`) 이동용
+  nickname: string;       // `^[a-z0-9_.]+$`
+  totalGp: number;        // 누적 GP = (보상 + 환급) − (참여 + 부스팅)
+  playCount: number;      // 결과 확정된 게임 참여 횟수
+  winRate: number;        // 소수 1자리 (예: 23.0)
+  lastPlayedAt: string;   // YYYY.MM.DD
+}
+
+// 50명 랭킹 풀. 운영 BO 실측 닉네임 12명(holly·lily·…) + 가상 38명.
+const RANKING_NICKNAMES = [
+  'holly', 'lily', 'cromatica', 'lajkdream', 'dding',
+  'oliver', '4nellie2', 'chia', 'sara', '3xwoh_s',
+  'yumyelim', 'nieumi', 'rex17', 'sohyun', 'starlight99',
+  'pink_blink42', 'carat_love77', 'dive_in55', 'engine_on33', 'wishful28',
+  'my_once91', 'kepler_fan15', 'love_guys60', 'islander44', 'twinkle22',
+  'galaxy_77', 'dream_catcher', 'moon_river', 'zerobase_one', 'fearless_88',
+  'aurora_kim', 'midnight_v', 'sapphire_l', 'midnight_run', 'velvet_voice',
+  'lemonade21', 'cherryblossom', 'mintchoco', 'sunset_park', 'firefly99',
+  'glasswing', 'paperplane', 'sundial33', 'pixel_kim', 'tinytea',
+  'noon_after', 'snowdrop', 'wildflower', 'fluffy_cat', 'lazybirds',
+];
+
+export const rankings: RankingEntry[] = (() => {
+  const list: RankingEntry[] = [];
+  // 1위 50000 → 점점 감소. 자연스러운 분포(약간의 변동)
+  for (let i = 0; i < RANKING_NICKNAMES.length; i++) {
+    const baseGp = 50000 - i * 800;
+    const variance = Math.floor(Math.sin(i * 2.7) * 200);
+    const totalGp = Math.max(100, baseGp + variance);
+    const playCount = Math.max(5, 120 - i * 2 - (i % 7));
+    const wins = Math.max(0, Math.floor(playCount * (0.85 - i * 0.012 + (i % 5) * 0.01)));
+    const winRate = playCount > 0 ? Math.round((wins / playCount) * 1000) / 10 : 0;
+    // 최근 참여일: 2026.05.26 기준 i일 이내
+    const d = new Date(2026, 4, 26 - (i % 25));
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const lastPlayedAt = `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())}`;
+    list.push({
+      rank: i + 1,
+      uid: 100 + i,
+      nickname: RANKING_NICKNAMES[i],
+      totalGp,
+      playCount,
+      winRate,
+      lastPlayedAt,
+    });
+  }
+  return list;
+})();
+
+// 랭킹 설정 — [CEB-BO-GZ-402] 운영 BO 실측 기본값 정합
+export type RankingCriterion = '누적 GP' | '승률' | '참여 횟수';
+export type RankingUpdateInterval = '실시간' | '1시간마다' | '1일마다';
+
+export interface RankingSettings {
+  top10Visible: boolean;            // OFF 운영 실측 기본값
+  criterion: RankingCriterion;       // 누적 GP 기본
+  updateInterval: RankingUpdateInterval; // 1일마다 운영 실측 (명세 권장: 1시간마다)
+  minPlayCount: number;              // 1 기본
+}
+
+export const RANKING_SETTINGS_DEFAULT: RankingSettings = {
+  top10Visible: false,
+  criterion: '누적 GP',
+  updateInterval: '1일마다',
+  minPlayCount: 1,
+};
