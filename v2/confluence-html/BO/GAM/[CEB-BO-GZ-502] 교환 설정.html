@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-GZ-502] 교환 설정</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-GZ-502] 교환 설정</h1>
+<blockquote>
+<p>⚠️ <strong>DEPRECATED (Phase 10, 2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면 + 운영 정합 갱신) 게임존 휴면 중. 본 문서는 운영 BO 실측 정합 갱신본이며 PM/ST 운영 재개 시 v2 정식 발행</code>. 본 문서는 보존 목적 + 운영 정합 동시 달성.</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-GZ-502</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.3</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.26</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 게임존 > GP 교환소 > 교환 설정</td></tr>
+<tr><td>비고</td><td>DEPRECATED 라벨 유지 + 본문은 운영 BO 정합(v1.3, chrome-devtools + playwright 실접속 검증). 양식 표준화 (RFT/RFL 정합). 용어 충돌: 운영 표기 "GP 충전/GP 출금" 절대 우선 ([project_gam_terminology_decision] 정합).</td></tr>
+</table>
+<hr>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-26 · 버전: <strong>v1.3</strong> (양식 표준화 + 운영 BO 정합 — 용어 환원, 탭 구조 제거, 헤더 [교환 내역] 버튼 제거, 값 범위 운영 정합)</p>
+<p>화면 경로: <code>/gamezone/exchange/settings</code> · Breadcrumb: <code>홈 › 게임존 › GP 교환소 › 교환 설정</code></p>
+</blockquote>
+<blockquote>
+<p><strong>공통 정책 참조</strong>: 게임 상태/액션, 보상 계산, GP 변동 유형, 권한, UI 상태, 토스트/포맷 규격은 <strong>[CEB-BO-GZ-000] 공통 정책</strong>을 참조한다.</p>
+</blockquote>
+<h2>1. 화면 개요</h2>
+<p>GP ↔ CELB 교환의 <strong>운영 정책 4종</strong>(교환 비율 / GP 충전 한도 / GP 출금 한도 / 교환 기능 활성화)을 변경하는 화면. [CEB-BO-GZ-501] 교환 내역 헤더의 [교환 설정] 버튼으로 진입하며, 저장 즉시 새 거래부터 본 설정이 적용된다. 이미 완료된 과거 거래는 당시 비율·한도 유지(소급 적용 없음).</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/gamezone/exchange/settings</code></td></tr>
+<tr><td>Breadcrumb</td><td>홈 › 게임존 › GP 교환소 › 교환 설정</td></tr>
+<tr><td>페이지 제목</td><td>"교환 설정"</td></tr>
+<tr><td>진입 경로</td><td>[CEB-BO-GZ-501] 교환 내역 헤더 [교환 설정] 버튼</td></tr>
+<tr><td>접근 권한</td><td>[관리자 > 권한관리]에 설정된 권한을 따름</td></tr>
+<tr><td>용도</td><td>교환 비율·한도·활성 여부 4종 변경</td></tr>
+</table>
+<h2>2. 화면 구성</h2>
+<h3>2-1. 헤더</h3>
+<table>
+<tr><th>위치</th><th>요소</th><th>동작</th></tr>
+<tr><td>상단</td><td>Breadcrumb (4단)</td><td>홈 › 게임존 › GP 교환소 › 교환 설정</td></tr>
+<tr><td>좌</td><td>페이지 제목 (h1)</td><td>"교환 설정"</td></tr>
+<tr><td>우</td><td>(액션 없음)</td><td>명세 v1.2의 [교환 내역] 우측 버튼은 운영 BO 비노출 — 정정. Breadcrumb으로 복귀</td></tr>
+</table>
+<blockquote>
+<p>명세 v1.2의 "교환 내역/교환 설정" 탭 구조도 운영 BO에는 미존재. 두 화면은 <strong>별도 페이지</strong>로 운영되며 [GZ-501] 헤더의 [교환 설정] 버튼으로 일방향 진입.</p>
+</blockquote>
+<h3>2-2. 교환 비율 (섹션 1)</h3>
+<table>
+<tr><th>항목</th><th>컨트롤</th><th>형식</th></tr>
+<tr><td>GP → CELB 비율</td><td>"1 GP = [N] CELB" Number Input</td><td>정수 또는 소수 1자리</td></tr>
+<tr><td>CELB → GP 비율</td><td>"1 CELB = [N] GP" Number Input</td><td>정수 또는 소수 1자리</td></tr>
+</table>
+<ul>
+<li>두 비율은 독립 설정 (서로 역수 강제 아님 — 운영자가 의도적으로 비대칭 설정 가능)</li>
+<li>운영 BO 실측 시점 값: 양쪽 모두 1</li>
+</ul>
+<h3>2-3. GP 충전 (CELB → GP) — 한도 (섹션 2)</h3>
+<table>
+<tr><th>항목</th><th>컨트롤</th><th>단위</th><th>운영 실측 시점 값</th></tr>
+<tr><td>최소 금액</td><td>Number Input</td><td>CELB</td><td>5</td></tr>
+<tr><td>최대 금액</td><td>Number Input</td><td>CELB</td><td>10000</td></tr>
+<tr><td>일일 한도 (금액)</td><td>Number Input</td><td>CELB</td><td>10000</td></tr>
+<tr><td>일일 한도 (횟수)</td><td>Number Input</td><td>회</td><td>20</td></tr>
+</table>
+<blockquote>
+<p>운영 실측 값은 운영자가 수정 가능한 현재 설정값. 명세는 검증 룰만 보존(§5-1).</p>
+</blockquote>
+<h3>2-4. GP 출금 (GP → CELB) — 한도 (섹션 3)</h3>
+<table>
+<tr><th>항목</th><th>컨트롤</th><th>단위</th><th>운영 실측 시점 값</th></tr>
+<tr><td>최소 금액</td><td>Number Input</td><td>GP</td><td>5</td></tr>
+<tr><td>최대 금액</td><td>Number Input</td><td>GP</td><td>10000</td></tr>
+<tr><td>일일 한도 (금액)</td><td>Number Input</td><td>GP</td><td>10000</td></tr>
+<tr><td>일일 한도 (횟수)</td><td>Number Input</td><td>회</td><td>20</td></tr>
+</table>
+<h3>2-5. 교환 기능 (섹션 4)</h3>
+<table>
+<tr><th>항목</th><th>컨트롤</th><th>형식</th></tr>
+<tr><td>GP 충전 활성화</td><td>Toggle Switch + 우측 라벨 "(ON)" / "(OFF)"</td><td>회원 앱의 CELB → GP 교환 가능 여부</td></tr>
+<tr><td>GP 출금 활성화</td><td>Toggle Switch + 우측 라벨 "(ON)" / "(OFF)"</td><td>회원 앱의 GP → CELB 교환 가능 여부</td></tr>
+</table>
+<ul>
+<li>비활성화(OFF) 시 회원 앱에서 해당 방향의 [교환] 시도 자체가 차단됨</li>
+<li>진행 중 거래는 영향 없음 (이미 시작된 트랜잭션은 완료)</li>
+</ul>
+<h3>2-6. 액션 버튼 (하단 고정)</h3>
+<table>
+<tr><th>버튼</th><th>위치</th><th>스타일</th><th>동작</th></tr>
+<tr><td>[초기화]</td><td>우하단(저장 좌측)</td><td>Secondary (Outline)</td><td>모든 설정을 기본값으로 복원 — 확인 모달 노출 후 적용 (저장은 별도 클릭)</td></tr>
+<tr><td>[저장]</td><td>우하단</td><td>Primary (Solid)</td><td>변경값 저장 + Toast "교환 설정이 저장되었습니다." + 활동 로그</td></tr>
+</table>
+<blockquote>
+<p><strong>[초기화] 확인 모달</strong>: "모든 설정을 기본값으로 복원하시겠습니까? 변경사항은 저장되지 않습니다." [취소] [복원]. 복원 후 [저장]을 별도 클릭해야 실제 반영.</p>
+</blockquote>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th><th>의미</th></tr>
+<tr><td>Breadcrumb</td><td>홈 › 게임존 › GP 교환소 › 교환 설정</td><td>진입 경로</td></tr>
+<tr><td>페이지 제목</td><td>"교환 설정"</td><td>현재 화면</td></tr>
+<tr><td>섹션 1</td><td>교환 비율 2종 (GP→CELB, CELB→GP)</td><td>거래 환산 비율</td></tr>
+<tr><td>섹션 2</td><td>GP 충전 한도 4종 (최소·최대·일일 금액·횟수)</td><td>CELB → GP 거래 제한</td></tr>
+<tr><td>섹션 3</td><td>GP 출금 한도 4종 (동일 구성)</td><td>GP → CELB 거래 제한</td></tr>
+<tr><td>섹션 4</td><td>교환 기능 활성화 토글 2종</td><td>회원 앱 노출 여부</td></tr>
+<tr><td>하단 액션</td><td>[초기화] [저장]</td><td>변경 적용 / 기본값 복원</td></tr>
+</table>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>데이터 로딩 중</td><td>각 섹션 Skeleton</td></tr>
+<tr><td>데이터 로딩 실패</td><td>에러 토스트 "교환 설정을 불러오지 못했습니다" + [다시 시도]</td></tr>
+<tr><td>권한 없음 (읽기)</td><td>사이드바 미노출 + URL 직접 접근 시 권한 오류 페이지</td></tr>
+<tr><td>권한 없음 (쓰기)</td><td>입력 컨트롤·액션 버튼 disabled (조회만 가능)</td></tr>
+<tr><td>변경 후 [저장] 성공</td><td>Toast "교환 설정이 저장되었습니다." + 활동 로그 + 화면 유지</td></tr>
+<tr><td>변경 후 [저장] 실패</td><td>에러 토스트 + 잘못된 필드에 인라인 에러 메시지</td></tr>
+<tr><td>[초기화] 클릭</td><td>확인 모달 → [복원] 시 화면 값만 기본값 복원 (저장 X)</td></tr>
+<tr><td>비율 < 최솟값 또는 > 최댓값</td><td>인라인 에러 + [저장] 차단</td></tr>
+<tr><td>최소 금액 > 최대 금액</td><td>인라인 에러 "최소 금액은 최대 금액 이하여야 합니다" + [저장] 차단</td></tr>
+<tr><td>토글 OFF 저장</td><td>즉시 회원 앱 반영 (해당 방향 거래 차단)</td></tr>
+</table>
+<h2>5. 검증 규칙</h2>
+<h3>5-1. 입력 검증</h3>
+<table>
+<tr><th>필드</th><th>검증</th></tr>
+<tr><td>GP → CELB 비율 / CELB → GP 비율</td><td>정수 또는 소수 1자리, 0보다 큰 양수</td></tr>
+<tr><td>최소 금액 / 최대 금액</td><td>정수, 0보다 큰 양수, 최소 ≤ 최대</td></tr>
+<tr><td>일일 한도 (금액)</td><td>정수, 0보다 큰 양수 (0 = 무제한 미사용. 무제한 정책 시 별도 검토)</td></tr>
+<tr><td>일일 한도 (횟수)</td><td>정수, 0보다 큰 양수</td></tr>
+<tr><td>활성화 토글</td><td>OFF / ON 2상태</td></tr>
+</table>
+<h3>5-2. 저장 시 처리</h3>
+<table>
+<tr><th>항목</th><th>처리</th></tr>
+<tr><td>교환 비율 변경</td><td>저장 후 새 거래부터 적용 (소급 적용 없음 — [GZ-501] §5-2 정합)</td></tr>
+<tr><td>한도 변경</td><td>저장 후 새 거래부터 적용. 진행 중 거래는 영향 없음</td></tr>
+<tr><td>활성화 토글 변경</td><td>회원 앱 캐시 즉시 갱신</td></tr>
+<tr><td>동시 변경</td><td>마지막 저장이 우선 (별도 충돌 안내 없음)</td></tr>
+</table>
+<h3>5-3. 활동 로그</h3>
+<p><code>[CEB-BO-GZ-000] 공통 정책 §활동 로그</code> 정합:</p>
+<table>
+<tr><th>액션</th><th>로그 메시지</th></tr>
+<tr><td>교환 설정 저장</td><td>교환 설정을 변경했습니다. (비율: GP→CELB {N}, CELB→GP {N} / 충전 한도: 최소 {N}·최대 {N}·일일 {N} CELB·{N}회 / 출금 한도: 최소 {N}·최대 {N}·일일 {N} GP·{N}회 / 활성화: 충전 {ON/OFF}, 출금 {ON/OFF})</td></tr>
+</table>
+<blockquote>
+<p>로그는 변경 후 값만 기록. 변경 전·후 비교는 별도 진단 화면에서 처리.</p>
+</blockquote>
+<h3>5-4. 권한</h3>
+<ul>
+<li>권한은 [관리자 > 권한관리]에 설정된 그룹별 권한을 따름 ([CEB-BO-SYS-102])</li>
+<li>읽기 권한: 본 화면 조회만 가능 (입력·저장 disabled)</li>
+<li>쓰기 권한: 모든 설정 변경 및 저장 가능</li>
+</ul>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>Breadcrumb GP 교환소</td><td>[CEB-BO-GZ-501] 교환 내역</td></tr>
+<tr><td>상위 게임존</td><td>[CEB-BO-GZ-101] 게임존 메인</td></tr>
+<tr><td>관련 — 지갑 관리</td><td>[CEB-BO-GZ-503] 지갑 관리 (운영 지갑 [대표] 설정)</td></tr>
+<tr><td>공통 정책</td><td>[CEB-BO-GZ-000] 공통 정책</td></tr>
+</table>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.3</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합</strong> ① 양식 표준화: Page Properties 14필드(비고), §1 화면 개요 + 표, §2 화면 구성 하이픈(2-1~2-6: 헤더/교환 비율/GP 충전 한도/GP 출금 한도/교환 기능/액션 버튼), §3 노출 정보 표, §4 상태별 동작 분기, §5 검증 규칙 4항목, §6 연관 화면, §7 변경 이력 — Group A·B/[GZ-401·402]/[GZ-501·501-MD-DETAIL] 동일 양식 ② 운영 BO 정합 (chrome-devtools + playwright 실접속 검증): <strong>§2-1 헤더 — [교환 내역] 우측 버튼 제거 + "교환 내역/교환 설정" 탭 구조 제거</strong> (운영 BO 비노출, 일방향 진입 정책 명시), <strong>§용어 정합 — "GP 가져오기 / CELB으로 보내기" → "GP 충전 / GP 출금"</strong> (501·501-MD-DETAIL과 동일 환원 — [project_gam_terminology_decision] 정합), <strong>§섹션 구조 정합</strong> — "GP 가져오기 설정 / CELB으로 보내기 설정" → "GP 충전 (CELB → GP) / GP 출금 (GP → CELB)" (운영 섹션 헤더 정합), <strong>§2-5 활성화 토글 라벨</strong> — 운영 표기 "GP 충전 활성화 (ON)" 형태 (라벨 + 괄호 상태) ③ 운영 실측 시점 값(최소 5·최대 10000·일일 10000·횟수 20) 명세에 기록 — 운영자 수정 가능 안내 ④ <strong>권한 매트릭스 제거</strong> → "[관리자 > 권한관리]에 설정된 권한" 단일화 (BO-013 v7.0 정합) ⑤ <strong>ASCII UI 다이어그램 제거 + 백엔드 식별자/JSON 로그 제거</strong> — 기획자 언어 룰 위반. 활동 로그는 한국어 메시지만 명시 (GZ-000 위임) ⑥ DEPRECATED 라벨 유지 + 본문 운영 정합</td></tr>
+<tr><td>v1.2</td><td>2026.02.24</td><td>@Nill Yoo</td><td>교환 방향 용어 통일 — GP 충전 → GP 가져오기, GP 출금 → CELB으로 보내기 (v1.3에서 운영 표기로 환원)</td></tr>
+<tr><td>v1.1</td><td>2025.02.06</td><td>@Nill Yoo</td><td>교환 기능 활성화/비활성화 토글 추가</td></tr>
+<tr><td>v1.0</td><td>2025.02.03</td><td>@Nill Yoo</td><td>초안 작성</td></tr>
+</table>
+
+</body>
+</html>
