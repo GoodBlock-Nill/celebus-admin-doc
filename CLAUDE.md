@@ -1,14 +1,76 @@
 ```
-# CELEBUS ADMIN - 게임존 화면설명서 작성 가이드
+# CELEBUS ADMIN - 화면설명서 작성 가이드 (v1→v2 마이그레이션)
 
 ## 프로젝트 개요
 
-CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게임존(Game Zone) 백오피스 관리 시스템의 화면설명서를 작성하는 작업이다.
+CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 백오피스(BO) + 앱 화면설명서를 v1(게임존+팬퀘스트 중심)에서 v2(12개 영역 통합)로 마이그레이션하는 작업이다.
 
-- **플랫폼**: CELEBUS ADMIN (백오피스)
-- **대상 메뉴**: 게임존 (Game Zone)
-- **Phase 1 범위**: Prediction Market 게임 관리, 랭킹, GP 교환소, GP 변동 내역
-- **Phase 2 범위**: Survival Trivia, 추가 게임 유형 확장
+- **플랫폼**: CELEBUS ADMIN (백오피스) + CELEBUS APP
+- **현재 우선 작업**: v1 89개 화면 → v2/BO/, v2/APP/ 로 전면 이전 + Deprecation
+- **참고**: 게임존(Phase 1·2)은 PM/ST 운영 중단 상태. 활성 영역은 팬퀘스트(FQ) + BIVE NFT
+
+---
+
+## 작업 재개 프로토콜 (CRITICAL)
+
+신규 Claude Code 세션 시작 시 **반드시 다음 순서로 컨텍스트를 복원**한다.
+
+1. **자동 주입** — `.claude/hooks/session-start-context.sh` 가 SessionStart 훅으로 실행되어 진행상태·다음 작업·차단 이슈를 시스템 프롬프트에 자동 주입
+2. **수동 확인** (자동 주입이 실패한 경우):
+   - 진행상태: `~/.claude/projects/-Users-goodblock-Projects-celebus-admin/memory/v2_migration_progress.md`
+   - 매핑표: `~/.claude/projects/-Users-goodblock-Projects-celebus-admin/memory/v1_v2_mapping_matrix.md`
+   - 운영 갭: `~/.claude/projects/-Users-goodblock-Projects-celebus-admin/memory/v2_critical_gaps.md`
+   - 마스터 플랜: `~/.claude/plans/v1-v2-resilient-hamming.md`
+   - 분석 리포트: `v2/[CEB-BO-001-A] 실제 BO 구현 심층 분석 리포트.md`
+
+### Phase 진입·퇴출 시 강제 호출
+
+```bash
+# Phase 진입
+v2/scripts/update-progress.sh --phase N --status start --note "메모"
+
+# Phase 완료
+v2/scripts/update-progress.sh --phase N --status done --note "산출물 요약"
+
+# 차단 이슈 발생
+v2/scripts/update-progress.sh --phase N --status blocked --note "차단 사유"
+
+# 단순 메모만 추가 (Phase 진행 중 발견사항)
+v2/scripts/update-progress.sh --note "발견 내용"
+```
+
+이 스크립트가 호출되지 않으면 **세션 종료 시 작업 컨텍스트 손실 위험**이 발생한다.
+
+---
+
+## v2 폴더 구조 + 화면 ID 패턴
+
+```
+v2/
+├── BO/                    # 백오피스 화면 명세 (영역별 폴더)
+│   ├── 00-Common/        # CEB-BO-000 (공통 정책), CEB-BO-001 (마이그레이션 마스터)
+│   ├── USR/              # 회원 — CEB-BO-002 (가이드) + CEB-BO-USR-*
+│   ├── ART/              # 아티스트 — CEB-BO-003 + CEB-BO-ART-*
+│   ├── BIVE/             # NFT — CEB-BO-004 + CEB-BO-BIVE-*
+│   ├── FQ/               # 팬퀘스트 — CEB-BO-006 + CEB-BO-FQ-* (34개 ✅)
+│   └── SYS/              # 관리자 — CEB-BO-005 + CEB-BO-SYS-*
+├── APP/                   # 앱 화면 명세 (Phase 11)
+├── confluence-html/       # MD ↔ HTML 자동 동기화 (폴더 구조 1:1 미러)
+│   ├── BO/{영역}/...
+│   └── APP/...
+├── scripts/
+│   └── update-progress.sh
+└── convert-to-html.js     # 재귀 스캔 + 폴더 미러 자동 변환
+```
+
+**향후 추가 예정 영역** (Phase 9): `DUK/`, `EVT/`, `SUP/`, `INF/`, `MEM/`, `COL/`, `APP/` (회원 앱 운영 — 배너 등)
+
+**v2 화면 ID 패턴**: `CEB-BO-{영역}-{번호}[-{유형}]`
+- 영역: USR / ART / BIVE / RFT / SYS / FQ / DUK / EVT / SUP / INF / MEM / COL / APP / SQ
+- 번호: 100(메인), 101~199(메인 하위), 201~299(상세), 301~399(부속), 401~499(내역), 501~599(정책)
+- 유형: `Create` / `Edit` / `MD-{action}` (모달)
+
+**HTML 동기화**: `npm run docs:build` (Phase 2 완료 후) 또는 `npm run docs:watch` (실시간)
 
 ---
 
@@ -49,9 +111,9 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 
 | 구분 | 통일 용어 | 사용 금지 |
 |------|----------|----------|
-| GP 증가 | 보상, 환급, 가져오기 | 발급, 충전 |
-| GP 감소 | 참여, 부스팅, 보내기 | 출금 |
-| 교환 방향 | GP 가져오기 (CELB→GP), CELB으로 보내기 (GP→CELB) | 충전, 출금 |
+| GP 증가 | 보상, 환급, 충전 | 발급, 가져오기 |
+| GP 감소 | 참여, 부스팅, 출금 | 보내기 |
+| 교환 방향 | GP 충전 (CELB→GP), GP 출금 (GP→CELB) | 가져오기, 보내기 |
 | 상금 (PM) | 총 상금 GP | 상금풀 |
 | 상금 (ST) | 최대 상금풀, 적용 상금풀, 참여비 | 총 상금 GP (ST에서 사용 금지) |
 | 게임 상태 | 임시저장/게시대기/진행중/결과 대기/결과 확정/종료 | - |
@@ -241,8 +303,8 @@ CELEBUS는 K-pop 팬 엔터테인먼트 플랫폼이며, 본 프로젝트는 게
 | 환급 | REFUND | 결과 발표 후 참여 GP 반환 | + (증가) | PM 전용 | ST는 참여GP 환급 없음 |
 | 보상 | REWARD | 정답/생존 시 보상 지급 | + (증가) | PM, ST | PM: 비율배분, ST: 균등분배 |
 | 환불 | REFUND_CANCEL | 게임 취소 시 환불 | + (증가) | PM, ST | PM: 부스팅+참여GP, ST: 참여GP만 |
-| GP 가져오기 | EXCHANGE_IN | CELB → GP 교환 | + (증가) | 공통 | 게임유형 무관 |
-| CELB으로 보내기 | EXCHANGE_OUT | GP → CELB 교환 | - (차감) | 공통 | 게임유형 무관 |
+| GP 충전 | EXCHANGE_IN | CELB → GP 교환 | + (증가) | 공통 | 게임유형 무관 |
+| GP 출금 | EXCHANGE_OUT | GP → CELB 교환 | - (차감) | 공통 | 게임유형 무관 |
 
 ---
 
