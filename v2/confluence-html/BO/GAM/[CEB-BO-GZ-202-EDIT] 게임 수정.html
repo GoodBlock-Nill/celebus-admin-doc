@@ -91,7 +91,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.10</td></tr>
+<tr><td>버전</td><td>v2.11</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.26</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -101,7 +101,7 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-26 · 버전: <strong>v2.10</strong> (신규 기능 본문 보강 — §2-2 PM 잠금 매트릭스 6행과 §2-3 ST 매트릭스에 신규 3필드 명시 + Closed/Ended 잠금 안내. v2.8 변경 이력 약속이 본문에 미반영된 상태였음)</p>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-26 · 버전: <strong>v2.11</strong> (ST 수정 화면 테스트 BO 실측 정합 — §1 ST 라우트 별도 페이지 분리, §2-3 ST 잠금 매트릭스 임시저장 실측, 운영 구현 불일치 3건 발견 — 탈락자 응모권 필수★/아티스트 그룹 부재/별도 페이지)</p>
 <p>화면 경로: <code>/gamezone/games/create?mode=edit&{predictionMarketId|survivalTriviaId}={gameId}</code> · Breadcrumb: <code>홈 › 게임존 › 게임 관리 › 게임 생성</code> (수정도 동일 표기)</p>
 </blockquote>
 <blockquote>
@@ -112,7 +112,8 @@ p {
 <p>기존 게임의 정보를 수정하는 <strong>풀페이지 폼 화면</strong>. [201-CREATE] 게임 생성 화면과 같은 컴포넌트이며, <code>?mode=edit</code> 진입 시 페이지 제목·CTA·필드 잠금 매트릭스가 수정 모드로 전환된다. 게임 상태에 따라 수정 가능 필드가 동적 잠금된다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>화면 경로</td><td>`/gamezone/games/create?mode=edit&{predictionMarketId</td><td>survivalTriviaId}={gameId}`</td></tr>
+<tr><td>화면 경로 (PM)</td><td><code>/gamezone/games/create?mode=edit&predictionMarketId={gameId}</code> (생성 페이지 공용)</td></tr>
+<tr><td>화면 경로 (ST)</td><td><code>/gamezone/games/st/{gameId}/edit</code> (별도 페이지, 테스트 BO 실측 2026-05-26 신규 발견)</td></tr>
 <tr><td>Breadcrumb</td><td>홈 › 게임존 › 게임 관리 › <strong>게임 생성</strong> (운영 표기 그대로 — 수정도 "게임 생성"으로 표시)</td></tr>
 <tr><td>페이지 제목</td><td>"<strong>게임 수정</strong>" (h1, mode=edit일 때만 차별화)</td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-GZ-202] 게임 상세의 [수정하기] 또는 [결과 수정] 버튼</td></tr>
@@ -141,15 +142,22 @@ p {
 <p>v2.7에서는 Pending 상태 실측만 확정. Draft/Ready/Active의 매트릭스는 v2.6 명세를 보존하며 향후 신규 게임 생성·전이 검증 시 재정합.</p>
 </blockquote>
 <h3>2-3. 상태별 수정 잠금 매트릭스 (ST)</h3>
-<p>(v2.6 명세 보존 — 운영 검증 미실시)</p>
+<p>테스트 BO 실측(2026-05-26, ST id=22 Draft) + 명세 보존 혼합:</p>
 <table>
 <tr><th>상태</th><th>수정 가능 필드</th><th>잠금 필드</th></tr>
-<tr><td>Draft</td><td>게임유형 외 전부 (<strong>아티스트·응모권 보상(생존자/탈락자)·덕력 보상 포함</strong>)</td><td>게임유형</td></tr>
-<tr><td>Ready</td><td>타이틀·상세설명·이미지·<strong>아티스트·보상(응모권·덕력 포함)</strong>·참여·퀴즈·일정</td><td>게임유형</td></tr>
-<tr><td>Active</td><td>타이틀·상세설명만</td><td>퀴즈·<strong>아티스트·응모권·덕력</strong>·보상·참여·시작일시</td></tr>
-<tr><td>Ended</td><td>진입 불가</td><td><strong>아티스트·응모권·덕력 보상 모두 잠금</strong> (이미 분배) + 나머지 전부</td></tr>
+<tr><td>임시저장 (실측)</td><td>게임유형 외 전부 — 타이틀(KO/EN/JP) / 상세설명(KO/EN/JP) / 배너 이미지 / 퀴즈설정(제한시간·정답 결과 노출시간·퀴즈 10문제) / 최대 모집인원 / 보상설정(최대 상금풀·배수·보상 유형·<strong>탈락자 응모권 수량 필수★</strong>) / 게임 시작일시</td><td>게임유형 (Survival Trivia, 라벨 readonly)</td></tr>
+<tr><td>게시대기 (v2.6 명세 보존 — 미검증)</td><td>타이틀·상세설명·이미지·<strong>아티스트·보상(응모권·덕력 포함)</strong>·참여·퀴즈·일정</td><td>게임유형</td></tr>
+<tr><td>진행중 (v2.6 명세 보존 — 미검증)</td><td>타이틀·상세설명만</td><td>퀴즈·<strong>아티스트·응모권·덕력</strong>·보상·참여·시작일시</td></tr>
+<tr><td>종료</td><td>진입 불가 (수정 화면 자체 접근 차단)</td><td>전체 잠금</td></tr>
+<tr><td>강제종료·환불</td><td>진입 불가 (수정 화면 자체 접근 차단)</td><td>전체 잠금</td></tr>
 </table>
-<p>ST는 Pending/Closed 상태 없음 (서버 자동 판정·보상).</p>
+<p>ST는 결과 대기/결과 확정 상태 없음 (서버 자동 판정·보상).</p>
+<blockquote>
+<p><strong>테스트 BO 실측 신규 발견(2026-05-26)</strong>:</p>
+<p>- ST 수정은 PM과 달리 <strong>별도 페이지</strong> (<code>/gamezone/games/st/{id}/edit</code>) — PM은 <code>?mode=edit</code> 쿼리 공용 폼</p>
+<p>- ST 보상설정의 "탈락자 응모권 수량"이 <strong>필수★ (기본 1장)</strong> — v2.5 명세에서 "선택 (0=미지급)"으로 정정한 것과 운영 구현 불일치. 운영팀 결정 필요</p>
+<p>- ST 기본정보에 <strong>아티스트 그룹 필드 부재</strong> — v2.8 명세 신규 약속이 ST 운영 구현에 미적용. 운영팀 결정 필요</p>
+</blockquote>
 <h3>2-4. 폼 본문</h3>
 <p>[201-CREATE] §2-3 (PM) / §2-4 (ST)와 <strong>동일한 폼 구조</strong>를 가지며, 차이점은:</p>
 <ul>
@@ -230,7 +238,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v2.10</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 기능 본문 보강</strong> — v2.8 변경 이력에서 약속한 잠금 매트릭스 갱신을 본문에 실제 명시 (사용자 점검 발견). ① §2-2 PM 잠금 매트릭스 6행 모두에 신규 3필드(아티스트·응모권 보상·덕력 보상) 명시 + Closed/Ended 안내문 "결과 확정 후에는 아티스트·응모권·덕력 보상값을 수정할 수 없습니다 (이미 분배된 보상)" 추가 ② §2-3 ST 잠금 매트릭스 4행 동일 정합 ③ §3 노출 정보 폼 행에 신규 3필드 명시 ④ §5 검증 규칙에 "결과 확정 후 잠금"·"신규 필드 잠금 매트릭스" 2행 신규 추가. 공용 폼 자동 적용([201-CREATE] §2-3·§2-4)은 v2.7 유지</td></tr>
+<tr><td><strong>v2.11</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>ST 수정 화면 테스트 BO 실측 정합</strong> — 테스트 BO ST id=22 (Draft) 직접 실측으로 ST 수정 화면 본문·라우트·잠금 매트릭스 정합. ① §1 화면 경로 표 PM/ST 분리 — ST는 <code>/gamezone/games/st/{id}/edit</code> <strong>별도 페이지</strong> (PM은 <code>?mode=edit</code> 공용 폼) ② §2-3 ST 잠금 매트릭스 임시저장 행 실측 — 게임유형 외 전부 수정 가능. 보상설정에 "최대 상금풀·배수·보상 유형(단계별/비율 보상)·탈락자 응모권 수량 필수★" 실측 명시 ③ <strong>운영 구현 불일치 3건 발견</strong> (운영팀 결정 필요): 가) ST 수정 별도 페이지 (PM 공용 폼과 다름) 나) 탈락자 응모권 필수★ (v2.5 명세 "선택 0=미지급"과 다름) 다) ST 기본정보 아티스트 그룹 필드 부재 (v2.8 명세 신규 약속 미적용)</td></tr>
+<tr><td>v2.10</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 본문 보강</strong> — v2.8 변경 이력에서 약속한 잠금 매트릭스 갱신을 본문에 실제 명시 (사용자 점검 발견). ① §2-2 PM 잠금 매트릭스 6행 모두에 신규 3필드(아티스트·응모권 보상·덕력 보상) 명시 + Closed/Ended 안내문 "결과 확정 후에는 아티스트·응모권·덕력 보상값을 수정할 수 없습니다 (이미 분배된 보상)" 추가 ② §2-3 ST 잠금 매트릭스 4행 동일 정합 ③ §3 노출 정보 폼 행에 신규 3필드 명시 ④ §5 검증 규칙에 "결과 확정 후 잠금"·"신규 필드 잠금 매트릭스" 2행 신규 추가. 공용 폼 자동 적용([201-CREATE] §2-3·§2-4)은 v2.7 유지</td></tr>
 <tr><td>v2.9</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>보상 정책 정정 — 탈락자 응모권 선택화 + 덕력 = 참여자 균등 분배로 통일 (공용 폼 자동 적용)</strong> — [GZ-201-CREATE v3.3]과 동일 페이지(`?mode={create\</td><td>edit}` 분기). v3.3 정정 사항 자동 적용: ① ST 보상설정 "탈락자 응모권 수량 (필수)" → "응모권 보상 (탈락자 1인당)" (선택, 기본 0) ② 덕력 보상 라벨 "정답자/생존자 1인당" → "참여자 1인당" (PM·ST 공통, 참여 기반 균등 분배). 잠금 매트릭스 v2.8 정책 유지 (결과 확정 후 보상 필드 잠금)</td></tr>
 <tr><td>v2.8</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 — 아티스트 그룹 + 응모권·덕력 보상 필드 추가 (공용 폼 정합)</strong> — 본 화면은 [GZ-201-CREATE v3.2]와 동일 페이지(`?mode={create\</td><td>edit}<code> 분기). v3.2 신규 필드 3종(아티스트·응모권 보상·덕력 보상)이 자동 적용됨. <strong>수정 모드 잠금 매트릭스에 추가</strong>: ① <strong>결과 확정 후</strong>(</code>결과확정<code>·</code>종료`) 아티스트·응모권·덕력 보상값 <strong>모두 잠금</strong> (이미 분배된 보상). ② Draft·Ready·Active(진행중)·Pending(결과대기)에서는 v2.7 기존 잠금 정책 따름 + 신규 필드는 결과 확정 이전 변경 가능. ③ [GZ-000 v2.4] §5 잠금 정책 정합</td></tr>
 <tr><td>v2.7</td><td>2026.05.22</td><td>@Nill Yoo</td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합 + 페이지 재사용 정정</strong> ① 양식 표준화: Page Properties 비고 필드 추가, §1 화면 개요 표, §2 하이픈 표기(§2-1~§2-6), §3 노출 정보, §4 상태별 동작 분기, §5 검증 규칙(+5-1 ST Active), §6 연관 화면, §7 변경 이력 — RFT/RFL 양식 정합 ② 운영 BO 정합(테스트 BO id=92 PM Pending 실측): <strong>라우트 명시(<code>/gamezone/games/create?mode=edit&predictionMarketId={id}</code>)</strong>, <strong>Breadcrumb 마지막 노드 "게임 생성"</strong> (수정도 동일 표기), 페이지 제목 "게임 수정", <strong>Pending 안내문 "결과 대기 중인 게임은 결과 발표 예정일과 결과 확인 기준만 수정할 수 있습니다."</strong>, <strong>Pending 잠금 매트릭스 실측</strong> (결과 발표 예정일·결과 확인 기준만 활성), <strong>CTA 안내문 "변경된 내용이 있을 때만 저장할 수 있습니다."</strong>, [저장하기] 변경 없으면 disabled, 이미지 영역 미리보기+[변경]/[제거] 버튼, 우측 앱 미리보기 사이드 패널 §2-6 명시 ③ <strong>페이지 재사용 정정</strong> — 생성·수정이 동일 페이지(`?mode={create\</td><td>edit}` 분기)임을 명시. 별도 [202-EDIT] 라우트가 아님 ④ Draft/Ready/Active/Closed의 잠금 매트릭스는 v2.6 명세 보존 (운영 검증 미실시) ⑤ ST 폼은 명세 보존 + 검증 미실시 노트 ⑥ DEPRECATED 라벨 유지</td></tr>

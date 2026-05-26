@@ -121,21 +121,24 @@ p {
 <hr>
 <h2>2. 게임 상태 정의</h2>
 <table>
-<tr><th>상태</th><th>코드</th><th>설명</th><th>Badge 색상</th><th>앱 반영</th></tr>
-<tr><td>임시저장</td><td>Draft</td><td>작성 완료, 미게시</td><td>회색</td><td>노출 안됨</td></tr>
-<tr><td>게시대기</td><td>Ready</td><td>생성 완료, 게시 대기 중</td><td>파란색</td><td>노출 안됨</td></tr>
-<tr><td>진행중</td><td>Active</td><td>참여 가능</td><td>초록색</td><td>참여 가능</td></tr>
-<tr><td>결과 대기</td><td>Pending</td><td>참여 마감, 결과 입력 대기</td><td>주황색</td><td>결과 대기 표시</td></tr>
-<tr><td>결과 확정</td><td>Closed</td><td>결과 확정, 보상 지급 전</td><td>보라색</td><td>결과 확인 가능</td></tr>
-<tr><td>종료</td><td>Ended</td><td>보상 지급 완료</td><td>검정색</td><td>종료 표시</td></tr>
+<tr><th>상태</th><th>설명</th><th>Badge 색상</th><th>앱 반영</th></tr>
+<tr><td>임시저장</td><td>작성 완료, 미게시</td><td>회색</td><td>노출 안됨</td></tr>
+<tr><td>게시대기</td><td>생성 완료, 게시 대기 중</td><td>파란색</td><td>노출 안됨</td></tr>
+<tr><td>진행중</td><td>참여 가능</td><td>초록색</td><td>참여 가능</td></tr>
+<tr><td>결과 대기</td><td>참여 마감, 결과 입력 대기 (PM 전용)</td><td>주황색</td><td>결과 대기 표시</td></tr>
+<tr><td>결과 확정</td><td>결과 확정, 보상 지급 전 (PM 전용)</td><td>보라색</td><td>결과 확인 가능</td></tr>
+<tr><td>종료</td><td>정상 종료 (PM: 보상 지급 완료 / ST: 자동 보상 지급 완료)</td><td>검정색</td><td>종료 표시</td></tr>
+<tr><td>강제종료</td><td>관리자가 [강제 종료]로 종료한 상태 (Active 또는 Pending에서 전이). 환불 처리 후 종료 (테스트 BO 실측 2026-05-26 신규 추가)</td><td>회색</td><td>종료 표시</td></tr>
+<tr><td>환불</td><td>환불 처리 완료 상태 (강제종료 게임 참여자에게 참여 GP·부스팅 GP 환급 후 표기, 테스트 BO 실측 2026-05-26 신규 추가)</td><td>회색</td><td>종료 표시</td></tr>
 </table>
 <h3>게임유형별 상태 흐름</h3>
 <ul>
-<li><strong>Prediction Market (PM)</strong>: Draft → Ready → Active → Pending → Closed → Ended</li>
-<li>Pending: 참여 마감 후 관리자 수동 결과 입력 대기 상태</li>
-<li>Closed: 결과 확정 후 관리자 수동 보상 지급 대기 상태</li>
-<li><strong>Survival Trivia (ST)</strong>: Draft → Ready → Active → Ended</li>
-<li>Pending / Closed 상태 없음 (게임 종료 즉시 서버 자동 결과 확정 및 보상 지급)</li>
+<li><strong>Prediction Market (PM)</strong>: 임시저장 → 게시대기 → 진행중 → 결과 대기 → 결과 확정 → 종료</li>
+<li>결과 대기: 참여 마감 후 관리자 수동 결과 입력 대기 상태</li>
+<li>결과 확정: 결과 확정 후 관리자 수동 보상 지급 대기 상태</li>
+<li><strong>Survival Trivia (ST)</strong>: 임시저장 → 게시대기 → 진행중 → 종료</li>
+<li>결과 대기 / 결과 확정 상태 없음 (게임 종료 즉시 서버 자동 결과 확정 및 보상 지급)</li>
+<li><strong>공통 분기 상태</strong> (PM·ST 모두): 진행중·결과 대기 상태에서 관리자가 [강제 종료] → <strong>강제종료</strong> → (환급 완료 후) <strong>환불</strong></li>
 </ul>
 <hr>
 <h2>3. 상태별 가능 액션</h2>
@@ -402,7 +405,7 @@ p {
 <h2>변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
-<tr><td><strong>v2.7</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>GAM 24개 명세 기획자 언어 룰 일괄 정정</strong> — <code>v2/scripts/planner-language-check.sh</code> 도입 후 GAM 24개 명세 전수 검증: 78건 위반 후보 → 0건 통과 달성. 정정 내역: ① 모든 명세 DEPRECATED 라벨에서 "Phase 10" 메타 표기 제거 (날짜만 유지) ② [GZ-101] §5-1 본문의 "Phase 1/Phase 2" 표기 → 한국어 자연어 ("PM만 Active 상태일 때") ③ [GZ-000] §4 GP 변동 유형 표에서 "코드" 컬럼(enum 평문 7종) 제거 ④ 본문/변경 이력의 enum·camelCase 평문(<code>ticketReward</code>·<code>dukReward</code>·<code>artistGroup</code>·<code>PM_PARTICIPATION</code> 등) 일괄 백틱 인용 처리 ⑤ HTML 속성(<code>target=_blank</code>) 백틱 인용 ⑥ [GZ-202] §결과 입력 사전 검증 안내문의 "사이클 #2" 메타 마커 백틱 인용. 영향 24개 명세 모두 <code>planner-language-check.sh</code> 종료 코드 0</td></tr>
+<tr><td><strong>v2.7</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>GAM 24개 명세 기획자 언어 룰 일괄 정정</strong> — <code>v2/scripts/planner-language-check.sh</code> 도입 후 GAM 24개 명세 전수 검증: 78건 위반 후보 → 0건 통과 달성. 정정 내역: ① 모든 명세 DEPRECATED 라벨에서 <code>Phase 10</code> 메타 표기 제거 (날짜만 유지) ② [GZ-101] §5-1 본문의 <code>Phase 1</code>/<code>Phase 2</code> 표기 → 한국어 자연어 ("PM만 Active 상태일 때") ③ [GZ-000] §4 GP 변동 유형 표에서 "코드" 컬럼(enum 평문 7종) 제거 ④ 본문/변경 이력의 enum·<code>camelCase</code> 평문(<code>ticketReward</code>·<code>dukReward</code>·<code>artistGroup</code>·<code>PM_PARTICIPATION</code> 등) 일괄 백틱 인용 처리 ⑤ HTML 속성(<code>target=_blank</code>) 백틱 인용 ⑥ [GZ-202] §결과 입력 사전 검증 안내문의 <code>사이클 #2</code> 메타 마커 백틱 인용. 영향 24개 명세 모두 <code>planner-language-check.sh</code> 종료 코드 0</td></tr>
 <tr><td>v2.6</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>덕력 단위 'DUK' 표기 통일</strong> — §5 활동 로그 메시지의 <code>덕력 {총}점</code> 표기를 <strong>"덕력 {총} DUK"</strong> 로 정정. [CEB-BO-DUK-000] §단위·표기 SSOT("단위 <code>DUK</code> (예: 1,234 DUK). 소수점 없음")와 일치시키기 위한 도메인 용어 통일. 정책 자체 변경 없음 — 표기만 정합</td></tr>
 <tr><td>v2.5</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>보상 정책 정정 — 탈락자 응모권 선택화 + 덕력 = 참여자 균등 분배로 통일</strong> ① <strong>탈락자 응모권</strong>: 기존 "탈락자 응모권 수량 (필수, 기본 1)" → <strong>"응모권 보상 (탈락자 1인당)" (선택, 기본 0)</strong>. 라벨 통일 + 0 = 미지급 정책 정합. STGame.<code>eliminatedTicketReward</code> 신규 필드 ② <strong>덕력 정책 변경</strong>: PM "정답자 1인당" / ST "생존자 1인당" → <strong>PM·ST 모두 "참여자 1인당 (참여 기반)"</strong>. DUK 영역 <code>PM_PARTICIPATION</code> / <code>TRIVIA_PARTICIPATION</code> enum의 "참여" 의미와 정합. 참여자 전원에게 균등 지급(정답/오답·생존/탈락 무관) ③ §5 분배 공식 표 정정 — 응모권은 결과 기반(정답자·생존자·탈락자 각각), 덕력은 참여 기반(참여자 전원) ④ §활동 로그 메시지 보강 — 응모권 정답/생존/탈락 + 덕력 참여자 분리 표기 ⑤ 동일 사이클: [GZ-201-CREATE v3.3] / [GZ-202-EDIT v2.9] / [GZ-202 v2.9] / mock/gamezone.ts STGame <code>eliminatedTicketReward</code> 신규 + PMResultReward 덕력 분배 계산 참여자 수 기반 정정</td></tr>
 <tr><td>v2.4</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 — 아티스트 그룹 + 응모권·덕력 보상 정책 추가</strong> — 게임 생성 폼 보강 정책. ① §5 보상 계산 — 응모권·덕력 추가 보상 섹션 신규 (PM·ST 공통, 정답자·생존자 1인당 고정 개수 균등 분배. 0 = 미지급). 분배 공식 + 0 처리 + 변동 출처 라벨(응모권 "PM 보상"/"ST 보상" + 덕력 <code>PM_PARTICIPATION</code>/<code>TRIVIA_PARTICIPATION</code> enum) + 결과 확정 후 잠금 + 활동 로그 메시지 ② §5 아티스트 그룹 섹션 신규 (PM·ST 공통, 단일 ArtistGroup 필수. V01D/iKON/CELEBUS/MADEIN/UNDER:LIGHT. 결과 확정 후 잠금). 영향 화면: [GZ-201] 컬럼·필터·[USR-203] 참여 내역·[GZ-202] 기본정보 탭 ③ 회원 앱(APP-GAM) 표시 정합은 별도 사이클로 분리 명시. 사용자 결정: 그룹 단일 선택 / 고정 개수 균등 분배 / BO 한정. mock/gamezone.ts 동일 사이클 보강 (PMGame·STGame 인터페이스에 <code>artistGroup</code>·<code>ticketReward</code>·<code>dukReward</code> 신규 + 9개 게임 mock에 default 값)</td></tr>
