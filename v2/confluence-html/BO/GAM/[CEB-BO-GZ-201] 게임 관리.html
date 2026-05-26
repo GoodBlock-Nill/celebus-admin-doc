@@ -89,7 +89,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>GAM — 게임존</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.6</td></tr>
+<tr><td>버전</td><td>v1.7</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -248,7 +248,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.6</strong></td><td><strong>2026.05.22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합</strong> ① 양식 표준화: Page Properties 비고 필드 추가, §1 화면 개요 표, §2 하이픈 표기, §3 노출 정보 표, §4 상태별 동작 분기, §5 검증 규칙(+5-1 상태 흐름, +5-2 권한), §6 연관 화면, §7 변경 이력 — RFT/RFL 양식과 일관 ② 운영 BO 정합(chrome-devtools 실접속 검증): 라우트 명시(<code>/gamezone/games?type={…}</code> 기본 PM 리다이렉트), Breadcrumb 3단 정합, <strong>상태 필터 옵션 영문 → 한국어</strong> (Draft/Ready/Active/Pending/Closed/Ended → 임시저장/게시대기/진행중/결과대기/결과확정/종료), PM 컬럼 "참여 기간" → "<strong>참여기간</strong>" (운영 표기 띄어쓰기 없음), ST 컬럼 "총 상금 GP" → <strong>"최대 상금 GP"</strong> (운영 표기), 페이지네이션 라벨 "이전/다음" → "<strong>Previous/Next</strong>" (운영 영문) ③ DEPRECATED 라벨 유지</td></tr>
+<tr><td><strong>v1.7</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>신규 기능 — 아티스트 컬럼·필터 추가 (PM·ST 공통)</strong> ① §2-3 PM·ST 테이블 컬럼에 <strong>"아티스트"</strong> 신규 (타이틀 다음 위치, width 120px). Badge 형태 (V01D=인디고 톤). [GZ-000 v2.4] §5 아티스트 그룹 정책 정합 ② §필터 행에 <strong>"아티스트 전체"</strong> Dropdown 신규 (옵션 6: 전체 + 5 ArtistGroup). 변경 시 즉시 적용 + 페이지 1 리셋 ③ 응모권·덕력 보상은 본 화면 컬럼 미추가 (게임 상세 [GZ-202 v2.8]에서 확인). 사용자 결정: 그룹 단일 선택 / BO 한정</td></tr>
+<tr><td>v1.6</td><td>2026.05.22</td><td>@Nill Yoo</td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합</strong> ① 양식 표준화: Page Properties 비고 필드 추가, §1 화면 개요 표, §2 하이픈 표기, §3 노출 정보 표, §4 상태별 동작 분기, §5 검증 규칙(+5-1 상태 흐름, +5-2 권한), §6 연관 화면, §7 변경 이력 — RFT/RFL 양식과 일관 ② 운영 BO 정합(chrome-devtools 실접속 검증): 라우트 명시(<code>/gamezone/games?type={…}</code> 기본 PM 리다이렉트), Breadcrumb 3단 정합, <strong>상태 필터 옵션 영문 → 한국어</strong> (Draft/Ready/Active/Pending/Closed/Ended → 임시저장/게시대기/진행중/결과대기/결과확정/종료), PM 컬럼 "참여 기간" → "<strong>참여기간</strong>" (운영 표기 띄어쓰기 없음), ST 컬럼 "총 상금 GP" → <strong>"최대 상금 GP"</strong> (운영 표기), 페이지네이션 라벨 "이전/다음" → "<strong>Previous/Next</strong>" (운영 영문) ③ DEPRECATED 라벨 유지</td></tr>
 <tr><td>v1.5</td><td>2026.03.13</td><td>@Nill Yoo</td><td>공통 정책 중앙화: 상태별 Badge 색상 표 및 상태 흐름 설명을 [CEB-BO-GZ-000] 공통 정책서 참조로 대체</td></tr>
 <tr><td>v1.4</td><td>2026.02.26</td><td>@Nill Yoo</td><td>ST 테이블 컬럼 축소 (9→7): 생존자 수, 생성일 컬럼 제거 (상세 화면에서 확인 가능)</td></tr>
 <tr><td>v1.3</td><td>2026.02.25</td><td>@Nill Yoo</td><td>PM/ST 별도 테이블 분리: 게임유형별 전용 컬럼 구성, ST 테이블 신규 (참여자/정원, 생존자 수, 참여 비용, 시작일시)</td></tr>

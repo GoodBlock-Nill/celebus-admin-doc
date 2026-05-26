@@ -78,7 +78,7 @@ export default function GameZoneTab({ member }: { member: Member }) {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                {['게임타이틀', '참여일시', '선택', '참여GP', '부스팅GP', '게임결과', '보상GP', '환급GP', '게임상태'].map((c) => (
+                {['게임타이틀', '아티스트', '참여일시', '선택', '참여GP', '부스팅GP', '게임결과', '보상GP', '응모권', '덕력', '게임상태'].map((c) => (
                   <th key={c} className="px-3 py-3 text-left text-xs font-semibold text-gray-600">
                     {c}
                   </th>
@@ -87,7 +87,7 @@ export default function GameZoneTab({ member }: { member: Member }) {
             </thead>
             <tbody>
               <tr>
-                <td colSpan={9} className="px-4 py-12 text-center text-sm text-gray-500">
+                <td colSpan={11} className="px-4 py-12 text-center text-sm text-gray-500">
                   게임 참여 내역이 없습니다.
                 </td>
               </tr>

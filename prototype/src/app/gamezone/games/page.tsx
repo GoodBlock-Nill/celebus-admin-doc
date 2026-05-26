@@ -7,7 +7,7 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/layout/PageHeader';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
-import { games, type GameStatus, type GameType, type PMGame, type STGame } from '@/mock/gamezone';
+import { ARTIST_GROUPS, games, type ArtistGroup, type GameStatus, type GameType, type PMGame, type STGame } from '@/mock/gamezone';
 
 // [CEB-BO-GZ-201] 게임 리스트 — 운영 BO 정합 v1.6 (RFT/RFL 양식)
 // 라우트: /gamezone/games?type={PM|ST} (기본 PM)
@@ -36,12 +36,14 @@ const PAGE_SIZE = 20;
 export default function GamesPage() {
   const [type, setType] = useState<GameType>('PM');
   const [status, setStatus] = useState<GameStatus | ''>('');
+  const [artistFilter, setArtistFilter] = useState<ArtistGroup | ''>('');
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
 
   const filtered = useMemo(() => {
     let list = games.filter((g) => g.type === type);
     if (status) list = list.filter((g) => g.status === status);
+    if (artistFilter) list = list.filter((g) => g.artistGroup === artistFilter);
     if (keyword.trim()) {
       const kw = keyword.trim().toLowerCase();
       list = list.filter((g) =>
@@ -51,7 +53,7 @@ export default function GamesPage() {
     }
     // 정렬: 생성일 내림차순
     return list.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-  }, [type, status, keyword]);
+  }, [type, status, artistFilter, keyword]);
 
   const total = filtered.length;
   const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
@@ -61,6 +63,7 @@ export default function GamesPage() {
 
   const pmColumns = [
     { key: 'title', label: '타이틀', wrap: true },
+    { key: 'artist', label: '아티스트', width: '120px' },
     { key: 'status', label: '상태', width: '120px' },
     { key: 'participants', label: '참여자 수', width: '110px' },
     { key: 'totalPrize', label: '총 상금 GP', width: '120px' },
@@ -71,6 +74,7 @@ export default function GamesPage() {
 
   const stColumns = [
     { key: 'title', label: '타이틀', wrap: true },
+    { key: 'artist', label: '아티스트', width: '120px' },
     { key: 'status', label: '상태', width: '100px' },
     { key: 'participants', label: '참여자 / 정원', width: '130px' },
     { key: 'maxPrize', label: '최대 상금 GP', width: '130px' },
@@ -90,11 +94,17 @@ export default function GamesPage() {
         {g.title}
       </Link>
     );
+    const artistBadge = (
+      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+        {g.artistGroup}
+      </span>
+    );
     if (isPM) {
       const pm = g as PMGame;
       const period = pm.votingStart ? `${pm.votingStart} ~ ${pm.votingEnd}` : '-';
       return {
         title: titleCell,
+        artist: artistBadge,
         status: badge,
         participants: pm.participants.toLocaleString(),
         totalPrize: `${pm.totalPrize.toLocaleString()} GP`,
@@ -107,6 +117,7 @@ export default function GamesPage() {
     const enrollment = st.maxParticipants === -1 ? `${st.participants} / ∞` : `${st.participants} / ${st.maxParticipants}`;
     return {
       title: titleCell,
+      artist: artistBadge,
       status: badge,
       participants: enrollment,
       maxPrize: `${st.maxPrize.toLocaleString()} GP`,
@@ -151,6 +162,19 @@ export default function GamesPage() {
           >
             {STATUS_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+          <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+        </div>
+        <div className="relative">
+          <select
+            value={artistFilter}
+            onChange={(e) => { setArtistFilter(e.target.value as ArtistGroup | ''); setPage(1); }}
+            className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none min-w-[140px]"
+          >
+            <option value="">아티스트 전체</option>
+            {ARTIST_GROUPS.map((g) => (
+              <option key={g} value={g}>{g}</option>
             ))}
           </select>
           <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
