@@ -394,66 +394,6 @@ export function getBannerById(id: number): HomeBanner | undefined {
   return banners.find((b) => b.id === id);
 }
 
-// 회원 앱 노출 판정 — [CEB-BO-APP-201] §노출 정책 정합
-//  · status === 'ACTIVE'
-//  · period.UNLIMITED 이거나, CUSTOM 이면 openDt ≤ now ≤ closeDt
-//  · displayOrder 오름차순, SINGLE 슬롯은 1건, MULTI 슬롯은 capacityLimit 까지
-// 미리보기·검증 전용. 운영 트리거(공개일/종료일 자동 전환)와 동일한 규칙으로 작동.
-function parseBannerDt(s: string): Date {
-  // mock 포맷: "YYYY.MM.DD HH:mm" → ISO. 브라우저 로컬 시간대(KST 가정).
-  const [date, time] = s.split(' ');
-  return new Date(`${date.replace(/\./g, '-')}T${time}:00`);
-}
-export type ExclusionReason = 'STATUS' | 'BEFORE_OPEN' | 'AFTER_CLOSE' | 'CAPACITY';
-export interface VisibilityResult {
-  visible: HomeBanner[];
-  excluded: { banner: HomeBanner; reason: ExclusionReason }[];
-}
-export function getVisibleBanners(
-  slotKind: SlotKind,
-  artistGroup: ArtistGroup | null,
-  now: Date,
-): VisibilityResult {
-  const meta = SLOT_KIND_META[slotKind];
-  const all = banners
-    .filter((b) => b.slotKind === slotKind && b.artistGroup === artistGroup)
-    .sort((a, b) => a.displayOrder - b.displayOrder);
-
-  const excluded: VisibilityResult['excluded'] = [];
-  const passed: HomeBanner[] = [];
-  for (const b of all) {
-    if (b.status !== 'ACTIVE') {
-      excluded.push({ banner: b, reason: 'STATUS' });
-      continue;
-    }
-    if (b.period.type === 'CUSTOM') {
-      const open = parseBannerDt(b.period.openDt);
-      const close = parseBannerDt(b.period.closeDt);
-      if (now < open) {
-        excluded.push({ banner: b, reason: 'BEFORE_OPEN' });
-        continue;
-      }
-      if (now > close) {
-        excluded.push({ banner: b, reason: 'AFTER_CLOSE' });
-        continue;
-      }
-    }
-    passed.push(b);
-  }
-
-  const limit = meta.capacity === 'SINGLE' ? 1 : meta.capacityLimit ?? 8;
-  const visible = passed.slice(0, limit);
-  const over = passed.slice(limit).map((banner) => ({ banner, reason: 'CAPACITY' as const }));
-  return { visible, excluded: [...excluded, ...over] };
-}
-
-export const EXCLUSION_LABEL: Record<ExclusionReason, string> = {
-  STATUS: '상태 비활성 (DRAFT/CLOSED)',
-  BEFORE_OPEN: '공개일 도래 전',
-  AFTER_CLOSE: '종료일 경과',
-  CAPACITY: '슬롯 한도 초과',
-};
-
 // 슬롯 1개 — 빈 슬롯도 derived 가능
 export function getSlot(slotKind: SlotKind, artistGroup: ArtistGroup | null): Slot {
   const list = banners.filter(
