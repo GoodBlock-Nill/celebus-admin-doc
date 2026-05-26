@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>APP — 앱 운영</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v6.1</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>버전</td><td>v6.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.26</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -145,7 +145,7 @@ p {
 <table>
 <tr><th>컬럼</th><th>표시 내용</th></tr>
 <tr><td>아티스트</td><td>"전역" 또는 그룹명 Badge</td></tr>
-<tr><td>배너 위치</td><td>"메인 · 캐러셀 · 최대 N개" / "오늘의 할일 · 단일" 형태 Badge + 보조 설명</td></tr>
+<tr><td>배너 위치</td><td>"메인 · 캐러셀 · 최대 N개" / "오늘의 할일 · 단일" / "다함께 · 단일" / "미션 · 단일" 형태 Badge + 보조 설명 (캐러셀은 <strong>메인 한정</strong>, 그 외는 모두 단일)</td></tr>
 <tr><td>배너 수</td><td>"N건 · 노출중 X · 대기 Y" / 비어 있으면 "비어 있음"</td></tr>
 <tr><td>최근 수정일</td><td>슬롯 내 가장 최근 배너의 수정 시각 / 없으면 "—"</td></tr>
 <tr><td>최근 수정자</td><td>마지막 수정자 / 없으면 "—"</td></tr>
@@ -193,7 +193,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v6.1</strong></td><td><strong>2026.05.20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>영역 명칭 정합 정정</strong> — Page Properties 기능영역(Epic)·§6 연관 화면의 영역 가이드 참조 표기를 "<strong>앱 배너 관리</strong>" → "<strong>앱 운영</strong>"으로 정정 ([CEB-BO-013] v7.0에서 영역 명칭이 "앱 배너 관리" → "앱 운영"으로 확장되었으나 본 화면 명세는 미반영되어 있던 정합 누락)</td></tr>
+<tr><td><strong>v6.2</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>아티스트 메인 슬롯(다함께) 캐러셀 → 단일 정정</strong> — 캐러셀은 홈(메인)에만 존재. §2-6 슬롯 인벤토리 테이블의 "배너 위치" Badge 예시에 "다함께 · 단일" / "미션 · 단일" 추가 + "캐러셀은 메인 한정" 보조 설명 명시. 동일 사이클에서 [CEB-BO-013 v7.11] / [CEB-BO-APP-201 v6.10] / [CEB-BO-APP-202 v6.5] / <code>prototype/src/mock/home.ts</code> TOGETHER capacity MULTI→SINGLE 동시 정정</td></tr>
+<tr><td>v6.1</td><td>2026.05.20</td><td>@Nill Yoo</td><td><strong>영역 명칭 정합 정정</strong> — Page Properties 기능영역(Epic)·§6 연관 화면의 영역 가이드 참조 표기를 "<strong>앱 배너 관리</strong>" → "<strong>앱 운영</strong>"으로 정정 ([CEB-BO-013] v7.0에서 영역 명칭이 "앱 배너 관리" → "앱 운영"으로 확장되었으나 본 화면 명세는 미반영되어 있던 정합 누락)</td></tr>
 <tr><td>v6.0</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>RFT 양식 정합</strong> — ① Page Properties 13필드 확장 ② 상단 한 줄 헤더 추가 ③ 표 구분자 컴팩트(공백 없음) 형태로 통일 ④ 하이픈 형태 헤딩 번호 ⑤ §3 화면에 노출되는 정보 / §4 상태별 동작 분기 / §5 검증 규칙 신설 ⑥ 권한 표 제거 → "[관리자 > 권한관리] 설정에 따라" 단일화 ⑦ 영역 가이드 ID 참조를 [CEB-BO-013]으로 갱신</td></tr>
 <tr><td>v5.0</td><td>2026-05-19</td><td>@Nill Yoo</td><td>운영 도입 공식 발행본</td></tr>
 <tr><td>v4.x</td><td>2026-05-19</td><td>@Nill Yoo</td><td>슬롯 단위 재설계 + 타겟 모드 분리</td></tr>

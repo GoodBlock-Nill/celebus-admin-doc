@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>APP — 앱 운영</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v6.9</td></tr>
+<tr><td>버전</td><td>v6.10</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.26</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -134,7 +134,7 @@ p {
 </table>
 <p>각 슬롯의 정책 보조 표시는 동적으로 노출 ("캐러셀 · 최대 8개" / "단일 배너 1개 고정"). 아티스트 메인 슬롯(다함께/미션)은 전역이 없고 항상 단일 아티스트만 옵션.</p>
 <blockquote>
-<p><strong>복제 모드 슬롯 변경 시 미디어 권장 비율 동적 분기</strong> — 캐러셀(메인 1:1, 다함께/미션 16:9) ↔ 단일(오늘의 할일 16:9) 비율 불일치 시 §C 미디어 패널에 경고 Toast "권장 비율이 변경되었습니다. 이미지를 재업로드하세요." 노출. 자동 변환은 하지 않음 (운영자 책임).</p>
+<p><strong>복제 모드 슬롯 변경 시 미디어 권장 비율 동적 분기</strong> — 캐러셀(<strong>메인</strong> 1:1) ↔ 단일(오늘의 할일·<strong>다함께</strong>·미션 16:9) 비율 불일치 시 §C 미디어 패널에 경고 Toast "권장 비율이 변경되었습니다. 이미지를 재업로드하세요." 노출. 자동 변환은 하지 않음 (운영자 책임).</p>
 </blockquote>
 <blockquote>
 <p>일반 신규 작성 모드 (복제가 아닌 경우)는 슬롯 상세에서 prefill된 슬롯 컨텍스트가 read-only로 고정. 변경하려면 다른 슬롯 상세에서 새로 [+ 배너 추가] 진입.</p>
@@ -188,7 +188,7 @@ p {
 <p><strong>v6.7 변경 요약</strong> — v6.6 이전: "무기한" 모드는 운영자 [즉시 노출 시작]으로 활성화 / "사용자 지정" 모드는 공개일 자동 활성화 (2중 흐름). v6.7부터: <strong>단일 흐름</strong> — 공개일 항상 필수 + 도달 시 시스템 자동 활성화. 종료일만 무기한 옵션 유지.</p>
 </blockquote>
 <blockquote>
-<p><strong>캐러셀 슬롯</strong>의 슬라이드 순서는 본 폼에서 다루지 않는다 — 저장 시 마지막 순서로 자동 배치되며, 슬롯 상세([CEB-BO-APP-202])에서 드래그로 변경한다. 단일 슬롯(오늘의 할일·미션)은 정렬 개념 없음. E 섹션 하단에 안내 부기로 노출.</p>
+<p><strong>캐러셀 슬롯(메인 한정)</strong> 의 슬라이드 순서는 본 폼에서 다루지 않는다 — 저장 시 마지막 순서로 자동 배치되며, 슬롯 상세([CEB-BO-APP-202])에서 드래그로 변경한다. 단일 슬롯(오늘의 할일·<strong>다함께</strong>·미션)은 정렬 개념 없음. E 섹션 하단에 안내 부기로 노출.</p>
 </blockquote>
 <h2>3. 화면에 노출되는 정보</h2>
 <table>
@@ -237,7 +237,7 @@ p {
 <tr><td><strong>[노출 재개] 슬롯 한도 초과</strong> (CLOSED → ACTIVE 차단, v6.8 / v6.9 보강)</td><td>모달 안에서 차단 Toast "이 슬롯의 동시 노출 {N}개를 이미 채웠습니다. 다른 배너를 먼저 종료해 주세요." + 모달 유지. <strong>종료일 과거 + 한도 초과 동시 발생 시 우선순위</strong>: 한도 초과가 더 강한 차단이므로 한도 메시지를 우선 표시하고, 모달 내부에 종료일 과거도 함께 안내 ("⚠️ 또한 종료일이 과거({종료일})입니다 — 슬롯 정리 후 재시도할 때 종료일도 함께 수정해 주세요"). 운영자가 다른 배너 종료 후 재시도할 때 종료일 수정도 놓치지 않도록 단일 모달에서 동시 안내 (v6.9)</td></tr>
 <tr><td><strong>[삭제] 클릭</strong> (DRAFT·CLOSED, v6.8)</td><td><strong><code>BannerDeleteModal</code></strong> 호출 "삭제된 배너는 복구할 수 없습니다." + 게임 정보 → 확정 시 즉시 삭제 + 슬롯 상세로 복귀 + Toast "삭제되었습니다"</td></tr>
 <tr><td><strong>[← 슬롯으로] 클릭</strong> (v6.8)</td><td>view·수정 모드 모두 — 부모 슬롯 상세 <code>/home/banners/slot/{slotKind}/{artist}</code>로 복귀 (수정 모드 변경 사항 있으면 <code>BannerEditCancelModal</code> 호출 후 복귀)</td></tr>
-<tr><td>캐러셀 한도 초과 (공개일 도달 시)</td><td><strong>시스템 자동 차단</strong> + 운영자 알림 "이 슬롯의 동시 노출 8개를 이미 채웠습니다. 슬롯 정리 후 재공개일을 설정하세요." (배너는 DRAFT 유지)</td></tr>
+<tr><td><strong>캐러셀(메인) 한도 초과</strong> (공개일 도달 시)</td><td><strong>시스템 자동 차단</strong> + 운영자 알림 "이 슬롯의 동시 노출 8개를 이미 채웠습니다. 슬롯 정리 후 재공개일을 설정하세요." (배너는 DRAFT 유지) — 캐러셀 정책은 메인 슬롯에만 적용</td></tr>
 <tr><td>단일 슬롯 자동 교체 (공개일 도달 시)</td><td>기존 ACTIVE 자동 종료 + 신규 배너 ACTIVE 전이 + 활동 로그 "{위치}·{아티스트} 슬롯의 배너 '{새}' 노출 시작으로 '{기존}'이(가) 자동 종료되었습니다." (확인 모달 없음 — 시스템 자동 처리)</td></tr>
 <tr><td>권한 없음 진입</td><td>[관리자 > 권한관리] 설정에 따라 화면 자체 미노출 또는 액션 버튼 비활성</td></tr>
 </table>
@@ -255,8 +255,8 @@ p {
 <h3>5-2. 슬롯 한도·교체 (v6.7 시점 정정)</h3>
 <table>
 <tr><th>슬롯 유형</th><th>규칙</th></tr>
-<tr><td>캐러셀 (메인/다함께)</td><td><strong>공개일 도달 시 시스템 검증</strong> — ACTIVE 8개 초과 시 자동 차단 + 운영자 알림 ([CEB-BO-013] §5-3)</td></tr>
-<tr><td>단일 (오늘의 할일/미션)</td><td><strong>공개일 도달 시 시스템 자동 교체</strong> — 기존 ACTIVE 자동 종료 + 신규 ACTIVE 전이 + 활동 로그 ([CEB-BO-013] §5-4). 확인 모달 없음</td></tr>
+<tr><td>캐러셀 (<strong>메인 한정</strong>)</td><td><strong>공개일 도달 시 시스템 검증</strong> — ACTIVE 8개 초과 시 자동 차단 + 운영자 알림 ([CEB-BO-013] §5-3)</td></tr>
+<tr><td>단일 (오늘의 할일 / <strong>다함께</strong> / 미션)</td><td><strong>공개일 도달 시 시스템 자동 교체</strong> — 기존 ACTIVE 자동 종료 + 신규 ACTIVE 전이 + 활동 로그 ([CEB-BO-013] §5-4). 확인 모달 없음</td></tr>
 </table>
 <blockquote>
 <p>v6.6 이전 "[노출 시작] 시 확인 모달"은 v6.7에서 제거. 자동 교체 사실은 활동 로그·운영자 알림으로 통지.</p>
@@ -290,7 +290,7 @@ p {
 <ul>
 <li>공개일·종료일·상태·통계는 초기화</li>
 <li><code>?from</code> 쿼리가 있으면 <strong>복제 모드 식별</strong> — §2-2 A 슬롯 컨텍스트가 read-only Badge 대신 <strong>편집 가능 Select</strong>로 노출 (위치·아티스트 변경 허용)</li>
-<li>슬롯 변경 시 §C 미디어 권장 비율 동적 분기 (캐러셀 ↔ 단일 비율 불일치 경고 Toast)</li>
+<li>슬롯 변경 시 §C 미디어 권장 비율 동적 분기 — 캐러셀(메인 1:1) ↔ 단일(다함께·미션·오늘의 할일 16:9) 비율 불일치 시 경고 Toast</li>
 </ul>
 <h3>5-6. 수정 모드 변경 추적 (v6.8 신규)</h3>
 <p>운영자가 [수정] 모드에서 입력 후 [취소] 시 변경 사항 폐기 경고를 제공한다.</p>
@@ -327,7 +327,8 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v6.9</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>v6.8 사후 검증 — 단순화·안전성 개선 (5건 즉시 적용 + 3건 명세 보강)</strong> ① <strong>A1 슬롯 변경 시 아티스트 자동 강제 제거</strong> — 운영자가 명시적으로 선택해야 [생성하기]/[저장] 활성화. ARTIST_ONLY 슬롯에서 미선택 시 인라인 경고 + 버튼 disabled (잘못된 아티스트 자동 채움 방지) ② <strong>A2 "수정 후 재개" 자동 연결</strong> — CLOSED 종료일 과거 모달에서 [수정 후 재개] 선택 시 <code>pendingResumeAfterEdit</code> 플래그 set → 수정 [저장] 후 시스템이 자동으로 노출 재개 모달 재오픈 (운영자가 재개 단계 잊지 않도록) ③ <strong>A3 공개일·종료일 datetime-local input</strong> — 자유 문자열 → 브라우저 네이티브 datetime picker. 형식 오류 입력 차단 + KST 가정 안내 ④ <strong>A4 노출 재개 모달 — 한도+종료일 과거 동시 안내</strong> — 한도 초과로 차단된 상태에서도 종료일 과거를 함께 안내 (다음 재시도 시 놓치지 않도록) ⑤ <strong>B1 pendingNav state 제거</strong> — EditCancel 모달 onConfirm을 클로저로 매번 주입 (잔여 상태 버그 방지, 단순화) ⑥ <strong>B2 handleSubmit Toast 차단 제거</strong> — disabled 버튼으로 충분, 데드 코드 제거 ⑦ <strong>C1 ACTIVE 수정 즉시 반영 정책 명시</strong> — §4-2에 "ACTIVE 수정 [저장] 시 회원 앱에 즉시 반영" + 수정 모드 진입 시 Toast(Info) 1회 안내 ⑧ <strong>C2 §5-7 신규 — CLOSED 수정→재개 통합 흐름 매트릭스</strong> ⑨ <strong>C3 §4-2 노출 재개 한도+종료일 과거 우선순위 명시</strong> ⑩ B4 변경 추적 snapshot 코드 코멘트 보강 — 신규 필드 추가 시 양쪽 갱신 필수 ⑪ 후속 (별도 사이클): B3 Toast 공용화 (BIVE·GAM·FQ 마이그레이션)</td></tr>
+<tr><td><strong>v6.10</strong></td><td><strong>2026.05.26</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>아티스트 메인 슬롯(다함께) 캐러셀 → 단일 정정 (사용자 정합 검증)</strong> — 캐러셀 정책은 홈(<strong>메인</strong>) 슬롯에만 적용되고, 아티스트 메인의 모든 배너(다함께·미션)는 단일 슬롯이라는 사용자 정정을 본 화면 명세 전 구간에 반영. ① <strong>§2-2 A 슬롯 컨텍스트</strong> — 복제 모드 슬롯 변경 시 미디어 권장 비율 동적 분기 안내 정정: "캐러셀(메인 1:1, 다함께/미션 16:9) ↔ 단일(오늘의 할일 16:9)" → "캐러셀(<strong>메인</strong> 1:1) ↔ 단일(오늘의 할일·<strong>다함께</strong>·미션 16:9)" ② <strong>§2-2 E 노출 기간</strong> — 캐러셀 슬롯 정렬 안내 부기를 "캐러셀 슬롯(<strong>메인 한정</strong>)" + 단일 슬롯 목록에 다함께 추가 ③ <strong>§4-2 시점별 동작</strong> — "캐러셀 한도 초과" 항목 라벨에 "(메인)" 한정 명시 + 도입 문구에 "캐러셀 정책은 메인 슬롯에만 적용" 부기 ④ <strong>§5-2 슬롯 한도·교체 표</strong> — "캐러셀 (메인/다함께)" → "캐러셀 (<strong>메인 한정</strong>)" / "단일 (오늘의 할일/미션)" → "단일 (오늘의 할일/<strong>다함께</strong>/미션)" ⑤ <strong>§5-5 복제 동작</strong> — 슬롯 변경 시 비율 분기 안내 동일 정정 ⑥ 이미지 비율 표(§C)는 다함께 16:9 유지 — 시각 자산 호환. 동일 사이클에서 [CEB-BO-013 v7.11] / [CEB-BO-APP-101 v6.2] / [CEB-BO-APP-202 v6.5] / <code>prototype/src/mock/home.ts</code> TOGETHER capacity MULTI→SINGLE 동시 정정</td></tr>
+<tr><td>v6.9</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>v6.8 사후 검증 — 단순화·안전성 개선 (5건 즉시 적용 + 3건 명세 보강)</strong> ① <strong>A1 슬롯 변경 시 아티스트 자동 강제 제거</strong> — 운영자가 명시적으로 선택해야 [생성하기]/[저장] 활성화. ARTIST_ONLY 슬롯에서 미선택 시 인라인 경고 + 버튼 disabled (잘못된 아티스트 자동 채움 방지) ② <strong>A2 "수정 후 재개" 자동 연결</strong> — CLOSED 종료일 과거 모달에서 [수정 후 재개] 선택 시 <code>pendingResumeAfterEdit</code> 플래그 set → 수정 [저장] 후 시스템이 자동으로 노출 재개 모달 재오픈 (운영자가 재개 단계 잊지 않도록) ③ <strong>A3 공개일·종료일 datetime-local input</strong> — 자유 문자열 → 브라우저 네이티브 datetime picker. 형식 오류 입력 차단 + KST 가정 안내 ④ <strong>A4 노출 재개 모달 — 한도+종료일 과거 동시 안내</strong> — 한도 초과로 차단된 상태에서도 종료일 과거를 함께 안내 (다음 재시도 시 놓치지 않도록) ⑤ <strong>B1 pendingNav state 제거</strong> — EditCancel 모달 onConfirm을 클로저로 매번 주입 (잔여 상태 버그 방지, 단순화) ⑥ <strong>B2 handleSubmit Toast 차단 제거</strong> — disabled 버튼으로 충분, 데드 코드 제거 ⑦ <strong>C1 ACTIVE 수정 즉시 반영 정책 명시</strong> — §4-2에 "ACTIVE 수정 [저장] 시 회원 앱에 즉시 반영" + 수정 모드 진입 시 Toast(Info) 1회 안내 ⑧ <strong>C2 §5-7 신규 — CLOSED 수정→재개 통합 흐름 매트릭스</strong> ⑨ <strong>C3 §4-2 노출 재개 한도+종료일 과거 우선순위 명시</strong> ⑩ B4 변경 추적 snapshot 코드 코멘트 보강 — 신규 필드 추가 시 양쪽 갱신 필수 ⑪ 후속 (별도 사이클): B3 Toast 공용화 (BIVE·GAM·FQ 마이그레이션)</td></tr>
 <tr><td>v6.8</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>유저 플로우·로직 전면 검증 — 노출 재개 + Modal 4종 표준화 + 복제 슬롯 자유도 + 왕복 복귀 + 변경 추적</strong> ① <strong>§4-1 CLOSED 액션 4종 (CRITICAL)</strong>: 기존 [복제][삭제] → [수정][복제][<strong>노출 재개</strong>][삭제]. 한 번 종료된 배너를 운영자가 원클릭으로 다시 켤 수 있게 함. v6.7 "공개일 자동 활성화" 일원화는 신규 노출에만, 복구는 운영자 수동 (복구 권한) ② <strong>§4-2 Modal 4종 표준화</strong>: JS confirm/alert → React Modal <code>BannerStopExposureModal</code> / <code>BannerResumeExposureModal</code> (신규) / <code>BannerDeleteModal</code> / <code>BannerEditCancelModal</code> (신규) + 저장·생성·삭제 알림은 Toast 컴포넌트 ③ <strong>§2-1 헤더 [← 슬롯으로] 링크 신규</strong>: view·수정 모드 모두 부모 슬롯 상세로 원터치 복귀 (수정 모드 변경 사항 있으면 EditCancel 모달) ④ <strong>§2-2 A 슬롯 컨텍스트 복제 모드 편집 가능</strong>: 복제 진입(<code>?from={id}</code>) 시 위치·아티스트 Select로 변경 가능. 슬롯 변경 시 §C 미디어 권장 비율 동적 분기 + 경고 Toast ⑤ <strong>§5-6 (신규) 수정 모드 변경 추적</strong>: <code>initialSnapshot</code> vs <code>currentSnapshot</code> 비교 → [취소] 시 변경 있으면 EditCancel 모달, [저장] 시 변경 없으면 Toast 차단 ⑥ <strong>§5-4 활동 로그 노출 재개 3건 추가</strong> (운영자 / 한도 차단 / 단일 슬롯 자동 교체) ⑦ <strong>§5-5 복제 동작</strong>: <code>?from</code> 쿼리 명시 + 슬롯 컨텍스트 편집 가능 정책 ⑧ CLOSED [수정] 허용 — 종료 후 콘텐츠 정정 → 재개 흐름 자연스럽게</td></tr>
 <tr><td>v6.7</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>"즉시 노출" 흐름 완전 제거 → 공개일 자동 활성화 + FQ·게임존 패턴(2단계)으로 통일</strong> ① §2-1 헤더 CTA: 신규 작성 "저장+즉시 노출 시작" → <strong>[취소] [임시저장] [생성하기]</strong> (FQ Raffle·게임존 게임과 동일). 수정 모드 [취소] [저장] ② §4-1 액션: DRAFT [수정][삭제]만 (즉시 노출 시작 제거), ACTIVE [수정][복제][<strong>노출 종료</strong>] ("즉시" 단어만 제거, 비상 차단 권한 유지), CLOSED [복제][삭제] ③ §E 노출 기간: "무기한 / 사용자 지정" 라디오 폐기. 공개일 항상 필수 + 종료일만 무기한 옵션 유지 ④ §4-2 분기: 공개일 도달 시 시스템 자동 ACTIVE 전이 + 검증 실패 시 자동 차단·운영자 알림. 단일 슬롯 자동 교체는 모달 없이 시스템 자동 처리 ⑤ §5-1 검증 시점: "[노출 시작] 클릭" → "공개일 도달 시 시스템 자동 검증". 폼 저장 시점에는 권장 강조(노란 테두리)로 미리 안내 ⑥ §5-2 슬롯 한도: 검증 시점을 공개일 도달로 일원화. 캐러셀 초과 시 자동 차단 + 알림 ⑦ §5-4 활동 로그: "즉시 노출 시작" → "노출 시작 (자동)", "즉시 노출 종료" → "노출 종료 (자동)" + "노출 종료 (운영자)" 분기. "노출 시작 차단 (자동)" 신규 ⑧ 운영자 "지금 노출" 욕구는 공개일을 현재 시각으로 설정하면 동일 효과 — 트리거 일원화로 정책 단순화</td></tr>
 <tr><td>v6.6</td><td>2026.05.20</td><td>@Nill Yoo</td><td><strong>딥링크 입력 방식 정정 — 소스 타입 + URL 2개 자유 텍스트박스</strong> — v6.5에서 소스 타입 필드 자체를 폐기했던 결정을 정정. 사용자 의도는 "드롭다운 → 자유 텍스트"였음. §2-2 D 딥링크 섹션: <strong>소스 타입 텍스트박스 + URL 텍스트박스 2개</strong> 구조로 변경. 소스 타입은 자유 라벨(예: "래플", "프로모션"), URL은 형식 검증(<code>https://</code>·<code>http://</code>·<code>/</code>). §3 노출 정보·§5-3 검증 규칙 정합 갱신</td></tr>

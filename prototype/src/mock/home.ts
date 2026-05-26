@@ -60,8 +60,8 @@ export const SLOT_KIND_META: Record<SlotKind, SlotKindMeta> = {
   TOGETHER: {
     label: '다함께',
     tab: 'artist',
-    capacity: 'MULTI',
-    capacityLimit: 8,
+    capacity: 'SINGLE',
+    capacityLimit: 1,
     targetMode: 'ARTIST_ONLY',
     imageSpec: { ratio: '16:9', recommended: '1920×1080' },
   },
