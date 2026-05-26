@@ -380,3 +380,38 @@ export function truncateAddress(addr: string, head = 10, tail = 8): string {
   if (!addr || addr.length < head + tail + 3) return addr;
   return `${addr.slice(0, head)}...${addr.slice(-tail)}`;
 }
+
+// ─────────────── 교환 설정 — [CEB-BO-GZ-502] ───────────────
+export interface ExchangeSettings {
+  // 교환 비율
+  gpToCelbRate: number;     // 1 GP = N CELB
+  celbToGpRate: number;     // 1 CELB = N GP
+  // GP 충전 (CELB → GP) 한도
+  chargeMin: number;        // CELB
+  chargeMax: number;
+  chargeDailyAmount: number;
+  chargeDailyCount: number;
+  // GP 출금 (GP → CELB) 한도
+  withdrawMin: number;      // GP
+  withdrawMax: number;
+  withdrawDailyAmount: number;
+  withdrawDailyCount: number;
+  // 활성화 토글
+  chargeEnabled: boolean;
+  withdrawEnabled: boolean;
+}
+
+export const EXCHANGE_SETTINGS_DEFAULT: ExchangeSettings = {
+  gpToCelbRate: 1,
+  celbToGpRate: 1,
+  chargeMin: 5,
+  chargeMax: 10000,
+  chargeDailyAmount: 10000,
+  chargeDailyCount: 20,
+  withdrawMin: 5,
+  withdrawMax: 10000,
+  withdrawDailyAmount: 10000,
+  withdrawDailyCount: 20,
+  chargeEnabled: true,
+  withdrawEnabled: true,
+};
