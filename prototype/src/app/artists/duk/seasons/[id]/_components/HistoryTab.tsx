@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { toast } from '@/components/ui/Toast';
+import SimplePagination from '@/components/clone/SimplePagination';
 import {
   getAvailablePayoutMonths,
   getMonthlyPayouts,
@@ -222,30 +223,8 @@ export default function HistoryTab({ seasonId, seasonName, groupName }: Props) {
         )}
       </div>
 
-      {/* 페이지네이션 */}
-      {payouts.length > PAGE_SIZE && (
-        <div className="flex items-center justify-center gap-2 pt-2">
-          <button
-            type="button"
-            disabled={page === 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            className="h-9 px-3 text-sm border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            이전
-          </button>
-          <span className="text-sm text-gray-600">
-            {page} / {totalPages}
-          </span>
-          <button
-            type="button"
-            disabled={page === totalPages}
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            className="h-9 px-3 text-sm border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            다음
-          </button>
-        </div>
-      )}
+      {/* 페이지네이션 (백오피스 공통 패턴) */}
+      <SimplePagination page={page} totalPages={totalPages} onChange={setPage} />
 
       <PayoutStatusModal
         target={editTarget}
