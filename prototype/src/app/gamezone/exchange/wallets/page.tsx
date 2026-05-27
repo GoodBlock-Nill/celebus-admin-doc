@@ -29,10 +29,31 @@ export default function WalletsPage() {
 
   const handleRefresh = () => toast.success('지갑 목록을 새로고침했습니다.');
 
-  const handleSubmitRegister = ({ type, address }: { type: WalletType; address: string }) => {
+  const handleSubmitRegister = ({
+    type,
+    address,
+    privateKey,
+  }: {
+    type: WalletType;
+    address: string;
+    privateKey?: string;
+  }) => {
+    // 출금용 + PK 입력값이 있으면 마스킹 prefix·suffix 4자로 저장 (운영 BO 실측 형태: `PK: 94d2....97ef`)
+    const maskPk = (pk: string) => `PK: ${pk.slice(2, 6)}....${pk.slice(-4)}`;
     if (editTarget) {
       // 수정
-      setWallets((prev) => prev.map((w) => (w.id === editTarget.id ? { ...w, type, address } : w)));
+      setWallets((prev) =>
+        prev.map((w) => {
+          if (w.id !== editTarget.id) return w;
+          const nextMasked =
+            type === '출금용'
+              ? privateKey
+                ? maskPk(privateKey)
+                : w.privateKeyMasked
+              : undefined;
+          return { ...w, type, address, privateKeyMasked: nextMasked };
+        }),
+      );
       toast.success('지갑을 수정했습니다.');
       setEditTarget(null);
     } else {
@@ -47,6 +68,7 @@ export default function WalletsPage() {
           type,
           isPrimary: false,
           address,
+          privateKeyMasked: type === '출금용' && privateKey ? maskPk(privateKey) : undefined,
           celbBalance: 0,
           bnbBalance: 0,
           status: '활성',
