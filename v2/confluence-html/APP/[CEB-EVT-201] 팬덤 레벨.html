@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>EVT(경품/응모)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.3</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.29</td></tr>
+<tr><td>버전</td><td>v2.4</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.08</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td></td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -153,12 +153,13 @@ p {
 <table>
 <tr><th>규칙</th><th>설명</th></tr>
 <tr><td>기여 기준</td><td>팬덤 전체 유저의 <strong>획득 덕력 / Earned Fan Power / 獲得 推し力</strong> 합산 (자동 누적. 보유/사용 덕력과 무관)</td></tr>
-<tr><td>리셋</td><td>없음 (상시 누적. 시즌제는 추후 검토)</td></tr>
+<tr><td>리셋 ⭐ v2.4 변경</td><td><strong>연 1회 시즌별 리셋 — 매년 1월 1일 ~ 12월 31일 (캘린더 연도)</strong> ⭐ 2026.05.08 합의. K-pop 팬덤의 "팬클럽 N기" 흐름 채택. 12월 31일 23:59:59 시즌 자동 종료 → 정산 → 1월 1일 00:00:00 신규 시즌 시작. 회원 레벨 리셋 + 시즌별 보상 지급. v2.3 이전: "상시 누적" 정책이었으나 ERD <code>fandom_level_season</code> 시즌제 구조 채택 + 운영 결정으로 변경. 자세한 정책은 BO [CEB-BO-EVT-101] v1.3 §0.1, [CEB-BO-100] v1.6 §3 결정사항 ⑩ 참조</td></tr>
+<tr><td>시즌명 패턴 ⭐ v2.4 신규</td><td><code>"{아티스트} 팬덤 N기 (YYYY)"</code> — 예: "V01D 팬덤 2기 (2026)"</td></tr>
 <tr><td>레벨 수</td><td>최대 10레벨 (BO 설정). BO에서 레벨 수, 목표 덕력, 보상 모두 자유 설정</td></tr>
 <tr><td>목표 설정</td><td><strong>권장 곡선</strong> (아래 §2.2.1 참조) + BO 자유 변경 가능. BO 미설정 시 권장값 자동 적용</td></tr>
 <tr><td>목표 기간</td><td>활성 팬덤 1만 명 기준 6~12개월 Lv5 도달 설계</td></tr>
 <tr><td>아티스트 분리</td><td>팬덤 레벨은 아티스트별 독립 (artist_id 기반) — <strong>[CEB-000] §5.2.2 멀티 아티스트 귀속 매트릭스</strong> 참조</td></tr>
-<tr><td>활동×귀속</td><td>콘텐츠 활동(Quest·기억·굿즈·게임 참여·PM 정답·ST 완주)은 <strong>활동 대상 아티스트</strong>에 자동 귀속 / 개인 활동(출석·일일미션·스트릭·일반 SNS공유)은 <strong>선택 아티스트</strong>에 귀속</td></tr>
+<tr><td>활동×귀속</td><td>콘텐츠 활동(Quest·기억·굿즈·게임 참여)은 <strong>활동 대상 아티스트</strong>에 자동 귀속 / 개인 활동(출석·일일미션·스트릭·일반 SNS공유)은 <strong>선택 아티스트</strong>에 귀속</td></tr>
 </table>
 <h5>2.2.1 권장 레벨링 곡선 (v2.1 신규 / v2.2 리셋 모델 명문화)</h5>
 <blockquote>
@@ -423,6 +424,13 @@ p {
 <tr><td>CEB-HOM-001</td><td>홈 메인</td><td>바로가기 카드 + 추천 카드 [기여하기] 탭 시 진입</td></tr>
 </table>
 <hr>
+<h5>BO 측 운영 (Phase 12 보강, 2026-05-06)</h5>
+<table>
+<tr><th>BO 화면ID</th><th>BO 화면명</th><th>운영 액션</th></tr>
+<tr><td>CEB-BO-EVT-101</td><td>곡선 설정</td><td>레벨 누적 곡선 정의</td></tr>
+<tr><td>CEB-BO-EVT-201</td><td>레벨별 보상 설정</td><td>독점 콘텐츠·BIVE·이벤트권 등 보상 매핑</td></tr>
+<tr><td>CEB-BO-EVT-401</td><td>회원 팬덤 레벨 변동 내역</td><td>EVT 8종 거래 코드 추적</td></tr>
+</table>
 <h2>5. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>v2.3</th><th>작성자</th><th>변경 내용</th></tr>
@@ -439,6 +447,8 @@ p {
 <tr><td><strong>v2.1</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>디자이너 피드백 반영</strong> — 레벨업 정책 2건 신규 명문화. ① <strong>§2.2.1 권장 레벨링 곡선</strong> 신규 — Lv1 10,000 → Lv5 300,000 → Lv10 6,000,000 누적값 권장표. 활성 팬덤 1만 명 기준 6~12개월 Lv5 도달 설계. BO 미설정 시 권장값 자동 적용 (fallback) ② <strong>§2.2.2 0DUK 기여 유저 처리 — 조용 제외 + 유도</strong> — 푸시·모달·보상 모두 X, 다음 앱 진입 시 안내 배너 1회 노출. 3언어 안내 문구(KO/EN/JP) 명문화. 취지: 강제 노출 시 이탈 우려 → 자연스러운 다음 라운드 참여 유도</td></tr>
 <tr><td><strong>v2.2</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.3 동기화 — 팬덤 레벨 카운터 리셋 모델 명문화</strong>. 사용자(@Nill Yoo)·개발자·디자이너 팀 공통 이해와 일치시키기 위해 표 표현 정정. ① <strong>§2.2.1 표 컬럼명 정정</strong> — "누적 목표 덕력" → "<strong>레벨업 목표 덕력</strong>"(레벨별 단독값) ② <strong>"직전 레벨 대비 증가폭" 컬럼 제거</strong> (누적 모델 전제이므로 리셋 모델에서는 의미 없음) ③ <strong>카운터 모델 명시 문구 신규</strong> — "각 레벨에서 0부터 시작, 목표 도달 시 다음 레벨 진입과 동시에 카운터 0 리셋" ④ <strong>§2.2 진행률 공식 명확화</strong> — "팬덤 전체 현재 누적 덕력" → "팬덤 전체가 현재 레벨에서 모은 카운터 덕력"으로 정정. "내 기여도"는 lifetime 통계로 별개 명시. <strong>곡선 수치 동일 유지</strong> (10K~6M). 시드·UI 코드는 이미 리셋 모델로 작동 중이라 코드 변경 불필요</td></tr>
 <tr><td><strong>v2.3</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 덕력 단위 pt→DUK 일괄 변경</strong>. §2.2 레벨업 목표 덕력·기여도 표시·이번 달 합계·0DUK 처리 정책 등 단위 표기 모두 갱신. 곡선 수치·정책 변경 없음</td></tr>
+<tr><td><strong>v2.5</strong></td><td><strong>2026.05.27</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>공통정책 v5.6 동기화 — PM 정답·ST 완주 덕력 보너스 폐기 정합</strong>. §2.2 "활동×귀속" 행에서 콘텐츠 활동 키워드 정리 — "Quest·기억·굿즈·게임 참여·~~PM 정답·ST 완주~~" → "<strong>Quest·기억·굿즈·게임 참여</strong>"로 PM 정답·ST 완주 표현 제거. 게임 활동 보상은 [CEB-000] §5.2 T2 "게임 참여 보상 25DUK (PM·ST 공통)" 1종으로 단순화되어, 콘텐츠 귀속 활동도 "게임 참여"로 통합. 정책 본문·곡선·시즌 정책 변경 없음 — 활동 키워드 정합 정정만</td></tr>
+<tr><td><strong>v2.4</strong></td><td><strong>2026.05.08</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>시즌별 리셋 정책 채택 (v2.3 "상시 누적" → "연 1회 캘린더 연도 시즌 리셋")</strong>. 개발팀 ERD([CEB-BO-100-B]) <code>fandom_level_season</code> 시즌제 구조 채택 + 사용자 합의. ① §2.2 리셋 행: "없음(상시 누적)" → "<strong>연 1회 시즌별 리셋 — 매년 1월 1일 ~ 12월 31일 (캘린더 연도)</strong>" ② 시즌명 패턴 행 신규 — <code>"{아티스트} 팬덤 N기 (YYYY)"</code>. K-pop 팬덤 일반 흐름(팬클럽 1기·2기) 채택 ③ 12.31 23:59:59 자동 종료 → 정산 → 1.1 00:00:00 신규 시즌 → 회원 레벨 리셋 + 시즌별 보상 지급 ④ §2.2.1 카운터 모델(레벨별 0 리셋)은 유지 — 시즌 내 레벨 카운터 모델 + 시즌 종료 시 전체 레벨 리셋 2층 구조. 동기화: BO [CEB-BO-100] v1.6 §3 결정사항 ⑩, BO [CEB-BO-EVT-101] v1.3 §0.1.</td></tr>
 </table>
 
 </body>

@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>ALL (전체)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v5.5</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.29</td></tr>
+<tr><td>버전</td><td>v5.6</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.27</td></tr>
 <tr><td>비고</td><td>고도화 서비스 전체 공통 정책 정의서. 각 화면 스펙 문서는 이 문서를 참조.</td></tr>
 </table>
 <hr>
@@ -388,7 +388,7 @@ p {
 </table>
 <h3>5.2 덕력 획득 경로 (v5.0 — 티어 기반 매트릭스 + 캡)</h3>
 <p><strong>티어 분류 원칙</strong>: 활동 소요시간·관여도 기반 3티어 + 보너스. 핵심 행동(Quest·기억저장소) 가중 강화 + 어뷰징 차단을 위한 일일/주간 캡.</p>
-<h4>보상 매트릭스 (v5.1 — PM/ST 단순화 + 일일 미션 일괄 지급 반영)</h4>
+<h4>보상 매트릭스 (v5.6 — PM 정답·ST 완주 보너스 폐기 정합)</h4>
 <table>
 <tr><th>Tier</th><th>활동</th><th>포인트</th><th>빈도</th><th>캡 적용</th><th>비고</th></tr>
 <tr><td><strong>T1 — 즉시·습관</strong></td><td>출석 체크</td><td><strong>5DUK</strong></td><td>1일 1회</td><td>✅</td><td>유저 직접 탭</td></tr>
@@ -399,16 +399,16 @@ p {
 <tr><td><strong>T3 — 고관여</strong></td><td>Quest 완료</td><td><strong>75DUK</strong></td><td>미션별</td><td>✅</td><td>난이도별 ±50% BO 조정 가능</td></tr>
 <tr><td></td><td>기억저장소 업로드</td><td><strong>75DUK</strong></td><td>업로드당</td><td>✅</td><td>사진/영상</td></tr>
 <tr><td></td><td>디지털 굿즈 획득</td><td><strong>75DUK</strong></td><td>획득당</td><td>✅</td><td>등급별 차등 가능 (BO 설정)</td></tr>
-<tr><td><strong>보너스</strong></td><td>PM 정답 보상 (적중)</td><td><strong>100DUK</strong></td><td>적중당</td><td>❌</td><td>캡 무관</td></tr>
-<tr><td></td><td>ST 완주 보상 (종료 도달)</td><td><strong>100DUK</strong></td><td>완주당</td><td>❌</td><td>캡 무관</td></tr>
-<tr><td></td><td>스트릭 7일</td><td><strong>200DUK</strong></td><td>일회</td><td>❌</td><td>캡 무관</td></tr>
+<tr><td><strong>보너스</strong></td><td>스트릭 7일</td><td><strong>200DUK</strong></td><td>일회</td><td>❌</td><td>캡 무관</td></tr>
 <tr><td></td><td>스트릭 14일</td><td><strong>500DUK</strong></td><td>일회</td><td>❌</td><td>캡 무관</td></tr>
 <tr><td></td><td>스트릭 30일</td><td><strong>1,000DUK</strong></td><td>일회</td><td>❌</td><td>캡 무관</td></tr>
 <tr><td></td><td>스트릭 100일</td><td><strong>5,000DUK</strong></td><td>일회</td><td>❌</td><td>캡 무관</td></tr>
 </table>
 <blockquote>
-<p><strong>v5.1 변경 포인트</strong>:</p>
-<p>- <strong>PM/ST 보상 단순화</strong> — 기존 "PM 참여 25 / Trivia 정답 25/문제 / PM 적중 100" → "<strong>게임 참여 25 (공통) / PM 정답 100 (적중) / ST 완주 100 (종료)</strong>" 3단 구조로 압축</p>
+<p><strong>v5.6 변경 포인트</strong>: <strong>PM 정답 보상 100DUK·ST 완주 보상 100DUK 보너스 2행 폐기</strong>. 게임 활동의 덕력 보상은 T2 "게임 참여 보상 25DUK (PM·ST 공통)" 1종으로 단순화. PM 적중·ST 완주에 대한 별도 덕력 가산 없음.</p>
+<p>></p>
+<p><strong>v5.1 변경 포인트</strong> (이력):</p>
+<p>- <strong>PM/ST 보상 단순화</strong> — 기존 "PM 참여 25 / Trivia 정답 25/문제 / PM 적중 100" → "게임 참여 25 (공통) / ~~PM 정답 100 (적중) / ST 완주 100 (종료)~~ <em>(v5.6 폐기)</em>" 3단 구조로 압축</p>
 <p>- <strong>일일 미션 일괄 지급</strong> — "1건당 25DUK" → "오늘 제시된 미션 <strong>모두 완료 시 25DUK 일괄</strong>". 미션 풀이 1건이면 1건 완료 = 일괄 / 향후 다건 확장 시 모두 완료 조건</p>
 </blockquote>
 <h4>일일/주간 적립 상한 (v5.0 신설)</h4>
@@ -486,9 +486,7 @@ p {
 <tr><td>Quest 완료</td><td><strong>Quest의 아티스트</strong></td><td>콘텐츠</td><td>자동 귀속</td></tr>
 <tr><td>기억저장소 업로드</td><td><strong>기억의 아티스트</strong></td><td>콘텐츠</td><td>작성 대상 아티스트</td></tr>
 <tr><td>디지털 굿즈 획득</td><td><strong>굿즈의 아티스트</strong></td><td>콘텐츠</td><td>자동 귀속</td></tr>
-<tr><td>Trivia 정답</td><td><strong>Trivia의 아티스트</strong></td><td>콘텐츠</td><td>게임존 ST 콘텐츠</td></tr>
-<tr><td>PM 참여</td><td><strong>PM의 아티스트</strong></td><td>콘텐츠</td><td>게임존 PM 콘텐츠</td></tr>
-<tr><td>PM 적중</td><td><strong>PM의 아티스트</strong></td><td>콘텐츠</td><td>게임존 PM 콘텐츠</td></tr>
+<tr><td>PM 참여</td><td><strong>PM의 아티스트</strong></td><td>콘텐츠</td><td>게임존 PM 콘텐츠 (참여 시 1회. v5.6에서 PM 적중·Trivia 정답 보상 폐기됨)</td></tr>
 <tr><td>응모권 사용 (래플)</td><td><strong>래플의 아티스트</strong></td><td>콘텐츠</td><td>응모한 래플 기준 자동</td></tr>
 </table>
 <h4>어뷰징 방지 룰</h4>
@@ -1257,6 +1255,7 @@ p {
 <tr><td>v3.9</td><td>2026.04.22</td><td>@Nill Yoo</td><td>Quest 해금 용어 변경(8.5): "제출 기반 임시 해금"→"제출 기반 해금" 일괄 변경. 개발팀 피드백 반영</td></tr>
 <tr><td>v4.0</td><td>2026.04.23</td><td>@Nill Yoo</td><td>반복 퀘스트 정책(7.4) 개정: 적용 범위 '팬퀘스트(FQ) 전용' 명시 (PM/ST 미적용), 반복 주기 프리셋(매일/매주/격주/매월/수동) 제거 → 반복일수 직접 입력(1~365일)으로 변경, 해제 동작 정의(일시 중단·설정값 유지)</td></tr>
 <tr><td>v4.1</td><td>2026.04.23</td><td>@Nill Yoo</td><td>이벤트 상태 체계 개정(4.6, 4.7): '마감중(Closing, D-3 임박)' 제거 → '집계중(Tallying, 추첨 대기)' 추가. 4종 상태(진행중/집계중/마감됨/숨김)로 재정의, 상태 전이 흐름 추가(추첨형/비추첨형 분기). BO 캐러셀 필터 및 앱 홈/이벤트 전체 화면 필터 탭 연쇄 적용</td></tr>
+<tr><td><strong>v5.6</strong></td><td>2026.05.27</td><td>@Nill Yoo</td><td><strong>PM 정답·ST 완주 덕력 보너스 폐기 — 게임 활동 보상 단순화</strong>. 사용자 정정 요구. ① <strong>§5.2 보상 매트릭스 보너스 행 2건 제거</strong> — "PM 정답 보상 (적중) 100DUK" / "ST 완주 보상 (종료 도달) 100DUK". 게임 활동의 덕력 보상은 T2 "게임 참여 보상 25DUK (PM·ST 공통)" 1종으로 단순화. PM 적중·ST 완주에 별도 덕력 가산 없음 ② <strong>§5.2 v5.1 변경 포인트 블록</strong>에 v5.6 폐기 노트 부착 (이력 보존 + 취소선 표기로 폐기 명시) ③ <strong>§5.2.2 멀티 아티스트 귀속 매트릭스에서 "Trivia 정답"·"PM 적중" 행 제거</strong>, "PM 참여" 1행만 유지 (게임 참여 보상의 귀속 대상 명문화) ④ 응모권·다른 보상 정책은 무관 (RFT-302의 PM 정답자·ST 생존자 응모권 정책은 별개 도메인, 본 폐기 영향 없음). 동기화: [CEB-EVT-201] 활동×귀속 행 정합 정정</td></tr>
 <tr><td><strong>v5.0</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>🎯 덕력 시스템 메이저 개정 — 5대 영역 전면 재설계</strong>. 워킹 문서 [CEB-DUK-000] 의사결정 결과 일괄 반영. ① <strong>§1.3 다국어 라벨 매핑 11종</strong> 추가 (KO/EN/JP) — 영문: <strong>Fan Power</strong>, 일본어: <strong>推し力</strong> 공식 채택 ② <strong>§5.2 보상 매트릭스 티어 재설계</strong> — T1(즉시·습관) 5DUK / T2(저관여) 25DUK / T3(고관여) 75DUK + 보너스(PM 적중·스트릭 4단계). 일일 캡 500DUK, 주간 캡 3,000DUK 신설(보너스 제외). BO 무제한 자유 변경 명문화 ③ <strong>§5.2.1 동일 포인트 처리 정밀화</strong> — ms 정밀도 + 충돌 시 DB 자동 ID 폴백 + 즉시 적립은 이벤트 발생 시점·운영자 승인 활동은 <strong>승인 시각</strong> 기준 + 시즌 1 시작 후 정책 동결 ④ <strong>§5.2.2 멀티 아티스트 귀속 매트릭스 신규</strong> — 활동 12종 × 귀속(개인 vs 콘텐츠) 매트릭스 명문화. 4/23 도입 정책 확장. 쿨다운 없음·시점 이후 반영. 어뷰징 자동 차단 ⑤ <strong>§5.6 소비 엣지케이스 6종 신규</strong> — (a) 보유 0DUK (b) 시즌 초기화 중 5분 lock (c) 반환 즉시 재사용 (d) 해금 환불 없음 (e) BO 단가 변경 새 응원부터 (f) 동시 클릭 디바운스 + 선착 1건. 3언어 UI 안내문 확정. <strong>영향 화면</strong>: DUK-101 / DUK-201 / EVT-201 / FQ-501 / HOM-001 / MEM-201 / FQ-101 명세서 동기화 필요 (별도 작업)</td></tr>
 <tr><td><strong>v5.1</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>개발팀 피드백 반영 — PM/ST 보상 단순화 + 일일 미션 일괄 지급</strong>. ① <strong>PM/ST 보상 3단 구조 압축</strong> — 기존 "PM 참여 25 / Trivia 정답 25/문제 / PM 적중 100" → <strong>"게임 참여 보상 25(PM·ST 공통, 입장 시 1회) / PM 정답 보상 100(적중) / ST 완주 보상 100(종료 도달)"</strong>. 보상 구조 단순화로 BO 관리 포인트 감소 + 운영 이해도 ↑ ② <strong>일일 미션 일괄 지급</strong> — 기존 "1건당 25DUK 즉시 지급" → <strong>"오늘 제시된 모든 일일 미션 완료 시 25DUK 일괄 지급"</strong>. 향후 BO 다건 확장 시에도 동일 룰 적용. 동기화: [CEB-FQ-501] v2.1 + [CEB-HOM-001] v2.6</td></tr>
 <tr><td><strong>v5.2</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>디자이너 피드백 반영 — §5.5 팬덤 레벨업 권장 곡선 + 0DUK 유저 처리</strong>. ① <strong>권장 레벨링 곡선 신설</strong> — Lv1 10,000 → Lv5 300,000 → Lv10 6,000,000 누적값 권장표. 활성 팬덤 1만 명 기준 6~12개월 Lv5 도달 설계. <strong>BO 미설정 시 권장값 자동 적용 (fallback)</strong> ② <strong>0DUK 기여 유저 처리</strong> — "조용 제외 + 유도 메시지" 정책. 푸시·모달·보상 모두 X, 다음 앱 진입 시 안내 배너 1회 노출 (3언어 KO/EN/JP). 강제 노출 시 이탈 우려 → 자연스러운 다음 라운드 참여 유도. 동기화: [CEB-EVT-201] v2.1 (§2.2.1·§2.2.2)</td></tr>
