@@ -6,18 +6,26 @@ import { toast } from '@/components/ui/Toast';
 import type { DukLangText, DukRewardPrize, DukRewardTargetType, DukRewardTier } from '@/mock/duk';
 import PrizeForm, { PrizeSummary } from './PrizeForm';
 
-// [CEB-BO-ART-401] v1.7 §2-1-E §E-3·E-4 — 월별 보상 폼 (아코디언)
-// - 정산 완료 월: 잠금 (조회만 — PrizeSummary 사용)
-// - 미정산 월: 1구간 = 복수 상품 nested 구조 + PrizeForm 5종 분기
-// - v1.7: 아코디언 헤더 클릭으로 토글 + 이번 달 자동 펼침
+// [CEB-BO-ART-401-DETAIL] §2.5 매트릭스 — 월별 보상 폼 (아코디언)
+// - 잠금 사유는 부모(page.tsx)가 시즌 상태 × 월 시점 × 정산을 종합해 lockReason으로 전달
+// - lockReason !== null: 조회만 (PrizeSummary). 사유별 라벨·아이콘·색상 분기
+// - lockReason === null: 편집 가능 (1구간 = 복수 상품 nested + PrizeForm 5종 분기)
+
+export type LockReason = 'settled' | 'past-month' | 'season-ended' | null;
 
 interface Props {
   yearMonth: string; // YYYY.MM
   initialTiers: DukRewardTier[];
-  isLocked: boolean;
+  lockReason: LockReason;
   settledAt?: string;
-  defaultExpanded?: boolean; // v1.7 — 이번 달만 true
+  defaultExpanded?: boolean;
 }
+
+const LOCK_LABEL: Record<Exclude<LockReason, null>, string> = {
+  settled: '정산 완료',
+  'past-month': '지난 월 — 수정 불가',
+  'season-ended': '시즌 종료로 인해 수정 불가',
+};
 
 const TARGET_TYPES: DukRewardTargetType[] = ['등수', '퍼센트', '등수범위'];
 
@@ -79,10 +87,11 @@ function validatePrize(p: DukRewardPrize): string | null {
 export default function MonthRewardForm({
   yearMonth,
   initialTiers,
-  isLocked,
+  lockReason,
   settledAt,
   defaultExpanded = false,
 }: Props) {
+  const isLocked = lockReason !== null;
   const [tiers, setTiers] = useState<DukRewardTier[]>(initialTiers);
   const [expanded, setExpanded] = useState(defaultExpanded);
   const nextLocalIdRef = useRef(-1);
@@ -169,8 +178,9 @@ export default function MonthRewardForm({
 
   const ChevronIcon = expanded ? ChevronDownIcon : ChevronRightIcon;
 
-  // ─ 정산 완료 월 (잠금) ─
+  // ─ 잠금 월 (정산 완료 / 진행중 시즌 지난 월 / 종료 시즌의 전 월) ─
   if (isLocked) {
+    const label = LOCK_LABEL[lockReason];
     return (
       <section className="border border-gray-200 rounded-xl bg-gray-50 overflow-hidden">
         <button
@@ -183,18 +193,24 @@ export default function MonthRewardForm({
             <h3 className="text-sm font-semibold text-gray-700">{yearMonth}</h3>
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-600">
               <LockClosedIcon className="w-3 h-3" />
-              정산 완료
+              {label}
             </span>
             <span className="text-xs text-gray-500">
               · 구간 {tiers.length}개 · 상품 {totalPrizes}개
             </span>
           </div>
-          {settledAt && <span className="text-xs text-gray-500">{settledAt}</span>}
+          {lockReason === 'settled' && settledAt && (
+            <span className="text-xs text-gray-500">{settledAt}</span>
+          )}
         </button>
         {expanded && (
           <div className="px-5 py-4 space-y-4">
             {tiers.length === 0 ? (
-              <p className="text-sm text-gray-400">보상 미설정 (정산 시 보상 미지급)</p>
+              <p className="text-sm text-gray-400">
+                {lockReason === 'settled'
+                  ? '보상 미설정 (정산 시 보상 미지급)'
+                  : '설정된 보상 구간이 없습니다.'}
+              </p>
             ) : (
               tiers.map((tier) => (
                 <div key={tier.id} className="border-l-2 border-gray-300 pl-3">

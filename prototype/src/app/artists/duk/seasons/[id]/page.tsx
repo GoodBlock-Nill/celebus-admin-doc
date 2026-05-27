@@ -14,7 +14,7 @@ import {
   type DukSeason,
   type DukSeasonStatus,
 } from '@/mock/duk';
-import MonthRewardForm from './_components/MonthRewardForm';
+import MonthRewardForm, { type LockReason } from './_components/MonthRewardForm';
 
 // [CEB-BO-ART-401] v1.6 §2-1-E 시즌 상세 페이지
 // 라우트: /artists/duk/seasons/{id}
@@ -53,15 +53,40 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
 
   const months = getMonthlyRewards(seasonId);
   const settledCount = getSettledMonthCount(seasonId);
-  // v1.7 정정 — 정산 완료된 첫·마지막 월 (시즌 첫 월 아님)
   const settledMonths = months.filter((m) => m.isLocked);
   const firstSettled = settledMonths[0]?.yearMonth;
   const lastSettled = settledMonths[settledMonths.length - 1]?.yearMonth;
 
-  // 이번 달 yearMonth (현재 시각 기준) — 아코디언 자동 펼침
+  // 이번 달 yearMonth (현재 시각 기준)
   const now = new Date();
   const pad = (n: number) => String(n).padStart(2, '0');
   const currentYearMonth = `${now.getFullYear()}.${pad(now.getMonth() + 1)}`;
+
+  // 시즌 상태 × 월 시점 × 정산 매트릭스로 잠금 사유 결정 (DETAIL §2.5)
+  const monthPosition = (ym: string): 'past' | 'current' | 'future' => {
+    if (ym < currentYearMonth) return 'past';
+    if (ym > currentYearMonth) return 'future';
+    return 'current';
+  };
+
+  const resolveLockReason = (ym: string, isSettled: boolean): LockReason => {
+    if (isSettled) return 'settled';
+    if (season.status === '종료') return 'season-ended';
+    if (season.status === '진행중' && monthPosition(ym) === 'past') return 'past-month';
+    return null;
+  };
+
+  // 자동 펼침 정책 (DETAIL §2.4) — 항상 1개월만 펼침
+  // - 예정: 시즌 첫 월
+  // - 진행중: 이번 달 (시즌 범위 안일 때)
+  // - 종료: 정산 완료 마지막 월 (없으면 시즌 첫 월)
+  const firstMonth = months[0]?.yearMonth;
+  const expandedMonth: string | undefined =
+    season.status === '예정'
+      ? firstMonth
+      : season.status === '진행중'
+        ? months.find((m) => m.yearMonth === currentYearMonth)?.yearMonth ?? firstMonth
+        : lastSettled ?? firstMonth;
 
   const handleEdit = (data: {
     artistGroupId: number;
@@ -168,7 +193,7 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
       <section>
         <h2 className="text-base font-semibold text-gray-900 mb-3">월별 보상 설정</h2>
         <p className="text-sm text-gray-500 mb-4">
-          시즌(1년) 내 매월 별도 보상을 설정합니다. 정산 완료된 월은 잠금되며, 미정산 월은 구간·상품을 자유롭게 추가·수정·삭제할 수 있습니다. 1구간에 상품 N개(배송·현장·BIVE·응모권·덕력 5종)를 함께 지급할 수 있습니다.
+          시즌(1년) 내 매월 별도 보상을 설정합니다. 편집은 예정 시즌의 모든 월 또는 진행중 시즌의 이번 달·미래 월에서만 가능하며, 진행중 시즌의 지난 월·정산 완료 월·종료 시즌의 모든 월은 잠금 상태로 조회만 가능합니다. 1구간에 상품 N개(배송·현장·BIVE·응모권·덕력 5종)를 함께 지급할 수 있습니다.
         </p>
         <div className="space-y-3">
           {months.map((m) => (
@@ -176,9 +201,9 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
               key={m.yearMonth}
               yearMonth={m.yearMonth}
               initialTiers={m.tiers}
-              isLocked={m.isLocked}
+              lockReason={resolveLockReason(m.yearMonth, m.isLocked)}
               settledAt={m.settledAt}
-              defaultExpanded={m.yearMonth === currentYearMonth}
+              defaultExpanded={m.yearMonth === expandedMonth}
             />
           ))}
         </div>
