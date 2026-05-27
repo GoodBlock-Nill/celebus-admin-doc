@@ -46,7 +46,7 @@
 | CEB-BO-ART-103 | 소속사 설정 | Page | v1 흡수 + EXTERNAL_ARTIST 매핑 | 후속 |
 | CEB-BO-ART-103-MD-MAPPING | 소속사 ↔ EXTERNAL_ARTIST 매핑 모달 | Modal | v2 신규 | 후속 |
 | CEB-BO-ART-301 | 포지션 설정 | Page | v1 흡수 | 후속 |
-| CEB-BO-ART-401 | 덕력 관리 (3탭) | Page (탭) | v2 신규 — 사용자 재기획 (2026-05-27) | ✅ 작성 완료 (v1.0) |
+| CEB-BO-ART-401 | 덕력 관리 (3탭) | Page (탭) | v2 신규 — 사용자 재기획 (2026-05-27) | ✅ 작성 완료 (v1.2) |
 
 ---
 
