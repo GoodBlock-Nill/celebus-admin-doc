@@ -19,7 +19,7 @@ export interface DukLedger {
   occurredAt: string;
   artistGroupId: number;
   artistGroupName: string;
-  memberId: number;
+  memberId: string; // 회원 id (mock/members.ts와 정합 — string)
   memberNickname: string;
   type: DukLedgerType;
   source: string; // 한국어
@@ -62,17 +62,17 @@ export const dukSeasons: DukSeason[] = [
 ];
 
 // ─────────────────────────────────────────────
-// 회원 풀 (덕력 활동 회원 8명)
+// 회원 풀 (덕력 활동 회원 8명) — mock/members.ts 운영 실회원 정합
 // ─────────────────────────────────────────────
-const dukMembers: { id: number; nickname: string }[] = [
-  { id: 10001, nickname: '별빛소녀' },
-  { id: 10002, nickname: '하늘바라기' },
-  { id: 10003, nickname: '응원단장' },
-  { id: 10004, nickname: '코어팬덤' },
-  { id: 10005, nickname: '월광기사' },
-  { id: 10006, nickname: '봄날의곰' },
-  { id: 10007, nickname: '청춘피버' },
-  { id: 10008, nickname: '심야라디오' },
+const dukMembers: { id: string; nickname: string }[] = [
+  { id: '578', nickname: 'in.mycosmos' },
+  { id: '577', nickname: 'qqqaas' },
+  { id: '576', nickname: 'luna_jiyun_lee' },
+  { id: '575', nickname: 'dhyem' },
+  { id: '574', nickname: 'jaea306122' },
+  { id: '573', nickname: 'manju' },
+  { id: '572', nickname: 'sally410504' },
+  { id: '571', nickname: 'sohyun0105' },
 ];
 
 // ─────────────────────────────────────────────
@@ -83,7 +83,7 @@ function buildLedger(): DukLedger[] {
   const rows: DukLedger[] = [];
   let id = 1;
   const balance: Record<string, number> = {};
-  const k = (mid: number, gid: number) => `${mid}-${gid}`;
+  const k = (mid: string, gid: number) => `${mid}-${gid}`;
 
   const push = (
     occurredAt: string,
@@ -201,7 +201,7 @@ export const dukLedger: DukLedger[] = buildLedger();
 
 export interface DukRankingRow {
   rank: number;
-  memberId: number;
+  memberId: string;
   memberNickname: string;
   totalAmount: number; // 획득 - 사용
   lastChangedAt: string;
@@ -219,7 +219,7 @@ export function getDukRankingByPeriod(
   const filtered = dukLedger.filter(
     (l) => l.artistGroupId === groupId && l.occurredAt.startsWith(prefix),
   );
-  const acc: Record<number, { nickname: string; total: number; last: string }> = {};
+  const acc: Record<string, { nickname: string; total: number; last: string }> = {};
   for (const l of filtered) {
     const cur = acc[l.memberId] ?? { nickname: l.memberNickname, total: 0, last: l.occurredAt };
     cur.total += l.type === '획득' ? l.amount : -l.amount;
@@ -228,7 +228,7 @@ export function getDukRankingByPeriod(
   }
   return Object.entries(acc)
     .map(([mid, v]) => ({
-      memberId: Number(mid),
+      memberId: mid,
       memberNickname: v.nickname,
       totalAmount: v.total,
       lastChangedAt: v.last,
