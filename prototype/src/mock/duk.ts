@@ -492,11 +492,13 @@ const lang = (ko: string, en: string, ja: string): DukLangText => ({ ko, en, ja 
 // 신규 상품 5종 모두 1회 이상 등장하도록 분포
 export const dukMonthlyRewards: DukMonthlyReward[] = [
   // V01D 2026 시즌 (202) — 1~4월 정산 완료 + 5월 진행중 + 나머지 예정
+  // 정산 완료 4개월은 다양한 tier 조합으로 케이스 풍부화
   {
     id: 1,
     seasonId: 202,
     yearMonth: '2026.01',
     settledAt: '2026.01.31 23:59',
+    // 케이스: 단독 등수 3종 + 등수범위 + 퍼센트 (5종 혼합)
     tiers: [
       {
         id: 1,
@@ -506,7 +508,7 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
           {
             id: 101,
             type: '배송 수령',
-            title: lang('V01D 사인 앨범', 'V01D Signed Album', 'V01Dサイン入りアルバム'),
+            title: lang('V01D 사인 앨범 (1위 한정)', 'V01D Signed Album (1st only)', 'V01Dサイン入りアルバム(1位限定)'),
             deliveryDeadlineDt: '2026-02-15',
             deliveryDeadlineTime: '23:59',
             deliveryFormUrl: 'https://forms.gle/v01d-signed-album-202601',
@@ -514,36 +516,62 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
           {
             id: 102,
             type: '덕력',
-            title: lang('보너스 덕력', 'Bonus Fan Power', 'ボーナス推し力'),
-            amount: 500,
+            title: lang('1위 보너스 덕력', '1st Bonus Fan Power', '1位ボーナス推し力'),
+            amount: 1000,
           },
         ],
       },
       {
         id: 2,
-        targetType: '등수범위',
-        targetValue: '2-10',
+        targetType: '등수',
+        targetValue: '2',
         prizes: [
           {
-            id: 103,
+            id: 121,
             type: '배송 수령',
-            title: lang('V01D 사인 포카', 'V01D Signed Photocard', 'V01Dサイン入りフォトカード'),
+            title: lang('V01D 사인 포카 (2위)', 'V01D Signed Photocard (2nd)', 'V01Dサイン入りフォトカード(2位)'),
             deliveryDeadlineDt: '2026-02-15',
             deliveryDeadlineTime: '23:59',
-            deliveryFormUrl: 'https://forms.gle/v01d-photocard-202601',
+            deliveryFormUrl: 'https://forms.gle/v01d-photocard-2nd-202601',
           },
         ],
       },
       {
         id: 3,
+        targetType: '등수',
+        targetValue: '3',
+        prizes: [
+          {
+            id: 122,
+            type: '덕력',
+            title: lang('3위 보너스 덕력', '3rd Bonus', '3位ボーナス'),
+            amount: 500,
+          },
+        ],
+      },
+      {
+        id: 4,
+        targetType: '등수범위',
+        targetValue: '4-10',
+        prizes: [
+          {
+            id: 103,
+            type: '응모권',
+            title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'),
+            count: 5,
+          },
+        ],
+      },
+      {
+        id: 5,
         targetType: '퍼센트',
-        targetValue: '10',
+        targetValue: '30',
         prizes: [
           {
             id: 104,
             type: '응모권',
             title: lang('슈퍼팬 응모권', 'Super Fan Tickets', 'スーパーファン応募券'),
-            count: 5,
+            count: 2,
           },
         ],
       },
@@ -554,9 +582,10 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     seasonId: 202,
     yearMonth: '2026.02',
     settledAt: '2026.02.28 23:59',
+    // 케이스: 등수 + 작은 등수범위 + 큰 퍼센트
     tiers: [
       {
-        id: 4,
+        id: 6,
         targetType: '등수',
         targetValue: '1',
         prizes: [
@@ -571,9 +600,9 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
         ],
       },
       {
-        id: 5,
+        id: 7,
         targetType: '등수범위',
-        targetValue: '2-10',
+        targetValue: '2-5',
         prizes: [
           {
             id: 106,
@@ -588,6 +617,19 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
           },
         ],
       },
+      {
+        id: 8,
+        targetType: '퍼센트',
+        targetValue: '50',
+        prizes: [
+          {
+            id: 123,
+            type: '덕력',
+            title: lang('상위 50% 참여 보너스', 'TOP 50% Participation Bonus', '上位50%参加ボーナス'),
+            amount: 100,
+          },
+        ],
+      },
     ],
   },
   {
@@ -595,36 +637,50 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     seasonId: 202,
     yearMonth: '2026.03',
     settledAt: '2026.03.31 23:59',
+    // 케이스: 퍼센트만 3단 (좁은→넓은) — 매칭 우선순위 검증용
     tiers: [
       {
-        id: 6,
-        targetType: '등수',
-        targetValue: '1',
+        id: 9,
+        targetType: '퍼센트',
+        targetValue: '5',
         prizes: [
           {
             id: 107,
             type: 'BIVE NFT',
-            title: lang('V01D 프로핏 BIVE', 'V01D Prophet BIVE', 'V01Dプロフェットビーブ'),
+            title: lang('V01D 프로핏 BIVE (TOP 5%)', 'V01D Prophet BIVE (TOP 5%)', 'V01Dプロフェットビーブ(TOP5%)'),
             mintingEventId: 26,
           },
           {
             id: 108,
             type: '덕력',
-            title: lang('TOP 1 덕력 보너스', 'TOP 1 Bonus', 'TOP1 ボーナス'),
+            title: lang('TOP 5% 덕력 보너스', 'TOP 5% Bonus', 'TOP5% ボーナス'),
             amount: 1000,
           },
         ],
       },
       {
-        id: 7,
+        id: 10,
         targetType: '퍼센트',
-        targetValue: '10',
+        targetValue: '20',
         prizes: [
           {
             id: 109,
             type: '응모권',
-            title: lang('슈퍼팬 응모권', 'Super Fan Tickets', 'スーパーファン応募券'),
+            title: lang('TOP 20% 응모권', 'TOP 20% Tickets', 'TOP20% 応募券'),
             count: 3,
+          },
+        ],
+      },
+      {
+        id: 11,
+        targetType: '퍼센트',
+        targetValue: '50',
+        prizes: [
+          {
+            id: 124,
+            type: '덕력',
+            title: lang('상위 50% 격려 덕력', 'TOP 50% Encouragement', '上位50%励まし'),
+            amount: 100,
           },
         ],
       },
@@ -635,9 +691,10 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     seasonId: 202,
     yearMonth: '2026.04',
     settledAt: '2026.04.30 23:59',
+    // 케이스: 등수 + 등수범위 + 퍼센트 3종 표준 혼합
     tiers: [
       {
-        id: 8,
+        id: 12,
         targetType: '등수',
         targetValue: '1',
         prizes: [
@@ -649,17 +706,36 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
             deliveryDeadlineTime: '23:59',
             deliveryFormUrl: 'https://forms.gle/v01d-limited-202604',
           },
+          {
+            id: 125,
+            type: 'BIVE NFT',
+            title: lang('V01D 1위 기념 BIVE', 'V01D 1st Commemorative BIVE', 'V01D1位記念ビーブ'),
+            mintingEventId: 27,
+          },
         ],
       },
       {
-        id: 9,
+        id: 13,
+        targetType: '등수범위',
+        targetValue: '2-10',
+        prizes: [
+          {
+            id: 126,
+            type: '응모권',
+            title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'),
+            count: 5,
+          },
+        ],
+      },
+      {
+        id: 14,
         targetType: '퍼센트',
-        targetValue: '10',
+        targetValue: '30',
         prizes: [
           {
             id: 111,
             type: '덕력',
-            title: lang('TOP 10% 덕력 보너스', 'TOP 10% Bonus', 'TOP10% ボーナス'),
+            title: lang('TOP 30% 덕력 보너스', 'TOP 30% Bonus', 'TOP30% ボーナス'),
             amount: 200,
           },
         ],
@@ -726,9 +802,10 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     seasonId: 102,
     yearMonth: '2026.01',
     settledAt: '2026.01.31 23:59',
+    // 케이스: 등수 2종 + 등수범위 + 퍼센트 (4종)
     tiers: [
       {
-        id: 13,
+        id: 15,
         targetType: '등수',
         targetValue: '1',
         prizes: [
@@ -743,15 +820,41 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
         ],
       },
       {
-        id: 14,
+        id: 16,
+        targetType: '등수',
+        targetValue: '2',
+        prizes: [
+          {
+            id: 127,
+            type: '덕력',
+            title: lang('2위 보너스 덕력', '2nd Bonus', '2位ボーナス'),
+            amount: 500,
+          },
+        ],
+      },
+      {
+        id: 17,
         targetType: '등수범위',
-        targetValue: '2-10',
+        targetValue: '3-10',
         prizes: [
           {
             id: 117,
             type: '응모권',
             title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'),
-            count: 2,
+            count: 3,
+          },
+        ],
+      },
+      {
+        id: 18,
+        targetType: '퍼센트',
+        targetValue: '30',
+        prizes: [
+          {
+            id: 128,
+            type: '덕력',
+            title: lang('TOP 30% 격려 덕력', 'TOP 30% Encouragement', 'TOP30%励まし'),
+            amount: 150,
           },
         ],
       },
@@ -762,9 +865,10 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     seasonId: 102,
     yearMonth: '2026.02',
     settledAt: '2026.02.28 23:59',
+    // 케이스: 등수 + 퍼센트 2단 (좁은→넓은)
     tiers: [
       {
-        id: 15,
+        id: 19,
         targetType: '등수',
         targetValue: '1',
         prizes: [
@@ -782,7 +886,7 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
         ],
       },
       {
-        id: 16,
+        id: 20,
         targetType: '퍼센트',
         targetValue: '5',
         prizes: [
@@ -791,6 +895,19 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
             type: '덕력',
             title: lang('TOP 5% 덕력', 'TOP 5% Fan Power', 'TOP5% 推し力'),
             amount: 500,
+          },
+        ],
+      },
+      {
+        id: 21,
+        targetType: '퍼센트',
+        targetValue: '20',
+        prizes: [
+          {
+            id: 129,
+            type: '응모권',
+            title: lang('TOP 20% 응모권', 'TOP 20% Tickets', 'TOP20% 応募券'),
+            count: 2,
           },
         ],
       },
@@ -895,75 +1012,101 @@ export function isAutoPaidPrize(type: DukPrizeType): boolean {
   return type === 'BIVE NFT' || type === '응모권' || type === '덕력';
 }
 
-// 등수 기준을 회원 순위 배열로 변환
-function expandTargetToRanks(
+// 한 회원이 특정 tier에 매칭되는지 판정 (해당 등수가 tier의 target 범위 안인가)
+function isRankInTier(
+  rank: number,
   targetType: DukRewardTargetType,
   targetValue: string,
   totalActiveMembers: number,
-): number[] {
+): boolean {
   if (targetType === '등수') {
-    return [Number(targetValue)];
+    return rank === Number(targetValue);
   }
   if (targetType === '등수범위') {
     const m = targetValue.match(/^(\d+)-(\d+)$/);
-    if (!m) return [];
-    const from = Number(m[1]);
-    const to = Number(m[2]);
-    const ranks: number[] = [];
-    for (let r = from; r <= to; r++) ranks.push(r);
-    return ranks;
+    if (!m) return false;
+    return rank >= Number(m[1]) && rank <= Number(m[2]);
   }
   if (targetType === '퍼센트') {
     const pct = Number(targetValue);
     const count = Math.max(1, Math.ceil((totalActiveMembers * pct) / 100));
-    return Array.from({ length: count }, (_, i) => i + 1);
+    return rank >= 1 && rank <= count;
   }
-  return [];
+  return false;
 }
 
-// 정산 시점 회원 풀 (시즌·월 무관 — 일관된 30명 풀로 mock 단순화)
-// 실제 운영에서는 정산 시점에 해당 그룹의 활동 회원 순위를 동결
-const PAYOUT_MEMBER_POOL: { rank: number; id: string; nickname: string }[] = Array.from(
-  { length: 30 },
-  (_, i) => ({
-    rank: i + 1,
-    id: `user_${570 - i}`,
-    nickname: `덕력회원${String(i + 1).padStart(2, '0')}`,
-  }),
-);
+// 중복 지급 금지 — 한 회원에게 매칭되는 tier 중 가장 상위 1개만 선택
+// 우선순위: ① 타입 (등수 > 등수범위 > 퍼센트) ② 같은 타입은 값 작은 것 우선
+function selectTopTierForMember(
+  rank: number,
+  tiers: DukRewardTier[],
+  totalActiveMembers: number,
+): DukRewardTier | null {
+  const candidates = tiers.filter((t) =>
+    isRankInTier(rank, t.targetType, t.targetValue, totalActiveMembers),
+  );
+  if (candidates.length === 0) return null;
+
+  const TYPE_RANK: Record<DukRewardTargetType, number> = {
+    등수: 0,
+    등수범위: 1,
+    퍼센트: 2,
+  };
+
+  const tierValueKey = (t: DukRewardTier): number => {
+    if (t.targetType === '등수') return Number(t.targetValue);
+    if (t.targetType === '등수범위') {
+      const m = t.targetValue.match(/^(\d+)-(\d+)$/);
+      return m ? Number(m[1]) : Number.MAX_SAFE_INTEGER;
+    }
+    if (t.targetType === '퍼센트') return Number(t.targetValue);
+    return Number.MAX_SAFE_INTEGER;
+  };
+
+  candidates.sort((a, b) => {
+    const typeDiff = TYPE_RANK[a.targetType] - TYPE_RANK[b.targetType];
+    if (typeDiff !== 0) return typeDiff;
+    return tierValueKey(a) - tierValueKey(b);
+  });
+
+  return candidates[0];
+}
+
+// 정산 시점 회원 풀 = dukMembers 50명 (NICKNAMES 정합)
+// 등수 = dukMembers 인덱스 + 1. 실제 운영에서는 그룹·월별 ledger 누적으로 결정되나 mock은 단순 인덱스로 통일
 
 function buildPayouts(): DukRewardPayout[] {
   const payouts: DukRewardPayout[] = [];
   let nextId = 1;
+  const totalMembers = dukMembers.length;
 
   for (const mr of dukMonthlyRewards) {
     if (!mr.settledAt) continue;
-    for (const tier of mr.tiers) {
-      const ranks = expandTargetToRanks(tier.targetType, tier.targetValue, PAYOUT_MEMBER_POOL.length);
-      for (const rank of ranks) {
-        const member = PAYOUT_MEMBER_POOL[rank - 1];
-        if (!member) continue;
-        for (const prize of tier.prizes) {
-          const auto = isAutoPaidPrize(prize.type);
-          payouts.push({
-            id: nextId++,
-            seasonId: mr.seasonId,
-            yearMonth: mr.yearMonth,
-            memberId: member.id,
-            memberNickname: member.nickname,
-            rank,
-            tierId: tier.id,
-            targetType: tier.targetType,
-            targetValue: tier.targetValue,
-            prizeId: prize.id,
-            prizeType: prize.type,
-            prizeTitle: prize.title,
-            paidStatus: auto ? '지급완료' : '지급대기',
-            paidAt: auto ? mr.settledAt : undefined,
-            paidBy: auto ? '시스템' : undefined,
-            createdAt: mr.settledAt,
-          });
-        }
+    for (let i = 0; i < totalMembers; i++) {
+      const rank = i + 1;
+      const member = dukMembers[i];
+      const selectedTier = selectTopTierForMember(rank, mr.tiers, totalMembers);
+      if (!selectedTier) continue;
+      for (const prize of selectedTier.prizes) {
+        const auto = isAutoPaidPrize(prize.type);
+        payouts.push({
+          id: nextId++,
+          seasonId: mr.seasonId,
+          yearMonth: mr.yearMonth,
+          memberId: member.id,
+          memberNickname: member.nickname,
+          rank,
+          tierId: selectedTier.id,
+          targetType: selectedTier.targetType,
+          targetValue: selectedTier.targetValue,
+          prizeId: prize.id,
+          prizeType: prize.type,
+          prizeTitle: prize.title,
+          paidStatus: auto ? '지급완료' : '지급대기',
+          paidAt: auto ? mr.settledAt : undefined,
+          paidBy: auto ? '시스템' : undefined,
+          createdAt: mr.settledAt,
+        });
       }
     }
   }
