@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-ART-401] 덕력 관리 (3탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-ART-401] 덕력 관리 (3탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-ART-401</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>ART — 아티스트 / 덕력 관리</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.27</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td><code>/artists/duk</code></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 아티스트 > 덕력관리</td></tr>
+<tr><td>비고</td><td>신규 작성. 사용자 재기획(2026-05-27) — 직전 사이클 ed5caec에서 v1 덕력/팬덤 레벨 라우트를 백지 정리한 뒤 신규 방향 확정: ① 그룹 단위 독립 관리 ② 그룹별 시즌 ③ 획득/사용 ledger 추적. 3탭 단일 화면 (시즌 설정·랭킹·내역). 오버스펙 회피 — 티어·자동 보상 지급·통계 카드 제외.</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한(§3·§4), 활동 로그(§6), UI 상태(§7), 토스트·포맷(§16)</td></tr>
+<tr><td>[CEB-BO-003] 아티스트(ART) 영역 가이드</td><td>그룹 단위 정책, <code>EXTERNAL_ARTIST</code> 권한 매핑</td></tr>
+<tr><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td><td>본 화면 R/W 권한은 SYS-102 그룹 설정에 따른다</td></tr>
+</table>
+<hr>
+<h2>1. 화면 개요</h2>
+<p>회원이 아티스트 그룹별로 적립·소비하는 <strong>덕력(DUK)</strong> 을 운영자가 시즌·랭킹·내역 차원에서 관리·조회하는 단일 화면. 사이드바 진입 1회 후 상단 탭 3개로 분기.</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>화면 경로</td><td><code>/artists/duk</code> (기본 탭 = 시즌 설정 / 탭은 URL query `?tab={season</td><td>ranking</td><td>history}`)</td></tr>
+<tr><td>Breadcrumb</td><td>홈 › 아티스트 › 덕력관리</td></tr>
+<tr><td>진입 경로</td><td>사이드바 [아티스트] > [덕력관리]</td></tr>
+<tr><td>관리 단위</td><td><strong>아티스트 그룹</strong> 단위 (V01D, iKON, MADEIN 등 — 멤버 단위 제외)</td></tr>
+<tr><td>시즌 단위</td><td>그룹별 독립 시즌 (동일 시기에 그룹별로 다른 시즌 운영 가능)</td></tr>
+<tr><td>데이터 모델</td><td>시즌 마스터 + 변동 ledger 2종. 랭킹은 ledger의 (그룹, 시즌, 회원) 누적 합산으로 동적 도출</td></tr>
+<tr><td>접근 권한</td><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정에 따른다 (쓰기 권한 없으면 모달 진입 차단 + [신규 시즌]·[수정]·[종료] 버튼 미노출)</td></tr>
+<tr><td>사용처 화면 (응원)</td><td>회원이 보유 덕력을 사용하는 화면(응원하기 등)은 <strong>본 사이클 범위 외</strong> — ledger에 출처 "응원하기"로 기록만, UI 정의는 별도 사이클</td></tr>
+</table>
+<h3>주요 기능</h3>
+<ul>
+<li>그룹별 랭킹 시즌 CRUD (생성·수정·종료)</li>
+<li>시즌·그룹 기준 회원별 누적 덕력 순위 조회</li>
+<li>획득·사용 ledger 전체 조회 (그룹·유형·기간·회원 필터 결합)</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2-0. 상단 공통 영역</h3>
+<table>
+<tr><th>위치</th><th>요소</th><th>동작</th></tr>
+<tr><td>상단</td><td>Breadcrumb</td><td>홈 › 아티스트 › 덕력관리</td></tr>
+<tr><td>상단</td><td>페이지 제목 (h1)</td><td>"덕력관리"</td></tr>
+<tr><td>상단</td><td>탭 메뉴 (3탭 상호 배타)</td><td>[랭킹 시즌 설정] / [덕력랭킹] / [덕력내역] — 기본 = 랭킹 시즌 설정</td></tr>
+</table>
+<h3>2-1. 탭 1 — 랭킹 시즌 설정 (<code>?tab=season</code>)</h3>
+<p>그룹별 시즌의 마스터 관리.</p>
+<h4>A. 헤더 액션</h4>
+<table>
+<tr><th>위치</th><th>요소</th><th>동작</th></tr>
+<tr><td>우상단</td><td>[신규 시즌] 버튼 (Primary)</td><td>시즌 생성 모달 열기</td></tr>
+</table>
+<h4>B. 시즌 리스트 테이블</h4>
+<table>
+<tr><th>컬럼</th><th>표시</th></tr>
+<tr><td>그룹</td><td>그룹명 (한국어 표시명)</td></tr>
+<tr><td>시즌명</td><td>시즌명 (1~50자)</td></tr>
+<tr><td>기간</td><td>시작일시 ~ 종료일시 (YYYY.MM.DD HH:mm)</td></tr>
+<tr><td>상태</td><td>배지 — 예정(회색) / 진행중(초록) / 종료(검정)</td></tr>
+<tr><td>액션</td><td>[수정] (예정·진행중) / [종료] (진행중) / 액션 없음 (종료)</td></tr>
+</table>
+<ul>
+<li>정렬: 기본 시작일시 내림차순. 그룹·상태 컬럼 정렬 가능</li>
+<li>페이지네이션: 20건/페이지</li>
+</ul>
+<h4>C. 시즌 생성·수정 모달 (<code>SeasonFormModal</code>)</h4>
+<table>
+<tr><th>필드</th><th>입력</th><th>검증</th></tr>
+<tr><td>그룹</td><td>Dropdown (활성 그룹 5종 중 1종 — 생성 모드만 노출, 수정 모드는 readonly 표시)</td><td>필수</td></tr>
+<tr><td>시즌명</td><td>Text Input (placeholder "예: V01D 2026 1Q 시즌")</td><td>필수, 1~50자</td></tr>
+<tr><td>시작일시</td><td>Date + Time</td><td>필수</td></tr>
+<tr><td>종료일시</td><td>Date + Time</td><td>필수, 시작일시 초과</td></tr>
+</table>
+<p>푸터: [취소] / [저장]</p>
+<h4>D. 종료 확인 모달</h4>
+<p>진행중 시즌의 [종료] 클릭 시 확인 모달:</p>
+<ul>
+<li>타이틀: "시즌을 종료하시겠습니까?"</li>
+<li>본문: "{그룹명} - {시즌명} 시즌을 종료합니다. 종료 후 본 시즌의 랭킹은 확정 보존되며 신규 적립/소비는 다음 시즌에 귀속됩니다."</li>
+<li>푸터: [취소] / [종료하기] (Danger)</li>
+</ul>
+<h3>2-2. 탭 2 — 덕력랭킹 (<code>?tab=ranking</code>)</h3>
+<p>시즌·그룹 기준 회원별 누적 덕력 순위.</p>
+<h4>A. 필터 바</h4>
+<table>
+<tr><th>필터</th><th>컨트롤</th><th>기본값</th></tr>
+<tr><td>시즌</td><td>Dropdown (그룹 선택에 종속 — 해당 그룹의 시즌 목록만 노출, "전체 시즌(누적)" 옵션 포함)</td><td>진행중 시즌 우선</td></tr>
+<tr><td>그룹</td><td>Dropdown (활성 그룹 5종)</td><td>첫 번째 그룹</td></tr>
+<tr><td>회원 검색</td><td>Text Input (닉네임 부분 일치)</td><td>빈 값</td></tr>
+</table>
+<h4>B. 랭킹 테이블</h4>
+<table>
+<tr><th>컬럼</th><th>표시</th></tr>
+<tr><td>순위</td><td>1·2·3위 메달 컬러 / 4위 이하 회색 숫자</td></tr>
+<tr><td>회원</td><td>닉네임 (회원 상세로 새 탭 진입)</td></tr>
+<tr><td>누적 덕력</td><td>{N} DUK (천 단위 콤마)</td></tr>
+<tr><td>최근 변동일</td><td>YYYY.MM.DD HH:mm</td></tr>
+</table>
+<ul>
+<li>정렬: 누적 덕력 내림차순 고정</li>
+<li>페이지네이션: 20건/페이지</li>
+<li>빈 결과: "해당 필터 조건에 일치하는 회원이 없습니다." 안내</li>
+</ul>
+<h3>2-3. 탭 3 — 덕력내역 (<code>?tab=history</code>)</h3>
+<p>회원의 덕력 획득·사용 ledger 전체 조회.</p>
+<h4>A. 필터 바</h4>
+<table>
+<tr><th>필터</th><th>컨트롤</th><th>기본값</th></tr>
+<tr><td>그룹</td><td>Dropdown (전체 + 활성 그룹 5종)</td><td>전체</td></tr>
+<tr><td>유형</td><td>라디오 (전체 / 획득 / 사용)</td><td>전체</td></tr>
+<tr><td>기간 시작</td><td>Date Picker</td><td>최근 30일 전</td></tr>
+<tr><td>기간 종료</td><td>Date Picker</td><td>오늘</td></tr>
+<tr><td>회원 검색</td><td>Text Input (닉네임 부분 일치)</td><td>빈 값</td></tr>
+<tr><td>초기화</td><td>[초기화] 버튼</td><td>모든 필터 기본값 복원</td></tr>
+</table>
+<h4>B. 요약 카드 2종</h4>
+<table>
+<tr><th>카드</th><th>값</th></tr>
+<tr><td>필터 결과 건수</td><td>현재 필터 적용 후 ledger 총 건수</td></tr>
+<tr><td>합계 (유형별)</td><td>획득 합계 +N DUK / 사용 합계 -N DUK / 전체 선택 시 둘 다 표시</td></tr>
+</table>
+<h4>C. ledger 테이블</h4>
+<table>
+<tr><th>컬럼</th><th>표시</th></tr>
+<tr><td>일시</td><td>YYYY.MM.DD HH:mm</td></tr>
+<tr><td>회원</td><td>닉네임 (새 탭 진입)</td></tr>
+<tr><td>그룹</td><td>그룹명</td></tr>
+<tr><td>유형</td><td>배지 — 획득(초록) / 사용(분홍)</td></tr>
+<tr><td>출처</td><td>한국어 — 획득: 퀘스트 보상·래플 환급·운영자 지급·이벤트 보상 / 사용: 응원하기·래플 응모</td></tr>
+<tr><td>변동</td><td>+N DUK (획득, 초록) / -N DUK (사용, 분홍)</td></tr>
+<tr><td>잔액</td><td>변동 후 잔액 (해당 그룹 기준, {N} DUK)</td></tr>
+<tr><td>시즌</td><td>해당 시점 진행중 시즌명 (시즌 없을 시 "—")</td></tr>
+</table>
+<ul>
+<li>정렬: 일시 내림차순 고정</li>
+<li>페이지네이션: 20건/페이지</li>
+</ul>
+<hr>
+<h2>3. 화면에 노출되는 정보</h2>
+<table>
+<tr><th>위치</th><th>정보</th></tr>
+<tr><td>공통 헤더</td><td>Breadcrumb·페이지 제목·3탭 메뉴</td></tr>
+<tr><td>탭 1 본문</td><td>[신규 시즌] 버튼·시즌 리스트(그룹·시즌명·기간·상태·액션)·시즌 생성·수정 모달·종료 확인 모달</td></tr>
+<tr><td>탭 2 본문</td><td>시즌·그룹·회원 필터·랭킹 테이블(순위·회원·누적 덕력·최근 변동일)</td></tr>
+<tr><td>탭 3 본문</td><td>그룹·유형·기간·회원 필터·요약 카드 2종·ledger 테이블(일시·회원·그룹·유형·출처·변동·잔액·시즌)</td></tr>
+</table>
+<hr>
+<h2>4. 상태별 동작 분기</h2>
+<table>
+<tr><th>상황</th><th>동작</th></tr>
+<tr><td>URL <code>?tab=</code> 없이 진입</td><td>기본 탭 = 시즌 설정으로 분기</td></tr>
+<tr><td>탭 변경</td><td>URL query 갱신 (브라우저 뒤로가기로 복원 가능)</td></tr>
+<tr><td>[신규 시즌] 클릭</td><td><code>SeasonFormModal</code> 생성 모드 진입 (그룹 Dropdown 활성)</td></tr>
+<tr><td>시즌 [수정] 클릭</td><td><code>SeasonFormModal</code> 수정 모드 진입 (그룹 readonly + 나머지 필드 prefill)</td></tr>
+<tr><td>시즌 [종료] 클릭</td><td>종료 확인 모달 노출</td></tr>
+<tr><td>시즌 생성·수정 [저장]</td><td>검증 통과 시 API 호출 → 토스트 "시즌이 저장되었습니다." + 모달 닫기 + 리스트 갱신</td></tr>
+<tr><td>시즌 종료 [종료하기]</td><td>API 호출 → 토스트 "시즌이 종료되었습니다." + 리스트 상태 갱신 (진행중 → 종료)</td></tr>
+<tr><td>검증 실패</td><td>인라인 에러 + [저장] disabled</td></tr>
+<tr><td>동일 그룹에 진행중 시즌 충돌</td><td>시즌 생성 시 토스트 "해당 그룹에 이미 진행중인 시즌이 있습니다." + 모달 유지</td></tr>
+<tr><td>랭킹 탭 그룹 변경</td><td>시즌 Dropdown 옵션이 새 그룹의 시즌으로 갱신 + 시즌 선택값 초기화 (진행중 시즌 우선)</td></tr>
+<tr><td>내역 탭 [초기화]</td><td>모든 필터 기본값 복원 + 1페이지로 이동</td></tr>
+<tr><td>빈 결과 (랭킹·내역)</td><td>안내 텍스트 노출 + 페이지네이션 숨김</td></tr>
+<tr><td>API 실패</td><td>에러 토스트 + 입력값/필터 유지</td></tr>
+</table>
+<hr>
+<h2>5. 검증 규칙</h2>
+<h3>5-1. 입력 검증</h3>
+<table>
+<tr><th>필드</th><th>필수</th><th>검증</th></tr>
+<tr><td>시즌 - 그룹</td><td>O</td><td>활성 그룹 1종 선택 (생성 모드만 변경 가능)</td></tr>
+<tr><td>시즌 - 시즌명</td><td>O</td><td>1~50자. 공백만 입력 불가</td></tr>
+<tr><td>시즌 - 시작일시</td><td>O</td><td>유효한 일시</td></tr>
+<tr><td>시즌 - 종료일시</td><td>O</td><td>유효한 일시, 시작일시보다 미래</td></tr>
+</table>
+<h3>5-2. 비즈니스 규칙</h3>
+<ul>
+<li><strong>그룹별 진행중 시즌은 동시 1개 제한</strong> — 생성·수정 시 동일 그룹의 다른 진행중 시즌과 기간이 겹치면 차단</li>
+<li>시즌 상태는 시작·종료 일시 기준 자동 전이: 시작 전 = 예정 / 시작 ~ 종료 = 진행중 / 종료 이후 = 종료. 운영자가 [종료] 클릭 시 종료 일시를 현재로 조정하여 즉시 종료</li>
+<li>종료된 시즌은 수정·종료 액션 미노출 (조회만 가능)</li>
+<li>종료된 시즌의 랭킹은 변동 없이 보존 — 신규 적립·소비는 다음 시즌에 귀속</li>
+<li>시즌 삭제 액션 없음 — ledger 무결성 보존</li>
+<li>덕력 변동은 적립·소비 시점에 ledger 1행 신규 생성 (수정·삭제 불가 — 운영자 보정이 필요한 경우 "운영자 지급" 출처로 보정 행 추가)</li>
+</ul>
+<h3>5-3. 활동 로그</h3>
+<p><code>[CEB-BO-000] §6 활동 로그</code> 양식 정합:</p>
+<table>
+<tr><th>액션</th><th>로그 메시지</th></tr>
+<tr><td>시즌 생성</td><td>덕력 시즌 '{그룹명} - {시즌명}'을(를) 생성했습니다. (기간: {시작} ~ {종료})</td></tr>
+<tr><td>시즌 수정</td><td>덕력 시즌 '{그룹명} - {시즌명}'을(를) 수정했습니다. (변경 항목: {필드명 리스트})</td></tr>
+<tr><td>시즌 종료</td><td>덕력 시즌 '{그룹명} - {시즌명}'을(를) 종료했습니다.</td></tr>
+</table>
+<blockquote>
+<p>랭킹·내역 조회는 활동 로그 대상 아님 (조회만).</p>
+</blockquote>
+<h3>5-4. 권한</h3>
+<ul>
+<li>권한은 [CEB-BO-SYS-102] 권한 관리 그룹 설정에 따른다 (R/W 분리)</li>
+<li>쓰기 권한 없으면 [신규 시즌]·[수정]·[종료] 버튼 미노출 (조회만 가능)</li>
+<li><code>EXTERNAL_ARTIST</code> 권한자(외부 협력사) — [CEB-BO-003] §4 정합: 본인 매핑 소속사 산하 그룹의 시즌·랭킹·내역만 조회 가능 (쓰기 불가)</li>
+</ul>
+<hr>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>사이드바 진입</td><td>본 화면</td></tr>
+<tr><td>회원 닉네임 클릭 (랭킹·내역 테이블)</td><td>[CEB-BO-USR-201] 회원 상세 (새 탭)</td></tr>
+<tr><td>영역 가이드</td><td>[CEB-BO-003] 아티스트 영역 가이드</td></tr>
+<tr><td>공통 정책</td><td>[CEB-BO-000] 백오피스 공통 정책</td></tr>
+<tr><td>권한 그룹</td><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td></tr>
+</table>
+<hr>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026.05.27</strong></td><td><strong>@Nill Yoo</strong></td><td>초안 — 사용자 재기획. 직전 사이클 ed5caec에서 v1 덕력·팬덤 레벨을 백지 정리한 뒤 신규 방향(그룹 단위 + 그룹별 시즌 + 획득/사용 ledger 추적) 확정. 단일 화면 3탭 구성: ① 탭 1 랭킹 시즌 설정(그룹별 시즌 생성·수정·종료 모달) ② 탭 2 덕력랭킹(시즌·그룹·회원 필터 + 누적 덕력 순위 테이블) ③ 탭 3 덕력내역(그룹·유형·기간·회원 필터 + ledger 테이블 8컬럼). 오버스펙 회피 — 티어·자동 보상 지급·한도 정책·통계 카드 4개·TOP 10 그리드 제외. 그룹별 진행중 시즌 1개 제한 + 시즌 삭제 액션 없음(ledger 무결성). 사용처 화면(응원하기)은 별도 사이클</td></tr>
+</table>
+
+</body>
+</html>
