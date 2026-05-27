@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BO 아티스트 영역 (ART)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.2</td></tr>
+<tr><td>버전</td><td>v1.3</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.27</td></tr>
 <tr><td>비고</td><td>v1.2 갱신 — 덕력 관리 신규 화면 추가 (CEB-BO-ART-401, 단일 화면 3탭: 시즌 설정·랭킹·내역). 사용자 재기획(2026-05-27) — 그룹 단위 독립 시즌·획득/사용 ledger 추적. v1.1 사항 유지 — 그룹 상세 3탭. 마스터 가이드 [CEB-BO-001] §4.2 / §11 참조</td></tr>
 </table>
@@ -117,7 +117,13 @@ p {
 <tr><td>CEB-BO-ART-103</td><td>소속사 설정</td><td>Page</td><td>v1 흡수 + EXTERNAL_ARTIST 매핑</td><td>후속</td></tr>
 <tr><td>CEB-BO-ART-103-MD-MAPPING</td><td>소속사 ↔ EXTERNAL_ARTIST 매핑 모달</td><td>Modal</td><td>v2 신규</td><td>후속</td></tr>
 <tr><td>CEB-BO-ART-301</td><td>포지션 설정</td><td>Page</td><td>v1 흡수</td><td>후속</td></tr>
-<tr><td>CEB-BO-ART-401</td><td>덕력 관리 (3탭)</td><td>Page (탭)</td><td>v2 신규 — 사용자 재기획 (2026-05-27)</td><td>✅ 작성 완료 (v1.2)</td></tr>
+<tr><td>CEB-BO-ART-401</td><td>덕력 관리 (메인)</td><td>Page (탭 컨테이너)</td><td>v2 신규</td><td>✅ v1.0</td></tr>
+<tr><td>CEB-BO-ART-401-SEASON</td><td>랭킹 시즌 설정</td><td>Page (탭 본문)</td><td>v2 신규</td><td>✅ v1.0</td></tr>
+<tr><td>CEB-BO-ART-401-RANKING</td><td>덕력 랭킹</td><td>Page (탭 본문)</td><td>v2 신규</td><td>✅ v1.0</td></tr>
+<tr><td>CEB-BO-ART-401-HISTORY</td><td>덕력 내역</td><td>Page (탭 본문, 획득·사용 내부 탭)</td><td>v2 신규</td><td>✅ v1.0</td></tr>
+<tr><td>CEB-BO-ART-401-DETAIL</td><td>시즌 상세 — 월별 보상 설정</td><td>Page</td><td>v2 신규</td><td>✅ v1.0</td></tr>
+<tr><td>CEB-BO-ART-401-MD-SEASON</td><td>시즌 생성·수정 모달</td><td>Modal</td><td>v2 신규</td><td>✅ v1.0</td></tr>
+<tr><td>CEB-BO-ART-401-MD-CLOSE</td><td>시즌 종료 확인 모달</td><td>Modal</td><td>v2 신규</td><td>✅ v1.0</td></tr>
 </table>
 <hr>
 <h2>3. 화면 ID 체계</h2>
@@ -150,7 +156,13 @@ p {
 <tr><td>ART-103 소속사 설정</td><td>R/W/D</td><td>R</td><td>R</td><td>—</td></tr>
 <tr><td>ART-103-MD-MAPPING 매핑 모달</td><td><strong>SUPER 전용</strong></td><td>—</td><td>—</td><td>—</td></tr>
 <tr><td>ART-301 포지션 설정</td><td>R/W/D</td><td>R</td><td>R</td><td>—</td></tr>
-<tr><td>ART-401 덕력 관리 (3탭)</td><td>R/W</td><td>R</td><td>R</td><td>R (자기 소속사 산하 그룹의 시즌·랭킹·내역만, 쓰기 불가)</td></tr>
+<tr><td>ART-401 덕력 관리 (메인)</td><td>R/W</td><td>R</td><td>R</td><td>R (자기 소속사 산하 그룹만, 쓰기 불가)</td></tr>
+<tr><td>ART-401-SEASON 랭킹 시즌 설정</td><td>R/W</td><td>R</td><td>R</td><td>R (자기 소속사 산하 그룹만, 쓰기 불가)</td></tr>
+<tr><td>ART-401-RANKING 덕력 랭킹</td><td>R</td><td>R</td><td>R</td><td>R (자기 소속사 산하 그룹만)</td></tr>
+<tr><td>ART-401-HISTORY 덕력 내역</td><td>R</td><td>R</td><td>R</td><td>R (자기 소속사 산하 그룹만)</td></tr>
+<tr><td>ART-401-DETAIL 시즌 상세 — 월별 보상 설정</td><td>R/W</td><td>R</td><td>R</td><td>R (자기 소속사 산하 그룹만, 쓰기 불가)</td></tr>
+<tr><td>ART-401-MD-SEASON 시즌 생성·수정 모달</td><td>R/W</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>ART-401-MD-CLOSE 시즌 종료 확인 모달</td><td>R/W</td><td>—</td><td>—</td><td>—</td></tr>
 </table>
 <blockquote>
 <p>EXTERNAL_ARTIST의 R/W는 항상 <strong>자기 매핑 아티스트만</strong> ([CEB-BO-000] §4 주석). 그룹 신규 생성·삭제는 불가, 정보 수정만.</p>
@@ -318,6 +330,7 @@ EXTERNAL_ARTIST 권한자 (예: ix_admin@ix-ent.kr)
 <h2>10. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.3</td><td>2026.05.27</td><td>@Nill Yoo</td><td>덕력 관리 명세 분할 — ART-401 단일 문서를 7개 문서로 분할 (메인·시즌 설정·랭킹·내역·시즌 상세·시즌 모달·종료 모달). 다팀 협업용 기획자 언어 정합 차원. §2 화면 목록 1행 → 7행 확장, §4 권한 매트릭스도 동일 확장. 정책·UI·검증 변경 없음.</td></tr>
 <tr><td>v1.2</td><td>2026.05.27</td><td>@Nill Yoo</td><td>덕력 관리 화면 신규 추가 — 사용자 재기획. 직전 사이클 ed5caec에서 v1 덕력·팬덤 레벨 백지 정리 후 신규 방향 확정(그룹 단위 독립 시즌·획득/사용 ledger 추적). §2 화면 목록에 CEB-BO-ART-401 행 추가 + §4 권한 매트릭스 행 추가. ART-401 단일 화면 3탭(시즌 설정·랭킹·내역) — 명세 작성 완료(v1.0). 사이드바 [아티스트] 메뉴 children에 [덕력관리] 1항목 진입.</td></tr>
 <tr><td>v1.1</td><td>2026.05.06</td><td>@Nill Yoo</td><td>분석 리포트 운영 검증 반영 — 그룹 상세 3탭 정렬 (4탭 → 3탭). v2 활동 통계 탭 별도 영역(BIVE-102/FQ) 분리. 핵심 4화면(ART-101/102/201/202) 정렬.</td></tr>
 <tr><td>v1.0</td><td>2026.05.05</td><td>@Nill Yoo</td><td>초안 작성. v1 아티스트 영역 흡수 — 그룹 상세 3탭(기본·SNS&LINK·멤버) + 멤버 상세 2탭(기본·소속그룹) + 소속사 설정 + 포지션 설정. v2 신규: ① 그룹 상세 "활동 통계" 탭 추가 (팬덤 레벨 추이·누적 응원 덕력·Quest·Raffle·BIVE 발행 KPI 7종) ② 소속사 ↔ EXTERNAL_ARTIST 권한자 1:N 매핑 정의 (SUPER 전용 매핑 모달, 소속사 변경 시 권한 자동 재할당) ③ 멤버 상세 SNS·BIVE 연결 옵션 ④ EXTERNAL_ARTIST 권한 노출 범위 (자기 소속사 산하 그룹·멤버만 R/W, 생성·삭제 불가). 화면 11개 정의. 마스터 가이드 [CEB-BO-001] §4.2·§5·§11 호환.</td></tr>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-ART-401-HISTORY] 덕력 내역</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-ART-401-HISTORY] 덕력 내역</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-ART-401-HISTORY</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>ART — 아티스트 / 덕력 관리</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.27</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td><code>/artists/duk?tab=history</code></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 아티스트 > 덕력관리 > 덕력 내역</td></tr>
+<tr><td>비고</td><td>덕력 관리 메인의 세 번째 탭. 회원의 덕력 적립·사용 내역을 운영자가 조회한다. 화면 안에서 [획득 내역]과 [사용 내역] 두 영역으로 나뉜다.</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-000] 고도화 공통 정책</td><td>덕력 출처 (§5.2 보상 매트릭스), 사용처 (§3.2 보유 덕력 사용처)</td></tr>
+<tr><td>[CEB-BO-USR-201] 회원 상세</td><td>회원 클릭 시 진입 화면</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>운영자가 <strong>회원의 덕력 변동 이력을 적립·사용 영역으로 나누어 조회</strong>하는 화면이다. 그룹·기간·회원 조건을 조합해 누구든 빠르게 변동 기록을 추적할 수 있다.</p>
+<ul>
+<li><strong>누가</strong>: 덕력 운영·CS 권한이 있는 백오피스 관리자</li>
+<li><strong>왜</strong>: 회원의 보상 적립 누락·사용 분쟁 등을 추적하고, 운영 의사결정 근거 확보</li>
+<li><strong>결과</strong>: 조건에 맞는 변동 행을 조회하고 회원 상세로 즉시 진입 가능</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 화면 레이아웃</h3>
+<pre><code>[탭 메뉴]  [랭킹 시즌 설정] [덕력 랭킹] [덕력 내역]
+
+────────────────────────────────────────────────────────
+
+[내부 탭]  [획득 내역] [사용 내역]      ← 한 번에 한 영역
+
+[필터 바]
+그룹: [전체 ▾]   기간 시작: [2026-04-26]   기간 종료: [2026-05-26]   회원 검색: [...]   [초기화]
+
+(기간 시작이 종료보다 늦으면 안내 메시지 표시)
+
+[요약 카드]
+| 필터 결과 | 획득(또는 사용) 합계  |
+|---|---|
+| 1,234건 | +12,345 DUK |
+
+[내역 테이블]
+| 일시 | 회원 | 그룹 | 출처 | 변동 | 잔액 | 시즌 |
+|---|---|---|---|---|---|---|
+| 2026.05.26 17:30 | 닉네임A | V01D | Quest 완료 | +75 DUK | 1,250 DUK | V01D 2026 시즌 |
+| ... |
+
+[페이지네이션]
+</code></pre>
+<h3>2.2 구성요소</h3>
+<table>
+<tr><th>영역</th><th>요소</th><th>설명</th></tr>
+<tr><td>내부 탭</td><td>[획득 내역] / [사용 내역]</td><td>한 번에 한 영역만 노출. 첫 진입 시 [획득 내역]. 탭 전환 시 각 탭의 필터·페이지 상태는 별도 보존</td></tr>
+<tr><td>필터</td><td>그룹 선택 메뉴</td><td>"전체" + 활성 그룹 5종. 기본 "전체"</td></tr>
+<tr><td>필터</td><td>기간 시작·종료</td><td>날짜 선택. 기본 최근 30일 (오늘 기준)</td></tr>
+<tr><td>필터</td><td>회원 검색</td><td>닉네임 부분 일치</td></tr>
+<tr><td>필터</td><td>[초기화] 버튼</td><td>현재 탭의 필터만 기본값 복원 (다른 탭에 영향 없음)</td></tr>
+<tr><td>요약</td><td>필터 결과 카드</td><td>조회 결과 건수</td></tr>
+<tr><td>요약</td><td>합계 카드</td><td>획득 탭 = + 합계 / 사용 탭 = − 합계 (DUK 단위)</td></tr>
+<tr><td>리스트</td><td>내역 테이블</td><td>일시·회원·그룹·출처·변동·잔액·시즌 7컬럼</td></tr>
+<tr><td>하단</td><td>페이지네이션</td><td>20건/페이지</td></tr>
+</table>
+<h3>2.3 내역 테이블 컬럼</h3>
+<table>
+<tr><th>컬럼</th><th>표시</th></tr>
+<tr><td>일시</td><td>변동 발생 일시 (YYYY.MM.DD HH:mm)</td></tr>
+<tr><td>회원</td><td>회원 닉네임 — 클릭 시 회원 상세 [CEB-BO-USR-201]로 새 창 이동</td></tr>
+<tr><td>그룹</td><td>변동이 귀속된 아티스트 그룹</td></tr>
+<tr><td>출처</td><td>변동 발생 활동 — 획득 탭: 출석 체크·응모권 사용·일일 미션·게임 참여·SNS 공유·Quest 완료·기억저장소 업로드·디지털 굿즈 획득 / 사용 탭: 서포트 응원·독점 콘텐츠 해금</td></tr>
+<tr><td>변동</td><td>획득은 +N DUK (초록) / 사용은 −N DUK (분홍)</td></tr>
+<tr><td>잔액</td><td>해당 그룹 기준 변동 후 잔액</td></tr>
+<tr><td>시즌</td><td>해당 시점 진행 중 시즌명 (시즌이 없으면 "—")</td></tr>
+</table>
+<h3>2.4 시각적 스타일</h3>
+<ul>
+<li>획득 탭: + 변동 초록 / 사용 탭: − 변동 분홍</li>
+<li>회원 닉네임 hover 시 강조 + 새 창 이동 안내</li>
+<li>빈 상태: "조건에 일치하는 내역이 없습니다."</li>
+</ul>
+<hr>
+<h2>3. 기능 설명</h2>
+<p>운영자가 이 화면에서 할 수 있는 동작:</p>
+<ol>
+<li><strong>획득/사용 탭 전환</strong> — 한 번에 한 영역</li>
+<li><strong>그룹·기간·회원 검색 필터링</strong> — 필터 조합으로 빠른 조회</li>
+<li><strong>필터 초기화</strong> — 현재 탭의 필터만 복원</li>
+<li><strong>회원 상세 진입</strong> — 닉네임 클릭 시 새 창</li>
+</ol>
+<hr>
+<h2>4. 로직·플로우</h2>
+<h3>4.1 화면 진입 → 기본 표시</h3>
+<ol>
+<li>첫 진입 시 [획득 내역] 탭 활성화</li>
+<li>필터: 그룹 "전체" + 기간 최근 30일 + 회원 검색 빈 값</li>
+<li>일시 내림차순(최신순)으로 변동 행 표시</li>
+</ol>
+<h3>4.2 내부 탭 전환</h3>
+<ol>
+<li>[사용 내역] 클릭 시 [획득 내역] 화면을 숨기고 [사용 내역] 표시</li>
+<li>두 탭의 필터·페이지·검색어 상태는 각각 보존 (전환 후 복귀 시 직전 상태 유지)</li>
+</ol>
+<h3>4.3 필터 변경</h3>
+<ol>
+<li>그룹·기간·회원 검색 중 하나라도 변경 시 즉시 결과 갱신</li>
+<li>페이지는 1페이지로 복귀</li>
+</ol>
+<h3>4.4 회원 닉네임 클릭</h3>
+<ol>
+<li>새 창으로 회원 상세 [CEB-BO-USR-201] 진입</li>
+<li>현재 내역 화면 상태는 유지</li>
+</ol>
+<hr>
+<h2>5. 검증·예외 상황</h2>
+<h3>5.1 빈 상태</h3>
+<table>
+<tr><th>상황</th><th>표시</th></tr>
+<tr><td>조회 결과 0건</td><td>"조건에 일치하는 내역이 없습니다." + 페이지네이션 숨김</td></tr>
+</table>
+<h3>5.2 기간 검증</h3>
+<table>
+<tr><th>상황</th><th>안내</th></tr>
+<tr><td>기간 시작이 종료보다 늦음</td><td>필터 바 하단에 안내 문구 "기간 시작은 종료보다 이전이어야 합니다." 표시. 결과 테이블은 0건으로 표시</td></tr>
+</table>
+<h3>5.3 권한별 동작</h3>
+<ul>
+<li>본 화면은 조회 전용 — 모든 운영자 권한에 R 권한 부여</li>
+<li>외부 협력사 권한자는 본인 매핑 소속사 산하 그룹의 변동만 조회 가능</li>
+</ul>
+<h3>5.4 활동 로그</h3>
+<p>조회 화면 — 활동 로그 대상 아님.</p>
+<hr>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>진입 경로</th><th>다음 화면</th></tr>
+<tr><td>부모</td><td>[CEB-BO-ART-401] 덕력 관리 (메인)</td></tr>
+<tr><td>회원 닉네임 클릭 (새 창)</td><td>[CEB-BO-USR-201] 회원 상세</td></tr>
+<tr><td>공통 정책</td><td>[CEB-000] §5.2 보상 매트릭스 · §3.2 보유 덕력 사용처</td></tr>
+</table>
+<hr>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td>v1.0</td><td>2026.05.27</td><td>@Nill Yoo</td><td>초안 작성</td></tr>
+</table>
+
+</body>
+</html>
