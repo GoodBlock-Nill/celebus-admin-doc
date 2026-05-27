@@ -53,8 +53,15 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
 
   const months = getMonthlyRewards(seasonId);
   const settledCount = getSettledMonthCount(seasonId);
-  const firstMonth = months[0]?.yearMonth;
-  const lastSettled = [...months].reverse().find((m) => m.isLocked)?.yearMonth;
+  // v1.7 정정 — 정산 완료된 첫·마지막 월 (시즌 첫 월 아님)
+  const settledMonths = months.filter((m) => m.isLocked);
+  const firstSettled = settledMonths[0]?.yearMonth;
+  const lastSettled = settledMonths[settledMonths.length - 1]?.yearMonth;
+
+  // 이번 달 yearMonth (현재 시각 기준) — 아코디언 자동 펼침
+  const now = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const currentYearMonth = `${now.getFullYear()}.${pad(now.getMonth() + 1)}`;
 
   const handleEdit = (data: {
     artistGroupId: number;
@@ -149,7 +156,9 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
           <div className="flex">
             <dt className="w-24 text-gray-500">정산 완료</dt>
             <dd className="flex-1 text-gray-800">
-              {settledCount === 0 ? '0개월' : `${settledCount}개월 (${firstMonth}~${lastSettled})`}
+              {settledCount === 0
+                ? '0개월'
+                : `${settledCount}개월 (${firstSettled}~${lastSettled})`}
             </dd>
           </div>
         </dl>
@@ -169,6 +178,7 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
               initialTiers={m.tiers}
               isLocked={m.isLocked}
               settledAt={m.settledAt}
+              defaultExpanded={m.yearMonth === currentYearMonth}
             />
           ))}
         </div>

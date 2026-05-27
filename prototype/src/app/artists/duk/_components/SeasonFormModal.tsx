@@ -4,9 +4,10 @@ import { useEffect, useMemo, useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import { dukActiveGroups, type DukSeason } from '@/mock/duk';
 
-// [CEB-BO-ART-401] v1.1 §2-1 C. 시즌 생성·수정 모달
+// [CEB-BO-ART-401] v1.7 §2-1 C. 시즌 생성·수정 모달
 // - 시즌 1년 고정: 시작일시만 입력, 종료 = 시작 + 1년 자동 산출
 // - 생성 모드: 그룹 Dropdown 활성 / 수정 모드: 그룹 readonly
+// - v1.7: 수정 모드 + 진행중·종료 시즌 → 시작일 readonly (12개월 시퀀스 매칭 깨짐 방지)
 
 interface Props {
   isOpen: boolean;
@@ -63,6 +64,8 @@ export default function SeasonFormModal({
 
   const isEdit = mode === 'edit';
   const title = isEdit ? '시즌 수정' : '신규 시즌';
+  // v1.7 — 진행중·종료 시즌은 시작일 readonly (12개월 시퀀스 매칭 깨짐 방지)
+  const startReadonly = isEdit && (initial?.status === '진행중' || initial?.status === '종료');
 
   // 종료 자동 산출 (시작 + 1년)
   const computedEndDot = useMemo(() => {
@@ -164,12 +167,23 @@ export default function SeasonFormModal({
           <label className="block text-xs font-medium text-gray-600 mb-1">
             시작일시 <span className="text-red-500">*</span>
           </label>
-          <input
-            type="datetime-local"
-            value={startAt}
-            onChange={(e) => setStartAt(e.target.value)}
-            className="h-10 w-full px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
+          {startReadonly ? (
+            <>
+              <div className="h-10 w-full px-3 inline-flex items-center border border-gray-100 rounded-lg bg-gray-50 text-sm text-gray-700">
+                {initial?.startAt ?? '—'}
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                진행중·종료 시즌은 시작일을 변경할 수 없습니다 (12개월 보상 시퀀스 보호)
+              </p>
+            </>
+          ) : (
+            <input
+              type="datetime-local"
+              value={startAt}
+              onChange={(e) => setStartAt(e.target.value)}
+              className="h-10 w-full px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          )}
         </div>
 
         <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2">

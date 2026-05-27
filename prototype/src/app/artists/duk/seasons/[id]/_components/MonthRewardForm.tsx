@@ -1,20 +1,22 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { LockClosedIcon, PencilSquareIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { ChevronDownIcon, ChevronRightIcon, LockClosedIcon, PencilSquareIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { toast } from '@/components/ui/Toast';
 import type { DukLangText, DukRewardPrize, DukRewardTargetType, DukRewardTier } from '@/mock/duk';
 import PrizeForm, { PrizeSummary } from './PrizeForm';
 
-// [CEB-BO-ART-401] v1.6 §2-1-E §E-4 — 월별 보상 폼
+// [CEB-BO-ART-401] v1.7 §2-1-E §E-3·E-4 — 월별 보상 폼 (아코디언)
 // - 정산 완료 월: 잠금 (조회만 — PrizeSummary 사용)
 // - 미정산 월: 1구간 = 복수 상품 nested 구조 + PrizeForm 5종 분기
+// - v1.7: 아코디언 헤더 클릭으로 토글 + 이번 달 자동 펼침
 
 interface Props {
   yearMonth: string; // YYYY.MM
   initialTiers: DukRewardTier[];
   isLocked: boolean;
   settledAt?: string;
+  defaultExpanded?: boolean; // v1.7 — 이번 달만 true
 }
 
 const TARGET_TYPES: DukRewardTargetType[] = ['등수', '퍼센트', '등수범위'];
@@ -41,17 +43,31 @@ function validateTargetValue(tier: DukRewardTier): string | null {
   return null;
 }
 
+function isValidUrl(s: string): boolean {
+  try {
+    new URL(s);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function validatePrize(p: DukRewardPrize): string | null {
   if (!isLangFilled(p.title)) return '상품명 KO/EN/JP 모두 입력';
   if (p.type === '배송 수령') {
     if (!p.deliveryDeadlineDt || !p.deliveryDeadlineTime) return '배송 마감일·시간 필수';
     if (!p.deliveryFormUrl.trim()) return '배송 폼 URL 필수';
+    // v1.7 — URL 형식 검증
+    if (!isValidUrl(p.deliveryFormUrl)) return '올바른 URL 형식이 아닙니다';
   } else if (p.type === '현장 수령') {
     if (!p.pickupStartDt || !p.pickupEndDt) return '수령 시작·종료일 필수';
     if (p.pickupStartDt > p.pickupEndDt) return '시작일 ≤ 종료일';
     if (!p.openTime || !p.closeTime) return '운영 시간 필수';
     if (!isLangFilled(p.location)) return '장소 KO/EN/JP 모두 입력';
     if (!isLangFilled(p.items)) return '지참물 KO/EN/JP 모두 입력';
+  } else if (p.type === 'BIVE NFT') {
+    // v1.7 — 미선택 차단 (sentinel 0)
+    if (!p.mintingEventId || p.mintingEventId === 0) return 'BIVE NFT 민팅 이벤트를 선택하세요';
   } else if (p.type === '응모권') {
     if (!Number.isFinite(p.count) || p.count < 1) return '응모권 수량 양의 정수';
   } else if (p.type === '덕력') {
@@ -60,10 +76,18 @@ function validatePrize(p: DukRewardPrize): string | null {
   return null;
 }
 
-export default function MonthRewardForm({ yearMonth, initialTiers, isLocked, settledAt }: Props) {
+export default function MonthRewardForm({
+  yearMonth,
+  initialTiers,
+  isLocked,
+  settledAt,
+  defaultExpanded = false,
+}: Props) {
   const [tiers, setTiers] = useState<DukRewardTier[]>(initialTiers);
+  const [expanded, setExpanded] = useState(defaultExpanded);
   const nextLocalIdRef = useRef(-1);
   const nextPrize = () => nextLocalIdRef.current--;
+  const totalPrizes = tiers.reduce((sum, t) => sum + t.prizes.length, 0);
 
   const addTier = () => {
     setTiers((prev) => [
@@ -140,47 +164,58 @@ export default function MonthRewardForm({ yearMonth, initialTiers, isLocked, set
         }
       }
     }
-    const totalPrizes = tiers.reduce((sum, t) => sum + t.prizes.length, 0);
     toast.success(`${yearMonth} 보상 저장 (구간 ${tiers.length}개 · 상품 ${totalPrizes}개)`);
   };
+
+  const ChevronIcon = expanded ? ChevronDownIcon : ChevronRightIcon;
 
   // ─ 정산 완료 월 (잠금) ─
   if (isLocked) {
     return (
       <section className="border border-gray-200 rounded-xl bg-gray-50 overflow-hidden">
-        <header className="flex items-center justify-between px-5 py-3 bg-gray-100 border-b border-gray-200">
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="w-full flex items-center justify-between px-5 py-3 bg-gray-100 border-b border-gray-200 hover:bg-gray-150"
+        >
           <div className="flex items-center gap-2">
+            <ChevronIcon className="w-4 h-4 text-gray-500" />
             <h3 className="text-sm font-semibold text-gray-700">{yearMonth}</h3>
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-600">
               <LockClosedIcon className="w-3 h-3" />
               정산 완료
             </span>
+            <span className="text-xs text-gray-500">
+              · 구간 {tiers.length}개 · 상품 {totalPrizes}개
+            </span>
           </div>
           {settledAt && <span className="text-xs text-gray-500">{settledAt}</span>}
-        </header>
-        <div className="px-5 py-4 space-y-4">
-          {tiers.length === 0 ? (
-            <p className="text-sm text-gray-400">보상 미설정 (정산 시 보상 미지급)</p>
-          ) : (
-            tiers.map((tier) => (
-              <div key={tier.id} className="border-l-2 border-gray-300 pl-3">
-                <p className="text-xs font-semibold text-gray-600 mb-2">
-                  {tier.targetType === '등수' && `${tier.targetValue}위`}
-                  {tier.targetType === '퍼센트' && `상위 ${tier.targetValue}%`}
-                  {tier.targetType === '등수범위' && `${tier.targetValue}위`}
-                  <span className="ml-2 font-normal text-gray-400">· 상품 {tier.prizes.length}개</span>
-                </p>
-                <ul className="space-y-1.5">
-                  {tier.prizes.map((p) => (
-                    <li key={p.id}>
-                      <PrizeSummary prize={p} />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          )}
-        </div>
+        </button>
+        {expanded && (
+          <div className="px-5 py-4 space-y-4">
+            {tiers.length === 0 ? (
+              <p className="text-sm text-gray-400">보상 미설정 (정산 시 보상 미지급)</p>
+            ) : (
+              tiers.map((tier) => (
+                <div key={tier.id} className="border-l-2 border-gray-300 pl-3">
+                  <p className="text-xs font-semibold text-gray-600 mb-2">
+                    {tier.targetType === '등수' && `${tier.targetValue}위`}
+                    {tier.targetType === '퍼센트' && `상위 ${tier.targetValue}%`}
+                    {tier.targetType === '등수범위' && `${tier.targetValue}위`}
+                    <span className="ml-2 font-normal text-gray-400">· 상품 {tier.prizes.length}개</span>
+                  </p>
+                  <ul className="space-y-1.5">
+                    {tier.prizes.map((p) => (
+                      <li key={p.id}>
+                        <PrizeSummary prize={p} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </section>
     );
   }
@@ -188,15 +223,24 @@ export default function MonthRewardForm({ yearMonth, initialTiers, isLocked, set
   // ─ 미정산 월 (편집 가능) ─
   return (
     <section className="border border-gray-200 rounded-xl bg-white overflow-hidden">
-      <header className="flex items-center justify-between px-5 py-3 border-b border-gray-100">
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className="w-full flex items-center justify-between px-5 py-3 border-b border-gray-100 hover:bg-gray-50"
+      >
         <div className="flex items-center gap-2">
+          <ChevronIcon className="w-4 h-4 text-gray-500" />
           <h3 className="text-sm font-semibold text-gray-900">{yearMonth}</h3>
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-700">
             <PencilSquareIcon className="w-3 h-3" />
             수정 가능
           </span>
+          <span className="text-xs text-gray-500">
+            · 구간 {tiers.length}개 · 상품 {totalPrizes}개
+          </span>
         </div>
-      </header>
+      </button>
+      {expanded && (
       <div className="px-5 py-4 space-y-4">
         {tiers.length === 0 ? (
           <p className="text-sm text-gray-400">
@@ -286,6 +330,7 @@ export default function MonthRewardForm({ yearMonth, initialTiers, isLocked, set
           </button>
         </div>
       </div>
+      )}
     </section>
   );
 }

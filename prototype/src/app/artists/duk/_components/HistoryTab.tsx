@@ -1,13 +1,15 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import { dukActiveGroups, dukLedger, dukSeasons, type DukLedger, type DukLedgerType } from '@/mock/duk';
 
-// [CEB-BO-ART-401] v1.2 §2-3 탭 3 — 덕력내역
+// [CEB-BO-ART-401] v1.7 §2-3 탭 3 — 덕력내역
 // 내부 sub-tab 2개: [획득 내역] / [사용 내역]
 // 두 LedgerSection 모두 마운트 유지 + display 토글로 state 보존
+// v1.7 — 회원 닉네임 Link + 기간 시작>종료 인라인 검증
 
 const PAGE_SIZE = 20;
 
@@ -63,6 +65,8 @@ function LedgerSection({ type }: LedgerSectionProps) {
   const isEarn = type === '획득';
   const amountColor = isEarn ? 'text-emerald-600' : 'text-rose-600';
   const sign = isEarn ? '+' : '-';
+  // v1.7 — 기간 검증
+  const periodInvalid = !!startDate && !!endDate && startDate > endDate;
 
   return (
     <div>
@@ -131,6 +135,13 @@ function LedgerSection({ type }: LedgerSectionProps) {
         </button>
       </div>
 
+      {/* v1.7 — 기간 검증 인라인 에러 */}
+      {periodInvalid && (
+        <p className="mb-3 text-xs text-rose-600">
+          기간 시작은 종료보다 이전이어야 합니다.
+        </p>
+      )}
+
       {/* 요약 카드 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
         <div className="bg-gray-50 border border-gray-100 rounded-lg px-4 py-3">
@@ -149,7 +160,20 @@ function LedgerSection({ type }: LedgerSectionProps) {
       <SimpleTable
         columns={[
           { key: 'occurredAt', label: '일시' },
-          { key: 'memberNickname', label: '회원' },
+          {
+            key: 'memberNickname',
+            label: '회원',
+            render: (r: DukLedger) => (
+              <Link
+                href={`/members/${r.memberId}?tab=basic`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-gray-700 hover:text-indigo-600 hover:underline"
+              >
+                {r.memberNickname}
+              </Link>
+            ),
+          },
           { key: 'artistGroupName', label: '그룹' },
           { key: 'source', label: '출처' },
           {

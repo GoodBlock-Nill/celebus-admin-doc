@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import {
@@ -10,9 +11,10 @@ import {
   type DukRankingRow,
 } from '@/mock/duk';
 
-// [CEB-BO-ART-401] v1.1 §2-2 탭 2 — 덕력랭킹
+// [CEB-BO-ART-401] v1.7 §2-2 탭 2 — 덕력랭킹
 // 그룹 + 단위 토글(년/월) + 단위별 Dropdown + 회원 검색 → 누적 덕력 순위
 // 시즌과 무관하게 ledger 발생 일시(occurredAt) 기준으로 년/월 집계
+// v1.7 — 컨텍스트 카드(선택 기간·활동 회원·누적) + 회원 닉네임 Link
 
 const PAGE_SIZE = 20;
 const MONTHS = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
@@ -64,6 +66,12 @@ export default function RankingTab() {
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const slice = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  // v1.7 — 컨텍스트 카드 데이터
+  const periodLabel = unit === 'year' ? `${year}년` : `${year}년 ${month}월`;
+  const groupName = dukActiveGroups.find((g) => g.id === groupId)?.name ?? '';
+  const memberCount = ranking.length;
+  const totalSum = ranking.reduce((s, r) => s + r.totalAmount, 0);
 
   return (
     <div>
@@ -177,6 +185,15 @@ export default function RankingTab() {
         </div>
       </div>
 
+      {/* v1.7 — 컨텍스트 카드 */}
+      <div className="mb-4 flex items-center gap-2 px-4 py-2.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-sm">
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-600 text-white">
+          {periodLabel}
+        </span>
+        <span className="font-semibold text-gray-900">{groupName}</span>
+        <span className="text-gray-500">— 활동 회원 {memberCount.toLocaleString()}명 · 누적 {totalSum.toLocaleString()} DUK</span>
+      </div>
+
       <SimpleTable
         columns={[
           {
@@ -191,7 +208,20 @@ export default function RankingTab() {
               </span>
             ),
           },
-          { key: 'memberNickname', label: '회원' },
+          {
+            key: 'memberNickname',
+            label: '회원',
+            render: (r: DukRankingRow) => (
+              <Link
+                href={`/members/${r.memberId}?tab=basic`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-gray-700 hover:text-indigo-600 hover:underline"
+              >
+                {r.memberNickname}
+              </Link>
+            ),
+          },
           {
             key: 'totalAmount',
             label: '누적 덕력',

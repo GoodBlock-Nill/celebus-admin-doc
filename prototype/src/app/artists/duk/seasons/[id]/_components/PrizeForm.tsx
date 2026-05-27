@@ -34,7 +34,8 @@ function buildDefaultByType(id: number, type: DukPrizeType): DukRewardPrize {
         items: { ko: '', en: '', ja: '' },
       };
     case 'BIVE NFT':
-      return { id, type, title: emptyTitle, mintingEventId: RAFFLE_MINTING_EVENTS[0].id };
+      // v1.7 — 미선택 sentinel (0). validatePrize에서 차단
+      return { id, type, title: emptyTitle, mintingEventId: 0 };
     case '응모권':
       return { id, type, title: emptyTitle, count: 1 };
     case '덕력':
@@ -229,13 +230,16 @@ export default function PrizeForm({ prize, onChange, onRemove, readonly }: Props
 
       {prize.type === 'BIVE NFT' && (
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">민팅 이벤트</label>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            민팅 이벤트 <span className="text-red-500">*</span>
+          </label>
           <select
-            value={prize.mintingEventId}
+            value={prize.mintingEventId || ''}
             onChange={(e) => onChange({ ...prize, mintingEventId: Number(e.target.value) })}
             disabled={readonly}
             className="h-10 w-full px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
           >
+            <option value="" disabled>선택해주세요</option>
             {RAFFLE_MINTING_EVENTS.map((ev) => (
               <option key={ev.id} value={ev.id}>{ev.name}</option>
             ))}
