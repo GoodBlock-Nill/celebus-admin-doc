@@ -5,16 +5,17 @@ import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import {
   dukActiveGroups,
-  dukSeasons,
-  getDukRanking,
-  getSeasonsByGroup,
+  getActiveYears,
+  getDukRankingByPeriod,
   type DukRankingRow,
 } from '@/mock/duk';
 
-// [CEB-BO-ART-401] §2-2 탭 2 — 덕력랭킹
-// 시즌·그룹 필터 + 회원 검색 → 누적 덕력 순위
+// [CEB-BO-ART-401] v1.1 §2-2 탭 2 — 덕력랭킹
+// 그룹 + 단위 토글(년/월) + 단위별 Dropdown + 회원 검색 → 누적 덕력 순위
+// 시즌과 무관하게 ledger 발생 일시(occurredAt) 기준으로 년/월 집계
 
 const PAGE_SIZE = 20;
+const MONTHS = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
 function rankBadge(rank: number) {
   if (rank === 1) return 'bg-amber-100 text-amber-800';
@@ -24,25 +25,38 @@ function rankBadge(rank: number) {
 }
 
 export default function RankingTab() {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1;
+
   const [groupId, setGroupId] = useState<number>(dukActiveGroups[0].id);
-  const groupSeasons = useMemo(() => getSeasonsByGroup(groupId), [groupId]);
-  const defaultSeason = useMemo(() => {
-    const active = groupSeasons.find((s) => s.status === '진행중');
-    return active ? active.id : groupSeasons[0]?.id ?? 'all';
-  }, [groupSeasons]);
-  const [seasonId, setSeasonId] = useState<number | 'all'>(defaultSeason);
+  const [unit, setUnit] = useState<'year' | 'month'>('year');
+  const [year, setYear] = useState<number>(currentYear);
+  const [month, setMonth] = useState<number>(currentMonth);
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
 
-  // 그룹 변경 시 시즌 기본값 갱신
+  // 선택 그룹의 활동 연도 (ledger 기반)
+  const activeYears = useMemo(() => {
+    const years = getActiveYears(groupId);
+    return years.length > 0 ? years : [currentYear];
+  }, [groupId, currentYear]);
+
+  // 그룹 변경 시 기간 기본값 정합
   const handleGroupChange = (v: number) => {
     setGroupId(v);
-    const next = dukSeasons.find((s) => s.artistGroupId === v && s.status === '진행중');
-    setSeasonId(next ? next.id : 'all');
+    const years = getActiveYears(v);
+    if (years.length > 0 && !years.includes(year)) {
+      setYear(years[years.length - 1]); // 최신 활동 연도
+    }
     setPage(1);
   };
 
-  const ranking = useMemo<DukRankingRow[]>(() => getDukRanking(groupId, seasonId), [groupId, seasonId]);
+  const ranking = useMemo<DukRankingRow[]>(
+    () => getDukRankingByPeriod(groupId, unit === 'year' ? { unit, year } : { unit, year, month }),
+    [groupId, unit, year, month],
+  );
+
   const filtered = useMemo(() => {
     if (!keyword.trim()) return ranking;
     return ranking.filter((r) => r.memberNickname.includes(keyword.trim()));
@@ -69,25 +83,86 @@ export default function RankingTab() {
             ))}
           </select>
         </div>
+
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">시즌</label>
-          <select
-            value={seasonId}
-            onChange={(e) => {
-              const v = e.target.value;
-              setSeasonId(v === 'all' ? 'all' : Number(v));
-              setPage(1);
-            }}
-            className="h-10 px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-[220px]"
-          >
-            <option value="all">전체 시즌 (누적)</option>
-            {groupSeasons.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name} ({s.status})
-              </option>
+          <label className="block text-xs font-medium text-gray-600 mb-1">단위</label>
+          <div role="radiogroup" className="inline-flex bg-white border border-gray-200 rounded-lg p-0.5">
+            {([
+              { v: 'year', label: '년 단위' },
+              { v: 'month', label: '월 단위' },
+            ] as const).map((opt) => (
+              <button
+                key={opt.v}
+                role="radio"
+                aria-checked={unit === opt.v}
+                onClick={() => {
+                  setUnit(opt.v);
+                  setPage(1);
+                }}
+                className={`h-9 px-3 text-xs font-medium rounded-md ${
+                  unit === opt.v ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                {opt.label}
+              </button>
             ))}
-          </select>
+          </div>
         </div>
+
+        {unit === 'year' ? (
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">년</label>
+            <select
+              value={year}
+              onChange={(e) => {
+                setYear(Number(e.target.value));
+                setPage(1);
+              }}
+              className="h-10 px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              {activeYears.map((y) => (
+                <option key={y} value={y}>
+                  {y}년
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">년-월</label>
+            <div className="inline-flex gap-2">
+              <select
+                value={year}
+                onChange={(e) => {
+                  setYear(Number(e.target.value));
+                  setPage(1);
+                }}
+                className="h-10 px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                {activeYears.map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={String(month).padStart(2, '0')}
+                onChange={(e) => {
+                  setMonth(Number(e.target.value));
+                  setPage(1);
+                }}
+                className="h-10 px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                {MONTHS.map((mm) => (
+                  <option key={mm} value={mm}>
+                    {Number(mm)}월
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
+
         <div className="flex-1 min-w-[220px]">
           <label className="block text-xs font-medium text-gray-600 mb-1">회원 검색</label>
           <input

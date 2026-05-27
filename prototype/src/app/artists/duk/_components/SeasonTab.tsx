@@ -9,7 +9,7 @@ import { dukSeasons as initialSeasons, type DukSeason, type DukSeasonStatus } fr
 
 // [CEB-BO-ART-401] §2-1 탭 1 — 랭킹 시즌 설정
 // - 그룹별 시즌 리스트 + [신규 시즌] + [수정]·[종료] 액션
-// - 그룹별 진행중 시즌 1개 제한 검증 (SeasonFormModal에 위임)
+// - 시즌 1년 고정 + 동일 그룹 기간 중복 차단 (SeasonFormModal에 위임)
 
 const STATUS_BADGE: Record<DukSeasonStatus, string> = {
   예정: 'bg-gray-100 text-gray-700',
@@ -31,7 +31,7 @@ export default function SeasonTab() {
   const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const slice = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const activeSeasons = useMemo(() => seasons.filter((s) => s.status === '진행중'), [seasons]);
+  // 모든 시즌(예정·진행중·종료)이 기간 중복 검증 대상 — SeasonFormModal에 전달
 
   const handleSave = (data: { artistGroupId: number; name: string; startAt: string; endAt: string }) => {
     const groupName = seasons.find((s) => s.artistGroupId === data.artistGroupId)?.artistGroupName
@@ -160,7 +160,7 @@ export default function SeasonTab() {
         }}
         mode={editTarget ? 'edit' : 'create'}
         initial={editTarget ?? undefined}
-        existingActiveSeasons={activeSeasons}
+        existingSeasons={seasons}
         onSubmit={handleSave}
       />
 
