@@ -1,7 +1,7 @@
-// [CEB-BO-ART-401] v1.5 정합
+// [CEB-BO-ART-401] v1.6 정합
 // 덕력(DUK) — 아티스트 그룹 단위 독립 관리. 그룹별 시즌(1년 고정)·획득/사용 ledger.
 // 출처 enum은 [CEB-000] §5.2 v5.6 보상 매트릭스 활동 8종 + §3.2 사용처 2종 SSOT 정합.
-// v1.5 신규 — 시즌 상세 페이지 + 월별 보상 12 매트릭스 ([CEB-DUK-101] §2.5 + [CEB-000] §5.2.1 정합).
+// v1.6 — 1구간 = 복수 상품 nested + 상품 5종 분기 (배송·현장·BIVE·응모권·덕력) + 다국어 KO/EN/JP
 
 export type DukSeasonStatus = '예정' | '진행중' | '종료';
 export type DukLedgerType = '획득' | '사용';
@@ -30,14 +30,67 @@ export interface DukLedger {
   seasonId?: number;
 }
 
-// v1.5 신규 — 월별 보상 매트릭스
+// v1.5 — 월별 보상 매트릭스 / v1.6 — 1구간 = 복수 상품 nested
 export type DukRewardTargetType = '등수' | '퍼센트' | '등수범위';
+
+// 다국어 라벨 (LangField 패턴 정합 — KO/EN/JA)
+export interface DukLangText {
+  ko: string;
+  en: string;
+  ja: string;
+}
+
+export type DukPrizeType = '배송 수령' | '현장 수령' | 'BIVE NFT' | '응모권' | '덕력';
+
+interface DukPrizeBase {
+  id: number;
+  title: DukLangText;
+}
+
+export interface DukPrizeShipping extends DukPrizeBase {
+  type: '배송 수령';
+  deliveryDeadlineDt: string; // YYYY-MM-DD
+  deliveryDeadlineTime: string; // HH:mm
+  deliveryFormUrl: string;
+}
+
+export interface DukPrizePickup extends DukPrizeBase {
+  type: '현장 수령';
+  pickupStartDt: string;
+  pickupEndDt: string;
+  openTime: string;
+  closeTime: string;
+  location: DukLangText;
+  items: DukLangText;
+}
+
+export interface DukPrizeBive extends DukPrizeBase {
+  type: 'BIVE NFT';
+  mintingEventId: number; // RAFFLE_MINTING_EVENTS.id
+}
+
+export interface DukPrizeTicket extends DukPrizeBase {
+  type: '응모권';
+  count: number;
+}
+
+export interface DukPrizeDuk extends DukPrizeBase {
+  type: '덕력';
+  amount: number;
+}
+
+export type DukRewardPrize =
+  | DukPrizeShipping
+  | DukPrizePickup
+  | DukPrizeBive
+  | DukPrizeTicket
+  | DukPrizeDuk;
 
 export interface DukRewardTier {
   id: number;
   targetType: DukRewardTargetType;
   targetValue: string; // 등수=숫자 / 퍼센트=숫자 / 등수범위=N-M
-  rewardText: string; // 자유 입력 (상품 텍스트)
+  prizes: DukRewardPrize[]; // v1.6 — 1구간 = 복수 상품. 최소 1개 필수
 }
 
 export interface DukMonthlyReward {
@@ -289,8 +342,12 @@ export function getSeasonsByGroup(groupId: number): DukSeason[] {
 // v1.5 — 월별 보상 매트릭스
 // ─────────────────────────────────────────────
 
-// 시즌별 월별 보상 mock — 일부 시즌·월만 설정 (보상 미설정 월은 빈 tiers)
+// 다국어 헬퍼
+const lang = (ko: string, en: string, ja: string): DukLangText => ({ ko, en, ja });
+
+// 시즌별 월별 보상 mock — v1.6 1구간 = 복수 상품 nested 구조
 // settledAt 채워진 entry = 정산 완료(잠금)
+// 신규 상품 5종 모두 1회 이상 등장하도록 분포
 export const dukMonthlyRewards: DukMonthlyReward[] = [
   // V01D 2026 시즌 (202) — 1~4월 정산 완료 + 5월 진행중 + 나머지 예정
   {
@@ -299,9 +356,55 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     yearMonth: '2026.01',
     settledAt: '2026.01.31 23:59',
     tiers: [
-      { id: 1, targetType: '등수', targetValue: '1', rewardText: '사인 앨범 + 디지털 포카' },
-      { id: 2, targetType: '등수범위', targetValue: '2-10', rewardText: '사인 포카' },
-      { id: 3, targetType: '퍼센트', targetValue: '10', rewardText: '슈퍼팬 뱃지' },
+      {
+        id: 1,
+        targetType: '등수',
+        targetValue: '1',
+        prizes: [
+          {
+            id: 101,
+            type: '배송 수령',
+            title: lang('V01D 사인 앨범', 'V01D Signed Album', 'V01Dサイン入りアルバム'),
+            deliveryDeadlineDt: '2026-02-15',
+            deliveryDeadlineTime: '23:59',
+            deliveryFormUrl: 'https://forms.gle/v01d-signed-album-202601',
+          },
+          {
+            id: 102,
+            type: '덕력',
+            title: lang('보너스 덕력', 'Bonus Fan Power', 'ボーナス推し力'),
+            amount: 500,
+          },
+        ],
+      },
+      {
+        id: 2,
+        targetType: '등수범위',
+        targetValue: '2-10',
+        prizes: [
+          {
+            id: 103,
+            type: '배송 수령',
+            title: lang('V01D 사인 포카', 'V01D Signed Photocard', 'V01Dサイン入りフォトカード'),
+            deliveryDeadlineDt: '2026-02-15',
+            deliveryDeadlineTime: '23:59',
+            deliveryFormUrl: 'https://forms.gle/v01d-photocard-202601',
+          },
+        ],
+      },
+      {
+        id: 3,
+        targetType: '퍼센트',
+        targetValue: '10',
+        prizes: [
+          {
+            id: 104,
+            type: '응모권',
+            title: lang('슈퍼팬 응모권', 'Super Fan Tickets', 'スーパーファン応募券'),
+            count: 5,
+          },
+        ],
+      },
     ],
   },
   {
@@ -310,8 +413,39 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     yearMonth: '2026.02',
     settledAt: '2026.02.28 23:59',
     tiers: [
-      { id: 4, targetType: '등수', targetValue: '1', rewardText: '사인 앨범' },
-      { id: 5, targetType: '등수범위', targetValue: '2-10', rewardText: '사인 포카' },
+      {
+        id: 4,
+        targetType: '등수',
+        targetValue: '1',
+        prizes: [
+          {
+            id: 105,
+            type: '배송 수령',
+            title: lang('V01D 사인 앨범', 'V01D Signed Album', 'V01Dサイン入りアルバム'),
+            deliveryDeadlineDt: '2026-03-15',
+            deliveryDeadlineTime: '23:59',
+            deliveryFormUrl: 'https://forms.gle/v01d-signed-album-202602',
+          },
+        ],
+      },
+      {
+        id: 5,
+        targetType: '등수범위',
+        targetValue: '2-10',
+        prizes: [
+          {
+            id: 106,
+            type: '현장 수령',
+            title: lang('V01D 팬 사인회 초대권', 'V01D Fan Sign Pass', 'V01Dファンサイン招待券'),
+            pickupStartDt: '2026-03-20',
+            pickupEndDt: '2026-03-20',
+            openTime: '14:00',
+            closeTime: '18:00',
+            location: lang('서울시 강남구 도산대로 123 V01D HQ', 'V01D HQ, 123 Dosan-daero, Gangnam-gu, Seoul', 'V01D HQ ソウル江南区島山大路123'),
+            items: lang('신분증·티켓 QR', 'ID + Ticket QR', '身分証・チケットQR'),
+          },
+        ],
+      },
     ],
   },
   {
@@ -320,9 +454,38 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     yearMonth: '2026.03',
     settledAt: '2026.03.31 23:59',
     tiers: [
-      { id: 6, targetType: '등수', targetValue: '1', rewardText: '사인 앨범 + 디지털 포카' },
-      { id: 7, targetType: '등수범위', targetValue: '2-10', rewardText: '사인 포카' },
-      { id: 8, targetType: '퍼센트', targetValue: '10', rewardText: '슈퍼팬 뱃지 + 응모권 5장' },
+      {
+        id: 6,
+        targetType: '등수',
+        targetValue: '1',
+        prizes: [
+          {
+            id: 107,
+            type: 'BIVE NFT',
+            title: lang('V01D 프로핏 BIVE', 'V01D Prophet BIVE', 'V01Dプロフェットビーブ'),
+            mintingEventId: 26,
+          },
+          {
+            id: 108,
+            type: '덕력',
+            title: lang('TOP 1 덕력 보너스', 'TOP 1 Bonus', 'TOP1 ボーナス'),
+            amount: 1000,
+          },
+        ],
+      },
+      {
+        id: 7,
+        targetType: '퍼센트',
+        targetValue: '10',
+        prizes: [
+          {
+            id: 109,
+            type: '응모권',
+            title: lang('슈퍼팬 응모권', 'Super Fan Tickets', 'スーパーファン応募券'),
+            count: 3,
+          },
+        ],
+      },
     ],
   },
   {
@@ -331,8 +494,34 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     yearMonth: '2026.04',
     settledAt: '2026.04.30 23:59',
     tiers: [
-      { id: 9, targetType: '등수', targetValue: '1', rewardText: '사인 앨범' },
-      { id: 10, targetType: '퍼센트', targetValue: '10', rewardText: '디지털 포카' },
+      {
+        id: 8,
+        targetType: '등수',
+        targetValue: '1',
+        prizes: [
+          {
+            id: 110,
+            type: '배송 수령',
+            title: lang('V01D 한정판 앨범', 'V01D Limited Album', 'V01D限定版アルバム'),
+            deliveryDeadlineDt: '2026-05-15',
+            deliveryDeadlineTime: '23:59',
+            deliveryFormUrl: 'https://forms.gle/v01d-limited-202604',
+          },
+        ],
+      },
+      {
+        id: 9,
+        targetType: '퍼센트',
+        targetValue: '10',
+        prizes: [
+          {
+            id: 111,
+            type: '덕력',
+            title: lang('TOP 10% 덕력 보너스', 'TOP 10% Bonus', 'TOP10% ボーナス'),
+            amount: 200,
+          },
+        ],
+      },
     ],
   },
   {
@@ -340,9 +529,53 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     seasonId: 202,
     yearMonth: '2026.05',
     tiers: [
-      { id: 11, targetType: '등수', targetValue: '1', rewardText: '사인 앨범 + 디지털 포카' },
-      { id: 12, targetType: '등수범위', targetValue: '2-10', rewardText: '사인 포카' },
-      { id: 13, targetType: '퍼센트', targetValue: '10', rewardText: '슈퍼팬 뱃지' },
+      {
+        id: 10,
+        targetType: '등수',
+        targetValue: '1',
+        prizes: [
+          {
+            id: 112,
+            type: '배송 수령',
+            title: lang('V01D 시즌 앨범', 'V01D Season Album', 'V01Dシーズンアルバム'),
+            deliveryDeadlineDt: '2026-06-15',
+            deliveryDeadlineTime: '23:59',
+            deliveryFormUrl: 'https://forms.gle/v01d-season-202605',
+          },
+          {
+            id: 113,
+            type: 'BIVE NFT',
+            title: lang('V01D 100일 기념 BIVE', 'V01D 100 Days BIVE', 'V01D100日記念ビーブ'),
+            mintingEventId: 27,
+          },
+        ],
+      },
+      {
+        id: 11,
+        targetType: '등수범위',
+        targetValue: '2-10',
+        prizes: [
+          {
+            id: 114,
+            type: '응모권',
+            title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'),
+            count: 3,
+          },
+        ],
+      },
+      {
+        id: 12,
+        targetType: '퍼센트',
+        targetValue: '10',
+        prizes: [
+          {
+            id: 115,
+            type: '덕력',
+            title: lang('TOP 10% 덕력', 'TOP 10% Fan Power', 'TOP10% 推し力'),
+            amount: 300,
+          },
+        ],
+      },
     ],
   },
   // 언더라이트 2026 시즌 (102) — 1·2월 정산 완료
@@ -352,8 +585,34 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     yearMonth: '2026.01',
     settledAt: '2026.01.31 23:59',
     tiers: [
-      { id: 14, targetType: '등수', targetValue: '1', rewardText: '사인 앨범' },
-      { id: 15, targetType: '등수범위', targetValue: '2-10', rewardText: '디지털 포카' },
+      {
+        id: 13,
+        targetType: '등수',
+        targetValue: '1',
+        prizes: [
+          {
+            id: 116,
+            type: '배송 수령',
+            title: lang('언더라이트 사인 앨범', 'UNDER:LIGHT Signed Album', 'アンダーライトサイン入りアルバム'),
+            deliveryDeadlineDt: '2026-02-15',
+            deliveryDeadlineTime: '23:59',
+            deliveryFormUrl: 'https://forms.gle/underlight-album-202601',
+          },
+        ],
+      },
+      {
+        id: 14,
+        targetType: '등수범위',
+        targetValue: '2-10',
+        prizes: [
+          {
+            id: 117,
+            type: '응모권',
+            title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'),
+            count: 2,
+          },
+        ],
+      },
     ],
   },
   {
@@ -362,8 +621,37 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     yearMonth: '2026.02',
     settledAt: '2026.02.28 23:59',
     tiers: [
-      { id: 16, targetType: '등수', targetValue: '1', rewardText: '사인 포카' },
-      { id: 17, targetType: '퍼센트', targetValue: '5', rewardText: '슈퍼팬 뱃지' },
+      {
+        id: 15,
+        targetType: '등수',
+        targetValue: '1',
+        prizes: [
+          {
+            id: 118,
+            type: '현장 수령',
+            title: lang('언더라이트 팬미팅 초대권', 'UNDER:LIGHT Fan Meeting Pass', 'アンダーライトファンミーティング招待券'),
+            pickupStartDt: '2026-03-20',
+            pickupEndDt: '2026-03-21',
+            openTime: '10:00',
+            closeTime: '20:00',
+            location: lang('서울시 마포구 어울마당로 88 언더라이트홀', '88 Eoulmadang-ro, Mapo-gu, Seoul, UNDER:LIGHT Hall', 'ソウル麻浦区オウルマダン路88 アンダーライトホール'),
+            items: lang('신분증·예매 QR', 'ID + Booking QR', '身分証・予約QR'),
+          },
+        ],
+      },
+      {
+        id: 16,
+        targetType: '퍼센트',
+        targetValue: '5',
+        prizes: [
+          {
+            id: 119,
+            type: '덕력',
+            title: lang('TOP 5% 덕력', 'TOP 5% Fan Power', 'TOP5% 推し力'),
+            amount: 500,
+          },
+        ],
+      },
     ],
   },
   {
@@ -371,7 +659,19 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
     seasonId: 102,
     yearMonth: '2026.05',
     tiers: [
-      { id: 18, targetType: '등수', targetValue: '1', rewardText: '사인 앨범 + BIVE 에디션' },
+      {
+        id: 17,
+        targetType: '등수',
+        targetValue: '1',
+        prizes: [
+          {
+            id: 120,
+            type: 'BIVE NFT',
+            title: lang('언더라이트 BIVE 에디션', 'UNDER:LIGHT BIVE Edition', 'アンダーライトビーブエディション'),
+            mintingEventId: 23,
+          },
+        ],
+      },
     ],
   },
 ];

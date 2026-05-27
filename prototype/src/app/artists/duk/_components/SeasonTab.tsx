@@ -8,10 +8,10 @@ import { toast } from '@/components/ui/Toast';
 import SeasonFormModal from './SeasonFormModal';
 import { dukSeasons as initialSeasons, type DukSeason, type DukSeasonStatus } from '@/mock/duk';
 
-// [CEB-BO-ART-401] v1.5 §2-1 탭 1 — 랭킹 시즌 설정
-// - 그룹별 시즌 리스트 + [신규 시즌] + [상세]·[수정]·[종료] 액션
-// - 시즌 1년 고정 + 동일 그룹 기간 중복 차단 (SeasonFormModal에 위임)
-// - row 클릭 또는 [상세] → /artists/duk/seasons/{id} 시즌 상세 페이지 (v1.5 신규)
+// [CEB-BO-ART-401] v1.6 §2-1 탭 1 — 랭킹 시즌 설정
+// - 시즌 리스트 + [신규 시즌] 버튼만 보유
+// - 액션 컬럼 폐기 (v1.6) — row 클릭만으로 상세 진입 (백오피스 전체 통일 패턴 정합)
+// - [수정]·[종료] 액션은 시즌 상세 페이지 상단으로 이동
 
 const STATUS_BADGE: Record<DukSeasonStatus, string> = {
   예정: 'bg-gray-100 text-gray-700',
@@ -25,76 +25,55 @@ export default function SeasonTab() {
   const router = useRouter();
   const [seasons, setSeasons] = useState<DukSeason[]>(initialSeasons);
   const [registerOpen, setRegisterOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState<DukSeason | null>(null);
-  const [closeTarget, setCloseTarget] = useState<DukSeason | null>(null);
   const [page, setPage] = useState(1);
 
-  // 시작일시 내림차순 정렬
-  const sorted = useMemo(() => [...seasons].sort((a, b) => (a.startAt < b.startAt ? 1 : -1)), [seasons]);
+  const sorted = useMemo(
+    () => [...seasons].sort((a, b) => (a.startAt < b.startAt ? 1 : -1)),
+    [seasons],
+  );
   const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const slice = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  // 모든 시즌(예정·진행중·종료)이 기간 중복 검증 대상 — SeasonFormModal에 전달
+  const handleCreate = (data: {
+    artistGroupId: number;
+    name: string;
+    startAt: string;
+    endAt: string;
+  }) => {
+    const groupName =
+      seasons.find((s) => s.artistGroupId === data.artistGroupId)?.artistGroupName ?? '그룹';
+    const now = new Date();
+    const startDate = new Date(data.startAt.replace(/\./g, '-').replace(' ', 'T'));
+    const endDate = new Date(data.endAt.replace(/\./g, '-').replace(' ', 'T'));
+    let status: DukSeasonStatus = '예정';
+    if (now >= startDate && now <= endDate) status = '진행중';
+    else if (now > endDate) status = '종료';
 
-  const handleSave = (data: { artistGroupId: number; name: string; startAt: string; endAt: string }) => {
-    const groupName = seasons.find((s) => s.artistGroupId === data.artistGroupId)?.artistGroupName
-      ?? '그룹';
-    if (editTarget) {
-      // 수정
-      setSeasons((prev) =>
-        prev.map((s) =>
-          s.id === editTarget.id
-            ? { ...s, name: data.name, startAt: data.startAt, endAt: data.endAt }
-            : s,
-        ),
-      );
-      toast.success('시즌이 저장되었습니다.');
-      setEditTarget(null);
-    } else {
-      // 생성 — 기본 상태는 시작일시 기준 자동 결정 (간단히 '예정' 처리. 실제 운영은 서버 시각 비교)
-      const now = new Date();
-      const startDate = new Date(data.startAt.replace(/\./g, '-').replace(' ', 'T'));
-      const endDate = new Date(data.endAt.replace(/\./g, '-').replace(' ', 'T'));
-      let status: DukSeasonStatus = '예정';
-      if (now >= startDate && now <= endDate) status = '진행중';
-      else if (now > endDate) status = '종료';
-
-      const nextId = Math.max(...seasons.map((s) => s.id)) + 1;
-      setSeasons((prev) => [
-        ...prev,
-        {
-          id: nextId,
-          artistGroupId: data.artistGroupId,
-          artistGroupName: groupName,
-          name: data.name,
-          startAt: data.startAt,
-          endAt: data.endAt,
-          status,
-        },
-      ]);
-      toast.success('시즌이 저장되었습니다.');
-    }
+    const nextId = Math.max(...seasons.map((s) => s.id)) + 1;
+    setSeasons((prev) => [
+      ...prev,
+      {
+        id: nextId,
+        artistGroupId: data.artistGroupId,
+        artistGroupName: groupName,
+        name: data.name,
+        startAt: data.startAt,
+        endAt: data.endAt,
+        status,
+      },
+    ]);
+    toast.success('시즌이 저장되었습니다.');
     setRegisterOpen(false);
-  };
-
-  const handleClose = () => {
-    if (!closeTarget) return;
-    setSeasons((prev) =>
-      prev.map((s) => (s.id === closeTarget.id ? { ...s, status: '종료' } : s)),
-    );
-    toast.success('시즌이 종료되었습니다.');
-    setCloseTarget(null);
   };
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-gray-500">그룹별 랭킹 시즌을 생성·수정·종료합니다. 같은 그룹에 진행중 시즌은 1개만 운영됩니다.</p>
+        <p className="text-sm text-gray-500">
+          그룹별 랭킹 시즌을 생성합니다. 시즌 row를 클릭하면 상세 페이지로 이동하여 월별 보상을 설정할 수 있습니다. 같은 그룹에 진행중 시즌은 1개만 운영됩니다.
+        </p>
         <button
-          onClick={() => {
-            setEditTarget(null);
-            setRegisterOpen(true);
-          }}
+          onClick={() => setRegisterOpen(true)}
           className="h-10 px-4 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
         >
           + 신규 시즌
@@ -114,45 +93,11 @@ export default function SeasonTab() {
             key: 'status',
             label: '상태',
             render: (r: DukSeason) => (
-              <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${STATUS_BADGE[r.status]}`}>
+              <span
+                className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${STATUS_BADGE[r.status]}`}
+              >
                 {r.status}
               </span>
-            ),
-          },
-          {
-            key: 'actions',
-            label: '액션',
-            align: 'right',
-            render: (r: DukSeason) => (
-              <div className="inline-flex gap-2 justify-end" onClick={(e) => e.stopPropagation()}>
-                <button
-                  onClick={() => router.push(`/artists/duk/seasons/${r.id}`)}
-                  className="px-3 h-8 text-xs font-medium text-indigo-700 bg-white border border-indigo-200 rounded-md hover:bg-indigo-50"
-                >
-                  상세
-                </button>
-                {r.status !== '종료' && (
-                  <>
-                    <button
-                      onClick={() => {
-                        setEditTarget(r);
-                        setRegisterOpen(true);
-                      }}
-                      className="px-3 h-8 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50"
-                    >
-                      수정
-                    </button>
-                    {r.status === '진행중' && (
-                      <button
-                        onClick={() => setCloseTarget(r)}
-                        className="px-3 h-8 text-xs font-medium text-rose-600 bg-white border border-rose-200 rounded-md hover:bg-rose-50"
-                      >
-                        종료
-                      </button>
-                    )}
-                  </>
-                )}
-              </div>
             ),
           },
         ]}
@@ -165,50 +110,11 @@ export default function SeasonTab() {
 
       <SeasonFormModal
         isOpen={registerOpen}
-        onClose={() => {
-          setRegisterOpen(false);
-          setEditTarget(null);
-        }}
-        mode={editTarget ? 'edit' : 'create'}
-        initial={editTarget ?? undefined}
+        onClose={() => setRegisterOpen(false)}
+        mode="create"
         existingSeasons={seasons}
-        onSubmit={handleSave}
+        onSubmit={handleCreate}
       />
-
-      {/* 종료 확인 모달 */}
-      {closeTarget && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setCloseTarget(null);
-          }}
-        >
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md">
-            <div className="px-6 py-4 border-b">
-              <h3 className="text-base font-semibold text-gray-900">시즌을 종료하시겠습니까?</h3>
-            </div>
-            <div className="px-6 py-4">
-              <p className="text-sm text-gray-700">
-                {closeTarget.artistGroupName} - {closeTarget.name} 시즌을 종료합니다. 종료 후 본 시즌의 랭킹은 확정 보존되며 신규 적립/소비는 다음 시즌에 귀속됩니다.
-              </p>
-            </div>
-            <div className="px-6 py-4 border-t flex justify-end gap-2">
-              <button
-                onClick={() => setCloseTarget(null)}
-                className="h-10 px-5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
-              >
-                취소
-              </button>
-              <button
-                onClick={handleClose}
-                className="h-10 px-5 text-sm font-semibold text-white bg-rose-600 rounded-lg hover:bg-rose-700"
-              >
-                종료하기
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

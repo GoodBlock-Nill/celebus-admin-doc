@@ -1,20 +1,25 @@
 'use client';
 
-import { use } from 'react';
+import { use, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/layout/PageHeader';
+import { toast } from '@/components/ui/Toast';
+import SeasonFormModal from '../../_components/SeasonFormModal';
+import SeasonCloseModal from '../../_components/SeasonCloseModal';
 import {
-  dukSeasons,
+  dukSeasons as initialSeasons,
   getMonthlyRewards,
   getSettledMonthCount,
+  type DukSeason,
   type DukSeasonStatus,
 } from '@/mock/duk';
 import MonthRewardForm from './_components/MonthRewardForm';
 
-// [CEB-BO-ART-401] v1.5 §2-1-E 시즌 상세 페이지
+// [CEB-BO-ART-401] v1.6 §2-1-E 시즌 상세 페이지
 // 라우트: /artists/duk/seasons/{id}
-// 시즌 정보 카드 + 월별 보상 12 섹션
+// 상단 액션: [수정] (예정·진행중) · [종료] (진행중) · [목록으로]
+// 월별 보상 12 섹션 — 1구간 = 복수 상품 nested + 5종 분기
 
 const STATUS_BADGE: Record<DukSeasonStatus, string> = {
   예정: 'bg-gray-100 text-gray-700',
@@ -25,7 +30,12 @@ const STATUS_BADGE: Record<DukSeasonStatus, string> = {
 export default function SeasonDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const seasonId = Number(id);
-  const season = dukSeasons.find((s) => s.id === seasonId);
+
+  const [seasons, setSeasons] = useState<DukSeason[]>(initialSeasons);
+  const [editOpen, setEditOpen] = useState(false);
+  const [closeTarget, setCloseTarget] = useState<DukSeason | null>(null);
+
+  const season = seasons.find((s) => s.id === seasonId);
 
   if (!season) {
     return (
@@ -46,6 +56,29 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
   const firstMonth = months[0]?.yearMonth;
   const lastSettled = [...months].reverse().find((m) => m.isLocked)?.yearMonth;
 
+  const handleEdit = (data: {
+    artistGroupId: number;
+    name: string;
+    startAt: string;
+    endAt: string;
+  }) => {
+    setSeasons((prev) =>
+      prev.map((s) =>
+        s.id === seasonId
+          ? { ...s, name: data.name, startAt: data.startAt, endAt: data.endAt }
+          : s,
+      ),
+    );
+    toast.success('시즌이 저장되었습니다.');
+    setEditOpen(false);
+  };
+
+  const handleClose = (target: DukSeason) => {
+    setSeasons((prev) => prev.map((s) => (s.id === target.id ? { ...s, status: '종료' } : s)));
+    toast.success('시즌이 종료되었습니다.');
+    setCloseTarget(null);
+  };
+
   return (
     <div>
       <PageHeader
@@ -57,13 +90,31 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
           { label: season.name },
         ]}
         actions={
-          <Link
-            href="/artists/duk?tab=season"
-            className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
-          >
-            <ArrowLeftIcon className="w-4 h-4" />
-            목록으로
-          </Link>
+          <>
+            {season.status !== '종료' && (
+              <button
+                onClick={() => setEditOpen(true)}
+                className="h-10 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+              >
+                수정
+              </button>
+            )}
+            {season.status === '진행중' && (
+              <button
+                onClick={() => setCloseTarget(season)}
+                className="h-10 px-4 text-sm font-medium text-rose-600 bg-white border border-rose-200 rounded-lg hover:bg-rose-50"
+              >
+                종료
+              </button>
+            )}
+            <Link
+              href="/artists/duk?tab=season"
+              className="h-10 px-4 inline-flex items-center gap-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+            >
+              <ArrowLeftIcon className="w-4 h-4" />
+              목록으로
+            </Link>
+          </>
         }
       />
 
@@ -98,9 +149,7 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
           <div className="flex">
             <dt className="w-24 text-gray-500">정산 완료</dt>
             <dd className="flex-1 text-gray-800">
-              {settledCount === 0
-                ? '0개월'
-                : `${settledCount}개월 (${firstMonth}~${lastSettled})`}
+              {settledCount === 0 ? '0개월' : `${settledCount}개월 (${firstMonth}~${lastSettled})`}
             </dd>
           </div>
         </dl>
@@ -110,7 +159,7 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
       <section>
         <h2 className="text-base font-semibold text-gray-900 mb-3">월별 보상 설정</h2>
         <p className="text-sm text-gray-500 mb-4">
-          시즌(1년) 내 매월 별도 보상을 설정합니다. 정산 완료된 월은 잠금되며, 미정산 월은 구간을 자유롭게 추가·수정·삭제할 수 있습니다.
+          시즌(1년) 내 매월 별도 보상을 설정합니다. 정산 완료된 월은 잠금되며, 미정산 월은 구간·상품을 자유롭게 추가·수정·삭제할 수 있습니다. 1구간에 상품 N개(배송·현장·BIVE·응모권·덕력 5종)를 함께 지급할 수 있습니다.
         </p>
         <div className="space-y-3">
           {months.map((m) => (
@@ -124,6 +173,21 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
           ))}
         </div>
       </section>
+
+      <SeasonFormModal
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        mode="edit"
+        initial={season}
+        existingSeasons={seasons}
+        onSubmit={handleEdit}
+      />
+
+      <SeasonCloseModal
+        target={closeTarget}
+        onClose={() => setCloseTarget(null)}
+        onConfirm={handleClose}
+      />
     </div>
   );
 }
