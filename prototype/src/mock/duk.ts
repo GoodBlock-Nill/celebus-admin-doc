@@ -144,9 +144,11 @@ export const dukSeasons: DukSeason[] = [
 ];
 
 // ─────────────────────────────────────────────
-// 회원 풀 (덕력 활동 회원 8명) — mock/members.ts 운영 실회원 정합
+// 회원 풀 (덕력 활동 회원 50명) — mock/members.ts NICKNAMES + user_{idNum} 패턴 정합
+// 처음 8명은 기존 핵심 회원 (id=578~571), 9~50명은 신규 (id=570~529)
 // ─────────────────────────────────────────────
 const dukMembers: { id: string; nickname: string }[] = [
+  // 핵심 8명 (NICKNAMES[0~7])
   { id: '578', nickname: 'in.mycosmos' },
   { id: '577', nickname: 'qqqaas' },
   { id: '576', nickname: 'luna_jiyun_lee' },
@@ -155,6 +157,51 @@ const dukMembers: { id: string; nickname: string }[] = [
   { id: '573', nickname: 'manju' },
   { id: '572', nickname: 'sally410504' },
   { id: '571', nickname: 'sohyun0105' },
+  // NICKNAMES[8]은 빈 값 → user_570 fallback
+  { id: '570', nickname: 'user_570' },
+  // NICKNAMES[9~24] (16명)
+  { id: '569', nickname: 'suu.b1n' },
+  { id: '568', nickname: 'mimi' },
+  { id: '567', nickname: 'jjeom5jjang' },
+  { id: '566', nickname: 'effieee02' },
+  { id: '565', nickname: 'xxxx' },
+  { id: '564', nickname: 'rdy0602' },
+  { id: '563', nickname: 'lena' },
+  { id: '562', nickname: 'xbdjeui' },
+  { id: '561', nickname: 'c.s.k' },
+  { id: '560', nickname: 'yoon' },
+  { id: '559', nickname: 'hello17' },
+  { id: '558', nickname: 'ttee' },
+  { id: '557', nickname: 'celebus' },
+  { id: '556', nickname: 'joonk85' },
+  { id: '555', nickname: 'teddy2' },
+  { id: '554', nickname: 'mice' },
+  // user_{idNum} 패턴 (25명) — id=553~529
+  { id: '553', nickname: 'user_553' },
+  { id: '552', nickname: 'user_552' },
+  { id: '551', nickname: 'user_551' },
+  { id: '550', nickname: 'user_550' },
+  { id: '549', nickname: 'user_549' },
+  { id: '548', nickname: 'user_548' },
+  { id: '547', nickname: 'user_547' },
+  { id: '546', nickname: 'user_546' },
+  { id: '545', nickname: 'user_545' },
+  { id: '544', nickname: 'user_544' },
+  { id: '543', nickname: 'user_543' },
+  { id: '542', nickname: 'user_542' },
+  { id: '541', nickname: 'user_541' },
+  { id: '540', nickname: 'user_540' },
+  { id: '539', nickname: 'user_539' },
+  { id: '538', nickname: 'user_538' },
+  { id: '537', nickname: 'user_537' },
+  { id: '536', nickname: 'user_536' },
+  { id: '535', nickname: 'user_535' },
+  { id: '534', nickname: 'user_534' },
+  { id: '533', nickname: 'user_533' },
+  { id: '532', nickname: 'user_532' },
+  { id: '531', nickname: 'user_531' },
+  { id: '530', nickname: 'user_530' },
+  { id: '529', nickname: 'user_529' },
 ];
 
 // ─────────────────────────────────────────────
@@ -271,6 +318,99 @@ function buildLedger(): DukLedger[] {
   push('2025.11.15 14:00', 501, 5, 'iKON', 6, '획득', '디지털 굿즈 획득', 280);
   push('2025.12.10 16:00', 501, 5, 'iKON', 7, '획득', '디지털 굿즈 획득', 450);
   push('2025.12.28 18:00', 501, 5, 'iKON', 4, '사용', '서포트 응원', 220);
+
+  // ─────────────────────────────────────────────
+  // 신규 42명 (idx 8~49) 자동 생성 — 시드 RNG로 그룹·시기·출처·금액 분포
+  // mock/members.ts 시드 패턴 정합. 핵심 8명은 위 hard-coded ledger 유지
+  // ─────────────────────────────────────────────
+  const earnSources: { source: string; tier: number }[] = [
+    { source: '출석 체크', tier: 5 },
+    { source: '응모권 사용', tier: 5 },
+    { source: '일일 미션', tier: 25 },
+    { source: '게임 참여', tier: 25 },
+    { source: 'SNS 공유', tier: 25 },
+    { source: 'Quest 완료', tier: 75 },
+    { source: '기억저장소 업로드', tier: 75 },
+    { source: '디지털 굿즈 획득', tier: 75 },
+  ];
+  const spendSources = ['서포트 응원', '독점 콘텐츠 해금'];
+
+  function seededRng(seed: number) {
+    let s = seed;
+    return () => {
+      s = (s * 1103515245 + 12345) & 0x7fffffff;
+      return s / 0x7fffffff;
+    };
+  }
+  const pad2 = (n: number) => String(n).padStart(2, '0');
+
+  function findSeasonId(groupId: number, occurredAt: string): number | undefined {
+    return dukSeasons.find(
+      (s) => s.artistGroupId === groupId && s.startAt <= occurredAt && occurredAt <= s.endAt,
+    )?.id;
+  }
+
+  // 신규 회원 idx 8~49 (총 42명)
+  for (let mi = 8; mi < dukMembers.length; mi++) {
+    const r = seededRng(2000 + mi);
+    // 회원당 1~3개 그룹 활동
+    const groupCount = 1 + Math.floor(r() * 3);
+    const groupIdxList = new Set<number>();
+    while (groupIdxList.size < groupCount) {
+      groupIdxList.add(Math.floor(r() * dukActiveGroups.length));
+    }
+    for (const gi of groupIdxList) {
+      const group = dukActiveGroups[gi];
+      // 그룹당 2~6개 활동
+      const actCount = 2 + Math.floor(r() * 5);
+      for (let ai = 0; ai < actCount; ai++) {
+        const isEarn = r() > 0.18; // 82% 획득
+        // 2026.01~05 또는 2025.10~12 분포
+        let year: number;
+        let month: number;
+        if (r() < 0.85) {
+          year = 2026;
+          month = 1 + Math.floor(r() * 5);
+        } else {
+          year = 2025;
+          month = 10 + Math.floor(r() * 3);
+        }
+        const day = 1 + Math.floor(r() * 27);
+        const hour = 9 + Math.floor(r() * 12);
+        const minute = Math.floor(r() * 60);
+        const occurredAt = `${year}.${pad2(month)}.${pad2(day)} ${pad2(hour)}:${pad2(minute)}`;
+
+        if (isEarn) {
+          const earn = earnSources[Math.floor(r() * earnSources.length)];
+          // 티어 기본값에 ±50% 변동
+          const amount = Math.max(1, Math.round(earn.tier * (0.5 + r() * 1.5)));
+          push(
+            occurredAt,
+            findSeasonId(group.id, occurredAt),
+            group.id,
+            group.name,
+            mi,
+            '획득',
+            earn.source,
+            amount,
+          );
+        } else {
+          const source = spendSources[Math.floor(r() * spendSources.length)];
+          const amount = 30 + Math.floor(r() * 250);
+          push(
+            occurredAt,
+            findSeasonId(group.id, occurredAt),
+            group.id,
+            group.name,
+            mi,
+            '사용',
+            source,
+            amount,
+          );
+        }
+      }
+    }
+  }
 
   return rows;
 }
