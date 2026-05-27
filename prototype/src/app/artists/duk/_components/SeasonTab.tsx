@@ -1,15 +1,17 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import { toast } from '@/components/ui/Toast';
 import SeasonFormModal from './SeasonFormModal';
 import { dukSeasons as initialSeasons, type DukSeason, type DukSeasonStatus } from '@/mock/duk';
 
-// [CEB-BO-ART-401] §2-1 탭 1 — 랭킹 시즌 설정
-// - 그룹별 시즌 리스트 + [신규 시즌] + [수정]·[종료] 액션
+// [CEB-BO-ART-401] v1.5 §2-1 탭 1 — 랭킹 시즌 설정
+// - 그룹별 시즌 리스트 + [신규 시즌] + [상세]·[수정]·[종료] 액션
 // - 시즌 1년 고정 + 동일 그룹 기간 중복 차단 (SeasonFormModal에 위임)
+// - row 클릭 또는 [상세] → /artists/duk/seasons/{id} 시즌 상세 페이지 (v1.5 신규)
 
 const STATUS_BADGE: Record<DukSeasonStatus, string> = {
   예정: 'bg-gray-100 text-gray-700',
@@ -20,6 +22,7 @@ const STATUS_BADGE: Record<DukSeasonStatus, string> = {
 const PAGE_SIZE = 20;
 
 export default function SeasonTab() {
+  const router = useRouter();
   const [seasons, setSeasons] = useState<DukSeason[]>(initialSeasons);
   const [registerOpen, setRegisterOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<DukSeason | null>(null);
@@ -120,34 +123,42 @@ export default function SeasonTab() {
             key: 'actions',
             label: '액션',
             align: 'right',
-            render: (r: DukSeason) =>
-              r.status === '종료' ? (
-                <span className="text-xs text-gray-400">—</span>
-              ) : (
-                <div className="inline-flex gap-2 justify-end">
-                  <button
-                    onClick={() => {
-                      setEditTarget(r);
-                      setRegisterOpen(true);
-                    }}
-                    className="px-3 h-8 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50"
-                  >
-                    수정
-                  </button>
-                  {r.status === '진행중' && (
+            render: (r: DukSeason) => (
+              <div className="inline-flex gap-2 justify-end" onClick={(e) => e.stopPropagation()}>
+                <button
+                  onClick={() => router.push(`/artists/duk/seasons/${r.id}`)}
+                  className="px-3 h-8 text-xs font-medium text-indigo-700 bg-white border border-indigo-200 rounded-md hover:bg-indigo-50"
+                >
+                  상세
+                </button>
+                {r.status !== '종료' && (
+                  <>
                     <button
-                      onClick={() => setCloseTarget(r)}
-                      className="px-3 h-8 text-xs font-medium text-rose-600 bg-white border border-rose-200 rounded-md hover:bg-rose-50"
+                      onClick={() => {
+                        setEditTarget(r);
+                        setRegisterOpen(true);
+                      }}
+                      className="px-3 h-8 text-xs font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50"
                     >
-                      종료
+                      수정
                     </button>
-                  )}
-                </div>
-              ),
+                    {r.status === '진행중' && (
+                      <button
+                        onClick={() => setCloseTarget(r)}
+                        className="px-3 h-8 text-xs font-medium text-rose-600 bg-white border border-rose-200 rounded-md hover:bg-rose-50"
+                      >
+                        종료
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+            ),
           },
         ]}
         rows={slice}
         emptyMessage="등록된 시즌이 없습니다."
+        onRowClick={(r) => router.push(`/artists/duk/seasons/${r.id}`)}
       />
 
       <SimplePagination page={page} totalPages={totalPages} onChange={setPage} />

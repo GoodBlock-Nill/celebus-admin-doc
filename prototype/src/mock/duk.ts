@@ -1,6 +1,7 @@
-// [CEB-BO-ART-401] v1.3 정합
+// [CEB-BO-ART-401] v1.5 정합
 // 덕력(DUK) — 아티스트 그룹 단위 독립 관리. 그룹별 시즌(1년 고정)·획득/사용 ledger.
-// 출처 enum은 [CEB-000] §5.2 v5.6 보상 매트릭스 활동 9종 + §3.2 사용처 2종 SSOT 정합.
+// 출처 enum은 [CEB-000] §5.2 v5.6 보상 매트릭스 활동 8종 + §3.2 사용처 2종 SSOT 정합.
+// v1.5 신규 — 시즌 상세 페이지 + 월별 보상 12 매트릭스 ([CEB-DUK-101] §2.5 + [CEB-000] §5.2.1 정합).
 
 export type DukSeasonStatus = '예정' | '진행중' | '종료';
 export type DukLedgerType = '획득' | '사용';
@@ -27,6 +28,24 @@ export interface DukLedger {
   amount: number; // 양수
   balanceAfter: number;
   seasonId?: number;
+}
+
+// v1.5 신규 — 월별 보상 매트릭스
+export type DukRewardTargetType = '등수' | '퍼센트' | '등수범위';
+
+export interface DukRewardTier {
+  id: number;
+  targetType: DukRewardTargetType;
+  targetValue: string; // 등수=숫자 / 퍼센트=숫자 / 등수범위=N-M
+  rewardText: string; // 자유 입력 (상품 텍스트)
+}
+
+export interface DukMonthlyReward {
+  id: number;
+  seasonId: number;
+  yearMonth: string; // YYYY.MM
+  tiers: DukRewardTier[];
+  settledAt?: string; // 정산 완료 일시 (YYYY.MM.DD HH:mm) — 설정 시 잠금
 }
 
 // 활성 그룹 5종 (mock/artists.ts와 정합)
@@ -264,4 +283,140 @@ export function getSeasonsByGroup(groupId: number): DukSeason[] {
   return dukSeasons
     .filter((s) => s.artistGroupId === groupId)
     .sort((a, b) => (a.startAt < b.startAt ? 1 : -1));
+}
+
+// ─────────────────────────────────────────────
+// v1.5 — 월별 보상 매트릭스
+// ─────────────────────────────────────────────
+
+// 시즌별 월별 보상 mock — 일부 시즌·월만 설정 (보상 미설정 월은 빈 tiers)
+// settledAt 채워진 entry = 정산 완료(잠금)
+export const dukMonthlyRewards: DukMonthlyReward[] = [
+  // V01D 2026 시즌 (202) — 1~4월 정산 완료 + 5월 진행중 + 나머지 예정
+  {
+    id: 1,
+    seasonId: 202,
+    yearMonth: '2026.01',
+    settledAt: '2026.01.31 23:59',
+    tiers: [
+      { id: 1, targetType: '등수', targetValue: '1', rewardText: '사인 앨범 + 디지털 포카' },
+      { id: 2, targetType: '등수범위', targetValue: '2-10', rewardText: '사인 포카' },
+      { id: 3, targetType: '퍼센트', targetValue: '10', rewardText: '슈퍼팬 뱃지' },
+    ],
+  },
+  {
+    id: 2,
+    seasonId: 202,
+    yearMonth: '2026.02',
+    settledAt: '2026.02.28 23:59',
+    tiers: [
+      { id: 4, targetType: '등수', targetValue: '1', rewardText: '사인 앨범' },
+      { id: 5, targetType: '등수범위', targetValue: '2-10', rewardText: '사인 포카' },
+    ],
+  },
+  {
+    id: 3,
+    seasonId: 202,
+    yearMonth: '2026.03',
+    settledAt: '2026.03.31 23:59',
+    tiers: [
+      { id: 6, targetType: '등수', targetValue: '1', rewardText: '사인 앨범 + 디지털 포카' },
+      { id: 7, targetType: '등수범위', targetValue: '2-10', rewardText: '사인 포카' },
+      { id: 8, targetType: '퍼센트', targetValue: '10', rewardText: '슈퍼팬 뱃지 + 응모권 5장' },
+    ],
+  },
+  {
+    id: 4,
+    seasonId: 202,
+    yearMonth: '2026.04',
+    settledAt: '2026.04.30 23:59',
+    tiers: [
+      { id: 9, targetType: '등수', targetValue: '1', rewardText: '사인 앨범' },
+      { id: 10, targetType: '퍼센트', targetValue: '10', rewardText: '디지털 포카' },
+    ],
+  },
+  {
+    id: 5,
+    seasonId: 202,
+    yearMonth: '2026.05',
+    tiers: [
+      { id: 11, targetType: '등수', targetValue: '1', rewardText: '사인 앨범 + 디지털 포카' },
+      { id: 12, targetType: '등수범위', targetValue: '2-10', rewardText: '사인 포카' },
+      { id: 13, targetType: '퍼센트', targetValue: '10', rewardText: '슈퍼팬 뱃지' },
+    ],
+  },
+  // 언더라이트 2026 시즌 (102) — 1·2월 정산 완료
+  {
+    id: 6,
+    seasonId: 102,
+    yearMonth: '2026.01',
+    settledAt: '2026.01.31 23:59',
+    tiers: [
+      { id: 14, targetType: '등수', targetValue: '1', rewardText: '사인 앨범' },
+      { id: 15, targetType: '등수범위', targetValue: '2-10', rewardText: '디지털 포카' },
+    ],
+  },
+  {
+    id: 7,
+    seasonId: 102,
+    yearMonth: '2026.02',
+    settledAt: '2026.02.28 23:59',
+    tiers: [
+      { id: 16, targetType: '등수', targetValue: '1', rewardText: '사인 포카' },
+      { id: 17, targetType: '퍼센트', targetValue: '5', rewardText: '슈퍼팬 뱃지' },
+    ],
+  },
+  {
+    id: 8,
+    seasonId: 102,
+    yearMonth: '2026.05',
+    tiers: [
+      { id: 18, targetType: '등수', targetValue: '1', rewardText: '사인 앨범 + BIVE 에디션' },
+    ],
+  },
+];
+
+// 시즌 시작일시("YYYY.MM.DD HH:mm")로부터 12개월 yearMonth 시퀀스 생성
+function buildMonthsFromStart(startAt: string): string[] {
+  const m = startAt.match(/^(\d{4})\.(\d{2})\./);
+  if (!m) return [];
+  const startYear = Number(m[1]);
+  const startMonth = Number(m[2]);
+  const result: string[] = [];
+  for (let i = 0; i < 12; i++) {
+    const monthIdx = (startMonth - 1 + i) % 12;
+    const yearOffset = Math.floor((startMonth - 1 + i) / 12);
+    const y = startYear + yearOffset;
+    const mm = String(monthIdx + 1).padStart(2, '0');
+    result.push(`${y}.${mm}`);
+  }
+  return result;
+}
+
+// 시즌별 월별 보상 12개 조회 (mock에 없으면 빈 tiers entry 생성)
+export interface DukMonthlyRewardView {
+  yearMonth: string;
+  tiers: DukRewardTier[];
+  settledAt?: string;
+  isLocked: boolean; // 정산 완료 여부
+}
+
+export function getMonthlyRewards(seasonId: number): DukMonthlyRewardView[] {
+  const season = dukSeasons.find((s) => s.id === seasonId);
+  if (!season) return [];
+  const months = buildMonthsFromStart(season.startAt);
+  return months.map((ym) => {
+    const found = dukMonthlyRewards.find((r) => r.seasonId === seasonId && r.yearMonth === ym);
+    return {
+      yearMonth: ym,
+      tiers: found?.tiers ?? [],
+      settledAt: found?.settledAt,
+      isLocked: !!found?.settledAt,
+    };
+  });
+}
+
+// 정산 완료 월 카운트 (시즌 정보 카드용)
+export function getSettledMonthCount(seasonId: number): number {
+  return getMonthlyRewards(seasonId).filter((m) => m.isLocked).length;
 }
