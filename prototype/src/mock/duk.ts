@@ -862,3 +862,174 @@ export function getMonthlyRewards(seasonId: number): DukMonthlyRewardView[] {
 export function getSettledMonthCount(seasonId: number): number {
   return getMonthlyRewards(seasonId).filter((m) => m.isLocked).length;
 }
+
+// ─────────────────────────────────────────────
+// 월별 보상 지급 내역 (정산 결과 — 누가 어떤 등수로 어떤 상품을 받았는가)
+// [CEB-BO-ART-401-DETAIL] §2.11~§2.13 — 월별 보상 내역 탭
+// ─────────────────────────────────────────────
+
+export type DukPayoutStatus = '지급완료' | '지급대기' | '지급실패' | '재지급대기';
+
+export interface DukRewardPayout {
+  id: number;
+  seasonId: number;
+  yearMonth: string;                // YYYY.MM
+  memberId: string;
+  memberNickname: string;           // snapshot — 정산 시점 닉네임
+  rank: number;                     // 정산 시점 회원 순위 (해당 그룹·해당 월 누적 덕력)
+  tierId: number;                   // 참조
+  targetType: DukRewardTargetType;  // snapshot
+  targetValue: string;              // snapshot
+  prizeId: number;                  // 참조
+  prizeType: DukPrizeType;          // snapshot
+  prizeTitle: DukLangText;          // snapshot — 보상 설정 변경에도 보존
+  paidStatus: DukPayoutStatus;
+  paidAt?: string;                  // YYYY.MM.DD HH:mm
+  paidBy?: string;                  // '시스템' (자동) 또는 운영자명 (수동)
+  memo?: string;                    // 운영자 메모/사유
+  createdAt: string;                // 정산 시각 (자동 생성)
+}
+
+// 자동 지급 상품 분류 — 정산 시점에 즉시 지급완료 처리
+export function isAutoPaidPrize(type: DukPrizeType): boolean {
+  return type === 'BIVE NFT' || type === '응모권' || type === '덕력';
+}
+
+// 등수 기준을 회원 순위 배열로 변환
+function expandTargetToRanks(
+  targetType: DukRewardTargetType,
+  targetValue: string,
+  totalActiveMembers: number,
+): number[] {
+  if (targetType === '등수') {
+    return [Number(targetValue)];
+  }
+  if (targetType === '등수범위') {
+    const m = targetValue.match(/^(\d+)-(\d+)$/);
+    if (!m) return [];
+    const from = Number(m[1]);
+    const to = Number(m[2]);
+    const ranks: number[] = [];
+    for (let r = from; r <= to; r++) ranks.push(r);
+    return ranks;
+  }
+  if (targetType === '퍼센트') {
+    const pct = Number(targetValue);
+    const count = Math.max(1, Math.ceil((totalActiveMembers * pct) / 100));
+    return Array.from({ length: count }, (_, i) => i + 1);
+  }
+  return [];
+}
+
+// 정산 시점 회원 풀 (시즌·월 무관 — 일관된 30명 풀로 mock 단순화)
+// 실제 운영에서는 정산 시점에 해당 그룹의 활동 회원 순위를 동결
+const PAYOUT_MEMBER_POOL: { rank: number; id: string; nickname: string }[] = Array.from(
+  { length: 30 },
+  (_, i) => ({
+    rank: i + 1,
+    id: `user_${570 - i}`,
+    nickname: `덕력회원${String(i + 1).padStart(2, '0')}`,
+  }),
+);
+
+function buildPayouts(): DukRewardPayout[] {
+  const payouts: DukRewardPayout[] = [];
+  let nextId = 1;
+
+  for (const mr of dukMonthlyRewards) {
+    if (!mr.settledAt) continue;
+    for (const tier of mr.tiers) {
+      const ranks = expandTargetToRanks(tier.targetType, tier.targetValue, PAYOUT_MEMBER_POOL.length);
+      for (const rank of ranks) {
+        const member = PAYOUT_MEMBER_POOL[rank - 1];
+        if (!member) continue;
+        for (const prize of tier.prizes) {
+          const auto = isAutoPaidPrize(prize.type);
+          payouts.push({
+            id: nextId++,
+            seasonId: mr.seasonId,
+            yearMonth: mr.yearMonth,
+            memberId: member.id,
+            memberNickname: member.nickname,
+            rank,
+            tierId: tier.id,
+            targetType: tier.targetType,
+            targetValue: tier.targetValue,
+            prizeId: prize.id,
+            prizeType: prize.type,
+            prizeTitle: prize.title,
+            paidStatus: auto ? '지급완료' : '지급대기',
+            paidAt: auto ? mr.settledAt : undefined,
+            paidBy: auto ? '시스템' : undefined,
+            createdAt: mr.settledAt,
+          });
+        }
+      }
+    }
+  }
+
+  // mock 다양성: 수동 지급 일부 행을 다른 상태로 변경 (운영자 액션 시뮬레이션)
+  const manual = payouts.filter((p) => !isAutoPaidPrize(p.prizeType));
+  if (manual[0]) {
+    manual[0].paidStatus = '지급완료';
+    manual[0].paidAt = `${manual[0].createdAt.slice(0, 10)} 14:30`;
+    manual[0].paidBy = '운영자A';
+    manual[0].memo = '배송 발송 완료';
+  }
+  if (manual[1]) {
+    manual[1].paidStatus = '지급실패';
+    manual[1].paidBy = '운영자A';
+    manual[1].memo = '주소 불량으로 반송됨';
+  }
+  if (manual[2]) {
+    manual[2].paidStatus = '재지급대기';
+    manual[2].paidBy = '운영자B';
+    manual[2].memo = '회원 요청으로 재발송 준비 중';
+  }
+
+  return payouts;
+}
+
+export const dukRewardPayouts: DukRewardPayout[] = buildPayouts();
+
+// 헬퍼: 시즌별 정산 완료 월 목록 (최신순)
+export function getAvailablePayoutMonths(seasonId: number): string[] {
+  return dukMonthlyRewards
+    .filter((m) => m.seasonId === seasonId && m.settledAt)
+    .map((m) => m.yearMonth)
+    .sort((a, b) => (a < b ? 1 : -1));
+}
+
+// 헬퍼: 해당 시즌·월의 지급 내역 (순위 오름차순)
+export function getMonthlyPayouts(seasonId: number, yearMonth: string): DukRewardPayout[] {
+  return dukRewardPayouts
+    .filter((p) => p.seasonId === seasonId && p.yearMonth === yearMonth)
+    .sort((a, b) => a.rank - b.rank || a.prizeId - b.prizeId);
+}
+
+// 헬퍼: 지급 상태별 카운트 (통계 카드용)
+export interface DukPayoutStats {
+  memberCount: number;
+  totalPrizes: number;
+  byStatus: Record<DukPayoutStatus, number>;
+}
+
+export function getMonthlyPayoutStats(seasonId: number, yearMonth: string): DukPayoutStats {
+  const rows = getMonthlyPayouts(seasonId, yearMonth);
+  const byStatus: Record<DukPayoutStatus, number> = {
+    지급완료: 0,
+    지급대기: 0,
+    지급실패: 0,
+    재지급대기: 0,
+  };
+  const memberSet = new Set<string>();
+  for (const r of rows) {
+    memberSet.add(r.memberId);
+    byStatus[r.paidStatus] += 1;
+  }
+  return {
+    memberCount: memberSet.size,
+    totalPrizes: rows.length,
+    byStatus,
+  };
+}
