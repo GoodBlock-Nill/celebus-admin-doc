@@ -33,8 +33,6 @@ import {
   BookOpenIcon,
   InboxStackIcon,
   ClipboardDocumentCheckIcon,
-  StarIcon,
-  BoltIcon,
   PhotoIcon,
   CalendarDaysIcon,
   GiftIcon,
@@ -86,24 +84,6 @@ const ADMIN_MENU: MenuItem[] = [
       { label: '혜택 관리', href: '/bive/benefits', icon: TrophyIcon },
     ],
   },
-  {
-    label: '팬덤 레벨',
-    icon: StarIcon,
-    children: [
-      { label: '곡선 설정', href: '/evt/curves', icon: ChartBarIcon },
-      { label: '시즌 관리', href: '/evt/seasons', icon: CalendarDaysIcon },
-      { label: '레벨 보상', href: '/evt/rewards', icon: GiftIcon },
-    ],
-  },
-  {
-    label: '덕력',
-    icon: BoltIcon,
-    children: [
-      { label: '시즌 관리', href: '/duk/seasons', icon: CalendarDaysIcon },
-      { label: '랭킹', href: '/duk/rankings', icon: TrophyIcon },
-      { label: '한도 정책', href: '/duk/limits', icon: ChartBarIcon },
-    ],
-  },
   { label: 'Fans', href: '/fans', icon: ShoppingBagIcon },
   { label: '티켓', href: '/tickets', icon: KeyIcon },
   {
@@ -150,7 +130,7 @@ const ADMIN_MENU: MenuItem[] = [
 export default function AdminSidebar() {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState<Set<string>>(
-    new Set(['앱', '아티스트', 'BIVE', '팬덤 레벨', '덕력', '게임존', '에피소드', '래플', '관리자']),
+    new Set(['앱', '아티스트', 'BIVE', '게임존', '에피소드', '래플', '관리자']),
   );
 
   const toggle = (label: string) =>
