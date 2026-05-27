@@ -227,6 +227,8 @@ function buildLedger(): DukLedger[] {
     const m = dukMembers[memberIdx];
     const key = k(m.id, groupId);
     const prev = balance[key] ?? 0;
+    // v1.8 — 사용 타입 + 잔액 미달이면 행 skip (음수 잔액 노출 방지)
+    if (type === '사용' && prev < amount) return;
     const next = type === '획득' ? prev + amount : prev - amount;
     balance[key] = next;
     rows.push({

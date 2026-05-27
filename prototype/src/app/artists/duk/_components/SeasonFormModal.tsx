@@ -4,10 +4,11 @@ import { useEffect, useMemo, useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import { dukActiveGroups, type DukSeason } from '@/mock/duk';
 
-// [CEB-BO-ART-401] v1.7 §2-1 C. 시즌 생성·수정 모달
+// [CEB-BO-ART-401] v1.8 §2-1 C. 시즌 생성·수정 모달
 // - 시즌 1년 고정: 시작일시만 입력, 종료 = 시작 + 1년 자동 산출
 // - 생성 모드: 그룹 Dropdown 활성 / 수정 모드: 그룹 readonly
 // - v1.7: 수정 모드 + 진행중·종료 시즌 → 시작일 readonly (12개월 시퀀스 매칭 깨짐 방지)
+// - v1.8: 시즌명·시작일시 필드별 인라인 에러 (touched 후 노출)
 
 interface Props {
   isOpen: boolean;
@@ -53,12 +54,18 @@ export default function SeasonFormModal({
   const [groupId, setGroupId] = useState<number>(dukActiveGroups[0].id);
   const [name, setName] = useState('');
   const [startAt, setStartAt] = useState(''); // input value (datetime-local)
+  // v1.8 — 인라인 검증용 touched state (포커스 후 첫 이탈 시 true)
+  const [nameTouched, setNameTouched] = useState(false);
+  const [startTouched, setStartTouched] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setGroupId(initial?.artistGroupId ?? dukActiveGroups[0].id);
       setName(initial?.name ?? '');
       setStartAt(toLocalInput(initial?.startAt ?? ''));
+      // 모달 재진입 시 touched 초기화
+      setNameTouched(false);
+      setStartTouched(false);
     }
   }, [isOpen, initial]);
 
@@ -76,6 +83,9 @@ export default function SeasonFormModal({
 
   const nameValid = name.trim().length >= 1 && name.trim().length <= 50;
   const dateValid = !!startAt && !!computedEndDot;
+  // v1.8 — 인라인 에러 메시지
+  const nameError = nameTouched && name.trim().length === 0 ? '시즌명을 입력하세요' : null;
+  const startError = startTouched && !startAt ? '시작일시를 선택하세요' : null;
 
   // 동일 그룹의 다른 시즌과 기간 겹침 검증 (1년 고정으로 충돌 검증 단순화)
   const conflict = useMemo(() => {
@@ -156,11 +166,20 @@ export default function SeasonFormModal({
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
+            onBlur={() => setNameTouched(true)}
             placeholder="예: V01D 2026 시즌"
             maxLength={50}
-            className="h-10 w-full px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className={`h-10 w-full px-3 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
+              nameError
+                ? 'border-rose-300 focus:ring-rose-500'
+                : 'border-gray-200 focus:ring-indigo-500'
+            }`}
           />
-          <p className="text-xs text-gray-500 mt-1">1~50자</p>
+          {nameError ? (
+            <p className="text-xs text-rose-600 mt-1">{nameError}</p>
+          ) : (
+            <p className="text-xs text-gray-500 mt-1">1~50자 ({name.length}/50)</p>
+          )}
         </div>
 
         <div>
@@ -177,12 +196,22 @@ export default function SeasonFormModal({
               </p>
             </>
           ) : (
-            <input
-              type="datetime-local"
-              value={startAt}
-              onChange={(e) => setStartAt(e.target.value)}
-              className="h-10 w-full px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+            <>
+              <input
+                type="datetime-local"
+                value={startAt}
+                onChange={(e) => setStartAt(e.target.value)}
+                onBlur={() => setStartTouched(true)}
+                className={`h-10 w-full px-3 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
+                  startError
+                    ? 'border-rose-300 focus:ring-rose-500'
+                    : 'border-gray-200 focus:ring-indigo-500'
+                }`}
+              />
+              {startError && (
+                <p className="text-xs text-rose-600 mt-1">{startError}</p>
+              )}
+            </>
           )}
         </div>
 

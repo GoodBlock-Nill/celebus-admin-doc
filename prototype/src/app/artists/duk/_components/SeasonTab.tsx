@@ -6,10 +6,10 @@ import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import { toast } from '@/components/ui/Toast';
 import SeasonFormModal from './SeasonFormModal';
-import { dukSeasons as initialSeasons, type DukSeason, type DukSeasonStatus } from '@/mock/duk';
+import { dukActiveGroups, dukSeasons as initialSeasons, type DukSeason, type DukSeasonStatus } from '@/mock/duk';
 
-// [CEB-BO-ART-401] v1.6 §2-1 탭 1 — 랭킹 시즌 설정
-// - 시즌 리스트 + [신규 시즌] 버튼만 보유
+// [CEB-BO-ART-401] v1.8 §2-1 탭 1 — 랭킹 시즌 설정
+// - 시즌 리스트 + [신규 시즌] 버튼 + 그룹 Dropdown 필터 (v1.8)
 // - 액션 컬럼 폐기 (v1.6) — row 클릭만으로 상세 진입 (백오피스 전체 통일 패턴 정합)
 // - [수정]·[종료] 액션은 시즌 상세 페이지 상단으로 이동
 
@@ -25,14 +25,16 @@ export default function SeasonTab() {
   const router = useRouter();
   const [seasons, setSeasons] = useState<DukSeason[]>(initialSeasons);
   const [registerOpen, setRegisterOpen] = useState(false);
+  const [groupFilter, setGroupFilter] = useState<number | 'all'>('all'); // v1.8 — 그룹 필터
   const [page, setPage] = useState(1);
 
-  const sorted = useMemo(
-    () => [...seasons].sort((a, b) => (a.startAt < b.startAt ? 1 : -1)),
-    [seasons],
-  );
-  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
-  const slice = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const filtered = useMemo(() => {
+    return [...seasons]
+      .filter((s) => groupFilter === 'all' || s.artistGroupId === groupFilter)
+      .sort((a, b) => (a.startAt < b.startAt ? 1 : -1));
+  }, [seasons, groupFilter]);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const slice = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const handleCreate = (data: {
     artistGroupId: number;
@@ -78,6 +80,32 @@ export default function SeasonTab() {
         >
           + 신규 시즌
         </button>
+      </div>
+
+      {/* v1.8 — 그룹 필터 */}
+      <div className="flex items-end gap-3 mb-4">
+        <div>
+          <label className="block text-xs font-medium text-gray-600 mb-1">그룹</label>
+          <select
+            value={groupFilter}
+            onChange={(e) => {
+              const v = e.target.value;
+              setGroupFilter(v === 'all' ? 'all' : Number(v));
+              setPage(1);
+            }}
+            className="h-10 px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="all">전체</option>
+            {dukActiveGroups.map((g) => (
+              <option key={g.id} value={g.id}>
+                {g.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <span className="h-10 inline-flex items-center text-xs text-gray-500">
+          {filtered.length.toLocaleString()}건
+        </span>
       </div>
 
       <SimpleTable
