@@ -70,9 +70,9 @@ function LedgerSection({ type }: LedgerSectionProps) {
 
   return (
     <div>
-      {/* 필터 바 */}
-      <div className="flex flex-wrap gap-3 items-end mb-4">
-        <div>
+      {/* 필터 바 — flex-wrap 제거, 고정 너비 + 검색은 우측 스페이서 */}
+      <div className="flex items-end gap-3 mb-4">
+        <div className="min-w-[180px]">
           <label className="block text-xs font-medium text-gray-600 mb-1">그룹</label>
           <select
             value={groupId}
@@ -81,7 +81,7 @@ function LedgerSection({ type }: LedgerSectionProps) {
               setGroupId(v === 'all' ? 'all' : Number(v));
               setPage(1);
             }}
-            className="h-10 px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="h-10 w-full px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="all">전체</option>
             {dukActiveGroups.map((g) => (
@@ -91,7 +91,7 @@ function LedgerSection({ type }: LedgerSectionProps) {
             ))}
           </select>
         </div>
-        <div>
+        <div className="min-w-[150px]">
           <label className="block text-xs font-medium text-gray-600 mb-1">기간 시작</label>
           <input
             type="date"
@@ -100,10 +100,10 @@ function LedgerSection({ type }: LedgerSectionProps) {
               setStartDate(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="h-10 w-full px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
-        <div>
+        <div className="min-w-[150px]">
           <label className="block text-xs font-medium text-gray-600 mb-1">기간 종료</label>
           <input
             type="date"
@@ -112,10 +112,10 @@ function LedgerSection({ type }: LedgerSectionProps) {
               setEndDate(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="h-10 w-full px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
-        <div className="flex-1 min-w-[200px]">
+        <div className="flex-1 min-w-[220px] ml-auto">
           <label className="block text-xs font-medium text-gray-600 mb-1">회원 검색</label>
           <input
             value={keyword}
@@ -135,21 +135,21 @@ function LedgerSection({ type }: LedgerSectionProps) {
         </button>
       </div>
 
-      {/* v1.7 — 기간 검증 인라인 에러 */}
+      {/* 기간 검증 인라인 에러 */}
       {periodInvalid && (
         <p className="mb-3 text-xs text-rose-600">
           기간 시작은 종료보다 이전이어야 합니다.
         </p>
       )}
 
-      {/* 요약 카드 */}
+      {/* 요약 카드 — indigo 톤 통일 (RankingTab 컨텍스트 카드와 정합) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-        <div className="bg-gray-50 border border-gray-100 rounded-lg px-4 py-3">
-          <p className="text-xs text-gray-500">필터 결과</p>
+        <div className="bg-indigo-50/60 border border-indigo-100 rounded-lg px-4 py-3">
+          <p className="text-xs text-indigo-700/80">필터 결과</p>
           <p className="text-xl font-semibold text-gray-900">{filtered.length.toLocaleString()} 건</p>
         </div>
-        <div className="bg-gray-50 border border-gray-100 rounded-lg px-4 py-3">
-          <p className="text-xs text-gray-500">{isEarn ? '획득 합계' : '사용 합계'}</p>
+        <div className="bg-indigo-50/60 border border-indigo-100 rounded-lg px-4 py-3">
+          <p className="text-xs text-indigo-700/80">{isEarn ? '획득 합계' : '사용 합계'}</p>
           <p className={`text-xl font-semibold ${amountColor}`}>
             {sign}
             {total.toLocaleString()} DUK
@@ -223,14 +223,19 @@ export default function HistoryTab() {
 
   return (
     <div>
-      {/* sub-tab 메뉴 */}
+      {/* 안내 문구 */}
+      <p className="text-sm text-gray-500 mb-4">
+        회원의 덕력 적립·소비 내역을 영역별로 조회합니다. 그룹·기간·회원 조건으로 필터링 가능합니다.
+      </p>
+
+      {/* sub-tab 메뉴 — 메인 탭과 높이 통일 (py-3) */}
       <div className="border-b border-gray-200 mb-5">
         <nav className="-mb-px flex gap-1">
           {SUB_TABS.map((t) => (
             <button
               key={t.key}
               onClick={() => setSubTab(t.key)}
-              className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                 subTab === t.key
                   ? 'border-indigo-600 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'

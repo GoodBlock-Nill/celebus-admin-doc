@@ -75,14 +75,19 @@ export default function RankingTab() {
 
   return (
     <div>
-      {/* 필터 바 */}
-      <div className="flex flex-wrap gap-3 items-end mb-4">
-        <div>
+      {/* 안내 문구 */}
+      <p className="text-sm text-gray-500 mb-4">
+        회원의 그룹별·기간별 누적 덕력 순위를 조회합니다. 시즌과 무관하게 년·월 단위로 자유롭게 기간을 지정할 수 있습니다.
+      </p>
+
+      {/* 필터 바 — flex-wrap 제거, 고정 너비 + 검색은 우측 스페이서 */}
+      <div className="flex items-end gap-3 mb-4">
+        <div className="min-w-[180px]">
           <label className="block text-xs font-medium text-gray-600 mb-1">그룹</label>
           <select
             value={groupId}
             onChange={(e) => handleGroupChange(Number(e.target.value))}
-            className="h-10 px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="h-10 w-full px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             {dukActiveGroups.map((g) => (
               <option key={g.id} value={g.id}>
@@ -118,7 +123,7 @@ export default function RankingTab() {
         </div>
 
         {unit === 'year' ? (
-          <div>
+          <div className="min-w-[110px]">
             <label className="block text-xs font-medium text-gray-600 mb-1">년</label>
             <select
               value={year}
@@ -126,7 +131,7 @@ export default function RankingTab() {
                 setYear(Number(e.target.value));
                 setPage(1);
               }}
-              className="h-10 px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="h-10 w-full px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               {activeYears.map((y) => (
                 <option key={y} value={y}>
@@ -171,7 +176,7 @@ export default function RankingTab() {
           </div>
         )}
 
-        <div className="flex-1 min-w-[220px]">
+        <div className="flex-1 min-w-[240px] ml-auto">
           <label className="block text-xs font-medium text-gray-600 mb-1">회원 검색</label>
           <input
             value={keyword}
@@ -185,8 +190,8 @@ export default function RankingTab() {
         </div>
       </div>
 
-      {/* v1.7 — 컨텍스트 카드 */}
-      <div className="mb-4 flex items-center gap-2 px-4 py-2.5 bg-indigo-50/60 border border-indigo-100 rounded-lg text-sm">
+      {/* 컨텍스트 카드 — indigo 톤 표준 */}
+      <div className="mb-4 flex items-center gap-2 px-4 py-3 bg-indigo-50/60 border border-indigo-100 rounded-lg text-sm">
         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-indigo-600 text-white">
           {periodLabel}
         </span>
