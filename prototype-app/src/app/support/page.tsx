@@ -1,156 +1,63 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import SubPageHeader from '@/components/layout/SubPageHeader';
-import GuestBanner from '@/components/ui/GuestBanner';
-import PresetSelector from '@/components/dev/PresetSelector';
-import { useUIStore } from '@/stores/useUIStore';
-import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
-import { useSupportEvents, useInvestSupport } from '@/lib/hooks/useSupport';
-import { useUserCurrency } from '@/lib/hooks/useUser';
-import { Skeleton } from '@/components/ui/skeleton';
-import { SUPPORT_PRESET_OPTIONS, applySupportPreset, type SupportPreset } from '@/lib/presets/support';
-import { formatNumber } from '@/lib/utils';
-import EventCard from '@/components/support/EventCard';
-import ConfirmModal from '@/components/ui/ConfirmModal';
-import EmptyState from '@/components/ui/EmptyState';
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Sparkles, Check } from 'lucide-react';
+import SubHeader from '@/components/layout/SubHeader';
+import { FilterTabs, Card, ProgressBar } from '@/components/ui/primitives';
+import { SUPPORTS, ME } from '@/lib/data';
+import { cn } from '@/lib/utils';
 
 export default function SupportPage() {
-  const { artistName, activeArtistId } = useActiveArtist();
-  const addToast = useUIStore((s) => s.addToast);
-  const queryClient = useQueryClient();
-  const { data: events, isLoading } = useSupportEvents(activeArtistId);
-  const { data: currency } = useUserCurrency(activeArtistId);
-  const investMutation = useInvestSupport(activeArtistId);
+  const [filter, setFilter] = useState('전체');
+  const [mineOnly, setMineOnly] = useState(false);
 
-  const [preset, setPreset] = useState('mixed');
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [forceEmpty, setForceEmpty] = useState(false);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [showConfirmModal, setShowConfirmModal] = useState<{ eventId: string; amount: number } | null>(null);
-  const [investAmounts, setInvestAmounts] = useState<Record<string, number>>({});
-  // Fix #12: 완료 이벤트 결과 이미지 전체화면
-  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
-
-  const myHeldPt = currency?.virtueHeld ?? 0;
-
-  const handlePreset = async (key: string) => {
-    if (key === 'guest') {
-      setIsLoggedIn(false);
-      setForceEmpty(false);
-      setPreset(key);
-      return;
-    }
-    if (key === 'guestEmpty') {
-      setIsLoggedIn(false);
-      setForceEmpty(true);
-      setPreset(key);
-      return;
-    }
-    setIsLoggedIn(true);
-    setForceEmpty(false);
-    setPreset(key);
-    await applySupportPreset(key as SupportPreset, queryClient);
-    setExpandedId(null);
-  };
-
-  // Auto-expand first active event — useEffect avoids render-time side effects
-  const firstActiveId = events?.find((e) => e.status === 'active')?.id;
-  useEffect(() => {
-    if (expandedId === null && firstActiveId) {
-      setExpandedId(firstActiveId);
-    }
-  }, [firstActiveId]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleInvest = useCallback((eventId: string) => {
-    if (!isLoggedIn) { addToast('info', '로그인 화면으로 이동합니다'); return; }
-    const amount = investAmounts[eventId] || 100;
-    setShowConfirmModal({ eventId, amount });
-  }, [isLoggedIn, investAmounts, addToast]);
-
-  const confirmInvest = useCallback(async () => {
-    if (!showConfirmModal) return;
-    try {
-      await investMutation.mutateAsync({ eventId: showConfirmModal.eventId, amount: showConfirmModal.amount });
-      addToast('success', `덕력 ${showConfirmModal.amount}DUK 응원 완료!`);
-    } catch {
-      addToast('error', '앗, 응원이 전달되지 않았어요. 다시 시도해 주세요');
-    }
-    setShowConfirmModal(null);
-  }, [showConfirmModal, investMutation, addToast]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-dvh bg-white pb-20">
-        <SubPageHeader title={`${artistName} 응원하기`} backHref="/artist" />
-        <div className="px-4 mt-4 space-y-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="h-24 w-full rounded-2xl" />
-          ))}
-        </div>
-      </div>
-    );
-  }
+  let list = SUPPORTS;
+  if (filter === '참여가능') list = list.filter((s) => s.status === 'active');
+  else if (filter === '종료') list = list.filter((s) => s.status !== 'active');
+  if (mineOnly) list = list.filter((s) => s.myDuk > 0);
 
   return (
-    <div className="min-h-dvh bg-white pb-20">
-      {!isLoggedIn && <GuestBanner />}
-      <SubPageHeader title={`${artistName} 응원하기`} backHref="/artist" />
+    <div className="min-h-dvh pb-8">
+      <SubHeader title="SUPPORT" right={<span className="flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-[11px] font-semibold"><Sparkles className="size-3 text-primary" />{ME.duk.toLocaleString()}</span>} />
+      <div className="space-y-4 px-4 pt-2">
+        <FilterTabs tabs={['전체', '참여가능', '종료']} active={filter} onChange={setFilter} />
+        <button onClick={() => setMineOnly((v) => !v)} className="flex items-center gap-2 text-[13px] text-text-body">
+          <span className={cn('grid size-4 place-items-center rounded border', mineOnly ? 'border-primary bg-primary' : 'border-border-card')}>{mineOnly && <Check className="size-3 text-white" />}</span>
+          내 참여만 보기
+        </button>
 
-      <div className="px-4 mt-4 space-y-3">
-        {!forceEmpty && (events ?? []).map((event) => (
-          <EventCard
-            key={event.id}
-            event={event}
-            isExpanded={expandedId === event.id}
-            onToggle={() => setExpandedId(expandedId === event.id ? null : event.id)}
-            investAmount={investAmounts[event.id] || 100}
-            onAmountChange={(v) => setInvestAmounts((prev) => ({ ...prev, [event.id]: v }))}
-            onInvest={() => handleInvest(event.id)}
-            myHeldPt={myHeldPt}
-            onImageFullscreen={setFullscreenImage}
-          />
-        ))}
-
-        {(forceEmpty || (events ?? []).length === 0) && (
-          <EmptyState
-            emoji="💜"
-            title="현재 진행 중인 서포트 이벤트가 없습니다"
-          />
-        )}
-      </div>
-
-      <ConfirmModal
-        open={!!showConfirmModal}
-        title="덕력 응원"
-        confirmLabel="응원"
-        onConfirm={confirmInvest}
-        onCancel={() => setShowConfirmModal(null)}
-      >
-        {showConfirmModal && (
-          <>
-            <p className="text-sm text-gray-700 leading-relaxed mb-2">덕력 {formatNumber(showConfirmModal.amount)}DUK를 응원합니다.</p>
-            <p className="text-xs text-violet-600 font-medium mb-2">응원 후 잔액: {formatNumber(Math.max(0, myHeldPt - showConfirmModal.amount))}DUK</p>
-            <p className="text-sm text-gray-900 font-semibold mb-3">한번 응원하면 돌이킬 수 없어요.<br />그래도 응원할까요?</p>
-            <div className="text-xs text-gray-500 space-y-1">
-              <p>달성 시: 서포트 집행에 사용됩니다</p>
-              <p>미달성 시: 전액 반환됩니다</p>
-            </div>
-          </>
-        )}
-      </ConfirmModal>
-
-      <PresetSelector presets={SUPPORT_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
-
-      {/* Fix #12: 결과 이미지 전체화면 오버레이 */}
-      {fullscreenImage && (
-        <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center" role="dialog" aria-modal="true" aria-label="결과 이미지 전체화면" onClick={() => setFullscreenImage(null)}>
-          <button className="absolute top-4 right-4 text-white text-2xl z-10">✕</button>
-          <img src={fullscreenImage} alt="" className="max-w-full max-h-full object-contain" />
+        <div className="space-y-3">
+          {list.map((s) => {
+            const ended = s.status === 'closed-fail' || s.status === 'cancelled';
+            const achieved = s.status === 'achieved';
+            return (
+              <Link key={s.id} href="/support/detail" className="block">
+                <Card className="overflow-hidden p-0">
+                  <div className="relative">
+                    <Image src={s.image} alt={s.title} width={375} height={170} className={cn('h-44 w-full object-cover', ended && 'opacity-50')} />
+                    <span className="absolute left-3 top-3 rounded-full bg-ticket/90 px-2 py-0.5 text-[10px] font-medium text-white">💜 서포트</span>
+                    {ended && <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-8deg] rounded-full border-2 border-error/80 px-4 py-1 text-[14px] font-bold text-error/90">CLOSED</span>}
+                  </div>
+                  <div className="space-y-1.5 p-3.5">
+                    <p className="text-[12px] text-text-disabled">💜 {s.artist}</p>
+                    <p className="text-[15px] font-semibold">{s.title}</p>
+                    <div className="flex items-center justify-between text-[12px]">
+                      <span className="text-text-body">목표금액 <b className="text-foreground">{s.goal.toLocaleString()} DUK</b> {s.percent === 100 && <span className="text-primary">달성</span>} {ended && <span className="text-error">미달성</span>}</span>
+                      <span className={cn('font-semibold', s.percent === 100 ? 'text-success' : 'text-primary')}>{s.percent}%</span>
+                    </div>
+                    <ProgressBar percent={s.percent} barClassName={s.percent === 100 ? 'bg-success' : ''} />
+                    {s.status === 'active' && <p className="text-[12px] text-text-body"><span className="mr-2 rounded bg-primary-900 px-1.5 py-0.5 text-purple-light">D-{s.dday}</span>{s.period}</p>}
+                    {achieved && <p className="text-[12px] text-text-body">서포트 진행 예정</p>}
+                    {ended && <p className="text-[12px] text-error">서포트가 {s.status === 'cancelled' ? '취소되었어요' : '미달성으로 종료'}</p>}
+                  </div>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   );
 }
-

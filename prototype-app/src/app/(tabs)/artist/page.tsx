@@ -1,166 +1,157 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { usePullToRefresh } from '@/lib/hooks/usePullToRefresh';
-import ArtistHeader from '@/components/artist/ArtistHeader';
-import OnboardingOverlay from '@/components/artist/OnboardingOverlay';
-import ServiceCard from '@/components/cards/ServiceCard';
-import PresetSelector from '@/components/dev/PresetSelector';
-import { useUIStore } from '@/stores/useUIStore';
-import AppHeader from '@/components/layout/AppHeader';
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ChevronDown, Trophy, Star, Ticket, Gift, ChevronRight, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ARTIST_PRESET_OPTIONS, getArtistPresetState } from '@/lib/presets/artist';
-import { SERVICE_GROUP_LABELS } from '@/lib/types';
-import type { ServiceCardData, ServiceCardGroup } from '@/lib/types';
-
-// TODO: DB에서 동적 계산 (퀘스트 진행률, 시즌 순위, 래플 건수 등)
-const ARTIST_CARDS: ServiceCardData[] = [
-  // 미션 그룹
-  { id: 'challenge', group: 'mission', icon: '🎯', title: 'V01D 챌린지', statusText: '2/5장', href: '/quest', comingSoon: false },
-  { id: 'daily-mission', group: 'mission', icon: '📋', title: '일일 미션', statusText: '도전 중', href: '/daily-mission', comingSoon: false },
-  { id: 'support', group: 'mission', icon: '💜', title: 'V01D 응원하기', statusText: '진행중 70%', href: '/support', comingSoon: false },
-  // 내기록 그룹
-  { id: 'virtue', group: 'record', icon: '⭐', title: '덕력', statusText: '시즌 38위', href: '/virtue', comingSoon: false },
-  { id: 'collection', group: 'record', icon: '🃏', title: '컬렉션', statusText: '12종', href: '/collection', comingSoon: false },
-  { id: 'raffle', group: 'record', icon: '🎁', title: 'Raffle', statusText: '래플 2건 진행중', href: '/raffle', comingSoon: false },
-  { id: 'fandom-level', group: 'record', icon: '🏆', title: 'V01D 키우기', statusText: 'Lv.3 (40K/70K)', href: '/fandom-level', comingSoon: false },
-  // 더보기 그룹
-  { id: 'info', group: 'more', icon: '📰', title: '정보', statusText: '새소식 3', href: '/info', comingSoon: false },
-  { id: 'memory', group: 'more', icon: '📸', title: '기억 저장소', statusText: '기억 8개', href: '/memory', comingSoon: false },
-];
-
-// 비로그인(guest) 시 로그인 없이 열람 가능한 카드 (서비스 수준 데이터, 읽기 전용)
-// 나머지 카드(challenge, daily-mission, collection, memory)는 로그인 필요 → 토스트 표시
-const GUEST_OPEN_CARDS = new Set(['virtue', 'support', 'fandom-level', 'raffle', 'info']);
-
-// 비로그인 시 개인화 데이터를 숨겨야 하는 카드 ID 목록
-const GUEST_PERSONAL_CARDS = new Set(['challenge', 'daily-mission', 'virtue', 'collection', 'memory']);
-
-function getGuestStatusText(card: ServiceCardData): string {
-  if (GUEST_PERSONAL_CARDS.has(card.id)) return '-';
-  return card.statusText;
-}
-
-const GROUP_ORDER: ServiceCardGroup[] = ['mission', 'record', 'more'];
-
-function groupCards(cards: ServiceCardData[]) {
-  const grouped: Record<ServiceCardGroup, ServiceCardData[]> = {
-    mission: [],
-    record: [],
-    more: [],
-  };
-  for (const card of cards) {
-    grouped[card.group].push(card);
-  }
-  return grouped;
-}
+import { Card, ProgressBar } from '@/components/ui/primitives';
+import { ARTIST, ME, GROW, SUPPORTS, INFO_TODAY, MY_MEMORIES, RAFFLES } from '@/lib/data';
 
 export default function ArtistPage() {
-  const [cards, setCards] = useState(ARTIST_CARDS);
-  const [preset, setPreset] = useState('loginContent');
-  const [isGuest, setIsGuest] = useState(false);
-  const { showOnboarding, setShowOnboarding, addToast } = useUIStore();
-  const presetState = getArtistPresetState(preset);
-
-  const handlePreset = (key: string) => {
-    setPreset(key);
-    setIsGuest(key === 'guest' || key === 'guestEmpty');
-    if (key === 'onboarding') setShowOnboarding(true);
-  };
-
-  // 온보딩: 첫 진입 시 1회
-  useEffect(() => {
-    const key = 'celebus-artist-onboarding-done';
-    if (!localStorage.getItem(key)) {
-      setShowOnboarding(true);
-    }
-  }, [setShowOnboarding]);
-
-  const dismissOnboarding = useCallback(() => {
-    localStorage.setItem('celebus-artist-onboarding-done', 'true');
-    setShowOnboarding(false);
-  }, [setShowOnboarding]);
-
-  // Pull-to-Refresh 시뮬레이션
-  const handleRefresh = useCallback(() => {
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        setCards([...ARTIST_CARDS]);
-        resolve();
-      }, 800);
-    });
-  }, []);
-
-  const { isRefreshing, handleTouchStart, handleTouchEnd } = usePullToRefresh(handleRefresh);
-
-  const grouped = groupCards(cards);
+  const [followed, setFollowed] = useState(true);
 
   return (
-    <div
-      className="min-h-dvh bg-white"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
-      {/* 앱 헤더 (홈과 동일) */}
-      <AppHeader isGuest={isGuest} />
-
+    <div className="pb-6">
       {/* 아티스트 헤더 */}
-      <ArtistHeader />
-
-      {/* Pull-to-Refresh 표시 */}
-      {isRefreshing && (
-        <div className="flex justify-center py-3">
-          <div className="w-5 h-5 border-2 border-violet-400 border-t-transparent rounded-full animate-spin" />
+      <div className="relative h-56">
+        <Image src="/v01d/group.jpg" alt="V01D" width={375} height={224} className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-4">
+          <button className="flex items-center gap-1 text-[22px] font-bold text-white">{ARTIST.name} <ChevronDown className="size-5" /></button>
+          <div className="mt-2 flex items-center justify-between">
+            <div className="flex items-center gap-3 text-[12px] text-white/90">
+              <span>내 덕력 <b className="text-purple-light">✦ {ME.duk.toLocaleString()} DUK</b></span>
+              <span>키우기 <b>Lv.{ME.growLevel}</b></span>
+            </div>
+            <button onClick={() => setFollowed((v) => !v)} className={cn('rounded-full px-3 py-1.5 text-[12px] font-medium', followed ? 'bg-muted text-text-body' : 'bg-primary text-white')}>
+              {followed ? '✓ 팔로우' : '+ 팔로우'}
+            </button>
+          </div>
         </div>
-      )}
-
-      {/* 카드 그리드 — 흰색 라운드 컨테이너로 ArtistHeader와 시각적 분리 */}
-      <div className="bg-white rounded-t-3xl -mt-4 relative z-10 px-4 pt-5 pb-28 space-y-6 min-h-[60vh] shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
-        {GROUP_ORDER.map((group) => {
-          const groupCards = grouped[group];
-          if (groupCards.length === 0) return null;
-
-          return (
-            <section key={group}>
-              {/* 그룹 라벨 */}
-              <div className="flex items-center gap-2 mb-3">
-                <span className={cn(
-                  'text-xs font-bold tracking-wider',
-                  group === 'mission' ? 'text-violet-500' : group === 'record' ? 'text-blue-500' : 'text-gray-400'
-                )}>
-                  {SERVICE_GROUP_LABELS[group]}
-                </span>
-                <div className="flex-1 h-px bg-gray-100" />
-              </div>
-
-              {/* 카드 그리드: 2열 기본, 홀수 행 마지막 카드 1열 풀 */}
-              <div className="grid grid-cols-2 gap-3">
-                {groupCards.map((card, idx) => {
-                  const isLastOdd = groupCards.length % 2 === 1 && idx === groupCards.length - 1;
-                  // 비로그인 시 GUEST_OPEN_CARDS 외 카드는 클릭 시 로그인 토스트
-                  const isGuestBlocked = isGuest && !GUEST_OPEN_CARDS.has(card.id);
-                  // Fix #5: 비로그인 시 개인화 데이터는 "-" 표시
-                  const displayCard = isGuest ? { ...card, statusText: getGuestStatusText(card) } : card;
-                  return (
-                    <div key={card.id} className={isLastOdd ? 'col-span-2' : ''} onClick={isGuestBlocked ? (e) => { e.preventDefault(); addToast('info', '로그인 화면으로 이동합니다'); } : undefined}>
-                      <ServiceCard
-                        card={displayCard}
-                        fullWidth={isLastOdd}
-                        disabled={false}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
       </div>
 
-      {/* 온보딩 오버레이 */}
-      <OnboardingOverlay onDismiss={dismissOnboarding} />
+      <div className="space-y-6 px-4 pt-5">
+        {/* 키우기·응원 하이라이트 */}
+        <div className="flex gap-3 overflow-x-auto no-scrollbar">
+          <Link href="/fandom" className="w-[88%] shrink-0">
+            <Card className="gra-amber border-0 p-4">
+              <p className="text-[13px] text-white/90">{ARTIST.name} 키우기</p>
+              <p className="mt-0.5 text-[18px] font-bold text-white">Lv.{GROW.level}</p>
+              <div className="mt-2 flex items-center gap-2">
+                <ProgressBar percent={GROW.percent} className="bg-white/25" barClassName="bg-white" />
+                <span className="text-[12px] font-bold text-white">{GROW.percent}%</span>
+              </div>
+            </Card>
+          </Link>
+          <Link href="/support" className="w-[88%] shrink-0">
+            <Card className="gra-violet-pink border-0 p-4">
+              <p className="text-[13px] text-white/90">{SUPPORTS[0].title}</p>
+              <p className="mt-0.5 text-[13px] font-bold text-white">목표 달성 임박!</p>
+              <div className="mt-2 flex items-center gap-2">
+                <ProgressBar percent={SUPPORTS[0].percent} className="bg-white/25" barClassName="bg-white" />
+                <span className="text-[12px] font-bold text-white">{SUPPORTS[0].percent}%</span>
+              </div>
+            </Card>
+          </Link>
+        </div>
 
-      <PresetSelector presets={ARTIST_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
+        {/* 오늘 스케줄 */}
+        <Link href="/info">
+          <Card className="flex items-center justify-between p-4">
+            <div className="flex items-center gap-2 text-[13px]"><span>📅</span> 오늘 일정을 확인해보세요</div>
+            <ChevronRight className="size-4 text-text-disabled" />
+          </Card>
+        </Link>
+
+        {/* 미션 */}
+        <section>
+          <h2 className="mb-3 text-[16px] font-semibold">미션</h2>
+          <Card className="divide-y divide-border-card">
+            <MissionRow href="/quest" icon={<Sparkles className="size-4 text-primary" />} title="V01D 퀘스트" badge="진행중 · EP.1" />
+            <MissionRow href="/daily" icon={<Star className="size-4 text-gold" />} title="오늘의 할 일" badge="0/2 완료" />
+            <MissionRow href="/support" icon={<Trophy className="size-4 text-ticket" />} title="V01D 응원하기" badge="진행중 85%" />
+            <MissionRow href="/fandom" icon={<Trophy className="size-4 text-amber-400" />} title="V01D 키우기" badge={`Lv.${GROW.level}`} />
+          </Card>
+        </section>
+
+        {/* RAFFLE NOW */}
+        <Link href="/raffle">
+          <Card className="gra-violet-pink flex items-center justify-between border-0 p-4">
+            <div>
+              <p className="text-[15px] font-bold text-white">RAFFLE NOW</p>
+              <p className="text-[12px] text-white/80">진행중 래플 {RAFFLES.filter((r) => r.status === 'active').length}건</p>
+            </div>
+            <Gift className="size-6 text-white" />
+          </Card>
+        </Link>
+
+        {/* 내 기록 */}
+        <section>
+          <h2 className="mb-3 text-[16px] font-semibold">내 기록</h2>
+          <div className="grid grid-cols-3 gap-2">
+            <RecordCard href="/ranking" icon={<Star className="size-4 text-gold" />} label="덕력" value={`${ME.rank}위`} />
+            <RecordCard href="/collection" icon={<Ticket className="size-4 text-ticket" />} label="응모권" value={`${ME.tickets}장`} />
+            <RecordCard href="/raffle" icon={<Gift className="size-4 text-primary" />} label="래플" value="2건" />
+          </div>
+        </section>
+
+        {/* 소식·일정 프리뷰 */}
+        <section>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-[16px] font-semibold">소식 · 일정 <span className="ml-1 rounded bg-primary px-1.5 py-0.5 text-[10px] text-white">NEW</span></h2>
+            <Link href="/info" className="text-[13px] text-text-body">더보기 ›</Link>
+          </div>
+          <Card className="divide-y divide-border-card">
+            {INFO_TODAY.slice(0, 3).map((i) => (
+              <Link key={i.id} href={`/info/${i.id}`} className="flex items-center gap-2 p-3.5">
+                <span>{i.type === 'schedule' ? '📅' : '📰'}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[13px]">{i.official && <span className="mr-1 text-primary">공식</span>}{i.title}</p>
+                  <p className="text-[11px] text-text-disabled">{i.time}{i.sub ? ` · ${i.sub}` : ''}</p>
+                </div>
+              </Link>
+            ))}
+          </Card>
+        </section>
+
+        {/* 기억 저장소 프리뷰 */}
+        <section>
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-[16px] font-semibold">기억 저장소</h2>
+            <Link href="/memory" className="text-[13px] text-text-body">더보기 ›</Link>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            {MY_MEMORIES.map((m) => (
+              <Link key={m.id} href={`/memory/${m.id}`} className="relative overflow-hidden rounded-xl">
+                <Image src={m.image!} alt="" width={120} height={120} className="aspect-square w-full object-cover" />
+                <span className="absolute bottom-1 left-1 text-[14px]">{m.emotion}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
+  );
+}
+
+function MissionRow({ href, icon, title, badge }: { href: string; icon: React.ReactNode; title: string; badge: string }) {
+  return (
+    <Link href={href} className="flex items-center justify-between p-3.5">
+      <span className="flex items-center gap-2.5 text-[14px]">{icon}{title}</span>
+      <span className="flex items-center gap-2 text-[12px] text-text-body">{badge}<ChevronRight className="size-4 text-text-disabled" /></span>
+    </Link>
+  );
+}
+
+function RecordCard({ href, icon, label, value }: { href: string; icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <Link href={href}>
+      <Card className="flex flex-col items-center gap-1 p-3">
+        {icon}
+        <span className="text-[11px] text-text-disabled">{label}</span>
+        <span className="text-[14px] font-bold">{value}</span>
+      </Card>
+    </Link>
   );
 }

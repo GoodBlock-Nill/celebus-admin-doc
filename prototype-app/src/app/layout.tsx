@@ -1,24 +1,20 @@
 import type { Metadata, Viewport } from 'next';
-import { Suspense } from 'react';
-import QueryProvider from '@/components/providers/QueryProvider';
-import { Toaster } from '@/components/ui/sonner';
-import OfflineIndicator from '@/components/pwa/OfflineIndicator';
-import InstallPrompt from '@/components/pwa/InstallPrompt';
+import { Noto_Sans_KR } from 'next/font/google';
+import { Toaster } from 'sonner';
 import './globals.css';
-import { Geist } from 'next/font/google';
-import { cn } from '@/lib/utils';
 
-const geist = Geist({ subsets: ['latin', 'latin-ext'], variable: '--font-sans' });
+const noto = Noto_Sans_KR({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-noto',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'CELEBUS',
   description: 'CELEBUS - K-pop Fan Entertainment Platform',
   manifest: '/manifest.json',
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'CELEBUS',
-  },
+  appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'CELEBUS' },
 };
 
 export const viewport: Viewport = {
@@ -27,25 +23,18 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   viewportFit: 'cover',
-  themeColor: '#7C3AED',
+  themeColor: '#121212',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={cn('font-sans', geist.variable)}>
-      <body className="antialiased">
-        <QueryProvider>
-          <Suspense fallback={<div className="min-h-dvh bg-white" />}>
-            {children}
-          </Suspense>
-          <OfflineIndicator />
-          <InstallPrompt />
-          <Toaster position="top-center" richColors closeButton />
-        </QueryProvider>
+    <html lang="ko" className={noto.variable}>
+      <body className="bg-black">
+        {/* 375px mobile shell, centered on larger screens */}
+        <div className="relative mx-auto flex min-h-dvh w-full max-w-shell flex-col bg-background text-foreground">
+          {children}
+        </div>
+        <Toaster position="top-center" theme="dark" richColors closeButton />
       </body>
     </html>
   );

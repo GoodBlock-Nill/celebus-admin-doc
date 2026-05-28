@@ -1,17 +1,12 @@
-'use client';
+import BottomNav from '@/components/layout/BottomNav';
 
-import { Suspense } from 'react';
-import BottomTabBar from '@/components/layout/BottomTabBar';
+export const dynamic = 'force-dynamic';
 
 export default function TabsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-dvh">
-      <main className="pb-tab-bar">
-        <Suspense fallback={<div className="min-h-dvh bg-white pb-20" />}>
-          {children}
-        </Suspense>
-      </main>
-      <BottomTabBar />
+    <div className="flex min-h-dvh flex-col">
+      <div className="flex-1 pb-2">{children}</div>
+      <BottomNav />
     </div>
   );
 }
