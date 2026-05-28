@@ -130,58 +130,91 @@ export const artistGroups: ArtistGroup[] = [
   },
 ];
 
-// 69 멤버 — 운영 데이터 일부 + 자동 생성
-const SAMPLE_NAMES = [
-  ['오카다 호노카', '여자', '2003.10.10'],
-  ['후지타 유메', '여자', '2004.04.01'],
-  ['마에다 시오리', '여자', '2001.07.19'],
-  ['이시카와 루나', '여자', '2002.10.15'],
-  ['하시모토 코하루', '여자', '2006.03.21'],
-  ['이케다 유우', '여자', '2003.06.30'],
-  ['모리타 카나데', '여자', '2004.08.08'],
-  ['시미즈 아야카', '여자', '2005.01.03'],
-  ['하야시 미사키', '여자', '2002.04.10'],
-  ['키무라 유키노', '여자', '2003.12.20'],
+// 69 멤버 — 운영 BO /artists/members 전수 실측 (Active 68 + Inactive 1, 업데이트 일시 내림차순)
+type MemberSeed = [name: string, gender: '여자' | '남자', birthday: string, updatedAt: string];
+const ACTIVE_SEED: MemberSeed[] = [
+  ['오카다 호노카', '여자', '2003.10.10', '2026.02.10 13:04'],
+  ['후지타 유메', '여자', '2004.04.01', '2026.02.10 13:02'],
+  ['마에다 시오리', '여자', '2001.07.19', '2026.02.10 13:00'],
+  ['이시카와 루나', '여자', '2002.10.15', '2026.02.10 12:58'],
+  ['하시모토 코하루', '여자', '2006.03.21', '2026.02.10 12:56'],
+  ['이케다 유우', '여자', '2003.06.30', '2026.02.10 12:54'],
+  ['모리타 카나데', '여자', '2004.08.08', '2026.02.10 12:52'],
+  ['시미즈 아야카', '여자', '2005.01.03', '2026.02.10 12:50'],
+  ['하야시 미사키', '여자', '2002.04.10', '2026.02.10 12:47'],
+  ['키무라 유키노', '여자', '2003.12.20', '2026.02.10 12:41'],
+  ['이노우에 마오', '여자', '2000.11.22', '2026.02.10 12:39'],
+  ['마츠모토 아이', '여자', '2004.02.28', '2026.02.10 12:37'],
+  ['사사키 츠키노', '여자', '2005.09.05', '2026.02.10 12:35'],
+  ['야마다 치히로', '여자', '2001.05.25', '2026.02.10 12:32'],
+  ['요시다 코토네', '여자', '2003.02.12', '2026.02.10 12:30'],
+  ['가토 리코', '여자', '2004.09.18', '2026.02.10 12:28'],
+  ['고바야시 히카리', '여자', '2002.06.21', '2026.02.10 12:26'],
+  ['나카무라 사쿠라', '여자', '2005.03.30', '2026.02.10 12:24'],
+  ['야마모토 카에데', '여자', '2003.11.15', '2026.02.10 12:22'],
+  ['이토 나나미', '여자', '2006.07.07', '2026.02.10 12:20'],
+  ['와타나베 유이', '여자', '2001.03.10', '2026.02.10 12:18'],
+  ['다카하시 아카리', '여자', '2004.12.24', '2026.02.10 12:16'],
+  ['스즈키 린', '여자', '2002.08.16', '2026.02.10 12:14'],
+  ['다나카 하나', '여자', '2005.04.03', '2026.02.10 12:12'],
+  ['사토 미츠키', '여자', '2003.01.25', '2026.02.10 12:10'],
+  ['차예나', '여자', '2004.02.14', '2026.02.10 12:08'],
+  ['남보라', '여자', '2000.10.31', '2026.02.10 12:06'],
+  ['진아라', '여자', '2005.05.05', '2026.02.10 12:05'],
+  ['유하영', '여자', '2001.02.09', '2026.02.10 12:02'],
+  ['노은서', '여자', '2003.09.29', '2026.02.10 12:00'],
+  ['홍채림', '여자', '2004.06.14', '2026.02.10 11:58'],
+  ['권소윤', '여자', '2002.01.18', '2026.02.10 11:56'],
+  ['장미래', '여자', '2005.11.11', '2026.02.10 11:55'],
+  ['류아인', '여자', '2003.07.07', '2026.02.10 11:52'],
+  ['배수현', '여자', '1998.03.22', '2026.02.10 11:49'],
+  ['문세은', '여자', '2004.12.01', '2026.02.10 11:46'],
+  ['안지아', '여자', '2002.08.31', '2026.02.10 11:44'],
+  ['신하린', '여자', '2006.04.20', '2026.02.10 11:41'],
+  ['임소희', '여자', '2001.06.15', '2026.02.10 11:38'],
+  ['서은비', '여자', '2003.10.07', '2026.02.10 11:35'],
+  ['오유진', '여자', '2005.02.28', '2026.02.10 10:42'],
+  ['강다현', '여자', '1999.04.11', '2026.02.10 10:31'],
+  ['윤채원', '여자', '2004.08.03', '2026.02.10 10:27'],
+  ['송민지', '여자', '2000.12.25', '2026.02.10 09:51'],
+  ['한나은', '여자', '2003.05.19', '2026.02.10 10:38'],
+  ['최수아', '여자', '2001.09.14', '2026.02.10 10:37'],
+  ['정예린', '여자', '2006.01.30', '2026.02.10 10:37'],
+  ['박지우', '여자', '2002.11.08', '2026.02.10 09:36'],
+  ['이서연', '여자', '2005.07.22', '2026.02.10 10:36'],
+  ['김하늘', '여자', '2004.03.15', '2026.02.10 10:32'],
+  ['송유찬', '남자', '1995.01.01', '2026.02.03 17:16'],
+  ['정지섭', '남자', '2001.01.01', '2026.02.03 17:15'],
+  ['케빈박', '남자', '2001.01.01', '2026.02.03 17:13'],
+  ['신노스케', '남자', '2005.01.01', '2026.02.03 17:12'],
+  ['조주연', '남자', '2000.05.08', '2026.02.03 16:48'],
+  ['CELEBUS', '여자', '2026.01.01', '2026.01.29 12:34'],
+  ['나고미', '여자', '2007.07.02', '2026.01.29 12:01'],
+  ['세리나', '여자', '2006.05.03', '2026.01.29 11:57'],
+  ['예서', '여자', '2005.08.22', '2026.01.29 11:53'],
+  ['수혜', '여자', '2004.12.13', '2026.01.29 11:50'],
+  ['미유', '여자', '2003.01.09', '2026.01.29 11:47'],
+  ['마시로', '여자', '1999.12.16', '2026.01.29 11:46'],
+  ['정찬우', '남자', '1998.01.26', '2026.01.29 11:18'],
+  ['구준회', '남자', '1997.03.31', '2026.01.29 11:16'],
+  ['김동혁', '남자', '1997.01.03', '2026.01.29 11:13'],
+  ['Bobby', '남자', '1995.12.21', '2026.01.29 11:10'],
+  ['송윤형', '남자', '1995.02.08', '2026.01.29 11:07'],
+  ['김진환', '남자', '1994.02.07', '2026.01.29 11:05'],
 ];
 
-function rng(seed: number) {
-  let s = seed;
-  return () => {
-    s = (s * 1103515245 + 12345) & 0x7fffffff;
-    return s / 0x7fffffff;
-  };
-}
-
-export const artistMembers: ArtistMember[] = (() => {
-  const list: ArtistMember[] = [];
-  const r = rng(2000);
-  for (let i = 0; i < 69; i++) {
-    if (i < SAMPLE_NAMES.length) {
-      const [name, gender, birthday] = SAMPLE_NAMES[i];
-      list.push({
-        id: i + 1,
-        status: 'Active',
-        name,
-        groupCount: 1,
-        birthday,
-        gender: gender as '여자' | '남자',
-        updatedAt: `2026.02.10 ${String(13 - Math.floor(i / 3)).padStart(2, '0')}:${String(4 - (i % 5)).padStart(2, '0')}`.replace(/-\d+/, '00'),
-      });
-    } else {
-      const isInactive = i === 68;
-      list.push({
-        id: i + 1,
-        status: isInactive ? 'Inactive' : 'Active',
-        name: `멤버${String(i + 1).padStart(3, '0')}`,
-        groupCount: r() > 0.85 ? 2 : 1,
-        birthday: `200${Math.floor(r() * 6)}.0${Math.floor(r() * 9) + 1}.${String(Math.floor(r() * 28) + 1).padStart(2, '0')}`,
-        gender: r() > 0.5 ? '여자' : '남자',
-        updatedAt: `2026.02.${String(Math.floor(r() * 9) + 1).padStart(2, '0')} ${String(Math.floor(r() * 12) + 9).padStart(2, '0')}:${String(Math.floor(r() * 60)).padStart(2, '0')}`,
-      });
-    }
-  }
-  return list;
-})();
+export const artistMembers: ArtistMember[] = [
+  ...ACTIVE_SEED.map((s, i) => ({
+    id: i + 1,
+    status: 'Active' as ArtistStatus,
+    name: s[0],
+    groupCount: 1,
+    birthday: s[2],
+    gender: s[1],
+    updatedAt: s[3],
+  })),
+  { id: 69, status: 'Inactive', name: '테스트', groupCount: 0, birthday: '2005.02.09', gender: '남자', updatedAt: '2026.02.10 10:44' },
+];
 
 export const artistStats = {
   groups: { total: 5, active: 5, inactive: 0 },
@@ -205,6 +238,52 @@ export function getGroupMembers(groupId: number) {
   // V01D = id 2 (운영) 근데 운영에서 V01D 클릭 시 id=4 였음. mock도 id=2로 매핑
   return groupId === 2 || groupId === 4 ? v01dMembers : [];
 }
+
+// 포지션·소속사 — 운영 BO 실측 (운영자 노출명 + 유저 노출명 KO/EN/JP + 상태)
+export type SettingStatus = '사용' | '미사용';
+
+export interface ArtistPosition {
+  id: number;
+  status: SettingStatus;
+  operatorName: string; // 운영자 노출명
+  nameKO: string;
+  nameEN: string;
+  nameJP: string;
+}
+
+export interface ArtistAgency {
+  id: number;
+  status: SettingStatus;
+  operatorName: string;
+  nameKO: string;
+  nameEN: string;
+  nameJP: string;
+}
+
+// 운영 BO /artists/groups/positions 실측 (16건, 전부 사용)
+export const artistPositions: ArtistPosition[] = [
+  { id: 1, status: '사용', operatorName: '드럼', nameKO: '드럼', nameEN: 'Drums', nameJP: 'ドラム' },
+  { id: 2, status: '사용', operatorName: '기타', nameKO: '기타', nameEN: 'Guitar', nameJP: 'ギター' },
+  { id: 3, status: '사용', operatorName: '키보드', nameKO: '키보드', nameEN: 'Keyboard', nameJP: 'キーボード' },
+  { id: 4, status: '사용', operatorName: '베이스', nameKO: '베이스', nameEN: 'Bass', nameJP: 'ベース' },
+  { id: 5, status: '사용', operatorName: '막내', nameKO: '막내', nameEN: 'Maknae', nameJP: 'マンネ' },
+  { id: 6, status: '사용', operatorName: '리더, 메인 보컬', nameKO: '리더, 메인 보컬', nameEN: 'Leader, Main Vocal', nameJP: 'リーダー, メインボーカル' },
+  { id: 7, status: '사용', operatorName: '리드 래퍼', nameKO: '리드 래퍼', nameEN: 'Lead Rapper', nameJP: 'リードラッパー' },
+  { id: 8, status: '사용', operatorName: '메인 래퍼', nameKO: '메인 래퍼', nameEN: 'Main Rapper', nameJP: 'メインラッパー' },
+  { id: 9, status: '사용', operatorName: '리드 댄서', nameKO: '리드 댄서', nameEN: 'Lead Dancer', nameJP: 'リードダンサー' },
+  { id: 10, status: '사용', operatorName: '메인 댄서', nameKO: '메인 댄서', nameEN: 'Main Dancer', nameJP: 'メインダンサー' },
+  { id: 11, status: '사용', operatorName: '서브 보컬', nameKO: '서브 보컬', nameEN: 'Sub Vocal', nameJP: 'サブボーカル' },
+  { id: 12, status: '사용', operatorName: '리드 보컬', nameKO: '리드 보컬', nameEN: 'Lead Vocal', nameJP: 'リードボーカル' },
+  { id: 13, status: '사용', operatorName: '메인 보컬', nameKO: '메인 보컬', nameEN: 'Main Vocal', nameJP: 'メインボーカル' },
+  { id: 14, status: '사용', operatorName: '비주얼', nameKO: '비주얼', nameEN: 'Visual', nameJP: 'ビジュアル' },
+  { id: 15, status: '사용', operatorName: '센터', nameKO: '센터', nameEN: 'Center', nameJP: 'センター' },
+  { id: 16, status: '사용', operatorName: '리더', nameKO: '리더', nameEN: 'Leader', nameJP: 'リーダー' },
+];
+
+// 운영 BO /artists/members/agencies 실측 (기본 '소속사 없음' 1건)
+export const artistAgencies: ArtistAgency[] = [
+  { id: 1, status: '사용', operatorName: '소속사 없음', nameKO: '소속사 없음', nameEN: 'No agency', nameJP: '所属事務所なし' },
+];
 
 export function getMemberById(id: number): ArtistMember | undefined {
   const m = artistMembers.find((m) => m.id === id);

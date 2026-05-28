@@ -3,67 +3,34 @@
 import { use, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import PageHeader from '@/components/layout/PageHeader';
+import { GlobeAltIcon } from '@heroicons/react/24/outline';
+import Breadcrumb from '@/components/layout/Breadcrumb';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import { getGroupById, getGroupMembers } from '@/mock/artists';
 
 const TABS = [
   { key: 'info', label: '기본정보' },
-  { key: 'sns', label: 'SNS & Link' },
   { key: 'members', label: '멤버' },
 ] as const;
 
 type TabKey = (typeof TABS)[number]['key'];
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="bg-indigo-50/50 border border-indigo-100 rounded-xl overflow-hidden mb-4">
-      <div className="bg-indigo-50 px-5 py-3 border-b border-indigo-100">
-        <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
-      </div>
-      <div className="bg-white p-5">{children}</div>
-    </div>
-  );
-}
-
-function Field({ label, children, className = '' }: { label: string; children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`flex items-center justify-between py-2 ${className}`}>
-      <span className="text-sm text-gray-500">{label}</span>
-      <span className="text-sm text-gray-900 font-medium">{children}</span>
-    </div>
-  );
-}
-
-function MultiLangField({ label, ko, en, jp }: { label: string; ko: string; en: string; jp: string }) {
-  return (
-    <div>
-      <p className="text-sm font-semibold text-gray-900 mb-3">{label}</p>
-      <div className="space-y-3">
-        <div>
-          <p className="text-xs text-gray-500 mb-1">한국어</p>
-          <p className="text-sm text-gray-900 whitespace-pre-line">{ko || '-'}</p>
-        </div>
-        <div>
-          <p className="text-xs text-gray-500 mb-1">영어</p>
-          <p className="text-sm text-gray-900 whitespace-pre-line">{en || '-'}</p>
-        </div>
-        <div>
-          <p className="text-xs text-gray-500 mb-1">일본어</p>
-          <p className="text-sm text-gray-900 whitespace-pre-line">{jp || '-'}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
+const SNS_ROWS = [
+  { key: 'instagram', label: 'Instagram' },
+  { key: 'twitter', label: 'X' },
+  { key: 'youtube', label: 'YouTube' },
+  { key: 'tiktok', label: 'TikTok' },
+  { key: 'homepage', label: 'Homepage' },
+] as const;
 
 export default function GroupDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ tab?: TabKey }> }) {
   const router = useRouter();
   const { id } = use(params);
   const sp = use(searchParams);
-  const [tab, setTab] = useState<TabKey>(sp.tab || 'info');
+  const [tab, setTab] = useState<TabKey>(sp.tab === 'members' ? 'members' : 'info');
   const [active, setActive] = useState(true);
+  const [memberKeyword, setMemberKeyword] = useState('');
 
   const group = getGroupById(parseInt(id, 10));
   const members = getGroupMembers(parseInt(id, 10));
@@ -79,18 +46,34 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
     window.history.replaceState({}, '', url.toString());
   };
 
+  const filteredMembers = members.filter((m) => (memberKeyword ? m.name.includes(memberKeyword) : true));
+
   return (
     <div>
-      <PageHeader
-        title={`그룹상세 (${group.name})`}
-        breadcrumbItems={[
-          { label: '아티스트' },
-          { label: '그룹리스트', href: '/artists/groups' },
-          { label: group.name },
-        ]}
-      />
+      {/* 헤더 */}
+      <div className="mb-6">
+        <Breadcrumb customItems={[{ label: '아티스트' }, { label: '그룹리스트', href: '/artists/groups' }, { label: group.name }]} />
+        <div className="flex items-start justify-between mt-2">
+          <div>
+            <p className="text-sm text-gray-500 mb-1">아티스트 그룹</p>
+            <h1 className="text-[28px] font-bold text-gray-900">{group.name}</h1>
+          </div>
+          {tab === 'members' ? (
+            <button
+              onClick={() => router.push(`/artists/groups/${id}/members/manage`)}
+              className="h-10 px-4 inline-flex items-center text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+            >멤버 관리</button>
+          ) : (
+            <button
+              onClick={() => router.push(`/artists/groups/${id}/edit`)}
+              className="h-10 px-4 inline-flex items-center text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100"
+            >수정하기</button>
+          )}
+        </div>
+      </div>
 
-      <div className="border-b border-gray-200 mb-6 flex items-center justify-between">
+      {/* 탭 */}
+      <div className="border-b border-gray-200 mb-6">
         <div className="flex gap-0">
           {TABS.map((t) => (
             <button
@@ -102,23 +85,35 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
             >{t.label}</button>
           ))}
         </div>
-        {tab === 'members' ? (
-          <button className="h-9 px-4 mb-2 inline-flex items-center text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50">
-            멤버 관리
-          </button>
-        ) : (
-          <button className="h-9 px-4 mb-2 inline-flex items-center text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100">
-            수정하기
-          </button>
-        )}
       </div>
 
       {tab === 'info' && (
-        <div className="space-y-4">
-          <Section title="관리정보">
-            <div className="space-y-1">
-              <div className="flex items-center justify-between py-2">
-                <span className="text-sm text-gray-500">상태</span>
+        <div className="space-y-5">
+          <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-5">
+            {/* 관리정보 카드 */}
+            <div className="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-5">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-base font-bold text-gray-900">관리정보</h2>
+                <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${active ? 'bg-emerald-500 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                  {active ? 'Active' : 'Inactive'}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-fuchsia-500 to-indigo-500 flex items-center justify-center text-white text-xs font-bold">
+                  {group.name.slice(0, 2)}
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">로고</p>
+                  <p className="text-sm font-medium text-gray-900">{group.logoSrc ? '등록됨' : '등록됨'}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between rounded-lg bg-white/70 px-3 py-2.5 mb-5">
+                <div>
+                  <p className="text-sm font-medium text-gray-900">운영 상태</p>
+                  <p className="text-xs text-gray-500">{active ? '노출 중' : '비노출'}</p>
+                </div>
                 <button
                   onClick={() => setActive(!active)}
                   role="switch"
@@ -128,55 +123,66 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
                   <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${active ? 'translate-x-5' : 'translate-x-0.5'}`} />
                 </button>
               </div>
-              <Field label="생성 관리자">{group.createdBy || '-'}</Field>
-              <Field label="생성 일시">{group.createdAt || '-'}</Field>
-              <Field label="최근 수정자">{group.updatedBy || '-'}</Field>
-              <Field label="최근 수정 일시">{group.updatedAt}</Field>
-            </div>
-          </Section>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Section title="로고">
-              <div className="aspect-square w-full bg-black rounded-lg flex items-center justify-center text-white font-bold text-3xl">
-                {group.name.split(' ')[0]}
+              <dl className="space-y-2.5 text-sm">
+                {[
+                  ['생성 관리자', group.createdBy || '-'],
+                  ['생성 일시', group.createdAt || '-'],
+                  ['최근 수정자', group.updatedBy || '-'],
+                  ['최근 수정 일시', group.updatedAt],
+                ].map(([k, v]) => (
+                  <div key={k} className="flex items-center justify-between">
+                    <dt className="text-gray-500">{k}</dt>
+                    <dd className="font-medium text-gray-900">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            {/* 대표 이미지 및 링크 */}
+            <div className="bg-white border border-gray-200 rounded-2xl p-5">
+              <h2 className="text-base font-bold text-gray-900 mb-4">대표 이미지 및 링크</h2>
+              <div className="grid grid-cols-1 xl:grid-cols-[1.6fr_1fr] gap-5">
+                <div>
+                  <p className="text-sm font-medium text-gray-700 mb-2">대표 이미지</p>
+                  <div className="aspect-video w-full rounded-xl bg-gradient-to-br from-purple-300 via-fuchsia-300 to-indigo-300 flex items-center justify-center text-white font-bold text-xl">
+                    {group.name}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-700 mb-2">SNS &amp; Link</p>
+                  <div className="border border-gray-100 rounded-xl divide-y divide-gray-100">
+                    {SNS_ROWS.map((s) => (
+                      <div key={s.key} className="flex items-center justify-between px-3 py-2.5">
+                        <span className="inline-flex items-center gap-2 text-sm text-gray-700">
+                          <GlobeAltIcon className="w-4 h-4 text-gray-400" />{s.label}
+                        </span>
+                        <span className="text-sm text-gray-400 truncate max-w-[140px]">
+                          {(group.sns?.[s.key as keyof typeof group.sns]) || '-'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </Section>
-            <Section title="메인 이미지">
-              <div className="aspect-square w-full bg-gradient-to-br from-purple-200 to-indigo-200 rounded-lg flex items-center justify-center text-gray-500 text-sm">
-                메인 이미지
-              </div>
-            </Section>
+            </div>
           </div>
 
-          <Section title="그룹명">
-            <div className="space-y-1">
-              <Field label="한국어">{group.nameKO || group.name}</Field>
-              <Field label="영어">{group.nameEN || group.name}</Field>
-              <Field label="일본어">{group.nameJP || group.name}</Field>
-            </div>
-          </Section>
-
-          <Section title="그룹 소개">
-            <MultiLangField
-              label=""
-              ko={group.descriptionKO || group.description}
-              en={group.descriptionEN || ''}
-              jp={group.descriptionJP || ''}
-            />
-          </Section>
+          {/* 다국어 콘텐츠 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              { lang: '한국어', name: group.nameKO || group.name, desc: group.descriptionKO || group.description },
+              { lang: '영어', name: group.nameEN || group.name, desc: group.descriptionEN || '' },
+              { lang: '일본어', name: group.nameJP || group.name, desc: group.descriptionJP || '' },
+            ].map((c) => (
+              <div key={c.lang} className="bg-white border border-gray-200 rounded-2xl p-5">
+                <p className="text-xs text-gray-500 mb-2">{c.lang}</p>
+                <h3 className="text-base font-bold text-gray-900 mb-3">{c.name}</h3>
+                <p className="text-sm text-gray-600 whitespace-pre-line leading-relaxed">{c.desc || '-'}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      )}
-
-      {tab === 'sns' && (
-        <Section title="SNS & Link 정보">
-          <div className="space-y-1">
-            <Field label="Instagram">{group.sns?.instagram || '-'}</Field>
-            <Field label="X(twitter)">{group.sns?.twitter || '-'}</Field>
-            <Field label="Youtube">{group.sns?.youtube || '-'}</Field>
-            <Field label="TikTok">{group.sns?.tiktok || '-'}</Field>
-            <Field label="Homepage">{group.sns?.homepage || '-'}</Field>
-          </div>
-        </Section>
       )}
 
       {tab === 'members' && (
@@ -185,6 +191,8 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
             <div className="relative">
               <select className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[140px]">
                 <option>상태(전체)</option>
+                <option>Active</option>
+                <option>Inactive</option>
               </select>
               <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
@@ -192,11 +200,13 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
             <div className="relative">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
+                value={memberKeyword}
+                onChange={(e) => setMemberKeyword(e.target.value)}
                 placeholder="멤버명 입력"
                 className="h-10 pl-9 pr-3 border border-gray-200 rounded-lg text-sm w-[260px] focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
-            <button className="h-10 px-4 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">초기화</button>
+            <button onClick={() => setMemberKeyword('')} className="h-10 px-4 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">초기화</button>
           </div>
 
           <SimpleTable
@@ -209,13 +219,13 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
                   {m.name}
                 </button>
               )},
-              { key: 'position', label: '포지션', width: '140px' },
+              { key: 'position', label: '포지션', width: '140px', render: (m: typeof members[number]) => m.position || '-' },
               { key: 'birthday', label: '생년월일', width: '130px' },
               { key: 'gender', label: '성별', width: '80px' },
               { key: 'registeredAt', label: '등록 일시', width: '160px' },
             ]}
-            rows={members}
-            emptyMessage="등록된 멤버가 없습니다."
+            rows={filteredMembers}
+            emptyMessage="검색 결과가 없습니다."
           />
           <SimplePagination page={1} totalPages={1} onChange={() => {}} />
         </div>
