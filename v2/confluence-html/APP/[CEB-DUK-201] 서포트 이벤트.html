@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>DUK(덕력)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.7</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>버전</td><td>v1.8</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.29</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=328-6538</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -156,22 +156,22 @@ p {
 <h4>상태별 표시</h4>
 <table>
 <tr><th>상태</th><th>아이콘</th><th>표시</th><th>부가 정보</th></tr>
-<tr><td>모집중 (Active)</td><td>유형별 (피그마 참조)</td><td>타이틀 + 달성률 바 {N}%</td><td>목표금액: {N} DUK ㅣ D-{N}</td></tr>
-<tr><td>달성 (Achieved)</td><td>🎯</td><td>타이틀 + "목표 달성! 서포트 진행 예정" + 100%</td><td>참여자: {N}명</td></tr>
-<tr><td>집행중 (Executing)</td><td>⏳</td><td>타이틀 + "서포트 진행중..."</td><td>-</td></tr>
-<tr><td>완료 (Completed)</td><td>✅</td><td>타이틀 + "완료"</td><td>결과 보기 →</td></tr>
-<tr><td>미달성종료 (Expired)</td><td>⛔</td><td>타이틀 + "미달성"</td><td>응원 덕력 반환 완료</td></tr>
-<tr><td>집행취소 (Cancelled)</td><td>🚫</td><td>타이틀 + "서포트가 취소되었어요"</td><td>응원 덕력 반환 완료</td></tr>
+<tr><td>모집중</td><td>유형별 (피그마 참조)</td><td>타이틀 + 달성률 바 {N}%</td><td>목표금액: {N} DUK ㅣ D-{N}</td></tr>
+<tr><td>달성</td><td>🎯</td><td>타이틀 + "목표 달성! 서포트 진행 예정" + 100%</td><td>참여자: {N}명</td></tr>
+<tr><td>집행중</td><td>⏳</td><td>타이틀 + "서포트 진행중..."</td><td>-</td></tr>
+<tr><td>완료</td><td>✅</td><td>타이틀 + "완료"</td><td>결과 보기 →</td></tr>
+<tr><td>미달성종료</td><td>⛔</td><td>타이틀 + "미달성"</td><td>응원 덕력 반환 완료</td></tr>
+<tr><td>집행취소</td><td>🚫</td><td>타이틀 + "서포트가 취소되었어요"</td><td>응원 덕력 반환 완료</td></tr>
 </table>
 <h5>정렬 규칙</h5>
 <table>
 <tr><th>순서</th><th>상태</th><th>2차 정렬</th></tr>
-<tr><td>1</td><td>모집중 (Active)</td><td>마감일 임박순</td></tr>
-<tr><td>2</td><td>달성 (Achieved)</td><td>달성일 최신순</td></tr>
-<tr><td>3</td><td>집행중 (Executing)</td><td>전환일 최신순</td></tr>
-<tr><td>4</td><td>완료 (Completed)</td><td>완료일 최신순</td></tr>
-<tr><td>5</td><td>미달성종료 (Expired)</td><td>종료일 최신순</td></tr>
-<tr><td>6</td><td>집행취소 (Cancelled)</td><td>취소일 최신순</td></tr>
+<tr><td>1</td><td>모집중</td><td>마감일 임박순</td></tr>
+<tr><td>2</td><td>달성</td><td>달성일 최신순</td></tr>
+<tr><td>3</td><td>집행중</td><td>전환일 최신순</td></tr>
+<tr><td>4</td><td>완료</td><td>완료일 최신순</td></tr>
+<tr><td>5</td><td>미달성종료</td><td>종료일 최신순</td></tr>
+<tr><td>6</td><td>집행취소</td><td>취소일 최신순</td></tr>
 </table>
 <h4>에러/예외</h4>
 <table>
@@ -236,8 +236,8 @@ p {
 <li>수량 입력 (직접 입력 또는 [-]/[+] 버튼)</li>
 <li>[응원하기] 탭 → 확인 모달 표시</li>
 <li>확인 모달에서 [응원] 탭 → 서버 처리</li>
-<li>성공 → 토스트(Success) "덕력 {N}DUK 응원 완료!" + 프로그레스 바 갱신 + "내 응원" 갱신 + 보유 덕력 차감 반영</li>
-<li>달성 트리거: 응원으로 누적 >= 목표 시 서버가 즉시 달성 상태로 전환 → 응원 UI 비활성 + 토스트(Success) "🎯 목표 달성!"</li>
+<li>성공 → 완료 토스트 "덕력 {N}DUK 응원 완료!" + 프로그레스 바 갱신 + "내 응원" 갱신 + 보유 덕력 차감 반영</li>
+<li>달성 트리거: 응원으로 누적 >= 목표 시 서버가 즉시 달성 상태로 전환 → 응원 UI 비활성 + 완료 토스트 "🎯 목표 달성!"</li>
 </ol>
 <h5>누적 응원</h5>
 <ul>
@@ -262,14 +262,14 @@ p {
 <tr><td>0DUK 입력</td><td>[응원하기] 버튼 비활성</td></tr>
 <tr><td>달성 후</td><td>응원 UI 전체 비활성</td></tr>
 </table>
-<h4>에러/예외 (v1.5 — v5.0 공통정책 §5.6 소비 엣지케이스 6종 동기화)</h4>
+<h4>덕력 응원 에러/예외</h4>
 <table>
 <tr><th>#</th><th>상태</th><th>시스템 동작</th><th>UI 안내문 KO</th><th>UI 안내문 EN</th><th>UI 안내문 JP</th></tr>
 <tr><td>(a)</td><td><strong>보유 0DUK 응원</strong></td><td>[응원하기] 버튼 비활성화</td><td>덕력이 부족해요</td><td>Not enough Fan Power</td><td>推し力が足りません</td></tr>
-<tr><td>(b)</td><td><strong>시즌 초기화 중 응원</strong></td><td>시즌 전환 시각 직전 5분 응원 입력 lock</td><td>잠시 후 새 시즌이 시작돼요. 5분간 응원이 잠시 멈춰요</td><td>A new season starts soon. Cheers paused for 5 minutes</td><td>まもなく新シーズン開始。5分間 応援が一時停止します</td></tr>
+<tr><td>(b)</td><td><strong>시즌 초기화 중 응원</strong></td><td>시즌 전환 시각 직전 5분 응원 입력 잠금</td><td>잠시 후 새 시즌이 시작돼요. 5분간 응원이 잠시 멈춰요</td><td>A new season starts soon. Cheers paused for 5 minutes</td><td>まもなく新シーズン開始。5分間 応援が一時停止します</td></tr>
 <tr><td>(c)</td><td><strong>응원 → 미달성 → 반환 → 재사용</strong></td><td>반환 즉시 보유 덕력 합산, 다음 응원 사용 가능</td><td>이력: "+500DUK (반환 — 미달성)"</td><td>"+500DUK (Returned — Goal Not Met)"</td><td>"+500DUK (返却 — 未達成)"</td></tr>
-<tr><td>(e)</td><td><strong>응원 도중 BO 단가 변경</strong></td><td>새 응원부터 적용. 진행 중 응원은 변경 시점 단가 lock</td><td>(시스템 처리, UI 변동 없음)</td><td>(System-only, no UI change)</td><td>(システム処理のみ)</td></tr>
-<tr><td>(f)</td><td><strong>다중 응원 동시 클릭</strong></td><td>클라이언트 디바운스 0.5초 + 서버 트랜잭션 lock. 선착 1건 처리, 나머지 거부</td><td>잠시 후 다시 시도해주세요 (토스트)</td><td>Please try again in a moment</td><td>少し待ってから再度お試しください</td></tr>
+<tr><td>(e)</td><td><strong>응원 도중 BO 단가 변경</strong></td><td>새 응원부터 적용. 진행 중 응원은 변경 시점 단가 잠금</td><td>(시스템 처리, UI 변동 없음)</td><td>(System-only, no UI change)</td><td>(システム処理のみ)</td></tr>
+<tr><td>(f)</td><td><strong>다중 응원 동시 클릭</strong></td><td>클라이언트 디바운스 0.5초 + 서버 트랜잭션 잠금. 선착 1건 처리, 나머지 거부</td><td>잠시 후 다시 시도해주세요 (토스트)</td><td>Please try again in a moment</td><td>少し待ってから再度お試しください</td></tr>
 </table>
 <blockquote>
 <p><strong>참조</strong>: [CEB-000] 공통 정책 §5.6 소비 엣지케이스 6종 (Case (d) 독점 콘텐츠 해금 환불 정책은 본 화면 무관 — CEB-MEM-202 참조)</p>
@@ -277,10 +277,10 @@ p {
 <h4>추가 에러 케이스 (네트워크·운영)</h4>
 <table>
 <tr><th>상태</th><th>처리</th></tr>
-<tr><td>응원 실패 (네트워크)</td><td>토스트(Error) "앗, 응원이 전달되지 않았어요. 다시 시도해 주세요". 덕력 차감 없음</td></tr>
-<tr><td>마감 직전 응원</td><td>마감일시 경과 후 응원 API 호출 시 서버 거절 + 토스트(Error) "아쉽지만 모집이 끝났어요. 다음 서포트를 기다려 주세요!"</td></tr>
+<tr><td>응원 실패 (네트워크)</td><td>에러 토스트 "앗, 응원이 전달되지 않았어요. 다시 시도해 주세요". 덕력 차감 없음</td></tr>
+<tr><td>마감 직전 응원</td><td>마감일시 경과 후 응원 요청 시 서버 거절 + 에러 토스트 "아쉽지만 모집이 끝났어요. 다음 서포트를 기다려 주세요!"</td></tr>
 <tr><td>달성 직전 초과</td><td>남은 목표량보다 큰 금액 응원 시: 남은 목표량만 차감. 초과분 보유 유지 (반환 규칙 참조)</td></tr>
-<tr><td>BO 강제 종료 (실시간)</td><td>응원 UI 열어둔 상태에서 BO 종료 시: 응원 API 호출 시 서버 거절 + Error 토스트. 다음 조회 시 상태 반영</td></tr>
+<tr><td>BO 강제 종료 (실시간)</td><td>응원 UI 열어둔 상태에서 BO 종료 시: 응원 요청 시 서버 거절 + 에러 토스트. 다음 조회 시 상태 반영</td></tr>
 </table>
 <hr>
 <h3>2.5 확인 모달</h3>
@@ -292,7 +292,7 @@ p {
 <tr><td>타이틀</td><td>"덕력 응원"</td></tr>
 <tr><td>내용</td><td>"덕력 {N}DUK를 응원합니다.\n한번 응원하면 돌이킬 수 없어요. 그래도 응원할까요?\n\n달성 시: 서포트 집행에 사용됩니다\n미달성 시: 전액 반환됩니다"</td></tr>
 <tr><td>응원 후 잔액</td><td>"응원 후 잔액: {M}DUK"</td></tr>
-<tr><td>CTA 1</td><td>[응원] → 응원 처리 + 모달 닫기 + 토스트(Success)</td></tr>
+<tr><td>CTA 1</td><td>[응원] → 응원 처리 + 모달 닫기 + 완료 토스트</td></tr>
 <tr><td>CTA 2</td><td>[취소] → 모달 닫기</td></tr>
 <tr><td>Dimmed 탭</td><td>닫히지 않음 (CTA로만 닫기 가능)</td></tr>
 </table>
@@ -305,13 +305,13 @@ p {
 <h4>동작</h4>
 <h5>이벤트 상태 정의 (6종)</h5>
 <table>
-<tr><th>상태</th><th>코드</th><th>전이 트리거</th><th>유저 액션</th></tr>
-<tr><td>모집중</td><td>Active</td><td>BO에서 이벤트 생성</td><td>덕력 응원 가능</td></tr>
-<tr><td>달성</td><td>Achieved</td><td>서버 자동 (누적 응원 >= 목표)</td><td>응원 차단. 집행 대기</td></tr>
-<tr><td>집행중</td><td>Executing</td><td>BO 수동 전환</td><td>대기 (읽기 전용)</td></tr>
-<tr><td>완료</td><td>Completed</td><td>BO 수동 전환 (결과물 업로드)</td><td>결과 확인</td></tr>
-<tr><td>미달성종료</td><td>Expired</td><td>서버 자동 (마감일시 경과 + 미달성)</td><td>덕력 반환 확인</td></tr>
-<tr><td>집행취소</td><td>Cancelled</td><td>BO 수동 전환 (달성 후 집행 불가 시)</td><td>덕력 반환 확인</td></tr>
+<tr><th>상태</th><th>전이 트리거</th><th>유저 액션</th></tr>
+<tr><td>모집중</td><td>BO에서 이벤트 생성</td><td>덕력 응원 가능</td></tr>
+<tr><td>달성</td><td>서버 자동 (누적 응원 >= 목표)</td><td>응원 차단. 집행 대기</td></tr>
+<tr><td>집행중</td><td>BO 수동 전환</td><td>대기 (읽기 전용)</td></tr>
+<tr><td>완료</td><td>BO 수동 전환 (결과물 업로드)</td><td>결과 확인</td></tr>
+<tr><td>미달성종료</td><td>서버 자동 (마감일시 경과 + 미달성)</td><td>덕력 반환 확인</td></tr>
+<tr><td>집행취소</td><td>BO 수동 전환 (달성 후 집행 불가 시)</td><td>덕력 반환 확인</td></tr>
 </table>
 <h5>상태 전이 규칙</h5>
 <table>
@@ -332,7 +332,7 @@ p {
 <tr><td>BO 강제 종료</td><td>전액 반환</td></tr>
 <tr><td>달성 + 정상 집행</td><td>반환 없음 (서포트 집행에 사용)</td></tr>
 <tr><td>반환 시점</td><td>상태 전이 즉시 (서버 자동)</td></tr>
-<tr><td>반환 알림</td><td>푸시 알림 + 화면 진입 시 토스트(Info)</td></tr>
+<tr><td>반환 알림</td><td>푸시 알림 + 화면 진입 시 안내 토스트</td></tr>
 </table>
 <hr>
 <h2>3. 공통 규칙</h2>
@@ -350,7 +350,7 @@ p {
 </ul>
 <h3>3.3 멀티 아티스트 대응</h3>
 <ul>
-<li>서포트 이벤트는 아티스트별 분리 (<code>artist_id</code> 기반)</li>
+<li>서포트 이벤트는 아티스트별 분리</li>
 <li>아티스트 전환 시 해당 아티스트의 이벤트 목록으로 갱신</li>
 </ul>
 <h3>3.4 비로그인 공통</h3>
@@ -391,6 +391,7 @@ p {
 <tr><td><strong>v1.5</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.0 동기화 — 소비 엣지케이스 6종 반영</strong>. ① 에러/예외 표를 [CEB-000] §5.6 엣지케이스 (a)/(b)/(c)/(e)/(f) 5종으로 재구성 (화면 적용 케이스만, (d) 해금 환불은 MEM-202 영역) ② <strong>3언어 UI 안내문 명문화</strong> (KO/EN/JP) — "덕력이 부족해요 / Not enough Fan Power / 推し力が足りません" 등 ③ 시즌 초기화 5분 lock 정책 추가 ④ 동시 클릭 디바운스 0.5초 + 트랜잭션 lock 명문화 ⑤ 다국어 라벨 병기 (보유 덕력 / Available Fan Power) ⑥ 추가 에러 케이스(네트워크·마감 임박·BO 강제 종료) 별도 분리</td></tr>
 <tr><td><strong>v1.6</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 덕력 단위 pt→DUK 일괄 변경</strong>. 응원 단가·잔고·증감 단위(100DUK)·반환 안내·진행률 표기 모두 갱신</td></tr>
 <tr><td><strong>v1.7</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. ① §2.2 <strong>[전체]/[참여가능]/[종료] 필터 탭 + "내 참여만 보기" 토글</strong> 신규 ② 카드 구성을 <strong>풀 너비 이미지 + "목표금액 {N} DUK" + 달성률 바 + 인라인 [참여하기]</strong>로 보강. 카드 [참여하기]로 응원 진입(상세·응원은 인라인 또는 별도 화면 CEB-DUK-202 추후) ③ §2.1 헤더 보유 덕력 pill 추가 ④ 사용자 노출 문구 "집행 대기/집행 취소" → "<strong>서포트 진행 예정/서포트가 취소되었어요</strong>" 정합(상태 코드명은 유지) ⑤ 연관화면 DUK-202 추가. 응원·반환·상태 전이 정책 변경 없음</td></tr>
+<tr><td>v1.8</td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 본문 섹션 제목의 버전 메타 표기 제거. 내용 변경 없음 + 상태 코드·코드 식별자·개발 용어 한국어 전환</td></tr>
 </table>
 
 </body>

@@ -84,8 +84,8 @@ p {
 <tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
 <tr><td>기능영역(Epic)</td><td>EVT(Raffle/응모)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.1</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>버전</td><td>v1.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=354-9978</td></tr>
 <tr><td>다국어 영향</td><td>Yes (KO/EN/JP)</td></tr>
 <tr><td>Breadcrumb</td><td>(모달)</td></tr>
@@ -93,7 +93,7 @@ p {
 </table>
 <hr>
 <h2>1. 화면 개요</h2>
-<p>Raffle 응모 최종 확인 모달. 응모권 차감 수량을 명확히 고지하여 실수로 인한 재화 소모를 방지하고, [확인] 시 응모 API 호출.</p>
+<p>Raffle 응모 최종 확인 모달. 응모권 차감 수량을 명확히 고지하여 실수로 인한 재화 소모를 방지하고, [확인] 시 응모 처리.</p>
 <hr>
 <h2>2. UI 설명</h2>
 <pre><code>+------------------------------+
@@ -130,17 +130,17 @@ p {
 <h3>3.2 [확인] 클릭</h3>
 <ol>
 <li>버튼 비활성 + 로딩 (중복 클릭 방지)</li>
-<li>서버 응모 API 호출</li>
+<li>서버 응모 처리</li>
 </ol>
 <table>
 <tr><th>결과</th><th>처리</th></tr>
-<tr><td>Success</td><td>모달 닫힘 → "응모가 완료되었습니다" Success 토스트 → 상세 화면 데이터(내 응모권·통계) 갱신</td></tr>
+<tr><td>Success</td><td>모달 닫힘 → "응모가 완료되었습니다" 완료 토스트 → 상세 화면 데이터(내 응모권·통계) 갱신</td></tr>
 <tr><td>래플 마감됨</td><td>모달 본문 변경: "이벤트가 종료되었습니다" + [확인]만 → 이전 화면 복귀</td></tr>
-<tr><td>Network Error</td><td>"네트워크 오류가 발생했습니다. 다시 시도해주세요" Error 토스트 (모달 유지)</td></tr>
-<tr><td>기타 실패</td><td>Error 토스트 + 모달 닫힘</td></tr>
+<tr><td>Network Error</td><td>"네트워크 오류가 발생했습니다. 다시 시도해주세요" 에러 토스트 (모달 유지)</td></tr>
+<tr><td>기타 실패</td><td>에러 토스트 + 모달 닫힘</td></tr>
 </table>
 <h3>3.3 거래 코드</h3>
-<p>응모 성공 시 BO [CEB-BO-FQ-301] 응모권 거래 내역에 <code>TICKET_RAFFLE_USE</code> 코드로 기록 ([CEB-BO-006] §7.6).</p>
+<p>응모 성공 시 BO [CEB-BO-FQ-301] 응모권 거래 내역에 래플 응모 사용 유형으로 기록 ([CEB-BO-006] §7.6).</p>
 <h3>3.4 [취소] / Dimmed</h3>
 <ul>
 <li>[취소] → 모달 닫힘, 상세 화면 유지</li>
@@ -151,16 +151,16 @@ p {
 <table>
 <tr><th>상황</th><th>처리</th></tr>
 <tr><td>모달 체류 중 이벤트 마감</td><td>래플 마감됨 분기 (위 §3.2)</td></tr>
-<tr><td>네트워크 끊김</td><td>Error 토스트 + 모달 유지 → 재시도 가능</td></tr>
-<tr><td>서버 오류</td><td>Error 토스트</td></tr>
+<tr><td>네트워크 끊김</td><td>에러 토스트 + 모달 유지 → 재시도 가능</td></tr>
+<tr><td>서버 오류</td><td>에러 토스트</td></tr>
 </table>
 <hr>
 <h2>5. 연관 화면</h2>
 <table>
 <tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
 <tr><td>CEB-EVT-102</td><td>Raffle 상세 (진행중)</td><td>호출처</td></tr>
-<tr><td>CEB-EVT-103</td><td>Raffle 상세 (당첨)</td><td>Ended 후 결과 화면</td></tr>
-<tr><td>CEB-EVT-104</td><td>Raffle 상세 (미당첨)</td><td>Ended 후 결과 화면</td></tr>
+<tr><td>CEB-EVT-103</td><td>Raffle 상세 (당첨)</td><td>종료 후 결과 화면</td></tr>
+<tr><td>CEB-EVT-104</td><td>Raffle 상세 (미당첨)</td><td>종료 후 결과 화면</td></tr>
 <tr><td>CEB-EVT-301</td><td>응모권</td><td>보유 응모권 갱신</td></tr>
 <tr><td>CEB-BO-FQ-205</td><td>Raffle 응모내역 (BO)</td><td>응모 데이터 적재</td></tr>
 </table>
@@ -170,6 +170,7 @@ p {
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>v1 [CEB-FQ-202-MD] 흡수. ① 응모 처리 결과 4분기 ② 마감 모달 변형 ③ 응모권 사용 거래 연동</td></tr>
 <tr><td><strong>v1.1</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. Figma 링크 연결(<code>354-9978</code>) — 응모 모달은 [CEB-EVT-102] 래플 상세 위 "응모가 완료되었어요!" 확인 표시(체크 + 안내)로 존재. 본문 정책 변경 없음</td></tr>
+<tr><td><strong>v1.2</strong></td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 영문 상태 코드 한국어 표준명 전환 + 코드 식별자·개발 용어 한국어화. 정책 변경 없음</td></tr>
 </table>
 
 </body>

@@ -84,21 +84,21 @@ p {
 <tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
 <tr><td>기능영역(Epic)</td><td>EVT(Raffle/응모)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
-<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
 <tr><td>다국어 영향</td><td>Yes (KO/EN/JP)</td></tr>
 <tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > Raffle > Raffle 상세 (당첨)</td></tr>
-<tr><td>비고</td><td>Phase 11 신규. v1 [CEB-FQ-203] Raffle 상세(당첨) 흡수</td></tr>
+<tr><td>비고</td><td>v1 [CEB-FQ-203] Raffle 상세(당첨) 흡수</td></tr>
 </table>
 <hr>
 <h2>1. 화면 개요</h2>
-<p>Raffle 추첨 결과 당첨된 유저(Winner)에게 축하 메시지를 전달하고, 수령 방식별(현장/배송/온라인) 가이드와 폼을 제공.</p>
+<p>Raffle 추첨 결과 당첨된 유저에게 축하 메시지를 전달하고, 수령 방식별(현장/배송/온라인) 가이드와 폼을 제공.</p>
 <h5>주요 기능</h5>
 <ul>
 <li>컨페티 애니메이션 + 축하 문구</li>
 <li>당첨 경품 정보 (이미지·경품명·수량)</li>
-<li>수령 방식 분기: 현장(ONSITE) / 배송(DELIVERY) / 온라인(ONLINE)</li>
-<li>배송지 입력 폼 (DELIVERY 한정)</li>
+<li>수령 방식 분기: 현장 / 배송 / 온라인</li>
+<li>배송지 입력 폼 (배송 수령 한정)</li>
 </ul>
 <h5>접근 경로</h5>
 <ul>
@@ -115,28 +115,28 @@ p {
 ─────────────────────────────────
 [썸네일] {경품명} · 수량 {n}개
 ─────────────────────────────────
-[수령 안내] (receive_type별 분기)
-  ONSITE: 장소·일시·지참물
-  DELIVERY: 배송지 입력 폼
-  ONLINE: 추후 정의 (Phase 2+)
+[수령 안내] (수령 방식별 분기)
+  현장: 장소·일시·지참물
+  배송: 배송지 입력 폼
+  온라인: 추후 정의
 ─────────────────────────────────
-[Sticky Footer]
-  ONSITE/ONLINE: [확인]
-  DELIVERY: [배송지 입력 완료]
+[하단 고정 버튼]
+  현장/온라인: [확인]
+  배송: [배송지 입력 완료]
 ─────────────────────────────────
 </code></pre>
 <table>
 <tr><th>영역</th><th>구성</th><th>설명</th></tr>
-<tr><td>Header</td><td>[<] / "당첨 결과"</td><td></td></tr>
-<tr><td>Visual</td><td>축하 이미지 + 컨페티</td><td>진입 시 1회 재생, 재진입 시 재실행</td></tr>
-<tr><td>Info</td><td>썸네일 + 경품명 + 수량</td><td>BO 보상 상세</td></tr>
-<tr><td>Guide</td><td>receive_type별 텍스트/폼</td><td>운영자 등록 가이드 줄바꿈 보존</td></tr>
-<tr><td>Footer</td><td>Sticky 버튼</td><td>Type별 텍스트 분기</td></tr>
+<tr><td>헤더</td><td>[<] / "당첨 결과"</td><td></td></tr>
+<tr><td>대표 이미지</td><td>축하 이미지 + 컨페티</td><td>진입 시 1회 재생, 재진입 시 재실행</td></tr>
+<tr><td>정보</td><td>썸네일 + 경품명 + 수량</td><td>BO 보상 상세</td></tr>
+<tr><td>안내</td><td>수령 방식별 텍스트/폼</td><td>운영자 등록 가이드 줄바꿈 보존</td></tr>
+<tr><td>푸터</td><td>하단 고정 버튼</td><td>수령 방식별 텍스트 분기</td></tr>
 </table>
 <blockquote>
 <p>시각적 스타일은 피그마 참조</p>
 </blockquote>
-<h3>2.1 배송 폼 (DELIVERY 전용)</h3>
+<h3>2.1 배송 폼 (배송 수령 전용)</h3>
 <table>
 <tr><th>필드</th><th>필수</th><th>타입</th></tr>
 <tr><td>수령인 성함</td><td>필수</td><td>Text</td></tr>
@@ -145,21 +145,21 @@ p {
 <tr><td>상세주소</td><td>필수</td><td>Text</td></tr>
 <tr><td>배송메모</td><td>선택</td><td>Text</td></tr>
 </table>
-<p>기존 저장된 배송지가 있으면 default 바인딩.</p>
+<p>기존 저장된 배송지가 있으면 기본값으로 자동 채움.</p>
 <hr>
 <h2>3. 규칙·로직</h2>
 <h3>3.1 진입 시 검증</h3>
 <ol>
-<li>서버 <code>is_winner</code> 재조회</li>
-<li><code>false</code> → [CEB-EVT-104] 미당첨 화면 replace (에러 토스트 없이 자연 전환)</li>
-<li><code>true</code> + Ended → 본 화면 렌더</li>
+<li>서버에서 당첨 여부 재조회</li>
+<li>미당첨으로 확인 → [CEB-EVT-104] 미당첨 화면으로 교체 전환 (에러 토스트 없이 자연 전환)</li>
+<li>당첨 + 종료 상태 → 본 화면 표시</li>
 </ol>
 <h3>3.2 수령 방식별 동작</h3>
 <table>
-<tr><th>receive_type</th><th>버튼 텍스트</th><th>동작</th></tr>
-<tr><td>ONSITE</td><td>확인</td><td>[CEB-EVT-101] Raffle 메인으로 이동</td></tr>
-<tr><td>DELIVERY</td><td>배송지 입력 완료</td><td>배송 정보 저장 API → 성공 시 Success 토스트 + 이동</td></tr>
-<tr><td>ONLINE</td><td>확인</td><td>Phase 2+ 정의 예정</td></tr>
+<tr><th>수령 방식</th><th>버튼 텍스트</th><th>동작</th></tr>
+<tr><td>현장</td><td>확인</td><td>[CEB-EVT-101] Raffle 메인으로 이동</td></tr>
+<tr><td>배송</td><td>배송지 입력 완료</td><td>배송 정보 저장 → 성공 시 완료 토스트 + 이동</td></tr>
+<tr><td>온라인</td><td>확인</td><td>추후 정의 예정</td></tr>
 </table>
 <h3>3.3 배송지 입력 기한</h3>
 <ul>
@@ -180,7 +180,7 @@ p {
 </ul>
 <h3>3.6 다국어</h3>
 <ul>
-<li>축하 문구·수령 가이드·버튼 텍스트: i18n KO/EN/JP</li>
+<li>축하 문구·수령 가이드·버튼 텍스트: 다국어 KO/EN/JP</li>
 <li>경품명: 서버 다국어 (BO 설정)</li>
 </ul>
 <hr>
@@ -188,9 +188,9 @@ p {
 <table>
 <tr><th>상태</th><th>처리</th></tr>
 <tr><td>Loading</td><td>Skeleton (축하 이미지·문구·경품·수령 가이드 모두 회색 박스)</td></tr>
-<tr><td>검증 실패</td><td>즉시 [CEB-EVT-104] replace</td></tr>
+<tr><td>검증 실패</td><td>즉시 [CEB-EVT-104]로 교체 전환</td></tr>
 <tr><td>데이터 로딩 실패</td><td>"정보를 불러오는 데 실패했습니다" + [다시 시도]</td></tr>
-<tr><td>배송 저장 실패</td><td>"저장에 실패했습니다. 다시 시도해주세요" Error 토스트 (폼 데이터 보존)</td></tr>
+<tr><td>배송 저장 실패</td><td>"저장에 실패했습니다. 다시 시도해주세요" 에러 토스트 (폼 데이터 보존)</td></tr>
 <tr><td>기한 만료</td><td>"입력 기간이 종료되어 당첨이 취소되었어요"</td></tr>
 <tr><td>Network Error</td><td>"네트워크 연결을 확인해주세요" + [다시 시도]</td></tr>
 </table>
@@ -199,15 +199,16 @@ p {
 <table>
 <tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
 <tr><td>CEB-EVT-101</td><td>Raffle 메인</td><td>진입, 확인 후 복귀</td></tr>
-<tr><td>CEB-EVT-102</td><td>Raffle 상세 (진행중)</td><td>상태 전환 (Active→Ended 당첨)</td></tr>
-<tr><td>CEB-EVT-104</td><td>Raffle 상세 (미당첨)</td><td>검증 실패 시 replace</td></tr>
+<tr><td>CEB-EVT-102</td><td>Raffle 상세 (진행중)</td><td>상태 전환 (진행중→종료 당첨)</td></tr>
+<tr><td>CEB-EVT-104</td><td>Raffle 상세 (미당첨)</td><td>검증 실패 시 교체 전환</td></tr>
 <tr><td>CEB-BO-FQ-204~206</td><td>Raffle BO</td><td>배송·당첨 데이터 적재</td></tr>
 </table>
 <hr>
 <h2>6. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 11 신규. v1 [CEB-FQ-203] 흡수. ① receive_type 3종 분기 (ONSITE/DELIVERY/ONLINE) ② 배송지 입력 기한 + 만료 처리 ③ is_winner 재검증 자연 전환 ④ 미입력 이탈 가드</td></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. v1 [CEB-FQ-203] 흡수. ① 수령 방식 3종 분기 (현장/배송/온라인) ② 배송지 입력 기한 + 만료 처리 ③ 당첨 여부 재검증 자연 전환 ④ 미입력 이탈 가드</td></tr>
+<tr><td>v1.1</td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 본문·변경 이력의 코드 식별자(수령 방식 영문 표기·당첨 여부 변수명·내부 단계 메타) 한국어 도메인 용어로 정정 + 상태 코드·코드 식별자·개발 용어 한국어 전환</td></tr>
 </table>
 
 </body>

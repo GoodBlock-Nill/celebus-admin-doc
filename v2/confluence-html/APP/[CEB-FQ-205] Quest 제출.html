@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.6</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>버전</td><td>v2.7</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=1015-7654</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -109,7 +109,7 @@ p {
 <ul>
 <li>CEB-FQ-101 Quest 메인 > 활성 장 > 미션 [참여하기] 탭 시 이동 (캡처 제출형 미션)</li>
 <li>CEB-FQ-101 Quest 메인 > 타임라인 > 반려 미션 → CEB-FQ-201-MD 반려 사유 모달에서 [재도전] 탭 시 본 화면으로 이동 (기존 이미지 클리어 상태)</li>
-<li>진입 가능 조건: 해당 미션의 상태가 INCOMPLETE(미완료) 또는 REJECTED(반려)인 경우에만 진입</li>
+<li>진입 가능 조건: 해당 미션의 상태가 미완료 또는 반려인 경우에만 진입</li>
 </ul>
 <h5>레이아웃 참조</h5>
 <blockquote>
@@ -163,10 +163,10 @@ p {
 <h4>진입 조건</h4>
 <table>
 <tr><th>미션 상태</th><th>처리</th></tr>
-<tr><td>INCOMPLETE (미완료)</td><td>본 화면 진입 가능</td></tr>
-<tr><td>REJECTED (반려)</td><td>본 화면 진입 가능 (기존 반려 이미지는 초기화/삭제된 상태로 진입)</td></tr>
-<tr><td>SUBMITTED (심사중)</td><td>진입 불가 (타임라인에서 비활성 처리)</td></tr>
-<tr><td>APPROVED (승인)</td><td>진입 불가 (타임라인에서 완료 상태 표시)</td></tr>
+<tr><td>미완료</td><td>본 화면 진입 가능</td></tr>
+<tr><td>반려</td><td>본 화면 진입 가능 (기존 반려 이미지는 초기화/삭제된 상태로 진입)</td></tr>
+<tr><td>심사중</td><td>진입 불가 (타임라인에서 비활성 처리)</td></tr>
+<tr><td>승인</td><td>진입 불가 (타임라인에서 완료 상태 표시)</td></tr>
 <tr><td>자동완료</td><td>진입 불가 (에피소드 카드에서 완료 상태 표시)</td></tr>
 </table>
 <h3>2.3 이미지 업로드</h3>
@@ -191,23 +191,23 @@ p {
 <table>
 <tr><th>상태</th><th>표시</th></tr>
 <tr><td>이미지 선택 전</td><td>Placeholder 노출, [제출하기] 버튼 Disabled</td></tr>
-<tr><td>이미지 선택 후</td><td>Preview 노출, [제출하기] 버튼 Active</td></tr>
+<tr><td>이미지 선택 후</td><td>Preview 노출, [제출하기] 버튼 활성</td></tr>
 <tr><td>이미지 삭제 시</td><td>다시 초기 상태(Placeholder)로 복귀</td></tr>
 </table>
 <h4>에러/예외</h4>
 <table>
 <tr><th>상황</th><th>처리</th></tr>
-<tr><td>네트워크 불안정 또는 파일 손상으로 업로드 실패</td><td>"앗, 사진이 올라가지 않았어요. 다시 시도해 주세요" Error 토스트</td></tr>
-<tr><td>제한 용량(10MB) 초과</td><td>"10MB 이하의 이미지만 업로드 가능합니다." Error 토스트</td></tr>
+<tr><td>네트워크 불안정 또는 파일 손상으로 업로드 실패</td><td>"앗, 사진이 올라가지 않았어요. 다시 시도해 주세요" 에러 토스트</td></tr>
+<tr><td>제한 용량(10MB) 초과</td><td>"10MB 이하의 이미지만 업로드 가능합니다." 에러 토스트</td></tr>
 <tr><td>카메라/갤러리 접근 권한 거부</td><td>"사진을 업로드하려면 권한 설정이 필요합니다." 안내 후 OS 설정 화면으로 이동 유도</td></tr>
-<tr><td>파일 형식 불일치</td><td>"JPG, PNG, WebP, HEIC 형식만 올릴 수 있어요" Error 토스트</td></tr>
+<tr><td>파일 형식 불일치</td><td>"JPG, PNG, WebP, HEIC 형식만 올릴 수 있어요" 에러 토스트</td></tr>
 </table>
 <h3>2.4 제출 버튼</h3>
 <h4>UI 구성</h4>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>위치</td><td>하단 고정 바</td></tr>
-<tr><td>[제출하기] 버튼</td><td>초기엔 비활성(Dimmed). 이미지 업로드 완료 시 활성화(Active)</td></tr>
+<tr><td>[제출하기] 버튼</td><td>초기엔 비활성(Dimmed). 이미지 업로드 완료 시 활성화</td></tr>
 </table>
 <blockquote>
 <p>상세 스타일은 피그마 참조</p>
@@ -219,8 +219,8 @@ p {
 </ul>
 <table>
 <tr><th>결과</th><th>처리</th></tr>
-<tr><td>성공</td><td>"제출 완료! 결과는 빠르면 하루 안에 알려드릴게요" Success 토스트 노출 → 화면을 닫고 CEB-FQ-101 Quest 메인(타임라인)으로 복귀 → 해당 미션의 로컬 상태를 SUBMITTED(심사중)으로 업데이트</td></tr>
-<tr><td>실패</td><td>에러 유형별 Error 토스트 노출</td></tr>
+<tr><td>성공</td><td>"제출 완료! 결과는 빠르면 하루 안에 알려드릴게요" 완료 토스트 노출 → 화면을 닫고 CEB-FQ-101 Quest 메인(타임라인)으로 복귀 → 해당 미션의 로컬 상태를 심사중으로 업데이트</td></tr>
+<tr><td>실패</td><td>에러 유형별 에러 토스트 노출</td></tr>
 </table>
 <blockquote>
 <p>제출 즉시 해당 건은 Admin의 검토 대기 목록([CEB-BO-FQ-202])에 등록된다.</p>
@@ -228,8 +228,8 @@ p {
 <h4>에러/예외</h4>
 <table>
 <tr><th>상황</th><th>처리</th></tr>
-<tr><td>제출 실패 (네트워크 에러)</td><td>Error 토스트 + 버튼 활성 상태로 복구 (재시도 가능)</td></tr>
-<tr><td>중복 제출 방지</td><td>진입 시 미션 상태 재확인. 이미 SUBMITTED이면 진입 차단 + 토스트(Info) "이미 제출된 미션이에요"</td></tr>
+<tr><td>제출 실패 (네트워크 에러)</td><td>에러 토스트 + 버튼 활성 상태로 복구 (재시도 가능)</td></tr>
+<tr><td>중복 제출 방지</td><td>진입 시 미션 상태 재확인. 이미 심사중이면 진입 차단 + 안내 토스트 "이미 제출된 미션이에요"</td></tr>
 </table>
 <hr>
 <h2>3. 공통 규칙</h2>
@@ -286,6 +286,7 @@ p {
 <tr><td>v2.4</td><td>2026.04.17</td><td>@Nill Yoo</td><td>문서 구조 개선: 영역별(컴포넌트) 그룹핑으로 재구성. 정보 변경 없음</td></tr>
 <tr><td><strong>v2.5</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 덕력 단위 pt→DUK 일괄 변경</strong></td></tr>
 <tr><td><strong>v2.6</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. ① Figma 링크 연결(<code>1015-7654</code>) — 보상 뱃지·미션 정보·연관 링크 2개·갤러리/사진촬영·업로드 사진 가이드·[제출하기] 구조 시안과 일치 확인 ② Breadcrumb "챌린지"→"<strong>퀘스트</strong>" 용어 정합(FQ-101 표준). 본문 정책 변경 없음</td></tr>
+<tr><td><strong>v2.7</strong></td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 영문 상태 코드 한국어 표준명 전환 + 코드 식별자·개발 용어 한국어화. 정책 변경 없음</td></tr>
 </table>
 
 </body>

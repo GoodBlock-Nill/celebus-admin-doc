@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>MEM(기억저장소)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.3</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>버전</td><td>v2.4</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.29</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=1584-9428</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -111,7 +111,7 @@ p {
 </ul>
 <h5>접근 경로</h5>
 <ul>
-<li>CEB-MEM-101 > [+] FAB 탭 (작성 모드)</li>
+<li>CEB-MEM-101 > [+] 플로팅 작성 버튼 탭 (작성 모드)</li>
 <li>CEB-MEM-202 > ⋯ 메뉴 > [수정하기] (수정 모드)</li>
 </ul>
 <h5>레이아웃 참조</h5>
@@ -206,10 +206,10 @@ p {
 <h4>에러/예외</h4>
 <table>
 <tr><th>상황</th><th>처리</th></tr>
-<tr><td>이미지 3장 초과</td><td>토스트(Info) "이미지는 최대 3장까지 추가할 수 있어요"</td></tr>
-<tr><td>이미지 용량 초과</td><td>토스트(Error) "10MB 이하의 이미지만 업로드할 수 있어요"</td></tr>
-<tr><td>이미지 포맷 에러</td><td>토스트(Error) "지원하지 않는 파일 형식이에요 (JPG/PNG/WebP/HEIC)"</td></tr>
-<tr><td>업로드 실패</td><td>해당 썸네일에 에러 아이콘 + 탭 시 재시도. 토스트(Error) "업로드에 실패했어요. 다시 시도해주세요"</td></tr>
+<tr><td>이미지 3장 초과</td><td>안내 토스트 "이미지는 최대 3장까지 추가할 수 있어요"</td></tr>
+<tr><td>이미지 용량 초과</td><td>에러 토스트 "10MB 이하의 이미지만 업로드할 수 있어요"</td></tr>
+<tr><td>이미지 포맷 에러</td><td>에러 토스트 "지원하지 않는 파일 형식이에요 (JPG/PNG/WebP/HEIC)"</td></tr>
+<tr><td>업로드 실패</td><td>해당 썸네일에 에러 아이콘 + 탭 시 재시도. 에러 토스트 "업로드에 실패했어요. 다시 시도해주세요"</td></tr>
 </table>
 <h3>2.6 텍스트 입력</h3>
 <h4>UI 구성</h4>
@@ -244,17 +244,17 @@ p {
 <tr><td>비활성 상태</td><td>회색 처리, 탭 불가</td></tr>
 <tr><td>스타일</td><td>피그마 참조</td></tr>
 </table>
-<h5>동작 - 작성 모드 (mode=create)</h5>
+<h5>동작 - 작성 모드</h5>
 <ul>
-<li>[+] FAB 탭 → 빈 폼 진입</li>
+<li>[+] 플로팅 작성 버튼 탭 → 빈 폼 진입</li>
 <li>필수 필드 입력 → [저장하기] 활성</li>
-<li>저장 완료 → 토스트(Success) "기억이 저장되었어요! 덕력 75DUK 획득"</li>
+<li>저장 완료 → 완료 토스트 "기억이 저장되었어요! 덕력 75DUK 획득"</li>
 <li>CEB-MEM-101로 자동 복귀 + 캘린더 데이터 재조회</li>
 </ul>
-<h5>동작 - 수정 모드 (mode=edit)</h5>
+<h5>동작 - 수정 모드</h5>
 <ul>
 <li>CEB-MEM-202 > ⋯ 메뉴 > [수정하기] 탭 → 기존 데이터 프리필 진입</li>
-<li>저장 완료 → 토스트(Success) "기억이 수정되었어요"</li>
+<li>저장 완료 → 완료 토스트 "기억이 수정되었어요"</li>
 <li>CEB-MEM-202로 자동 복귀 (수정된 내용 반영)</li>
 <li><strong>덕력(Fan Power / 推し力) 중복 미지급</strong> (최초 작성 시에만 <strong>75DUK</strong> — T3 고관여, [CEB-000] §5.2 보상 매트릭스 참조)</li>
 <li><strong>귀속</strong>: 기억의 아티스트에 자동 귀속 ([CEB-000] §5.2.2 멀티 아티스트 귀속 매트릭스 참조)</li>
@@ -263,8 +263,8 @@ p {
 <h5>에러/예외</h5>
 <table>
 <tr><th>상황</th><th>처리</th></tr>
-<tr><td>저장 실패</td><td>토스트(Error) "저장에 실패했어요. 다시 시도해주세요"</td></tr>
-<tr><td>월간 한도 초과 (서버)</td><td>토스트(Error) "이번 달 업로드 한도에 도달했어요"</td></tr>
+<tr><td>저장 실패</td><td>에러 토스트 "저장에 실패했어요. 다시 시도해주세요"</td></tr>
+<tr><td>월간 한도 초과 (서버)</td><td>에러 토스트 "이번 달 업로드 한도에 도달했어요"</td></tr>
 <tr><td>네트워크 에러</td><td>공통정책 11.3 참조</td></tr>
 </table>
 <h3>2.9 취소 모달</h3>
@@ -298,13 +298,13 @@ p {
 <table>
 <tr><th>규칙</th><th>설명</th></tr>
 <tr><td>한도</td><td>50건/아티스트/월 (공통정책 13.3 참조)</td></tr>
-<tr><td>차단 시점</td><td>CEB-MEM-101 FAB 탭 시 토스트로 차단</td></tr>
-<tr><td>서버 검증</td><td>저장 API 호출 시에도 서버에서 한도 검증. 초과 시 거절 + 토스트(Error)</td></tr>
+<tr><td>차단 시점</td><td>CEB-MEM-101 플로팅 작성 버튼 탭 시 토스트로 차단</td></tr>
+<tr><td>서버 검증</td><td>저장 시에도 서버에서 한도 검증. 초과 시 거절 + 에러 토스트</td></tr>
 </table>
 <h3>3.3 비로그인 정책</h3>
 <table>
 <tr><th>상태</th><th>정책</th></tr>
-<tr><td>비로그인</td><td>본 화면은 로그인 상태에서만 접근 가능. CEB-MEM-101 FAB 탭 또는 CEB-ART-101 카드 탭 시 로그인 유도 (공통정책 10.5 참조)</td></tr>
+<tr><td>비로그인</td><td>본 화면은 로그인 상태에서만 접근 가능. CEB-MEM-101 플로팅 작성 버튼 탭 또는 CEB-ART-101 카드 탭 시 로그인 유도 (공통정책 10.5 참조)</td></tr>
 </table>
 <h3>3.4 데이터 갱신</h3>
 <table>
@@ -321,7 +321,7 @@ p {
 <h2>4. 연관화면ID</h2>
 <table>
 <tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
-<tr><td>CEB-MEM-101</td><td>기억저장소 메인</td><td>FAB [+] 탭 시 작성 모드 진입. 저장 완료 후 복귀</td></tr>
+<tr><td>CEB-MEM-101</td><td>기억저장소 메인</td><td>플로팅 작성 버튼 [+] 탭 시 작성 모드 진입. 저장 완료 후 복귀</td></tr>
 <tr><td>CEB-MEM-202</td><td>기억 상세</td><td>[수정하기] 탭 시 수정 모드 진입. 수정 완료 후 복귀</td></tr>
 </table>
 <hr>
@@ -340,6 +340,7 @@ p {
 <tr><td><strong>v2.1</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 기억저장소 3대 정책 + 단위 변경</strong>. ① <strong>§2.3 감정 이모지</strong> — "토글 1~3개 멀티" → <strong>"라디오 1개 단일 선택"</strong>, 미선택 시 [저장하기] 비활성 ② <strong>§2.5 미디어 업로드</strong> — "OS 이미지 Picker" → <strong>"OS 기본 피커 (카메라 촬영 + 갤러리 선택 둘 다 제공)"</strong> 명문화 ③ <strong>덕력 단위 pt→DUK</strong> 일괄 변경 — 저장 토스트 "75DUK", 캡 "500DUK·3,000DUK" 표기 갱신 ④ 주요 기능 항목 동기화 (이모지 1개·이미지 카메라/갤러리)</td></tr>
 <tr><td><strong>v2.2</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. Figma 링크 연결(<code>1584-9428</code>). ① §2.3 감정 이모지 5번째 라벨 "어마" → <strong>"우와"</strong>(Figma) ② §2.1 헤더 우측 <strong>"비공개" 토글</strong> 명시(Figma 시안 위치). 날짜·사진 3장·텍스트·장소·[저장하기] 구조 일치 확인. 정책 변경 없음</td></tr>
 <tr><td><strong>v2.3</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합 (주소 등록 서브플로우)</strong>. §2.4 위치 입력을 <strong>장소 검색(<code>1618-11073</code> 검색 결과 리스트) + 지도 확인(<code>1618-11104</code> 핀 표시) 서브 화면</strong>으로 보강. 입력 장소는 기억저장소 지도 뷰(MEM-101)에서 위치 기반 표시</td></tr>
+<tr><td>v2.4</td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 영문 상태 코드 한국어 표준명 전환 + 코드 식별자·개발 용어 한국어화. 정책 변경 없음</td></tr>
 </table>
 
 </body>

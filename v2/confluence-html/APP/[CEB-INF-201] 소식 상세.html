@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>INF(정보/일정/공지)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.5</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>버전</td><td>v1.6</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=4-6898</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -102,7 +102,7 @@ p {
 <li>소식 본문 전체 표시 (제목 + 본문 텍스트 + 이미지)</li>
 <li>공식 제공 뱃지 표시 (공식 출처 표기된 콘텐츠)</li>
 <li>관련 링크 바로가기</li>
-<li>소식 공유 (Web Share API)</li>
+<li>소식 공유 (기기 공유 기능)</li>
 <li>이전/다음 소식 네비게이션</li>
 </ul>
 <h5>접근 경로</h5>
@@ -127,7 +127,7 @@ p {
 <h4>동작</h4>
 <ul>
 <li>← 탭 → CEB-INF-101 복귀</li>
-<li>공유 버튼 탭 → Web Share API 호출 (지원 안 될 경우 URL 클립보드 복사 + 토스트)</li>
+<li>공유 버튼 탭 → 기기 공유 기능 호출 (지원 안 될 경우 URL 클립보드 복사 + 토스트)</li>
 </ul>
 <hr>
 <h3>2.2 소식 헤더</h3>
@@ -191,13 +191,13 @@ p {
 <table>
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>좋아요</td><td>❤️ 아이콘 + 좋아요 수. 토글 가능</td></tr>
-<tr><td>공유</td><td>↗ 공유 아이콘. 탭 시 Web Share API</td></tr>
+<tr><td>공유</td><td>↗ 공유 아이콘. 탭 시 기기 공유 기능</td></tr>
 <tr><td>스타일</td><td>하단 고정. 피그마 참조</td></tr>
 </table>
 <h4>동작</h4>
 <ul>
 <li>좋아요 탭 → 토글 (좋아요 추가/해제) + 카운트 갱신</li>
-<li>공유 탭 → Web Share API (미지원 시: 클립보드 복사)</li>
+<li>공유 탭 → 기기 공유 기능 (미지원 시: 클립보드 복사)</li>
 </ul>
 <h4>비로그인</h4>
 <ul>
@@ -215,7 +215,7 @@ p {
 </table>
 <h3>3.2 멀티 아티스트 대응</h3>
 <ul>
-<li>소식은 아티스트별 분리 (<code>artist_id</code> 기반)</li>
+<li>소식은 아티스트별 분리 (아티스트 단위)</li>
 <li>이전/다음 네비게이션도 동일 아티스트 내에서만 이동</li>
 </ul>
 <h3>3.3 비로그인 공통</h3>
@@ -254,6 +254,7 @@ p {
 <tr><td>v1.4</td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. Figma 링크 연결(<code>4-6898</code>) — 소식 본문 + 좋아요 인터랙션 구조 시안과 일치 확인. 본문 변경 없음</td></tr>
 <tr><td>v1.5</td><td>2026.05.28</td><td>@Nill Yoo</td><td>BO 운영 표 정정: 상세([CEB-BO-INF-201])·작성·수정([CEB-BO-INF-201-EDIT]) 분리, "관련 링크"→"연관 콘텐츠" 문구 정정</td></tr>
 <tr><td>v1.2</td><td>2026.04.23</td><td>@Nill Yoo</td><td>선공개 뱃지 표기 개정: "[CELEBUS 단독]"→"[공식 제공]"으로 변경, BO 플래그 "선공개"→"공식 출처 표기"로 변경. INF-101과 동기화. 문서 댓글 피드백 반영</td></tr>
+<tr><td>v1.6</td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 영문 상태 코드 한국어 표준명 전환 + 코드 식별자·개발 용어 한국어화. 정책 변경 없음</td></tr>
 </table>
 
 </body>

@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>MEM(기억저장소)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.1</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>버전</td><td>v1.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.29</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=1805-12027</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -148,7 +148,7 @@ p {
 <tr><td>메인 사진</td><td>등록 사진 첫 장 OR <strong>시스템 생성 SVG (글 20자 컷오프)</strong> — 사진 미등록 게시글의 경우 (MEM-102 §2.2 동일 규격)</td></tr>
 <tr><td>조회수</td><td><code>👁 N</code> 천 단위 콤마 (예: 1,234)</td></tr>
 <tr><td>좋아요</td><td><code>❤ N</code> 1탭 토글</td></tr>
-<tr><td>정렬</td><td><strong>최신순 단일</strong> (<code>created_at DESC</code>). 정렬 토글 없음</td></tr>
+<tr><td>정렬</td><td><strong>최신순 단일</strong> (작성일시 내림차순(최신순)). 정렬 토글 없음</td></tr>
 <tr><td>탭 동작</td><td>카드 탭 → [CEB-MEM-202] 기억 상세</td></tr>
 </table>
 <blockquote>
@@ -162,7 +162,7 @@ p {
 <tr><th>항목</th><th>정책</th></tr>
 <tr><td>초기 로드</td><td>30건</td></tr>
 <tr><td>무한 스크롤</td><td>스크롤 끝 도달 시 30건씩 추가 로드</td></tr>
-<tr><td>캐시</td><td>React Query 5분 stale-time</td></tr>
+<tr><td>캐시</td><td>5분 캐시 유지</td></tr>
 </table>
 <hr>
 <h2>3. 상태별 표시</h2>
@@ -203,6 +203,7 @@ p {
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td>v1.0</td><td>2026.04.29</td><td>@Nill Yoo</td><td>초안 작성 (공통정책 v5.4 반영). PDF 기획안(<code>docs/CA-[CEB-MEM-103]{닉네임} 님의 기억저장소-290426-041748.pdf</code>) 기반. 헤더(뒤로가기 + 닉네임 타이틀) + 3열 그리드 + 최신순 단일 정렬. 그 외 동작은 MEM-102와 동일 (좋아요·조회수·시스템 생성 SVG·페이지네이션). 본인 설정 ⚙️·뷰 전환 버튼은 본 화면에서 미노출. 카드 내 프로필 사진·닉네임은 헤더 타이틀로 갈음하여 생략</td></tr>
 <tr><td>v1.1</td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. Figma 링크 연결(<code>1805-12027</code>) — 타인 저장소 헤더("{닉네임}님의 기억 저장소") + 3열 그리드 시안과 일치 확인. 본문 변경 없음</td></tr>
+<tr><td>v1.2</td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 영문 상태 코드 한국어 표준명 전환 + 코드 식별자·개발 용어 한국어화. 정책 변경 없음</td></tr>
 </table>
 
 </body>

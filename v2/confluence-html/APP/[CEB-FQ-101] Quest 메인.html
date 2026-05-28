@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.3</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>버전</td><td>v2.4</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=1015-7463</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -164,11 +164,11 @@ p {
 <h5>에피소드 카드 상태 (5종)</h5>
 <table>
 <tr><th>상태</th><th>표현</th><th>카드/헤더 표시</th><th>선택 시 동작</th></tr>
-<tr><td>잠금 (locked)</td><td>🔒 잠금 처리</td><td>에피소드 제목만 (미션 수 미표시)</td><td>프리뷰 바텀시트 표시 (제출 기반 해금 규칙 참조)</td></tr>
-<tr><td>해금 (provisional)</td><td>🔓 해금 표시</td><td>제목 + "미션 {N}개"</td><td>미션 리스트 표시</td></tr>
-<tr><td>활성 (active)</td><td>진행중 뱃지</td><td>제목 + [진행중] + 진행 카운트 "{완료}/{전체}"</td><td>미션 리스트 표시 (기본 선택)</td></tr>
-<tr><td>확인 중 (reviewing)</td><td>⏳ 확인중</td><td>제목 + "{N}/{M} 승인, {K} 확인 중"</td><td>미션 리스트 표시 (미션별 상태)</td></tr>
-<tr><td>완료 (cleared)</td><td>✅ 완료</td><td>제목 + "완료" + 굿즈 수령 버튼</td><td>미션 리스트 표시 (완료 상태 + 보상 이력)</td></tr>
+<tr><td>잠금</td><td>🔒 잠금 처리</td><td>에피소드 제목만 (미션 수 미표시)</td><td>프리뷰 바텀시트 표시 (제출 기반 해금 규칙 참조)</td></tr>
+<tr><td>해금</td><td>🔓 해금 표시</td><td>제목 + "미션 {N}개"</td><td>미션 리스트 표시</td></tr>
+<tr><td>활성</td><td>진행중 뱃지</td><td>제목 + [진행중] + 진행 카운트 "{완료}/{전체}"</td><td>미션 리스트 표시 (기본 선택)</td></tr>
+<tr><td>확인 중</td><td>⏳ 확인중</td><td>제목 + "{N}/{M} 승인, {K} 확인 중"</td><td>미션 리스트 표시 (미션별 상태)</td></tr>
+<tr><td>완료</td><td>✅ 완료</td><td>제목 + "완료" + 굿즈 수령 버튼</td><td>미션 리스트 표시 (완료 상태 + 보상 이력)</td></tr>
 </table>
 <h5>심사 안내 영역</h5>
 <table>
@@ -205,17 +205,17 @@ p {
 <h5>에피소드 상태 전이</h5>
 <table>
 <tr><th>현재 상태</th><th>전이 조건</th><th>다음 상태</th></tr>
-<tr><td>locked</td><td>이전 에피소드 전체 미션 제출 완료</td><td>provisional</td></tr>
-<tr><td>provisional</td><td>유저가 해당 에피소드의 미션 CTA를 최초 탭한 시점</td><td>active</td></tr>
-<tr><td>active</td><td>해당 에피소드 전체 미션 제출(SUBMITTED) 또는 승인(자동검증)(APPROVED)</td><td>reviewing</td></tr>
-<tr><td>active</td><td>해당 에피소드 전체 미션이 APPROVED 또는 APPROVED (심사 불필요)</td><td>cleared (reviewing 생략)</td></tr>
-<tr><td>reviewing</td><td>해당 에피소드 전체 미션 승인 완료</td><td>cleared</td></tr>
-<tr><td>reviewing</td><td>미션 1개 이상 반려</td><td>active (반려 미션 재제출 필요)</td></tr>
+<tr><td>잠금</td><td>이전 에피소드 전체 미션 제출 완료</td><td>해금</td></tr>
+<tr><td>해금</td><td>유저가 해당 에피소드의 미션 CTA를 최초 탭한 시점</td><td>활성</td></tr>
+<tr><td>활성</td><td>해당 에피소드 전체 미션 제출 또는 자동검증 승인</td><td>확인 중</td></tr>
+<tr><td>활성</td><td>해당 에피소드 전체 미션이 승인 또는 자동 승인(심사 불필요)</td><td>완료 (확인 중 생략)</td></tr>
+<tr><td>확인 중</td><td>해당 에피소드 전체 미션 승인 완료</td><td>완료</td></tr>
+<tr><td>확인 중</td><td>미션 1개 이상 반려</td><td>활성 (반려 미션 재제출 필요)</td></tr>
 </table>
 <blockquote>
-<p>EP.1은 초기 상태가 active (잠금 없음)</p>
-<p>자동검증 미션(Trivia/PM)만으로 구성된 에피소드는 전체 APPROVED 시 reviewing을 거치지 않고 바로 cleared로 전이</p>
-<p>해금(locked → provisional) 시 토스트(Success) "다음 에피소드가 열렸습니다!" 표시</p>
+<p>EP.1은 초기 상태가 활성 (잠금 없음)</p>
+<p>자동검증 미션(Trivia/PM)만으로 구성된 에피소드는 전체 승인 시 확인 중을 거치지 않고 바로 완료로 전이</p>
+<p>잠금 → 해금 전환 시 완료 토스트 "다음 에피소드가 열렸습니다!" 표시</p>
 </blockquote>
 <h5>심사 SLA 안내</h5>
 <ul>
@@ -226,14 +226,14 @@ p {
 <h4>상태별 표시</h4>
 <h5>미션 상태 정의</h5>
 <table>
-<tr><th>상태</th><th>코드</th><th>설명</th><th>아이콘</th></tr>
-<tr><td>미완료</td><td>INCOMPLETE</td><td>아직 제출하지 않음</td><td>□</td></tr>
-<tr><td>제출(확인 중)</td><td>SUBMITTED</td><td>제출 완료, 심사 대기</td><td>⏳</td></tr>
-<tr><td>승인</td><td>APPROVED</td><td>심사 승인 또는 자동검증 완료. 보상 지급 완료</td><td>✅</td></tr>
-<tr><td>재도전 필요</td><td>REJECTED</td><td>심사 반려, 재제출 필요</td><td>❌</td></tr>
+<tr><th>상태</th><th>설명</th><th>아이콘</th></tr>
+<tr><td>미완료</td><td>아직 제출하지 않음</td><td>□</td></tr>
+<tr><td>제출(확인 중)</td><td>제출 완료, 심사 대기</td><td>⏳</td></tr>
+<tr><td>승인</td><td>심사 승인 또는 자동검증 완료. 보상 지급 완료</td><td>✅</td></tr>
+<tr><td>재도전 필요</td><td>심사 반려, 재제출 필요</td><td>❌</td></tr>
 </table>
 <blockquote>
-<p><strong>APPROVED 상태 폐지</strong>: Trivia/PM 자동검증도 APPROVED로 통합 처리. 자동검증 여부는 미션 타입(🧠/🎯)과 "자동검증" 뱃지로만 구분. 내부적으로 <code>source: 'auto' | 'review'</code> 메타데이터로 구분 가능.</p>
+<p><strong>별도 승인 단계 폐지</strong>: 자동검증(Trivia/PM)도 일반 승인으로 통합 처리. 자동검증 여부는 미션 타입(🧠/🎯)과 "자동검증" 뱃지로만 구분.</p>
 </blockquote>
 <h4>에러/예외</h4>
 <table>
@@ -242,7 +242,7 @@ p {
 <tr><td>Default</td><td>에피소드 캐러셀 + 미션 상태 정상 표시</td></tr>
 <tr><td>Error</td><td>전체 조회 실패 시 에러 안내 + 재시도 버튼. 개별 미션 상태 실패 시 해당 미션만 "-" 표시</td></tr>
 <tr><td>전 에피소드 심사중</td><td>1~5번 모든 에피소드 미션 제출 완료 + 전체 심사 대기 중: "모든 미션을 제출했습니다! 심사 결과를 기다려주세요 🎉" 안내 배너 표시 (캐러셀 상단)</td></tr>
-<tr><td>딥링크 복귀 갱신 실패</td><td>미션 상태 변경 미반영 시 Pull-to-Refresh 안내 토스트(Info)</td></tr>
+<tr><td>딥링크 복귀 갱신 실패</td><td>미션 상태 변경 미반영 시 Pull-to-Refresh 안내 토스트</td></tr>
 <tr><td>관리자 퀘스트 수정</td><td>진행중 미션 내용 변경 시: 다음 조회 시 변경된 내용 반영. 미션 삭제 시: 해당 미션 "종료됨" 표시 + 보상 유지</td></tr>
 <tr><td>관리자 퀘스트 종료</td><td>반복 퀘스트 강제 종료 시: 미제출 미션은 소멸, 이미 제출/승인된 미션 보상은 유지</td></tr>
 <tr><td>5개 에피소드 부분 반려</td><td>예: Ch1 1건 반려 + Ch3 진행중. Ch1에 재도전 뱃지 표시, Ch3 진행 유지. 재제출 안내 푸시 발송</td></tr>
@@ -256,7 +256,7 @@ p {
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>표시 조건</td><td>활성/해금/심사중/완료 장을 탭했을 때 확장</td></tr>
 <tr><td>기본 상태</td><td>가장 우선순위 높은 장 1개만 자동 확장 (나머지 축소)</td></tr>
-<tr><td>우선순위</td><td>active > provisional > reviewing > cleared (순서대로)</td></tr>
+<tr><td>우선순위</td><td>활성 > 해금 > 확인 중 > 완료 (순서대로)</td></tr>
 <tr><td>미션 항목</td><td>타입 아이콘 + 미션명 + (연관 링크 또는 자동검증 뱃지) + 상태 아이콘 + CTA 버튼</td></tr>
 </table>
 <h5>미션 타입별 인라인 UI</h5>
@@ -281,7 +281,7 @@ p {
 <table>
 <tr><th>동작</th><th>설명</th></tr>
 <tr><td>[참여하기] 탭</td><td>→ CEB-FQ-205 Quest 제출 화면 이동. 연관 링크는 제출 화면(CEB-FQ-205)에서 표시</td></tr>
-<tr><td>이미지 업로드 + 제출</td><td>→ 미션 상태 SUBMITTED (심사중)으로 전환</td></tr>
+<tr><td>이미지 업로드 + 제출</td><td>→ 미션 상태 심사중으로 전환</td></tr>
 <tr><td>반려 시 [사유 확인] 탭</td><td>→ 반려 사유 모달(CEB-FQ-201-MD) 표시 → [재도전] → CEB-FQ-205 (기존 이미지 클리어)</td></tr>
 <tr><td>심사중</td><td>탭 불가 (비활성 상태)</td></tr>
 <tr><td>승인 완료</td><td>탭 시 보상 정보 인라인 표시</td></tr>
@@ -290,34 +290,34 @@ p {
 <table>
 <tr><th>동작</th><th>설명</th></tr>
 <tr><td>[도전하기] 탭</td><td>→ CEB-GAM-204 Trivia 홈 딥링크 이동</td></tr>
-<tr><td>조건 충족 (7/10 이상)</td><td>→ 미션 APPROVED (서버 자동 연동). 복귀 시 상태 재조회로 반영</td></tr>
-<tr><td>조건 미달 (7문제 미만)</td><td>→ 미션 INCOMPLETE 유지. <strong>즉시 재참여 가능 (횟수 제한 없음)</strong></td></tr>
+<tr><td>조건 충족 (7/10 이상)</td><td>→ 미션 승인 (서버 자동 연동). 복귀 시 상태 재조회로 반영</td></tr>
+<tr><td>조건 미달 (7문제 미만)</td><td>→ 미션 미완료 유지. <strong>즉시 재참여 가능 (횟수 제한 없음)</strong></td></tr>
 <tr><td>복귀 시</td><td>미션 상태 자동 재조회 (공통 규칙 3.1 데이터 갱신 참조)</td></tr>
 </table>
 <h5>🎯 PM 참여 (Ch4)</h5>
 <table>
 <tr><th>동작</th><th>설명</th></tr>
 <tr><td>[참여하기] 탭</td><td>→ CEB-GAM-202 PM 상세 딥링크 이동. 각 미션 = PM 게임 1회 참여</td></tr>
-<tr><td>참여 완료</td><td>→ 해당 미션 APPROVED (서버 자동 연동)</td></tr>
-<tr><td>PM 게임 미가용 시</td><td>→ 토스트(Info) "현재 진행중인 PM 게임이 없습니다". 미션 항목에 "게임 준비중" 상태 표시 + [알림 설정] CTA. [알림 설정] 탭 시 토스트(Success) '새 PM 게임이 등록되면 알려드릴게요'. 서버에서 PM 게임 등록 시 푸시 알림 발송 (공통정책 15 참조)</td></tr>
+<tr><td>참여 완료</td><td>→ 해당 미션 승인 (서버 자동 연동)</td></tr>
+<tr><td>PM 게임 미가용 시</td><td>→ 안내 토스트 "현재 진행중인 PM 게임이 없습니다". 미션 항목에 "게임 준비중" 상태 표시 + [알림 설정] CTA. [알림 설정] 탭 시 완료 토스트 '새 PM 게임이 등록되면 알려드릴게요'. 서버에서 PM 게임 등록 시 푸시 알림 발송 (공통정책 15 참조)</td></tr>
 <tr><td>복귀 시</td><td>미션 상태 자동 재조회 (공통 규칙 3.1 데이터 갱신 참조)</td></tr>
 </table>
 <h5>미션 타입별 규칙</h5>
 <table>
 <tr><th>타입</th><th>검증 방식</th><th>재시도</th><th>특수 규칙</th></tr>
 <tr><td>📸 캡처 제출형</td><td>수동 심사 (BO)</td><td>반려 시 재제출 (기존 이미지 클리어)</td><td>이미지 1장. JPG/PNG/WebP/HEIC, 10MB. 연관 링크 0~2개 (BO 등록)</td></tr>
-<tr><td>🧠 Trivia</td><td>자동검증 (서버)</td><td>조건 미달 시 즉시 재참여 (횟수 무제한)</td><td>조건: 10문제 중 7문제 이상 정답. 실패 시 INCOMPLETE 유지</td></tr>
+<tr><td>🧠 Trivia</td><td>자동검증 (서버)</td><td>조건 미달 시 즉시 재참여 (횟수 무제한)</td><td>조건: 10문제 중 7문제 이상 정답. 실패 시 미완료 유지</td></tr>
 <tr><td>🎯 PM</td><td>자동검증 (서버)</td><td>게임 미가용 시 [알림 설정] CTA</td><td>각 미션 = PM 게임 1회 참여. 게임 등록 시 자동 활성화</td></tr>
 </table>
 <h5>자동검증(Trivia/PM) 완료 조건</h5>
 <table>
 <tr><th>조건</th><th>설명</th></tr>
-<tr><td>아티스트 일치</td><td><strong>해당 아티스트(artist_id)의 게임</strong>이어야 함. 다른 아티스트 게임 참여/승리는 미인정</td></tr>
+<tr><td>아티스트 일치</td><td><strong>해당 아티스트의 게임</strong>이어야 함. 다른 아티스트 게임 참여/승리는 미인정</td></tr>
 <tr><td>게임 승리</td><td><strong>게임에서 승리</strong>(Trivia: 7/10 이상 정답, PM: 정답)해야 완료 처리. 단순 참여만으로는 미완료</td></tr>
 <tr><td>해금 이후 참여</td><td><strong>해당 에피소드이 해금된 이후에 참여한 게임만</strong> 완료 기준에 포함. 해금 전 기존 이력은 미인정</td></tr>
 </table>
 <blockquote>
-<p>위 3가지 조건을 모두 충족해야 미션이 APPROVED 처리됩니다. 서버에서 퀘스트 화면 진입 시 또는 게임 종료 후 복귀 시 자동으로 이력을 확인하여 상태를 갱신합니다.</p>
+<p>위 3가지 조건을 모두 충족해야 미션이 승인 처리됩니다. 서버에서 퀘스트 화면 진입 시 또는 게임 종료 후 복귀 시 자동으로 이력을 확인하여 상태를 갱신합니다.</p>
 </blockquote>
 <h5>게임 오픈 정책</h5>
 <table>
@@ -335,7 +335,7 @@ p {
 <tr><td>표시 조건</td><td>에피소드 전체 미션 승인 완료 + 디지털 굿즈 미수령</td></tr>
 <tr><td>위치</td><td>해당 에피소드 확장 영역 하단</td></tr>
 <tr><td>CTA</td><td>[디지털 굿즈 받기 🎁]</td></tr>
-<tr><td>수령 후</td><td>수령 애니메이션 → "Grade {N} '{굿즈명}' 획득!" 토스트(Success)</td></tr>
+<tr><td>수령 후</td><td>수령 애니메이션 → "Grade {N} '{굿즈명}' 획득!" 완료 토스트</td></tr>
 <tr><td>이미 수령</td><td>"Grade {N} '{굿즈명}' 수령 완료" 텍스트 (비활성)</td></tr>
 </table>
 <h5>축소 스토리 배너 (5개 에피소드 완료 후)</h5>
@@ -345,7 +345,7 @@ p {
 <tr><td>위치</td><td>헤더 아래 최상단</td></tr>
 <tr><td>내용</td><td>"🎉 V01D 퀘스트 완료!" + "5개 에피소드의 스토리를 모두 완주했어요"</td></tr>
 <tr><td>CTA 영역</td><td>[보상 받기 🎁] + [더보기] 2개 버튼</td></tr>
-<tr><td>보상 받기</td><td>탭 시 5개 에피소드 완료 최종 보상 수령 (서명 포카 래플 자격, 독점 콘텐츠 해금) → 토스트(Success) → 버튼 "보상 수령 완료 ✅"로 비활성화</td></tr>
+<tr><td>보상 받기</td><td>탭 시 5개 에피소드 완료 최종 보상 수령 (서명 포카 래플 자격, 독점 콘텐츠 해금) → 완료 토스트 → 버튼 "보상 수령 완료 ✅"로 비활성화</td></tr>
 <tr><td>더보기</td><td>탭 시 완료된 5개 에피소드 읽기 전용 표시 (각 에피소드 선택 가능, 미수령 굿즈 수령 가능, 스페셜 굿즈 합성 CTA)</td></tr>
 <tr><td>스타일</td><td>축하 카드 (그라데이션 배경, 피그마 참조)</td></tr>
 </table>
@@ -353,14 +353,14 @@ p {
 <h5>디지털 굿즈 수령</h5>
 <ul>
 <li>장 전체 미션 승인 완료 시 해당 에피소드 확장 영역 하단에 [디지털 굿즈 받기] 버튼 표시</li>
-<li>탭 시 수령 애니메이션 + 컬렉션 추가 + 토스트(Success)</li>
+<li>탭 시 수령 애니메이션 + 컬렉션 추가 + 완료 토스트</li>
 <li>수령은 선택적 (나중에 수령 가능)</li>
 <li>5개 에피소드 전체 굿즈 수령 후 스페셜 굿즈 합성 CTA 표시 (→ CEB-COL-101)</li>
 </ul>
 <h5>5개 에피소드 완료 판정 및 축하 모달</h5>
 <h6>완료 조건</h6>
 <ul>
-<li>5개 에피소드 × 모든 미션 전체 APPROVED</li>
+<li>5개 에피소드 × 모든 미션 전체 승인</li>
 </ul>
 <h6>축하 모달</h6>
 <table>
@@ -400,7 +400,7 @@ p {
 <table>
 <tr><th>항목</th><th>규칙</th></tr>
 <tr><td>표시 조건</td><td>5개 에피소드 전체 완료 후</td></tr>
-<tr><td>정렬</td><td>진행중(Active) > 신규(Ready) > 종료(Ended), 최신순</td></tr>
+<tr><td>정렬</td><td>진행중 > 신규 > 종료, 최신순</td></tr>
 <tr><td>카드 정보</td><td>타이틀 + 기간(MM.DD~MM.DD) + 미션 수 + 보상 요약</td></tr>
 <tr><td>상태 뱃지</td><td>진행중(초록) / 신규(파란) / 종료(회색)</td></tr>
 <tr><td>탭 액션</td><td>해당 퀘스트 미션 리스트 인라인 확장</td></tr>
@@ -449,7 +449,7 @@ p {
 <h3>3.3 멀티 아티스트 대응</h3>
 <ul>
 <li>이 화면은 현재 선택된 아티스트 기준으로 표시</li>
-<li><code>artist_id</code> 기반 데이터 조회</li>
+<li>아티스트별 데이터 조회</li>
 <li>아티스트 전환 시 해당 아티스트의 Quest 진행 상황으로 전환 (예: V01D 5개 에피소드 Ch3 진행중 → iKON 전환 시 iKON Quest 진행 상황 표시)</li>
 </ul>
 <hr>
@@ -479,7 +479,7 @@ p {
 <tr><th>버전</th><th>v2.3</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td>v1.0</td><td>2026.04.14</td><td>@Nill Yoo</td><td>초안 작성. 스토리 타임라인 + 제출 기반 해금 정책 도입. UX 검증 반영: 해금(R1), 완료배너(R2), 잠금프리뷰(R3), 빈상태(R4), 인라인미션(R5), 딥링크갱신(R6), 인트로배너(R7)</td></tr>
 <tr><td>v1.1</td><td>2026.04.14</td><td>@Nill Yoo</td><td>미션 타입별 상세 추가: 타입별 아이콘(📸/🧠/🎯), 캡처형 연관 링크(제출화면 표시), Trivia 재참여(횟수 무제한), PM 미가용 처리(안내+알림CTA), 자동검증 뱃지, 게임 준비중 상태, 타입별 규칙 테이블(4.8)</td></tr>
-<tr><td>v1.2</td><td>2026.04.14</td><td>@Nill Yoo</td><td>최종 검증 반영: 반려 CTA 모달 경유로 통일(2.2), 자동검증 장 reviewing 생략 규칙(4.2), provisional→active 트리거 명확화(4.2), 축하 모달 인라인 상세(4.4), 비로그인 정책 삭제(5), 전 장 심사중 안내(5), 해금 토스트 피드백(4.2)</td></tr>
+<tr><td>v1.2</td><td>2026.04.14</td><td>@Nill Yoo</td><td>최종 검증 반영: 반려 CTA 모달 경유로 통일(2.2), 자동검증 장 확인 중 생략 규칙(4.2), 해금→활성 트리거 명확화(4.2), 축하 모달 인라인 상세(4.4), 비로그인 정책 삭제(5), 전 장 심사중 안내(5), 해금 토스트 피드백(4.2)</td></tr>
 <tr><td>v1.3</td><td>2026.04.14</td><td>@Nill Yoo</td><td>크로스 검증 반영: 반려 CTA 라벨 통일([사유 확인]), WebP 포맷 추가(4.8), 축하 모달 1회성 규칙 명확화(4.4), 비로그인 정책 명시(5)</td></tr>
 <tr><td>v1.4</td><td>2026.04.15</td><td>@Nill Yoo</td><td>핸드오프 개선: 홈 접근 경로 추가(HOM-001 추천/오늘의 할 일), 프로토타입 참조 안내</td></tr>
 <tr><td>v1.5</td><td>2026.04.15</td><td>@Nill Yoo</td><td>크로스 검증: 반복 퀘스트 미션 타입 BO 설정 명시, PM 미가용 알림 설정 CTA 동작 정의</td></tr>
@@ -491,6 +491,7 @@ p {
 <tr><td><strong>v2.1</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.0 동기화 — Quest 보상값 명문화</strong>. ① Quest 완료 보상 권장값 <strong>75DUK</strong> (T3 고관여) 표기 — 기존 50~100DUK 범위 → 75DUK 단일 권장값. BO 자유 설정 가능 ② [CEB-000] §5.2 보상 매트릭스 참조 링크 추가 ③ 미션 상태 표시 영역에 권장값 안내</td></tr>
 <tr><td><strong>v2.2</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 덕력 단위 pt→DUK 일괄 변경</strong>. Quest 보상 덕력·캡 표기 갱신. 정책 변경 없음</td></tr>
 <tr><td><strong>v2.3</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합 + 용어 표준 정합</strong>. ① 화면명 "챌린지" → <strong>"퀘스트"</strong>, 진행 단위 "장" → <strong>"에피소드(EP)"</strong> (도메인 용어 사전: 스토리 퀘스트 → 에피소드 → 미션) ② §2.2 <strong>세로 타임라인 → 가로 에피소드 카드 캐러셀</strong> 전면 재작성 — 에피소드 카드(EP.01~05) 캐러셀 + 선택 에피소드 헤더([진행중] + "{완료}/{전체}") + 미션 리스트 인라인. 해금·상태 전이·미션 타입(📸/🧠/🎯)·보상 정책은 동일 유지 ③ §2.1 헤더 우측 <strong>보유 덕력·응모권 pill</strong> 추가 ④ §2.6 잠금 에피소드 프리뷰 표기 정합. 본문 정책 변경 없음 — 표현·용어 정합</td></tr>
+<tr><td><strong>v2.4</strong></td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 영문 상태 코드 한국어 표준명 전환 + 코드 식별자·개발 용어 한국어화. 정책 변경 없음</td></tr>
 </table>
 
 </body>
