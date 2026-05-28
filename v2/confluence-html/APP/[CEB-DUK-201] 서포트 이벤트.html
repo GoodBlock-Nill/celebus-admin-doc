@@ -87,10 +87,10 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>DUK(덕력)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.6</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.29</td></tr>
+<tr><td>버전</td><td>v1.7</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
-<tr><td>Figma 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=328-6538</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
 <tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 서포트</td></tr>
 </table>
@@ -99,10 +99,11 @@ p {
 <p>아티스트 탭(CEB-ART-101)에서 "{아티스트명} 응원하기" 카드를 탭했을 때 진입하는 화면이다. (유저 대면 명칭: {아티스트명} 응원하기, 예: V01D 응원하기) 아티스트 서포트 이벤트 목록을 표시하고, 유저가 보유 덕력을 응원하여 팬덤 서포트에 참여할 수 있다.</p>
 <h5>주요 기능</h5>
 <ul>
-<li>서포트 이벤트 카드 리스트 (상태별: 모집중 / 달성 / 집행중 / 완료 / 미달성종료 / 집행취소)</li>
-<li>카드 탭 시 인라인 확장 (상세 정보 + 덕력 응원 UI + 진행률)</li>
-<li>덕력 응원: 수량 입력 + 확인 모달 + 응원 완료</li>
+<li>[전체] / [참여가능] / [종료] 필터 탭 + "내 참여만 보기" 토글</li>
+<li>서포트 이벤트 카드 리스트 (풀 너비 이미지 + 목표금액 + 달성률 + 인라인 [참여하기])</li>
+<li>카드의 [참여하기]로 응원 진입 (덕력 응원 UI: 수량 입력 + 확인 모달 + 응원 완료)</li>
 <li>완료 이벤트 결과 확인 (사진/영상 인라인 표시)</li>
+<li>이벤트 상태: 모집중 / 달성 / 진행중 / 완료 / 미달성종료 / 취소</li>
 </ul>
 <h5>접근 경로</h5>
 <ul>
@@ -120,31 +121,47 @@ p {
 <table>
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>뒤로가기</td><td>← 탭 → 이전 화면으로 복귀 (네비게이션 스택 기반)</td></tr>
-<tr><td>타이틀</td><td>"{아티스트명} 응원하기" (예: "V01D 응원하기")</td></tr>
+<tr><td>타이틀</td><td>"{아티스트명} 응원하기" (예: "V01D 응원하기"). Figma 시안 라벨은 "SUPPORT"</td></tr>
+<tr><td>우측 자산</td><td>보유 덕력 "✦ {N}DUK" pill (피그마 참조)</td></tr>
 </table>
 <hr>
-<h3>2.2 이벤트 카드 (축소)</h3>
-<h4>UI 구성</h4>
+<h3>2.2 필터 탭 + 이벤트 카드</h3>
+<h4>필터 탭 + 내 참여만 보기 (v.3 신규)</h4>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
-<tr><td>구성</td><td>상태 아이콘 + 이벤트 타이틀 + 프로그레스 바(모집중만) + 부가 정보</td></tr>
-<tr><td>탭 영역</td><td>카드 전체</td></tr>
+<tr><td>구성</td><td>[전체] / [참여가능] / [종료] 3개 탭</td></tr>
+<tr><td>기본 선택</td><td>전체</td></tr>
+<tr><td>내 참여만 보기</td><td>필터 탭 아래 체크박스 토글. 체크 시 본인이 응원한 이벤트만 표시</td></tr>
+<tr><td>전체</td><td>모집중 + 진행 + 종료 모든 이벤트</td></tr>
+<tr><td>참여가능</td><td>모집중(응원 가능) 이벤트만</td></tr>
+<tr><td>종료</td><td>완료/미달성종료/취소 이벤트 (집행중·달성 포함 마감 상태)</td></tr>
+<tr><td>탭 전환·토글</td><td>즉시 리스트 갱신</td></tr>
+</table>
+<h4>카드 UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>형태</td><td>풀 너비 이미지 카드 (세로 리스트)</td></tr>
+<tr><td>타입 뱃지</td><td>"서포트" 좌상단</td></tr>
+<tr><td>구성</td><td>아티스트명 + 이벤트 타이틀 + "목표금액 {N} DUK" + 달성률 progress bar({N}%) + 기간 + 상태 뱃지</td></tr>
+<tr><td>모집중 카드</td><td>달성률 바 + D-day + 인라인 [참여하기] 버튼</td></tr>
+<tr><td>달성 카드</td><td>"달성" 뱃지 + 100% + "서포트 진행 예정"</td></tr>
+<tr><td>종료 카드</td><td>CLOSED 스탬프 + "달성/미달성" + 결과 안내</td></tr>
 </table>
 <h4>동작</h4>
 <ul>
-<li>카드 탭 시 인라인 확장/축소 토글</li>
-<li>동시에 1개만 확장 (다른 카드 탭 시 이전 카드 자동 축소)</li>
-<li>화면 진입 시 첫 번째 모집중 이벤트를 자동 확장</li>
+<li>모집중 카드 [참여하기] 탭 → 응원 진입 (덕력 응원 UI, §2.4 참조)</li>
+<li>카드 탭 → 상세 정보·결과 확인 (인라인 확장 또는 별도 상세 화면 CEB-DUK-202, 추후 작성)</li>
+<li>화면 진입 시 첫 번째 모집중 이벤트 우선 표시</li>
 </ul>
 <h4>상태별 표시</h4>
 <table>
 <tr><th>상태</th><th>아이콘</th><th>표시</th><th>부가 정보</th></tr>
-<tr><td>모집중 (Active)</td><td>유형별 (피그마 참조)</td><td>타이틀 + 프로그레스 바 {N}%</td><td>목표: {N}DUK ㅣ D-{N}</td></tr>
-<tr><td>달성 (Achieved)</td><td>🎯</td><td>타이틀 + "목표 달성! 집행 대기"</td><td>참여자: {N}명</td></tr>
-<tr><td>집행중 (Executing)</td><td>⏳</td><td>타이틀 + "집행중..."</td><td>-</td></tr>
+<tr><td>모집중 (Active)</td><td>유형별 (피그마 참조)</td><td>타이틀 + 달성률 바 {N}%</td><td>목표금액: {N} DUK ㅣ D-{N}</td></tr>
+<tr><td>달성 (Achieved)</td><td>🎯</td><td>타이틀 + "목표 달성! 서포트 진행 예정" + 100%</td><td>참여자: {N}명</td></tr>
+<tr><td>집행중 (Executing)</td><td>⏳</td><td>타이틀 + "서포트 진행중..."</td><td>-</td></tr>
 <tr><td>완료 (Completed)</td><td>✅</td><td>타이틀 + "완료"</td><td>결과 보기 →</td></tr>
 <tr><td>미달성종료 (Expired)</td><td>⛔</td><td>타이틀 + "미달성"</td><td>응원 덕력 반환 완료</td></tr>
-<tr><td>집행취소 (Cancelled)</td><td>🚫</td><td>타이틀 + "집행 취소"</td><td>응원 덕력 반환 완료</td></tr>
+<tr><td>집행취소 (Cancelled)</td><td>🚫</td><td>타이틀 + "서포트가 취소되었어요"</td><td>응원 덕력 반환 완료</td></tr>
 </table>
 <h5>정렬 규칙</h5>
 <table>
@@ -350,14 +367,22 @@ p {
 <table>
 <tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
 <tr><td>CEB-ART-101</td><td>아티스트 메인</td><td>진입원 (서포트 카드 탭)</td></tr>
+<tr><td>CEB-DUK-202</td><td>서포트 이벤트 상세</td><td>카드 [참여하기]/탭 시 상세·응원 (별도 화면, 추후 작성)</td></tr>
 <tr><td>CEB-DUK-101</td><td>덕력 랭킹</td><td>관련 (응원한 덕력은 랭킹 무영향)</td></tr>
 <tr><td>CEB-FQ-501</td><td>일일 미션</td><td>미션 대상 (서포트 이벤트 확인)</td></tr>
 <tr><td>CEB-HOM-001</td><td>홈 메인</td><td>바로가기 응원 카드 탭 시 진입</td></tr>
 </table>
 <hr>
+<h5>BO 측 운영</h5>
+<table>
+<tr><th>BO 화면ID</th><th>BO 화면명</th><th>운영 액션</th></tr>
+<tr><td>CEB-BO-SUP-101</td><td>서포트 이벤트 리스트</td><td>이벤트 생성·상태 관리</td></tr>
+<tr><td>CEB-BO-SUP-201</td><td>서포트 이벤트 상세</td><td>결과물 등록·응원 반환 처리</td></tr>
+<tr><td>CEB-BO-SUP-401</td><td>응원·반환 변동 내역</td><td>응원 누적·DUK 적립 추적</td></tr>
+</table>
 <h2>5. 변경 이력</h2>
 <table>
-<tr><th>버전</th><th>v1.6</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><th>버전</th><th>v1.7</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td>v1.0</td><td>2026.04.14</td><td>@Nill Yoo</td><td>초안 작성. 리스트+인라인 확장, 덕력 응원 UI(수량 입력+확인 모달), 상태 6종(집행취소 추가), 누적 응원 허용, 취소 불가, 초과 응원 방지(남은 목표량 차감), 반환 규칙, 결과 인라인 표시</td></tr>
 <tr><td>v1.1</td><td>2026.04.15</td><td>@Nill Yoo</td><td>핸드오프 개선: 홈 접근 경로 추가, 에러 케이스 추가(달성 직전 초과, BO 강제 종료 실시간, Race condition), 프로토타입 참조 안내</td></tr>
 <tr><td>v1.2</td><td>2026.04.15</td><td>@Nill Yoo</td><td>크로스 검증: 뒤로가기 네비게이션 스택 기반으로 변경</td></tr>
@@ -365,6 +390,7 @@ p {
 <tr><td>v1.4</td><td>2026.04.17</td><td>@Nill Yoo</td><td>문서 구조 개선: 영역별(컴포넌트) 그룹핑으로 재구성. 정보 변경 없음</td></tr>
 <tr><td><strong>v1.5</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.0 동기화 — 소비 엣지케이스 6종 반영</strong>. ① 에러/예외 표를 [CEB-000] §5.6 엣지케이스 (a)/(b)/(c)/(e)/(f) 5종으로 재구성 (화면 적용 케이스만, (d) 해금 환불은 MEM-202 영역) ② <strong>3언어 UI 안내문 명문화</strong> (KO/EN/JP) — "덕력이 부족해요 / Not enough Fan Power / 推し力が足りません" 등 ③ 시즌 초기화 5분 lock 정책 추가 ④ 동시 클릭 디바운스 0.5초 + 트랜잭션 lock 명문화 ⑤ 다국어 라벨 병기 (보유 덕력 / Available Fan Power) ⑥ 추가 에러 케이스(네트워크·마감 임박·BO 강제 종료) 별도 분리</td></tr>
 <tr><td><strong>v1.6</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 덕력 단위 pt→DUK 일괄 변경</strong>. 응원 단가·잔고·증감 단위(100DUK)·반환 안내·진행률 표기 모두 갱신</td></tr>
+<tr><td><strong>v1.7</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. ① §2.2 <strong>[전체]/[참여가능]/[종료] 필터 탭 + "내 참여만 보기" 토글</strong> 신규 ② 카드 구성을 <strong>풀 너비 이미지 + "목표금액 {N} DUK" + 달성률 바 + 인라인 [참여하기]</strong>로 보강. 카드 [참여하기]로 응원 진입(상세·응원은 인라인 또는 별도 화면 CEB-DUK-202 추후) ③ §2.1 헤더 보유 덕력 pill 추가 ④ 사용자 노출 문구 "집행 대기/집행 취소" → "<strong>서포트 진행 예정/서포트가 취소되었어요</strong>" 정합(상태 코드명은 유지) ⑤ 연관화면 DUK-202 추가. 응원·반환·상태 전이 정책 변경 없음</td></tr>
 </table>
 
 </body>

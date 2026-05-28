@@ -87,10 +87,10 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>MEM(기억저장소)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.4</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.29</td></tr>
+<tr><td>버전</td><td>v1.5</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
-<tr><td>Figma 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=1805-12178</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
 <tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 기억저장소 > 기억 상세</td></tr>
 </table>
@@ -275,12 +275,12 @@ p {
 <li>[신고하기] 탭 → 신고 사유 선택 바텀시트:</li>
 </ul>
 <table>
-<tr><th>신고 사유</th><th>코드</th></tr>
-<tr><td>부적절한 콘텐츠</td><td>INAPPROPRIATE</td></tr>
-<tr><td>스팸</td><td>SPAM</td></tr>
-<tr><td>욕설·혐오</td><td>HATE_SPEECH</td></tr>
-<tr><td>개인정보 노출</td><td>PRIVACY</td></tr>
-<tr><td>기타</td><td>OTHER</td></tr>
+<tr><th>신고 사유</th></tr>
+<tr><td>부적절한 콘텐츠</td></tr>
+<tr><td>스팸</td></tr>
+<tr><td>욕설·혐오</td></tr>
+<tr><td>개인정보 노출</td></tr>
+<tr><td>기타</td></tr>
 </table>
 <ul>
 <li>사유 선택 + [신고] 탭 → 토스트(Success) "신고가 접수되었어요"</li>
@@ -403,6 +403,12 @@ p {
 <tr><td>CEB-000</td><td>공통 정책 §7.6</td><td>기억저장소 소셜 인터랙션 (좋아요·조회수)</td></tr>
 </table>
 <hr>
+<h5>BO 측 운영</h5>
+<table>
+<tr><th>BO 화면ID</th><th>BO 화면명</th><th>운영 액션</th></tr>
+<tr><td>CEB-BO-MEM-101</td><td>신고 리스트</td><td>신고 접수 → 처리 대기열</td></tr>
+<tr><td>CEB-BO-MEM-201</td><td>신고 상세·처리</td><td>신고 인정·차단·작성자 제재</td></tr>
+</table>
 <h2>5. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>v1.4</th><th>작성자</th><th>변경 내용</th></tr>
@@ -411,6 +417,7 @@ p {
 <tr><td>v1.2</td><td>2026.04.17</td><td>@Nill Yoo</td><td>문서 구조 개선: 영역별(컴포넌트) 그룹핑으로 재구성. 정보 변경 없음</td></tr>
 <tr><td><strong>v1.3</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.4 동기화 — 좋아요·조회수 UI 신규</strong>. ① <strong>§2.5 좋아요·조회수 신설</strong> — 공개 기억(🌐)에 한해 표시. 본인 게시글 좋아요 허용·게시글당 1회·옵티미스틱 업데이트. 비로그인 탭 시 로그인 유도. 푸시 알림 미발송 ② <strong>조회수 카운팅 정책</strong> — 로그인 유저 + 브라우저 세션 + 24시간 쿨다운. 비로그인 진입 시 카운트 미적립. 본 화면 진입 시점에 1회 적립 ③ <strong>연관화면ID에 CEB-MEM-102 / CEB-MEM-103 / CEB-000 §7.6 추가</strong> ④ <strong>§2.6/2.7/2.8 번호 이동</strong> (메뉴/공유/공유 링크 접속 — 기존 §2.5/2.6/2.7) ⑤ <strong>주요 기능 항목에 좋아요·조회수 추가</strong></td></tr>
 <tr><td><strong>v1.4</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 감정 이모지 표시 1개로 정정</strong>. §2.2 "선택된 1~3개 이모지 가로 나열" → <strong>"선택된 이모지 1개 표시"</strong>. 본 화면은 덕력 표기 없으므로 단위 변경 영향 없음</td></tr>
+<tr><td><strong>v1.5</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. Figma 링크 연결(<code>1805-12178</code>) — 날짜 타이틀·작성자/시각/공개여부·⋯ 메뉴·이미지 캐러셀·감정 이모지·조회수/좋아요·위치·공유 구조 시안과 일치 확인. 본문 변경 없음</td></tr>
 </table>
 
 </body>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-NTF-510] 알림</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-NTF-510] 알림</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-NTF-510</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>NTF(알림)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>Jira 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=2616-15347</td></tr>
+<tr><td>다국어 영향</td><td>Yes</td></tr>
+<tr><td>Breadcrumb</td><td>(앱 헤더 🔔) > 알림</td></tr>
+</table>
+<hr>
+<h2>1. 화면 개요</h2>
+<h5>목적</h5>
+<p>홈/아티스트 메인 등의 앱 헤더 🔔 알림 아이콘에서 진입하는 알림 센터다. 아티스트 소식·이벤트·게임존·공지 알림을 카테고리/날짜별로 확인하고, 항목 탭 시 관련 화면으로 이동한다.</p>
+<blockquote>
+<p>ID 정합: 기존 문서가 "CEB-NTF-101 알림 센터(추후 작성)"으로 참조하던 화면의 실제 시안. <strong>CEB-NTF-510으로 일원화</strong> (HOM-001·ART-101 연관화면 참조 갱신).</p>
+</blockquote>
+<h5>주요 기능</h5>
+<ul>
+<li>카테고리 탭 (전체 / 아티스트 / 이벤트 / 게임존 / 공지)</li>
+<li>아티스트 탭 시 아티스트 선택 서브 필터</li>
+<li>날짜 그룹별 알림 리스트 (오늘 / 어제 / 지난 주)</li>
+<li>읽음/안읽음 구분 + [모두 읽음]</li>
+<li>헤더 ⚙️ → 알림 설정(CEB-MY-103)</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>앱 헤더 🔔 알림 아이콘 탭 (CEB-HOM-001 / CEB-ART-101 등)</li>
+<li>푸시 알림 탭 시 진입</li>
+</ul>
+<h5>화면 레이아웃</h5>
+<blockquote>
+<p>시각적 스타일은 Figma 시안을 따릅니다. 변형: 모두 읽음 / 알림 off(미수신).</p>
+</blockquote>
+<hr>
+<h2>2. 영역별 상세</h2>
+<h3>2.1 헤더</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>뒤로가기</td><td>← 탭 → 이전 화면 복귀</td></tr>
+<tr><td>타이틀</td><td>"알림"</td></tr>
+<tr><td>모두 읽음</td><td>[✓ 모두 읽음] 버튼 — 전체 알림 읽음 처리</td></tr>
+<tr><td>설정</td><td>⚙️ 버튼 → CEB-MY-103 설정(알림) 이동</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h3>2.2 카테고리 탭 + 아티스트 필터</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>카테고리 탭</td><td>[전체] / [아티스트] / [이벤트] / [게임존] / [공지] (가로 스크롤)</td></tr>
+<tr><td>기본 선택</td><td>전체</td></tr>
+<tr><td>아티스트 서브 필터</td><td>[아티스트] 탭 활성 시 "{아티스트명} ▼" 드롭다운 노출 (팔로우 아티스트 선택)</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h4>동작</h4>
+<ul>
+<li>카테고리 탭 전환 → 해당 카테고리 알림만 표시</li>
+<li>[아티스트] 탭 → 아티스트 드롭다운으로 특정 아티스트 알림만 필터</li>
+<li>[공지] 탭: 서비스(플랫폼) 공지 + 아티스트 공지 통합 (정보 피드 INF-101은 아티스트 공지만, 알림센터는 통합 — [CEB-INF-101] §2.2 참조)</li>
+</ul>
+<h3>2.3 알림 리스트</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>날짜 그룹</td><td>"오늘" / "어제" / "지난 주" 등 그룹 헤더</td></tr>
+<tr><td>항목 구성</td><td>아이콘 + 제목 + 설명 + 시간 + "・" + 아티스트명</td></tr>
+<tr><td>안읽음 표시</td><td>안읽음 항목에 ● 점 표시 (읽으면 제거)</td></tr>
+<tr><td>정렬</td><td>최신순</td></tr>
+<tr><td>페이지네이션</td><td>무한 스크롤</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h5>알림 유형 예시</h5>
+<table>
+<tr><th>유형</th><th>제목 / 설명 예시</th><th>탭 이동</th></tr>
+<tr><td>덕력 시즌 시작</td><td>"덕력 랭킹 새로운 시즌이 시작되었어요!" / "🏆 덕력을 쌓고 시즌 보상을 획득해보세요."</td><td>CEB-DUK-101</td></tr>
+<tr><td>덕력 시즌 종료</td><td>"덕력 랭킹 시즌이 종료되었어요!" / "🎁 이번 시즌 {N}위 달성! 보상을 확인해보세요."</td><td>CEB-DUK-105</td></tr>
+<tr><td>퀘스트 완료</td><td>"퀘스트를 완료했어요!" / "[퀘스트명] {BIVE 에디션명}이 지급 되었어요."</td><td>CEB-FQ-101 / CEB-COL-101</td></tr>
+<tr><td>퀘스트 참여 유도</td><td>"아직 참여하지 않은 퀘스트가 있어요" / "지금 참여하고 보상을 받아보세요."</td><td>CEB-FQ-101</td></tr>
+<tr><td>이벤트/래플·서포트</td><td>(이벤트 알림)</td><td>CEB-EVT-101 / CEB-DUK-201</td></tr>
+<tr><td>공지</td><td>(서비스/아티스트 공지)</td><td>공지 상세</td></tr>
+</table>
+<h4>동작</h4>
+<ul>
+<li>알림 항목 탭 → 안읽음 → 읽음 처리 + 관련 화면(딥링크)으로 이동</li>
+<li>[모두 읽음] 탭 → 전체 안읽음 → 읽음 처리</li>
+</ul>
+<h4>상태별 표시</h4>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>Loading</td><td>리스트 Skeleton UI</td></tr>
+<tr><td>Default</td><td>날짜 그룹 알림 리스트 표시</td></tr>
+<tr><td>모두 읽음</td><td>안읽음 ● 점 전체 제거 (Figma 모두 읽음 변형)</td></tr>
+<tr><td>Empty / 알림 off</td><td>수신 알림 없음/알림 미설정: "받은 알림이 없어요" 또는 알림 설정 유도 (Figma 알림off 변형)</td></tr>
+<tr><td>Error</td><td>조회 실패 시 에러 안내 + 재시도</td></tr>
+</table>
+<h4>비로그인</h4>
+<ul>
+<li>알림 센터는 로그인 상태에서만 (헤더 🔔은 비로그인 시 미확인 뱃지 미표시)</li>
+</ul>
+<hr>
+<h2>3. 공통 규칙</h2>
+<h3>3.1 데이터 갱신</h3>
+<table>
+<tr><th>트리거</th><th>동작</th></tr>
+<tr><td>화면 진입</td><td>알림 리스트 조회 + 미확인 건수 갱신</td></tr>
+<tr><td>카테고리/아티스트 필터</td><td>해당 조건 재조회</td></tr>
+<tr><td>Pull-to-Refresh</td><td>전체 재조회 (공통정책 11.2 참조)</td></tr>
+</table>
+<h3>3.2 알림 수신 정책</h3>
+<ul>
+<li>카테고리별 수신 ON/OFF는 CEB-MY-103 설정에서 제어. OFF 카테고리는 푸시 미발송 (알림 센터 노출 정책은 운영 기준)</li>
+<li>아티스트별 알림은 정보 피드(CEB-INF-101) 헤더 🔔 토글 / 설정(CEB-MY-103) 아티스트 알림과 연동</li>
+</ul>
+<hr>
+<h2>4. 연관화면ID</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-HOM-001</td><td>홈 메인</td><td>진입원 (앱 헤더 🔔)</td></tr>
+<tr><td>CEB-ART-101</td><td>아티스트 메인</td><td>진입원 (앱 헤더 🔔)</td></tr>
+<tr><td>CEB-MY-103</td><td>설정</td><td>⚙️ 알림 설정 이동 + 수신 설정 연동</td></tr>
+<tr><td>CEB-INF-101</td><td>정보 피드</td><td>공지 노출 범위 구분 (정보 피드=아티스트 공지, 알림센터=통합)</td></tr>
+<tr><td>CEB-DUK-101</td><td>덕력 랭킹</td><td>덕력 시즌 알림 이동</td></tr>
+<tr><td>CEB-DUK-105</td><td>덕력 랭킹 내 보상</td><td>시즌 보상 알림 이동</td></tr>
+<tr><td>CEB-FQ-101</td><td>Quest 메인</td><td>퀘스트 알림 이동</td></tr>
+<tr><td>CEB-COL-101</td><td>컬렉션</td><td>BIVE 지급 알림 이동</td></tr>
+</table>
+<hr>
+<h5>BO 측 운영</h5>
+<table>
+<tr><th>BO 화면ID</th><th>BO 화면명</th><th>운영 액션</th></tr>
+<tr><td>(알림/푸시 발송 정책)</td><td>—</td><td>카테고리별 알림·푸시 발송 관리</td></tr>
+</table>
+<h2>5. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.05.28</td><td>@Nill Yoo</td><td>초안 작성 (Figma v.3 <code>2616-15347</code> 기반). 카테고리 탭(전체/아티스트/이벤트/게임존/공지) + 아티스트 서브 필터 + 날짜 그룹 알림 리스트(읽음/안읽음) + [모두 읽음] + ⚙️ 설정 이동. 알림 유형별 딥링크. 모두 읽음/알림off 변형 반영. <strong>기존 문서 참조 "CEB-NTF-101 알림 센터"를 CEB-NTF-510으로 일원화</strong></td></tr>
+</table>
+
+</body>
+</html>

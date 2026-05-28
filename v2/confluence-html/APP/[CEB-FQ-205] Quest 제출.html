@@ -87,12 +87,12 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.5</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.29</td></tr>
+<tr><td>버전</td><td>v2.6</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
-<tr><td>Figma 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=1015-7654</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
-<tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 챌린지 > Quest 제출</td></tr>
+<tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 퀘스트 > Quest 제출</td></tr>
 </table>
 <hr>
 <h2>1. 화면 개요</h2>
@@ -167,7 +167,7 @@ p {
 <tr><td>REJECTED (반려)</td><td>본 화면 진입 가능 (기존 반려 이미지는 초기화/삭제된 상태로 진입)</td></tr>
 <tr><td>SUBMITTED (심사중)</td><td>진입 불가 (타임라인에서 비활성 처리)</td></tr>
 <tr><td>APPROVED (승인)</td><td>진입 불가 (타임라인에서 완료 상태 표시)</td></tr>
-<tr><td>AUTO_COMPLETED (자동완료)</td><td>진입 불가 (타임라인에서 완료 상태 표시)</td></tr>
+<tr><td>자동완료</td><td>진입 불가 (에피소드 카드에서 완료 상태 표시)</td></tr>
 </table>
 <h3>2.3 이미지 업로드</h3>
 <h4>UI 구성</h4>
@@ -273,18 +273,19 @@ p {
 <hr>
 <h2>5. 변경 이력</h2>
 <table>
-<tr><th>버전</th><th>v2.5</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><th>버전</th><th>v2.6</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td>v1.0</td><td>2025.12.24</td><td>@Nill Yoo</td><td>초안 작성</td></tr>
 <tr><td>v1.1</td><td>2026.03.25</td><td>@Nill Yoo</td><td>APP-GAM 양식 재작성</td></tr>
 <tr><td>v1.2</td><td>2026.03.25</td><td>@Nill Yoo</td><td>연관 링크 표시 영역 추가, Quest 정보 필드 명확화 (BO-FQ 동기화)</td></tr>
 <tr><td>v1.3</td><td>2026.03.25</td><td>@Nill Yoo</td><td>CEB-FQ-101→CEB-HOM-501-FQ 통일, 연관화면 보완, 접근 경로 추가</td></tr>
 <tr><td>v1.4</td><td>2026.03.26</td><td>@Nill Yoo</td><td>CEB-FQ-201 화면명 "Event"로 변경 반영</td></tr>
 <tr><td>v2.0</td><td>2026.04.14</td><td>@Nill Yoo</td><td>v2 업그레이드: 접근 경로를 CEB-FQ-101 Quest 메인 타임라인 연동으로 변경 (홈 메인 진입 제거), 제출 완료 후 복귀 화면을 CEB-FQ-101 Quest 메인 타임라인으로 변경, 제출 완료 토스트에 심사 SLA("결과는 빠르면 하루 안에 알려드릴게요") 반영, 보상 즉시 지급 정책 명시(공통정책 8.5 참조), Breadcrumb 갱신</td></tr>
-<tr><td>v2.1</td><td>2026.04.14</td><td>@Nill Yoo</td><td>크로스 검증 반영: WebP 포맷 추가, 이미지 1장 제한 명시, AUTO_COMPLETED 진입 불가 추가</td></tr>
+<tr><td>v2.1</td><td>2026.04.14</td><td>@Nill Yoo</td><td>크로스 검증 반영: WebP 포맷 추가, 이미지 1장 제한 명시, 자동완료 상태 진입 불가 추가</td></tr>
 <tr><td>v2.2</td><td>2026.04.15</td><td>@Nill Yoo</td><td>핸드오프 개선: 에러 케이스 추가(파일 형식 불일치, 제출 실패 복구, 중복 제출 방지), 프로토타입 참조 안내</td></tr>
 <tr><td>v2.3</td><td>2026.04.15</td><td>@Nill Yoo</td><td>크로스 검증: [재제출]→[재도전] CTA 라벨 FQ-101과 통일</td></tr>
 <tr><td>v2.4</td><td>2026.04.17</td><td>@Nill Yoo</td><td>문서 구조 개선: 영역별(컴포넌트) 그룹핑으로 재구성. 정보 변경 없음</td></tr>
 <tr><td><strong>v2.5</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 덕력 단위 pt→DUK 일괄 변경</strong></td></tr>
+<tr><td><strong>v2.6</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. ① Figma 링크 연결(<code>1015-7654</code>) — 보상 뱃지·미션 정보·연관 링크 2개·갤러리/사진촬영·업로드 사진 가이드·[제출하기] 구조 시안과 일치 확인 ② Breadcrumb "챌린지"→"<strong>퀘스트</strong>" 용어 정합(FQ-101 표준). 본문 정책 변경 없음</td></tr>
 </table>
 
 </body>

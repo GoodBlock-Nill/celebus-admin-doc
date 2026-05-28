@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-DUK-103] 덕력 내역보기</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-DUK-103] 덕력 내역보기</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-DUK-103</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>DUK(덕력)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>Jira 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=4-5510</td></tr>
+<tr><td>다국어 영향</td><td>Yes</td></tr>
+<tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 덕력 > 덕력 내역</td></tr>
+</table>
+<hr>
+<h2>1. 화면 개요</h2>
+<h5>목적</h5>
+<p>덕력 랭킹(CEB-DUK-101)의 내 정보 카드 [덕력 내역 보기]에서 진입하는 화면이다. 유저가 획득·사용한 덕력의 전체 내역을 날짜별로 확인하는 화면이다. (Figma 시안 라벨: "덕력 History")</p>
+<blockquote>
+<p>v.3 정합: 기존 CEB-DUK-101 인앱 바텀시트로 제공하던 덕력 이력을 <strong>별도 화면으로 분리</strong>.</p>
+</blockquote>
+<h5>주요 기능</h5>
+<ul>
+<li>전체 / 획득 / 사용 필터로 내역 분류</li>
+<li>날짜 그룹별 내역 리스트 (획득 +초록 / 사용 -빨강)</li>
+<li>항목 탭 시 관련 화면으로 이동 (어디에 쓰였는지 확인)</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>CEB-DUK-101 덕력 랭킹 > 내 정보 카드 [덕력 내역 보기 >] 탭</li>
+</ul>
+<h5>화면 레이아웃</h5>
+<blockquote>
+<p>시각적 스타일은 Figma 시안을 따릅니다.</p>
+</blockquote>
+<hr>
+<h2>2. 영역별 상세</h2>
+<h3>2.1 헤더</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>좌측</td><td>← 뒤로가기 또는 타이틀</td></tr>
+<tr><td>타이틀</td><td>"덕력 내역" (Figma 시안 라벨 "덕력 History")</td></tr>
+<tr><td>우측</td><td>[X] 닫기 (CEB-DUK-101 복귀)</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h4>동작</h4>
+<ul>
+<li>← / [X] 탭 → CEB-DUK-101 덕력 랭킹으로 복귀</li>
+</ul>
+<h3>2.2 필터 탭</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>구성</td><td>[전체] / [획득] / [사용] 3개 탭</td></tr>
+<tr><td>기본 선택</td><td>전체</td></tr>
+<tr><td>전체</td><td>획득 + 사용 모든 내역</td></tr>
+<tr><td>획득</td><td>덕력 증가 내역만 (출석·미션·퀘스트·기억·시즌 보상·반환 등)</td></tr>
+<tr><td>사용</td><td>덕력 감소 내역만 (서포트 응원·독점 콘텐츠 해제 등)</td></tr>
+<tr><td>탭 전환</td><td>즉시 리스트 갱신</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h3>2.3 내역 리스트</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>그룹</td><td>날짜별 그룹 헤더 (YYYY. MM. DD)</td></tr>
+<tr><td>항목 구성</td><td>활동명 + 세부 설명(선택) + 증감 수치 + (관련 화면 있을 시 ">")</td></tr>
+<tr><td>증감 표기</td><td>획득: "+{N}" (초록) / 사용: "-{N}" (빨강)</td></tr>
+<tr><td>항목 예시</td><td>"서포트 이벤트 / 커피차 서포트·반환 +10 >", "독점 콘텐츠 해제 / 비하인드 사진 -100 >", "출석 체크 +10", "일일 미션 완료 +20", "기억 저장 +30", "시즌 보상 +500"</td></tr>
+<tr><td>정렬</td><td>최신순 (날짜 내림차순)</td></tr>
+<tr><td>페이지네이션</td><td>무한 스크롤 또는 더보기</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h4>동작</h4>
+<table>
+<tr><th>항목 유형</th><th>탭 동작</th></tr>
+<tr><td>서포트 응원/반환</td><td>→ CEB-DUK-201 해당 서포트 이벤트로 이동</td></tr>
+<tr><td>독점 콘텐츠 해제</td><td>→ 해당 콘텐츠로 이동</td></tr>
+<tr><td>출석·일일 미션·퀘스트·기억·시즌 보상</td><td>관련 화면 없으면 탭 동작 없음 (정보 표시만)</td></tr>
+</table>
+<h4>내역 유형 (획득/사용)</h4>
+<table>
+<tr><th>구분</th><th>활동</th><th>표시 예시</th><th>증감</th></tr>
+<tr><td>획득</td><td>출석 체크</td><td>"출석 체크"</td><td>+5DUK</td></tr>
+<tr><td>획득</td><td>일일 미션 완료</td><td>"일일 미션 완료"</td><td>+25DUK</td></tr>
+<tr><td>획득</td><td>퀘스트 미션 승인</td><td>"출석 체크 / EP.01·V01D 공식 X 팔로우"</td><td>+N DUK</td></tr>
+<tr><td>획득</td><td>기억 저장</td><td>"기억 저장"</td><td>+30DUK</td></tr>
+<tr><td>획득</td><td>시즌 보상</td><td>"시즌 보상"</td><td>+N DUK</td></tr>
+<tr><td>획득</td><td>서포트 미달성 반환</td><td>"서포트 이벤트 / 커피차 서포트·반환"</td><td>+N DUK</td></tr>
+<tr><td>사용</td><td>서포트 응원</td><td>"서포트 이벤트 / 커피차 서포트"</td><td>-N DUK</td></tr>
+<tr><td>사용</td><td>독점 콘텐츠 해제</td><td>"독점 콘텐츠 해제 / 비하인드 사진"</td><td>-N DUK</td></tr>
+</table>
+<h4>상태별 표시</h4>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>Loading</td><td>리스트 영역 Skeleton UI</td></tr>
+<tr><td>Default</td><td>날짜 그룹 내역 정상 표시</td></tr>
+<tr><td>Empty</td><td>내역 없음(신규 유저): "아직 덕력 내역이 없어요" 안내 (Figma 내역x 변형 참조)</td></tr>
+<tr><td>Error</td><td>조회 실패 시 에러 안내 + 재시도 버튼</td></tr>
+</table>
+<h4>비로그인</h4>
+<ul>
+<li>본 화면은 로그인 상태에서만 진입 (CEB-DUK-101에서 비로그인 시 [덕력 내역 보기] 미노출)</li>
+</ul>
+<hr>
+<h2>3. 공통 규칙</h2>
+<h3>3.1 데이터 갱신</h3>
+<table>
+<tr><th>트리거</th><th>동작</th></tr>
+<tr><td>화면 진입</td><td>덕력 내역 조회</td></tr>
+<tr><td>필터 전환</td><td>해당 필터 기준 재조회</td></tr>
+<tr><td>Pull-to-Refresh</td><td>전체 재조회 (공통정책 11.2 참조)</td></tr>
+</table>
+<h3>3.2 멀티 아티스트 대응</h3>
+<ul>
+<li>덕력 내역은 계정 단위 통합 표시 (덕력은 보유/사용 모두 계정 단위)</li>
+</ul>
+<hr>
+<h2>4. 연관화면ID</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-DUK-101</td><td>덕력 랭킹</td><td>진입원 ([덕력 내역 보기]) + 복귀</td></tr>
+<tr><td>CEB-DUK-201</td><td>서포트 이벤트</td><td>서포트 응원/반환 내역 항목 탭 시 이동</td></tr>
+</table>
+<hr>
+<h5>BO 측 운영</h5>
+<table>
+<tr><th>BO 화면ID</th><th>BO 화면명</th><th>운영 액션</th></tr>
+<tr><td>CEB-BO-DUK-401</td><td>변동 내역</td><td>회원 덕력 변동 내역 추적·조회</td></tr>
+</table>
+<h2>5. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.05.28</td><td>@Nill Yoo</td><td>초안 작성 (Figma v.3 <code>4-5510</code> 기반). CEB-DUK-101 덕력 이력 바텀시트를 별도 화면으로 분리. 전체/획득/사용 필터 + 날짜 그룹 내역 리스트(획득 +초록/사용 -빨강) + 항목 탭 관련 화면 이동. Empty(내역x) 변형 반영</td></tr>
+</table>
+
+</body>
+</html>

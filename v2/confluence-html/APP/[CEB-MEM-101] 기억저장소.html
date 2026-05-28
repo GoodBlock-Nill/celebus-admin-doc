@@ -87,10 +87,10 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>MEM(기억저장소)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.8</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.29</td></tr>
+<tr><td>버전</td><td>v1.9</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
-<tr><td>Figma 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=1584-9232</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
 <tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 기억 저장소</td></tr>
 </table>
@@ -127,9 +127,10 @@ p {
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>뒤로가기</td><td>← 탭 → 이전 화면으로 복귀 (네비게이션 스택 기반)</td></tr>
 <tr><td>타이틀</td><td>"기억저장소"</td></tr>
-<tr><td>탭 전환</td><td><strong>[내 기억저장소] / [모두의 기억저장소]</strong> 2탭. 기본 활성: 내 기억저장소. 비로그인 시 "내" 탭 비활성, "모두" 탭만 활성</td></tr>
-<tr><td>뷰 전환 버튼</td><td>[📅] [🖼️] [🗺️] 3개 아이콘 버튼. <strong>"내" 탭 활성 시에만 표시.</strong> "모두" 탭에서는 숨김 처리</td></tr>
-<tr><td>⚙️ 설정</td><td><strong>헤더 우측 ⚙️ 버튼.</strong> 탭 시 설정 바텀시트(§2.7) 오픈. 비로그인 시 비활성</td></tr>
+<tr><td>탭 전환</td><td><strong>[내 기억] / [모두의 기억]</strong> 2탭 (Figma 라벨). 기본 활성: 내 기억. 비로그인 시 "내 기억" 탭 비활성, "모두의 기억" 탭만 활성</td></tr>
+<tr><td>뷰 전환 버튼</td><td>[📅] [▦] [📍] 3개 아이콘 버튼(캘린더/그리드/지도). <strong>"내 기억" 탭 활성 시에만 표시.</strong> "모두의 기억" 탭에서는 숨김 처리</td></tr>
+<tr><td>⚙️ 설정</td><td>헤더 우측 ⚙️ 버튼. 탭 시 설정 바텀시트(§2.7) 오픈. 비로그인 시 비활성. (Figma 기본 캘린더 프레임에는 미표시 — 디자인팀 확인)</td></tr>
+<tr><td>FAB</td><td>우하단 작성 FAB (✏️). 탭 시 CEB-MEM-201 기억 작성</td></tr>
 </table>
 <h4>동작</h4>
 <ul>
@@ -297,7 +298,7 @@ p {
 <tr><td>표시 조건</td><td>기억 0건 + 첫 진입 시</td></tr>
 <tr><td>구성</td><td>캘린더 / 그리드 / 지도 뷰 소개 + "첫 기억 남기기" CTA (피그마 참조)</td></tr>
 <tr><td>CTA</td><td>[첫 기억 남기기] 탭 시 기억 작성 화면으로 이동</td></tr>
-<tr><td>이후</td><td>1회성. 해제 후 재진입 시 미표시 (localStorage 기준)</td></tr>
+<tr><td>이후</td><td>1회성. 해제 후 재진입 시 미표시 (기기 저장 기준)</td></tr>
 </table>
 <h4>에러/예외</h4>
 <table>
@@ -345,9 +346,16 @@ p {
 <tr><td>CEB-MEM-103</td><td>{닉네임} 님의 기억저장소</td><td>MEM-102에서 닉네임 탭 시 진입. 해당 유저 공개 게시글만 표시</td></tr>
 </table>
 <hr>
+<h5>BO 측 운영</h5>
+<table>
+<tr><th>BO 화면ID</th><th>BO 화면명</th><th>운영 액션</th></tr>
+<tr><td>CEB-BO-MEM-101</td><td>신고 리스트</td><td>신고 들어온 기억 처리</td></tr>
+<tr><td>CEB-BO-MEM-201</td><td>신고 상세·처리</td><td>개별 신고 처리·차단·작성자 제재</td></tr>
+<tr><td>CEB-BO-MEM-301</td><td>차단 통합</td><td>차단된 회원·게시물 관리</td></tr>
+</table>
 <h2>5. 변경 이력</h2>
 <table>
-<tr><th>버전</th><th>v1.8</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><th>버전</th><th>v1.9</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td>v1.0</td><td>2026.04.15</td><td>@Nill Yoo</td><td>초안 작성. 캘린더 / 그리드 / 지도 3뷰, [+] FAB, 감정 이모지 6종(필수 1~3개), 기억 상세 / 수정 / 삭제, 덕력 30DUK(삭제 미회수), 월간 50건 제한, 프라이버시 2단계 공개 구조, 온보딩 가이드, MVP 개인 다이어리</td></tr>
 <tr><td>v1.1</td><td>2026.04.15</td><td>@Nill Yoo</td><td>크로스 검증 반영: 작성 후 Quest CTA 추가(3.3), 1년 전 오늘 푸시 진입 동작 추가(3.7)</td></tr>
 <tr><td>v1.2</td><td>2026.04.15</td><td>@Nill Yoo</td><td>핸드오프 개선: 서브 화면 ID(MEM-201/202 추후 작성), 에러 케이스 추가(미래 날짜, 이미지 형식/용량, 지도 뷰 위치 없음), 홈/푸시 접근 경로 추가, 프로토타입 참조 안내</td></tr>
@@ -357,6 +365,7 @@ p {
 <tr><td>v1.6</td><td>2026.04.17</td><td>@Nill Yoo</td><td>문서 구조 개선: 영역별(컴포넌트) 그룹핑으로 재구성. 정보 변경 없음</td></tr>
 <tr><td><strong>v1.7</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.4 동기화 — 소셜 기능 추가</strong>. ① <strong>§2.1 헤더 2탭 구조</strong> 신설 — [내 기억저장소] / [모두의 기억저장소]. 비로그인 시 "내" 탭 비활성, "모두" 탭만 활성 ② <strong>뷰 전환 버튼([📅][🖼️][🗺️]) "내" 탭에서만 표시</strong>, "모두" 탭에서는 숨김 ③ <strong>§2.7 설정 바텀시트 신규</strong> — 헤더 우측 ⚙️ 버튼 → 저장소 공개 토글. 비공개→공개 전환 시 안내 모달 1회 ④ <strong>연관화면ID에 CEB-MEM-102 / CEB-MEM-103 추가</strong></td></tr>
 <tr><td><strong>v1.8</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 기억저장소 3대 정책 + 단위 변경</strong>. ① <strong>§2.2 캘린더 도트</strong> — "이모지 1개 + +N" → <strong>"도트 1개만 (+N 표기 제거)"</strong> ② <strong>§2.5 기억 작성 규칙</strong> — 감정 이모지 "1~3개" → <strong>"1개 단일 선택 (라디오)"</strong> ③ <strong>덕력 단위 pt→DUK</strong> 일괄 변경 (저장 보상 30DUK 표기 갱신) ④ 작성 순서 안내 문구 "필수 1~3개" → "필수 1개"</td></tr>
+<tr><td><strong>v1.9</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. Figma 링크 연결(<code>1584-9232</code>). § 2.1 탭 라벨 "내 기억저장소/모두의 기억저장소" → <strong>"내 기억/모두의 기억"</strong>(Figma), 뷰 버튼 아이콘 정합(캘린더/그리드/지도), 우하단 작성 FAB(✏️) 명시. ⚙️ 설정 버튼은 Figma 기본 프레임 미표시 — 디자인팀 확인 노트. 캘린더·그리드·지도 3뷰 구조 일치 확인</td></tr>
 </table>
 
 </body>

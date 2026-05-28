@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-DUK-202] 서포트 이벤트 상세</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-DUK-202] 서포트 이벤트 상세</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-DUK-202</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>DUK(덕력)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>Jira 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=328-6217</td></tr>
+<tr><td>다국어 영향</td><td>Yes</td></tr>
+<tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 응원하기 > 서포트 상세</td></tr>
+</table>
+<hr>
+<h2>1. 화면 개요</h2>
+<h5>목적</h5>
+<p>서포트 이벤트 목록(CEB-DUK-201)에서 카드 [참여하기]/탭 시 진입하는 상세 화면이다. 서포트 이벤트의 상세 정보·진행도·내 참여 현황을 확인하고, 보유 덕력으로 응원하는 화면이다.</p>
+<blockquote>
+<p>v.3 정합: 기존 CEB-DUK-201 인라인 확장으로 제공하던 상세·응원을 <strong>별도 상세 화면으로 분리</strong>.</p>
+</blockquote>
+<h5>주요 기능</h5>
+<ul>
+<li>서포트 이벤트 상세 (대표 이미지 + 타이틀 + D-day + 기간 + 설명)</li>
+<li>진행도 (목표금액 + 달성률 + 누적/목표 DUK)</li>
+<li>내 참여 현황 (내 누적 응원) + 참여 통계 (참여 유저 수)</li>
+<li>유의사항 안내</li>
+<li>하단 고정 응원 바 (보유 덕력 + 수량 입력 + [응원하기])</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>CEB-DUK-201 서포트 이벤트 > 카드 [참여하기]/탭</li>
+</ul>
+<h5>화면 레이아웃</h5>
+<blockquote>
+<p>시각적 스타일은 Figma 시안을 따릅니다. 변형: 모집중 / 달성 / 완료 / 미달성종료 / 집행취소 등 상태별.</p>
+</blockquote>
+<hr>
+<h2>2. 영역별 상세</h2>
+<h3>2.1 헤더 + 히어로</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>뒤로가기</td><td>← 탭 → CEB-DUK-201 복귀</td></tr>
+<tr><td>공유</td><td>우측 공유 아이콘 (OS 기본 공유)</td></tr>
+<tr><td>대표 이미지</td><td>서포트 대표 이미지 (상단 풀 너비)</td></tr>
+<tr><td>타이틀</td><td>아티스트명 + 서포트 타이틀 (예: "V01D 커피차 서포트")</td></tr>
+<tr><td>기간·D-day</td><td>"D-{N}" + "{YYYY.MM.DD} ~ MM.DD"</td></tr>
+<tr><td>설명</td><td>BO에서 등록한 이벤트 설명 텍스트</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h3>2.2 진행도</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>목표금액</td><td>"목표금액 {N} DUK"</td></tr>
+<tr><td>달성률</td><td>progress bar + "{N}%"</td></tr>
+<tr><td>누적/목표</td><td>"{현재} / {목표} DUK"</td></tr>
+<tr><td>달성 상태</td><td>목표 달성 시 100% + "목표 달성!" 표시 (응원 UI 비활성)</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h3>2.3 내 참여 현황 · 참여 통계</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>내 누적 응원</td><td>"내 누적 응원 ✦{N}" (0이면 미표시 또는 0 표시)</td></tr>
+<tr><td>참여 유저 수</td><td>"참여 유저 수 {N}명"</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h3>2.4 유의사항 안내</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>구성</td><td>유의사항 리스트 (BO 등록)</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h3>2.5 응원 바 (하단 고정)</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>보유 표시</td><td>"사용 가능한 덕력 ✦{N} DUK"</td></tr>
+<tr><td>수량 입력</td><td>[-] 버튼 + 수량 필드(직접 입력) + [+] 버튼</td></tr>
+<tr><td>증감 단위</td><td>[-]/[+] 탭 시 100DUK 단위 (CEB-DUK-201 §2.4 응원 규칙 참조)</td></tr>
+<tr><td>최소/최대</td><td>최소 1DUK / 최대 min(보유 덕력, 남은 목표량)</td></tr>
+<tr><td>[응원하기]</td><td>수량 0이면 비활성. 1 이상이면 활성</td></tr>
+<tr><td>달성 상태</td><td>응원 UI 전체 비활성 + "목표 달성! 감사합니다 💜"</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h4>동작</h4>
+<ul>
+<li>[응원하기] 탭 → 확인 모달 표시 → [응원] → 서버 처리 → 토스트(Success) "덕력 {N}DUK 응원 완료!" + 진행도·내 누적 응원·보유 덕력 갱신</li>
+<li>응원 규칙·확인 모달·초과 응원 방지·누적 응원·반환 규칙·상태 6종·에러 케이스는 <strong>[CEB-DUK-201] §2.4·2.5·2.6 영역 정책 준용</strong></li>
+</ul>
+<h4>상태별 표시 (CEB-DUK-201 §2.6 상태 정의 준용)</h4>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>모집중</td><td>응원 바 활성</td></tr>
+<tr><td>달성</td><td>응원 바 비활성 + "목표 달성! 서포트 진행 예정"</td></tr>
+<tr><td>집행중</td><td>"서포트 진행중..." (응원 불가)</td></tr>
+<tr><td>완료</td><td>결과(사진/영상) 표시 (CEB-DUK-201 §2.3 결과 영역 준용)</td></tr>
+<tr><td>미달성종료 / 집행취소</td><td>"응원 덕력 반환 완료" 안내</td></tr>
+</table>
+<h4>비로그인</h4>
+<ul>
+<li>상세 열람 가능. 내 누적 응원 "-" 표시. [응원하기] 탭 시 로그인 화면 이동 (공통정책 10.5 참조)</li>
+</ul>
+<hr>
+<h2>3. 공통 규칙</h2>
+<h3>3.1 데이터 갱신</h3>
+<table>
+<tr><th>트리거</th><th>동작</th></tr>
+<tr><td>화면 진입</td><td>이벤트 상세 + 진행도 + 내 참여 조회</td></tr>
+<tr><td>응원 완료</td><td>진행도 + 내 누적 응원 + 보유 덕력 갱신</td></tr>
+<tr><td>Pull-to-Refresh</td><td>전체 재조회 (공통정책 11.2 참조)</td></tr>
+</table>
+<h3>3.2 멀티 아티스트 대응</h3>
+<ul>
+<li>서포트 이벤트는 아티스트별 분리 (artist_id). 응원 덕력은 해당 서포트 아티스트에 귀속 ([CEB-000] §5.2.2 참조)</li>
+</ul>
+<hr>
+<h2>4. 연관화면ID</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-DUK-201</td><td>서포트 이벤트</td><td>진입원 + 응원 규칙·상태·반환 정책 준용</td></tr>
+<tr><td>CEB-DUK-101</td><td>덕력 랭킹</td><td>관련 (응원 덕력은 랭킹 무영향)</td></tr>
+<tr><td>CEB-DUK-103</td><td>덕력 내역보기</td><td>응원/반환 내역 확인</td></tr>
+</table>
+<hr>
+<h5>BO 측 운영</h5>
+<table>
+<tr><th>BO 화면ID</th><th>BO 화면명</th><th>운영 액션</th></tr>
+<tr><td>CEB-BO-SUP-201</td><td>서포트 이벤트 상세</td><td>결과물 등록·응원 반환 처리</td></tr>
+<tr><td>CEB-BO-SUP-401</td><td>응원·반환 변동 내역</td><td>응원 누적·DUK 적립 추적</td></tr>
+</table>
+<h2>5. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.05.28</td><td>@Nill Yoo</td><td>초안 작성 (Figma v.3 <code>328-6217</code> 기반). CEB-DUK-201 인라인 확장 상세·응원을 별도 상세 화면으로 분리. 히어로(이미지·타이틀·D-day·설명) + 진행도(목표금액·달성률·누적/목표) + 내 참여 현황·참여 통계 + 유의사항 + 하단 고정 응원 바. 응원 규칙·상태·반환 정책은 CEB-DUK-201 영역 정책 준용. 상태별 변형 반영</td></tr>
+</table>
+
+</body>
+</html>

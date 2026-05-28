@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-DUK-105] 덕력 랭킹 내 보상</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-DUK-105] 덕력 랭킹 내 보상</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-DUK-105</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>DUK(덕력)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>Jira 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=2205-14675</td></tr>
+<tr><td>다국어 영향</td><td>Yes</td></tr>
+<tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 덕력 > 내 보상</td></tr>
+</table>
+<hr>
+<h2>1. 화면 개요</h2>
+<h5>목적</h5>
+<p>덕력 랭킹(CEB-DUK-101)의 시즌 보상 카드 [보상 확인]에서 진입하는 화면이다. 유저가 시즌별로 달성한 랭킹 등급과 획득 보상(실물·디지털)을 확인하고, 실물 보상의 배송지를 입력하는 화면이다.</p>
+<h5>주요 기능</h5>
+<ul>
+<li>시즌 선택 (드롭다운)으로 시즌별 내 보상 조회</li>
+<li>달성 등급 표시 (1위 / TOP 10 / TOP 10% 등)</li>
+<li>획득 보상 리스트 (실물: 배송지 입력 / 디지털: 자동 지급)</li>
+<li>보상 받은 시즌 목록</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>CEB-DUK-101 덕력 랭킹 > 시즌 보상 카드 [보상 확인] 탭</li>
+</ul>
+<h5>화면 레이아웃</h5>
+<blockquote>
+<p>시각적 스타일은 Figma 시안을 따릅니다. 변형: 1위 달성 / TOP 10 / TOP 10% 등 등급별.</p>
+</blockquote>
+<hr>
+<h2>2. 영역별 상세</h2>
+<h3>2.1 헤더 + 시즌 선택</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>뒤로가기</td><td>← 탭 → CEB-DUK-101 복귀</td></tr>
+<tr><td>타이틀</td><td>"내 보상"</td></tr>
+<tr><td>시즌 드롭다운</td><td>보상받은 시즌 선택 (예: "3월 시즌 ▼")</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h4>동작</h4>
+<ul>
+<li>시즌 드롭다운 탭 → 보상받은 시즌 목록에서 선택 → 해당 시즌 보상 표시</li>
+</ul>
+<h3>2.2 달성 결과</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>구성</td><td>왕관 일러스트 + 달성 등급 + 안내 문구</td></tr>
+<tr><td>달성 등급</td><td>"1위 달성" / "TOP 10 달성" / "TOP 10% 달성" 등 (시즌 보상 구간 기준)</td></tr>
+<tr><td>안내 문구</td><td>"시즌 보상을 획득했어요!"</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<blockquote>
+<p>보상 대상 구간(등수/퍼센트)은 시즌별 BO 설정 ([CEB-DUK-101] §2.5 보상 대상 기준 참조).</p>
+</blockquote>
+<h3>2.3 획득한 보상</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>구성</td><td>보상별 행: 보상 이미지/아이콘 + 보상명 + 상태/안내</td></tr>
+<tr><td>실물 보상</td><td>보상명(예: "사인 포토카드") + "배송지 정보를 입력해주세요" + [배송지 입력]</td></tr>
+<tr><td>디지털 보상</td><td>보상명(예: "디지털 포토카드") + "보상이 지급되었어요" (자동 지급)</td></tr>
+<tr><td>배송 안내</td><td>"실물 보상은 배송지 입력 후 순차적으로 배송됩니다."</td></tr>
+<tr><td>입력 기한</td><td>"입력기한 {YYYY.MM.DD} 까지"</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h4>동작</h4>
+<ul>
+<li>실물 보상 [배송지 입력] 탭 → 배송지 입력 폼 (이름·연락처·주소). 입력 완료 시 토스트(Success)</li>
+<li>디지털 보상: 시즌 종료 시 자동 지급 완료 (별도 액션 없음)</li>
+<li>입력 기한 경과 시: 실물 보상 배송지 입력 마감 안내 (수령 불가 또는 운영 문의 안내)</li>
+</ul>
+<h4>상태별 표시</h4>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>실물 미입력</td><td>"배송지 정보를 입력해주세요" + [배송지 입력] 활성</td></tr>
+<tr><td>실물 입력 완료</td><td>"배송지 입력 완료 · 배송 준비 중" (비활성)</td></tr>
+<tr><td>디지털 지급 완료</td><td>"보상이 지급되었어요"</td></tr>
+<tr><td>보상 없음</td><td>해당 시즌 미수상: "이 시즌에는 받은 보상이 없어요" 안내</td></tr>
+</table>
+<h3>2.4 보상 받은 시즌</h3>
+<h4>UI 구성</h4>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>구성</td><td>보상받은 시즌 리스트 (하단 영역)</td></tr>
+<tr><td>항목</td><td>시즌명 + 달성 등급 뱃지(예: "1위 달성", "TOP10% 달성") + 기간(YYYY.MM.DD ~ YYYY.MM.DD) + 선택 표시(✓)</td></tr>
+<tr><td>정렬</td><td>최신 시즌순</td></tr>
+<tr><td>탭 동작</td><td>시즌 선택 → 상단 보상 영역 해당 시즌으로 전환</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<h4>비로그인</h4>
+<ul>
+<li>본 화면은 로그인 상태에서만 진입 (CEB-DUK-101에서 비로그인 시 시즌 보상 카드 미노출)</li>
+</ul>
+<hr>
+<h2>3. 공통 규칙</h2>
+<h3>3.1 데이터 갱신</h3>
+<table>
+<tr><th>트리거</th><th>동작</th></tr>
+<tr><td>화면 진입</td><td>보상받은 시즌 목록 + 선택 시즌 보상 조회</td></tr>
+<tr><td>시즌 전환</td><td>해당 시즌 보상 재조회</td></tr>
+<tr><td>배송지 입력 후</td><td>해당 보상 상태 갱신</td></tr>
+</table>
+<h3>3.2 멀티 아티스트 대응</h3>
+<ul>
+<li>시즌 보상은 아티스트별 랭킹 기준 (artist_id) — 진입한 아티스트의 시즌 보상 표시</li>
+</ul>
+<hr>
+<h2>4. 연관화면ID</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-DUK-101</td><td>덕력 랭킹</td><td>진입원 (시즌 보상 카드 [보상 확인]) + 복귀</td></tr>
+</table>
+<hr>
+<h5>BO 측 운영</h5>
+<table>
+<tr><th>BO 화면ID</th><th>BO 화면명</th><th>운영 액션</th></tr>
+<tr><td>CEB-BO-DUK-201</td><td>시즌 상세</td><td>랭킹 보상 구간·상품 설정</td></tr>
+<tr><td>CEB-BO-DUK-102</td><td>랭킹</td><td>시즌 보상 판정·수동 재지급·배송 처리</td></tr>
+</table>
+<h2>5. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.05.28</td><td>@Nill Yoo</td><td>초안 작성 (Figma v.3 <code>2205-14675</code> 기반). CEB-DUK-101 시즌 보상 카드 [보상 확인]에서 진입. 시즌 선택 + 달성 등급(1위/TOP10/TOP10%) + 획득 보상(실물 배송지 입력·디지털 자동 지급, 입력 기한) + 보상 받은 시즌 목록. 1위/TOP10/TOP10% 변형 반영</td></tr>
+</table>
+
+</body>
+</html>

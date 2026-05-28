@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-EVT-104] Raffle 상세 (미당첨)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-EVT-104] Raffle 상세 (미당첨)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-EVT-104</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>EVT(Raffle/응모)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
+<tr><td>Figma 링크</td><td>(v.3 전체 화면 미발견 — "종료_미당첨" 상단 안내 배너 컴포넌트만 존재. 미당첨 전용 화면 디자인 여부 디자인팀 확인 필요)</td></tr>
+<tr><td>다국어 영향</td><td>Yes (KO/EN/JP)</td></tr>
+<tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > Raffle > Raffle 상세 (미당첨)</td></tr>
+<tr><td>비고</td><td>v1 [CEB-FQ-204] Raffle 상세(미당첨) 흡수</td></tr>
+</table>
+<hr>
+<h2>1. 화면 개요</h2>
+<p>Raffle 추첨 결과 미당첨된 유저(Loser)에게 결과를 정중히 안내. 부정적 감정을 최소화하기 위해 위로 메시지를 랜덤 노출하며, Raffle 메인으로 복귀를 유도.</p>
+<h5>주요 기능</h5>
+<ul>
+<li>위로 이미지 (차분한 톤)</li>
+<li>위로 문구 6종 중 랜덤 노출</li>
+<li>[확인] → Raffle 메인 복귀</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>[CEB-EVT-101] Raffle 메인 > 미당첨 리스트 클릭</li>
+<li>결과 발표 푸시 알림 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<pre><code>[&lt;] 당첨 결과
+─────────────────────────────────
+[위로 이미지/감성 일러스트]
+(채도 낮은 차분한 톤)
+
+"아쉽게도 당첨되지 않았어요."  (H1, 중앙)
+"다음 기회에 다시 도전해주세요!
+ 더 좋은 이벤트로 찾아올게요."  (Body, 중앙)
+─────────────────────────────────
+[Sticky Footer]
+[ 확인 ]  (Secondary/Line)
+─────────────────────────────────
+</code></pre>
+<table>
+<tr><th>영역</th><th>구성</th><th>설명</th></tr>
+<tr><td>Header</td><td>[<] / "당첨 결과"</td><td></td></tr>
+<tr><td>Visual</td><td>위로 이미지</td><td>차분한 톤앤매너, 당첨 화면(EVT-103)의 화려함과 대비</td></tr>
+<tr><td>Message</td><td>메인+서브 위로 문구</td><td>진입 시 6종 중 랜덤</td></tr>
+<tr><td>Footer</td><td>[확인]</td><td>Secondary(Line) 또는 Text Button — 과도한 강조 회피</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<h3>2.1 위로 문구 세트 (6종)</h3>
+<table>
+<tr><th>#</th><th>메인</th><th>서브</th></tr>
+<tr><td>1</td><td>아쉽게도 당첨되지 않았어요.</td><td>다음 기회에 다시 도전해주세요! 더 좋은 이벤트로 찾아올게요.</td></tr>
+<tr><td>2</td><td>이번엔 아쉽지만, 다음엔 꼭 당첨될 거예요!</td><td>(없음)</td></tr>
+<tr><td>3</td><td>다음 기회엔 꼭 좋은 소식 들려드릴게요 :)</td><td>(없음)</td></tr>
+<tr><td>4</td><td>오늘의 운은 잠시 쉬는 중…</td><td>내일은 다시 올라갈 거예요!</td></tr>
+<tr><td>5</td><td>이번에는 놓쳤지만, 기회는 또 올 거예요!</td><td>더 재미있는 이벤트로 다시 찾아올게요</td></tr>
+<tr><td>6</td><td>헉! 아쉽게도 떨어졌어요.</td><td>다음엔 우리 같이 꼭 잡아봐요</td></tr>
+</table>
+<hr>
+<h2>3. 규칙·로직</h2>
+<h3>3.1 진입 시 검증</h3>
+<ol>
+<li>서버 <code>is_winner</code> 재조회</li>
+<li><code>true</code> → [CEB-EVT-103] 당첨 화면 replace (자연 전환)</li>
+<li><code>false</code> + Ended → 본 화면 렌더 + 위로 문구 랜덤 선택</li>
+</ol>
+<h3>3.2 [확인] 동작</h3>
+<ul>
+<li>[CEB-EVT-101] Raffle 메인으로 이동</li>
+<li>네비게이션 스택에서 현재 화면 제거</li>
+</ul>
+<h3>3.3 다국어</h3>
+<ul>
+<li>위로 문구·버튼: i18n KO/EN/JP (위로 문구 세트 6종 모두 다국어 리소스)</li>
+</ul>
+<hr>
+<h2>4. UI 상태·에러</h2>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>Loading</td><td>Skeleton (위로 이미지·문구 회색 박스)</td></tr>
+<tr><td>검증 실패 (당첨자 오인)</td><td>즉시 [CEB-EVT-103] replace, 토스트 없음</td></tr>
+<tr><td>데이터 로딩 실패</td><td>"정보를 불러오는 데 실패했습니다" + [다시 시도]</td></tr>
+<tr><td>Network Error</td><td>"네트워크 연결을 확인해주세요" + [다시 시도]</td></tr>
+</table>
+<hr>
+<h2>5. 연관 화면</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-EVT-101</td><td>Raffle 메인</td><td>진입, 확인 후 복귀</td></tr>
+<tr><td>CEB-EVT-102</td><td>Raffle 상세 (진행중)</td><td>상태 전환 (Active→Ended 미당첨)</td></tr>
+<tr><td>CEB-EVT-103</td><td>Raffle 상세 (당첨)</td><td>검증 시 replace</td></tr>
+<tr><td>CEB-BO-FQ-206</td><td>Raffle 추첨내역 (BO)</td><td>추첨 결과 데이터 소스</td></tr>
+</table>
+<hr>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>v1 [CEB-FQ-204] 흡수. ① 위로 문구 6종 랜덤 ② 당첨 여부 재검증 자연 전환 ③ 차분한 톤앤매너로 EVT-103과 대비</td></tr>
+<tr><td><strong>v1.1</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 정합 확인</strong>. v.3에 미당첨 전용 전체 화면 미발견("종료_미당첨" 상단 안내 배너 컴포넌트만 존재) — Figma 링크 필드에 미발견·확인 필요 노트 기재. 미당첨 전용 화면 디자인 여부 디자인팀 확인 대기. 본문 변경 없음</td></tr>
+</table>
+
+</body>
+</html>

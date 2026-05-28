@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-EVT-103] Raffle 상세 (당첨)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-EVT-103] Raffle 상세 (당첨)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-EVT-103</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>EVT(Raffle/응모)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>다국어 영향</td><td>Yes (KO/EN/JP)</td></tr>
+<tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > Raffle > Raffle 상세 (당첨)</td></tr>
+<tr><td>비고</td><td>Phase 11 신규. v1 [CEB-FQ-203] Raffle 상세(당첨) 흡수</td></tr>
+</table>
+<hr>
+<h2>1. 화면 개요</h2>
+<p>Raffle 추첨 결과 당첨된 유저(Winner)에게 축하 메시지를 전달하고, 수령 방식별(현장/배송/온라인) 가이드와 폼을 제공.</p>
+<h5>주요 기능</h5>
+<ul>
+<li>컨페티 애니메이션 + 축하 문구</li>
+<li>당첨 경품 정보 (이미지·경품명·수량)</li>
+<li>수령 방식 분기: 현장(ONSITE) / 배송(DELIVERY) / 온라인(ONLINE)</li>
+<li>배송지 입력 폼 (DELIVERY 한정)</li>
+</ul>
+<h5>접근 경로</h5>
+<ul>
+<li>[CEB-EVT-101] Raffle 메인 > 당첨 리스트 클릭</li>
+<li>당첨 푸시 알림 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<pre><code>[&lt;] 당첨 결과
+─────────────────────────────────
+[✨ 컨페티 ✨]
+[축하 이미지/트로피]
+"축하합니다! 당첨되었습니다 🎉"
+─────────────────────────────────
+[썸네일] {경품명} · 수량 {n}개
+─────────────────────────────────
+[수령 안내] (receive_type별 분기)
+  ONSITE: 장소·일시·지참물
+  DELIVERY: 배송지 입력 폼
+  ONLINE: 추후 정의 (Phase 2+)
+─────────────────────────────────
+[Sticky Footer]
+  ONSITE/ONLINE: [확인]
+  DELIVERY: [배송지 입력 완료]
+─────────────────────────────────
+</code></pre>
+<table>
+<tr><th>영역</th><th>구성</th><th>설명</th></tr>
+<tr><td>Header</td><td>[<] / "당첨 결과"</td><td></td></tr>
+<tr><td>Visual</td><td>축하 이미지 + 컨페티</td><td>진입 시 1회 재생, 재진입 시 재실행</td></tr>
+<tr><td>Info</td><td>썸네일 + 경품명 + 수량</td><td>BO 보상 상세</td></tr>
+<tr><td>Guide</td><td>receive_type별 텍스트/폼</td><td>운영자 등록 가이드 줄바꿈 보존</td></tr>
+<tr><td>Footer</td><td>Sticky 버튼</td><td>Type별 텍스트 분기</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<h3>2.1 배송 폼 (DELIVERY 전용)</h3>
+<table>
+<tr><th>필드</th><th>필수</th><th>타입</th></tr>
+<tr><td>수령인 성함</td><td>필수</td><td>Text</td></tr>
+<tr><td>연락처</td><td>필수</td><td>Phone</td></tr>
+<tr><td>주소</td><td>필수</td><td>주소 검색</td></tr>
+<tr><td>상세주소</td><td>필수</td><td>Text</td></tr>
+<tr><td>배송메모</td><td>선택</td><td>Text</td></tr>
+</table>
+<p>기존 저장된 배송지가 있으면 default 바인딩.</p>
+<hr>
+<h2>3. 규칙·로직</h2>
+<h3>3.1 진입 시 검증</h3>
+<ol>
+<li>서버 <code>is_winner</code> 재조회</li>
+<li><code>false</code> → [CEB-EVT-104] 미당첨 화면 replace (에러 토스트 없이 자연 전환)</li>
+<li><code>true</code> + Ended → 본 화면 렌더</li>
+</ol>
+<h3>3.2 수령 방식별 동작</h3>
+<table>
+<tr><th>receive_type</th><th>버튼 텍스트</th><th>동작</th></tr>
+<tr><td>ONSITE</td><td>확인</td><td>[CEB-EVT-101] Raffle 메인으로 이동</td></tr>
+<tr><td>DELIVERY</td><td>배송지 입력 완료</td><td>배송 정보 저장 API → 성공 시 Success 토스트 + 이동</td></tr>
+<tr><td>ONLINE</td><td>확인</td><td>Phase 2+ 정의 예정</td></tr>
+</table>
+<h3>3.3 배송지 입력 기한</h3>
+<ul>
+<li>운영자 설정 기간 (기본 7일, BO [CEB-BO-FQ-204] 정의)</li>
+<li>기한 내: 폼 활성화·수정 가능</li>
+<li>기한 만료: 폼 비활성화 + "입력 기간이 종료되어 당첨이 취소되었어요" 안내 + [확인] 버튼만 활성</li>
+</ul>
+<h3>3.4 미입력 이탈 가드</h3>
+<p>배송형 당첨자가 배송지 미입력 상태로 [<] 뒤로가기 시 컨펌 모달:</p>
+<ul>
+<li>"기한 내 배송지 정보를 입력해야 상품 수령이 가능해요. 입력하지 않고 나가시겠어요?"</li>
+<li>[나가기] / [계속 입력]</li>
+</ul>
+<h3>3.5 폼 검증</h3>
+<ul>
+<li>필수 필드 미입력 → [배송지 입력 완료] 비활성화</li>
+<li>모든 필수 입력 → 활성화</li>
+</ul>
+<h3>3.6 다국어</h3>
+<ul>
+<li>축하 문구·수령 가이드·버튼 텍스트: i18n KO/EN/JP</li>
+<li>경품명: 서버 다국어 (BO 설정)</li>
+</ul>
+<hr>
+<h2>4. UI 상태·에러</h2>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>Loading</td><td>Skeleton (축하 이미지·문구·경품·수령 가이드 모두 회색 박스)</td></tr>
+<tr><td>검증 실패</td><td>즉시 [CEB-EVT-104] replace</td></tr>
+<tr><td>데이터 로딩 실패</td><td>"정보를 불러오는 데 실패했습니다" + [다시 시도]</td></tr>
+<tr><td>배송 저장 실패</td><td>"저장에 실패했습니다. 다시 시도해주세요" Error 토스트 (폼 데이터 보존)</td></tr>
+<tr><td>기한 만료</td><td>"입력 기간이 종료되어 당첨이 취소되었어요"</td></tr>
+<tr><td>Network Error</td><td>"네트워크 연결을 확인해주세요" + [다시 시도]</td></tr>
+</table>
+<hr>
+<h2>5. 연관 화면</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-EVT-101</td><td>Raffle 메인</td><td>진입, 확인 후 복귀</td></tr>
+<tr><td>CEB-EVT-102</td><td>Raffle 상세 (진행중)</td><td>상태 전환 (Active→Ended 당첨)</td></tr>
+<tr><td>CEB-EVT-104</td><td>Raffle 상세 (미당첨)</td><td>검증 실패 시 replace</td></tr>
+<tr><td>CEB-BO-FQ-204~206</td><td>Raffle BO</td><td>배송·당첨 데이터 적재</td></tr>
+</table>
+<hr>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 11 신규. v1 [CEB-FQ-203] 흡수. ① receive_type 3종 분기 (ONSITE/DELIVERY/ONLINE) ② 배송지 입력 기한 + 만료 처리 ③ is_winner 재검증 자연 전환 ④ 미입력 이탈 가드</td></tr>
+</table>
+
+</body>
+</html>
