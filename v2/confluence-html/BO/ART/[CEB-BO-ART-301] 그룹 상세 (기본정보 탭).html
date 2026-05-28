@@ -84,7 +84,7 @@ p {
 <tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
 <tr><td>기능영역(Epic)</td><td>ART — 아티스트 그룹</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
 <tr><td>최근 업데이트</td><td>2026-05-28</td></tr>
 <tr><td>Breadcrumb</td><td>홈 > 아티스트 > 그룹리스트 > {그룹명}</td></tr>
 <tr><td>비고</td><td>운영 BO 실측 정합. 그룹 상세는 2탭(기본정보·멤버) 구조이며 본 문서는 [기본정보] 탭. SNS·링크는 본 탭 내 섹션으로 통합</td></tr>
@@ -133,6 +133,8 @@ p {
 <tr><td>로고</td><td>로고 이미지 + "등록됨" 표기</td></tr>
 <tr><td>운영 상태</td><td>노출 중 / 비노출</td></tr>
 <tr><td>활성 상태 토글</td><td>스위치 — Active↔Inactive 즉시 변경(§4.3)</td></tr>
+<tr><td>탐색 노출</td><td>스위치 — 앱 아티스트 탐색 노출 켬/끔 즉시 변경(§4.4). 그룹 리스트 컬럼과 동기화</td></tr>
+<tr><td>팔로워 수</td><td>앱에서 해당 그룹을 팔로우 중인 회원 수 (천 단위 콤마)</td></tr>
 <tr><td>생성 관리자</td><td>등록한 관리자 (이력 부재 시 "-")</td></tr>
 <tr><td>생성 일시</td><td>YYYY.MM.DD HH:mm (KST)</td></tr>
 <tr><td>최근 수정자</td><td>마지막 수정 관리자 (이력 부재 시 "-")</td></tr>
@@ -170,6 +172,7 @@ p {
 <tr><th>요소</th><th>동작</th></tr>
 <tr><td>[수정하기]</td><td>[CEB-BO-ART-301-EDIT] 그룹 수정 페이지 이동</td></tr>
 <tr><td>활성 상태 토글</td><td>Active↔Inactive 즉시 변경 + 완료 토스트 (별도 확인 모달 없음)</td></tr>
+<tr><td>탐색 노출 토글</td><td>앱 탐색 노출 켬↔끔 즉시 변경 + 완료 토스트 (§4.4). 그룹 리스트 컬럼과 동기화</td></tr>
 <tr><td>[멤버] 탭</td><td>[CEB-BO-ART-303] 그룹 상세 (멤버 탭)로 전환 (<code>?tab=members</code>)</td></tr>
 </table>
 <hr>
@@ -191,6 +194,12 @@ p {
 <ul>
 <li>Active: 앱 노출 / Inactive: 앱 미노출</li>
 </ul>
+<h3>4.4 탐색 노출 정책</h3>
+<ul>
+<li>탐색 노출은 앱 [CEB-ART-201] 아티스트 탐색 화면 노출 여부를 켜고 끄는 별개 플래그다. 토글 즉시 반영 + 완료 토스트(확인 모달 없음).</li>
+<li>앱 노출 조건 = <strong>상태 Active + 탐색 노출 켬</strong>. Inactive 그룹은 탐색 노출 켬이어도 앱 미노출(상태 우선).</li>
+<li>동일 정책을 [CEB-BO-ART-201] 그룹 리스트 [탐색 노출] 컬럼에서도 제어하며 두 화면은 동기화된다.</li>
+</ul>
 <hr>
 <h2>5. UI 상태별 처리</h2>
 <table>
@@ -205,6 +214,7 @@ p {
 <table>
 <tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
 <tr><td>그룹 상태 변경</td><td>그룹 '{그룹명}'을(를) {신규 상태}(으)로 변경했습니다.</td></tr>
+<tr><td>탐색 노출 변경</td><td>그룹 '{그룹명}'의 탐색 노출을 {켬/끔}(으)로 변경했습니다.</td></tr>
 <tr><td>그룹 정보 수정</td><td>그룹 '{그룹명}'의 정보를 수정했습니다.</td></tr>
 </table>
 <hr>
@@ -213,7 +223,8 @@ p {
 <tr><th>상황</th><th>메시지</th></tr>
 <tr><td>그룹 미존재 (URL 직접 접근)</td><td>Toast (Error): "존재하지 않는 그룹입니다." → [CEB-BO-ART-201] 리다이렉트</td></tr>
 <tr><td>상태 변경 실패</td><td>Toast (Error): "상태 변경에 실패했습니다." (토글 원복)</td></tr>
-<tr><td>권한 없음</td><td>[수정하기]·상태 토글 미노출</td></tr>
+<tr><td>탐색 노출 변경 실패</td><td>Toast (Error): "노출 설정 변경에 실패했습니다." (토글 원복)</td></tr>
+<tr><td>권한 없음</td><td>[수정하기]·상태 토글·탐색 노출 토글 미노출</td></tr>
 </table>
 <hr>
 <h2>8. 연관 화면ID</h2>
@@ -227,6 +238,7 @@ p {
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>관리정보에 팔로워 수·탐색 노출 추가. ① 탐색 노출 토글(앱 노출 조건 = 상태 Active + 탐색 노출 켬, 그룹 리스트 컬럼과 동기화) ② 팔로워 수 표시 ③ §4.4 탐색 노출 정책 신설 ④ 활동 로그·예외에 탐색 노출 변경 추가</td></tr>
 <tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>운영 BO 실측 정합 신규 작성. ① 그룹 상세 2탭(기본정보·멤버) 중 [기본정보] 탭 ② SNS·링크는 본 탭 내 "대표 이미지 및 링크" 섹션으로 통합(별도 탭 아님), 플랫폼 = Instagram·X·YouTube·TikTok·Homepage ③ 관리정보 사이드(상태·운영 상태·로고 등록 여부·생성/수정 이력) ④ 상태 토글 = 즉시 변경 + 토스트(확인 모달 없음) ⑤ 권한은 [CEB-BO-SYS-102] 참조</td></tr>
 </table>
 

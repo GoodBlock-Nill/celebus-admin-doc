@@ -49,7 +49,7 @@ export default function GroupMemberManagePage({ params }: { params: Promise<{ id
   return (
     <div>
       <div className="mb-6">
-        <Breadcrumb customItems={[{ label: '아티스트' }, { label: '그룹리스트', href: '/artists/groups' }, { label: '그룹 상세', href: `/artists/groups/${gid}?tab=info` }, { label: '멤버 관리' }]} />
+        <Breadcrumb customItems={[{ label: '아티스트' }, { label: '그룹 리스트', href: '/artists/groups' }, { label: '그룹 상세', href: `/artists/groups/${gid}?tab=info` }, { label: '멤버 관리' }]} />
         <div className="flex items-center justify-between mt-2">
           <h1 className="text-[28px] font-bold text-gray-900">{group.name} <span className="text-gray-400 font-normal">| 멤버 관리</span></h1>
           <div className="flex gap-2">

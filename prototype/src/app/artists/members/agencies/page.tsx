@@ -29,7 +29,7 @@ export default function AgenciesPage() {
       <div className="flex items-start justify-between mb-6">
         <PageHeader
           title="소속사 설정"
-          breadcrumbItems={[{ label: '아티스트' }, { label: '멤버 리스트' }, { label: '소속사 설정' }]}
+          breadcrumbItems={[{ label: '아티스트' }, { label: '멤버 리스트', href: '/artists/members' }, { label: '소속사 설정' }]}
         />
         <button
           onClick={() => setAddOpen(true)}

@@ -7,7 +7,9 @@ import { GlobeAltIcon } from '@heroicons/react/24/outline';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
-import { getGroupById, getGroupMembers } from '@/mock/artists';
+import { toast } from '@/components/ui/Toast';
+import { getGroupMembers } from '@/mock/artists';
+import { useArtistGroupStore } from '@/stores/artistGroupStore';
 
 const TABS = [
   { key: 'info', label: '기본정보' },
@@ -28,16 +30,26 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
   const router = useRouter();
   const { id } = use(params);
   const sp = use(searchParams);
+  const gid = parseInt(id, 10);
+  const group = useArtistGroupStore((s) => s.groups.find((g) => g.id === gid));
+  const setStatus = useArtistGroupStore((s) => s.setStatus);
+  const toggleExposure = useArtistGroupStore((s) => s.toggleExposure);
   const [tab, setTab] = useState<TabKey>(sp.tab === 'members' ? 'members' : 'info');
-  const [active, setActive] = useState(true);
   const [memberKeyword, setMemberKeyword] = useState('');
 
-  const group = getGroupById(parseInt(id, 10));
-  const members = getGroupMembers(parseInt(id, 10));
+  const members = getGroupMembers(gid);
 
   if (!group) {
     return <div className="text-center py-20 text-gray-500">그룹을 찾을 수 없습니다.</div>;
   }
+
+  const active = group.status === 'Active';
+  const exposed = group.exploreExposed ?? true;
+
+  const handleToggleExposure = () => {
+    const next = toggleExposure(group.id);
+    toast.success(`'${group.name}'의 탐색 노출을 ${next ? '켬' : '끔'}(으)로 변경했습니다.`);
+  };
 
   const handleTab = (k: TabKey) => {
     setTab(k);
@@ -52,7 +64,7 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
     <div>
       {/* 헤더 */}
       <div className="mb-6">
-        <Breadcrumb customItems={[{ label: '아티스트' }, { label: '그룹리스트', href: '/artists/groups' }, { label: group.name }]} />
+        <Breadcrumb customItems={[{ label: '아티스트' }, { label: '그룹 리스트', href: '/artists/groups' }, { label: group.name }]} />
         <div className="flex items-start justify-between mt-2">
           <div>
             <p className="text-sm text-gray-500 mb-1">아티스트 그룹</p>
@@ -109,13 +121,13 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
                 </div>
               </div>
 
-              <div className="flex items-center justify-between rounded-lg bg-white/70 px-3 py-2.5 mb-5">
+              <div className="flex items-center justify-between rounded-lg bg-white/70 px-3 py-2.5 mb-3">
                 <div>
                   <p className="text-sm font-medium text-gray-900">운영 상태</p>
                   <p className="text-xs text-gray-500">{active ? '노출 중' : '비노출'}</p>
                 </div>
                 <button
-                  onClick={() => setActive(!active)}
+                  onClick={() => setStatus(group.id, active ? 'Inactive' : 'Active')}
                   role="switch"
                   aria-checked={active}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${active ? 'bg-emerald-500' : 'bg-gray-200'}`}
@@ -124,8 +136,24 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
                 </button>
               </div>
 
+              <div className="flex items-center justify-between rounded-lg bg-white/70 px-3 py-2.5 mb-5">
+                <div>
+                  <p className="text-sm font-medium text-gray-900">탐색 노출</p>
+                  <p className="text-xs text-gray-500">{exposed ? '앱 탐색 노출' : '앱 탐색 숨김'}</p>
+                </div>
+                <button
+                  onClick={handleToggleExposure}
+                  role="switch"
+                  aria-checked={exposed}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${exposed ? 'bg-indigo-600' : 'bg-gray-300'}`}
+                >
+                  <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${exposed ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                </button>
+              </div>
+
               <dl className="space-y-2.5 text-sm">
                 {[
+                  ['팔로워 수', `${(group.followerCount ?? 0).toLocaleString()} 명`],
                   ['생성 관리자', group.createdBy || '-'],
                   ['생성 일시', group.createdAt || '-'],
                   ['최근 수정자', group.updatedBy || '-'],

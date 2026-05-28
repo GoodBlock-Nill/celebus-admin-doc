@@ -29,7 +29,7 @@ export default function PositionsPage() {
       <div className="flex items-start justify-between mb-6">
         <PageHeader
           title="포지션 설정"
-          breadcrumbItems={[{ label: '아티스트' }, { label: '그룹 리스트' }, { label: '포지션 설정' }]}
+          breadcrumbItems={[{ label: '아티스트' }, { label: '그룹 리스트', href: '/artists/groups' }, { label: '포지션 설정' }]}
         />
         <button
           onClick={() => setAddOpen(true)}

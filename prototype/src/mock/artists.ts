@@ -7,8 +7,10 @@ export interface ArtistGroup {
   status: ArtistStatus;
   name: string;
   memberCount: number;
+  followerCount?: number; // 앱 팔로워 수
   description: string;
   updatedAt: string;
+  exploreExposed?: boolean; // 앱 아티스트 탐색 노출 여부 (기본 켬). 그룹 리스트 [탐색 노출] 컬럼에서 제어
   // 상세
   createdBy?: string;
   createdAt?: string;
@@ -78,6 +80,8 @@ export const artistGroups: ArtistGroup[] = [
     status: 'Active',
     name: '언더라이트 (UNDER:LIGHT)',
     memberCount: 50,
+    followerCount: 128430,
+    exploreExposed: true,
     description:
       '지하 무대의 빛나는 원석들이 모였다. 한국과 일본, 두 나라의 지하아이돌 50명이 하나의 무대에서 꿈을 건다. 작은 라이브하우스에서 갈고닦은 실력, 거리 위에서 키운 개성, 누구도 주목하지 않던 그 시간들이 이제 세상에 드러날 차례다.',
     updatedAt: '2026.02.11 11:33',
@@ -87,6 +91,8 @@ export const artistGroups: ArtistGroup[] = [
     status: 'Active',
     name: 'V01D',
     memberCount: 5,
+    followerCount: 8210,
+    exploreExposed: true,
     description:
       'V01D는 공허(Void)라는 이름 위에 사운드로 존재를 새기는 남성 밴드입니다. 그 공허에 글을 새긴다, 설렘으로, 빛으로, 불로, 그리고 이별로. 이 앨범의 곡들은 그 글 사이로 흘러나온 소리들입니다.',
     updatedAt: '2026.04.01 09:53',
@@ -109,6 +115,8 @@ export const artistGroups: ArtistGroup[] = [
     status: 'Active',
     name: 'CELEBUS',
     memberCount: 1,
+    followerCount: 342910,
+    exploreExposed: true,
     description: '독점 투표, NFT 수집, 콘서트 경험으로 최고의 팬 커뮤니티에 참여하세요',
     updatedAt: '2026.04.01 09:51',
   },
@@ -117,6 +125,8 @@ export const artistGroups: ArtistGroup[] = [
     status: 'Active',
     name: 'MADEIN',
     memberCount: 6,
+    followerCount: 45300,
+    exploreExposed: true,
     description: 'MADEIN(메이딘)은 2024년 데뷔 이후, 감각적인 사운드와 깊이 있는 메시지로 주목받고 있는 신예 아티스트입니다.',
     updatedAt: '2026.02.11 11:45',
   },
@@ -125,6 +135,8 @@ export const artistGroups: ArtistGroup[] = [
     status: 'Active',
     name: 'iKON',
     memberCount: 6,
+    followerCount: 512800,
+    exploreExposed: true,
     description: 'iKON은 YG 엔터테인먼트 출신의 143엔터테인먼트 소속으로 대한민국 6인조 남성 아이돌 음악 그룹이다. 멤버는 김진환, 송윤형, BOBBY, 김동혁, 구준회, 정찬우로 구성되어 있다',
     updatedAt: '2026.02.11 11:45',
   },

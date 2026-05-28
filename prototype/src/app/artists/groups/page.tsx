@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { Cog6ToothIcon, PlusIcon } from '@heroicons/react/24/outline';
@@ -8,7 +8,9 @@ import PageHeader from '@/components/layout/PageHeader';
 import StatCardRow from '@/components/clone/StatCardRow';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
-import { artistGroups, artistStats, getGroupMembers, type ArtistGroup } from '@/mock/artists';
+import { toast } from '@/components/ui/Toast';
+import { getGroupMembers, type ArtistGroup } from '@/mock/artists';
+import { useArtistGroupStore } from '@/stores/artistGroupStore';
 
 const PAGE_SIZE = 10;
 
@@ -16,12 +18,20 @@ type SearchTarget = 'group' | 'member';
 
 export default function GroupsPage() {
   const router = useRouter();
+  const groups = useArtistGroupStore((s) => s.groups);
+  const toggleExposure = useArtistGroupStore((s) => s.toggleExposure);
   const [statusFilter, setStatusFilter] = useState('Active');
   const [searchTarget, setSearchTarget] = useState<SearchTarget>('group');
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
 
-  const filtered = artistGroups
+  const stats = useMemo(() => ({
+    total: groups.length,
+    active: groups.filter((g) => g.status === 'Active').length,
+    inactive: groups.filter((g) => g.status === 'Inactive').length,
+  }), [groups]);
+
+  const filtered = groups
     .filter((g) => (statusFilter ? g.status === statusFilter : true))
     .filter((g) => {
       if (!keyword) return true;
@@ -34,6 +44,12 @@ export default function GroupsPage() {
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const toggleStatus = (s: string) => { setStatusFilter((prev) => (prev === s ? '' : s)); setPage(1); };
+
+  const handleToggleExposure = (g: ArtistGroup, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const next = toggleExposure(g.id);
+    toast.success(`'${g.name}'의 탐색 노출을 ${next ? '켬' : '끔'}(으)로 변경했습니다.`);
+  };
 
   return (
     <div>
@@ -56,9 +72,9 @@ export default function GroupsPage() {
       </div>
 
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <StatCardRow label="전체" count={artistStats.groups.total} onClick={() => toggleStatus('')} active={statusFilter === ''} />
-        <StatCardRow label="Active" count={artistStats.groups.active} onClick={() => toggleStatus('Active')} active={statusFilter === 'Active'} />
-        <StatCardRow label="Inactive" count={artistStats.groups.inactive} onClick={() => toggleStatus('Inactive')} active={statusFilter === 'Inactive'} countClassName="text-rose-500" />
+        <StatCardRow label="전체" count={stats.total} onClick={() => toggleStatus('')} active={statusFilter === ''} />
+        <StatCardRow label="Active" count={stats.active} onClick={() => toggleStatus('Active')} active={statusFilter === 'Active'} />
+        <StatCardRow label="Inactive" count={stats.inactive} onClick={() => toggleStatus('Inactive')} active={statusFilter === 'Inactive'} countClassName="text-rose-500" />
       </div>
 
       <div className="flex items-center gap-3 mb-4">
@@ -108,14 +124,28 @@ export default function GroupsPage() {
               {r.status}
             </span>
           )},
-          { key: 'name', label: '그룹명', width: '220px', render: (r) => <span className="font-medium text-gray-900">{r.name}</span> },
+          { key: 'name', label: '그룹명', width: '240px', render: (r) => <span className="font-medium text-gray-900">{r.name}</span> },
           { key: 'memberCount', label: '멤버 수', width: '90px' },
-          { key: 'description', label: '설명', render: (r) => <span className="block max-w-[460px] truncate text-gray-600">{r.description}</span> },
+          { key: 'followerCount', label: '팔로워 수', width: '120px', render: (r) => <span className="text-gray-700">{(r.followerCount ?? 0).toLocaleString()}</span> },
+          { key: 'exposed', label: '탐색 노출', width: '110px', render: (r) => {
+            const on = r.exploreExposed ?? true;
+            return (
+              <button
+                type="button"
+                onClick={(e) => handleToggleExposure(r, e)}
+                role="switch"
+                aria-checked={on}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${on ? 'bg-indigo-600' : 'bg-gray-300'}`}
+              >
+                <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${on ? 'translate-x-5' : 'translate-x-0.5'}`} />
+              </button>
+            );
+          }},
           { key: 'updatedAt', label: '업데이트 일시', width: '160px' },
         ]}
         rows={paged}
         onRowClick={(g) => router.push(`/artists/groups/${g.id}?tab=info`)}
-        emptyMessage="등록된 그룹이 없습니다."
+        emptyMessage={keyword || statusFilter ? '검색 결과가 없습니다.' : '등록된 그룹이 없습니다.'}
       />
 
       <SimplePagination page={page} totalPages={totalPages || 1} onChange={setPage} />
