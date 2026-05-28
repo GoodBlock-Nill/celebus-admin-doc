@@ -66,6 +66,7 @@ const ADMIN_MENU: MenuItem[] = [
     children: [
       { label: '그룹 리스트', href: '/artists/groups', icon: UsersIcon },
       { label: '멤버 리스트', href: '/artists/members', icon: UserIcon },
+      { label: '소식/일정', href: '/artists/feed', icon: CalendarDaysIcon },
       { label: '덕력관리', href: '/artists/duk', icon: BoltIcon },
     ],
   },

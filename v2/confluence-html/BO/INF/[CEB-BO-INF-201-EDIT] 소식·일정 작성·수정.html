@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-INF-201-EDIT] 소식·일정 작성·수정</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-INF-201-EDIT] 소식·일정 작성·수정</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-INF-201-EDIT</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>INF — 소식·일정</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-28</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 아티스트 > 소식/일정 > 작성 / {제목} 수정</td></tr>
+<tr><td>비고</td><td>타입별(소식/일정/공지) 입력 폼. 작성(신규)·수정 공용. 상세는 [CEB-BO-INF-201]</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한, 다국어, 미디어 업로드, 푸시 알림, 토스트</td></tr>
+<tr><td>[CEB-BO-INF-000] 소식·일정 영역 가이드</td><td>콘텐츠 타입·라이프사이클·타입별 필드·공식 출처</td></tr>
+<tr><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td><td>권한 그룹별 읽기·쓰기·삭제 범위</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>소식·일정·공지를 작성(신규)하거나 수정하는 입력 폼. 운영자가 직접 작성·게시한다. 조회는 [CEB-BO-INF-201] 상세.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-INF-101] 리스트 > [작성하기] (신규)</li>
+<li>[CEB-BO-INF-201] 상세 > [수정] (수정)</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 헤더</h3>
+<ul>
+<li>Breadcrumb + 타이틀(작성 / {제목} 수정)</li>
+<li>우측 상단 액션: [취소] / [삭제](수정 시) / [임시저장] / [게시]</li>
+<li><strong>[게시] 버튼은 다국어 필수(한국어·영어·일본어)와 타입별 필수 항목이 모두 충족될 때만 활성</strong>된다. 미충족 시 비활성 처리하며, 미충족 사유 안내 문구를 노출한다. [임시저장]은 미완성 상태에서도 항상 가능하다.</li>
+</ul>
+<h3>2.2 공통 메타 (사이드)</h3>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>타입</td><td>Dropdown — 소식 / 일정 / 공지 (선택에 따라 §2.3 입력 필드 분기)</td></tr>
+<tr><td>연결 아티스트</td><td>Dropdown — 그룹</td></tr>
+<tr><td>공식 출처</td><td>토글 — 공식 제공 뱃지 표기 (소식·일정만, 공지 미해당)</td></tr>
+</table>
+<h3>2.3 타입별 입력 폼</h3>
+<h4>A. 소식</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>제목</td><td>다국어(한국어/영어/일본어), 각 50자 필수</td></tr>
+<tr><td>본문</td><td>다국어 위지윅, 각 5,000자 필수</td></tr>
+<tr><td>게시일</td><td>날짜 필수</td></tr>
+<tr><td>이미지</td><td>최대 10장</td></tr>
+<tr><td>연관 콘텐츠</td><td>최대 3건 — 각 행: <strong>콘텐츠 타입(유튜브/틱톡/스포티파이/스레드/인스타그램/X/웹) + 콘텐츠명(50자) + URL</strong>. 3건 초과 추가 불가</td></tr>
+</table>
+<h4>B. 일정</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>일정명</td><td>다국어, 각 50자 필수</td></tr>
+<tr><td>일시</td><td>날짜 + 시간 (필수)</td></tr>
+<tr><td>장소</td><td>구글 장소 검색 입력 — 검색어 입력 시 장소 제안, 선택 시 장소명 입력 (선택, 100자)</td></tr>
+</table>
+<blockquote>
+<p>일정에는 부제·썸네일 입력이 없다.</p>
+</blockquote>
+<h4>C. 공지</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>제목</td><td>다국어, 각 50자 필수</td></tr>
+<tr><td>본문</td><td>다국어 위지윅, 각 5,000자 필수</td></tr>
+<tr><td>게시일</td><td>날짜 필수</td></tr>
+<tr><td>대표 이미지</td><td>1장 (선택)</td></tr>
+<tr><td>CTA 버튼</td><td>라벨(30자) + 링크 URL (선택). 입력 시 앱 공지 상세에 버튼 노출</td></tr>
+</table>
+<h3>2.4 모달</h3>
+<table>
+<tr><th>모달</th><th>트리거</th><th>동작</th></tr>
+<tr><td>작성/수정 취소 확인</td><td>[취소]</td><td>"작성을 취소할까요?" → 나가기 시 미저장</td></tr>
+<tr><td>게시 확인</td><td>[게시]</td><td>"게시할까요?" → 게시 즉시 앱 노출</td></tr>
+<tr><td>삭제 확인</td><td>[삭제]</td><td>"삭제할까요?" → 영구 삭제(복구 불가)</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 규칙·로직</h2>
+<h3>3.1 권한</h3>
+<ul>
+<li>권한 그룹별 읽기·쓰기·삭제 범위는 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li>
+</ul>
+<h3>3.2 다국어 게시 검증</h3>
+<ul>
+<li>[게시] 시 소식·공지의 제목·본문, 일정의 일정명은 한국어·영어·일본어 모두 입력되어야 한다. 1개라도 빈 칸이면 [게시] 버튼이 비활성이며, 비활성 상태에서 게시 시도 시 차단 Toast: "한국어·영어·일본어를 모두 입력해야 게시할 수 있습니다."</li>
+</ul>
+<h3>3.3 타입별 필수 검증</h3>
+<table>
+<tr><th>타입</th><th>게시 필수</th></tr>
+<tr><td>소식</td><td>제목·본문(3언어), 게시일</td></tr>
+<tr><td>일정</td><td>일정명(3언어), 일시</td></tr>
+<tr><td>공지</td><td>제목·본문(3언어), 게시일</td></tr>
+</table>
+<ul>
+<li>연관 콘텐츠는 최대 3건(콘텐츠 타입·콘텐츠명·URL). CTA는 선택(라벨·링크 동시 입력 시 유효).</li>
+</ul>
+<hr>
+<h2>4. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>작성 (임시저장)</td><td>{타입} '{제목}'을(를) 임시저장했습니다.</td></tr>
+<tr><td>게시</td><td>{타입} '{제목}'을(를) 게시했습니다.</td></tr>
+<tr><td>수정</td><td>{타입} '{제목}'의 정보를 수정했습니다.</td></tr>
+<tr><td>삭제</td><td>{타입} '{제목}'을(를) 삭제했습니다.</td></tr>
+</table>
+<hr>
+<h2>5. UI 상태·에러</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>다국어 미입력 게시 시도</td><td>Toast (Error): "한국어·영어·일본어를 모두 입력해야 게시할 수 있습니다."</td></tr>
+<tr><td>연관 콘텐츠 4건 이상 시도</td><td>Toast (Error): "연관 콘텐츠는 최대 3건까지 등록할 수 있습니다."</td></tr>
+<tr><td>저장 실패</td><td>Toast (Error): "저장에 실패했습니다."</td></tr>
+</table>
+<hr>
+<h2>6. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-INF-101</td><td>소식·일정 리스트</td><td>상위 ([작성하기])</td></tr>
+<tr><td>CEB-BO-INF-201</td><td>소식·일정 상세</td><td>상위 ([수정])</td></tr>
+<tr><td>CEB-INF-101</td><td>정보 피드 (앱)</td><td>노출 대상</td></tr>
+</table>
+<hr>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>게시 게이팅 명시 — [게시] 버튼은 다국어 필수·타입별 필수 충족 시에만 활성, 미충족 시 비활성 + 사유 안내, 시도 시 차단 토스트(§2.1·§3.2). 임시저장은 항상 가능</td></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. [CEB-BO-INF-201] 작성·상세에서 입력 폼 분리. ① 타입별 폼(소식 연관 콘텐츠[타입+콘텐츠명+URL, 최대 3]·일정 장소[구글 장소 검색], 부제·썸네일 없음·공지 대표 이미지/CTA) ② 작성/수정 공용 ③ 취소·게시·삭제 확인 모달 ④ 다국어 게시 검증 ⑤ 권한 [CEB-BO-SYS-102] 참조</td></tr>
+</table>
+
+</body>
+</html>

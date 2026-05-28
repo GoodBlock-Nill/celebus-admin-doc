@@ -87,10 +87,10 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>INF(정보/일정/공지)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.2</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.23</td></tr>
+<tr><td>버전</td><td>v1.5</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
-<tr><td>Figma 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=4-6898</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
 <tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 정보 > 소식 상세</td></tr>
 </table>
@@ -197,7 +197,7 @@ p {
 <h4>동작</h4>
 <ul>
 <li>좋아요 탭 → 토글 (좋아요 추가/해제) + 카운트 갱신</li>
-<li>공유 탭 → Web Share API (fallback: 클립보드 복사)</li>
+<li>공유 탭 → Web Share API (미지원 시: 클립보드 복사)</li>
 </ul>
 <h4>비로그인</h4>
 <ul>
@@ -239,11 +239,20 @@ p {
 <tr><td>CEB-HOM-001</td><td>홈 메인</td><td>바로가기에서 소식 카드 탭 시 진입 가능</td></tr>
 </table>
 <hr>
+<h5>BO 측 운영</h5>
+<table>
+<tr><th>BO 화면ID</th><th>BO 화면명</th><th>운영 액션</th></tr>
+<tr><td>CEB-BO-INF-201</td><td>소식·일정 상세</td><td>소식 조회 (본문·이미지·연관 콘텐츠)</td></tr>
+<tr><td>CEB-BO-INF-201-EDIT</td><td>소식·일정 작성·수정</td><td>소식 본문·이미지(최대 10)·연관 콘텐츠(최대 3) 작성</td></tr>
+</table>
 <h2>5. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td>v1.0</td><td>2026.04.22</td><td>@Nill Yoo</td><td>초안 작성. 소식 상세 화면 (헤더/본문/이미지/관련링크/이전다음 네비게이션/좋아요/공유/비로그인 정책)</td></tr>
 <tr><td>v1.1</td><td>2026.04.22</td><td>@Nill Yoo</td><td>관련 링크 최대 건수 정의(2.4): 최대 3건, 0건 시 섹션 미노출. 개발팀 피드백 반영</td></tr>
+<tr><td>v1.3</td><td>2026.05.28</td><td>@Nill Yoo</td><td>BO 운영 화면 정합: BO 측 운영 표를 [CEB-BO-INF-201] 소식·일정 작성·상세(이미지 최대 10·관련 링크 최대 3)로 갱신</td></tr>
+<tr><td>v1.4</td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. Figma 링크 연결(<code>4-6898</code>) — 소식 본문 + 좋아요 인터랙션 구조 시안과 일치 확인. 본문 변경 없음</td></tr>
+<tr><td>v1.5</td><td>2026.05.28</td><td>@Nill Yoo</td><td>BO 운영 표 정정: 상세([CEB-BO-INF-201])·작성·수정([CEB-BO-INF-201-EDIT]) 분리, "관련 링크"→"연관 콘텐츠" 문구 정정</td></tr>
 <tr><td>v1.2</td><td>2026.04.23</td><td>@Nill Yoo</td><td>선공개 뱃지 표기 개정: "[CELEBUS 단독]"→"[공식 제공]"으로 변경, BO 플래그 "선공개"→"공식 출처 표기"로 변경. INF-101과 동기화. 문서 댓글 피드백 반영</td></tr>
 </table>
 

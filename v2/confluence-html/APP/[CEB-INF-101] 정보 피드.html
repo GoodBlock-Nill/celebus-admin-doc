@@ -87,10 +87,10 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>INF(정보/일정/공지)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.9</td></tr>
-<tr><td>최근 업데이트</td><td>2026.04.23</td></tr>
+<tr><td>버전</td><td>v1.13</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.28</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
-<tr><td>Figma 링크</td><td></td></tr>
+<tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=4-6648</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
 <tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 정보</td></tr>
 </table>
@@ -164,11 +164,25 @@ p {
 <hr>
 <h3>2.3 통합 타임라인</h3>
 <h4>UI 구성</h4>
+<h5>주간 날짜 스트립 (v.3 시안)</h5>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>위치</td><td>"소식·일정" 섹션 헤더 아래</td></tr>
+<tr><td>구성</td><td>일~토 7칸 주간 스트립. 각 칸: 요일 약자 + 날짜 + 해당일 항목 건수(+N)</td></tr>
+<tr><td>오늘</td><td>현재 날짜 강조(보더/배경)</td></tr>
+<tr><td>전체보기</td><td>스트립 우측/하단 "전체보기 ▽" — 펼침 시 전체 통합 타임라인 표시</td></tr>
+<tr><td>동작</td><td>날짜 칸 탭 → 해당 날짜의 항목으로 스크롤/필터</td></tr>
+<tr><td>스타일</td><td>피그마 참조</td></tr>
+</table>
+<blockquote>
+<p>주간 스트립은 빠른 날짜 탐색용 네비게이터이며, 아래 통합 타임라인(날짜 그룹)과 함께 표시된다.</p>
+</blockquote>
 <h5>날짜 그룹 구분선</h5>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
-<tr><td>그룹 종류</td><td>"오늘 {MM.DD}" / "이번 주" / "지난 주" / "이전"</td></tr>
-<tr><td>스타일</td><td>구분선 + 그룹 라벨 (좌측 정렬, 회색 텍스트). 오늘 그룹은 하이라이트 배경 (피그마 참조)</td></tr>
+<tr><td>그룹 종류</td><td>"오늘 {MM.DD} [TODAY]" / "다가오는 일정"(미래) / "지난 주" / "이전"</td></tr>
+<tr><td>다가오는 일정 (v.3)</td><td>오늘 이후 미래 일정을 "다가오는 일정" 섹션으로 묶어 노출 (기존 "다음 주"·"이후" 그룹 통합 표기)</td></tr>
+<tr><td>스타일</td><td>구분선 + 그룹 라벨 (좌측 정렬, 회색 텍스트). 오늘 그룹은 [TODAY] 강조 (피그마 참조)</td></tr>
 <tr><td>빈 그룹</td><td>해당 그룹에 항목이 없으면 구분선 자체 미표시</td></tr>
 </table>
 <h5>일정 항목 (📅)</h5>
@@ -221,7 +235,7 @@ p {
 <h4>에러/예외</h4>
 <table>
 <tr><th>상태</th><th>처리</th></tr>
-<tr><td>Empty</td><td>소식/일정 모두 없을 때 "V01D의 첫 소식이 곧 올 거예요!" + [알림 설정] CTA + [V01D 챌린지 시작하기] CTA → CEB-FQ-101</td></tr>
+<tr><td>Empty</td><td>소식/일정 모두 없을 때 "V01D의 첫 소식이 곧 올 거예요!" + [알림 설정] CTA + [V01D 퀘스트 시작하기] CTA → CEB-FQ-101</td></tr>
 <tr><td>일정만 Empty</td><td>오늘 그룹에 일정이 없을 때 "등록된 일정이 없습니다. 다음 일정: {날짜} {일정명}" 표시</td></tr>
 </table>
 <hr>
@@ -308,6 +322,13 @@ p {
 <tr><td>CEB-MEM-201</td><td>기억 작성</td><td>일정 상세 [기억 남기기] CTA 탭 시 이동 (날짜/장소 프리필)</td></tr>
 </table>
 <hr>
+<h5>BO 측 운영</h5>
+<table>
+<tr><th>BO 화면ID</th><th>BO 화면명</th><th>운영 액션</th></tr>
+<tr><td>CEB-BO-INF-101</td><td>소식·일정 리스트</td><td>소식·일정·공지 통합 조회·관리 (타입 탭)</td></tr>
+<tr><td>CEB-BO-INF-201</td><td>소식·일정 상세</td><td>콘텐츠 조회 + 게시·보관·삭제</td></tr>
+<tr><td>CEB-BO-INF-201-EDIT</td><td>소식·일정 작성·수정</td><td>타입별 작성 (일정 장소·소식 연관 콘텐츠·공지 대표 이미지/CTA)</td></tr>
+</table>
 <h2>5. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
@@ -320,6 +341,10 @@ p {
 <tr><td>v1.6</td><td>2026.04.21</td><td>@Nill Yoo</td><td>공지 범위 명확화: 아티스트 관련 공지만 표시, 서비스(플랫폼) 공지는 알림센터(CEB-NTF-510)에서 처리. 공지 노출 위치 정리표 추가 (INF-101 vs NTF-510 역할 구분). 개발팀 피드백 반영</td></tr>
 <tr><td>v1.7</td><td>2026.04.21</td><td>@Nill Yoo</td><td>알림 방식 변경: 통합 알림→아티스트별 알림 ON/OFF로 수정(2.1, 2.4). 개별 일정 알림 버튼 제거, 헤더 🔔 토글이 해당 아티스트 단위로 독립 제어. 아티스트 전환 시 상태 반영. 개발팀 피드백 반영</td></tr>
 <tr><td>v1.8</td><td>2026.04.22</td><td>@Nill Yoo</td><td>소식 상세 섹션(2.5) CEB-INF-201 참조로 변경. "추후 작성" 문구 제거, 중복 상세 설명 정리</td></tr>
+<tr><td>v1.10</td><td>2026.05.28</td><td>@Nill Yoo</td><td>BO 운영 화면 정합: BO 측 운영 표를 소식·일정·공지 통합 관리([CEB-BO-INF-101] 소식·일정 리스트 타입 탭, [CEB-BO-INF-201] 타입별 작성)로 갱신. 디자인 정합(일정 장소·소식 관련 링크·공지 CTA) 반영</td></tr>
+<tr><td>v1.11</td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합 (1차)</strong>. Figma 링크 연결(<code>4-6648</code>) + Empty CTA "챌린지"→"<strong>퀘스트</strong>" 용어 정합. (주간 날짜 스트립·"다가오는 일정" 섹션 등 구성 보강은 후속 🟡 정합 예정)</td></tr>
+<tr><td>v1.12</td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합 (2차 — 구성 보강)</strong>. ① §2.3 <strong>주간 날짜 스트립</strong>(일~토 + 요일별 건수 + 오늘 강조 + "전체보기") 신규 ② 날짜 그룹에 <strong>"다가오는 일정"</strong>(미래 일정 통합) + 오늘 그룹 [TODAY] 강조 표기 반영. 헤더 🔔 아티스트별 알림 토글은 유지(Figma 기본 프레임 미표시 — 디자인팀 확인). 통합 타임라인·공지 배너 정책 변경 없음</td></tr>
+<tr><td>v1.13</td><td>2026.05.28</td><td>@Nill Yoo</td><td>BO 운영 표 정정: 소식·일정 상세([CEB-BO-INF-201])와 작성·수정([CEB-BO-INF-201-EDIT]) 분리 반영, "관련 링크"→"연관 콘텐츠" 문구 정정</td></tr>
 <tr><td>v1.9</td><td>2026.04.23</td><td>@Nill Yoo</td><td>"CELEBUS 단독" 뱃지 표기 개정: BO 플래그 "선공개"→"공식 출처 표기"로 변경, 뱃지 텍스트 "⭐ CELEBUS 단독"→"공식 제공"(일정) / "[CELEBUS 단독]"→"[공식 제공]"(소식)으로 변경, 뱃지 규칙 목적 문구를 '차별점 시각화'→'공식 출처 보증'으로 재정의. 독점 표현으로 인한 오해 소지 제거 (문서 댓글 피드백 반영)</td></tr>
 </table>
 
