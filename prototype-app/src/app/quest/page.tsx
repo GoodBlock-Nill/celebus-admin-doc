@@ -1,247 +1,80 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { usePullToRefresh } from '@/lib/hooks/usePullToRefresh';
-import { useQueryClient } from '@tanstack/react-query';
-import SubPageHeader from '@/components/layout/SubPageHeader';
-import PresetSelector from '@/components/dev/PresetSelector';
-import TimelineNode from '@/components/quest/TimelineNode';
-import ChapterPreview from '@/components/quest/ChapterPreview';
-import StoryIntroBanner from '@/components/quest/StoryIntroBanner';
-import CompleteBanner from '@/components/quest/CompleteBanner';
-import RepeatingQuestCard from '@/components/quest/RepeatingQuestCard';
-import { useQuestStore } from '@/stores/useQuestStore';
-import { useQuestChapters, useRepeatingQuests } from '@/lib/hooks/useQuests';
-import { useActiveArtist } from '@/lib/hooks/useActiveArtist';
-import { useUIStore } from '@/stores/useUIStore';
-import { Skeleton } from '@/components/ui/skeleton';
-import { QUEST_PRESET_OPTIONS, applyQuestPreset } from '@/lib/presets/quest';
-import ConfirmModal from '@/components/ui/ConfirmModal';
-import EmptyState from '@/components/ui/EmptyState';
-import type { QuestChapter } from '@/lib/types';
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Lock, Sparkles, Ticket, ChevronRight } from 'lucide-react';
+import SubHeader from '@/components/layout/SubHeader';
+import { EPISODES, ME, ARTIST } from '@/lib/data';
+import { cn } from '@/lib/utils';
 
 export default function QuestPage() {
-  const { activeArtistId, artistName } = useActiveArtist();
-  const { expandedChapterId, toggleChapter } = useQuestStore();
-  const addToast = useUIStore((s) => s.addToast);
-  const queryClient = useQueryClient();
-  const [preset, setPreset] = useState('ch1');
-
-  const handlePreset = async (key: string) => {
-    setPreset(key);
-    await applyQuestPreset(key, queryClient);
-  };
-
-  const { data: chapters = [], isLoading: chaptersLoading, refetch: refetchChapters } = useQuestChapters(activeArtistId);
-  const { data: repeatingQuests = [], isLoading: repeatingLoading } = useRepeatingQuests(activeArtistId);
-
-  const [storyRewardClaimed, setStoryRewardClaimed] = useState(false);
-  const [previewChapter, setPreviewChapter] = useState<QuestChapter | null>(null);
-  const [showStoryView, setShowStoryView] = useState(false);
-
-  const isStoryComplete = chapters.length > 0 && chapters.every((ch) => ch.status === 'cleared');
-
-  const handleNodeTap = useCallback(
-    (chapter: QuestChapter) => {
-      if (chapter.status === 'locked') {
-        setPreviewChapter(chapter);
-      } else {
-        toggleChapter(chapter.id);
-      }
-    },
-    [toggleChapter]
-  );
-
-  // Pull-to-Refresh
-  const handleRefresh = useCallback(() => { refetchChapters(); }, [refetchChapters]);
-
-  const { isRefreshing, handleTouchStart, handleTouchEnd } = usePullToRefresh(handleRefresh);
-
-  const hasReviewingMissions = chapters.some(
-    (ch) => ch.missions.some((m) => m.status === 'SUBMITTED')
-  );
-
-  const allSubmitted = !isStoryComplete && chapters.every(
-    (ch) => ch.status === 'reviewing' || ch.status === 'cleared'
-  );
-
-  const currentChapter = chapters.find(
-    (ch) => ch.status === 'active' || ch.status === 'provisional'
-  );
-
-  const [showCompleteModal, setShowCompleteModal] = useState(false);
-  const [completeModalShown, setCompleteModalShown] = useState(false);
-
-  // 5장 완료 시 축하 모달 (1회성)
-  useEffect(() => {
-    if (isStoryComplete && !completeModalShown && !storyRewardClaimed && !showCompleteModal) {
-      setShowCompleteModal(true);
-    }
-  }, [isStoryComplete, completeModalShown, storyRewardClaimed, showCompleteModal]);
-
-  const showTimeline = !isStoryComplete || showStoryView;
-
-  const isLoading = chaptersLoading || repeatingLoading;
-
-  if (isLoading) {
-    return (
-      <div className="min-h-dvh bg-white pb-20">
-        <SubPageHeader title={`${artistName} 챌린지`} backHref="/artist" />
-        <div className="px-4 mt-5 space-y-3">
-          <Skeleton className="h-16 rounded-xl" />
-          <Skeleton className="h-16 rounded-xl" />
-          <Skeleton className="h-16 rounded-xl" />
-        </div>
-      </div>
-    );
-  }
+  const [sel, setSel] = useState(0);
+  const ep = EPISODES[sel];
 
   return (
-    <div
-      className="min-h-dvh bg-white pb-20"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
-      <SubPageHeader title={`${artistName} 챌린지`} backHref="/artist" />
+    <div className="min-h-dvh pb-8">
+      <SubHeader
+        title={`${ARTIST.name} 퀘스트`}
+        right={
+          <>
+            <span className="flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-[11px] font-semibold"><Sparkles className="size-3 text-primary" />{ME.dukEarned.toLocaleString()}</span>
+            <span className="flex items-center gap-1 rounded-full bg-muted px-2 py-1 text-[11px] font-semibold"><Ticket className="size-3 text-ticket" />{ME.tickets}</span>
+          </>
+        }
+      />
 
-      {/* Pull-to-Refresh 인디케이터 */}
-      {isRefreshing && (
-        <div className="flex justify-center py-3">
-          <div className="w-5 h-5 border-2 border-violet-400 border-t-transparent rounded-full animate-spin" />
-        </div>
-      )}
-
-      {/* === 스토리 완료 모드 === */}
-      {isStoryComplete && !showStoryView && (
-        <>
-          <CompleteBanner
-            onViewStory={() => setShowStoryView(true)}
-            onClaimReward={() => {
-              setStoryRewardClaimed(true);
-              addToast('success', '🎉 5장 완료 보상을 수령했습니다! 서명 포카 래플 자격 + 독점 콘텐츠 해금');
-            }}
-            rewardClaimed={storyRewardClaimed}
-          />
-
-          <div className="px-4 mt-5">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                반복 퀘스트
-              </span>
-              <div className="flex-1 h-px bg-gray-100" />
-            </div>
-
-            {repeatingQuests.length > 0 ? (
-              <div className="space-y-3">
-                {repeatingQuests.map((rq) => (
-                  <RepeatingQuestCard key={rq.id} quest={rq} />
-                ))}
+      {/* EP 카드 캐러셀 */}
+      <div className="px-4 pt-2">
+        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+          {EPISODES.map((e, i) => (
+            <button key={e.id} onClick={() => setSel(i)} className="shrink-0">
+              <div className={cn('relative h-64 w-44 overflow-hidden rounded-2xl border-2', sel === i ? 'border-primary' : 'border-transparent')}>
+                <Image src={e.image} alt={e.title} width={176} height={256} className={cn('h-full w-full object-cover', e.status === 'locked' && 'opacity-40')} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />
+                {e.status === 'locked' && <Lock className="absolute right-3 top-3 size-5 text-white/80" />}
+                <div className="absolute bottom-3 left-3 right-3">
+                  <p className="text-[12px] text-white/80">EP.0{e.no}</p>
+                  <p className="text-[15px] font-bold leading-tight text-white">{e.title}</p>
+                </div>
               </div>
-            ) : (
-              <EmptyState
-                emoji="🎉"
-                title="이번 주 퀘스트를 모두 완료했어요!"
-                description="새 퀘스트가 열리면 알려드릴게요"
-                ctaLabel="알림 설정하기"
-                secondaryCtaLabel="래플 응모하기"
-                secondaryCtaHref="/raffle"
-              />
-            )}
-          </div>
-        </>
-      )}
-
-      {/* === 스토리 타임라인 모드 === */}
-      {showTimeline && (
-        <>
-          {showStoryView && (
-            <div className="px-4 mt-3">
-              <button
-                onClick={() => setShowStoryView(false)}
-                className="text-xs text-gray-500"
-              >
-                ← 반복 퀘스트로 돌아가기
-              </button>
-            </div>
-          )}
-
-          {!showStoryView && currentChapter && (
-            <StoryIntroBanner artistName={artistName} currentChapter={currentChapter.number} />
-          )}
-
-          <div className="px-4 mt-5">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                타임라인
-              </span>
-              <div className="flex-1 h-px bg-gray-100" />
-            </div>
-
-            {chapters.map((chapter, idx) => (
-              <TimelineNode
-                key={chapter.id}
-                chapter={chapter}
-                isExpanded={expandedChapterId === chapter.id}
-                isLast={idx === chapters.length - 1}
-                readOnly={showStoryView}
-                onTap={() => handleNodeTap(chapter)}
-              />
-            ))}
-          </div>
-
-          {/* 전 장 심사중 안내 (D-4) */}
-          {allSubmitted && !showStoryView && (
-            <div className="mx-4 mt-2 mb-2 bg-violet-50 border border-violet-200 rounded-xl px-4 py-3 text-center">
-              <p className="text-sm font-semibold text-violet-700">
-                모든 미션을 제출했습니다! 🎉
-              </p>
-              <p className="text-xs text-violet-500 mt-1">
-                심사 결과를 기다려주세요
-              </p>
-            </div>
-          )}
-
-          {hasReviewingMissions && !allSubmitted && !showStoryView && (
-            <div className="mx-4 mt-2 mb-6 bg-gray-50 rounded-xl px-4 py-3">
-              <p className="text-xs text-gray-500">
-                ℹ️ 결과는 빠르면 하루 안에 알려드릴게요!
-              </p>
-            </div>
-          )}
-        </>
-      )}
-
-      {previewChapter && (
-        <ChapterPreview chapter={previewChapter} onClose={() => setPreviewChapter(null)} />
-      )}
-
-      <PresetSelector presets={QUEST_PRESET_OPTIONS} current={preset} onSelect={handlePreset} />
-
-      {/* 5장 완료 축하 모달 (A-1) */}
-      <ConfirmModal
-        open={showCompleteModal}
-        title="챌린지 완주 축하"
-        confirmLabel="보상 받기"
-        cancelLabel="나중에"
-        onConfirm={() => {
-          setShowCompleteModal(false);
-          setCompleteModalShown(true);
-          setStoryRewardClaimed(true);
-          addToast('success', '🎉 5장 완료 보상을 수령했습니다! 서명 포카 래플 자격 + 독점 콘텐츠 해금');
-        }}
-        onCancel={() => {
-          setShowCompleteModal(false);
-          setCompleteModalShown(true);
-        }}
-      >
-        <div className="text-center">
-          <p className="text-4xl mb-3">🎉</p>
-          <p className="text-lg font-bold text-gray-900 mb-2">{artistName} 챌린지 완주!</p>
-          <p className="text-sm text-gray-500">
-            5장의 스토리를 모두 완료했습니다!<br />특별한 보상이 준비되어 있어요.
-          </p>
+            </button>
+          ))}
         </div>
-      </ConfirmModal>
+        <p className="text-center text-[12px] text-text-disabled">{sel + 1} / {EPISODES.length}</p>
+      </div>
+
+      {/* 선택 에피소드 헤더 */}
+      <div className="px-4 pt-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-[16px] font-bold">EP.0{ep.no} {ep.title}</h2>
+          {ep.status === 'active' && <span className="rounded bg-primary-900 px-1.5 py-0.5 text-[11px] text-purple-light">진행중</span>}
+          <span className="text-[13px] text-text-disabled">{ep.done}/{ep.total}</span>
+        </div>
+        <p className="mt-1 text-[13px] text-text-body">{ARTIST.name}를 만나 첫 퀘스트를 시작해보세요</p>
+      </div>
+
+      {/* 미션 리스트 */}
+      <div className="mt-3 space-y-2.5 px-4">
+        {ep.status === 'locked' ? (
+          <div className="rounded-2xl bg-card p-6 text-center text-[13px] text-text-body">
+            이전 에피소드의 모든 미션을 제출하면 해금됩니다
+          </div>
+        ) : (
+          ep.missions.map((m) => (
+            <div key={m.id} className="rounded-2xl bg-card p-4">
+              <div className="flex items-center gap-2 text-[12px] text-text-disabled">
+                <Image src={ARTIST.logo} alt="" width={16} height={16} className="size-4 rounded-full" /> {ARTIST.name}
+              </div>
+              <p className="mt-1.5 text-[14px] font-medium leading-snug">{m.title}</p>
+              <div className="mt-3 flex items-center justify-between">
+                <span className="text-[12px] text-text-body">보상 <span className="text-purple-light">✦ +{m.dukReward}</span> <span className="text-ticket">🎟 {m.ticketReward}장</span></span>
+                <Link href="/quest/submit" className="flex items-center gap-0.5 rounded-full bg-primary px-3.5 py-1.5 text-[12px] font-medium text-white">참여하기<ChevronRight className="size-3.5" /></Link>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

@@ -1,35 +1,23 @@
-'use client';
+import Link from 'next/link';
+import { Bell, Ticket } from 'lucide-react';
+import { ME } from '@/lib/data';
 
-import { useRouter } from 'next/navigation';
-import { useUIStore } from '@/stores/useUIStore';
-
-interface AppHeaderProps {
-  isGuest?: boolean;
-}
-
-export default function AppHeader({ isGuest = false }: AppHeaderProps) {
-  const router = useRouter();
-  const addToast = useUIStore((s) => s.addToast);
-
+export default function AppHeader() {
   return (
-    <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 safe-top">
-      <div className="flex items-center h-12 px-4">
-        <span className="text-base font-bold text-violet-700 flex-1">CELEBUS</span>
-        {!isGuest && (
-          <button className="relative mr-3 p-1" aria-label="알림 센터" onClick={() => addToast('info', '알림 센터 준비 중')}>
-            <span className="text-lg">🔔</span>
-            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[9px] rounded-full flex items-center justify-center font-bold">3</span>
-          </button>
-        )}
-        <button
-          onClick={() => { if (isGuest) { addToast('info', '로그인 화면으로 이동합니다'); return; } router.push('/event-history'); }}
-          className="text-xs font-medium text-violet-600 bg-violet-50 px-2.5 py-1.5 rounded-lg flex items-center gap-1"
-          aria-label={isGuest ? '응모권' : '응모권 15장'}
-        >
-          <span>🎫</span>
-          <span>{isGuest ? '-' : '응모권 15장'}</span>
-        </button>
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between bg-background/95 px-4 backdrop-blur">
+      <Link href="/home" className="text-[18px] font-bold tracking-tight text-foreground">
+        CELEBUS
+      </Link>
+      <div className="flex items-center gap-2">
+        <Link href="/collection" className="flex items-center gap-1 rounded-full bg-muted px-2.5 py-1">
+          <Ticket className="size-3.5 text-primary" />
+          <span className="text-[12px] font-semibold text-foreground">{ME.tickets}</span>
+        </Link>
+        <Link href="/notifications" className="relative grid size-8 place-items-center rounded-full bg-muted">
+          <Bell className="size-4 text-foreground" />
+          <span className="absolute right-1.5 top-1.5 size-1.5 rounded-full bg-error" />
+        </Link>
       </div>
-    </div>
+    </header>
   );
 }
