@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-ART-202-MD-COMPLE] 멤버 생성 완료</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-ART-202-MD-COMPLE] 멤버 생성 완료</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-ART-202-MD-COMPLE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>ART — 아티스트 멤버</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-28</td></tr>
+<tr><td>비고</td><td>운영 BO 실측 정합. 멤버 생성 화면에서 [생성하기] 시 노출되는 생성 확인 모달</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>모달·토스트 공통 규격</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>멤버 생성 중 [생성하기]를 눌렀을 때, 신규 멤버 생성 여부를 최종 확인받는 모달.</p>
+<hr>
+<h2>2. UI 설명</h2>
+<table>
+<tr><th>요소</th><th>내용</th></tr>
+<tr><td>제목</td><td>멤버 생성</td></tr>
+<tr><td>본문</td><td>"확인 버튼을 누르면 신규 멤버가 생성됩니다" / "계속 진행하시겠습니까?"</td></tr>
+<tr><td>버튼</td><td>[다시 돌아가기] / [확인]</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 기능 설명</h2>
+<table>
+<tr><th>버튼</th><th>동작</th></tr>
+<tr><td>다시 돌아가기</td><td>모달 닫고 생성 화면 유지</td></tr>
+<tr><td>확인</td><td>멤버 생성 → 완료 토스트 → 멤버 리스트로 이동</td></tr>
+</table>
+<hr>
+<h2>4. 로직·플로우</h2>
+<p>[CEB-BO-ART-202-Create] [생성하기] → 입력 검증 통과 시 본 모달 → [확인] 시 생성·이탈.</p>
+<hr>
+<h2>5. 검증·예외 상황</h2>
+<ul>
+<li>생성 실패 시 Toast (Error): "멤버 생성에 실패했습니다." 노출 후 생성 화면 유지.</li>
+</ul>
+<hr>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>화면 ID</th><th>관계</th></tr>
+<tr><td>CEB-BO-ART-202-Create</td><td>진입 ([생성하기])</td></tr>
+<tr><td>CEB-BO-ART-202</td><td>[확인] 시 이동</td></tr>
+</table>
+<hr>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>운영 BO 실측 정합 신규 작성. 문구 "확인 버튼을 누르면 신규 멤버가 생성됩니다 / 계속 진행하시겠습니까?", 버튼 [다시 돌아가기]/[확인]</td></tr>
+</table>
+
+</body>
+</html>

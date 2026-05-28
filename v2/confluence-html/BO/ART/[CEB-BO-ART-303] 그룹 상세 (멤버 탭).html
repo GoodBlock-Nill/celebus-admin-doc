@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-ART-303] 그룹 상세 (멤버 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-ART-303] 그룹 상세 (멤버 탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-ART-303</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>ART — 아티스트 그룹</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-28</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 아티스트 > 그룹리스트 > {그룹명}</td></tr>
+<tr><td>비고</td><td>운영 BO 실측 정합. 그룹 상세 2탭 중 [멤버] 탭. 소속 멤버 조회 전용이며, 멤버 추가·포지션·제거는 [CEB-BO-ART-303-EDIT] 멤버 관리에서 수행</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한, UI 상태, 토스트</td></tr>
+<tr><td>[CEB-BO-003] 아티스트(ART) 영역 가이드</td><td>권한 범위, 포지션 정의</td></tr>
+<tr><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td><td>권한 그룹별 읽기·쓰기·삭제 범위</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>그룹에 소속된 멤버를 조회하는 화면. 그룹 상세 <strong>2탭 구조</strong>(기본정보 / 멤버) 중 [멤버] 탭이다. 본 탭은 조회 전용이며, 멤버를 그룹에 추가하거나 포지션을 지정·제거하는 작업은 [CEB-BO-ART-303-EDIT] 멤버 관리 화면에서 처리한다.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-ART-301] 그룹 상세 (기본정보 탭) > [멤버] 탭</li>
+<li>URL: <code>/artists/groups/{id}?tab=members</code></li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 헤더</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 아티스트 > 그룹리스트 > {그룹명(한국어)}</code></li>
+<li>타이틀: <code>{그룹명(한국어)}</code></li>
+<li>우측 상단 액션: [멤버 관리]</li>
+</ul>
+<h3>2.2 탭 메뉴 (2탭)</h3>
+<table>
+<tr><th>#</th><th>탭명</th><th>URL</th><th>문서</th></tr>
+<tr><td>1</td><td>기본정보</td><td><code>?tab=info</code></td><td>[CEB-BO-ART-301]</td></tr>
+<tr><td>2</td><td><strong>멤버</strong></td><td><code>?tab=members</code></td><td>본 문서</td></tr>
+</table>
+<h3>2.3 검색·필터</h3>
+<table>
+<tr><th>구분</th><th>요소</th><th>타입</th><th>설명</th></tr>
+<tr><td>필터</td><td>상태</td><td>Dropdown</td><td>상태(전체) / Active / Inactive</td></tr>
+<tr><td>입력</td><td>멤버명</td><td>Text Input</td><td>부분 일치 검색</td></tr>
+<tr><td>버튼</td><td>초기화</td><td>Dark Button</td><td>필터·검색 리셋</td></tr>
+</table>
+<h3>2.4 목록 영역 (테이블)</h3>
+<table>
+<tr><th>컬럼</th><th>데이터 예시</th><th>설명</th></tr>
+<tr><td>상태</td><td>Active / Inactive</td><td>상태 뱃지</td></tr>
+<tr><td>멤버명</td><td>"징베"</td><td>한국어 우선</td></tr>
+<tr><td>포지션</td><td>"메인 보컬" / "-"</td><td>그룹 내 포지션 (미지정 시 "-")</td></tr>
+<tr><td>생년월일</td><td>1976.04.02</td><td>YYYY.MM.DD</td></tr>
+<tr><td>성별</td><td>남자 / 여자</td><td></td></tr>
+<tr><td>등록 일시</td><td>2026.05.27 14:21</td><td>YYYY.MM.DD HH:mm (KST)</td></tr>
+</table>
+<ul>
+<li>페이지네이션: 하단 중앙</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>요소</th><th>동작</th></tr>
+<tr><td>[멤버 관리]</td><td>[CEB-BO-ART-303-EDIT] 멤버 관리 페이지 이동 (추가·포지션·제거)</td></tr>
+<tr><td>[기본정보] 탭</td><td>[CEB-BO-ART-301]로 전환 (<code>?tab=info</code>)</td></tr>
+<tr><td>[초기화]</td><td>상태 필터·멤버명 검색 리셋</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한</h3>
+<ul>
+<li>권한 그룹별 읽기·쓰기·삭제 범위는 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li>
+<li>[멤버 관리]는 쓰기 권한 보유 그룹만 노출된다.</li>
+</ul>
+<h3>4.2 정렬·포지션</h3>
+<ul>
+<li>포지션 값은 [CEB-BO-ART-201-PO] 포지션 설정에 등록된 항목을 따른다. 미지정 멤버는 "-"로 표시된다.</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>테이블 Skeleton</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Empty (소속 멤버 0명)</td><td>"검색 결과가 없습니다."</td></tr>
+<tr><td>Error</td><td>"데이터를 불러오지 못했습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>본 탭(조회)은 로그를 기록하지 않는다. 멤버 추가·제거·포지션 변경 로그는 [CEB-BO-ART-303-EDIT]에서 발생한다.</p>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>그룹 미존재</td><td>Toast (Error): "존재하지 않는 그룹입니다." → [CEB-BO-ART-201] 리다이렉트</td></tr>
+<tr><td>조회 실패</td><td>Toast (Error): "데이터를 불러오지 못했습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-ART-301</td><td>그룹 상세 (기본정보 탭)</td><td>형제 탭</td></tr>
+<tr><td>CEB-BO-ART-303-EDIT</td><td>멤버 관리</td><td>하위 ([멤버 관리])</td></tr>
+<tr><td>CEB-BO-ART-304</td><td>멤버 상세 (기본정보 탭)</td><td>연관 (멤버 단위 상세)</td></tr>
+<tr><td>CEB-BO-ART-201-PO</td><td>포지션 설정</td><td>데이터 소스 (포지션)</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>운영 BO 실측 정합 신규 작성. ① 그룹 상세 2탭 중 [멤버] 탭(조회 전용) ② 컬럼 = 상태·멤버명·포지션·생년월일·성별·등록 일시 ③ 상태 필터 + 멤버명 검색 ④ 추가·포지션·제거는 [CEB-BO-ART-303-EDIT] 멤버 관리로 분리 ⑤ 권한은 [CEB-BO-SYS-102] 참조</td></tr>
+</table>
+
+</body>
+</html>

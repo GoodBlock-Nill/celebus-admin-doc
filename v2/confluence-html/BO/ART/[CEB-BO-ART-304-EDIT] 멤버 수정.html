@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-ART-304-EDIT] 멤버 수정</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-ART-304-EDIT] 멤버 수정</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-ART-304-EDIT</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>ART — 아티스트 멤버</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-28</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 아티스트 > 멤버 리스트 > 멤버 상세 > 멤버 수정</td></tr>
+<tr><td>비고</td><td>운영 BO 실측 정합. 입력 항목은 멤버 생성([CEB-BO-ART-202-Create])과 동일하며 기존 값이 채워진 상태로 진입. 취소·수정 확인 모달은 본 문서에 포함</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한, 다국어, 미디어 업로드, 모달·토스트</td></tr>
+<tr><td>[CEB-BO-003] 아티스트(ART) 영역 가이드</td><td>다국어 글자수, 활동 로그</td></tr>
+<tr><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td><td>권한 그룹별 읽기·쓰기·삭제 범위</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>기존 멤버의 프로필 정보를 수정하는 화면. 입력 항목·구성은 [CEB-BO-ART-202-Create] 멤버 생성과 동일하며, 진입 시 기존 값이 채워진다.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-ART-304] 멤버 상세 (기본정보 탭) > [수정하기]</li>
+<li>URL: <code>/artists/members/{id}/edit</code></li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 헤더</h3>
+<ul>
+<li>타이틀: 멤버 수정</li>
+<li>우측 상단 액션: [취소하기] / [수정하기]</li>
+<li>[수정하기]는 변경 사항이 없으면 비활성 상태이다.</li>
+</ul>
+<h3>2.2 입력 항목</h3>
+<table>
+<tr><th>항목</th><th>필수</th><th>형식</th></tr>
+<tr><td>멤버명</td><td>필수</td><td>한국어·영어·일본어, 각 100자</td></tr>
+<tr><td>프로필이미지</td><td>필수</td><td>1:1, 최대 5MB. 기존 이미지 표시 + [변경]/[제거]</td></tr>
+<tr><td>생년월일</td><td>필수</td><td>날짜 선택 (YYYY.MM.DD)</td></tr>
+<tr><td>별자리</td><td>자동</td><td>생년월일로 자동 도출 (읽기 전용)</td></tr>
+<tr><td>키(cm)</td><td>필수</td><td>숫자</td></tr>
+<tr><td>소속사</td><td>선택</td><td>Dropdown — [CEB-BO-ART-202-CP] 등록 소속사 / "소속사 없음"</td></tr>
+<tr><td>성별</td><td>필수</td><td>Dropdown — 남자 / 여자</td></tr>
+<tr><td>멤버소개</td><td>선택</td><td>한국어·영어·일본어, 각 255자</td></tr>
+<tr><td>인사말</td><td>선택</td><td>한국어·영어·일본어, 각 100자</td></tr>
+<tr><td>취미</td><td>선택</td><td>한국어·영어·일본어, 각 100자</td></tr>
+<tr><td>좌우명</td><td>선택</td><td>한국어·영어·일본어, 각 100자</td></tr>
+<tr><td>몸무게(kg)</td><td>선택</td><td>숫자</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<h3>2.3 확인 모달</h3>
+<table>
+<tr><th>트리거</th><th>제목</th><th>본문</th><th>버튼</th></tr>
+<tr><td>[수정하기]</td><td>멤버 수정</td><td>"확인 버튼을 누르면 수정사항이 적용됩니다" / "계속 진행하시겠습니까?"</td><td>[다시 돌아가기] / [확인]</td></tr>
+<tr><td>[취소하기]</td><td>멤버 수정 취소</td><td>"수정된 데이터는 저장되지 않습니다" / "계속 진행하시겠습니까?"</td><td>[다시 돌아가기] / [확인]</td></tr>
+</table>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>요소</th><th>동작</th></tr>
+<tr><td>[수정하기]</td><td>입력 검증 후 수정 확인 모달 → [확인] 시 저장·이탈</td></tr>
+<tr><td>[취소하기]</td><td>취소 확인 모달 → [확인] 시 변경 폐기·이탈</td></tr>
+<tr><td>이미지 [변경]/[제거]</td><td>이미지 교체·삭제</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한</h3>
+<ul>
+<li>권한 그룹별 읽기·쓰기·삭제 범위는 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li>
+</ul>
+<h3>4.2 입력 검증</h3>
+<ul>
+<li>멤버명은 한국어·영어·일본어 모두 입력해야 한다.</li>
+<li>멤버명·프로필이미지·생년월일·키·성별은 필수이다.</li>
+<li>별자리는 생년월일로 자동 계산되며 직접 변경할 수 없다.</li>
+<li>변경 사항이 없으면 [수정하기]가 비활성화된다.</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>폼 Skeleton</td></tr>
+<tr><td>Default</td><td>기존 값 채워진 폼</td></tr>
+<tr><td>Error (저장 실패)</td><td>Toast (Error): "수정에 실패했습니다."</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>멤버 정보 수정</td><td>멤버 '{멤버명}'의 정보를 수정했습니다.</td></tr>
+</table>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>필수 미입력</td><td>해당 항목 인라인 에러, [수정하기] 비활성</td></tr>
+<tr><td>저장 실패</td><td>Toast (Error): "수정에 실패했습니다."</td></tr>
+<tr><td>미저장 이탈</td><td>[취소하기] 확인 모달 (§2.3)</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-ART-304</td><td>멤버 상세 (기본정보 탭)</td><td>상위 ([수정하기] 진입)</td></tr>
+<tr><td>CEB-BO-ART-202-Create</td><td>멤버 생성</td><td>동일 입력 폼</td></tr>
+<tr><td>CEB-BO-ART-202-CP</td><td>소속사 설정</td><td>소속사 데이터 소스</td></tr>
+<tr><td>CEB-BO-ART-201-PO</td><td>포지션 설정</td><td>(포지션은 멤버 관리에서 지정)</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>운영 BO 실측 정합 신규 작성. ① 멤버 생성과 동일 입력 폼(멤버명 100자·멤버소개 255자·인사말/취미/좌우명 100자 각 3언어 + 프로필이미지 1:1 + 생년월일·별자리 자동·키·소속사·성별·몸무게) 기존 값 채움 ② 변경 없으면 [수정하기] 비활성 ③ 수정 확인 모달("수정사항이 적용됩니다")·취소 확인 모달("저장되지 않습니다") 포함 ④ 권한은 [CEB-BO-SYS-102] 참조</td></tr>
+</table>
+
+</body>
+</html>

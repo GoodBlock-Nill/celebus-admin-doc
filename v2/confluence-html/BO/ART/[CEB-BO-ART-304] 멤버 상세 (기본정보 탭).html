@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-ART-304] 멤버 상세 (기본정보 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-ART-304] 멤버 상세 (기본정보 탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-ART-304</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>ART — 아티스트 멤버</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-28</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 아티스트 > 멤버 리스트 > {멤버명}</td></tr>
+<tr><td>비고</td><td>운영 BO 실측 정합. 멤버 상세는 2탭(기본정보·소속그룹) 구조이며 본 문서는 [기본정보] 탭</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한, 다국어, 활동 로그, UI 상태, 미디어 업로드</td></tr>
+<tr><td>[CEB-BO-003] 아티스트(ART) 영역 가이드</td><td>다국어 글자수, 활동 로그, 권한 범위</td></tr>
+<tr><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td><td>권한 그룹별 읽기·쓰기·삭제 범위</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>개별 멤버의 기본 프로필을 조회하고 상태(활성/비활성)를 관리하는 화면. 멤버 상세는 <strong>2탭 구조</strong>(기본정보 / 소속그룹)이며, 본 문서는 [기본정보] 탭을 다룬다.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-ART-202] 멤버 리스트 > Row 클릭</li>
+<li>[CEB-BO-ART-303] 그룹 상세 (멤버 탭)에서 멤버 연결</li>
+<li>URL: <code>/artists/members/{id}?tab=info</code> (기본 탭)</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 헤더</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 아티스트 > 멤버 리스트 > {멤버명(한국어)}</code></li>
+<li>상단 표기: "아티스트 멤버" + 타이틀 <code>{멤버명(한국어)}</code></li>
+<li>우측 상단 액션: [수정하기]</li>
+</ul>
+<h3>2.2 탭 메뉴 (2탭, 상호 배타)</h3>
+<table>
+<tr><th>#</th><th>탭명</th><th>URL</th><th>문서</th></tr>
+<tr><td>1</td><td><strong>기본정보</strong></td><td><code>?tab=info</code></td><td>본 문서</td></tr>
+<tr><td>2</td><td><strong>소속그룹</strong></td><td><code>?tab=groups</code></td><td>[CEB-BO-ART-305]</td></tr>
+</table>
+<h3>2.3 멤버 상태 (우측 사이드)</h3>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>멤버 상태</td><td>Active / Inactive 뱃지</td></tr>
+<tr><td>프로필</td><td>프로필 이미지</td></tr>
+<tr><td>운영 상태</td><td>노출 중 / 비노출</td></tr>
+<tr><td>활성 상태 토글</td><td>스위치 — Active↔Inactive 즉시 변경(§4.3)</td></tr>
+<tr><td>생성 관리자</td><td>등록한 관리자</td></tr>
+<tr><td>생성 일시</td><td>YYYY.MM.DD (KST)</td></tr>
+<tr><td>최근 수정자</td><td>마지막 수정 관리자</td></tr>
+<tr><td>최근 수정 일시</td><td>YYYY.MM.DD (KST)</td></tr>
+</table>
+<h3>2.4 기본정보 본문</h3>
+<h4>A. 멤버명 (다국어)</h4>
+<table>
+<tr><th>필드</th><th>한국어</th><th>영어</th><th>일본어</th></tr>
+<tr><td>멤버명</td><td>"징베"</td><td>"Jinbe"</td><td>"ジンベエ"</td></tr>
+</table>
+<ul>
+<li>각 언어 100자.</li>
+</ul>
+<h4>B. 프로필 속성</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>소속사</td><td>소속사명 (없으면 "소속사 없음")</td></tr>
+<tr><td>생년월일</td><td>YYYY.MM.DD</td></tr>
+<tr><td>성별</td><td>남성 / 여성</td></tr>
+<tr><td>별자리</td><td>생년월일로 자동 도출 (읽기 전용, 수동 변경 불가)</td></tr>
+<tr><td>키</td><td>{n}cm</td></tr>
+<tr><td>몸무게</td><td>{n}kg (미입력 시 "-")</td></tr>
+</table>
+<h4>C. 다국어 소개 항목</h4>
+<table>
+<tr><th>필드</th><th>언어</th><th>글자수</th></tr>
+<tr><td>멤버 소개</td><td>한국어·영어·일본어</td><td>각 255자</td></tr>
+<tr><td>인사말</td><td>한국어·영어·일본어</td><td>각 100자</td></tr>
+<tr><td>취미</td><td>한국어·영어·일본어</td><td>각 100자</td></tr>
+<tr><td>좌우명</td><td>한국어·영어·일본어</td><td>각 100자</td></tr>
+</table>
+<ul>
+<li>미입력 항목은 "-"로 표시된다.</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>요소</th><th>동작</th></tr>
+<tr><td>[수정하기]</td><td>[CEB-BO-ART-304-EDIT] 멤버 수정 페이지 이동</td></tr>
+<tr><td>활성 상태 토글</td><td>Active↔Inactive 즉시 변경 + 완료 토스트 (별도 확인 모달 없음)</td></tr>
+<tr><td>[소속그룹] 탭</td><td>[CEB-BO-ART-305]로 전환 (<code>?tab=groups</code>)</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한</h3>
+<ul>
+<li>권한 그룹별 읽기·쓰기·삭제 범위는 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li>
+</ul>
+<h3>4.2 별자리 자동 도출</h3>
+<ul>
+<li>별자리는 생년월일 입력 시 자동 계산되어 표시되며, 운영자가 직접 변경할 수 없다.</li>
+</ul>
+<h3>4.3 상태 토글 정책</h3>
+<table>
+<tr><th>변경</th><th>동작</th></tr>
+<tr><td>Active → Inactive / Inactive → Active</td><td>토글 클릭 시 즉시 반영 + 완료 토스트 ("멤버가 비활성화되었습니다." / "멤버가 활성화되었습니다."). 별도 확인 모달 없음</td></tr>
+</table>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>헤더·멤버 상태·본문 Skeleton</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Empty (미입력 항목)</td><td>"-"</td></tr>
+<tr><td>Error</td><td>"데이터를 불러오지 못했습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>멤버 상태 변경</td><td>멤버 '{멤버명}'을(를) {신규 상태}(으)로 변경했습니다.</td></tr>
+<tr><td>멤버 정보 수정</td><td>멤버 '{멤버명}'의 정보를 수정했습니다.</td></tr>
+</table>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>멤버 미존재 (URL 직접 접근)</td><td>Toast (Error): "존재하지 않는 멤버입니다." → [CEB-BO-ART-202] 리다이렉트</td></tr>
+<tr><td>상태 변경 실패</td><td>Toast (Error): "상태 변경에 실패했습니다." (토글 원복)</td></tr>
+<tr><td>권한 없음</td><td>[수정하기]·상태 토글 미노출</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-ART-202</td><td>멤버 리스트</td><td>상위</td></tr>
+<tr><td>CEB-BO-ART-305</td><td>멤버 상세 (소속그룹 탭)</td><td>형제 탭</td></tr>
+<tr><td>CEB-BO-ART-304-EDIT</td><td>멤버 수정</td><td>하위 ([수정하기])</td></tr>
+<tr><td>CEB-BO-ART-202-CP</td><td>소속사 설정</td><td>소속사 데이터 소스</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>운영 BO 실측 정합 신규 작성. ① 멤버 상세 2탭(기본정보·소속그룹) 중 [기본정보] 탭 ② 프로필 속성 = 소속사·생년월일·성별·별자리(생년월일 자동 도출·읽기 전용)·키·몸무게 ③ 멤버명(100자) + 멤버 소개(255자)·인사말·취미·좌우명(각 100자) 모두 한국어·영어·일본어 ④ 멤버 상태 사이드(상태·운영 상태·활성 토글·생성/수정 이력) ⑤ 상태 토글 = 즉시 변경 + 토스트 ⑥ 권한은 [CEB-BO-SYS-102] 참조</td></tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-ART-201-Create] 그룹 생성</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-ART-201-Create] 그룹 생성</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-ART-201-Create</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>ART — 아티스트 그룹</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-28</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 아티스트 > 그룹 리스트 > 그룹 생성</td></tr>
+<tr><td>비고</td><td>운영 BO 실측 정합. 신규 그룹 등록 화면</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한, 다국어, 미디어 업로드, 토스트</td></tr>
+<tr><td>[CEB-BO-003] 아티스트(ART) 영역 가이드</td><td>다국어 글자수, 활동 로그</td></tr>
+<tr><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td><td>권한 그룹별 읽기·쓰기·삭제 범위</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>신규 아티스트 그룹을 등록하는 화면. 그룹명·소개(다국어)·이미지·SNS 링크를 입력해 생성한다.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-ART-201] 그룹 리스트 > [그룹 생성]</li>
+<li>URL: <code>/artists/groups/create</code></li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 헤더</h3>
+<ul>
+<li>타이틀: 그룹 생성</li>
+<li>우측 상단 액션: [취소하기] / [생성하기]</li>
+<li>[생성하기]는 필수 항목 미충족 시 비활성 상태이다.</li>
+</ul>
+<h3>2.2 입력 항목</h3>
+<table>
+<tr><th>항목</th><th>필수</th><th>형식</th></tr>
+<tr><td>그룹명</td><td>필수</td><td>한국어·영어·일본어, 각 100자</td></tr>
+<tr><td>그룹 소개</td><td>필수</td><td>한국어·영어·일본어, 각 500자</td></tr>
+<tr><td>로고(심볼)</td><td>필수</td><td>1:1 권장 512×512px, 최대 5MB (jpeg·png·jpg·webp·gif·svg)</td></tr>
+<tr><td>대표이미지(배너)</td><td>필수</td><td>16:9 권장 1920×1080px, 최대 5MB</td></tr>
+<tr><td>Instagram</td><td>선택</td><td>URL</td></tr>
+<tr><td>X</td><td>선택</td><td>URL</td></tr>
+<tr><td>YouTube</td><td>선택</td><td>URL</td></tr>
+<tr><td>TikTok</td><td>선택</td><td>URL</td></tr>
+<tr><td>Homepage</td><td>선택</td><td>URL</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>요소</th><th>동작</th></tr>
+<tr><td>[생성하기]</td><td>입력 검증 후 확인 모달([CEB-BO-ART-201-MD-COMPLE])</td></tr>
+<tr><td>[취소하기]</td><td>확인 모달([CEB-BO-ART-201-MD-CANCEL])</td></tr>
+<tr><td>이미지 업로드</td><td>클릭 또는 드래그로 파일 등록</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한</h3>
+<ul>
+<li>권한 그룹별 읽기·쓰기·삭제 범위는 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li>
+</ul>
+<h3>4.2 입력 검증</h3>
+<ul>
+<li>그룹명·그룹 소개는 한국어·영어·일본어 모두 입력해야 한다.</li>
+<li>로고·대표이미지는 필수이다.</li>
+<li>필수 항목이 모두 충족되어야 [생성하기]가 활성화된다.</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Default</td><td>빈 폼 ([생성하기] 비활성)</td></tr>
+<tr><td>입력 완료</td><td>[생성하기] 활성</td></tr>
+<tr><td>Error (생성 실패)</td><td>Toast (Error): "그룹 생성에 실패했습니다."</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>그룹 생성</td><td>그룹 '{그룹명}'을(를) 생성했습니다.</td></tr>
+</table>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>필수 미입력</td><td>해당 항목 인라인 에러, [생성하기] 비활성</td></tr>
+<tr><td>이미지 형식·용량 초과</td><td>업로드 에러 안내</td></tr>
+<tr><td>생성 실패</td><td>Toast (Error): "그룹 생성에 실패했습니다."</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-ART-201</td><td>그룹 리스트</td><td>상위 ([그룹 생성] 진입)</td></tr>
+<tr><td>CEB-BO-ART-201-MD-COMPLE</td><td>그룹 생성 완료</td><td>하위 ([생성하기])</td></tr>
+<tr><td>CEB-BO-ART-201-MD-CANCEL</td><td>그룹 생성 취소</td><td>하위 ([취소하기])</td></tr>
+<tr><td>CEB-BO-ART-301-EDIT</td><td>그룹 수정</td><td>동일 입력 폼</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>운영 BO 실측 정합 신규 작성. ① 입력 = 그룹명(100자)·그룹 소개(500자) 각 3언어 + 로고(1:1 512×512) + 대표이미지(16:9 1920×1080) + SNS 5종(Instagram·X·YouTube·TikTok·Homepage) ② 필수 충족 시 [생성하기] 활성 ③ 권한은 [CEB-BO-SYS-102] 참조</td></tr>
+</table>
+
+</body>
+</html>
