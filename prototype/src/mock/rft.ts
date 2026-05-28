@@ -131,9 +131,14 @@ export const sourcePolicies: SourceMeta[] = [
 
 // 결정적 회원·로그 시드 데이터
 // ── GP 교환 정책 (운영자 설정 — [CEB-BO-RFT-301]) ────────────
+// 회원당 1일 교환 한도는 최소·최대 범위. null = 무제한 (검증 우회)
+export interface DailyLimitRange {
+  min: number; // 1일 최소 교환 수량 (장) — 양의 정수
+  max: number; // 1일 최대 교환 수량 (장) — 양의 정수, min 이상
+}
 export interface GpExchangePolicy {
-  rate: number;                          // N GP → 응모권 1장
-  dailyLimitPerMember: number | null;    // 회원당 1일 응모권 교환 한도 (장). null = 무제한
+  rate: number;                                  // N GP → 응모권 1장
+  dailyLimitPerMember: DailyLimitRange | null;   // 회원당 1일 응모권 교환 한도 (장). null = 무제한
   lastUpdatedBy: string;
   lastUpdatedAt: string;
 }

@@ -8,6 +8,7 @@ import {
   initialGpExchangePolicy,
   initialAppBuyTogglePolicy,
   initialGameRewardPolicy,
+  type DailyLimitRange,
   type GpExchangePolicy,
   type AppBuyTogglePolicy,
   type GameRewardPolicy,
@@ -25,8 +26,11 @@ export default function RftPolicyPage() {
   const [limitMode, setLimitMode] = useState<LimitMode>(
     policy.dailyLimitPerMember === null ? 'unlimited' : 'limited',
   );
-  const [limitInput, setLimitInput] = useState<string>(
-    policy.dailyLimitPerMember === null ? '50' : String(policy.dailyLimitPerMember),
+  const [minLimitInput, setMinLimitInput] = useState<string>(
+    policy.dailyLimitPerMember === null ? '10' : String(policy.dailyLimitPerMember.min),
+  );
+  const [maxLimitInput, setMaxLimitInput] = useState<string>(
+    policy.dailyLimitPerMember === null ? '50' : String(policy.dailyLimitPerMember.max),
   );
 
   // Phase 13 — 앱내 구매 운영 토글 입력 상태
@@ -40,14 +44,27 @@ export default function RftPolicyPage() {
 
   // 입력값 파싱·검증
   const rateNum = Number(rateInput);
-  const limitNum = Number(limitInput);
+  const minLimitNum = Number(minLimitInput);
+  const maxLimitNum = Number(maxLimitInput);
   const isRateValid = Number.isInteger(rateNum) && rateNum >= 1;
-  const isLimitValid = limitMode === 'unlimited' || (Number.isInteger(limitNum) && limitNum >= 1);
+  const isMinValid = Number.isInteger(minLimitNum) && minLimitNum >= 1;
+  const isMaxValid = Number.isInteger(maxLimitNum) && maxLimitNum >= 1;
+  const isOrderValid = !isMinValid || !isMaxValid || minLimitNum <= maxLimitNum;
+  const isLimitValid =
+    limitMode === 'unlimited' || (isMinValid && isMaxValid && isOrderValid);
 
   // 변경사항 비교
-  const newDailyLimit: number | null = limitMode === 'unlimited' ? null : limitNum;
+  const newDailyLimit: DailyLimitRange | null =
+    limitMode === 'unlimited' ? null : { min: minLimitNum, max: maxLimitNum };
+  const limitEqual = (() => {
+    const a = newDailyLimit;
+    const b = policy.dailyLimitPerMember;
+    if (a === null && b === null) return true;
+    if (a === null || b === null) return false;
+    return a.min === b.min && a.max === b.max;
+  })();
   const rateChanged = isRateValid && rateNum !== policy.rate;
-  const limitChanged = isLimitValid && newDailyLimit !== policy.dailyLimitPerMember;
+  const limitChanged = isLimitValid && !limitEqual;
   const buyEnabledChanged = buyEnabledInput !== buyToggle.enabled;
   const buyReasonChanged = buyReasonInput !== buyToggle.maintenanceReason;
   const buyChanged = buyEnabledChanged || (buyEnabledInput === false && buyReasonChanged);
@@ -61,9 +78,13 @@ export default function RftPolicyPage() {
       lines.push(`GP 환율을 ${policy.rate} GP → ${rateNum} GP로 변경합니다.`);
     }
     if (limitChanged) {
-      const prev = policy.dailyLimitPerMember === null ? '무제한' : `${policy.dailyLimitPerMember}장`;
-      const next = newDailyLimit === null ? '무제한' : `${newDailyLimit}장`;
-      lines.push(`회원당 1일 교환 한도를 ${prev} → ${next}으로 변경합니다.`);
+      const fmt = (r: DailyLimitRange | null) =>
+        r === null
+          ? '무제한'
+          : r.min === r.max
+            ? `${r.min}장 / 1일`
+            : `최소 ${r.min}장 ~ 최대 ${r.max}장 / 1일`;
+      lines.push(`회원당 1일 교환 한도를 ${fmt(policy.dailyLimitPerMember)} → ${fmt(newDailyLimit)}으로 변경합니다.`);
     }
     if (buyEnabledChanged) {
       const prev = buyToggle.enabled ? 'ON' : 'OFF';
@@ -87,7 +108,7 @@ export default function RftPolicyPage() {
       lines.push(`PM·ST 게임별 응모권 지급 기본 정책을 변경합니다.${fieldList}`);
     }
     return lines.join('\n');
-  }, [rateChanged, limitChanged, buyEnabledChanged, gameRewardChanged, policy.rate, rateNum, policy.dailyLimitPerMember, newDailyLimit, buyToggle.enabled, buyEnabledInput, buyReasonInput, gameRewardInput]);
+  }, [rateChanged, limitChanged, buyEnabledChanged, gameRewardChanged, policy.rate, rateNum, policy.dailyLimitPerMember, newDailyLimit, buyToggle.enabled, buyEnabledInput, buyReasonInput, gameRewardInput, gameReward.rows]);
 
   // [CEB-BO-RFT-301] §2-7·§4 정합 — 토글 ON+수량 0 안내 (2026-05-21 sync 정정 — 구 브라우저 confirm() → 인라인 확인 모달)
   const [zeroAmountWarnOpen, setZeroAmountWarnOpen] = useState(false);
@@ -217,27 +238,46 @@ export default function RftPolicyPage() {
           </label>
         </div>
 
-        {/* 숫자 입력 (한도 적용 모드에서만 활성) */}
+        {/* 숫자 입력 — 한도 적용 모드에서만 활성. 최소·최대 두 필드 (v3.2 신규) */}
         <div className="flex items-center gap-2 mb-2">
           <input
             type="number"
             min="1"
             step="1"
-            value={limitInput}
+            value={minLimitInput}
             disabled={limitMode === 'unlimited'}
-            onChange={(e) => setLimitInput(e.target.value)}
-            className={`h-11 w-32 px-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed ${
-              limitMode === 'limited' && !isLimitValid ? 'border-rose-400 bg-rose-50/30' : 'border-gray-200'
+            onChange={(e) => setMinLimitInput(e.target.value)}
+            aria-label="최소 교환 수량"
+            className={`h-11 w-28 px-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed ${
+              limitMode === 'limited' && (!isMinValid || !isOrderValid) ? 'border-rose-400 bg-rose-50/30' : 'border-gray-200'
             }`}
-            placeholder="50"
+            placeholder="최소"
+          />
+          <span className={`text-sm ${limitMode === 'unlimited' ? 'text-gray-400' : 'text-gray-700'}`}>장</span>
+          <span className={`text-sm ${limitMode === 'unlimited' ? 'text-gray-400' : 'text-gray-500'}`}>~</span>
+          <input
+            type="number"
+            min="1"
+            step="1"
+            value={maxLimitInput}
+            disabled={limitMode === 'unlimited'}
+            onChange={(e) => setMaxLimitInput(e.target.value)}
+            aria-label="최대 교환 수량"
+            className={`h-11 w-28 px-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed ${
+              limitMode === 'limited' && (!isMaxValid || !isOrderValid) ? 'border-rose-400 bg-rose-50/30' : 'border-gray-200'
+            }`}
+            placeholder="최대"
           />
           <span className={`text-sm ${limitMode === 'unlimited' ? 'text-gray-400' : 'text-gray-700'}`}>장 / 1일</span>
         </div>
-        {limitMode === 'limited' && !isLimitValid && (
+        {limitMode === 'limited' && (!isMinValid || !isMaxValid) && (
           <p className="text-xs text-rose-600 mb-2">최소 1 이상의 양의 정수만 입력 가능합니다.</p>
         )}
+        {limitMode === 'limited' && isMinValid && isMaxValid && !isOrderValid && (
+          <p className="text-xs text-rose-600 mb-2">최소는 최대보다 작거나 같아야 합니다.</p>
+        )}
         <p className="text-xs text-gray-500 leading-relaxed">
-          회원 1명이 KST 자정 기준 1일에 교환받을 수 있는 응모권 최대 장수. 한도 초과 시 회원 앱에서 교환이 차단되고 &quot;오늘 한도 도달. 내일 00:00에 리셋&quot; 안내가 노출됩니다.
+          회원 1명이 KST 자정 기준 1일에 교환할 수 있는 응모권 수량 범위. 1일 누적 수량이 최대 장수를 초과하면 회원 앱에서 교환이 차단되고 &quot;오늘 한도 도달. 내일 00:00에 리셋&quot; 안내가 노출됩니다. 최소·최대를 같은 값으로 설정하면 정확히 그 수량만 1일 한도로 적용됩니다.
           <br />
           <strong className="font-semibold">무제한 선택 시</strong> 한도 검증을 우회하여 회원이 GP만 충분하면 제한 없이 교환 가능합니다.
         </p>
