@@ -114,12 +114,20 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
           : s,
       ),
     );
+    // 활동 로그 (MD-SEASON §5.5 정합)
+    console.info(
+      `[활동 로그] 덕력 시즌 '${season.artistGroupName} - ${data.name}'의 정보를 수정했습니다.`,
+    );
     toast.success('시즌이 저장되었습니다.');
     setEditOpen(false);
   };
 
   const handleClose = (target: DukSeason) => {
     setSeasons((prev) => prev.map((s) => (s.id === target.id ? { ...s, status: '종료' } : s)));
+    // 활동 로그 (MD-CLOSE §5.3 정합)
+    console.info(
+      `[활동 로그] 덕력 시즌 '${target.artistGroupName} - ${target.name}'을(를) 종료했습니다.`,
+    );
     toast.success('시즌이 종료되었습니다.');
     setCloseTarget(null);
   };
@@ -244,6 +252,8 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
                 lockReason={resolveLockReason(m.yearMonth, m.isLocked)}
                 settledAt={m.settledAt}
                 defaultExpanded={m.yearMonth === expandedMonth}
+                groupName={season.artistGroupName}
+                seasonName={season.name}
               />
             ))}
           </div>

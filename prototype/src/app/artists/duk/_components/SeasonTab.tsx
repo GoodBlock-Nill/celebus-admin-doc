@@ -64,6 +64,10 @@ export default function SeasonTab() {
         status,
       },
     ]);
+    // 활동 로그 (MD-SEASON §5.5 정합)
+    console.info(
+      `[활동 로그] 덕력 시즌 '${groupName} - ${data.name}'을(를) 등록했습니다. (기간: ${data.startAt} ~ ${data.endAt})`,
+    );
     toast.success('시즌이 저장되었습니다.');
     setRegisterOpen(false);
   };

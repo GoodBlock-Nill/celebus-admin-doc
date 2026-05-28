@@ -99,7 +99,14 @@ export default function SeasonFormModal({
     });
   }, [dateValid, startAt, computedEndDot, groupId, existingSeasons, isEdit, initial]);
 
-  const canSubmit = nameValid && dateValid && !conflict;
+  // 동일 그룹 진행중 시즌 1개 제약 (MD-SEASON §5.2 정합)
+  // 생성 모드에서만 적용. 같은 그룹에 진행중 시즌이 이미 있으면 차단
+  const activeSeasonExists = useMemo(() => {
+    if (isEdit) return false;
+    return existingSeasons.some((s) => s.artistGroupId === groupId && s.status === '진행중');
+  }, [isEdit, groupId, existingSeasons]);
+
+  const canSubmit = nameValid && dateValid && !conflict && !activeSeasonExists;
 
   const handleSubmit = () => {
     if (!canSubmit) return;
@@ -223,6 +230,11 @@ export default function SeasonFormModal({
         {conflict && (
           <p className="text-xs text-rose-600">
             해당 기간이 같은 그룹의 다른 시즌과 겹칩니다. (그룹별 시즌은 기간 중복 불가)
+          </p>
+        )}
+        {activeSeasonExists && (
+          <p className="text-xs text-rose-600">
+            해당 그룹에 이미 진행중인 시즌이 있습니다. 진행중 시즌은 그룹당 1개만 운영할 수 있습니다.
           </p>
         )}
       </div>

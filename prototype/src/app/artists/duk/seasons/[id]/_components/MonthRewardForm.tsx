@@ -19,6 +19,8 @@ interface Props {
   lockReason: LockReason;
   settledAt?: string;
   defaultExpanded?: boolean;
+  groupName?: string; // 활동 로그 메시지용 (DETAIL §5.5 정합)
+  seasonName?: string;
 }
 
 const LOCK_LABEL: Record<Exclude<LockReason, null>, string> = {
@@ -90,6 +92,8 @@ export default function MonthRewardForm({
   lockReason,
   settledAt,
   defaultExpanded = false,
+  groupName,
+  seasonName,
 }: Props) {
   const isLocked = lockReason !== null;
   const [tiers, setTiers] = useState<DukRewardTier[]>(initialTiers);
@@ -172,6 +176,12 @@ export default function MonthRewardForm({
           return;
         }
       }
+    }
+    // 활동 로그 (DETAIL §5.5 정합)
+    if (groupName && seasonName) {
+      console.info(
+        `[활동 로그] 덕력 시즌 '${groupName} - ${seasonName}' ${yearMonth} 보상을 저장했습니다. (구간: ${tiers.length}개, 상품: ${totalPrizes}개)`,
+      );
     }
     toast.success(`${yearMonth} 보상 저장 (구간 ${tiers.length}개 · 상품 ${totalPrizes}개)`);
   };
