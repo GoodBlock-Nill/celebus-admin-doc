@@ -130,6 +130,18 @@ export default function BannerForm({
     slotEditable && slotMeta.targetMode === 'ARTIST_ONLY' && editArtist === null;
   const canSubmit = !artistMissing;
 
+  // v6.11: [생성하기] 검증 — 기본 정보 다국어 필수 필드(메인·서브 타이틀 KO/EN/JP) + 공개일시 필수.
+  // 이미지 대체 텍스트는 선택(§B 표). 이미지 업로드는 공개일 도달 시 시스템 재검증.
+  const requiredTextFilled =
+    titleKO.trim() !== '' && titleEN.trim() !== '' && titleJP.trim() !== '' &&
+    subtitleKO.trim() !== '' && subtitleEN.trim() !== '' && subtitleJP.trim() !== '';
+  const openDtFilled = openDt.trim() !== '';
+  const missingForCreate: string[] = [];
+  if (!requiredTextFilled) missingForCreate.push('기본 정보(메인·서브 타이틀 KO/EN/JP)');
+  if (!openDtFilled) missingForCreate.push('공개일시');
+  if (artistMissing) missingForCreate.push('아티스트');
+  const canCreate = missingForCreate.length === 0;
+
   return (
     <div className="space-y-6">
       {/* A. 슬롯 컨텍스트 — slotEditable 분기 (v6.8) */}
@@ -209,10 +221,11 @@ export default function BannerForm({
       </Section>
 
       {/* B. 기본 정보 — 다국어 */}
-      <Section title="B. 기본 정보 (다국어)" description="공개일 도달 시점에 KO/EN/JP 3언어 모두 입력 + 이미지 검증. 미입력 시 자동 노출 차단.">
+      <Section title="B. 기본 정보 (다국어)" description="메인·서브 타이틀은 KO/EN/JP 3언어 모두 필수 — [생성하기] 시 검증. 이미지 대체 텍스트는 선택.">
         <div className="space-y-4">
           <MultiLangRow
             label="메인 타이틀"
+            required
             max={30}
             ko={titleKO}
             en={titleEN}
@@ -224,6 +237,7 @@ export default function BannerForm({
           />
           <MultiLangRow
             label="서브 타이틀"
+            required
             max={60}
             ko={subtitleKO}
             en={subtitleEN}
@@ -324,43 +338,50 @@ export default function BannerForm({
       </Section>
 
       {/* 액션 */}
-      <div className="flex items-center justify-end gap-2 pt-4 border-t border-gray-200">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="h-10 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-        >
-          취소
-        </button>
-        {mode === 'create' && (
-          <>
-            <button
-              type="button"
-              onClick={() => onSubmit('save_draft')}
-              className="h-10 px-4 text-sm font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100"
-            >
-              임시저장
-            </button>
-            <button
-              type="button"
-              onClick={() => onSubmit('create')}
-              disabled={!canSubmit}
-              className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-indigo-300"
-            >
-              생성하기
-            </button>
-          </>
-        )}
-        {mode === 'edit' && (
+      <div className="flex items-center justify-between gap-3 pt-4 border-t border-gray-200">
+        <div className="text-xs text-rose-600 min-h-[1rem]">
+          {mode === 'create' && !canCreate && (
+            <span>생성하려면 다음 항목을 입력해주세요: {missingForCreate.join(', ')}</span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => onSubmit('save')}
-            disabled={!hasChanged || !canSubmit}
-            className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-indigo-300"
+            onClick={onCancel}
+            className="h-10 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
           >
-            저장
+            취소
           </button>
-        )}
+          {mode === 'create' && (
+            <>
+              <button
+                type="button"
+                onClick={() => onSubmit('save_draft')}
+                className="h-10 px-4 text-sm font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100"
+              >
+                임시저장
+              </button>
+              <button
+                type="button"
+                onClick={() => onSubmit('create')}
+                disabled={!canCreate}
+                className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-indigo-300"
+              >
+                생성하기
+              </button>
+            </>
+          )}
+          {mode === 'edit' && (
+            <button
+              type="button"
+              onClick={() => onSubmit('save')}
+              disabled={!hasChanged || !canSubmit}
+              className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-indigo-300"
+            >
+              저장
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -429,6 +450,7 @@ function SelectBox({
 
 function MultiLangRow({
   label,
+  required,
   max,
   ko,
   en,
@@ -439,6 +461,7 @@ function MultiLangRow({
   disabled,
 }: {
   label: string;
+  required?: boolean;
   max: number;
   ko: string;
   en: string;
@@ -451,7 +474,9 @@ function MultiLangRow({
   return (
     <div>
       <div className="text-xs font-medium text-gray-700 mb-2">
-        {label} <span className="text-gray-400">(최대 {max}자)</span>
+        {label}
+        {required && <span className="text-red-500"> *</span>}{' '}
+        <span className="text-gray-400">(최대 {max}자)</span>
       </div>
       <div className="grid grid-cols-3 gap-2">
         <LangInput lang="KO" value={ko} onChange={onKO} max={max} disabled={disabled} />
