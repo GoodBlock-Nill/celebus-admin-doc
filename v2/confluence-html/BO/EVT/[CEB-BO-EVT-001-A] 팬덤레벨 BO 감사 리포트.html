@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-EVT-001-A] 팬덤레벨 BO 감사 리포트</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-EVT-001-A] 팬덤레벨 BO 감사 리포트</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-EVT-001-A</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>EVT — 팬덤 레벨 (내부 감사 리포트)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
+<tr><td>비고</td><td>내부 작업 리포트. 앱·BO·프로토타입·데이터 모델 교차 감사 결과 + 명세 갭 정정 기록</td></tr>
+</table>
+<hr>
+<h2>0. 감사 개요</h2>
+<p>팬덤레벨 메뉴에 대해 <strong>앱이 요구하는 관리 항목을 BO가 올바르게 기획하고 프로토타입에 구현했는지</strong> 교차 검증했다.</p>
+<table>
+<tr><th>감사 축</th><th>대상</th></tr>
+<tr><td>앱 요구</td><td>[CEB-EVT-201] 팬덤 레벨 + 앱 프로토타입 (<code>prototype-app/src/app/fandom/page.tsx</code>)</td></tr>
+<tr><td>BO 기획</td><td>[CEB-BO-EVT-000/101/201/401] (2026-05-29 운영 정합 개정본)</td></tr>
+<tr><td>BO 프로토타입</td><td><code>prototype/src/app/artists/fandom/</code> (리스트·생성모달·상세 3탭·mock)</td></tr>
+<tr><td>데이터 모델</td><td><code>Celebus_고도화_덕력_팬덤_기억저장소.sql</code> (팬덤 레벨 8개 테이블)</td></tr>
+</table>
+<h3>종합 평가</h3>
+<table>
+<tr><th>항목</th><th>점수</th><th>결론</th></tr>
+<tr><td>기획(명세) 품질</td><td>⭐⭐⭐⭐☆</td><td>우수 — 4개 문서 내부 일관성·데이터 모델 95% 정합</td></tr>
+<tr><td>BO 프로토타입 정합</td><td>⭐⭐☆☆☆</td><td><strong>약 45% — 개정 이전(v1.0) 기준 제작, 전면 개정 필요</strong></td></tr>
+<tr><td>앱 ↔ BO 커버리지</td><td>⭐⭐⭐⭐☆</td><td>약 80% — 핵심 관리 항목 충족, 일부 정책 텍스트 관리 공백</td></tr>
+<tr><td>데이터 모델</td><td>⭐⭐⭐⭐☆</td><td>양호 — 구조 적절, 일부 결함·미정의</td></tr>
+</table>
+<p><strong>핵심 결론</strong>: 기획(명세)은 운영 도입 가능 수준으로 잘 정비됨. 그러나 <strong>BO 프로토타입이 명세 개정 이전 버전에 머물러 있어 명세와 약 55% 괴리</strong>가 가장 시급한 후속 과제다.</p>
+<hr>
+<h2>1. 기획(명세) 품질 — ✅ 우수</h2>
+<ul>
+<li>EVT-000/101/201/401 4개 문서의 시즌 상태(준비/진행중/정산중/종료)·보상 타입 5종·보상 지급 상태 6종이 데이터 모델 enum과 정확히 일치한다.</li>
+<li>생성 → 곡선 설정 → 보상 설정 → 게시 → 레벨업·지급 → 추첨 → 정산 → 종료의 운영 전 과정이 BO 화면에 매핑된다.</li>
+<li>본 감사로 발견된 명세 갭(§5)은 모두 정정 완료.</li>
+</ul>
+<hr>
+<h2>2. BO 프로토타입 정합 — ⚠️ 약 45% (핵심 발견)</h2>
+<p><code>prototype/src/app/artists/fandom/</code> 는 <strong>명세 개정(2026-05-29) 이전 버전(v1.0, 2026-05-28) 기준</strong>으로 제작되어, 운영 데이터 모델 정합 개정 내용이 미반영 상태다.</p>
+<h3>정합 매트릭스</h3>
+<table>
+<tr><th>영역</th><th>명세(현행)</th><th>프로토타입</th><th>정합</th><th>심각도</th></tr>
+<tr><td>시즌 상태</td><td>준비/진행중/정산중/종료 (4)</td><td>임시저장/진행중/종료 (3)</td><td>❌</td><td>🔴</td></tr>
+<tr><td>상태 전환 액션</td><td>[게시]/[정산 시작]/[종료] + 상태 뱃지</td><td>없음 (고정 읽기)</td><td>❌</td><td>🔴</td></tr>
+<tr><td>생성 모달</td><td>시즌 연도 선택 + 기간 자동</td><td>연도 선택 없음(올해 고정)</td><td>❌</td><td>🔴</td></tr>
+<tr><td>보상 필드</td><td>다국어명·참조 연결·배송·다운로드 파일·노출 순서</td><td>보상명(단일)·지급 방식·당첨 인원만</td><td>❌</td><td>🔴</td></tr>
+<tr><td>탭3</td><td>보상·레벨업 현황(지급 상태 6종 + 레벨업 이력)</td><td>변동 내역(덕력 기여 등 4종)</td><td>❌</td><td>🔴</td></tr>
+<tr><td>EVT-401 별도 화면</td><td>존재</td><td>미구현</td><td>❌</td><td>🔴</td></tr>
+<tr><td>곡선 탭 달성 표시</td><td>달성 여부·일시 읽기</td><td>미표시</td><td>❌</td><td>🟡</td></tr>
+<tr><td>래플 재시도</td><td>실패 시 [재시도]</td><td>없음</td><td>❌</td><td>🟡</td></tr>
+<tr><td>권한·활동 로그</td><td>[CEB-BO-SYS-102] 참조 / 로그 8종</td><td>미구현</td><td>❌</td><td>🟡</td></tr>
+<tr><td>리스트 레이아웃·곡선 입력·보상 기본 구조·레벨 추가·래플 실행(기본)</td><td>—</td><td>구현됨</td><td>✅</td><td>—</td></tr>
+</table>
+<h3>근거 (프로토타입 구버전 증거)</h3>
+<ul>
+<li><code>prototype/src/mock/fandom.ts</code>: <code>FandomStatus = '임시저장' | '진행중' | '종료'</code> (3단계), <code>HistoryType = '덕력 기여' | '레벨업 보상 지급' | '래플 당첨' | '시즌 정산'</code> (구 변동 내역), <code>FandomReward</code>에 보상명 단일·참조/배송/파일/순서 필드 부재.</li>
+<li><code>prototype/src/app/artists/fandom/[id]/page.tsx</code>: 탭3 라벨 "변동 내역", 헤더에 상태 전환 버튼·시즌 상태 뱃지 없음.</li>
+</ul>
+<p>→ <strong>운영 데이터 모델 정합(2026-05-29) 이후 프로토타입 전면 개정 필요</strong> (§6 후속 권고 1).</p>
+<hr>
+<h2>3. 앱 ↔ BO 커버리지 — 약 80%</h2>
+<h3>정상 커버 (BO에서 완전 관리)</h3>
+<p>레벨 수·레벨별 목표 덕력·보상 타입 5종·다국어 보상명·지급 방식·당첨 인원·래플 추첨·보상/레벨업 현황·시즌 상태 전환 — 모두 [CEB-BO-EVT-101/201/401]에서 관리됨.</p>
+<h3>관리 공백 (앱 정책 하드코딩 — BO 변경 경로 없음)</h3>
+<table>
+<tr><th>항목</th><th>현 상태</th><th>검토</th></tr>
+<tr><td>0DUK 유저 안내 배너 문구(3언어)</td><td>앱 정책 고정</td><td>아티스트·언어별 커스터마이징 필요성 검토</td></tr>
+<tr><td>활동 유도 CTA 라벨·보상값</td><td>앱 고정</td><td>BO 관리 필요성 검토</td></tr>
+<tr><td>레벨업 축하 모달 텍스트</td><td>앱 고정</td><td>커스터마이징 선택 사항</td></tr>
+</table>
+<p>→ 운영 커스터마이징 필요 여부는 제품 결정 사항 (§6 후속 권고 3).</p>
+<h3>앱 ↔ BO 프로토타입 mock 불일치</h3>
+<table>
+<tr><th>항목</th><th>앱 프로토타입</th><th>BO 프로토타입</th></tr>
+<tr><td>레벨 수</td><td>5</td><td>10</td></tr>
+<tr><td>현재 레벨</td><td>Lv.3</td><td>Lv.4 (V01D)</td></tr>
+<tr><td>누적 덕력</td><td>12,000 (월간 스냅샷)</td><td>1,240,000 (시즌 누적)</td></tr>
+<tr><td>보상 명칭</td><td>구체명("디지털 포카세트")</td><td>분류명("디지털 굿즈")</td></tr>
+</table>
+<p>→ 데모·QA 일관성을 위해 동기화 권고 (§6 후속 권고 3).</p>
+<hr>
+<h2>4. 데이터 모델 결함 (개발팀 소관 — 정정 범위 밖)</h2>
+<table>
+<tr><th>#</th><th>항목</th><th>위치</th><th>영향</th></tr>
+<tr><td>1</td><td>뱃지 유형 정의 괄호 중복 구문 오류 (<code>enum('SEASON','FANDOM'))</code>)</td><td><code>badge</code> 테이블 144행</td><td>🔴 테이블 생성 실패 — 즉시 수정</td></tr>
+<tr><td>2</td><td>시즌 (아티스트, 연도) 중복 방지 제약 부재</td><td><code>fandom_level_season</code></td><td>🔴 동일 연도 중복 시즌 생성 위험</td></tr>
+<tr><td>3</td><td>래플 추첨 실패 사유 저장 컬럼 부재</td><td><code>fandom_level_reward_job</code></td><td>🟡 명세는 "실패 사유 안내" 요구하나 저장 위치 없음</td></tr>
+<tr><td>4</td><td>레벨 달성 일시 이중 컬럼(초과/이하) 의미 모호</td><td><code>fandom_level_policy</code></td><td>🟡 판정 기준 명확화 필요</td></tr>
+<tr><td>5</td><td>시즌 자동 종료 스케줄러·추첨 알고리즘·재시도 정책 미정의</td><td>전반</td><td>🟡 개발 착수 전 결정 필요</td></tr>
+</table>
+<p>→ 개발팀 전달 사항 (§6 후속 권고 2). 데이터 모델 SQL은 개발 산출물이므로 본 감사에서 수정하지 않음.</p>
+<hr>
+<h2>5. 명세 갭 정정 (완료) ✅</h2>
+<p>본 감사로 발견된 기획(명세) 갭을 즉시 정정했다.</p>
+<table>
+<tr><th>갭</th><th>정정 위치</th><th>정정 내용</th></tr>
+<tr><td>보상 지급 상태 6종 전환 규칙 부재</td><td>[CEB-BO-EVT-000] §4.5</td><td>6상태 표에 "전환 조건" 열 추가 (각 상태 진입 시점 정의)</td></tr>
+<tr><td>보상 타입별 지급 방식·참조 제약 부재</td><td>[CEB-BO-EVT-201] §2.4</td><td>"보상 타입별 입력 규칙" 표 신설 (지급 방식 고정·참조 연결·필수 입력)</td></tr>
+<tr><td>래플 추첨 작업 상태 표기 불완전</td><td>[CEB-BO-EVT-201] §2.4</td><td>미실행/추첨 대기/추첨 완료 3단계로 정합</td></tr>
+<tr><td>MAX 후 신규 레벨 보상 대상 미정의</td><td>[CEB-BO-EVT-000] §4.1.2, [CEB-BO-EVT-201] §2.3</td><td>신규 레벨 보상은 추가 이후 달성 기준 적용, 기존 지급분 소급 없음 명시</td></tr>
+<tr><td>보상 미설정 레벨 현황 표시 미정의</td><td>[CEB-BO-EVT-201] §2.5</td><td>레벨업 이력에만 표시, 보상 지급 행 미생성 명시</td></tr>
+</table>
+<p>→ EVT-000 v1.3 / EVT-201 v1.2로 반영 완료.</p>
+<hr>
+<h2>6. 후속 권고 (범위 밖 — 별도 결정)</h2>
+<table>
+<tr><th>우선</th><th>권고</th><th>비고</th></tr>
+<tr><td>1 (높음)</td><td><strong>BO 프로토타입 전면 개정</strong></td><td>4단계 상태·상태 전환 버튼·생성 모달 연도·보상 5필드·탭3 재정의·EVT-401 신규·시즌 연도. 명세 정합 45% → 100%</td></tr>
+<tr><td>2 (높음)</td><td><strong>데이터 모델 정정</strong> (개발팀)</td><td>§4의 5개 결함 — 특히 뱃지 구문 오류·시즌 중복 제약은 즉시</td></tr>
+<tr><td>3 (중간)</td><td>앱↔BO 프로토타입 mock 동기화 + 0DUK 배너·활동 CTA 커스터마이징 여부 결정</td><td>제품 결정 사항</td></tr>
+</table>
+<hr>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-29</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 팬덤레벨 BO 기획·프로토타입·앱·데이터 모델 교차 감사. 프로토타입 정합 45% 발견, 명세 갭 5건 정정, 후속 권고 3건</td></tr>
+</table>
+
+</body>
+</html>

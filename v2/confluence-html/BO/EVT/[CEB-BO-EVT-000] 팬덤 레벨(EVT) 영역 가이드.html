@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-EVT-000] 팬덤 레벨(EVT) 영역 가이드</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-EVT-000] 팬덤 레벨(EVT) 영역 가이드</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-EVT-000</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>BO 팬덤 레벨 영역 (EVT)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.3</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
+<tr><td>비고</td><td>앱 [CEB-EVT-201] 팬덤 레벨 디자인 정합 + 운영 데이터 모델 정합 + 감사 갭 정정. 사이드 메뉴 [아티스트 > 팬덤레벨] 진입</td></tr>
+</table>
+<hr>
+<h2>1. 개요</h2>
+<p>팬덤 레벨(EVT) 영역은 아티스트별 <strong>팬덤 공동 레벨</strong> 시스템을 운영하는 영역이다. 팬덤 전체가 획득한 덕력이 누적되어 레벨업하며, 레벨별로 보상이 지급된다. 운영자는 <strong>팬덤레벨을 아티스트·시즌 단위로 직접 생성(수동)</strong>하고, 레벨 곡선·보상을 설정하며 상태(임시저장→진행중→종료)를 관리한다. 앱 [CEB-EVT-201] "{아티스트} 키우기" 화면에 반영된다.</p>
+<blockquote>
+<p>팬덤 레벨(공동 레벨)과 덕력관리(개인 덕력 시즌·랭킹, [아티스트 > 덕력관리])는 별개 영역이다. 팬덤 레벨은 개인 경쟁이 아닌 팬덤 전체의 공동 달성 목표다.</p>
+</blockquote>
+<table>
+<tr><th>항목</th><th>위치</th></tr>
+<tr><td>마스터 가이드</td><td>[CEB-BO-001] 마이그레이션·재구성 마스터 가이드</td></tr>
+<tr><td>사이드 메뉴</td><td>아티스트 > 팬덤레벨</td></tr>
+<tr><td>권한</td><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td></tr>
+<tr><td>활동 로그</td><td>[CEB-BO-000] 백오피스 공통 정책</td></tr>
+<tr><td>앱 연동</td><td>[CEB-EVT-201] 팬덤 레벨</td></tr>
+<tr><td>멀티 아티스트 정책</td><td>[CEB-BO-100] 멀티아티스트 운영 가이드</td></tr>
+</table>
+<hr>
+<h2>2. 화면 목록</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th><th>작성 상태</th></tr>
+<tr><td>CEB-BO-EVT-101</td><td>팬덤 레벨 리스트</td><td>Page</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-201</td><td>팬덤 레벨 상세 (3탭)</td><td>Page (탭)</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-401</td><td>보상·레벨업 현황</td><td>Page</td><td>✅ 작성 완료</td></tr>
+</table>
+<hr>
+<h2>3. 권한</h2>
+<ul>
+<li>권한 그룹별 읽기·쓰기·삭제 범위는 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li>
+<li>레벨 곡선·레벨별 보상 설정, 래플 추첨 실행은 쓰기 권한 보유 그룹만 수행한다.</li>
+</ul>
+<hr>
+<h2>4. 영역 고유 정책</h2>
+<h3>4.1 팬덤 레벨 기본 규칙</h3>
+<table>
+<tr><th>항목</th><th>정책</th></tr>
+<tr><td>생성</td><td><strong>운영자가 [생성]으로 아티스트·시즌 단위 팬덤레벨을 직접 생성</strong>한다. 자동 생성하지 않는다</td></tr>
+<tr><td>기여 기준</td><td>팬덤 전체 회원의 획득 덕력 합산 (자동 누적. 보유·사용 덕력과 무관)</td></tr>
+<tr><td>아티스트 분리</td><td>팬덤 레벨은 아티스트별 독립 (그룹 단위)</td></tr>
+<tr><td>레벨 수</td><td>최대 10레벨. 운영자가 레벨 수·레벨별 목표 덕력 자유 설정</td></tr>
+<tr><td>판정</td><td>팬덤 전체 누적 덕력이 현재 레벨 목표 도달 시 서버 자동 레벨업</td></tr>
+<tr><td>보상 대상</td><td>해당 아티스트에 획득 덕력 1DUK 이상 기여한 회원</td></tr>
+</table>
+<h3>4.1.1 시즌 라이프사이클 (상태)</h3>
+<pre><code>준비 → 진행중 → 정산중 → 종료
+</code></pre>
+<table>
+<tr><th>상태</th><th>의미</th><th>앱 노출</th><th>전환 트리거</th></tr>
+<tr><td>준비</td><td>생성 후 게시 전. 운영자가 레벨 곡선·보상을 설정하는 단계</td><td>미노출</td><td>생성 시 자동 진입</td></tr>
+<tr><td>진행중</td><td>앱 노출·운영 중. 팬덤 누적 덕력에 따라 레벨업 진행</td><td>노출</td><td>운영자 [게시]</td></tr>
+<tr><td>정산중</td><td>시즌 종료 직후 보상 지급(자동 지급 + 래플 추첨)을 진행하는 단계</td><td>미노출</td><td>시즌 자동 종료(12.31) 또는 운영자 [정산 시작]</td></tr>
+<tr><td>종료</td><td>보상 지급 완료. 시즌 마감</td><td>미노출</td><td>운영자 [종료] (정산 완료 후)</td></tr>
+</table>
+<ul>
+<li>시즌은 매년 12월 31일 23:59:59 자동으로 <strong>정산중</strong>으로 전환된다. 운영자는 진행 중 필요 시 [정산 시작]으로 조기 전환할 수 있다.</li>
+<li>상태 전환 액션(게시·정산 시작·종료)은 [CEB-BO-EVT-201] 상세 상단에서 수행한다.</li>
+</ul>
+<h3>4.1.2 레벨 운영 상태</h3>
+<p>진행중 시즌의 팬덤 레벨은 누적 덕력 달성에 따라 다음 운영 상태를 가진다.</p>
+<table>
+<tr><th>운영 상태</th><th>의미</th></tr>
+<tr><td>운영중</td><td>최고 레벨 미만. 다음 레벨 목표를 향해 누적 진행 중</td></tr>
+<tr><td>최고레벨(MAX)</td><td>설정된 최고 레벨에 도달. 추가 레벨이 등록되면 자동으로 다음 목표로 전환</td></tr>
+</table>
+<ul>
+<li>최고레벨(MAX) 도달 후 운영자가 [CEB-BO-EVT-201] 탭1에서 신규 레벨을 추가하면 팬덤 레벨은 다시 운영중으로 전환되어 새 목표를 향해 진행한다.</li>
+<li><strong>신규 레벨 보상 지급 대상</strong>: 신규 레벨의 보상은 추가 이후 그 레벨을 달성하는 시점에 기여 회원(1DUK 이상)에게 적용된다. 이미 달성·지급 완료된 기존 레벨의 보상·지급 내역은 변경되지 않는다(소급 없음).</li>
+</ul>
+<h3>4.2 레벨 곡선 (카운터 모델)</h3>
+<ul>
+<li>각 레벨은 <strong>0부터 시작</strong>하여 "레벨업 목표 덕력" 도달 시 다음 레벨 진입과 동시에 카운터 0으로 리셋된다. 각 레벨 목표값은 해당 레벨 단독 목표값이다.</li>
+<li>권장 곡선(운영자 미설정 시 자동 적용): Lv1 10,000 / Lv2 30,000 / Lv3 70,000 / Lv4 150,000 / Lv5 300,000 / Lv6 550,000 / Lv7 1,000,000 / Lv8 1,800,000 / Lv9 3,200,000 / Lv10 6,000,000 (단위 DUK).</li>
+<li>운영자는 권장값을 자유롭게 조정할 수 있다.</li>
+</ul>
+<h3>4.3 시즌 (연 1회 리셋)</h3>
+<table>
+<tr><th>항목</th><th>정책</th></tr>
+<tr><td>주기</td><td>연 1회 — 매년 1월 1일 ~ 12월 31일 (캘린더 연도). 모든 아티스트 동일 주기</td></tr>
+<tr><td>시즌명</td><td>"{아티스트} 팬덤 N기 (YYYY)" (예: V01D 팬덤 2기 (2026))</td></tr>
+<tr><td>종료·정산</td><td>12월 31일 23:59:59 자동 종료 → 정산 → 1월 1일 00:00:00 신규 시즌 시작 (회원 레벨 리셋 + 시즌별 보상 지급)</td></tr>
+</table>
+<h3>4.4 레벨별 보상 타입 (5종)</h3>
+<table>
+<tr><th>보상 타입</th><th>예시</th><th>지급 방식</th><th>처리 주체</th></tr>
+<tr><td>독점 콘텐츠 해금</td><td>비하인드 사진·미공개 영상·멤버 셀카</td><td>자동 해금 (앱 열람)</td><td>시스템</td></tr>
+<tr><td>디지털 굿즈</td><td>디지털 포카·뱃지·특별 에디션 BIVE</td><td>자동 지급 (컬렉션 추가)</td><td>시스템</td></tr>
+<tr><td>다운로드 콘텐츠</td><td>보이스 메시지·배경화면·영상 메시지</td><td>자동 지급 (앱 다운로드)</td><td>시스템</td></tr>
+<tr><td>실물 보상</td><td>사인앨범·사인 포토카드·기념 굿즈</td><td>래플 추첨 → 배송</td><td>추첨 시스템, 배송 운영자</td></tr>
+<tr><td>이벤트 참여권</td><td>팬싸 참가권·콘서트 VIP·영상통화</td><td>래플 추첨 → 안내</td><td>추첨 시스템, 안내 운영자</td></tr>
+</table>
+<ul>
+<li>디지털 보상(독점 콘텐츠·디지털 굿즈·다운로드)은 레벨 달성 시 기여 회원(1DUK 이상)에게 자동 지급.</li>
+<li>실물·이벤트 보상은 기여 회원 중 래플 추첨(기여도 비례 가중치). 추첨은 레벨 달성 후 운영자가 실행한다.</li>
+</ul>
+<h4>보상별 설정 항목</h4>
+<table>
+<tr><th>항목</th><th>설명</th><th>해당 보상 타입</th></tr>
+<tr><td>보상명(다국어)</td><td>한국어·영어·일본어 보상명</td><td>전체</td></tr>
+<tr><td>지급 방식</td><td>전체 지급(기여 회원 전원) / 추첨(당첨자만)</td><td>전체</td></tr>
+<tr><td>당첨 인원</td><td>추첨 시 당첨자 수</td><td>실물·이벤트</td></tr>
+<tr><td>참조 연결</td><td>보상이 연결되는 대상 — 바이브(디지털 굿즈) / 래플(실물) / 이벤트(참여권) / 뱃지</td><td>디지털 굿즈·실물·이벤트</td></tr>
+<tr><td>배송지 입력</td><td>배송지 입력 마감일·입력 폼</td><td>실물</td></tr>
+<tr><td>다운로드 파일</td><td>다운로드 콘텐츠 파일</td><td>다운로드</td></tr>
+<tr><td>노출 순서</td><td>같은 레벨 내 보상 표시 순서</td><td>전체</td></tr>
+</table>
+<h3>4.5 보상 지급 현황 상태</h3>
+<p>레벨 달성 시 기여 회원별로 다음 지급 현황을 가진다. 상태는 아래 전환 조건에 따라 자동/운영자 액션으로 전이한다.</p>
+<table>
+<tr><th>지급 상태</th><th>의미</th><th>전환 조건 (이 상태가 되는 시점)</th></tr>
+<tr><td>지급 대기</td><td>레벨 달성 후 지급 처리 전 초기 상태</td><td>레벨 달성 시 기여 회원(1DUK 이상)에 대해 생성</td></tr>
+<tr><td>자동 지급 완료</td><td>디지털 보상 자동 지급 완료</td><td>디지털 보상(독점 콘텐츠·디지털 굿즈·다운로드) 자동 지급 처리 완료 시</td></tr>
+<tr><td>추첨 대기</td><td>실물·이벤트 보상 래플 추첨 실행 전</td><td>실물·이벤트 보상 레벨 달성 후 운영자 추첨 실행 전</td></tr>
+<tr><td>당첨</td><td>래플 추첨 당첨 (배송·안내 대상)</td><td>운영자 래플 추첨 실행 결과 당첨 확정 시 (미당첨자는 지급 대상에서 제외)</td></tr>
+<tr><td>지급 완료</td><td>배송·안내까지 완료</td><td>당첨자 배송·이벤트 안내까지 완료 처리 시</td></tr>
+<tr><td>지급 실패</td><td>지급 처리 실패 (재시도 대상)</td><td>자동 지급·추첨 처리 실패 시. 재시도로 복구</td></tr>
+</table>
+<hr>
+<h2>5. 활동 로그 메시지 템플릿</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>게시 (준비→진행중)</td><td>그룹 '{그룹명}' '{시즌명}' 팬덤레벨을 게시했습니다.</td></tr>
+<tr><td>레벨 곡선 변경</td><td>그룹 '{그룹명}'의 팬덤 레벨 곡선을 변경했습니다.</td></tr>
+<tr><td>신규 레벨 추가</td><td>그룹 '{그룹명}'에 Lv.{N}을(를) 추가했습니다.</td></tr>
+<tr><td>레벨별 보상 설정</td><td>그룹 '{그룹명}' Lv.{N} 보상을 설정했습니다.</td></tr>
+<tr><td>래플 추첨 실행</td><td>그룹 '{그룹명}' Lv.{N} '{보상명}' 래플 추첨을 실행했습니다. (당첨: {N}명)</td></tr>
+<tr><td>래플 추첨 재시도</td><td>그룹 '{그룹명}' Lv.{N} '{보상명}' 래플 추첨을 재시도했습니다.</td></tr>
+<tr><td>정산 시작 (진행중→정산중)</td><td>그룹 '{그룹명}' '{시즌명}' 시즌 정산을 시작했습니다.</td></tr>
+<tr><td>시즌 종료 (정산중→종료)</td><td>그룹 '{그룹명}' '{시즌명}' 시즌을 종료했습니다.</td></tr>
+</table>
+<hr>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.3</strong></td><td><strong>2026-05-29</strong></td><td><strong>@Nill Yoo</strong></td><td>감사 갭 정정 — ① 보상 지급 현황 6상태에 <strong>전환 조건 열</strong> 추가(§4.5) ② 최고레벨(MAX) 후 신규 레벨 추가 시 <strong>신규 레벨 보상 지급 대상·소급 없음</strong> 규칙 명시(§4.1.2)</td></tr>
+<tr><td><strong>v1.2</strong></td><td><strong>2026-05-29</strong></td><td><strong>@Nill Yoo</strong></td><td>운영 데이터 모델 정합 — ① 시즌 라이프사이클 3단계 → <strong>4단계(준비→진행중→정산중→종료)</strong> §4.1.1 전환 트리거 포함 ② <strong>레벨 운영 상태(운영중/최고레벨)</strong> §4.1.2 신설 ③ 보상별 설정 항목(다국어 보상명·참조 연결·배송·다운로드 파일·노출 순서) §4.4 보강 ④ <strong>보상 지급 현황 상태 6종</strong> §4.5 신설 ⑤ 활동 로그에 게시·정산 시작·종료·신규 레벨 추가·추첨 재시도 추가 ⑥ 화면 목록에 <strong>EVT-401 보상·레벨업 현황</strong> 추가</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-29</strong></td><td><strong>@Nill Yoo</strong></td><td>기획 의도 정합 — ① 팬덤레벨은 <strong>운영자 수동 생성</strong>(자동 생성 아님) 명문화 ② <strong>라이프사이클(임시저장→진행중→종료)</strong> §4.1.1 신설. 상태 전환은 상세에서 수행</td></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. ① 팬덤 레벨 기본 규칙(아티스트별·최대 10레벨·자동 판정) ② 레벨 곡선 카운터 모델 + 권장 곡선 ③ 연 1회 시즌 리셋 정책 ④ 레벨별 보상 5종 + 지급 방식 ⑤ 권한 [CEB-BO-SYS-102] 참조 ⑥ 활동 로그 4종. 화면 = 리스트(EVT-101) + 상세 3탭(EVT-201)</td></tr>
+</table>
+
+</body>
+</html>

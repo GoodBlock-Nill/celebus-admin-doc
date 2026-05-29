@@ -38,6 +38,7 @@ import {
   CalendarDaysIcon,
   GiftIcon,
   BellAlertIcon,
+  ArrowTrendingUpIcon,
 } from '@heroicons/react/24/outline';
 
 interface SubMenu {
@@ -68,6 +69,8 @@ const ADMIN_MENU: MenuItem[] = [
       { label: '멤버 리스트', href: '/artists/members', icon: UserIcon },
       { label: '소식/일정', href: '/artists/feed', icon: CalendarDaysIcon },
       { label: '덕력관리', href: '/artists/duk', icon: BoltIcon },
+      { label: '팬덤레벨', href: '/artists/fandom', icon: ArrowTrendingUpIcon },
+      { label: '보상·레벨업 현황', href: '/artists/fandom/status', icon: GiftIcon },
     ],
   },
   {
