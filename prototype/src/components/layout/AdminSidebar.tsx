@@ -39,6 +39,7 @@ import {
   GiftIcon,
   BellAlertIcon,
   ArrowTrendingUpIcon,
+  HeartIcon,
 } from '@heroicons/react/24/outline';
 
 interface SubMenu {
@@ -71,6 +72,7 @@ const ADMIN_MENU: MenuItem[] = [
       { label: '덕력관리', href: '/artists/duk', icon: BoltIcon },
       { label: '팬덤레벨', href: '/artists/fandom', icon: ArrowTrendingUpIcon },
       { label: '보상·레벨업 현황', href: '/artists/fandom/status', icon: GiftIcon },
+      { label: '서포트 관리', href: '/artists/support', icon: HeartIcon },
     ],
   },
   {
