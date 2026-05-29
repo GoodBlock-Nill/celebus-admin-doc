@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SUP — 서포트 이벤트</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.1</td></tr>
+<tr><td>버전</td><td>v2.2</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.29</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -188,13 +188,29 @@ p {
 <p>결과물 등록은 집행중 상태에서 [결과물 등록·완료] 액션으로 수행하며, 완료 전이와 함께 처리된다.</p>
 </blockquote>
 <h4>반환 현황 (읽기 전용)</h4>
+<p>미달성종료·집행취소 상태일 때 ① 요약 ② 회원별 반환 내역으로 구성한다. 정상 진행·완료 이벤트는 "반환 없음" 안내만 표시한다.</p>
+<p><strong>요약</strong></p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>반환 상태</td><td>미달성종료·집행취소 시 "전액 반환 완료"</td></tr>
+<tr><td>반환 사유</td><td>목표 미달성 / 집행 취소 / 강제 종료</td></tr>
+<tr><td>반환 방식</td><td>서버 자동 · 즉시 전액</td></tr>
+<tr><td>반환율</td><td>100%</td></tr>
 <tr><td>반환 대상</td><td>응원 회원 수</td></tr>
-<tr><td>반환 덕력</td><td>반환 총 덕력</td></tr>
-<tr><td>반환 시점</td><td>상태 전이 시각</td></tr>
+<tr><td>반환 총 덕력</td><td>반환된 총 덕력</td></tr>
+<tr><td>반환 완료 시점</td><td>상태 전이 시각</td></tr>
 </table>
+<p><strong>회원별 반환 내역 테이블</strong></p>
+<table>
+<tr><th>컬럼</th><th>설명</th></tr>
+<tr><td>닉네임</td><td>반환 대상 회원</td></tr>
+<tr><td>반환 덕력</td><td>회원의 누적 응원 = 반환액</td></tr>
+<tr><td>원 응원 횟수</td><td>반환 전 응원한 횟수</td></tr>
+<tr><td>반환 시점</td><td>회원별 반환 처리 시각</td></tr>
+<tr><td>상태</td><td>"반환 완료"</td></tr>
+</table>
+<ul>
+<li>반환 덕력 많은 순 정렬. 회차별 응원 내역은 [응원자 내역] 탭의 응원 상세 모달 참조.</li>
+</ul>
 <blockquote>
 <p>반환은 서버 자동 처리(§3.3). 운영자 수동 반환 버튼은 없다.</p>
 </blockquote>
@@ -252,6 +268,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v2.2</strong></td><td><strong>2026.05.29</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>반환 현황 보강</strong> §2.4 반환 현황을 ① 요약(반환 사유 3종[목표 미달성·집행 취소·강제 종료]·반환 방식[서버 자동·즉시 전액]·반환율·대상·총 덕력·완료 시점) ② <strong>회원별 반환 내역 테이블</strong>(닉네임·반환 덕력·원 응원 횟수·반환 시점·상태)로 확장. 기존 요약 4칸에서 운영자 추적성 강화. 프로토타입 <code>support.ts</code>에 반환 사유 필드 추가</td></tr>
 <tr><td><strong>v2.1</strong></td><td><strong>2026.05.29</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>응원자 내역 보강 — 다회 응원 추적</strong> 한 회원이 동일 이벤트에 여러 번 응원하는 구조([CEB-DUK-201] 누적 응원)를 운영자가 추적할 수 있도록 탭2 응원자 내역을 보강. ① 상단 요약(응원자 수·총 응원 횟수·누적 응원) 추가 ② 회원별 테이블에 <strong>누적 응원량·응원 횟수·최초 응원·최근 응원</strong> 컬럼 추가(기존 단일 응원량·단일 시점 철회) ③ 행 클릭 시 <strong>회차별 응원 내역 모달</strong>(회차/응원량/시점 + 누적 합계, 반환 시 반환 시점 표기) 신규</td></tr>
 <tr><td><strong>v2.0</strong></td><td><strong>2026.05.29</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>앱 SSOT([CEB-DUK-201]) 정합 + 탭형 상세 재설계</strong> ① <strong>3탭 구조</strong>(기본 정보 / 응원자 내역 / 결과물·반환)로 재편(기존 단일 정보 그리드 철회) ② 상태를 <strong>한국어 7상태</strong>로 정정, 헤더 상태 전환 버튼을 상태별 가능 액션으로 재정의 ③ <strong>상태 전환 모달 5종</strong>(게시·집행 시작·집행 취소·결과물 등록·완료·강제 종료) 인라인 명세 ④ <strong>반환을 전액·서버 자동</strong>으로 단순화(기존 운영자 수동 반환·추가 인증 철회) — 운영자 수동 반환 버튼 제거 ⑤ 응원 적립 → <strong>보유 덕력 차감</strong> 정정, 팬덤 레벨·랭킹 적립 표현 제거 ⑥ 상태별 수정 범위 표(모집중은 이벤트명·설명·이미지만) ⑦ 권한은 [CEB-BO-SYS-102] 참조로 통일(권한 등급 표 제거) ⑧ 코드 식별자(<code>DUK_SUPPORT_CHEER</code> 등)·영문 상태 전면 제거</td></tr>
 <tr><td>v1.0</td><td>2026-05-06</td><td>@Nill Yoo</td><td>(폐기) 초안 — 단일 정보 그리드·영문 상태·수동 반환 (v2.0에서 전면 재작성)</td></tr>

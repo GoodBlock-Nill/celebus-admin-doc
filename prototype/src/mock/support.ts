@@ -15,6 +15,9 @@ export type SupportStatus =
 // 변동 유형 — [CEB-BO-SUP-000] §4.5 / [SUP-401]
 export type CheerLedgerType = '응원' | '반환' | '결과물 알림';
 
+// 반환 사유 — [CEB-BO-SUP-201] §2.4
+export type RefundReason = '목표 미달성' | '집행 취소' | '강제 종료';
+
 export const SUPPORT_STATUSES: SupportStatus[] = [
   '임시저장', '모집중', '달성', '집행중', '완료', '미달성종료', '집행취소',
 ];
@@ -62,6 +65,7 @@ export interface SupportEvent {
   imageUrl?: string;
   cheerers: Cheerer[];
   result?: SupportResult;
+  refundReason?: RefundReason; // 반환 상태(미달성종료·집행취소)일 때 사유
   createdAt: string;
   updatedAt: string;
 }
@@ -122,6 +126,19 @@ export function achieveRate(e: SupportEvent): number {
 // 반환 종료 상태 여부 (미달성종료·집행취소)
 export function isRefundedStatus(s: SupportStatus): boolean {
   return s === '미달성종료' || s === '집행취소';
+}
+
+// 반환 대상 회원 목록 (1 덕력 이상 응원한 회원 = 전액 반환 대상)
+export function refundedCheerers(e: SupportEvent): Cheerer[] {
+  return e.cheerers.filter((c) => cheerTotal(c) > 0);
+}
+
+// 반환 사유 (명시값 우선, 없으면 상태로 추정)
+export function refundReasonOf(e: SupportEvent): RefundReason | null {
+  if (e.refundReason) return e.refundReason;
+  if (e.status === '집행취소') return '집행 취소';
+  if (e.status === '미달성종료') return '목표 미달성';
+  return null;
 }
 
 // 응원자 빌더 — 회차별 [응원량, 시점] 목록으로 구성
@@ -208,6 +225,7 @@ export const supportEvents: SupportEvent[] = [
       ch('celebus_one', [[350000, '2026.04.02 10:00'], [250000, '2026.04.10 19:00']], true, '2026.04.22 00:01'),
       ch('day1_celeb', [[500000, '2026.04.08 21:00']], true, '2026.04.22 00:01'),
     ],
+    refundReason: '목표 미달성',
     createdAt: '2026.03.28 11:00', updatedAt: '2026.04.22 00:01',
   },
   {
@@ -220,6 +238,7 @@ export const supportEvents: SupportEvent[] = [
       ch('ikonic_og', [[200000, '2026.03.11 09:00'], [100000, '2026.03.20 12:00']], true, '2026.03.28 10:00'),
       ch('konic_love', [[200000, '2026.03.15 18:00']], true, '2026.03.28 10:00'),
     ],
+    refundReason: '집행 취소',
     createdAt: '2026.03.05 14:00', updatedAt: '2026.03.28 10:00',
   },
   {

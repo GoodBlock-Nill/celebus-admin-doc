@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import SimpleTable from '@/components/clone/SimpleTable';
 import {
-  cheererCount, isRefundedStatus,
-  type SupportEvent, type SupportStatus,
+  cheererCount, isRefundedStatus, refundedCheerers, refundReasonOf,
+  cheerTotal, cheerCount,
+  type Cheerer, type SupportEvent, type SupportStatus,
 } from '@/mock/support';
 
 export default function ResultRefundTab({ event, status }: { event: SupportEvent; status: SupportStatus }) {
@@ -61,11 +63,39 @@ export default function ResultRefundTab({ event, status }: { event: SupportEvent
           미달성종료·집행취소·강제 종료 시 응원 덕력은 전액 자동 반환됩니다. 운영자 수동 반환은 없습니다.
         </p>
         {isRefunded ? (
-          <div className="grid grid-cols-4 gap-4">
-            <RefundCell label="반환 상태" value="전액 반환 완료" highlight />
-            <RefundCell label="반환 대상" value={`${cheererCount(event).toLocaleString()}명`} />
-            <RefundCell label="반환 덕력" value={`${event.accumulatedDuk.toLocaleString()} 덕력`} />
-            <RefundCell label="반환 시점" value={event.updatedAt} />
+          <div className="space-y-5">
+            {/* 요약 */}
+            <div className="grid grid-cols-3 gap-4">
+              <RefundCell label="반환 사유" value={refundReasonOf(event) ?? '-'} badge />
+              <RefundCell label="반환 방식" value="서버 자동 · 즉시 전액" />
+              <RefundCell label="반환율" value="100%" highlight />
+              <RefundCell label="반환 대상" value={`${cheererCount(event).toLocaleString()}명`} />
+              <RefundCell label="반환 총 덕력" value={`${event.accumulatedDuk.toLocaleString()} 덕력`} highlight />
+              <RefundCell label="반환 완료 시점" value={event.updatedAt} />
+            </div>
+
+            {/* 회원별 반환 내역 */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-sm font-medium text-gray-800">회원별 반환 내역</h4>
+                <span className="text-xs text-gray-400">회차별 응원 내역은 “응원자 내역” 탭 참조</span>
+              </div>
+              <SimpleTable<Cheerer>
+                columns={[
+                  { key: 'member', label: '닉네임', render: (r) => <span className="font-medium text-gray-900">{r.member}</span> },
+                  { key: 'refundDuk', label: '반환 덕력', width: '150px', align: 'right', render: (r) => (
+                    <span className="text-rose-600 font-medium">{cheerTotal(r).toLocaleString()}</span>
+                  )},
+                  { key: 'count', label: '원 응원 횟수', width: '120px', align: 'right', render: (r) => `${cheerCount(r)}회` },
+                  { key: 'refundedAt', label: '반환 시점', width: '180px', render: (r) => <span className="text-gray-500">{r.refundedAt ?? event.updatedAt}</span> },
+                  { key: 'state', label: '상태', width: '110px', render: () => (
+                    <span className="inline-flex rounded-full px-2.5 py-1 text-xs font-medium bg-rose-100 text-rose-700">반환 완료</span>
+                  )},
+                ]}
+                rows={[...refundedCheerers(event)].sort((a, b) => cheerTotal(b) - cheerTotal(a))}
+                emptyMessage="반환 대상 회원이 없습니다."
+              />
+            </div>
           </div>
         ) : (
           <div className="rounded-lg bg-gray-50 border border-gray-200 px-4 py-6 text-center text-sm text-gray-500">
@@ -89,11 +119,15 @@ function ResultField({ label, value, onChange, disabled, max }: {
   );
 }
 
-function RefundCell({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+function RefundCell({ label, value, highlight, badge }: { label: string; value: string; highlight?: boolean; badge?: boolean }) {
   return (
     <div>
       <div className="text-xs text-gray-500 mb-1">{label}</div>
-      <div className={`text-sm font-semibold ${highlight ? 'text-rose-600' : 'text-gray-900'}`}>{value}</div>
+      {badge ? (
+        <span className="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold bg-rose-100 text-rose-700">{value}</span>
+      ) : (
+        <div className={`text-sm font-semibold ${highlight ? 'text-rose-600' : 'text-gray-900'}`}>{value}</div>
+      )}
     </div>
   );
 }
