@@ -17,11 +17,10 @@ const TABS = [
 
 type TabKey = (typeof TABS)[number]['key'];
 
-// 시즌 상태 뱃지 — [CEB-BO-EVT-201] §2.1
+// 시즌 상태 뱃지 — [CEB-BO-EVT-201 v1.4] §2.1
 function statusBadge(s: FandomStatus) {
   if (s === '진행중') return 'bg-emerald-500 text-white';
   if (s === '준비') return 'bg-gray-100 text-gray-600';
-  if (s === '정산중') return 'bg-amber-100 text-amber-700';
   return 'bg-gray-800 text-white'; // 종료
 }
 
@@ -34,6 +33,16 @@ export default function FandomDetailPage({ params }: { params: Promise<{ id: str
   const [tab, setTab] = useState<TabKey>('curve');
   const [status, setStatus] = useState<FandomStatus>(fandom?.status ?? '준비');
   const [transitionOpen, setTransitionOpen] = useState(false);
+  // 미저장 이탈 가드 — 편집 중 탭 전환 시 확인
+  const [childEditing, setChildEditing] = useState(false);
+
+  const handleTabChange = (next: TabKey) => {
+    if (childEditing && next !== tab) {
+      if (!window.confirm('저장하지 않은 변경이 있습니다. 이동할까요?')) return;
+      setChildEditing(false);
+    }
+    setTab(next);
+  };
 
   if (!fandom) {
     return <div className="text-center py-20 text-gray-500">아티스트를 찾을 수 없습니다.</div>;
@@ -43,6 +52,7 @@ export default function FandomDetailPage({ params }: { params: Promise<{ id: str
   const hasCurve = fandom.levels.length > 0;
 
   // 상태별 전환 액션 (확인 모달 → 상태 전환 → 완료 토스트)
+  // 정산중 단계 제거 — [CEB-BO-EVT-000 v1.5] §4.1.1 / [CEB-BO-EVT-101 v1.3]
   const transition: Transition | null =
     status === '준비'
       ? {
@@ -54,21 +64,13 @@ export default function FandomDetailPage({ params }: { params: Promise<{ id: str
         }
       : status === '진행중'
         ? {
-            label: '정산 시작',
-            next: '정산중',
-            title: '시즌 정산을 시작할까요?',
-            lines: ['정산을 시작하면 앱 노출이 종료되고 보상 지급(자동·래플) 단계로 전환됩니다.'],
-            toast: `'${fandom.season}' 시즌 정산을 시작했습니다.`,
+            label: '강제 종료',
+            next: '종료',
+            title: '시즌을 강제 종료할까요?',
+            lines: ['강제 종료 시 시즌이 즉시 마감됩니다.', '종료한 시즌은 수정할 수 없습니다.'],
+            toast: `'${fandom.season}' 시즌을 종료했습니다.`,
           }
-        : status === '정산중'
-          ? {
-              label: '종료',
-              next: '종료',
-              title: '시즌을 종료할까요?',
-              lines: ['모든 레벨 보상 지급·추첨이 완료된 후 종료할 수 있습니다.', '종료한 시즌은 수정할 수 없습니다.'],
-              toast: `'${fandom.season}' 시즌을 종료했습니다.`,
-            }
-          : null;
+        : null;
 
   const handleTransition = () => {
     if (!transition) return;
@@ -112,17 +114,17 @@ export default function FandomDetailPage({ params }: { params: Promise<{ id: str
           {TABS.map((t) => (
             <button
               key={t.key}
-              onClick={() => setTab(t.key)}
+              onClick={() => handleTabChange(t.key)}
               className={`px-5 py-3 text-sm font-medium border-b-2 transition-colors ${
-                tab === t.key ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700'
+                tab === t.key ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >{t.label}</button>
           ))}
         </div>
       </div>
 
-      {tab === 'curve' && <CurveTab fandom={fandom} />}
-      {tab === 'reward' && <RewardTab fandom={fandom} />}
+      {tab === 'curve' && <CurveTab fandom={fandom} onEditingChange={setChildEditing} />}
+      {tab === 'reward' && <RewardTab fandom={fandom} onEditingChange={setChildEditing} />}
       {tab === 'history' && <HistoryTab fandom={fandom} />}
 
       {transition && (

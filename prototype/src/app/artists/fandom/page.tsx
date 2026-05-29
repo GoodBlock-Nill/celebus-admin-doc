@@ -23,7 +23,6 @@ const PAGE_SIZE = 10;
 function statusBadge(s: FandomStatus) {
   if (s === '진행중') return 'bg-emerald-500 text-white';
   if (s === '준비') return 'bg-gray-100 text-gray-600';
-  if (s === '정산중') return 'bg-amber-100 text-amber-700';
   return 'bg-gray-800 text-white'; // 종료
 }
 
@@ -39,7 +38,6 @@ export default function FandomListPage() {
   const stats = useMemo(() => ({
     준비: items.filter((f) => f.status === '준비').length,
     진행중: items.filter((f) => f.status === '진행중').length,
-    정산중: items.filter((f) => f.status === '정산중').length,
     종료: items.filter((f) => f.status === '종료').length,
   }), [items]);
 
@@ -62,7 +60,7 @@ export default function FandomListPage() {
       seasonPeriod: `${year}.01.01 ~ ${year}.12.31`,
       levels: [], currentLevel: 0, accumulatedDuk: 0, participants: 0,
       updatedAt: new Date().toISOString().slice(0, 16).replace('T', ' ').replace(/-/g, '.'),
-      rewards: [], levelUpHistory: [], rewardGrants: [],
+      rewards: [], levelUpHistory: [], biveGrants: [],
     };
     setItems([newItem, ...items]);
     setCreateOpen(false);
@@ -78,10 +76,9 @@ export default function FandomListPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-3 gap-4 mb-6">
         <StatCardRow label="준비" count={stats.준비} onClick={() => toggleStatus('준비')} active={statusFilter === '준비'} />
         <StatCardRow label="진행중" count={stats.진행중} onClick={() => toggleStatus('진행중')} active={statusFilter === '진행중'} countClassName="text-emerald-600" />
-        <StatCardRow label="정산중" count={stats.정산중} onClick={() => toggleStatus('정산중')} active={statusFilter === '정산중'} countClassName="text-amber-600" />
         <StatCardRow label="종료" count={stats.종료} onClick={() => toggleStatus('종료')} active={statusFilter === '종료'} />
       </div>
 
@@ -95,7 +92,6 @@ export default function FandomListPage() {
             <option value="">상태(전체)</option>
             <option value="준비">준비</option>
             <option value="진행중">진행중</option>
-            <option value="정산중">정산중</option>
             <option value="종료">종료</option>
           </select>
           <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
