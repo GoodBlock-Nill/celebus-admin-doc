@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-DUK-102] 덕력 랭킹</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-DUK-102] 덕력 랭킹</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-DUK-102</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>DUK — 랭킹</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 덕력 > 랭킹</td></tr>
+<tr><td>비고</td><td>Phase 9 신규. v2 APP [CEB-DUK-101] 덕력 랭킹과 정합 (BO는 운영자 시즌 관리 + 보상 지급). 분석 리포트 §3.6.3 GP 랭킹 500 에러와 별도 시스템</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한(§3·§4), UI 상태(§7), 활동 로그(§6)</td></tr>
+<tr><td>[CEB-BO-DUK-000] DUK 영역 가이드</td><td>정산 정책(§6.2), 시즌 라이프사이클(§6.1), 활동 로그(§5)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>DUK 시즌별 회원 랭킹 통합 조회. 시즌 종료 시 랭킹 보상 자동 지급 결과 확인 + 수동 재지급. 회원 앱(<code>[CEB-DUK-101]</code>)에서 보는 랭킹과 동일 데이터, BO는 운영자 시각.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>시즌별 회원 랭킹 조회 (TOP 100 + 검색)</li>
+<li>시즌 종료 후 랭킹 보상 지급 결과 모니터링</li>
+<li>수동 재지급 (지급 실패 회원 대상)</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>사이드 메뉴 > 덕력 > 랭킹</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 영역</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 덕력 > 랭킹</code></li>
+<li>화면 타이틀: 덕력 랭킹</li>
+</ul>
+<h3>2.2 시즌 선택·필터 영역</h3>
+<table>
+<tr><th>구분</th><th>요소명</th><th>타입</th><th>설명</th></tr>
+<tr><td>필터</td><td>시즌</td><td>Dropdown</td><td>진행중 시즌 (Default) / 과거 시즌 / 전체 (누적)</td></tr>
+<tr><td>입력</td><td>닉네임/유저ID</td><td>Text Input</td><td>회원 검색 (랭킹 외 위치도 검색 가능)</td></tr>
+<tr><td>버튼</td><td>초기화</td><td>Dark Button</td><td>—</td></tr>
+</table>
+<h3>2.3 통계 대시보드 (시즌 선택 시)</h3>
+<table>
+<tr><th>카드</th><th>의미</th></tr>
+<tr><td>시즌 상태</td><td>Active / Settling / Ended</td></tr>
+<tr><td>참여 회원</td><td>1,234명</td></tr>
+<tr><td>TOP 1 잔액</td><td>50,000 DUK</td></tr>
+<tr><td>보상 지급 (Ended)</td><td>100/100명 — 지급 완료</td></tr>
+</table>
+<h3>2.4 랭킹 테이블</h3>
+<table>
+<tr><th>컬럼</th><th>설명</th></tr>
+<tr><td>순위</td><td>1 ~ N (동률 시 시즌 마지막 적립 시점 기준 — DUK-201 §2.2 D)</td></tr>
+<tr><td>닉네임</td><td>회원 닉네임</td></tr>
+<tr><td>잔액</td><td>시즌 내 누적 적립 (소비 미차감 — POLICY 결정 가능)</td></tr>
+<tr><td>티어</td><td>Bronze ~ Diamond</td></tr>
+<tr><td>보상 지급 (Ended 한정)</td><td>지급완료 / 미지급 / 재시도 중</td></tr>
+<tr><td>액션 (Ended·미지급)</td><td>[수동 재지급] (POLICY/SUPER)</td></tr>
+</table>
+<ul>
+<li>페이지네이션: 10건 단위</li>
+<li>TOP 100 우선 노출, 그 이하는 "내 순위 검색" 기능</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 규칙·로직</h2>
+<h3>3.1 권한별 분기</h3>
+<table>
+<tr><th>권한</th><th>화면 진입</th><th>조회</th><th>[수동 재지급]</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅ (조회 전용)</td><td>❌</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>❌</td><td>—</td><td>—</td></tr>
+</table>
+<h3>3.2 정렬</h3>
+<table>
+<tr><th>기본</th><th>잔액 내림차순 → 동률 시 시즌 마지막 적립 시점 빠른 순</th></tr>
+</table>
+<h3>3.3 보상 지급 로직 ([CEB-BO-DUK-000] §6.2)</h3>
+<p>시즌 종료(Settling) → 자동 트리거:</p>
+<ol>
+<li>잔액 기준 순위 산출</li>
+<li>POLICY 설정 TOP N 선발</li>
+<li>등수별 보상 지급 (응모권·BIVE)</li>
+<li>활동 로그 기록 + 회원 푸시</li>
+</ol>
+<p>지급 실패 (가스비·지갑·블록체인 오류) → 본 화면 [수동 재지급] 버튼.</p>
+<h3>3.4 잔액 산출 정책</h3>
+<ul>
+<li>기본: 시즌 내 <strong>순 적립 잔액</strong> (적립 누적)</li>
+<li>POLICY 결정 시: <strong>순잔액</strong> (적립 − 소비) 기준 가능</li>
+</ul>
+<p>DUK-201 [정산 정책] 섹션에서 시즌별 설정.</p>
+<hr>
+<h2>4. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>카드 + 테이블 Skeleton</td></tr>
+<tr><td>Default</td><td>정상</td></tr>
+<tr><td>Empty (시즌 0건)</td><td>"등록된 시즌이 없습니다."</td></tr>
+<tr><td>Empty (랭킹 0건 — 신규 시즌)</td><td>"아직 적립한 회원이 없습니다."</td></tr>
+<tr><td>Error</td><td>"랭킹 조회에 실패하였습니다." + [재시도]</td></tr>
+</table>
+<p>분석 리포트 §3.6.3 GP 랭킹 화면 API 500과 별도 시스템 — DUK 랭킹은 자체 데이터.</p>
+<hr>
+<h2>5. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>메시지</th></tr>
+<tr><td>수동 재지급</td><td>시즌 '{시즌명}' 회원 '{닉네임}' 랭킹 보상 수동 재지급 (등수: {N})</td></tr>
+</table>
+<hr>
+<h2>6. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>시즌 미선택</td><td>"시즌을 선택해주세요."</td></tr>
+<tr><td>보상 자동 지급 실패</td><td>(시스템) Toast (Warning) "보상 지급 일부 실패. 본 화면에서 재시도해주세요."</td></tr>
+<tr><td>재지급 실패</td><td>Toast (Error) + 재시도 큐 등록</td></tr>
+</table>
+<hr>
+<h2>7. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>관계</th></tr>
+<tr><td>CEB-BO-DUK-101</td><td>형제</td></tr>
+<tr><td>CEB-BO-DUK-201</td><td>시즌 정책 데이터 소스</td></tr>
+<tr><td>CEB-BO-DUK-401</td><td>변동 내역 (회원 단위 검증)</td></tr>
+</table>
+<hr>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 9 신규. ① 시즌 선택 + 통계 4카드 ② TOP 100 + 검색 ③ 수동 재지급 (지급 실패 시) ④ 잔액 산출 정책 (순적립 vs 순잔액) — POLICY 결정 ⑤ GP 랭킹 500 이슈와 별도 시스템 명시 ⑥ 동률 처리 (시즌 마지막 적립 시점 기준)</td></tr>
+</table>
+
+</body>
+</html>

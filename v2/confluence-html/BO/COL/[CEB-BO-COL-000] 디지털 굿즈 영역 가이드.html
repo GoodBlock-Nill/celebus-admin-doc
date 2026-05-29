@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-COL-000] 디지털 굿즈(COL) 영역 가이드</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-COL-000] 디지털 굿즈(COL) 영역 가이드</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-COL-000</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>BO 디지털 굿즈 영역 (COL)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>비고</td><td>Phase 9 신규. v2 APP [CEB-COL-101] 컬렉션과 정합. <strong>BIVE와 분리</strong> — 비-NFT 디지털 자산 관리. 마스터 가이드 [CEB-BO-001] §2 (#8 COL)</td></tr>
+</table>
+<hr>
+<h2>1. 개요</h2>
+<p>디지털 굿즈(COL) 영역은 <strong>BIVE(NFT) 외 비-NFT 디지털 자산</strong> (포토카드 이미지·배지·스티커·이모티콘 등)을 관리. BIVE는 온체인 NFT 발행이 필요한 자산, COL은 온체인 발행 없이 회원 컬렉션에 디지털 자산으로 추가하는 영역.</p>
+<h3>COL vs BIVE</h3>
+<table>
+<tr><th>항목</th><th>BIVE</th><th>COL</th></tr>
+<tr><td>유형</td><td>NFT (온체인)</td><td>비-NFT (디지털 자산)</td></tr>
+<tr><td>발행 가스비</td><td>운영 지갑 부담</td><td>없음</td></tr>
+<tr><td>회원 보유</td><td>외부 지갑</td><td>CELEBUS 내부 컬렉션</td></tr>
+<tr><td>거래·전송</td><td>가능</td><td>불가 (회원 본인 컬렉션만)</td></tr>
+<tr><td>발행 트리거</td><td>Quest/Raffle 보상 등</td><td>동일 + 운영자 수동 발급</td></tr>
+</table>
+<table>
+<tr><th>항목</th><th>위치</th></tr>
+<tr><td>마스터 가이드</td><td>[CEB-BO-001] §2 (#8 COL)</td></tr>
+<tr><td>영역 ID</td><td><code>CEB-BO-COL-{번호}</code></td></tr>
+<tr><td>권한</td><td>OPERATOR + EXTERNAL_ARTIST(자기 아티스트 굿즈)</td></tr>
+<tr><td>BIVE 분리</td><td>[CEB-BO-004] BIVE 가이드 (NFT 영역)</td></tr>
+<tr><td>활동 로그</td><td>[CEB-BO-000] §6</td></tr>
+<tr><td>앱 연동</td><td>v2 APP [CEB-COL-101] 컬렉션</td></tr>
+</table>
+<hr>
+<h2>2. 화면 목록</h2>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>작성</th></tr>
+<tr><td>CEB-BO-COL-101</td><td>디지털 굿즈 리스트</td><td>본 세션</td></tr>
+<tr><td>CEB-BO-COL-201</td><td>굿즈 상세·발행</td><td>본 세션</td></tr>
+</table>
+<hr>
+<h2>3. 권한 매트릭스</h2>
+<table>
+<tr><th>화면</th><th>SUPER</th><th>OPERATOR</th><th>POLICY</th><th>EXTERNAL_ARTIST</th></tr>
+<tr><td>COL-101 리스트</td><td>R/W/D</td><td><strong>R/W (지급·회수)</strong></td><td>R</td><td><strong>R/W</strong> (자기 아티스트 굿즈 등록만)</td></tr>
+<tr><td>COL-201 상세·발행</td><td>R/W/D</td><td>R/W</td><td>R</td><td>R/W (자기 아티스트)</td></tr>
+</table>
+<hr>
+<h2>4. 영역 고유 정책</h2>
+<h3>4.1 굿즈 타입</h3>
+<table>
+<tr><th>타입</th><th>설명</th><th>예시</th></tr>
+<tr><td>포토카드</td><td>이미지 컬렉션</td><td>"V01D 송유찬 콘서트 포토카드"</td></tr>
+<tr><td>배지</td><td>활동 인증</td><td>"Quest 100건 달성 배지"</td></tr>
+<tr><td>스티커</td><td>앱 내 사용 가능</td><td>"iKON 응원 스티커"</td></tr>
+<tr><td>이모티콘</td><td>앱 채팅·기억저장소에서 사용</td><td></td></tr>
+<tr><td>디지털 카드</td><td>게임 카드형</td><td>"MADEIN 시즌 1 카드 #001"</td></tr>
+</table>
+<h3>4.2 발행 트리거</h3>
+<table>
+<tr><th>트리거</th><th>설명</th></tr>
+<tr><td>운영자 수동 발급</td><td>OPERATOR가 회원 선택 후 발급</td></tr>
+<tr><td>Quest 보상 (자동)</td><td>Quest 검수 승인 시 자동 발급 (Quest 생성 시 [COL 자동 발급] 옵션)</td></tr>
+<tr><td>Raffle 당첨 보상 (자동)</td><td>Raffle 추첨 시</td></tr>
+<tr><td>EVT 레벨업 보상 (자동)</td><td>레벨 도달 시</td></tr>
+<tr><td>가입 보너스</td><td>신규 가입 시 (선택)</td></tr>
+</table>
+<h3>4.3 회원 컬렉션</h3>
+<p>회원 앱(<code>v2 APP [CEB-COL-101]</code>)에서 보유 굿즈 통합 조회:</p>
+<ul>
+<li>타입별·아티스트별 필터</li>
+<li>보유 일자</li>
+<li>같은 굿즈 다중 발급 시 수량 표시</li>
+</ul>
+<h3>4.4 EXTERNAL_ARTIST 정합</h3>
+<p>EXTERNAL_ARTIST는 자기 아티스트 굿즈 <strong>등록만</strong> 가능. 회원 발급·회수는 OPERATOR가 처리 (POLICY 검수 가능).</p>
+<h3>4.5 굿즈 회수 정책</h3>
+<p>OPERATOR (어뷰징 적발) 또는 SUPER (자산 회수, USR §7.4) 시 회수:</p>
+<ul>
+<li>활동 로그 + 회원 알림</li>
+<li>DUK·EVT 영향 X (별도 자산)</li>
+</ul>
+<hr>
+<h2>5. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 9 신규. ① <strong>BIVE vs COL 비교</strong> §1 (NFT vs 비-NFT) ② 굿즈 타입 5종 ③ 발행 트리거 5종 ④ EXTERNAL_ARTIST 등록만, 회원 발급은 OPERATOR ⑤ 회수 정책</td></tr>
+</table>
+
+</body>
+</html>

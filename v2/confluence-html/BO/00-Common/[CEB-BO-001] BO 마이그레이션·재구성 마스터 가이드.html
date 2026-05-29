@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-001] BO 마이그레이션·재구성 마스터 가이드</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-001] BO 마이그레이션·재구성 마스터 가이드</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-001</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>BO 전체 (마이그레이션 + 재구성 마스터)</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.05</td></tr>
+<tr><td>비고</td><td>기존 v1 BO를 v2 체계로 흡수·재구성하는 마스터 가이드. 영역별 세부는 CEB-BO-002~ 조각 문서 참조</td></tr>
+</table>
+<hr>
+<h2>0. 목적</h2>
+<p>기존 운영 중인 v1 백오피스(BO-GAM·BO-FQ·회원·아티스트·BIVE·관리자)를 <strong>v2 고도화 BO 체계로 흡수·재구성</strong>한다. 본 문서는 작업 전체의 마스터 가이드로:</p>
+<ol>
+<li><strong>현황 분석</strong> — 기존 BO 영역과 v2 BO-000 정의의 갭</li>
+<li><strong>마이그레이션 전략</strong> — v1 내용을 v2/BO/로 단계적 이전 (deprecation 태그)</li>
+<li><strong>v2 통합 영역 매핑</strong> — 8개 영역 → 12개 영역으로 확장</li>
+<li><strong>작업 우선순위·일정</strong></li>
+<li><strong>싱크 정책</strong> — 누락 없이 모든 문서 일관성 유지</li>
+</ol>
+<blockquote>
+<p><strong>사용자 결정 사항</strong> (1·2·3차 인터뷰):</p>
+<p>- 마이그레이션: v1 흡수 → v2 통합 재구성 (권장)</p>
+<p>- BIVE: NFT/온체인 실제 발행 + Quest/Raffle 보상 연결</p>
+<p>- 우선순위: 기존 영역 v2 호환 검토 먼저 (회원·아티스트·BIVE·관리자)</p>
+<p>- 회원 상세: 기존 4탭 + v2 신규 4탭 = <strong>8탭</strong></p>
+<p>- 관리자 권한: <strong>하이브리드</strong> (4단계 기본 + 그룹 커스터마이징)</p>
+<p>- v1 폴더: <strong>v2/BO/로 세계 이전</strong> (deprecation 태그)</p>
+<p>- 산출물 구조: <strong>메인 가이드 + 영역별 조각 문서</strong></p>
+</blockquote>
+<hr>
+<h2>1. 현황 분석</h2>
+<h3>1.1 실제 구현 BO 7개 영역</h3>
+<table>
+<tr><th>#</th><th>영역</th><th>화면</th><th>비고</th></tr>
+<tr><td>1</td><td>대시보드</td><td>빈 화면</td><td>v2 BO-000 §17에서 신규 정의 — 채워 넣을 차례</td></tr>
+<tr><td>2</td><td><strong>회원</strong></td><td>회원 리스트, 회원상세 (기본·참여내역(Quest·Raffle)·게임존·BIVE 4탭)</td><td>v2 신규 영역 4탭 추가 필요</td></tr>
+<tr><td>3</td><td><strong>아티스트</strong></td><td>그룹리스트, 그룹생성, 포지션설정, 멤버리스트, 소속사설정, 멤버생성, 그룹상세(기본·SNS&LINK·멤버 3탭), 멤버상세(기본·소속그룹 2탭)</td><td>v2 정책 호환 + EXTERNAL_ARTIST 권한 연결</td></tr>
+<tr><td>4</td><td><strong>BIVE</strong></td><td>에디션관리(에디션 생성, BIVE관리, BIVE상세 4탭), 민팅관리(EVENT·Ticket 탭, 캠페인 생성), 혜택관리</td><td>NFT/온체인 실제 발행. Quest/Raffle 보상 연결</td></tr>
+<tr><td>5</td><td>게임존</td><td>v1 BO-GAM 24개 화면 그대로</td><td>v1 흡수 — <code>BO-GZ-archive</code> 태그</td></tr>
+<tr><td>6</td><td>팬퀘스트</td><td>v1 BO-FQ 35개 화면 그대로</td><td>v1 흡수 — <code>BO-FQ-archive</code> 태그</td></tr>
+<tr><td>7</td><td><strong>관리자</strong></td><td>관리자 초대, 관리자 리스트·상세, 권한관리, 권한생성, 권한상세(기본·권한설정·관리자 3탭)</td><td>v2 4단계 권한 + 그룹 커스터마이징 하이브리드</td></tr>
+</table>
+<h3>1.2 v2 BO-000 §1.2 정의 8개 영역</h3>
+<table>
+<tr><th>영역</th><th>접두어</th><th>상태</th></tr>
+<tr><td>Quest·Raffle</td><td><code>FQ</code></td><td>✅ 기존 BO-FQ 흡수</td></tr>
+<tr><td>덕력 시스템</td><td><code>DUK</code></td><td>⚠️ 신규 — 기존 BO에 없음</td></tr>
+<tr><td>팬덤 레벨</td><td><code>EVT</code></td><td>⚠️ 신규</td></tr>
+<tr><td>서포트 이벤트</td><td><code>SUP</code></td><td>⚠️ 신규</td></tr>
+<tr><td>콘텐츠·소식</td><td><code>INF</code></td><td>⚠️ 신규</td></tr>
+<tr><td>기억저장소 운영</td><td><code>MEM</code></td><td>⚠️ 신규</td></tr>
+<tr><td>디지털 굿즈 (BIVE)</td><td><code>COL</code></td><td>⚠️ <strong>재정의</strong> — 기존 BIVE 영역(에디션·민팅·캠페인·혜택)이 더 상세</td></tr>
+<tr><td>홈·아티스트</td><td><code>APP</code></td><td>⚠️ <strong>분리</strong> — 아티스트(ART)는 별도 영역으로 분리 권장</td></tr>
+</table>
+<h3>1.3 갭 요약</h3>
+<table>
+<tr><th>항목</th><th>현황</th></tr>
+<tr><td><strong>v2 BO-000에 누락된 영역</strong></td><td>회원(USR), 아티스트(ART)는 APP(앱 운영)에 묻힘, 관리자(SYS) 화면 단위 명세 부족</td></tr>
+<tr><td><strong>v2 BO-000보다 기존 BO가 상세한 영역</strong></td><td>BIVE (에디션·민팅·캠페인·혜택 4서브 영역)</td></tr>
+<tr><td><strong>기존 BO에 없고 v2에서 신규</strong></td><td>DUK·EVT·SUP·INF·MEM·APP (6개)</td></tr>
+<tr><td><strong>공통 정책 갭</strong></td><td>v2 BO-000 v1.1로 보강 완료 (회원 제재·외부 지갑·푸시·대시보드·미디어 업로드)</td></tr>
+</table>
+<hr>
+<h2>2. v2 통합 영역 매핑 (14개 영역)</h2>
+<p>기존 v2 BO-000 §1.2의 8개 영역을 <strong>14개 영역</strong>으로 확장한다. 추가된 6개: USR·ART·BIVE(독립)·SYS·<strong>RFT</strong> ⭐ v1.3·<strong>SQ</strong> ⭐ v1.4.</p>
+<table>
+<tr><th>#</th><th>영역</th><th>접두어</th><th>출처</th><th>권한 (R/W/D)</th></tr>
+<tr><td>1</td><td>Quest·Raffle</td><td><code>FQ</code></td><td>v1 BO-FQ 흡수</td><td>OPERATOR</td></tr>
+<tr><td>2</td><td><strong>덕력 시스템</strong></td><td><code>DUK</code></td><td>v2 신규</td><td>POLICY</td></tr>
+<tr><td>3</td><td><strong>팬덤 레벨</strong></td><td><code>EVT</code></td><td>v2 신규</td><td>POLICY</td></tr>
+<tr><td>4</td><td><strong>서포트 이벤트</strong></td><td><code>SUP</code></td><td>v2 신규</td><td>OPERATOR</td></tr>
+<tr><td>5</td><td><strong>콘텐츠·소식</strong></td><td><code>INF</code></td><td>v2 신규 (+v1 게임존 일부 통합)</td><td>OPERATOR + EXTERNAL_ARTIST</td></tr>
+<tr><td>6</td><td><strong>기억저장소 운영</strong></td><td><code>MEM</code></td><td>v2 신규</td><td>OPERATOR</td></tr>
+<tr><td>7</td><td><strong>BIVE</strong> (NFT)</td><td><code>BIVE</code></td><td>v1 흡수 + 재구성</td><td>OPERATOR + EXTERNAL_ARTIST (한정)</td></tr>
+<tr><td>8</td><td>디지털 굿즈 (기타)</td><td><code>COL</code></td><td>v2 신규 (BIVE 외 포토카드·배지 등)</td><td>OPERATOR</td></tr>
+<tr><td>9</td><td><strong>회원</strong></td><td><code>USR</code></td><td>v1 흡수 + 8탭 확장</td><td>OPERATOR (조회·제재) / SUPER (자산 회수)</td></tr>
+<tr><td>10</td><td><strong>아티스트</strong></td><td><code>ART</code></td><td>v1 흡수 + EXTERNAL_ARTIST 연결</td><td>SUPER + EXTERNAL_ARTIST (자기 아티스트)</td></tr>
+<tr><td>11</td><td>앱 (배너 등)</td><td><code>APP</code></td><td>v2 신규</td><td>OPERATOR</td></tr>
+<tr><td>12</td><td><strong>관리자</strong></td><td><code>SYS</code></td><td>v1 흡수 + 4단계 + 그룹</td><td>SUPER 전용</td></tr>
+<tr><td>13</td><td><strong>응모권</strong> ⭐ v1.3 추가</td><td><code>RFT</code></td><td>v2 신규 (+ FQ-301 이전·확장)</td><td>OPERATOR + EXTERNAL_ARTIST (자기 아티스트 출처 통계만)</td></tr>
+<tr><td>14</td><td><strong>스토리 퀘스트</strong> ⭐ v1.4 추가</td><td><code>SQ</code></td><td>v2 신규 (개발팀 ERD <code>story_quest_*</code> 7테이블 발견)</td><td>OPERATOR + EXTERNAL_ARTIST (자기 아티스트 한정 — 🔴 Critical)</td></tr>
+</table>
+<blockquote>
+<p>v1 게임존(<code>BO-GAM</code>)은 <code>FQ</code> 영역에 흡수되거나 별도 운영(현재 게임 운영 중이므로 v1 그대로 유지 + deprecated 태그) — 후속 결정.</p>
+</blockquote>
+<blockquote>
+<p><strong>RFT 영역 (v1.3 추가)</strong>: 응모권은 출처(팬퀘스트·게임존 GP·BIVE 보유 혜택·일일미션 등)와 라이프사이클(발급→보유→사용→소멸·만료)이 독립적인 자체 자산이므로 단일 영역에 종속하지 않고 별도 영역으로 분리. 사이드바상 BIVE 직후 — 자산 영역 그룹. 영역 가이드 = [CEB-BO-010]. 멀티아티스트 정책상 🟡 Info 등급 (전역 + 발급 출처 메타) — [CEB-BO-100] §3 참조.</p>
+</blockquote>
+<hr>
+<h2>3. 마이그레이션 전략</h2>
+<h3>3.1 v1 → v2/BO/ 세계 이전 (Deprecation 모델)</h3>
+<pre><code>[현재] v1 폴더                 [목표] v2/BO/ 통합
+BO-GAM/      ─┐
+BO-FQ/        ├──→  v2/BO/ (12개 영역)
+(BO-USR/)     │     ├── 화면별 .md 명세
+(BO-ART/)     │     ├── confluence-html/ 변환본
+(BO-BIVE/)    │     └── 영역별 가이드 (CEB-BO-002~005)
+(BO-SYS/)    ─┘
+                        + v1 폴더 deprecation 태그
+                          (Page Properties에 "deprecated 2026.MM.DD")
+</code></pre>
+<h3>3.2 단계별 이전 절차</h3>
+<p>각 화면 명세서별로 다음 4단계를 거친다.</p>
+<table>
+<tr><th>단계</th><th>작업</th><th>산출물</th></tr>
+<tr><td><strong>1. 검토</strong></td><td>v1 화면 명세서 읽기 + v2 정책(BO-000) 호환성 점검</td><td>갭 노트</td></tr>
+<tr><td><strong>2. 재구성</strong></td><td>v2/BO/에 신규 명세서 작성 (v2 정책 적용)</td><td><code>v2/BO/[CEB-BO-{영역}-{번호}] {제목}.md</code></td></tr>
+<tr><td><strong>3. Deprecate</strong></td><td>v1 원본 Page Properties에 <code>상태: deprecated (이전: v2/BO/...)</code> 추가</td><td>v1 원본 (수정 후)</td></tr>
+<tr><td><strong>4. HTML 변환</strong></td><td>v2/convert-to-html.js에 매핑 추가 → 실행</td><td><code>v2/confluence-html/BO/...html</code></td></tr>
+</table>
+<h3>3.3 V1 폴더 deprecation 태그 표준</h3>
+<p>기존 v1 화면 명세서 상단 Page Properties에 다음 행 추가:</p>
+<pre><code>| 상태 | **deprecated 2026.MM.DD** (이전: `v2/BO/[CEB-BO-{영역}-{번호}] {제목}.md`) |
+</code></pre>
+<p>v1 원본은 <strong>삭제하지 않음</strong> (히스토리 보존). 신규 작업·검색은 v2/BO/로 진행.</p>
+<hr>
+<h2>4. 영역별 재구성 개요</h2>
+<h3>4.1 회원(USR) 영역</h3>
+<table>
+<tr><th>화면</th><th>v1</th><th>v2 신규</th></tr>
+<tr><td>회원 리스트</td><td>기존 (CEB-BO-USR-101)</td><td>검색·필터에 v2 신규 활동 필터 추가 (덕력 잔액·기억저장소 신고 횟수 등)</td></tr>
+<tr><td>회원 상세</td><td>4탭: 기본·참여내역·게임존·BIVE</td><td><strong>8탭</strong>: 위 4탭 + <strong>덕력·서포트·기억저장소·팬덤레벨</strong></td></tr>
+<tr><td>회원 제재</td><td>(기존 미정의)</td><td>신규 — v2 BO-000 §14 회원 제재 정책 적용</td></tr>
+</table>
+<p>→ 상세 명세: <strong>CEB-BO-002 회원(USR) 영역 가이드</strong></p>
+<h3>4.2 아티스트(ART) 영역</h3>
+<table>
+<tr><th>화면</th><th>v1</th><th>v2 신규</th></tr>
+<tr><td>그룹 리스트·생성·상세</td><td>기존 (3탭: 기본·SNS&LINK·멤버)</td><td><strong>+1탭</strong> "v2 활동 통계" (해당 아티스트의 Quest·Raffle·BIVE 발행·팬덤 레벨업 추이)</td></tr>
+<tr><td>멤버 리스트·생성·상세</td><td>기존 (2탭: 기본·소속그룹)</td><td>멤버 SNS·BIVE 연결 옵션</td></tr>
+<tr><td>소속사 설정</td><td>기존</td><td>EXTERNAL_ARTIST 권한자 ↔ 소속사 매핑</td></tr>
+<tr><td>포지션 설정</td><td>기존</td><td>그대로</td></tr>
+</table>
+<p>→ 상세 명세: <strong>CEB-BO-003 아티스트(ART) 영역 가이드</strong></p>
+<h3>4.3 BIVE(NFT) 영역</h3>
+<table>
+<tr><th>화면</th><th>v1</th><th>v2 신규</th></tr>
+<tr><td>에디션 관리</td><td>기존 — Genesis·시즌별 에디션</td><td>v2 BO-000 §11(자산)·§15(외부 지갑) 정책 호환</td></tr>
+<tr><td>BIVE 관리</td><td>BIVE 상세 4탭 (기본·기능설정·민팅관리·민팅이력)</td><td>그대로 + 활동 로그 표준화</td></tr>
+<tr><td>민팅관리 캠페인</td><td>EVENT·Ticket 탭 + 캠페인 생성</td><td><strong>Quest/Raffle 보상 연결</strong>: Quest 완료 → BIVE 자동 민팅 트리거</td></tr>
+<tr><td>혜택관리</td><td>BIVE 보유자 혜택</td><td>v2 팬덤레벨·독점 콘텐츠·할인 등 통합</td></tr>
+</table>
+<p>→ 상세 명세: <strong>CEB-BO-004 BIVE(NFT) 영역 가이드</strong></p>
+<h3>4.4 관리자(SYS) 영역</h3>
+<table>
+<tr><th>화면</th><th>v1</th><th>v2 신규</th></tr>
+<tr><td>관리자 초대·리스트·상세</td><td>기존</td><td>초대 흐름에 4단계 권한 (SUPER·OPERATOR·POLICY·EXTERNAL_ARTIST) 선택</td></tr>
+<tr><td>권한 관리</td><td>권한 그룹·권한 생성·권한 상세 (3탭)</td><td><strong>하이브리드</strong>: 4단계 = 기본 권한 그룹 프리셋. 추가 그룹 커스터마이징 가능</td></tr>
+<tr><td>권한 부여·회수</td><td>기존</td><td>v2 BO-000 §3.2 정책 (만료일·IP 화이트리스트·90일 비활성 자동 잠금) 적용</td></tr>
+<tr><td>활동 로그</td><td>(기존 미정의 또는 부분)</td><td>v2 BO-000 §6 표준 적용 (3년 보관·append-only)</td></tr>
+</table>
+<p>→ 상세 명세: <strong>CEB-BO-005 관리자(SYS) 영역 가이드</strong></p>
+<h3>4.5 v2 신규 영역 (DUK·EVT·SUP·INF·MEM·APP)</h3>
+<p>기존 BO에 없으므로 신규 작성. 각 영역별 명세는 다음 세션에 진행.</p>
+<table>
+<tr><th>영역</th><th>핵심 화면 (예상)</th></tr>
+<tr><td>덕력 (DUK)</td><td>시즌 관리·티어 보상 설정·캡 조정·랭킹 보상</td></tr>
+<tr><td>팬덤 레벨 (EVT)</td><td>곡선 설정·레벨별 보상·독점 콘텐츠 연결</td></tr>
+<tr><td>서포트 (SUP)</td><td>이벤트 생성·상태 관리·결과물 등록·반환 처리</td></tr>
+<tr><td>콘텐츠 (INF)</td><td>소식·일정·공지 등록 (다국어·EXTERNAL_ARTIST)</td></tr>
+<tr><td>기억 (MEM)</td><td>신고 관리·차단·위반 게시물</td></tr>
+<tr><td>앱 (APP)</td><td>캐러셀 배너·추천 카드·바로가기 카드</td></tr>
+</table>
+<hr>
+<h2>5. 화면 ID 체계 (영역별 번호 분배)</h2>
+<p>v2 BO-000 §2 패턴 그대로 적용.</p>
+<pre><code>CEB-BO-{영역}-{번호}[-{유형}]
+</code></pre>
+<table>
+<tr><th>영역</th><th>메인 List</th><th>Create</th><th>Edit</th><th>Detail (탭)</th><th>부속</th></tr>
+<tr><td>FQ</td><td>101 (Quest), 102 (Raffle)</td><td>101-Create, 102-Create</td><td>201-Edit, 204-Edit</td><td>201~206</td><td>~~301 (응모권)~~ → <strong>RFT-201 이전·확장 (v1.3)</strong>, 401 (이력), 501 (일일 미션 관리), <strong>502 (반려사유 마스터, v1.3 신규)</strong></td></tr>
+<tr><td>DUK</td><td>101 (시즌·캡), 102 (랭킹)</td><td>—</td><td>101-Edit</td><td>201 (시즌 상세)</td><td>401 (변동 내역)</td></tr>
+<tr><td>EVT</td><td>101 (레벨 곡선)</td><td>—</td><td>101-Edit</td><td>201 (레벨별 보상)</td><td>—</td></tr>
+<tr><td>SUP</td><td>101 (List)</td><td>101-Create</td><td>201-Edit</td><td>201~203</td><td>—</td></tr>
+<tr><td>INF</td><td>101 (소식 List)</td><td>101-Create</td><td>201-Edit</td><td>201 (Detail)</td><td>—</td></tr>
+<tr><td>MEM</td><td>101 (신고 List)</td><td>—</td><td>—</td><td>201 (신고 상세)</td><td>301 (차단 유저)</td></tr>
+<tr><td>BIVE</td><td>101 (에디션 List), 102 (BIVE List), 103 (민팅 캠페인 List), 104 (혜택 List)</td><td>101-Create, 103-Create</td><td>102-Edit</td><td>102 Detail (4탭)</td><td>—</td></tr>
+<tr><td>COL</td><td>101 (디지털 굿즈)</td><td>—</td><td>—</td><td>201</td><td>—</td></tr>
+<tr><td><strong>USR</strong></td><td><strong>101</strong> (회원 리스트)</td><td>—</td><td>—</td><td><strong>201</strong> (회원 상세 8탭)</td><td>301 (제재 이력)</td></tr>
+<tr><td><strong>ART</strong></td><td><strong>101</strong> (그룹 리스트), 102 (멤버 리스트), 103 (소속사)</td><td>101-Create, 102-Create</td><td>101-Edit, 102-Edit</td><td>201 (그룹 상세 4탭), 202 (멤버 상세 2탭)</td><td>301 (포지션)</td></tr>
+<tr><td>APP</td><td>101 (슬롯 인벤토리)</td><td>101-Create</td><td>—</td><td>201</td><td>—</td></tr>
+<tr><td><strong>SYS</strong></td><td><strong>101</strong> (관리자 리스트), 102 (권한 그룹 리스트)</td><td>101-Invite, 102-Create</td><td>101-Edit, 102-Edit</td><td>201 (관리자 상세), 202 (권한 그룹 상세 3탭)</td><td>401 (활동 로그), <strong>501 (권한 스코프, v1.3 신규)</strong>, <strong>601 (활동 로그 컨텍스트, v1.3 신규)</strong>, <strong>701 (데이터 마이그레이션, v1.3 신규)</strong></td></tr>
+<tr><td><strong>RFT</strong> ⭐ v1.3 신규</td><td><strong>101</strong> (응모권 현황)</td><td>—</td><td>—</td><td>— (별도 상세 화면 없음, MVP)</td><td>201 (변동 내역, FQ-301 이전), 301 (발급 정책 마스터). 후속 트랙: ~~401 (캠페인)~~, ~~501 (만료·환수)~~</td></tr>
+</table>
+<hr>
+<h2>6. 폴더 구조 (이전 후)</h2>
+<pre><code>v2/
+├── [CEB-000] 공통 정책.md           # 앱 공통 정책 (기존)
+├── [CEB-DUK-000] 덕력 워킹 문서.md   # 기존
+├── APP/                              # 앱 화면 명세 (기존 22개)
+├── BO/                               # ⭐ 백오피스 화면 명세 (신규 통합)
+│   ├── [CEB-BO-000] 백오피스 공통 정책.md     # ✅ 작성됨
+│   ├── [CEB-BO-001] BO 마이그레이션·재구성 마스터 가이드.md  # ⭐ 본 문서
+│   ├── [CEB-BO-002] 회원(USR) 영역 가이드.md           # ⭐ 후속
+│   ├── [CEB-BO-003] 아티스트(ART) 영역 가이드.md       # ⭐ 후속
+│   ├── [CEB-BO-004] BIVE(NFT) 영역 가이드.md          # ⭐ 후속
+│   ├── [CEB-BO-005] 관리자(SYS) 영역 가이드.md         # ⭐ 후속
+│   ├── [CEB-BO-FQ-101] 팬퀘스트 메인 (Quest 탭).md    # v1 흡수
+│   ├── [CEB-BO-FQ-102] 팬퀘스트 메인 (Raffle 탭).md   # v1 흡수
+│   ├── ... (기존 BO-FQ 35개 흡수)
+│   ├── [CEB-BO-USR-101] 회원 리스트.md                 # 신규 작성
+│   ├── [CEB-BO-USR-201] 회원 상세 (8탭).md            # 신규 작성
+│   ├── [CEB-BO-ART-201] 그룹 리스트.md                # 신규 작성
+│   ├── ... (각 영역별 명세서)
+│   └── [CEB-BO-SYS-202] 권한 그룹 상세.md             # 신규 작성
+├── confluence-html/
+│   ├── [CEB-000] 공통 정책.html
+│   ├── APP/...
+│   └── BO/                          # ⭐ BO HTML 변환본 (신규 매핑)
+│       └── ...
+└── convert-to-html.js               # ⭐ BO 영역 매핑 추가 필요
+
+(deprecated)
+BO-GAM/                              # 게임존 v1 (deprecated 태그)
+BO-FQ/                               # 팬퀘스트 v1 (deprecated 태그)
+confluence-html/BO-GAM/, BO-FQ/      # v1 HTML (그대로 유지)
+</code></pre>
+<hr>
+<h2>7. 작업 우선순위·일정</h2>
+<h3>7.1 단계 (사용자 결정: 기존 영역 v2 호환 검토 먼저)</h3>
+<table>
+<tr><th>단계</th><th>작업</th><th>산출물</th><th>예상 기간</th></tr>
+<tr><td><strong>0</strong></td><td><strong>마스터 가이드 (본 문서)</strong></td><td>CEB-BO-001</td><td>완료 (이번 세션)</td></tr>
+<tr><td><strong>1</strong></td><td><strong>영역별 조각 문서 4개 작성</strong> (병행)</td><td>CEB-BO-002·003·004·005</td><td>1주</td></tr>
+<tr><td>2</td><td>v1 BO-FQ 흡수 — v2 정책 호환 검토 + 화면별 deprecation 태그</td><td>v2/BO/ 안에 35개 명세 이전</td><td>1주</td></tr>
+<tr><td>3</td><td>회원(USR) 8탭 명세 작성 (병행: 기존 4탭 호환 + 신규 4탭)</td><td>CEB-BO-USR-101·201·301</td><td>1~2주</td></tr>
+<tr><td>4</td><td>아티스트(ART) v2 호환 명세</td><td>CEB-BO-ART-201~305, 401</td><td>1주</td></tr>
+<tr><td>5</td><td>BIVE 4서브 영역 v2 호환 + Quest/Raffle 보상 연결</td><td>CEB-BO-BIVE-101~401</td><td>1~2주</td></tr>
+<tr><td>6</td><td>관리자(SYS) 하이브리드 권한 명세</td><td>CEB-BO-SYS-101~401</td><td>1주</td></tr>
+<tr><td>7</td><td>v2 신규 6개 영역 명세 (DUK·EVT·SUP·INF·MEM·APP)</td><td>각 영역별 5~10개 화면</td><td>2~3주</td></tr>
+<tr><td>8</td><td>HTML 변환 일괄 실행 + Confluence 업로드</td><td>confluence-html/BO/ 전체</td><td>0.5주</td></tr>
+<tr><td>9</td><td>운영팀 리뷰·QA·정정</td><td>변경 이력 v1.x</td><td>1주</td></tr>
+<tr><td></td><td><strong>합계</strong></td><td><strong>약 9~12주</strong></td><td></td></tr>
+</table>
+<h3>7.2 병행 가능한 작업</h3>
+<ul>
+<li>단계 1 영역별 조각 문서 4개는 <strong>모두 병행</strong> 가능 (의존성 없음)</li>
+<li>단계 2~6 (기존 영역)도 영역 간 독립 → 병행 가능</li>
+<li>단계 7 v2 신규 영역도 영역 간 독립 → 병행 가능</li>
+</ul>
+<p>운영 팀 인원 따라 단계 1·2 동시 진행 시 <strong>6~8주</strong>로 단축 가능.</p>
+<hr>
+<h2>8. 싱크 정책 — 누락 없이 모든 문서 일관성 유지</h2>
+<h3>8.1 문서 간 동기화 원칙</h3>
+<table>
+<tr><th>변경 발생 위치</th><th>동기화 대상</th></tr>
+<tr><td><strong>v2 정책 변경</strong> ([CEB-000] 또는 [CEB-BO-000])</td><td>① 영향 받는 화면 명세서 changelog 동기화 ② confluence-html 재변환</td></tr>
+<tr><td><strong>화면 명세서 변경</strong> (예: CEB-BO-USR-201)</td><td>① 해당 영역 가이드 (CEB-BO-002) 변경 이력 ② HTML 재변환</td></tr>
+<tr><td><strong>새 화면 추가</strong></td><td>① 영역 가이드의 화면 목록 ② 본 마스터 가이드 §5 화면 ID 표 ③ HTML 매핑</td></tr>
+<tr><td><strong>이전(deprecation)</strong></td><td>① v1 원본 Page Properties 태그 추가 ② v2/BO/ 신규 명세 ③ 본 마스터 가이드 §1.1 표</td></tr>
+</table>
+<h3>8.2 변경 이력 (changelog) 표준</h3>
+<p>모든 BO 명세서는 변경 이력 표를 가지며, 다음 패턴으로 작성:</p>
+<pre><code>## N. 변경 이력
+
+| 버전 | 일자 | 작성자 | 변경 내용 |
+| ---- | ---- | ------ | --------- |
+| v1.0 | YYYY.MM.DD | @작성자 | 초안 작성. 핵심 정책 ① ② ③ ... |
+| v1.1 | YYYY.MM.DD | @작성자 | (변경 동기) — ① ② ③ |
+</code></pre>
+<p>영향 받는 다른 문서가 있을 경우 changelog 마지막에 명시:</p>
+<blockquote>
+<p><code>동기화: [CEB-BO-000] v1.2, [CEB-BO-001] §5 화면 ID 표 갱신</code></p>
+</blockquote>
+<h3>8.3 HTML 변환 매핑 정책</h3>
+<p><code>v2/convert-to-html.js</code>에 BO 폴더의 모든 .md 파일을 매핑 추가. 신규 명세서 추가 시 매핑도 동시 추가 (체크리스트 §10).</p>
+<h3>8.4 검색·인덱스 유지</h3>
+<p><code>v2/BO/</code>에 새 명세서 추가 시:</p>
+<ol>
+<li>본 마스터 가이드 §5 화면 ID 표 갱신</li>
+<li>해당 영역 가이드 (CEB-BO-002~005) 화면 목록 갱신</li>
+<li>기존 영역(FQ 등)의 영역 가이드도 동일</li>
+</ol>
+<h3>8.5 다국어 라벨 일관성</h3>
+<p>[CEB-000] §1 다국어 라벨 매핑이 단일 진실 원천(SSOT). BO 명세서에서 라벨 신규 추가 시 [CEB-000] 동시 등록 필수.</p>
+<hr>
+<h2>9. 검증·QA 정책</h2>
+<h3>9.1 단계별 QA 체크포인트</h3>
+<table>
+<tr><th>단계</th><th>QA 항목</th></tr>
+<tr><td>영역별 가이드 작성 후</td><td>① v2 BO-000 정책 호환 ② v1 화면 ID 매핑 정확 ③ 변경 이력 명시</td></tr>
+<tr><td>화면 명세서 작성 후</td><td>① 본 마스터 가이드 §5 표 갱신 ② HTML 매핑 추가 ③ 영역 가이드 화면 목록 동기화</td></tr>
+<tr><td>Deprecation 태그 후</td><td>① v1 원본에 deprecated 태그 ② v2 신규 명세서에 v1 출처 명시</td></tr>
+<tr><td>HTML 변환 후</td><td>① v2/confluence-html/BO/ 파일 존재 ② Confluence 업로드 후 링크 검증</td></tr>
+</table>
+<h3>9.2 운영팀 리뷰 일정</h3>
+<p>각 영역 가이드 + 핵심 화면 명세서 완성 후 운영팀 리뷰 1회 (5일 이내). 피드백 반영하여 v1.1 버전 업데이트.</p>
+<hr>
+<h2>10. 누락 방지 체크리스트</h2>
+<h3>10.1 명세서 작성 시 (모든 화면)</h3>
+<ul>
+<li>[ ] Page Properties 헤더 (Screen ID·기획담당자·버전·일자)</li>
+<li>[ ] [CEB-BO-000] 공통 정책 참조 명시</li>
+<li>[ ] 권한 매트릭스 (어느 권한이 R/W/D 가능)</li>
+<li>[ ] 다국어 입력 (KO/EN/JP 3언어 필드별 글자수 명시)</li>
+<li>[ ] 활동 로그 메시지 템플릿 (변경·삭제 시)</li>
+<li>[ ] 모달 패턴 (BO-000 §9 차용)</li>
+<li>[ ] 에러·예외 상황 (BO-000 §12 차용)</li>
+<li>[ ] 변경 이력 changelog</li>
+<li>[ ] HTML 매핑 추가 (convert-to-html.js)</li>
+<li>[ ] 본 마스터 가이드 §5 표 갱신</li>
+</ul>
+<h3>10.2 v1 흡수 시 (deprecation 처리)</h3>
+<ul>
+<li>[ ] v1 원본 화면 명세서 읽기</li>
+<li>[ ] v2 정책 호환성 점검 (다국어·권한·로그·모달 등)</li>
+<li>[ ] v2/BO/에 신규 명세서 작성</li>
+<li>[ ] v1 원본 Page Properties에 <code>deprecated YYYY.MM.DD</code> + 이전 위치 명시</li>
+<li>[ ] confluence-html/BO/ 변환본 생성</li>
+<li>[ ] 영역 가이드 (CEB-BO-002~005) 화면 목록 갱신</li>
+</ul>
+<h3>10.3 변경 발생 시 (싱크)</h3>
+<ul>
+<li>[ ] 영향 받는 모든 명세서 changelog 업데이트</li>
+<li>[ ] [CEB-BO-000] 정책 영향 점검</li>
+<li>[ ] [CEB-000] 앱 정책 영향 점검 (다국어 라벨 등)</li>
+<li>[ ] HTML 재변환</li>
+<li>[ ] Confluence 페이지 업데이트</li>
+</ul>
+<hr>
+<h2>11. 영역별 조각 문서 인덱스</h2>
+<p>본 마스터 가이드를 보완하는 영역별 세부 문서. <strong>이번 세션 후속 작업</strong>.</p>
+<table>
+<tr><th>문서</th><th>영역</th><th>핵심 내용</th></tr>
+<tr><td><strong>CEB-BO-002 회원(USR) 영역 가이드</strong></td><td>USR</td><td>8탭 상세 구조 / 검색·필터 / 제재 처리 / v2 신규 활동 통합</td></tr>
+<tr><td><strong>CEB-BO-003 아티스트(ART) 영역 가이드</strong></td><td>ART</td><td>그룹·멤버·소속사 / EXTERNAL_ARTIST 매핑 / 활동 통계 탭</td></tr>
+<tr><td><strong>CEB-BO-004 BIVE(NFT) 영역 가이드</strong></td><td>BIVE</td><td>4서브 영역 / Quest/Raffle 보상 연결 / 온체인 트랜잭션 / 혜택</td></tr>
+<tr><td><strong>CEB-BO-005 관리자(SYS) 영역 가이드</strong></td><td>SYS</td><td>4단계 + 그룹 하이브리드 / 초대 흐름 / 권한 매트릭스 / 활동 로그</td></tr>
+<tr><td><strong>CEB-BO-006 Quest·Raffle(FQ) 영역 가이드</strong></td><td>FQ</td><td>v1 BO-FQ 34개 흡수 / Quest·Raffle 라이프사이클 / 검수 워크플로우 / Raffle 추첨 알고리즘 / 반려사유 DB / 응모권 거래 / BIVE 자동 민팅 연동</td></tr>
+</table>
+<p>추가 영역(FQ·DUK·EVT·SUP·INF·MEM·COL·APP)은 단계 7~8에서 작성. 본 가이드 §11에 인덱스 갱신.</p>
+<hr>
+<h2>12. 후속 결정 필요 사항 (3차 인터뷰 추가 발생 가능)</h2>
+<p>다음 항목은 영역별 가이드 작성 시 추가 결정이 필요할 수 있음. 작성 시 사용자 검토 요청.</p>
+<table>
+<tr><th>#</th><th>항목</th><th>가설 (작성 기본값)</th></tr>
+<tr><td>1</td><td>회원 8탭 순서</td><td>기본·참여내역·게임존·BIVE·<strong>덕력·서포트·기억·팬덤레벨</strong> (왼→오)</td></tr>
+<tr><td>2</td><td>회원 검색·필터 신규 항목</td><td>덕력 잔액 범위·기억저장소 신고 횟수·서포트 응원 누적·팬덤 레벨</td></tr>
+<tr><td>3</td><td>BIVE 캠페인 ↔ Quest/Raffle 연결 UI</td><td>Quest 생성 화면 또는 Raffle 추첨 화면에서 [BIVE 자동 민팅] 옵션 토글</td></tr>
+<tr><td>4</td><td>관리자 권한 그룹 프리셋</td><td>SUPER·OPERATOR·POLICY·EXTERNAL_ARTIST = 4개 기본 프리셋 + 운영자 정의 그룹 추가 가능</td></tr>
+<tr><td>5</td><td>아티스트 활동 통계 탭의 KPI</td><td>팬덤 레벨 추이 / 누적 응원 덕력 / Quest·Raffle 참여 / BIVE 발행 누적</td></tr>
+<tr><td>6</td><td>v1 BO-GAM 게임존 처리</td><td>v2/BO/에 흡수 (FQ 영역으로) 또는 v1 그대로 유지 — <strong>운영 영향 검토 후 결정</strong></td></tr>
+<tr><td>7</td><td>confluence-html 변환 시점</td><td>모든 명세서 작성 후 일괄 vs 영역별 단계적</td></tr>
+<tr><td>8</td><td>운영팀 리뷰 주기</td><td>영역 가이드 1개 완성 시 vs 모든 가이드 완성 후</td></tr>
+</table>
+<hr>
+<h2>13. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.05.05</td><td>@Nill Yoo</td><td>초안 작성. v1 BO 7개 영역(대시보드·회원·아티스트·BIVE·게임존·팬퀘스트·관리자) 현황 분석 + v2 BO-000 8개 영역 정의와 갭 비교. 사용자 1·2·3차 인터뷰 (총 12개 결정) 반영: ① 마이그레이션 v1→v2 통합 재구성 ② BIVE NFT 온체인 + Quest/Raffle 보상 연결 ③ 우선순위 기존 영역 호환 검토 먼저 ④ 회원 8탭 (기존 4 + 신규 4) ⑤ BIVE 4서브 영역 유지 ⑥ 관리자 하이브리드 권한 (4단계 + 그룹) ⑦ 아티스트 그룹·멤버·소속사 + EXTERNAL_ARTIST 연결 ⑧ v1 폴더 v2/BO/로 세계 이전 (deprecation 태그) ⑨ BIVE 캠페인 = Quest/Raffle 보상 연결 ⑩ 회원 8탭 병행 작성 ⑪ 메인 + 영역별 조각 문서 (CEB-BO-001 메인 + CEB-BO-002~005 조각). v2 통합 영역 12개 매핑 / 화면 ID 체계 분배 / 폴더 구조 / 작업 우선순위 9단계 일정 (~12주) / 싱크 정책 / QA 체크포인트 / 누락 방지 체크리스트 / 영역별 조각 문서 인덱스 / 후속 결정 필요 8건 명시</td></tr>
+</table>
+
+</body>
+</html>

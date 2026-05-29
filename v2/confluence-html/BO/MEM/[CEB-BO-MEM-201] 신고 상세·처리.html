@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-MEM-201] 기억저장소 신고 상세·처리</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-MEM-201] 기억저장소 신고 상세·처리</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-MEM-201</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>MEM — 신고 처리</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 기억저장소 > 신고 리스트 > {신고ID}</td></tr>
+<tr><td>비고</td><td>Phase 9 신규. [CEB-BO-MEM-000] §4.3 처리 정책</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000]</td><td>권한, UI 상태, 활동 로그</td></tr>
+<tr><td>[CEB-BO-MEM-000]</td><td>신고 처리 정책(§4.3), 자동 트리거(§4.4)</td></tr>
+<tr><td>[CEB-BO-USR-201-MD-SANCTION]</td><td>회원 제재 모달 (제재 검토 시 호출)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>개별 신고 상세 정보 조회 + 처리 (인정·반려). 게시물 차단·작성자 제재 검토.</p>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 헤더</h3>
+<ul>
+<li>Breadcrumb + 뒤로가기</li>
+<li>타이틀: <code>신고 상세 #{신고ID}</code> + 상태 Badge</li>
+<li>액션: [신고 인정] (Danger) / [신고 반려] (Secondary)</li>
+</ul>
+<h3>2.2 정보 그리드</h3>
+<h4>A. 신고 정보</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>신고 사유</td><td>6종 코드 + KO 표시</td></tr>
+<tr><td>신고자</td><td>닉네임 + 유저ID</td></tr>
+<tr><td>신고 일시</td><td>KST</td></tr>
+<tr><td>신고 메모 (선택)</td><td>신고자 자유 입력 (200자)</td></tr>
+</table>
+<h4>B. 게시물 정보</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>작성자</td><td>닉네임 (USR-201 딥링크)</td></tr>
+<tr><td>작성 일시</td><td>KST</td></tr>
+<tr><td>본문</td><td>전체 본문 (read-only)</td></tr>
+<tr><td>첨부 미디어</td><td>이미지·영상 (lightbox)</td></tr>
+<tr><td>좋아요 / 댓글</td><td>카운트</td></tr>
+<tr><td>누적 신고</td><td>동일 게시물 신고 건수</td></tr>
+</table>
+<h4>C. 작성자 회원 정보 (요약)</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>가입일 / 최근 로그인</td><td></td></tr>
+<tr><td>누적 신고당한 횟수</td><td>(전체 게시물 합계)</td></tr>
+<tr><td>현재 제재 상태</td><td>정상 / 정지 등</td></tr>
+<tr><td>[회원 상세] 버튼</td><td>USR-201 진입</td></tr>
+</table>
+<h4>D. 처리 영역</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>처리 의사</td><td>[신고 인정] / [신고 반려]</td></tr>
+<tr><td>처리 사유 (인정)</td><td>텍스트 입력 (필수, 200자)</td></tr>
+<tr><td>작성자 제재 (선택)</td><td>[USR-201-MD-SANCTION] 호출 — 즉시 제재 단계 적용 가능</td></tr>
+<tr><td>신고자 알림</td><td>자동 발송 — 처리 완료 안내</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 권한·로직</h2>
+<h3>3.1 권한별 분기</h3>
+<table>
+<tr><th>권한</th><th>진입</th><th>[신고 인정·반려]</th><th>[회원 제재]</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅ (전 단계)</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅</td><td>✅ (경고·1·7일 정지만)</td></tr>
+<tr><td>POLICY</td><td>✅ (R)</td><td>❌</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>❌</td><td>—</td><td>—</td></tr>
+</table>
+<h3>3.2 처리 프로세스</h3>
+<h4>신고 인정 ([CEB-BO-MEM-000] §4.3)</h4>
+<ol>
+<li>[신고 인정] 클릭 → 처리 사유 입력 모달</li>
+<li>게시물 즉시 차단 (앱 미노출)</li>
+<li>신고자 푸시 알림 ("신고하신 게시물이 차단되었습니다")</li>
+<li>작성자 푸시 알림 ("작성하신 게시물이 차단되었습니다")</li>
+<li>활동 로그 기록</li>
+<li>(선택) [회원 제재] 클릭 → USR-201-MD-SANCTION</li>
+</ol>
+<h4>신고 반려</h4>
+<ol>
+<li>[신고 반려] 클릭 → 반려 사유 입력 모달</li>
+<li>게시물 유지</li>
+<li>신고자 푸시 알림 ("신고가 반려되었습니다 — 사유: {요약}")</li>
+<li>활동 로그 기록</li>
+</ol>
+<h3>3.3 자동 차단 (다중 신고 누적)</h3>
+<p>동일 게시물에 신고 5건 이상 누적 시:</p>
+<ul>
+<li>시스템 자동 임시 차단 (Pending → 즉시 앱 미노출)</li>
+<li>운영자 푸시 알림</li>
+<li>운영자 검토 후 [신고 인정] 또는 [신고 반려] 처리</li>
+</ul>
+<hr>
+<h2>4. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>메시지</th></tr>
+<tr><td>신고 인정</td><td>기억 게시물 #{게시물ID} 신고 인정 — 차단 처리 (사유: {요약})</td></tr>
+<tr><td>신고 반려</td><td>기억 게시물 #{게시물ID} 신고 반려 (사유: {요약})</td></tr>
+<tr><td>자동 임시 차단</td><td>(시스템) 기억 게시물 #{게시물ID} 신고 5건 누적 — 자동 임시 차단</td></tr>
+<tr><td>회원 제재 호출</td><td>(USR-201-MD-SANCTION 별도 로그)</td></tr>
+</table>
+<hr>
+<h2>5. UI 상태·에러</h2>
+<p>[CEB-BO-000] §7 표준.</p>
+<hr>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 9 신규. ① 4섹션 정보 그리드 (신고/게시물/작성자/처리) ② 처리 프로세스 §3.2 (인정·반려 푸시 알림 자동) ③ 자동 차단 §3.3 (5건 누적) ④ 회원 제재 USR-201-MD-SANCTION 연동</td></tr>
+</table>
+
+</body>
+</html>

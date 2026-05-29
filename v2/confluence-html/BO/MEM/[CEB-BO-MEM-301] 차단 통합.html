@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-MEM-301] 차단 유저·게시물 통합</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-MEM-301] 차단 유저·게시물 통합</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-MEM-301</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>MEM — 차단 통합</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 기억저장소 > 차단 통합</td></tr>
+<tr><td>비고</td><td>Phase 9 신규. 회원 차단 + 게시물 차단 통합 조회</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000]</td><td>권한, UI 상태</td></tr>
+<tr><td>[CEB-BO-MEM-000]</td><td>신고 라이프사이클</td></tr>
+<tr><td>[CEB-BO-USR-201]</td><td>회원 차단 → USR 제재 모달 연동</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>차단 처리된 회원·게시물 통합 조회. 차단 해제 (SUPER 전용) + 위반 패턴 추적.</p>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 탭 메뉴 (2탭)</h3>
+<table>
+<tr><th>탭</th><th>URL</th><th>설명</th></tr>
+<tr><td>차단 회원</td><td><code>?tab=user</code></td><td>MEM 신고 인정으로 차단된 회원 통합</td></tr>
+<tr><td>차단 게시물</td><td><code>?tab=post</code></td><td>신고 인정 또는 자동 차단된 기억 게시물</td></tr>
+</table>
+<h3>2.2 [차단 회원] 탭</h3>
+<table>
+<tr><th>컬럼</th><th>설명</th></tr>
+<tr><td>닉네임</td><td>차단된 회원</td></tr>
+<tr><td>차단 사유</td><td>신고 사유 코드</td></tr>
+<tr><td>차단 처리 일시</td><td>KST</td></tr>
+<tr><td>처리자</td><td>OPERATOR/SUPER 닉네임</td></tr>
+<tr><td>누적 차단 게시물</td><td>해당 회원의 차단 게시물 수</td></tr>
+<tr><td>현재 제재 단계</td><td>USR §7.3 (경고/1·7일/30·90일/영구)</td></tr>
+<tr><td>액션</td><td>[차단 해제] (SUPER) / [회원 상세]</td></tr>
+</table>
+<h3>2.3 [차단 게시물] 탭</h3>
+<table>
+<tr><th>컬럼</th><th>설명</th></tr>
+<tr><td>게시물 본문 (요약)</td><td>200자 발췌</td></tr>
+<tr><td>작성자</td><td>닉네임</td></tr>
+<tr><td>차단 사유</td><td>신고 사유 코드</td></tr>
+<tr><td>차단 일시</td><td>KST</td></tr>
+<tr><td>처리자</td><td></td></tr>
+<tr><td>누적 신고</td><td></td></tr>
+<tr><td>액션</td><td>[차단 해제] (SUPER) / [신고 상세]</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 권한·로직</h2>
+<h3>3.1 권한별 분기</h3>
+<table>
+<tr><th>권한</th><th>진입</th><th>조회</th><th>[차단 해제]</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅</td><td>❌</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>❌</td><td>—</td><td>—</td></tr>
+</table>
+<h3>3.2 차단 해제 정책</h3>
+<ul>
+<li>SUPER만 가능 (가드레일)</li>
+<li>사유 입력 필수 + 2FA 재인증</li>
+<li>해제 시 게시물 앱 노출 복구 / 회원 차단 상태 해제 ([CEB-BO-USR-201]에서 별도 제재 처리 필요)</li>
+<li>활동 로그 기록</li>
+</ul>
+<h3>3.3 위반 패턴 추적</h3>
+<p>[차단 회원] 탭 정렬 옵션:</p>
+<ul>
+<li>누적 차단 게시물 많은 순 (어뷰징 의심)</li>
+<li>차단 처리 최근순</li>
+</ul>
+<p>USR-201 [활동내역] 탭과 연동.</p>
+<hr>
+<h2>4. UI 상태·에러</h2>
+<p>[CEB-BO-000] §7 표준.</p>
+<hr>
+<h2>5. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>메시지</th></tr>
+<tr><td>차단 해제 (회원)</td><td>회원 '{닉네임}' MEM 차단 해제 (사유: {요약}) — SUPER + 2FA</td></tr>
+<tr><td>차단 해제 (게시물)</td><td>기억 게시물 #{게시물ID} 차단 해제 (사유: {요약}) — SUPER + 2FA</td></tr>
+</table>
+<hr>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 9 신규. ① 2탭 (차단 회원 / 차단 게시물) ② 차단 해제 SUPER + 2FA + 사유 ③ 위반 패턴 추적</td></tr>
+</table>
+
+</body>
+</html>

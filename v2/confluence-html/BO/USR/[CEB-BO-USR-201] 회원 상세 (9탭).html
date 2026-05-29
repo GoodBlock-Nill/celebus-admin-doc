@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-USR-201] 회원 상세 (9탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-USR-201] 회원 상세 (9탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-USR-201</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>USR — 회원 라이프사이클</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.06</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 회원 > {유저명}</td></tr>
+<tr><td>비고</td><td>신규 작성 (Phase 6). 분석 리포트 [CEB-BO-001-A] §3.2.2 운영 화면 — <strong>9탭</strong> 구조 (실제 운영 그대로). v2 가이드 [CEB-BO-002] §7.1 (v1.1) 9탭 정의 참조</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한(§3·§4), 활동 로그(§6), UI 상태(§7), 토스트(§9), 회원 제재(§14), 외부 지갑(§15), 개인정보(§13)</td></tr>
+<tr><td>[CEB-BO-002] 회원(USR) 영역 가이드</td><td>권한 매트릭스(§4), 활동 로그(§6), 9탭(§7.1), 검색·필터(§7.2), 제재(§7.3), 자산 회수(§7.4)</td></tr>
+<tr><td>[CEB-BO-006] Quest·Raffle(FQ) 영역 가이드</td><td>참여내역 탭 데이터 소스</td></tr>
+<tr><td>[CEB-BO-004] BIVE(NFT) 영역 가이드</td><td>BIVE 탭 데이터 소스 + 지갑 연동(§7.4 온체인)</td></tr>
+<tr><td>[CEB-BO-FQ-301] 응모권 거래 내역</td><td>티켓 탭 데이터 소스 (<code>TICKET_*</code> 9종 코드)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>개별 회원의 통합 정보·활동 이력 조회. <strong>9탭 구조</strong> (분석 리포트 §3.2.2 운영 검증)로 영역별 활동을 집약하며, 운영자는 본 화면에서 회원 제재·자산 회수·운영자 메모를 관리한다.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>9탭별 회원 정보 조회 (기본정보·참여내역·게임존·BIVE·프로젝트·Fans·티켓·지갑·활동내역)</li>
+<li>회원 제재 액션 (계정정지 토글 + 제재 모달)</li>
+<li>자산 회수 (SUPER 전용)</li>
+<li>운영자 메모 추가/수정</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-USR-101] 회원 리스트 > Row 클릭</li>
+</ul>
+<p>URL: <code>/members/{id}?tab={tab}</code> (Default tab=basic)</p>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 네비게이션·헤더</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 회원 > {유저명}</code></li>
+<li>뒤로가기 (←) → [CEB-BO-USR-101]</li>
+<li>타이틀: <code>회원상세</code></li>
+<li>부타이틀: <code>{유저명} 님의 상세 정보를 관리합니다.</code></li>
+</ul>
+<h3>2.2 탭 메뉴 (9탭, 상호 배타)</h3>
+<p>[CEB-BO-002] §7.1 (v1.1) 9탭 적용:</p>
+<table>
+<tr><th>#</th><th>탭명</th><th>URL</th><th>설명</th></tr>
+<tr><td>1</td><td><strong>기본정보</strong></td><td><code>?tab=basic</code></td><td>닉네임·연락처·국가·로그인·KYC·DID·지갑·소개·운영자 메모</td></tr>
+<tr><td>2</td><td><strong>참여내역</strong></td><td><code>?tab=participation</code></td><td>Quest 제출·Raffle 응모·당첨 이력 ([CEB-BO-006] 데이터)</td></tr>
+<tr><td>3</td><td><strong>게임존</strong></td><td><code>?tab=gamezone</code></td><td>PM·ST 참여·GP 잔액·CELB 교환·랭킹 (현재 PM/ST 운영 중단)</td></tr>
+<tr><td>4</td><td><strong>BIVE</strong></td><td><code>?tab=bive</code></td><td>보유 BIVE 목록·획득 경로·혜택 사용 ([CEB-BO-004] 데이터)</td></tr>
+<tr><td>5</td><td><strong>프로젝트</strong></td><td><code>?tab=project</code></td><td>(placeholder — 운영 시작 시 활성화)</td></tr>
+<tr><td>6</td><td><strong>Fans</strong></td><td><code>?tab=fans</code></td><td>(placeholder — 운영 시작 시 활성화)</td></tr>
+<tr><td>7</td><td><strong>티켓</strong></td><td><code>?tab=ticket</code></td><td>응모권 거래 통합 ([CEB-BO-FQ-301] 코드 9종 회원 단위 필터)</td></tr>
+<tr><td>8</td><td><strong>지갑</strong></td><td><code>?tab=wallet</code></td><td>외부 지갑 연동 상태·BIVE 보유 추적 ([CEB-BO-000] §15)</td></tr>
+<tr><td>9</td><td><strong>활동내역</strong></td><td><code>?tab=activity</code></td><td>회원 행위 통합 시계열 (로그인·제재·자산 회수·응모·민팅)</td></tr>
+</table>
+<h3>2.3 [기본정보] 탭 상세</h3>
+<h4>A. 기본정보 섹션</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>유저명</td><td>{닉네임} + [유저명 수정] 버튼 (SUPER/OPERATOR 한정)</td></tr>
+<tr><td>이메일</td><td>{이메일}</td></tr>
+<tr><td>전화번호</td><td>+{국가코드} {휴대번호}</td></tr>
+<tr><td>국가</td><td>{국가명}</td></tr>
+<tr><td>로그인 방식</td><td>Google / Apple / Kakao 등</td></tr>
+<tr><td>가입일시</td><td>YYYY.MM.DD HH:mm KST</td></tr>
+<tr><td>최근 로그인</td><td>YYYY.MM.DD HH:mm KST</td></tr>
+</table>
+<h4>B. 상태정보 섹션</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>계정상태</td><td>정상 / 정지 / 탈퇴대기 / 탈퇴완료</td></tr>
+<tr><td>계정정지</td><td>Toggle Switch (즉시 정지/해제) — 토글 시 [CEB-BO-USR-201-MD-SANCTION] 모달 호출</td></tr>
+<tr><td>DID 발급</td><td>미발급 / 발급 완료 (블록체인 ID, [CEB-BO-000] §15 외부 지갑 연동 호환)</td></tr>
+<tr><td>Set Approval</td><td>미승인 / 승인 (NFT 권한 위임 상태)</td></tr>
+</table>
+<h4>C. 추가정보 섹션</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>지갑주소</td><td>0x... (외부 연동 지갑)</td></tr>
+<tr><td>소개</td><td>회원 자기소개 텍스트 (미입력 시 "—")</td></tr>
+<tr><td>운영자 메모</td><td>KO 단일, 500자 ([CEB-BO-002] §5) — [메모 추가/수정] 버튼</td></tr>
+</table>
+<h4>D. 액션 버튼 (우측 상단)</h4>
+<table>
+<tr><th>버튼</th><th>호출</th><th>권한</th></tr>
+<tr><td>[메모 추가/수정]</td><td>[CEB-BO-USR-201-MD-NOTE] (Phase 6 후속)</td><td>SUPER/OPERATOR</td></tr>
+<tr><td>[제재 처리]</td><td>[CEB-BO-USR-201-MD-SANCTION] (Phase 6 후속)</td><td>SUPER/OPERATOR (단계별 권한 구분)</td></tr>
+<tr><td>[자산 회수]</td><td>[CEB-BO-USR-201-MD-RECLAIM] (Phase 6 후속)</td><td><strong>SUPER 전용</strong></td></tr>
+</table>
+<blockquote>
+<p>Phase 6 v1.0에서는 위 3개 모달은 후속 작성. 본 화면에서는 진입 버튼만 정의.</p>
+</blockquote>
+<h3>2.4 기타 탭 구성</h3>
+<p>[CEB-BO-002] §7.1 정의 참조. 각 탭 진입 시:</p>
+<ul>
+<li>Skeleton UI ([CEB-BO-000] §7)</li>
+<li>빈 데이터 시 Empty 메시지 (탭별 안내)</li>
+<li>placeholder 탭(프로젝트·Fans): "해당 영역 운영 시작 시 활성화됩니다."</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 탭 동작</h3>
+<ul>
+<li>탭 클릭 → URL <code>?tab={tab}</code> 갱신, 비동기 로딩</li>
+<li>탭별 API 분리 → 빠른 렌더링</li>
+</ul>
+<h3>3.2 액션 버튼</h3>
+<table>
+<tr><th>버튼</th><th>동작</th></tr>
+<tr><td>[유저명 수정]</td><td>닉네임 직접 변경 (활동 로그 기록)</td></tr>
+<tr><td>계정정지 Toggle</td><td>즉시 정지/해제 모달 호출</td></tr>
+<tr><td>[메모 추가/수정]</td><td>운영자 메모 모달</td></tr>
+<tr><td>[제재 처리]</td><td>제재 단계 선택 모달</td></tr>
+<tr><td>[자산 회수]</td><td>자산 회수 모달 (SUPER 전용)</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한별 분기</h3>
+<p>[CEB-BO-002] §4 적용:</p>
+<table>
+<tr><th>권한</th><th>화면 진입</th><th>조회</th><th>유저명 수정</th><th>계정정지 토글</th><th>메모</th><th>제재 (단계별)</th><th>자산 회수</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅ (전체)</td><td>✅</td><td>✅ (전 단계)</td><td>✅</td><td>✅ (영구·30·90·당첨취소·삭제)</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅</td><td>✅</td><td>✅ (경고·1·7일 정지만)</td><td>✅</td><td>✅ (경고·1·7일·부분정지)</td><td>❌</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅ (조회 전용)</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>❌</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</table>
+<blockquote>
+<p>자산 회수는 [CEB-BO-002] §7.4 — <strong>SUPER 전용</strong> + 2FA 추가 인증.</p>
+</blockquote>
+<h3>4.2 9탭 데이터 소스</h3>
+<table>
+<tr><th>탭</th><th>데이터 출처</th></tr>
+<tr><td>기본정보</td><td>회원 본 테이블</td></tr>
+<tr><td>참여내역</td><td>[CEB-BO-FQ-202/203] 검수 이력 + Raffle 응모/당첨</td></tr>
+<tr><td>게임존</td><td>v1 BO-GAM 화면 데이터 (현재 PM/ST 운영 중단 → 빈 데이터)</td></tr>
+<tr><td>BIVE</td><td>[CEB-BO-BIVE-102] 회원 보유분 + [CEB-BO-BIVE-103] 자동 민팅 이력</td></tr>
+<tr><td>프로젝트</td><td>(운영 시작 후 정의)</td></tr>
+<tr><td>Fans</td><td>(운영 시작 후 정의)</td></tr>
+<tr><td>티켓</td><td>[CEB-BO-FQ-301] 회원 단위 필터</td></tr>
+<tr><td>지갑</td><td>외부 지갑 연동 + DID + Set Approval ([CEB-BO-000] §15)</td></tr>
+<tr><td>활동내역</td><td>[CEB-BO-000] §6 활동 로그 + 회원 본인 행위 통합</td></tr>
+</table>
+<h3>4.3 탭별 빈 데이터 정책</h3>
+<table>
+<tr><th>탭</th><th>빈 데이터 안내</th></tr>
+<tr><td>참여내역</td><td>"해당 회원은 아직 Quest 참여 이력이 없어요."</td></tr>
+<tr><td>게임존</td><td>"현재 게임존(PM·ST)은 운영 중단 상태입니다."</td></tr>
+<tr><td>BIVE</td><td>"보유한 BIVE가 없습니다."</td></tr>
+<tr><td>프로젝트</td><td>"프로젝트 영역 운영 시작 시 활성화됩니다."</td></tr>
+<tr><td>Fans</td><td>"Fans 영역 운영 시작 시 활성화됩니다."</td></tr>
+<tr><td>티켓</td><td>"응모권 거래 이력이 없습니다."</td></tr>
+<tr><td>지갑</td><td>"외부 지갑이 연동되지 않았습니다."</td></tr>
+<tr><td>활동내역</td><td>"활동 이력이 없습니다."</td></tr>
+</table>
+<h3>4.4 v1.1 v2 신규 영역 분리</h3>
+<p>[CEB-BO-002] §7.1 (v1.1) 사용자 결정에 따라:</p>
+<ul>
+<li>덕력 → DUK 영역 (Phase 9)</li>
+<li>서포트 → SUP 영역 (Phase 9)</li>
+<li>기억 → MEM 영역 (Phase 9)</li>
+<li>팬덤레벨 → EVT 영역 (Phase 9)</li>
+</ul>
+<p>회원 상세에서는 직접 표시하지 않음. [활동내역] 탭에서 위 영역 활동도 통합 노출 가능.</p>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading (회원 정보 조회)</td><td>헤더·기본정보 영역 Skeleton</td></tr>
+<tr><td>Loading (탭 전환)</td><td>탭 본문 Skeleton</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Empty (탭별)</td><td>§4.3 안내</td></tr>
+<tr><td>Error</td><td>"데이터를 불러오지 못했습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>[CEB-BO-002] §6 적용. 본 화면 진입(조회)은 로그 미기록 (빈도 과다). 액션 시:</p>
+<table>
+<tr><th>액션</th><th>로그 메시지 (KO)</th><th>권한</th></tr>
+<tr><td>유저명 수정</td><td>회원 '{기존명}' (ID: {N}) 의 유저명을 '{신규명}'(으)로 변경했습니다.</td><td>SUPER/OPERATOR</td></tr>
+<tr><td>계정정지 토글 ON</td><td>회원 '{닉네임}'을(를) {N}일 정지 처리했습니다. (코드: {V_*})</td><td>OPERATOR/SUPER</td></tr>
+<tr><td>계정정지 토글 OFF</td><td>회원 '{닉네임}'의 제재를 해제했습니다. (이전 제재: {제재명})</td><td>SUPER 전용</td></tr>
+<tr><td>운영자 메모 추가/수정</td><td>회원 '{닉네임}'의 메모를 추가/수정했습니다.</td><td>SUPER/OPERATOR</td></tr>
+<tr><td>제재 처리 (모달)</td><td>[CEB-BO-002] §6 표 참조</td><td>OPERATOR/SUPER</td></tr>
+<tr><td>자산 회수 (모달)</td><td>[CEB-BO-002] §6 표 참조</td><td>SUPER 전용</td></tr>
+</table>
+<p>3년 보관, append-only ([CEB-BO-000] §6).</p>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>회원 미존재 (URL 직접 접근)</td><td>Toast (Error): "존재하지 않는 회원입니다." → [CEB-BO-USR-101] 리다이렉트</td></tr>
+<tr><td>권한 부족 (EXTERNAL_ARTIST)</td><td>서버 차단 + Toast (Error): "접근 권한이 없습니다."</td></tr>
+<tr><td>탭 데이터 조회 실패</td><td>Toast (Error) + [재시도] (해당 탭만)</td></tr>
+<tr><td>동시 수정 충돌</td><td>Toast (Warning): "다른 관리자가 먼저 수정했습니다. 새로고침 후 다시 시도해주세요."</td></tr>
+<tr><td>자산 회수 SUPER 인증 실패</td><td>모달 차단 + 안내</td></tr>
+</table>
+<hr>
+<h2>8. 운영 검증 (분석 리포트 [CEB-BO-001-A] §3.2.2)</h2>
+<p>2026-05-05 운영 환경 검증 (effieee02 회원 샘플):</p>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>탭 수</td><td><strong>9탭</strong> (기본정보·참여내역·게임존·BIVE·프로젝트·Fans·티켓·지갑·활동내역)</td></tr>
+<tr><td>URL</td><td><code>/members/{id}?tab=basic</code> (Default)</td></tr>
+<tr><td>기본정보 표시</td><td>유저명·이메일·전화·국가·로그인 방식·가입일시·최근로그인·계정상태(토글)·DID·Set Approval·지갑주소·소개</td></tr>
+<tr><td>액션 버튼</td><td>유저명 수정</td></tr>
+</table>
+<hr>
+<h2>9. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-USR-101</td><td>회원 리스트</td><td>상위</td></tr>
+<tr><td>CEB-BO-USR-201-MD-SANCTION</td><td>제재 모달</td><td>하위 (Phase 6 후속)</td></tr>
+<tr><td>CEB-BO-USR-201-MD-RECLAIM</td><td>자산 회수 모달</td><td>하위 (Phase 6 후속)</td></tr>
+<tr><td>CEB-BO-USR-201-MD-NOTE</td><td>운영자 메모 모달</td><td>하위 (Phase 6 후속)</td></tr>
+<tr><td>CEB-BO-USR-501</td><td>정지사유 설정</td><td>데이터 소스 (제재 모달의 사유 목록)</td></tr>
+<tr><td>CEB-BO-FQ-301</td><td>응모권 거래 내역</td><td>티켓 탭 데이터 소스</td></tr>
+<tr><td>CEB-BO-BIVE-102</td><td>에디션 상세</td><td>BIVE 탭 데이터 소스</td></tr>
+<tr><td>(Phase 9) DUK·SUP·MEM·EVT</td><td>v2 신규 영역</td><td>활동내역 탭 통합 노출</td></tr>
+</table>
+<hr>
+<h2>10. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026.05.06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 6 신규 작성. ① 분석 리포트 §3.2.2 <strong>9탭 구조</strong> 정렬 (사용자 결정 2026-05-06: 9탭 + 필수 화면) ② 권한 4단계 + 자산 회수 SUPER 전용 ③ 9탭별 데이터 소스 §4.2 명시 ④ 탭별 빈 데이터 안내 §4.3 ⑤ v2 신규 4탭(덕력·서포트·기억·팬덤레벨) → Phase 9 별도 영역으로 분리 (UX 부담 회피) ⑥ 액션 버튼 3종(메모·제재·자산회수)은 Phase 6 후속 모달로 정의 ⑦ 운영 검증 effieee02 샘플 인용 ⑧ UI 상태 §5, 활동 로그 §6</td></tr>
+</table>
+
+</body>
+</html>

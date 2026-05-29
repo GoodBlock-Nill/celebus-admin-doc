@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-206-MD-DETAIL] 당첨자 비고사항</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-206-MD-DETAIL] 당첨자 비고사항</h1>
+<blockquote>
+<p>🚫 <strong>DEPRECATED (2026-05-13)</strong> — 본 문서는 사이드바 메뉴 재구성(v2.1)으로 폐기되었습니다. 최신 명세는 <strong>[CEB-BO-RFL-203-MD-NOTE] 당첨자 비고 모달</strong> (<code>v2/BO/RFL/</code>) 참조. 본 문서는 이력 보존용으로만 유지됩니다.</p>
+</blockquote>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-FQ-206-MD-DETAIL</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트) — Raffle 당첨자 관리</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.05</td></tr>
+<tr><td>Breadcrumb</td><td>(해당 없음 — 모달)</td></tr>
+<tr><td>비고</td><td>v1 BO-FQ/[CEB-BO-FQ-206-MD-DETAIL] v1.1 → v2 정책 호환 갱신</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>모달 패턴(§9), UI 상태(§7), 토스트(§9)</td></tr>
+<tr><td>[CEB-BO-006] Quest·Raffle(FQ) 영역 가이드</td><td>권한(§4), 활동 로그(§6)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>추첨 완료(Ended) Raffle의 <strong>당첨자(Win)에 한해</strong> 운영자가 비고사항(배송 정보·CS 기록 등) 수동 기록. 낙첨자(Lose) Row 클릭 시에는 모달 호출되지 않음.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-206] 추첨내역 탭 (Ended 상태) > <strong>Win Row 클릭</strong></li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>모달 구조</h3>
+<table>
+<tr><th>영역</th><th>내용</th></tr>
+<tr><td>타이틀</td><td>"당첨자 비고 사항"</td></tr>
+<tr><td>닫기 버튼 (X)</td><td>우측 상단</td></tr>
+</table>
+<h3>참여자 정보 (상단)</h3>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>닉네임</td><td>{유저닉네임}</td></tr>
+<tr><td>전화번호</td><td>{전화번호} ([CEB-BO-006] §7.5 표준 포맷)</td></tr>
+<tr><td>보상 지급여부</td><td>지급완료 / 미지급</td></tr>
+</table>
+<h3>비고사항 입력 영역</h3>
+<table>
+<tr><th>요소명</th><th>타입</th><th>글자수</th><th>설명</th></tr>
+<tr><td>비고사항</td><td>Textarea</td><td><strong>200자</strong> ([CEB-BO-006] §5.1 반려사유 텍스트 표준 동일)</td><td>KO 단일, 내부 관리용. 기존 데이터 바인딩</td></tr>
+</table>
+<ul>
+<li>우측 하단 글자수 카운터 (현재/200)</li>
+<li>Placeholder: "비고사항을 입력해주세요"</li>
+</ul>
+<h3>하단 액션 버튼</h3>
+<table>
+<tr><th>버튼</th><th>타입</th><th>동작</th></tr>
+<tr><td>[취소하기]</td><td>Secondary</td><td>미저장 닫기</td></tr>
+<tr><td>[저장하기]</td><td>Primary</td><td>서버 저장</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>버튼</th><th>동작</th></tr>
+<tr><td>[취소하기]</td><td>작성 내용 폐기, 모달 닫기</td></tr>
+<tr><td>[저장하기]</td><td>비고 내용 서버 저장, 모달 닫기</td></tr>
+<tr><td>[X] 닫기</td><td>[취소하기]와 동일</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 모달 호출 조건</h3>
+<ul>
+<li>화면: [CEB-BO-FQ-206] 추첨내역 탭</li>
+<li>조건: Row 상태 = <strong>Win</strong></li>
+<li>예외: Lose Row 클릭 시 동작 없음</li>
+</ul>
+<h3>4.2 권한별 분기</h3>
+<p>[CEB-BO-006] §4 적용:</p>
+<table>
+<tr><th>권한</th><th>본 모달 사용</th></tr>
+<tr><td>SUPER</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅</td></tr>
+<tr><td>POLICY</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>❌</td></tr>
+</table>
+<h3>4.3 데이터 바인딩</h3>
+<ul>
+<li>클릭한 당첨자 ID 기준 비고 데이터 조회 (있으면 바인딩)</li>
+<li>저장 시 UPDATE (덮어쓰기). 이력 보존은 활동 로그가 담당</li>
+</ul>
+<h3>4.4 유효성</h3>
+<ul>
+<li>빈 비고 저장 가능 (기존 비고 삭제 용도)</li>
+<li>200자 초과 시 인라인 에러: "200자 이내로 입력해주세요."</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading (조회)</td><td>입력 영역 Skeleton</td></tr>
+<tr><td>Loading (저장)</td><td>[저장하기] 스피너 + 비활성</td></tr>
+<tr><td>Success</td><td>Toast (Success) "비고사항이 저장되었습니다" → 모달 닫기</td></tr>
+<tr><td>Error</td><td>Toast (Error) "비고사항 저장에 실패하였습니다. 다시 시도하세요" → 모달 유지</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>[CEB-BO-006] §6 적용:</p>
+<table>
+<tr><th>액션</th><th>로그 메시지 (KO)</th></tr>
+<tr><td>당첨자 비고 수정</td><td>Raffle '{타이틀}' 당첨자 '{닉네임}' 비고를 수정했습니다.</td></tr>
+</table>
+<p>저장 시 자동 기록 ([CEB-BO-000] §6, 3년 보관 append-only).</p>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>저장 성공</td><td>Toast (Success): "비고사항이 저장되었습니다"</td></tr>
+<tr><td>저장 실패</td><td>Toast (Error): "비고사항 저장에 실패하였습니다. 다시 시도하세요"</td></tr>
+<tr><td>200자 초과</td><td>인라인 에러: "200자 이내로 입력해주세요."</td></tr>
+<tr><td>동시 수정 충돌</td><td>Toast (Warning): "다른 관리자가 먼저 수정했습니다. 새로고침 후 다시 시도해주세요."</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-FQ-206</td><td>Raffle 상세 (추첨내역 탭)</td><td>상위 (모달 호출처)</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2025.12.09</td><td>@Nill Yoo</td><td>(v1) 초안 작성</td></tr>
+<tr><td>v1.1</td><td>2026.03.24</td><td>@Nill Yoo</td><td>(v1) 상태 표기 한글화</td></tr>
+<tr><td><strong>v2.0</strong></td><td><strong>2026.05.05</strong></td><td><strong>@Nill Yoo</strong></td><td>v2 정책 호환 갱신. ① 공통 정책 참조 ② 권한 4단계 (POLICY/EXTERNAL_ARTIST 차단) ③ 글자수 200자 표준 ([CEB-BO-006] §5.1) ④ 활동 로그 §6 ⑤ 동시 수정 충돌 처리 ⑥ 빈 비고 저장 허용 명시 ⑦ v1 deprecation 동시 진행</td></tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-100-A] APP-BO 멀티아티스트 정책 정합성 리포트</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-100-A] APP-BO 멀티아티스트 정책 정합성 리포트</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-100-A</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>멀티아티스트 운영 정책 — APP↔BO 정합성 검증 (분석 리포트)</td></tr>
+<tr><td>상태</td><td>Review</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.07</td></tr>
+<tr><td>비고</td><td>[CEB-BO-100] v1.3 마스터 + 11개 후속 가이드 작성 직후 수행한 v2/APP ↔ v2/BO 정책 정합성 검증 결과. 본 리포트는 운영팀 검토용 분석 자료다. 정정·갱신은 본 리포트가 아니라 [CEB-BO-100] 마스터·APP 가이드에서 별도 트랙으로 진행한다. 패턴: [CEB-BO-001-A] 실제 BO 구현 심층 분석 리포트와 동일 형식.</td></tr>
+</table>
+<hr>
+<h2>1. 검증 배경</h2>
+<p>직전 작업으로 BO 측에서 다음 자료를 작성했다.</p>
+<ul>
+<li>마스터: [CEB-BO-100] 멀티아티스트 운영 가이드 v1.3</li>
+<li>RFT 영역 4개: [CEB-BO-010] v1.1, RFT-101, RFT-201, RFT-301</li>
+<li>정책 7개: USR-501(v1.1), FQ-502, EVT-101(v1.1), ART-501, SYS-501, SYS-601, SYS-701</li>
+<li>메타 갱신 3개: CLAUDE.md L69, [CEB-BO-000] v1.3, [CEB-BO-001] §2</li>
+</ul>
+<p>이 BO 정책이 v2/APP 25개 가이드와 모순되거나 갭이 있는지 7개 핵심 영역별로 점검했다. 본 리포트는 결과 + 후속 트랙 권고를 정리한다.</p>
+<hr>
+<h2>2. 정합성 매트릭스 (7영역)</h2>
+<table>
+<tr><th>영역</th><th>BO 정책 요지</th><th>APP 정책 요지</th><th>정합성</th><th>갭·조치</th></tr>
+<tr><td><strong>① 응모권 자산 통합</strong></td><td>전역 통합 자산 + 발급 출처 메타 (<code>sourceFeature</code>, <code>sourceArtistContext</code>). 라이프사이클 3상태(MVP).</td><td>어떤 아티스트 활동으로 획득해도 모든 래플 사용 가능. 9종 거래 코드.</td><td>✅ 일치</td><td>—</td></tr>
+<tr><td><strong>② 팬덤 레벨</strong></td><td>아티스트별 영구 누적. 곡선 3종(등차·등비·커스텀). 회원 1명 다중 아티스트 동시 보유.</td><td>"아티스트별 분리" 명시(v2.3 §3.2). 권장 곡선 10단계. 다중 아티스트 동시 보유 가능.</td><td>✅ 일치</td><td>APP [CEB-EVT-201]에 BO 메타 구조 명확 반영</td></tr>
+<tr><td><strong>③ 귀속 매트릭스</strong></td><td>SYS-601 활동 로그 <code>artistContext</code> 자동 기록 5종 룰. 개인 활동=선택 아티스트, 콘텐츠 활동=콘텐츠 아티스트.</td><td>[CEB-000] v5.0+ 명시. 양쪽 정책 동일.</td><td>✅ 일치</td><td>공통정책 v5.0 동기화 완벽 정합</td></tr>
+<tr><td><strong>④ 덕력 시즌</strong></td><td>마스터 §3: "아티스트별 + 글로벌 시즌 마스터"</td><td>[CEB-DUK-101]: "아티스트별 분리 랭킹, 시즌은 단일 글로벌(월간/분기별 BO 설정)"</td><td>⚠️ 표현 차이</td><td><strong>의미는 동일</strong>. BO 문구 명확화 권장</td></tr>
+<tr><td><strong>⑤ 응모권 만료·환수·구매</strong></td><td>MVP 후속 트랙 (RFT-401/501 제외, 관리자 수동 지급 제외)</td><td>GP→응모권 교환만 명시. 만료 미명시. 구매 화면명 미정.</td><td>⚠️ 양쪽 보류</td><td>양쪽 모두 후속 트랙 — <strong>정책 보류 일치</strong></td></tr>
+<tr><td><strong>⑥ 반려사유</strong></td><td>[CEB-BO-FQ-502]: 아티스트별 분리 마스터 + KO/EN/JP + 카테고리 4종</td><td>[CEB-FQ-201-MD]: 5종 프리셋 코드(IMG_BLUR·WRONG_OBJ·DUP_ENTRY·DATE_EXP·ETC_INPUT) 고정. <strong>다국어 미명시</strong>.</td><td>🔴 <strong>불일치</strong></td><td>APP 가이드 갱신 필요 — BO 동적 로드 + 다국어 지원</td></tr>
+<tr><td><strong>⑦ 모바일티켓</strong></td><td>🔴 Critical 등급 — 아티스트별 공연·팬미팅 콘텐츠</td><td><strong>APP 가이드 전무</strong> (검색 결과 모바일티켓 화면 0건)</td><td>🔴 <strong>APP 누락</strong></td><td>APP 신규 가이드 작성 필요</td></tr>
+</table>
+<p><strong>총평</strong>: 7영역 중 <strong>3 일치 / 2 부분 일치 / 2 불일치</strong>. 핵심 운영 정책(자산·레벨·귀속)은 양쪽 정렬됨. 검수 워크플로우(반려사유)와 미래 콘텐츠(모바일티켓)에서 갭 발견.</p>
+<hr>
+<h2>3. 즉시 조치 필요 (🔴 2건)</h2>
+<h3>3.1 반려사유 — APP 갱신 권고</h3>
+<p><strong>현황</strong>:</p>
+<ul>
+<li>APP <code>[CEB-FQ-201-MD]</code> 반려 사유 모달은 5종 프리셋 코드를 고정 하드코딩.</li>
+<li>다국어(KO/EN/JP) 표시 정책 미명시.</li>
+<li>아티스트별 사유 분리 개념 부재.</li>
+</ul>
+<p><strong>BO 정책</strong>:</p>
+<ul>
+<li><code>[CEB-BO-FQ-502]</code> 반려사유 마스터 — 아티스트별 분리 + 운영자가 코드·표시명·카테고리 자유 정의.</li>
+<li>표시명 다국어 KO 필수, EN/JP 권장. 회원 노출용 메시지 KO/EN/JP 권장.</li>
+<li>카테고리 4종(<code>CONTENT</code>/<code>FORMAT</code>/<code>POLICY</code>/<code>OTHER</code>).</li>
+</ul>
+<p><strong>권장 조치</strong>:</p>
+<ol>
+<li>APP <code>[CEB-FQ-201-MD]</code> v2.x 갱신:</li>
+</ol>
+<ul>
+<li>5종 프리셋 코드 제거</li>
+<li>BO 마스터에서 동적 로드 (<code>/api/quest/{questId}/rejection-reasons</code>)</li>
+<li>회원 언어 설정 기준 KO/EN/JP 폴백 (KO 필수, EN/JP 미입력 시 KO 표시)</li>
+<li>사유 코드는 BO에서 자동 채번 (<code>{ARTIST}_{N}</code> 또는 카테고리 접두어)</li>
+</ul>
+<ol>
+<li>회원 화면 변경 시점: BO FQ-502 활성화 + 운영자가 아티스트별 사유 등록 완료 후.</li>
+<li>마이그레이션: 기존 5종 프리셋 코드는 BO 측 "기본 사유" 그룹으로 전환. 회원 노출 메시지는 그대로 보존.</li>
+</ol>
+<p><strong>영향도</strong>: High — 검수 워크플로우 직접 영향. Phase 2 (BO FQ-502 활성화) 시점과 동기화 필수.</p>
+<h3>3.2 모바일티켓 — APP 가이드 신규 작성 권고</h3>
+<p><strong>현황</strong>:</p>
+<ul>
+<li>APP 측에 모바일티켓 관련 화면 가이드 0건.</li>
+<li>BO <code>[CEB-BO-100]</code> §2.3에서는 🔴 Critical 등급(아티스트별 공연·팬미팅) 분류했으나 BO 가이드 본문에 "모바일티켓"이라는 메뉴만 언급될 뿐 구체 화면·정책 미정의.</li>
+</ul>
+<p><strong>권장 조치</strong>:</p>
+<ol>
+<li>APP 측 신규 가이드 작성:</li>
+</ol>
+<ul>
+<li><code>[CEB-EVT-302]</code> 또는 유사 ID로 모바일티켓 메인·상세·QR·체크인·양도 등 화면 가이드.</li>
+<li>아티스트별 공연 리스트, 좌석 선택, 결제, 발권, QR 표시 흐름.</li>
+</ul>
+<ol>
+<li>BO 측에도 모바일티켓 영역 가이드 신설 검토:</li>
+</ol>
+<ul>
+<li><code>v2/BO/TKT/</code> 신규 폴더 + <code>[CEB-BO-009]</code> 모바일티켓 영역 가이드 + 화면 가이드.</li>
+<li>또는 기존 [CEB-BO-100] §2.3 모바일티켓 라인을 별도 영역 가이드로 확장.</li>
+</ul>
+<ol>
+<li>단, 모바일티켓은 Phase 2+ 콘텐츠 — 현 시점 APP/BO 모두 운영 안 함. 본 작업은 <strong>공연·팬미팅 사업 결정 시점</strong>과 동기화.</li>
+</ol>
+<p><strong>영향도</strong>: Critical — 향후 공연 운영 기능 필수. 다만 현재 사업 우선순위에 따라 Phase 2 또는 Phase 3로 미룰 수 있음.</p>
+<hr>
+<h2>4. 점검 필요 (⚠️ 1건)</h2>
+<h3>4.1 덕력 시즌 정책 표현 일관화</h3>
+<p><strong>현황</strong>:</p>
+<ul>
+<li>BO [CEB-BO-100] §3 덕력 시즌 행: "아티스트별 + 글로벌 시즌 마스터"</li>
+<li>APP [CEB-DUK-101]: "아티스트별 분리 랭킹, 시즌은 단일 글로벌(월간/분기별 BO 설정)"</li>
+</ul>
+<p><strong>의미 분석</strong>:</p>
+<ul>
+<li>시즌 자체는 글로벌(예: "2026년 5월 시즌") 1개로 운영.</li>
+<li>랭킹·통계는 아티스트별로 분리 산출(V01D 5월 랭킹, iKON 5월 랭킹).</li>
+<li>양쪽 정책이 동일한 운영 모델을 표현.</li>
+</ul>
+<p><strong>권장 조치</strong>:</p>
+<ul>
+<li>BO [CEB-BO-100] v1.4 갱신 — §3 덕력 시즌 행 문구를 다음으로 통일:</li>
+</ul>
+<p>  > <strong>글로벌 시즌 마스터(월간/분기별 BO 설정), 아티스트별 독립 랭킹 산출</strong></p>
+<ul>
+<li>표현 일치만 수정. 정책 자체는 변동 없음.</li>
+</ul>
+<p><strong>영향도</strong>: Low — 문서 정합성 문제. 운영·구현 영향 없음.</p>
+<hr>
+<h2>5. 정합성 확인 (✅ 4건)</h2>
+<table>
+<tr><th>#</th><th>항목</th><th>비고</th></tr>
+<tr><td>1</td><td>응모권 자산 통합</td><td>BO 전역 통합 + APP 통합 사용 — 완벽 일치</td></tr>
+<tr><td>2</td><td>팬덤 레벨 다중 보유</td><td>BO 아티스트별 영구 누적 + APP 다중 아티스트 동시 보유 — 일치</td></tr>
+<tr><td>3</td><td>귀속 매트릭스 ([CEB-000] §5.2.2)</td><td>BO SYS-601 자동 기록 룰 + APP v5.0+ 정책 — 공통정책 동기화로 정렬</td></tr>
+<tr><td>4</td><td>응모권 만료·환수·구매 후속 트랙</td><td>양쪽 모두 보류 — Phase 후속에서 동기화</td></tr>
+</table>
+<hr>
+<h2>6. SSOT(Single Source of Truth) 권장</h2>
+<p>본 리포트 발견 사항을 바탕으로 영역별 SSOT 권장:</p>
+<table>
+<tr><th>항목</th><th>SSOT</th><th>근거</th></tr>
+<tr><td>반려사유 (FQ)</td><td><strong>BO 마스터</strong></td><td>운영자가 정책 결정 → APP 동적 구현</td></tr>
+<tr><td>팬덤 레벨 곡선 (EVT)</td><td><strong>BO 마스터</strong></td><td>곡선 정의는 운영 정책</td></tr>
+<tr><td>덕력 시즌 (DUK)</td><td><strong>BO 마스터</strong></td><td>시즌 시작·종료는 운영 결정</td></tr>
+<tr><td>BIVE 등급 정의</td><td><strong>BO 마스터</strong></td><td>플랫폼 표준</td></tr>
+<tr><td>응모권 사용 정책 (래플 응모)</td><td><strong>APP 정책</strong></td><td>사용자 경험 정의</td></tr>
+<tr><td>멀티아티스트 컨텍스트 (사용자 시점)</td><td><strong>APP 정책</strong></td><td>홈 아티스트 선택·팔로우 UX</td></tr>
+<tr><td>멀티아티스트 컨텍스트 (운영자 시점)</td><td><strong>BO 정책</strong></td><td>헤더 토글·페이지 필터 운영</td></tr>
+</table>
+<hr>
+<h2>7. 후속 트랙 (운영팀 결정 후 별도 진행)</h2>
+<p>본 리포트는 분석 자료이며 즉시 정정하지 않는다. 운영팀 검토 후 다음 트랙 중 선택:</p>
+<h3>7.1 트랙 A — 반려사유 동기화 (Phase 2 동기화 필수)</h3>
+<ul>
+<li><strong>시점</strong>: BO FQ-502 활성화 시점과 동기화</li>
+<li><strong>산출물</strong>: APP <code>[CEB-FQ-201-MD]</code> v2.x 갱신 + 마이그레이션 가이드</li>
+<li><strong>선결 조건</strong>: BO FQ-502 운영자 사유 등록 완료 + API 엔드포인트 정의</li>
+</ul>
+<h3>7.2 트랙 B — 모바일티켓 신규 영역</h3>
+<ul>
+<li><strong>시점</strong>: 공연·팬미팅 사업 결정 시점 (Phase 2 또는 Phase 3)</li>
+<li><strong>산출물</strong>: APP 모바일티켓 가이드 + BO 모바일티켓 영역 가이드 + DB 모델</li>
+<li><strong>선결 조건</strong>: 사업·법무 검토(좌석·환불·양도 정책)</li>
+</ul>
+<h3>7.3 트랙 C — BO 마스터 v1.4 표현 정정</h3>
+<ul>
+<li><strong>시점</strong>: 다음 BO 정책 일괄 갱신 시점</li>
+<li><strong>산출물</strong>: [CEB-BO-100] v1.4 — 덕력 시즌 행 문구 정정만</li>
+<li><strong>소요</strong>: 5분</li>
+</ul>
+<h3>7.4 트랙 D — 추가 영역 정합성 확장 점검 (선택)</h3>
+<ul>
+<li>본 리포트 7영역 외 미점검 영역:</li>
+<li><strong>BIVE</strong> — 에디션·민팅·혜택의 APP 노출 화면과 BO 등록 정책 정렬</li>
+<li><strong>서포트 이벤트(SUP)</strong> — 응원 적립 정책 (APP CEB-DUK-201 ↔ BO SUP-101)</li>
+<li><strong>콘텐츠·소식(INF)</strong> — APP CEB-INF-* ↔ BO INF 영역</li>
+<li><strong>기억저장소(MEM)</strong> — APP CEB-MEM-* ↔ BO MEM 영역</li>
+<li>시점: 본 리포트 트랙 A·B·C 처리 후 운영팀 결정</li>
+</ul>
+<hr>
+<h2>8. 점검 방법론 (참고)</h2>
+<p>본 리포트는 다음 방법으로 작성됨.</p>
+<table>
+<tr><th>단계</th><th>도구</th><th>결과</th></tr>
+<tr><td>1. APP 가이드 인벤토리</td><td><code>ls v2/APP/*.md</code></td><td>25개 가이드 식별</td></tr>
+<tr><td>2. BO 신규 11개 정책 인벤토리</td><td><code>ls v2/BO/RFT/*.md</code> 등</td><td>마스터 + 11개 가이드</td></tr>
+<tr><td>3. 영역별 키워드 매칭</td><td>grep + 본문 정독</td><td>7영역 매트릭스 작성</td></tr>
+<tr><td>4. 정합성 평가</td><td>의미·표현·구현 차이 분류</td><td>✅ ⚠️ 🔴 3단계</td></tr>
+<tr><td>5. 후속 트랙 권고</td><td>SSOT 원칙 적용</td><td>트랙 A·B·C·D 정의</td></tr>
+</table>
+<hr>
+<h2>9. 연관 문서</h2>
+<table>
+<tr><th>문서</th><th>역할</th></tr>
+<tr><td>[CEB-BO-100] v1.3</td><td>멀티아티스트 운영 마스터 (본 리포트의 검증 대상)</td></tr>
+<tr><td>[CEB-BO-001-A]</td><td>실제 BO 구현 심층 분석 리포트 (선행 패턴)</td></tr>
+<tr><td>[CEB-000] v5.0+</td><td>APP 공통 정책 (귀속 매트릭스 SSOT)</td></tr>
+<tr><td>[CEB-EVT-201]</td><td>팬덤 레벨 (APP) — ✅ 일치 확인</td></tr>
+<tr><td>[CEB-DUK-101]</td><td>덕력 랭킹 (APP) — ⚠️ 표현 정정 권고</td></tr>
+<tr><td>[CEB-EVT-301]</td><td>응모권 (APP) — ✅ 일치 확인</td></tr>
+<tr><td>[CEB-FQ-201-MD]</td><td>반려 사유 모달 (APP) — 🔴 갱신 필요</td></tr>
+<tr><td>[CEB-HOM-001]</td><td>홈 메인 (APP) — 멀티아티스트 컨텍스트</td></tr>
+<tr><td>[CEB-ART-201]</td><td>아티스트 탐색 (APP) — 팔로우/언팔로우</td></tr>
+</table>
+<hr>
+<h2>10. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.05.07</td><td>@Nill Yoo</td><td>최초 작성. v2/APP ↔ v2/BO 신규 11개 정책 가이드 정합성 점검 결과. 7영역 매트릭스 (✅ 4 / ⚠️ 1 / 🔴 2). 즉시 조치 2건(반려사유·모바일티켓), 점검 1건(덕력 시즌 표현), 정합 4건. SSOT 권장 + 후속 트랙 4종(A 반려사유 / B 모바일티켓 / C 시즌 표현 / D 영역 확장 점검). 운영팀 검토용 자료 — 본 리포트 자체는 정책 정정에 사용하지 않음.</td></tr>
+</table>
+
+</body>
+</html>

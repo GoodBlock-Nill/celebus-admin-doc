@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-202] 퀘스트 상세 (대기내역 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-202] 퀘스트 상세 (대기내역 탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-FQ-202</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트) — Quest 검수</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.05</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 팬퀘스트 > Fan Quest 관리 > Quest > {Quest 타이틀}</td></tr>
+<tr><td>비고</td><td>v1 BO-FQ/[CEB-BO-FQ-202] v1.1 (2026.03.24) → v2 정책 호환 갱신</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한(§3·§4), UI 상태(§7), 토스트(§9), 푸시 알림(§15)</td></tr>
+<tr><td>[CEB-BO-006] Quest·Raffle(FQ) 영역 가이드</td><td>권한 매트릭스(§4), 활동 로그(§6), 검수 워크플로우(§7.3), 반려사유 DB(§7.4)</td></tr>
+<tr><td>[CEB-BO-004] BIVE(NFT) 영역 가이드</td><td>승인 시 BIVE 자동 민팅(§4.3)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>유저가 Quest 미션을 수행하고 제출한 결과물 중 <strong>검수 미처리(Pending)</strong> 상태의 제출 건을 운영자가 승인/반려한다. 검수 워크플로우의 핵심 진입점. [CEB-BO-006] §7.3 워크플로우 참조.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>대기 상태 유저 제출물 카드 그리드 조회</li>
+<li>개별 승인 (즉시 처리, BIVE 자동 민팅 + 응모권 지급 + 푸시 알림)</li>
+<li>개별 반려 (반려사유 모달 호출 → [CEB-BO-FQ-202-MD-REJECT])</li>
+<li>현재 페이지 일괄 승인</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-201] 퀘스트 상세 (기본정보 탭) > [대기내역] 탭 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 영역</h3>
+<ul>
+<li>탭 메뉴 (3탭): 기본정보 / <strong>대기내역 (현재)</strong> / 처리내역</li>
+<li>[현재 페이지 모두 승인] 버튼 (우측 상단)</li>
+<li>현재 페이지(Pagination된) 전체 대기 건 일괄 승인</li>
+<li>페이지에 대기 건 없을 시 비활성화</li>
+</ul>
+<h3>2.2 카드 그리드 (Grid List)</h3>
+<ul>
+<li>정렬: 제출일시 오름차순 (오래된순)</li>
+<li>페이지당 최대 10건</li>
+<li>데이터 없음: "제출내역이 없습니다." 문구</li>
+</ul>
+<p>각 카드 구성:</p>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>이미지 썸네일</td><td>유저 업로드 원본 (클릭 시 lightbox 확대)</td></tr>
+<tr><td>유저 정보</td><td>{유저닉네임} / User ID</td></tr>
+<tr><td>제출 정보</td><td>Submit ID / 제출일시 (YYYY.MM.DD HH:mm KST)</td></tr>
+<tr><td>액션 버튼</td><td>[반려] [승인]</td></tr>
+</table>
+<h3>2.3 페이지네이션</h3>
+<ul>
+<li>하단 중앙. 10페이지 단위 이동.</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 승인 처리 (Approve)</h3>
+<p>[CEB-BO-006] §7.3 검수 워크플로우 참조.</p>
+<ul>
+<li><strong>개별 승인</strong> ([승인] 버튼 클릭)</li>
+<li>별도 확인 절차 없이 즉시 처리</li>
+<li>상태 → Approved. 카드는 처리내역 탭으로 이동</li>
+<li>트리거 (자동):</li>
+<li><strong>응모권 지급</strong> (Quest 보상 설정 따라)</li>
+<li><strong>BIVE 자동 민팅</strong> ([CEB-BO-004] §4.3, 보상 NFT 캠페인 연결 시)</li>
+<li>회원 푸시 알림 ([CEB-BO-000] §15. 알림 본문은 피그마 참조)</li>
+<li>회원 앱: Event 화면(CEB-FQ-201)에서 응모권 / 컬렉션에서 BIVE 확인 가능</li>
+<li><strong>일괄 승인</strong> ([현재 페이지 모두 승인] 클릭)</li>
+<li>현재 페이지의 모든 대기 건 한 번에 승인 처리</li>
+<li>부분 실패 가능: 결과 토스트에 성공/실패 건수 표시</li>
+</ul>
+<h3>3.2 반려 처리 (Reject)</h3>
+<ul>
+<li>[반려] 버튼 클릭 → [CEB-BO-FQ-202-MD-REJECT] 모달 호출</li>
+<li>모달에서 반려사유 코드 선택 + 운영자 메시지 (선택, 200자) 입력</li>
+<li>최종 확인 시: 상태 → Rejected. 카드는 처리내역 탭 이동. 회원 푸시 알림 + 재참여 가이드</li>
+</ul>
+<h3>3.3 네비게이션</h3>
+<ul>
+<li>[기본정보] 탭 → [CEB-BO-FQ-201]</li>
+<li>[처리내역] 탭 → [CEB-BO-FQ-203]</li>
+</ul>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한별 분기</h3>
+<p>[CEB-BO-006] §4 적용:</p>
+<table>
+<tr><th>권한</th><th>화면 진입</th><th>조회</th><th>[승인]</th><th>[반려]</th><th>[모두 승인]</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>❌ (검수 권한 없음)</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</table>
+<blockquote>
+<p>EXTERNAL_ARTIST는 검수 권한 없음 ([CEB-BO-006] §4 핵심 제약).</p>
+</blockquote>
+<h3>4.2 정렬 기준</h3>
+<table>
+<tr><th>정렬 기준</th><th>정렬 방식</th><th>비고</th></tr>
+<tr><td>제출일시</td><td>오름차순 (오래된순)</td><td>기본. FIFO 검수 원칙</td></tr>
+</table>
+<h3>4.3 승인 시 자동 트리거</h3>
+<p>승인 1건당 다음 4개 트리거가 단일 트랜잭션으로 처리:</p>
+<ol>
+<li>응모권 잔액 +N (Quest 보상 설정 수량)</li>
+<li>BIVE 자동 민팅 큐에 추가 ([CEB-BO-004] §4.3) — 보상에 NFT 포함 시</li>
+<li>활동 로그 기록 ([CEB-BO-006] §6)</li>
+<li>회원 푸시 알림 ([CEB-BO-000] §15)</li>
+</ol>
+<p>부분 실패 처리: 응모권 지급 실패 시 전체 롤백. BIVE 민팅 실패는 별도 큐 재시도 (응모권은 정상 지급).</p>
+<h3>4.4 일괄 승인 한도</h3>
+<ul>
+<li>1회당 최대 페이지 단위 (10건)</li>
+<li>대량 승인 시 단계별 처리 (1건씩 순차)</li>
+<li>처리 중 페이지 이탈 시 백그라운드 큐 처리 + 완료 시 토스트</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading (목록 조회)</td><td>카드 grid Skeleton (6~10개)</td></tr>
+<tr><td>Loading (승인 처리)</td><td>카드 액션 버튼 Spinner</td></tr>
+<tr><td>Default</td><td>정상 카드 그리드</td></tr>
+<tr><td>Empty</td><td>"제출내역이 없습니다." 중앙 문구</td></tr>
+<tr><td>Error</td><td>"데이터를 불러오지 못했습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>[CEB-BO-006] §6 적용:</p>
+<table>
+<tr><th>액션</th><th>로그 메시지 (KO)</th></tr>
+<tr><td>검수 승인 (개별)</td><td>Quest '{타이틀}'의 제출 1건을 승인했습니다. (총 보상 BIVE 민팅: {n}장)</td></tr>
+<tr><td>검수 승인 (일괄)</td><td>Quest '{타이틀}'의 제출 {n}건을 승인했습니다. (총 보상 BIVE 민팅: {n}장)</td></tr>
+<tr><td>검수 반려 (개별)</td><td>Quest '{타이틀}'의 제출 1건을 반려했습니다. (사유: {반려코드})</td></tr>
+</table>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th><th>타입</th></tr>
+<tr><td>승인 성공</td><td>"선택한 {n}개 퀘스트의 승인 처리가 완료되었습니다."</td><td>Success</td></tr>
+<tr><td>승인 실패</td><td>"선택한 퀘스트의 승인 처리에 실패하였습니다."</td><td>Error</td></tr>
+<tr><td>일괄 승인 부분 실패</td><td>"{성공}개 승인, {실패}개 실패. 실패 건은 다시 시도해주세요."</td><td>Warning</td></tr>
+<tr><td>이미 처리된 건 (동시성 충돌)</td><td>"이미 다른 관리자가 처리한 건입니다. 새로고침 후 다시 시도해주세요."</td><td>Warning</td></tr>
+<tr><td>BIVE 민팅 실패 (재시도 큐 등록)</td><td>"응모권은 지급되었으나 BIVE 발행이 지연되고 있습니다. 잠시 후 자동 처리됩니다."</td><td>Info</td></tr>
+<tr><td>권한 부족</td><td>"검수 권한이 없습니다." (EXTERNAL_ARTIST)</td><td>Error</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-FQ-201</td><td>Quest 상세 (기본정보 탭)</td><td>형제 (상위 화면)</td></tr>
+<tr><td>CEB-BO-FQ-203</td><td>Quest 상세 (처리내역 탭)</td><td>형제 (검수 완료 후 데이터 이동)</td></tr>
+<tr><td>CEB-BO-FQ-202-MD-REJECT</td><td>반려사유 입력 모달</td><td>하위 ([반려] 버튼)</td></tr>
+<tr><td>CEB-BO-FQ-101-REJETSET</td><td>반려사유 설정</td><td>데이터 소스 (반려 모달의 사유 목록)</td></tr>
+<tr><td>CEB-BO-004 §4.3 BIVE 민팅</td><td>BIVE 자동 민팅 캠페인</td><td>외부 트리거 (승인 시 호출)</td></tr>
+</table>
+<hr>
+<h2>9. v1 → v2 변경 사항</h2>
+<table>
+<tr><th>항목</th><th>v1</th><th>v2</th></tr>
+<tr><td>권한</td><td>Super Admin / Admin</td><td>SUPER / OPERATOR / POLICY (조회만) / EXTERNAL_ARTIST (검수 차단)</td></tr>
+<tr><td>승인 트리거</td><td>"보상 즉시 지급 + 알림 + Event 화면 응모권"</td><td>응모권 지급 + BIVE 자동 민팅 + 활동 로그 + 푸시 알림 (단일 트랜잭션)</td></tr>
+<tr><td>일괄 승인 부분 실패</td><td>미정의</td><td>"{성공}/{실패}" 토스트 안내</td></tr>
+<tr><td>동시성 충돌 처리</td><td>미정의</td><td>Warning 토스트 안내</td></tr>
+<tr><td>BIVE 민팅 실패 재시도</td><td>미정의</td><td>응모권 정상 지급 + BIVE 큐 재시도</td></tr>
+<tr><td>활동 로그</td><td>미정의</td><td>[CEB-BO-006] §6 템플릿 (개별·일괄 별도 행)</td></tr>
+</table>
+<hr>
+<h2>10. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2025.12.09</td><td>@Nill Yoo</td><td>(v1) 초안 작성</td></tr>
+<tr><td>v1.1</td><td>2026.03.24</td><td>@Nill Yoo</td><td>(v1) 상태 표기 한글화</td></tr>
+<tr><td><strong>v2.0</strong></td><td><strong>2026.05.05</strong></td><td><strong>@Nill Yoo</strong></td><td>v2 정책 호환 갱신. ① [CEB-BO-000]/[CEB-BO-006]/[CEB-BO-004] 공통 정책 참조 헤더 ② 권한 4단계 + EXTERNAL_ARTIST 검수 차단 명시 ([CEB-BO-006] §4) ③ 승인 시 자동 트리거 4종 (응모권/BIVE 민팅/활동 로그/푸시) 단일 트랜잭션 처리 명시 ④ 일괄 승인 부분 실패 처리 ⑤ 동시성 충돌 처리 ⑥ BIVE 민팅 실패 재시도 큐 ⑦ 활동 로그 §6 템플릿 (개별·일괄) ⑧ UI 상태별 처리 §5 ⑨ v1 원본 deprecation 동시 진행</td></tr>
+</table>
+
+</body>
+</html>

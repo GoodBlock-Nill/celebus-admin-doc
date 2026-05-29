@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-COL-201] 디지털 굿즈 상세·발행</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-COL-201] 디지털 굿즈 상세·발행</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-COL-201</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>COL — 굿즈 상세·발행</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 디지털 굿즈 > 리스트 > {굿즈명}</td></tr>
+<tr><td>비고</td><td>Phase 9 신규. [CEB-BO-COL-000] 가이드 참조</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000]</td><td>권한, 다국어, 미디어 업로드</td></tr>
+<tr><td>[CEB-BO-COL-000]</td><td>굿즈 타입·트리거·회수 정책</td></tr>
+<tr><td>[CEB-BO-FQ-101-CREATE]</td><td>Quest 생성 시 COL 자동 발급 옵션 데이터 소스</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>개별 디지털 굿즈 정보 조회·수정·수동 발행/회수. OPERATOR가 회원 선택해 수동 발급 가능.</p>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 헤더</h3>
+<ul>
+<li>Breadcrumb + 뒤로가기</li>
+<li>타이틀: <code>{굿즈명}</code> + 상태 Badge</li>
+<li>액션: [수정하기] / [수동 발급] / [회수] (OPERATOR/SUPER)</li>
+</ul>
+<h3>2.2 정보 그리드</h3>
+<h4>A. 기본 정보</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>타입</td><td>5종</td></tr>
+<tr><td>굿즈명 (KO/EN/JP)</td><td>필수, 50자</td></tr>
+<tr><td>설명 (KO/EN/JP)</td><td>선택, 200자</td></tr>
+<tr><td>아티스트</td><td>그룹/멤버</td></tr>
+<tr><td>이미지</td><td>권장 1024x1024 (정사각), 최대 50MB</td></tr>
+<tr><td>등록일 / 수정일</td><td>KST</td></tr>
+</table>
+<h4>B. 발급 트리거 설정</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>트리거 유형</td><td>수동 / Quest / Raffle / EVT / 가입</td></tr>
+<tr><td>연결 캠페인</td><td>(Quest/Raffle 트리거 시)</td></tr>
+<tr><td>EVT 레벨 조건</td><td>(EVT 트리거 시) Lv N</td></tr>
+<tr><td>1회 발급 정책</td><td>회원당 1회 / 다중 가능</td></tr>
+</table>
+<h4>C. 발급 통계</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>누적 발급 수량</td><td></td></tr>
+<tr><td>발급 회원 수</td><td>(중복 제외)</td></tr>
+<tr><td>트리거별 발급 비율</td><td>(도넛 차트)</td></tr>
+</table>
+<h4>D. 발급 회원 리스트 (페이지네이션)</h4>
+<table>
+<tr><th>컬럼</th><th>설명</th></tr>
+<tr><td>닉네임</td><td></td></tr>
+<tr><td>발급 일시</td><td>KST</td></tr>
+<tr><td>트리거</td><td>수동/Quest/Raffle/EVT/가입</td></tr>
+<tr><td>액션</td><td>[회수] (OPERATOR/SUPER)</td></tr>
+</table>
+<h3>2.3 [수동 발급] 모달</h3>
+<ul>
+<li>회원 검색 (닉네임/유저ID)</li>
+<li>발급 사유 입력 (200자, KO)</li>
+<li>다중 회원 선택 가능 (최대 100명, 100명+ 시 SUPER 2FA)</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 규칙·로직</h2>
+<h3>3.1 권한별 분기</h3>
+<table>
+<tr><th>권한</th><th>진입</th><th>[수정]</th><th>[수동 발급]</th><th>[회수]</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅</td><td>✅ (~100명)</td><td>✅</td></tr>
+<tr><td>POLICY</td><td>✅ (R)</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>✅ (자기 아티스트)</td><td>✅</td><td>❌</td><td>❌</td></tr>
+</table>
+<h3>3.2 1회 발급 정책</h3>
+<ul>
+<li>"회원당 1회": 동일 굿즈 중복 발급 차단</li>
+<li>"다중 가능": 회원이 여러 번 받을 수 있음 (수량 누적)</li>
+</ul>
+<h3>3.3 회수 정책</h3>
+<ul>
+<li>OPERATOR (어뷰징 적발) 또는 SUPER (자산 회수)</li>
+<li>사유 입력 필수</li>
+<li>회원 푸시 알림 + 활동 로그</li>
+<li>DUK·EVT 영향 없음 ([CEB-BO-COL-000] §4.5)</li>
+</ul>
+<h3>3.4 일괄 발급 가드레일</h3>
+<p>100명+ 발급 시 → SUPER 2FA 재인증 필수.</p>
+<hr>
+<h2>4. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>메시지</th></tr>
+<tr><td>굿즈 등록</td><td>디지털 굿즈 '{굿즈명}'을(를) 등록했습니다. (타입: {타입}, 아티스트: {그룹})</td></tr>
+<tr><td>굿즈 수정</td><td>'{굿즈명}'을(를) 수정했습니다. (변경: {필드})</td></tr>
+<tr><td>수동 발급</td><td>'{굿즈명}'을(를) 회원 {N}명에게 수동 발급했습니다. (사유: {요약})</td></tr>
+<tr><td>자동 발급 (Quest 등)</td><td>(시스템 자동) 회원 '{닉네임}'에게 '{굿즈명}' 자동 발급 (트리거: {트리거})</td></tr>
+<tr><td>회수</td><td>회원 '{닉네임}'의 '{굿즈명}'을(를) 회수했습니다. (사유: {요약})</td></tr>
+</table>
+<hr>
+<h2>5. UI 상태·에러</h2>
+<p>[CEB-BO-000] §7 표준 + 100명+ SUPER 2FA 안내.</p>
+<hr>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 9 신규. ① 4섹션 정보 (기본·트리거·통계·발급 회원) ② 1회 발급 vs 다중 정책 ③ 일괄 100명+ SUPER 2FA ④ 회수 정책</td></tr>
+</table>
+
+</body>
+</html>

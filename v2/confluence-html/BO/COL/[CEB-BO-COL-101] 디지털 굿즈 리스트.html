@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-COL-101] 디지털 굿즈 리스트</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-COL-101] 디지털 굿즈 리스트</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-COL-101</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>COL — 디지털 굿즈 리스트</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 디지털 굿즈 > 리스트</td></tr>
+<tr><td>비고</td><td>Phase 9 신규. [CEB-BO-COL-000] 가이드 참조</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000]</td><td>권한, 다국어, UI 상태, 미디어 업로드</td></tr>
+<tr><td>[CEB-BO-COL-000]</td><td>굿즈 타입·트리거·EXTERNAL_ARTIST</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>디지털 굿즈 통합 조회·등록. OPERATOR/EXTERNAL_ARTIST가 굿즈를 등록하고 발급 캠페인 연동.</p>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 검색·필터</h3>
+<table>
+<tr><th>구분</th><th>요소</th><th>설명</th></tr>
+<tr><td>필터</td><td>타입</td><td>전체 / 포토카드 / 배지 / 스티커 / 이모티콘 / 디지털 카드</td></tr>
+<tr><td>필터</td><td>아티스트</td><td>전체 / V01D / iKON 등</td></tr>
+<tr><td>필터</td><td>상태</td><td>활성 / 비활성</td></tr>
+<tr><td>입력</td><td>굿즈명</td><td>부분 일치 (KO/EN/JP)</td></tr>
+<tr><td>버튼</td><td>초기화 / [굿즈 등록]</td><td>OPERATOR/SUPER, EXTERNAL_ARTIST</td></tr>
+</table>
+<h3>2.2 목록 테이블</h3>
+<table>
+<tr><th>컬럼</th><th>설명</th></tr>
+<tr><td>상태</td><td>Active / Inactive</td></tr>
+<tr><td>썸네일</td><td>굿즈 이미지</td></tr>
+<tr><td>굿즈명</td><td>KO 우선</td></tr>
+<tr><td>타입</td><td>Badge</td></tr>
+<tr><td>아티스트</td><td>그룹/멤버</td></tr>
+<tr><td>발급 트리거</td><td>수동 / Quest 자동 / Raffle / EVT 레벨업 / 가입 보너스</td></tr>
+<tr><td>누적 발급 수량</td><td>회원당 1회 + 다중 발급 합계</td></tr>
+<tr><td>등록일</td><td>KST</td></tr>
+</table>
+<ul>
+<li>Row 클릭 → COL-201 상세</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 권한·로직</h2>
+<h3>3.1 권한별 분기</h3>
+<table>
+<tr><th>권한</th><th>진입</th><th>조회</th><th>[굿즈 등록]</th><th>Row 클릭</th></tr>
+<tr><td>SUPER / OPERATOR</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅ (조회)</td><td>❌</td><td>✅</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>✅ (자기 아티스트)</td><td>✅</td><td>✅ (자기 아티스트만)</td><td>✅</td></tr>
+</table>
+<h3>3.2 정렬</h3>
+<table>
+<tr><th>기본</th><th>등록일 내림차순</th></tr>
+</table>
+<hr>
+<h2>4. UI 상태·에러</h2>
+<p>[CEB-BO-000] §7 표준.</p>
+<hr>
+<h2>5. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 9 신규. ① 5타입 필터 ② 발급 트리거 5종 ③ EXTERNAL_ARTIST 자기 아티스트 등록</td></tr>
+</table>
+
+</body>
+</html>

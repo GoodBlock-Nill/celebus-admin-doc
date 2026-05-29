@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-206] Raffle 상세 (추첨내역 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-206] Raffle 상세 (추첨내역 탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-FQ-206</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트) — Raffle 추첨</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.05</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 팬퀘스트 > Fan Quest 관리 > Raffle > {Raffle 타이틀}</td></tr>
+<tr><td>비고</td><td>v1 BO-FQ/[CEB-BO-FQ-206] v1.1 → v2 정책 호환 갱신</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한(§3·§4), UI 상태(§7), 토스트(§9)</td></tr>
+<tr><td>[CEB-BO-006] Quest·Raffle(FQ) 영역 가이드</td><td>권한 매트릭스(§4), Raffle 라이프사이클(§7.2), 추첨 알고리즘(§7.5), SUPER 가드레일(§4.2), 활동 로그(§6)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>응모가 마감(Closed)된 Raffle에 대해 추첨을 실행하고, 추첨 완료 후 당첨자 명단·보상 지급 상태 관리. Raffle 운영 라이프사이클의 종착점.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-204] Raffle 상세 (기본정보 탭) > [추첨내역] 탭 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 탭 + 상태별 분기</h3>
+<ul>
+<li>탭 메뉴 (3탭): 기본정보 / 응모내역 / <strong>추첨내역 (현재)</strong></li>
+</ul>
+<table>
+<tr><th>Raffle 상태</th><th>화면 표시</th></tr>
+<tr><td>Draft / Active</td><td>안내: "Raffle의 상태가 추첨대기(Closed)인 경우에만 추첨이 가능합니다." (데이터 없음)</td></tr>
+<tr><td>Closed</td><td>안내: "추첨대기 상태입니다. 하단 [추첨하기] 버튼을 눌러 추첨을 진행해주세요." [추첨하기] 버튼 노출</td></tr>
+<tr><td>Ended</td><td>통계 대시보드 + 필터 + 결과 테이블</td></tr>
+</table>
+<h3>2.2 통계 대시보드 (Ended 상태)</h3>
+<table>
+<tr><th>카드</th><th>의미</th></tr>
+<tr><td>보상 지급</td><td>지급 완료 수 / 목표 당첨자 수 (n/m)</td></tr>
+<tr><td>총 응모 유저</td><td>중복 제외 응모자 수</td></tr>
+<tr><td>Win</td><td>당첨자 수</td></tr>
+<tr><td>Lose</td><td>낙첨자 수</td></tr>
+</table>
+<h3>2.3 검색·필터 (Ended 상태)</h3>
+<table>
+<tr><th>구분</th><th>요소명</th><th>타입</th><th>설명</th></tr>
+<tr><td>필터</td><td>상태</td><td>Dropdown</td><td>전체 / Win / Lose</td></tr>
+<tr><td>필터</td><td>검색 대상</td><td>Dropdown</td><td>닉네임 / 전화번호</td></tr>
+<tr><td>입력</td><td>키워드</td><td>Text Input</td><td>부분 일치</td></tr>
+</table>
+<h3>2.4 목록 영역 (Ended 상태, Data Grid)</h3>
+<table>
+<tr><th>컬럼명</th><th>데이터 예시</th><th>설명</th></tr>
+<tr><td>상태</td><td>Win (Green Badge) / Lose (Gray Badge)</td><td>당첨 여부</td></tr>
+<tr><td>유저닉네임</td><td>{닉네임}</td><td>참여자</td></tr>
+<tr><td>전화번호</td><td>821012345678</td><td>[CEB-BO-006] §7.5 표준 포맷</td></tr>
+<tr><td>누적 사용 응모권</td><td>10</td><td>Raffle 응모권 누적</td></tr>
+<tr><td>추첨 일시</td><td>2026.05.05 15:23</td><td>추첨 실행 시간 (KST)</td></tr>
+<tr><td>보상 지급여부</td><td>지급완료 / 미지급</td><td>보상 상태 아이콘</td></tr>
+</table>
+<ul>
+<li>Win Row 클릭 → [CEB-BO-FQ-206-MD-DETAIL] 비고 모달</li>
+<li>Lose Row 클릭 → 동작 없음</li>
+</ul>
+<h3>2.5 하단 액션 (Closed 상태)</h3>
+<ul>
+<li>[추첨하기] 버튼 (중앙 하단) → [CEB-BO-FQ-206-MD-DRAW] 모달 호출</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 추첨 실행</h3>
+<ul>
+<li>[추첨하기] → [CEB-BO-FQ-206-MD-DRAW] 모달 호출</li>
+<li>모달 내 [추첨결과 확정하기] 시 Closed → Ended 전환 + 회원 알림 + 보상 자동 지급</li>
+</ul>
+<h3>3.2 네비게이션</h3>
+<ul>
+<li>[기본정보] 탭 → [CEB-BO-FQ-204]</li>
+<li>[응모내역] 탭 → [CEB-BO-FQ-205]</li>
+</ul>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한별 분기</h3>
+<p>[CEB-BO-006] §4 적용:</p>
+<table>
+<tr><th>권한</th><th>화면 진입</th><th>조회</th><th>[추첨하기]</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅</td><td>✅ (단, [CEB-BO-006] §4.2 가드레일 발동 시 SUPER 호출)</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅ (조회)</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>✅ (자기 아티스트)</td><td>✅</td><td>❌</td></tr>
+</table>
+<h3>4.2 추첨 진입 조건</h3>
+<ul>
+<li>Raffle 상태 = <strong>Closed</strong> (모집 마감 상태)</li>
+<li>Draft / Active / Ended 에서는 [추첨하기] 미노출</li>
+</ul>
+<h3>4.3 SUPER 추첨 가드레일 ([CEB-BO-006] §4.2)</h3>
+<p>다음 조건 중 하나라도 만족하면 OPERATOR 단독 추첨 차단 → SUPER 2FA 재인증 필수:</p>
+<ul>
+<li>응모권 사용 누적 ≥ <strong>10,000장</strong></li>
+<li>보상 BIVE 발행 예정 ≥ <strong>100장</strong></li>
+</ul>
+<p>조건 발동 시 [추첨하기] 버튼 옆에 안내 배지: "SUPER 인증 필요" + 추첨 모달 진입 시 SUPER 자격 검증.</p>
+<h3>4.4 보상 지급 로직</h3>
+<p>추첨 확정 시 자동 트리거:</p>
+<ol>
+<li>Win 회원에게 보상 자동 지급 요청 (현장/배송/온라인 타입별 별도)</li>
+<li>보상 지급 결과 → 리스트 "보상 지급여부" 컬럼 실시간 갱신</li>
+<li>보상 지급 실패 시 운영자 알림 + 미지급 상태로 보존 (재시도 큐)</li>
+</ol>
+<h3>4.5 데이터 표시 규칙</h3>
+<ul>
+<li>정렬: 기본은 상태 (Win 우선) → 추첨 일시 내림차순</li>
+<li>날짜: <code>YYYY.MM.DD HH:mm</code> KST</li>
+<li>전화번호: <code>[국가코드][휴대번호]</code> 표준 포맷 ([CEB-BO-006] §7.5)</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>통계·테이블 Skeleton</td></tr>
+<tr><td>Default (Closed)</td><td>안내 + [추첨하기]</td></tr>
+<tr><td>Default (Ended)</td><td>통계 + 필터 + 결과 테이블</td></tr>
+<tr><td>Empty (Ended에 결과 0건)</td><td>"추첨 결과가 없습니다." (예외 케이스 — 응모자 0명에서 추첨한 경우)</td></tr>
+<tr><td>Error</td><td>"데이터를 불러오지 못했습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>[CEB-BO-006] §6 적용:</p>
+<table>
+<tr><th>액션</th><th>발생 화면</th><th>로그 메시지 (KO)</th></tr>
+<tr><td>Raffle 추첨 실행</td><td>[MD-DRAW]</td><td>Raffle '{타이틀}'의 추첨을 실행했습니다. (응모자 {n}명 → 당첨 {n}명, 시드: {hex})</td></tr>
+<tr><td>Raffle 추첨 SUPER 검증</td><td>[MD-DRAW]</td><td>Raffle '{타이틀}' 추첨 SUPER 추가 인증 통과 (응모권 {n}장 / BIVE {n}장)</td></tr>
+<tr><td>당첨자 비고 수정</td><td>[MD-DETAIL]</td><td>Raffle '{타이틀}' 당첨자 '{닉네임}' 비고를 수정했습니다.</td></tr>
+</table>
+<p>본 화면(조회)은 로그 미기록.</p>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>처리</th></tr>
+<tr><td>추첨 진입 조건 미충족 (Active 상태에서 강제 호출)</td><td>UI 차단 + 서버 검증</td></tr>
+<tr><td>SUPER 가드레일 발동, OPERATOR 단독 시도</td><td>Toast (Error): "본 Raffle은 SUPER 추가 인증이 필요합니다."</td></tr>
+<tr><td>데이터 조회 실패</td><td>Toast (Error) + [재시도]</td></tr>
+<tr><td>보상 지급 실패 (개별 회원)</td><td>컬럼 "미지급" + 재시도 큐 등록</td></tr>
+<tr><td>EXTERNAL_ARTIST 자기 아티스트 외 진입</td><td>서버 차단</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-FQ-204</td><td>Raffle 상세 (기본정보 탭)</td><td>형제 (상위 화면)</td></tr>
+<tr><td>CEB-BO-FQ-205</td><td>Raffle 상세 (응모내역 탭)</td><td>형제 (탭 이동)</td></tr>
+<tr><td>CEB-BO-FQ-206-MD-DRAW</td><td>Raffle 추첨 모달</td><td>하위 ([추첨하기])</td></tr>
+<tr><td>CEB-BO-FQ-206-MD-DETAIL</td><td>당첨자 비고 모달</td><td>하위 (Win Row 클릭)</td></tr>
+</table>
+<hr>
+<h2>9. v1 → v2 변경 사항</h2>
+<table>
+<tr><th>항목</th><th>v1</th><th>v2</th></tr>
+<tr><td>권한</td><td>Super Admin / Admin</td><td>SUPER/OPERATOR/POLICY/EXTERNAL_ARTIST</td></tr>
+<tr><td>SUPER 추첨 가드레일</td><td>미정의</td><td>[CEB-BO-006] §4.2 (10K+ 응모권 또는 BIVE 100+)</td></tr>
+<tr><td>추첨 알고리즘</td><td>일반 명시</td><td>[CEB-BO-006] §7.5 시드 기반 Fisher-Yates 참조</td></tr>
+<tr><td>활동 로그</td><td>미정의</td><td>[CEB-BO-006] §6 (추첨 실행·SUPER 검증·비고 수정 별도 행)</td></tr>
+<tr><td>보상 지급 실패 처리</td><td>일반 명시</td><td>재시도 큐 + 운영자 알림</td></tr>
+</table>
+<hr>
+<h2>10. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2025.12.09</td><td>@Nill Yoo</td><td>(v1) 초안 작성</td></tr>
+<tr><td>v1.1</td><td>2026.03.24</td><td>@Nill Yoo</td><td>(v1) 상태 표기 한글화</td></tr>
+<tr><td><strong>v2.0</strong></td><td><strong>2026.05.05</strong></td><td><strong>@Nill Yoo</strong></td><td>v2 정책 호환 갱신. ① [CEB-BO-000]/[CEB-BO-006] 공통 정책 참조 ② 권한 4단계 + EXTERNAL_ARTIST 자기 아티스트 한정 ③ SUPER 추첨 가드레일 §4.2 적용 (응모권 10K+ 또는 BIVE 100+) ④ 추첨 알고리즘 §7.5 참조 ⑤ 활동 로그 §6 (추첨 실행·SUPER 검증·비고 수정) ⑥ 보상 지급 실패 재시도 큐 ⑦ UI 상태별 처리 §5 ⑧ v1 deprecation 동시 진행</td></tr>
+</table>
+
+</body>
+</html>

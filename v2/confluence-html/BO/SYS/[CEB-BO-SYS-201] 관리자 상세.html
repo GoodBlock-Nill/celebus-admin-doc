@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-SYS-201] 관리자 상세</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-SYS-201] 관리자 상세</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-SYS-201</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>SYS — 관리자 상세</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 관리자 > 관리자 리스트 > {관리자명}</td></tr>
+<tr><td>비고</td><td>신규 작성 (Phase 8). v2 가이드 [CEB-BO-005] §2 참조</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한 4단계(§3), 부여·회수(§3.2), IP·접속 제한(§3.3), 활동 로그(§6)</td></tr>
+<tr><td>[CEB-BO-005] 관리자(SYS) 영역 가이드</td><td>권한 매트릭스(§4), 활동 로그(§6), 만료 정책(§7)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>개별 관리자 정보 조회·권한 부여·만료 연장·세션 회수. <strong>2FA 정책 명시</strong> (구현은 운영팀 결정).</p>
+<h3>주요 기능</h3>
+<ul>
+<li>관리자 기본 정보 조회 (닉네임·이메일·등록일·최근 로그인)</li>
+<li>권한 그룹 부여·변경 (SUPER 전용)</li>
+<li>만료일 연장 (EXTERNAL_ARTIST 6개월 만료 정책)</li>
+<li>IP 화이트리스트 관리 (SUPER + EXTERNAL_ARTIST)</li>
+<li>세션 강제 종료·계정 잠금·비활성화</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-SYS-101] 관리자 리스트 > Row 클릭</li>
+<li>(자기 정보 수정) 관리자 본인 프로필 메뉴</li>
+</ul>
+<p>URL: <code>/admins/list/{id}</code></p>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 네비게이션·헤더</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 관리자 > 관리자 리스트 > {관리자명}</code></li>
+<li>뒤로가기 (←) → [CEB-BO-SYS-101]</li>
+<li>타이틀: <code>관리자상세 ({관리자명})</code> + 계정상태 Badge</li>
+<li>우측 상단 액션: [수정하기] (Primary, SUPER) / [세션 강제 종료] (Danger, SUPER)</li>
+</ul>
+<h3>2.2 상세 정보 그리드</h3>
+<h4>A. 관리정보 섹션</h4>
+<table>
+<tr><th>항목</th><th>표시</th><th>비고</th></tr>
+<tr><td>계정상태</td><td>Active / Pending / Locked / Inactive</td><td>Badge</td></tr>
+<tr><td>권한 그룹</td><td>Super Admin (프리셋) / Operator / Policy / EXTERNAL_ARTIST / 운영자 정의</td><td>매핑된 그룹. 변경 시 SUPER 전용 모달</td></tr>
+<tr><td>등록일시</td><td>YYYY.MM.DD HH:mm KST</td><td>초대 후 인증 완료 시점</td></tr>
+<tr><td>최근 로그인</td><td>YYYY.MM.DD HH:mm KST</td><td></td></tr>
+<tr><td>최근 비밀번호 변경</td><td>YYYY.MM.DD KST</td><td></td></tr>
+<tr><td>만료일 (EXTERNAL_ARTIST 한정)</td><td>YYYY.MM.DD</td><td>기본 6개월. [만료 연장] 버튼 → 모달</td></tr>
+</table>
+<h4>B. 기본정보 섹션</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>관리자명</td><td>nill (닉네임) — 본인만 수정 가능</td></tr>
+<tr><td>이메일</td><td>nill@good-block.com (로그인 ID, 변경 불가)</td></tr>
+<tr><td>휴대전화</td><td>010-XXXX-XXXX (선택)</td></tr>
+<tr><td>회사·부서</td><td>(선택, 운영팀 정보)</td></tr>
+</table>
+<h4>C. 보안 정보 섹션</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>2FA 활성 상태</td><td>활성 / 비활성 (정책 명시 — 구현 시점 운영팀 결정)</td></tr>
+<tr><td>2FA 방식</td><td>TOTP (Google Authenticator·1Password 등) — 정책 정의만</td></tr>
+<tr><td>IP 화이트리스트</td><td>등록된 IP 목록 (SUPER 필수, OPERATOR/POLICY 권장)</td></tr>
+<tr><td>시간대 제한</td><td>EXTERNAL_ARTIST: 평일 09:00~22:00 KST (기본), SUPER 협의 가능</td></tr>
+</table>
+<h4>D. 활동 통계 섹션</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>총 로그인 횟수</td><td>N회</td></tr>
+<tr><td>본인 활동 로그</td><td>[활동 로그 보기] 버튼 → SYS-401 (필터: 본인)</td></tr>
+<tr><td>최근 30일 활동 건수</td><td>영역별 활동 카운트 (Quest 검수·BIVE 민팅·회원 제재 등)</td></tr>
+</table>
+<h3>2.3 액션 버튼 (우측 상단·하단)</h3>
+<table>
+<tr><th>버튼</th><th>호출</th><th>권한</th></tr>
+<tr><td>[수정하기]</td><td>[CEB-BO-SYS-101-Edit] (Phase 8 후속)</td><td>SUPER (전체) / 본인 (제한적 — 닉네임·휴대전화·2FA)</td></tr>
+<tr><td>[권한 그룹 변경]</td><td>권한 그룹 변경 모달 (Phase 8 후속)</td><td>SUPER 전용</td></tr>
+<tr><td>[만료 연장]</td><td>[CEB-BO-SYS-201-MD-EXTEND] (Phase 8 후속, EXTERNAL_ARTIST만)</td><td>SUPER 전용</td></tr>
+<tr><td>[세션 강제 종료]</td><td>즉시 세션 무효화</td><td>SUPER 전용</td></tr>
+<tr><td>[계정 잠금]</td><td>Active → Locked 전환 (재로그인 차단)</td><td>SUPER 전용</td></tr>
+<tr><td>[비활성화]</td><td>[CEB-BO-SYS-201-MD-REVOKE] (Phase 8 후속)</td><td>SUPER 전용</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 권한 그룹 변경</h3>
+<p>권한 그룹 변경 모달 (Phase 8 후속):</p>
+<ul>
+<li>현재 그룹 → 신규 그룹 선택 (Active 그룹만 노출)</li>
+<li>변경 사유 입력 (필수, 200자 KO)</li>
+<li>즉시 반영 + 활동 로그 + 회원 푸시 알림 (자기 권한 변경 안내)</li>
+</ul>
+<h3>3.2 만료 연장 (EXTERNAL_ARTIST)</h3>
+<p>[CEB-BO-000] §3.2: EXTERNAL_ARTIST는 만료일 필수. 기본 6개월, [만료 연장] 클릭 시 모달 → 신규 만료일 선택 + 사유 입력.</p>
+<h3>3.3 세션 강제 종료</h3>
+<ul>
+<li>[세션 강제 종료] 클릭 → 확인 모달</li>
+<li>즉시 세션 무효화 (해당 관리자는 다음 요청 시 로그아웃)</li>
+<li>활동 로그 기록 (사유 입력 필수)</li>
+</ul>
+<h3>3.4 계정 잠금·비활성화</h3>
+<table>
+<tr><th>액션</th><th>동작</th></tr>
+<tr><td>[계정 잠금]</td><td>Active → Locked. 재로그인 차단. SUPER 재승인 후 Active 복구 가능</td></tr>
+<tr><td>[비활성화]</td><td>Active → Inactive. 영구 차단. 활동 로그·권한 매핑은 보존 (감사용)</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한별 분기</h3>
+<p>[CEB-BO-005] §4 적용:</p>
+<table>
+<tr><th>권한</th><th>화면 진입</th><th>조회</th><th>[수정]</th><th>권한 그룹 변경</th><th>만료 연장</th><th>세션 종료·잠금·비활성</th></tr>
+<tr><td>SUPER</td><td>✅ (전체)</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅ (자기 정보만)</td><td>✅</td><td>✅ (제한적)</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>POLICY</td><td>✅ (자기 정보만)</td><td>✅</td><td>✅ (제한적)</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>✅ (자기 정보만)</td><td>✅</td><td>✅ (제한적)</td><td>❌</td><td>❌</td><td>❌</td></tr>
+</table>
+<blockquote>
+<p>자기 정보 수정 범위: 닉네임·휴대전화·2FA 설정·비밀번호 변경. 권한·만료·IP 화이트리스트는 SUPER만.</p>
+</blockquote>
+<h3>4.2 2FA 정책 정의 (구현은 후속)</h3>
+<table>
+<tr><th>권한</th><th>2FA 정책</th></tr>
+<tr><td>SUPER</td><td><strong>필수</strong> + IP 화이트리스트 + 90일 비밀번호 변경 강제</td></tr>
+<tr><td>OPERATOR</td><td><strong>양의 권장</strong> (운영팀 결정 시 강제 가능)</td></tr>
+<tr><td>POLICY</td><td>권장</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td><strong>필수</strong> + 시간대 제한 + 6개월 만료</td></tr>
+</table>
+<blockquote>
+<p>구현 시점은 운영팀 결정. 본 v1.0 명세는 정책만 정의 (사용자 결정 2026-05-06).</p>
+</blockquote>
+<h3>4.3 90일 비활성 자동 잠금 ([CEB-BO-000] §3.2)</h3>
+<ul>
+<li>90일 미접속 → Active → Locked 자동 전환</li>
+<li>활동 로그 기록 (시스템 자동)</li>
+<li>SUPER 재승인 시 Active 복구</li>
+</ul>
+<h3>4.4 EXTERNAL_ARTIST 만료 정책</h3>
+<ul>
+<li>등록 시 만료일 필수 (기본 6개월)</li>
+<li>만료 7일 전 → SUPER + 본인에게 푸시 알림</li>
+<li>만료 시 자동 Inactive 전환</li>
+<li>[만료 연장]으로 갱신 가능</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>정보 그리드 Skeleton</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Error</td><td>"관리자 정보를 불러오지 못했습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>[CEB-BO-005] §6 적용. 본 화면 진입(조회)은 로그 미기록 (자기 정보 조회 제외). 액션 시:</p>
+<table>
+<tr><th>액션</th><th>로그 메시지 (KO)</th><th>권한</th></tr>
+<tr><td>권한 그룹 변경</td><td>관리자 '{닉네임}' 권한을 '{기존}' → '{신규}'로 변경했습니다. (사유: {요약})</td><td>SUPER</td></tr>
+<tr><td>만료일 연장</td><td>관리자 '{닉네임}' 만료일을 '{기존}' → '{신규}'로 연장했습니다. (사유: {요약})</td><td>SUPER</td></tr>
+<tr><td>세션 강제 종료</td><td>관리자 '{닉네임}' 세션을 강제 종료했습니다. (사유: {요약})</td><td>SUPER</td></tr>
+<tr><td>계정 잠금</td><td>관리자 '{닉네임}' 계정을 잠금 처리했습니다. (사유: {요약})</td><td>SUPER</td></tr>
+<tr><td>비활성화</td><td>관리자 '{닉네임}' 계정을 비활성화했습니다. (사유: {요약})</td><td>SUPER</td></tr>
+<tr><td>자기 정보 수정 (닉네임 등)</td><td>관리자 '{닉네임}' 본인 정보를 수정했습니다. (변경: {필드})</td><td>본인</td></tr>
+<tr><td>비밀번호 변경</td><td>관리자 '{닉네임}' 비밀번호를 변경했습니다.</td><td>본인</td></tr>
+<tr><td>2FA 활성/비활성</td><td>관리자 '{닉네임}' 2FA를 {활성/비활성}했습니다.</td><td>본인 (또는 SUPER 강제)</td></tr>
+</table>
+<p>3년 보관, append-only ([CEB-BO-000] §6).</p>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>관리자 미존재 (URL 직접 접근)</td><td>Toast (Error): "존재하지 않는 관리자입니다." → [CEB-BO-SYS-101] 리다이렉트</td></tr>
+<tr><td>권한 부족 (자기 정보 외 진입)</td><td>서버 차단 + Toast (Error): "접근 권한이 없습니다."</td></tr>
+<tr><td>자기 정보 - SUPER 액션 시도</td><td>UI 차단 + 안내</td></tr>
+<tr><td>Pending 상태 - 액션 시도</td><td>Toast (Info): "초대 인증 완료 후 액션이 가능합니다." [초대 재발송] 버튼만 노출</td></tr>
+<tr><td>동시 수정 충돌</td><td>Toast (Warning): "다른 SUPER가 먼저 수정했습니다. 새로고침 후 다시 시도해주세요."</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-SYS-101</td><td>관리자 리스트</td><td>상위</td></tr>
+<tr><td>CEB-BO-SYS-101-Edit</td><td>관리자 정보 수정</td><td>하위 ([수정하기]) — Phase 8 후속</td></tr>
+<tr><td>CEB-BO-SYS-201-MD-EXTEND</td><td>만료 연장 모달</td><td>하위 — Phase 8 후속</td></tr>
+<tr><td>CEB-BO-SYS-201-MD-REVOKE</td><td>권한 회수·잠금 모달</td><td>하위 — Phase 8 후속</td></tr>
+<tr><td>CEB-BO-SYS-202</td><td>권한 그룹 상세</td><td>데이터 소스</td></tr>
+<tr><td>CEB-BO-SYS-401</td><td>활동 로그</td><td>본인 활동 필터 — Phase 8 후속</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 8 신규 작성. ① 4섹션 정보 그리드 (관리정보/기본정보/보안 정보/활동 통계) ② 권한별 분기 — SUPER 전체, 본인은 자기 정보만 ③ <strong>2FA 정책 정의</strong> §4.2 (사용자 결정: 구현 시점 후속) — SUPER/EXTERNAL_ARTIST 필수, OPERATOR 권장 ④ 90일 자동 잠금 정책 §4.3 ⑤ EXTERNAL_ARTIST 6개월 만료·연장 정책 §4.4 ⑥ 활동 로그 §6 (8종 액션 별도 행) ⑦ 자기 정보 수정 범위 명시 (닉네임/휴대전화/2FA/비밀번호) ⑧ Pending 상태 액션 차단</td></tr>
+</table>
+
+</body>
+</html>

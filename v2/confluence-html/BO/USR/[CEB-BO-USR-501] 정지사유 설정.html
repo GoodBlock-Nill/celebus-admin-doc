@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-USR-501] 정지사유 설정</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-USR-501] 정지사유 설정</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-USR-501</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>USR — 회원 제재 정책</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.07</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 회원 > 정지사유 설정</td></tr>
+<tr><td>비고</td><td>v1.1: 멀티아티스트 정책 반영 — <strong>전역 단일 + 발견 컨텍스트 메타</strong> ([CEB-BO-100] v1.2 §3 결정사항 ① 적용). 사유 마스터는 분기 없음(전역). 정지 처리 시 <code>discoveryContext</code>(발견 아티스트 ID) 메타 기록으로 통계·감사 가능. v1.0: Phase 6 신규 작성. 분석 리포트 [CEB-BO-001-A] §3.2.1 발견. v2 가이드 [CEB-BO-002] §7.3 회원 제재 정책 참조.</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한(§3·§4), 다국어(§5), 활동 로그(§6), UI 상태(§7), 회원 제재(§14)</td></tr>
+<tr><td>[CEB-BO-002] 회원(USR) 영역 가이드</td><td>권한 매트릭스(§4), 활동 로그(§6), 회원 제재 정책(§7.3)</td></tr>
+<tr><td>[CEB-BO-100] 멀티아티스트 운영 가이드</td><td><strong>§3 정지사유 = 전역 단일 + 발견 컨텍스트 메타</strong> (v1.1 결정 ①). §3.2 결정 변경 근거. ⚪ None 등급</td></tr>
+<tr><td>[CEB-BO-FQ-101-REJETSET] 팬퀘스트 반려사유 설정</td><td>유사 패턴(코드·다국어·상태 정책) — 참조 모델</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>회원 제재 처리 시 운영자가 선택할 <strong>정지사유 데이터베이스</strong>를 통합 관리. [CEB-BO-FQ-101-REJETSET] 의 패턴을 회원 제재용으로 변형 — 코드(<code>SUS_{n}</code>)로 정규화하여 일관된 회원 안내 메시지 보장.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>정지사유 리스트 조회 (운영자 노출명 + 코드 + 상태 + 사용 횟수)</li>
+<li>상태 필터 (사용/미사용)</li>
+<li>신규 정지사유 추가</li>
+<li>기존 정지사유 수정</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-USR-101] 회원 리스트 > [정지사유 설정] 버튼 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 네비게이션</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 회원 > 정지사유 설정</code></li>
+<li>화면 타이틀: 정지사유 설정</li>
+</ul>
+<h3>2.2 검색·필터·액션 영역</h3>
+<table>
+<tr><th>구분</th><th>요소명</th><th>타입</th><th>설명</th></tr>
+<tr><td>필터</td><td>상태</td><td>Dropdown</td><td>전체 (Default) / 사용 (Active) / 미사용 (Inactive)</td></tr>
+<tr><td>버튼</td><td>+ 새 사유 추가</td><td>Primary Button</td><td>신규 정지사유 등록 모달 (Phase 6 후속 — <code>[CEB-BO-USR-501-MD-ADD]</code>)</td></tr>
+</table>
+<h3>2.3 목록 영역 (List Table)</h3>
+<table>
+<tr><th>컬럼명</th><th>데이터 예시</th><th>설명</th></tr>
+<tr><td>상태</td><td>사용 (Green) / 미사용 (Gray)</td><td>Badge</td></tr>
+<tr><td>코드</td><td>SUS_0001</td><td>자동 채번 (<code>SUS_{n}</code> 4자리)</td></tr>
+<tr><td>운영자 노출명</td><td>"어뷰징 의심 행위" / "약관 위반"</td><td>KO 단일, 30자</td></tr>
+<tr><td>적용 가능 단계</td><td>경고 / 부분정지 / 1·7일 / 30·90일 / 영구</td><td>[CEB-BO-002] §7.3 제재 단계 매핑 (다중 선택 가능)</td></tr>
+<tr><td>사용 횟수</td><td>12건</td><td>해당 사유로 처리된 누적 제재 건수 (read-only)</td></tr>
+<tr><td>최근 사용일시</td><td>2026.05.04 14:30</td><td>YYYY.MM.DD HH:mm KST</td></tr>
+<tr><td>등록일시</td><td>2026.02.10 09:48</td><td>등록 일시</td></tr>
+</table>
+<ul>
+<li>Row Click → 정지사유 수정 모달 (Phase 6 후속 — <code>[CEB-BO-USR-501-MD-EDIT]</code>)</li>
+<li>페이지네이션: 하단 중앙 10건 단위</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 버튼 동작</h3>
+<table>
+<tr><th>버튼</th><th>동작</th><th>권한</th></tr>
+<tr><td>[+ 새 사유 추가]</td><td>정지사유 추가 모달 호출 (Phase 6 후속)</td><td>SUPER/OPERATOR</td></tr>
+</table>
+<h3>3.2 네비게이션</h3>
+<ul>
+<li>Row 클릭 → 정지사유 수정 모달 호출</li>
+</ul>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한별 분기</h3>
+<p>[CEB-BO-002] §4 적용:</p>
+<table>
+<tr><th>권한</th><th>화면 진입</th><th>조회</th><th>[+ 새 사유 추가]</th><th>Row 클릭 (수정)</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅ (조회 전용)</td><td>❌</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>❌</td><td>—</td><td>—</td><td>—</td></tr>
+</table>
+<h3>4.2 정렬</h3>
+<table>
+<tr><th>기준</th><th>방식</th></tr>
+<tr><td>등록일시</td><td>내림차순 (최신순)</td></tr>
+</table>
+<h3>4.3 상태 정의</h3>
+<p>[CEB-BO-002] §7.3 적용 ([CEB-BO-FQ-101-REJETSET] 와 동일 패턴):</p>
+<table>
+<tr><th>상태</th><th>의미</th></tr>
+<tr><td>사용 (Active)</td><td>[CEB-BO-USR-201-MD-SANCTION] 제재 모달의 사유 목록에 노출</td></tr>
+<tr><td>미사용 (Inactive)</td><td>제재 모달에 미노출. 과거 제재 건은 영향 없음</td></tr>
+</table>
+<h3>4.4 코드 표준</h3>
+<ul>
+<li>자동 채번: <code>SUS_{n}</code> (4자리)</li>
+<li>코드 변경 불가 (NFT 메타데이터 일관성과 동일 원칙)</li>
+<li>메시지(다국어)·운영자 노출명·상태는 변경 가능 (신규 제재부터 적용)</li>
+</ul>
+<h3>4.5 적용 가능 단계 매핑</h3>
+<p>[CEB-BO-002] §7.3 회원 제재 단계와 사유의 매핑:</p>
+<table>
+<tr><th>사유 예시</th><th>적용 가능 단계</th></tr>
+<tr><td>"약관 단순 위반 (경미)"</td><td>경고만</td></tr>
+<tr><td>"약관 반복 위반"</td><td>경고 / 부분정지 / 1·7일 정지</td></tr>
+<tr><td>"어뷰징 의심"</td><td>1·7일 / 30·90일 정지 (SUPER)</td></tr>
+<tr><td>"심각한 위반·다중 계정"</td><td>영구 정지 (SUPER) / 당첨 취소 (SUPER)</td></tr>
+</table>
+<p>각 사유는 <strong>다중 단계</strong> 적용 가능하도록 체크박스로 설정.</p>
+<h3>4.6 회원 알림 메시지 (다국어)</h3>
+<p>[CEB-BO-002] §5 적용. 사유별 KO/EN/JP 3언어 메시지 입력. 회원 제재 시 회원 언어 설정 우선 안내.</p>
+<h3>4.7 멀티아티스트 정책 — 전역 단일 + 발견 컨텍스트 메타 ⭐ v1.1 신규</h3>
+<p>본 마스터는 [CEB-BO-100] §3 결정 ①에 따라 <strong>전역 단일</strong>로 운영한다. 아티스트별 분리하지 않는다.</p>
+<h4>4.7.1 결정 근거</h4>
+<table>
+<tr><th>검토 관점</th><th>채택</th></tr>
+<tr><td>정지사유 본질</td><td>회원 행동 판정 (욕설·도배·악성 활동 등) — 회원 단위</td></tr>
+<tr><td>식별 일관성</td><td>같은 위반 1개 코드로 통합 통계</td></tr>
+<tr><td>운영 복잡도</td><td>단일 마스터 — 1벌만 관리</td></tr>
+<tr><td>차별 룰 실수요</td><td>거의 없음 (대부분 위반은 공통 카테고리)</td></tr>
+<tr><td>결과</td><td><strong>전역 단일 채택</strong> ([CEB-BO-100] §3.2 v1.0 → v1.1 변경 근거 인용)</td></tr>
+</table>
+<h4>4.7.2 발견 컨텍스트 메타</h4>
+<p>정지 처리 시점에 어느 아티스트 활동 중 발견되었는지 메타로 기록 → 통계·감사 가능.</p>
+<table>
+<tr><th>필드</th><th>타입</th><th>설명</th></tr>
+<tr><td><code>discoveryContext</code></td><td>ID NULL</td><td>발견 컨텍스트 — 아티스트 그룹 ID 또는 NULL(전역 활동 중)</td></tr>
+<tr><td><code>discoveredFeature</code></td><td>enum</td><td><code>FANQUEST</code> / <code>RAFFLE</code> / <code>MEM</code> / <code>INF_COMMENT</code> / <code>SUPPORT</code> / <code>OTHER</code></td></tr>
+</table>
+<blockquote>
+<p>메타는 본 화면(사유 마스터)에서는 입력하지 않는다. <strong>회원 제재 처리 화면</strong>([CEB-BO-USR-201-MD-SANCTION])에서 운영자가 정지 처리 시 함께 입력한다.</p>
+</blockquote>
+<h4>4.7.3 발견 컨텍스트별 통계</h4>
+<p>본 화면 §2.3 테이블의 "사용 횟수" 컬럼은 발견 컨텍스트별로도 분리 통계 가능 (Phase 2+ 추가):</p>
+<ul>
+<li>컬럼 추가 옵션: 사용 횟수 (V01D 출처 / iKON 출처 / 전역 출처)</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>테이블 row Skeleton</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Empty (전체 0건)</td><td>"등록된 정지사유가 없습니다. [+ 새 사유 추가] 버튼으로 시작해주세요."</td></tr>
+<tr><td>Empty (필터 0건)</td><td>"해당 상태의 정지사유가 없습니다."</td></tr>
+<tr><td>Error</td><td>"정지사유 목록 조회에 실패하였습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>[CEB-BO-002] §6 적용. 본 화면(목록 조회)은 로그 미기록. 액션은 추가/수정 모달에서 발생:</p>
+<table>
+<tr><th>액션</th><th>로그 메시지 (KO)</th><th>권한</th></tr>
+<tr><td>정지사유 등록</td><td>정지사유 '{명칭}'을(를) 등록했습니다. (코드: {SUS_*}, 적용 단계: {단계 목록})</td><td>SUPER/OPERATOR</td></tr>
+<tr><td>정지사유 수정</td><td>정지사유 '{명칭}'의 메시지를 수정했습니다. (코드: {SUS_*})</td><td>SUPER/OPERATOR</td></tr>
+<tr><td>정지사유 상태 변경</td><td>정지사유 '{명칭}'의 상태를 {신규상태}(으)로 변경했습니다. (코드: {SUS_*})</td><td>SUPER/OPERATOR</td></tr>
+</table>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>검색 결과 없음</td><td>Empty 메시지 (§5)</td></tr>
+<tr><td>목록 조회 실패</td><td>Toast (Error): "정지사유 목록 조회에 실패하였습니다." + [재시도]</td></tr>
+<tr><td>권한 부족</td><td>Toast (Error): "정지사유 설정 권한이 없습니다." (POLICY)</td></tr>
+</table>
+<hr>
+<h2>8. 운영 검증 (분석 리포트 [CEB-BO-001-A] §3.2.1)</h2>
+<p>2026-05-05 운영 환경:</p>
+<ul>
+<li>URL: <code>/members/suspension-reasons</code> 메뉴 존재</li>
+<li>v2 가이드 BO-002 v1.0에서는 미정의 → 본 명세서 (v1.0)에서 [CEB-BO-USR-501]로 신규 정의</li>
+<li>운영 데이터: (확인 필요 — 회원 정지 0건이므로 사유 등록 미확인)</li>
+</ul>
+<hr>
+<h2>9. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-USR-101</td><td>회원 리스트</td><td>상위</td></tr>
+<tr><td>CEB-BO-USR-201-MD-SANCTION</td><td>회원 제재 모달</td><td>사용처 (제재 시 본 DB 참조)</td></tr>
+<tr><td>CEB-BO-USR-501-MD-ADD</td><td>정지사유 추가 모달</td><td>하위 (Phase 6 후속)</td></tr>
+<tr><td>CEB-BO-USR-501-MD-EDIT</td><td>정지사유 수정 모달</td><td>하위 (Phase 6 후속)</td></tr>
+<tr><td>CEB-BO-FQ-101-REJETSET</td><td>팬퀘스트 반려사유 설정</td><td>자매 패턴 (코드·다국어·상태 정책 동일)</td></tr>
+</table>
+<hr>
+<h2>10. v1 → v2 변경 사항</h2>
+<table>
+<tr><th>항목</th><th>v1 BO-002 v1.0</th><th>v2 BO-002 v1.1 (본 명세)</th></tr>
+<tr><td>정지사유 설정 화면</td><td>미정의</td><td><strong>신규 정의 — CEB-BO-USR-501</strong></td></tr>
+<tr><td>코드 형식</td><td>미명시</td><td><code>SUS_{n}</code> 자동 채번</td></tr>
+<tr><td>적용 가능 단계 매핑</td><td>미명시</td><td>다중 단계 체크박스</td></tr>
+<tr><td>다국어 메시지</td><td>미명시</td><td>KO/EN/JP 3언어 ([CEB-BO-002] §5)</td></tr>
+</table>
+<hr>
+<h2>11. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026.05.06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 6 신규 작성. ① 분석 리포트 §3.2.1 발견 (<code>/members/suspension-reasons</code> 운영 메뉴 존재) → v2 정식 정의 ② [CEB-BO-FQ-101-REJETSET] 패턴 차용 — 코드 <code>SUS_{n}</code> 자동 채번, 상태 Active/Inactive ③ 적용 가능 단계 매핑 (다중 단계 체크박스) ④ 회원 다국어 알림 메시지 (KO/EN/JP) ⑤ 권한 4단계 (POLICY 조회만 / EXTERNAL_ARTIST 차단) ⑥ 활동 로그 §6 ⑦ Phase 6 후속: USR-501-MD-ADD / MD-EDIT 모달 정의</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026.05.07</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>멀티아티스트 정책 반영</strong> ([CEB-BO-100] v1.2 §3 결정사항 ①). ① §0 공통 정책 참조에 [CEB-BO-100] 추가 ② §4.7 멀티아티스트 정책 신설 — 전역 단일 + 발견 컨텍스트 메타 ③ 결정 근거 표 ([CEB-BO-100] §3.2 인용) ④ 발견 컨텍스트 메타 필드 정의 (<code>discoveryContext</code>, <code>discoveredFeature</code>) ⑤ Phase 2+ 발견 컨텍스트별 통계 컬럼 옵션 명시. 사유 마스터 자체는 분기 없음 (전역 단일). 정지 처리 시점에 메타 기록은 [CEB-BO-USR-201-MD-SANCTION]에서 진행.</td></tr>
+</table>
+
+</body>
+</html>

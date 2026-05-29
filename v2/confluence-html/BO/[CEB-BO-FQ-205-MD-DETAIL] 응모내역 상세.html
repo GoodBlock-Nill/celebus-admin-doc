@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-205-MD-DETAIL] 응모내역 상세</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-205-MD-DETAIL] 응모내역 상세</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-FQ-205-MD-DETAIL</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트) — Raffle 응모</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.05</td></tr>
+<tr><td>Breadcrumb</td><td>(해당 없음 — 모달)</td></tr>
+<tr><td>비고</td><td>v1 BO-FQ/[CEB-BO-FQ-205-MD-DETAIL] v1.1 → v2 정책 호환 갱신</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>모달 패턴(§9), UI 상태(§7)</td></tr>
+<tr><td>[CEB-BO-006] Quest·Raffle(FQ) 영역 가이드</td><td>권한(§4), 응모권 거래(§7.6)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>특정 유저의 시계열 응모 이력 조회. CS 대응·어뷰징 분석 활용. 응모권 사용 누적 검증.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-205] 응모내역 탭 > Row 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>모달 구조</h3>
+<table>
+<tr><th>영역</th><th>내용</th></tr>
+<tr><td>타이틀</td><td>"응모내역 상세"</td></tr>
+<tr><td>닫기 버튼 (X)</td><td>우측 상단</td></tr>
+</table>
+<h3>참여자 정보 (상단)</h3>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>닉네임</td><td>{유저닉네임}</td></tr>
+<tr><td>전화번호</td><td>821012345678 (국가코드 포함, [CEB-BO-006] §7.5 표준)</td></tr>
+<tr><td>누적 사용 응모권</td><td>10 (해당 Raffle 누적)</td></tr>
+</table>
+<h3>응모 이력 리스트</h3>
+<table>
+<tr><th>컬럼</th><th>설명</th></tr>
+<tr><td>사용 응모권</td><td>해당 회차에 사용한 응모권 수량</td></tr>
+<tr><td>응모일시</td><td>응모 서버 시간 (YYYY.MM.DD HH:mm KST)</td></tr>
+</table>
+<ul>
+<li>정렬: 최근 응모 순 (내림차순)</li>
+<li>페이지네이션: 한 페이지 10건. 모달 내부에서만 동작 (재진입 시 1페이지 초기화)</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>버튼</th><th>동작</th></tr>
+<tr><td>[X] 닫기</td><td>모달 닫기, 응모내역 목록으로 복귀</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한 검증</h3>
+<p>호출자([CEB-BO-FQ-205]) 권한 위임. 별도 검증 없음.</p>
+<h3>4.2 데이터 바인딩</h3>
+<ul>
+<li>[CEB-BO-FQ-205] 클릭 유저 ID 기준 응모 로그 테이블 조회</li>
+<li>누적 합계 검증: 리스트 합 = 상단 누적 사용 응모권 (불일치 시 백엔드 데이터 정합성 이슈)</li>
+</ul>
+<h3>4.3 응모권 거래 코드 연동</h3>
+<p>각 응모 행은 <code>TICKET_RAFFLE_USE</code> 거래 로그와 1:1 매핑 ([CEB-BO-006] §7.6).</p>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>테이블 row Skeleton</td></tr>
+<tr><td>Default</td><td>정상</td></tr>
+<tr><td>Empty</td><td>"응모 이력이 없습니다." (예외 케이스)</td></tr>
+<tr><td>Error</td><td>"데이터를 불러오지 못했습니다."</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>본 모달(조회)은 로그 미기록.</p>
+<hr>
+<h2>7. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-FQ-205</td><td>Raffle 상세 (응모내역 탭)</td><td>상위 (모달 호출처)</td></tr>
+</table>
+<hr>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2025.12.09</td><td>@Nill Yoo</td><td>(v1) 초안 작성</td></tr>
+<tr><td>v1.1</td><td>2026.03.24</td><td>@Nill Yoo</td><td>(v1) 상태 표기 한글화</td></tr>
+<tr><td><strong>v2.0</strong></td><td><strong>2026.05.05</strong></td><td><strong>@Nill Yoo</strong></td><td>v2 정책 호환 갱신. ① 공통 정책 참조 ② 응모권 거래 코드 §7.6 매핑 명시 ③ 누적 합계 검증 정책 ④ v1 deprecation 동시 진행</td></tr>
+</table>
+
+</body>
+</html>

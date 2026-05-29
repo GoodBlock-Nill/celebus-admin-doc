@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-501] 일일 미션 관리</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-501] 일일 미션 관리</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-FQ-501</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>FQ — 일일 미션</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 팬퀘스트 > 일일 미션</td></tr>
+<tr><td>비고</td><td>Phase 12 신규. APP [CEB-FQ-501] 일일 미션 (v2.2) 대응 BO 운영 화면. [CEB-BO-006] 가이드 참조</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000]</td><td>권한, 다국어, 미디어, 활동 로그</td></tr>
+<tr><td>[CEB-BO-006]</td><td>FQ 영역 정책, 응모권 9종 거래 코드</td></tr>
+<tr><td>[CEB-BO-DUK-000]</td><td>DUK 거래 코드 14종, 일·주 캡 정책</td></tr>
+</table>
+<blockquote>
+<p>APP 대응 화면: [CEB-FQ-501] 일일 미션 (v2.2). 출석 5DUK + 일일 미션 일괄 25DUK + 스트릭 보너스 4단계 (7/14/30/100일).</p>
+</blockquote>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>APP 일일 미션 화면([CEB-FQ-501])의 운영 관리. 미션 풀 8종 CRUD, 보상량 정책 설정, 스트릭 보너스 정책, 일·주 캡 관리, 회원별 미션 회수·재지급.</p>
+<p><strong>핵심 운영 항목</strong>:</p>
+<ul>
+<li>미션 풀 8종 등록·수정·삭제 (텍스트·아이콘·딥링크)</li>
+<li>출석 보상 / 일일 미션 일괄 보상 / 스트릭 4단계 보상량 설정</li>
+<li>일 500DUK · 주 3,000DUK 상한 정책</li>
+<li>푸시 알림 시각·문구 설정 (23:00 KST 스트릭 끊김 알림)</li>
+<li>회원별 미션 회수·재지급 (이슈 발생 시)</li>
+<li>활동 로그·통계</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 헤더</h3>
+<ul>
+<li>Breadcrumb + [+ 미션 등록] (OPERATOR/SUPER)</li>
+<li>액션: [정책 설정] / [통계 조회]</li>
+</ul>
+<h3>2.2 탭 메뉴 (3탭)</h3>
+<table>
+<tr><th>탭</th><th>URL</th><th>설명</th></tr>
+<tr><td>미션 풀</td><td><code>?tab=pool</code></td><td>8종 미션 CRUD (기본)</td></tr>
+<tr><td>정책 설정</td><td><code>?tab=policy</code></td><td>보상량·캡·스트릭·푸시</td></tr>
+<tr><td>통계·로그</td><td><code>?tab=stats</code></td><td>회원별 스트릭·달성률·활동 로그</td></tr>
+</table>
+<h3>2.3 [미션 풀] 탭</h3>
+<h4>A. 미션 풀 리스트 (테이블)</h4>
+<table>
+<tr><th>컬럼</th><th>설명</th></tr>
+<tr><td>정렬 핸들</td><td>드래그 (선택 우선순위 영향 없음, 운영자 시각 정렬용)</td></tr>
+<tr><td>상태</td><td>Active / Inactive</td></tr>
+<tr><td>미션 코드</td><td><code>MISSION_{slug}</code> 자동 채번 (예: <code>MISSION_VOID_VISIT</code>)</td></tr>
+<tr><td>미션명 (KO/EN/JP)</td><td>다국어 필수, 30자</td></tr>
+<tr><td>설명 (KO/EN/JP)</td><td>선택, 80자</td></tr>
+<tr><td>아이콘</td><td>권장 200x200, 최대 5MB</td></tr>
+<tr><td>딥링크</td><td>내부 영역 선택 (BIVE/Quest/Raffle/소식/EVT 등) — [CEB-BO-APP-201] §E 참조</td></tr>
+<tr><td>완료 조건</td><td>진입 1회 (현재 표준) — 향후 API 연동형 확장 가능</td></tr>
+<tr><td>등록일</td><td>KST</td></tr>
+<tr><td>액션</td><td>[수정] / [활성화·비활성화] / [삭제]</td></tr>
+</table>
+<ul>
+<li>Row 클릭 → 미션 상세·수정 모달</li>
+<li>활성 미션 = 일일 선택 풀에 포함</li>
+</ul>
+<h4>B. 미션 선택 규칙 (상단 안내)</h4>
+<table>
+<tr><th>규칙</th><th>설명</th></tr>
+<tr><td>일일 선택</td><td>활성 미션 풀에서 시스템이 매일 1건 자동 선택 (00:00 KST)</td></tr>
+<tr><td>중복 방지</td><td>전일 선택 미션 회피 (풀 ≥ 2건 시)</td></tr>
+<tr><td>Coming Soon</td><td>딥링크 대상이 미오픈 상태면 자동 제외</td></tr>
+<tr><td>풀 0건</td><td>카드 자체 숨김 (출석 체크만 표시) — APP 측 자동 처리</td></tr>
+<tr><td>향후 확장</td><td>1일 다건 (BO에서 정책 추가 시)</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<h3>2.4 [정책 설정] 탭</h3>
+<h4>A. 보상량</h4>
+<table>
+<tr><th>항목</th><th>기본값</th><th>단위</th><th>비고</th></tr>
+<tr><td>출석 보상</td><td>5</td><td>DUK (T1)</td><td>APP <code>[FQ-501] §2.2</code></td></tr>
+<tr><td>일일 미션 일괄 보상</td><td>25</td><td>DUK (T2)</td><td>모든 미션 완료 시 일괄 지급. APP <code>[FQ-501] §2.3</code></td></tr>
+<tr><td>스트릭 7일 보너스</td><td>200</td><td>DUK</td><td>1회성</td></tr>
+<tr><td>스트릭 14일 보너스</td><td>500</td><td>DUK</td><td>1회성</td></tr>
+<tr><td>스트릭 30일 보너스</td><td>1,000</td><td>DUK</td><td>1회성</td></tr>
+<tr><td>스트릭 100일 보너스</td><td>5,000</td><td>DUK</td><td>1회성</td></tr>
+</table>
+<blockquote>
+<p>모든 값은 BO 자유 변경 가능. 변경 시 활동 로그 + 변경일 이후 신규 적립 분에만 적용.</p>
+</blockquote>
+<h4>B. 일·주 캡 ([CEB-BO-DUK-000] §캡 정책)</h4>
+<table>
+<tr><th>항목</th><th>기본값</th><th>비고</th></tr>
+<tr><td>일일 캡</td><td>500 DUK / 일 / 회원</td><td>출석·미션·기타 적립 출처 합산</td></tr>
+<tr><td>주간 캡</td><td>3,000 DUK / 주 / 회원</td><td>월요일 00:00 KST 시작</td></tr>
+<tr><td>캡 초과 처리</td><td>적립 시도는 성공으로 응답하나 적립량 0</td><td>회원에게 안내 토스트 (APP 책임)</td></tr>
+</table>
+<h4>C. 푸시 알림</h4>
+<table>
+<tr><th>항목</th><th>기본</th><th>설정 가능</th></tr>
+<tr><td>스트릭 끊김 안내</td><td>23:00 KST</td><td>시각·문구 BO 변경 가능</td></tr>
+<tr><td>문구 (KO)</td><td>"오늘 출석 체크를 아직 안 했어요! 스트릭 {N}일째 🔥"</td><td>다국어 KO/EN/JP</td></tr>
+</table>
+<h4>D. 시간 기준</h4>
+<ul>
+<li>하루 기준: 00:00~23:59 KST (고정)</li>
+<li>자정 리셋 (출석·미션 초기화)</li>
+<li>스트릭은 시즌 정산과 무관 ([CEB-BO-DUK-000] §시즌 라이프사이클)</li>
+</ul>
+<h3>2.5 [통계·로그] 탭</h3>
+<h4>A. 대시보드 (5카드)</h4>
+<table>
+<tr><th>카드</th><th>지표</th></tr>
+<tr><td>오늘 출석 회원 수</td><td>/ 활성 회원 (비율)</td></tr>
+<tr><td>오늘 미션 완료 회원 수</td><td>/ 활성 회원 (비율)</td></tr>
+<tr><td>평균 스트릭</td><td>활성 회원의 평균 연속일</td></tr>
+<tr><td>7일 보너스 달성 회원</td><td>누적 (1회성이므로 누적 해석)</td></tr>
+<tr><td>100일 보너스 달성 회원</td><td>누적</td></tr>
+</table>
+<h4>B. 회원별 스트릭 리스트</h4>
+<table>
+<tr><th>컬럼</th><th>설명</th></tr>
+<tr><td>닉네임</td><td></td></tr>
+<tr><td>현재 스트릭 일수</td><td></td></tr>
+<tr><td>최고 스트릭</td><td>역대 최고</td></tr>
+<tr><td>7/14/30/100일 보너스 수령 여부</td><td>4개 체크</td></tr>
+<tr><td>마지막 출석</td><td>KST</td></tr>
+<tr><td>액션</td><td>[회원 상세] (USR-201) / [수동 회수] (운영 보정 시)</td></tr>
+</table>
+<h4>C. 활동 로그</h4>
+<table>
+<tr><th>액션</th><th>메시지</th></tr>
+<tr><td>미션 등록</td><td>일일 미션 풀 '{미션명}' 등록 (코드: {코드}, 딥링크: {영역})</td></tr>
+<tr><td>미션 수정</td><td>'{미션명}' 수정 (변경: {필드})</td></tr>
+<tr><td>미션 비활성화</td><td>'{미션명}' 비활성화</td></tr>
+<tr><td>미션 삭제</td><td>'{미션명}' 삭제</td></tr>
+<tr><td>보상 정책 변경</td><td>보상 정책 변경 ({항목}: {기존} → {신규}) — POLICY</td></tr>
+<tr><td>캡 변경</td><td>캡 변경 (일·주: {기존} → {신규}) — POLICY</td></tr>
+<tr><td>푸시 시각 변경</td><td>푸시 알림 시각 변경 ({기존} → {신규})</td></tr>
+<tr><td>회원 보정 적립</td><td>회원 '{닉네임}'에게 일일 미션 보상 {N}DUK 보정 적립 (사유: {요약})</td></tr>
+<tr><td>회원 회수</td><td>회원 '{닉네임}'의 일일 미션 보상 {N}DUK 회수 (사유: {요약})</td></tr>
+</table>
+<hr>
+<h2>3. 규칙·로직</h2>
+<h3>3.1 권한별 분기</h3>
+<table>
+<tr><th>권한</th><th>진입</th><th>미션 풀 R/W/D</th><th>정책 설정 R/W</th><th>통계 R</th><th>회원 보정 W</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅ (R/W)</td><td>❌ (R)</td><td>✅</td><td>✅</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅ (R)</td><td>✅ (R/W)</td><td>✅</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>❌</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</table>
+<blockquote>
+<p>보상량·캡·스트릭 정책은 POLICY 권한 전용 (OPERATOR는 조회만).</p>
+</blockquote>
+<h3>3.2 미션 풀 활성화 정책</h3>
+<ul>
+<li>활성 미션 ≥ 1건 필요 (0건이면 APP 카드 숨김)</li>
+<li>비활성 전환 시 당일 이미 선택된 미션은 유지, 익일부터 풀 제외</li>
+<li>삭제 시 활동 로그 보관, 회원 데이터에는 영향 없음 (이미 적립된 DUK 유지)</li>
+</ul>
+<h3>3.3 보상 정책 변경 트랜잭션</h3>
+<ol>
+<li>POLICY가 보상량 변경 → 활동 로그 기록</li>
+<li>변경 시점 이후 발생하는 적립부터 신규 값 적용</li>
+<li>이미 지급된 DUK는 회수하지 않음 (회수가 필요하면 회원 보정 별도 사용)</li>
+</ol>
+<h3>3.4 회원 보정 적립·회수</h3>
+<ul>
+<li>OPERATOR/SUPER가 [회원 상세 → 수동 보정] 클릭</li>
+<li>사유 입력 필수 (200자, KO)</li>
+<li>일·주 캡 영향 없음 (보정은 캡 우회)</li>
+<li>DUK 거래 코드: <code>DUK_OPERATIONAL_ADJUST</code> ([CEB-BO-DUK-000] §운영 2종)</li>
+</ul>
+<h3>3.5 스트릭 보너스 1회성 정책</h3>
+<ul>
+<li>7/14/30/100일 보너스는 회원당 각 1회만 지급</li>
+<li>시즌 변경에도 보상 이력은 유지 (스트릭은 회원 계정 단위)</li>
+<li>4개 마일스톤 모두 달성 후 추가 마일스톤은 BO에서 정책 추가 시 적용</li>
+</ul>
+<h3>3.6 일·주 캡 우선순위</h3>
+<ul>
+<li>출석 → 일일 미션 → 스트릭 보너스 순으로 적립 시도</li>
+<li>캡 도달 시 후속 적립 0 (회원에게 안내 — APP 책임)</li>
+<li>보정 적립은 캡 우회</li>
+</ul>
+<hr>
+<h2>4. 활동 로그</h2>
+<p>§2.5 C 표 참조. [CEB-BO-000] §6 활동 로그 표준 적용 (3년 보관, append-only).</p>
+<hr>
+<h2>5. UI 상태·에러</h2>
+<p>[CEB-BO-000] §7 표준 + 다음 추가:</p>
+<table>
+<tr><th>상황</th><th>처리</th></tr>
+<tr><td>미션 풀 0건 등록 시도</td><td>"최소 1건 이상의 활성 미션이 필요합니다" 안내</td></tr>
+<tr><td>보상량 음수 입력</td><td>검증 차단 + 인라인 에러</td></tr>
+<tr><td>캡 < 보상량</td><td>"캡이 단일 미션 보상량보다 작습니다" 경고 (저장은 가능)</td></tr>
+<tr><td>푸시 시각 이상치 (00:00~05:00)</td><td>"심야 시각 푸시는 회원 항의 우려" 경고 (저장은 가능)</td></tr>
+</table>
+<hr>
+<h2>6. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 12 신규. APP [CEB-FQ-501] v2.2 대응. ① 미션 풀 8종 CRUD 탭 ② 정책 설정 탭 (출석 5DUK·미션 25DUK·스트릭 4단계·일 500/주 3000 캡·푸시 23:00) ③ 통계 5카드 + 회원 스트릭 리스트 ④ 권한 분기 (POLICY 보상·캡 전용 / OPERATOR 미션 풀·통계) ⑤ 회원 보정 <code>DUK_OPERATIONAL_ADJUST</code> ⑥ 미션 코드 <code>MISSION_{slug}</code> 자동 채번</td></tr>
+</table>
+
+</body>
+</html>

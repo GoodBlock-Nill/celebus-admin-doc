@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-201] 퀘스트 상세 (기본정보 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-201] 퀘스트 상세 (기본정보 탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-FQ-201</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트) — Quest</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.05</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 팬퀘스트 > Fan Quest 관리 > Quest > {Quest 타이틀}</td></tr>
+<tr><td>비고</td><td>v1 BO-FQ/[CEB-BO-FQ-201] v1.2 (2026.03.25) → v2 정책 호환 갱신</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한 체계(§3·§4), UI 상태(§7), 토스트(§9), 활동 로그(§6)</td></tr>
+<tr><td>[CEB-BO-006] Quest·Raffle(FQ) 영역 가이드</td><td>권한 매트릭스(§4), Quest 라이프사이클(§7.1), 검수 워크플로우(§7.3), 활동 로그 템플릿(§6)</td></tr>
+<tr><td>[CEB-BO-004] BIVE(NFT) 영역 가이드</td><td>보상 BIVE 자동 민팅(§4.3)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>등록된 개별 Quest의 기본 정보·설정·생애 주기를 관리. 운영자는 본 화면에서 Quest 현황을 확인하고 게시/수정/종료/삭제 액션을 수행한다. 검수 작업은 형제 탭(대기내역·처리내역)에서.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>Quest 기본 정보 및 설정 상태 확인 (다국어 텍스트 / 대표 이미지 / 보상 / 일정 / 연관 링크)</li>
+<li>실시간 제출 현황 대시보드 (총 제출 / 승인 / 반려 / 대기)</li>
+<li>Quest 라이프사이클 관리 ([CEB-BO-006] §7.1)</li>
+<li>형제 탭 진입 (대기내역 / 처리내역)</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-101] 팬퀘스트 메인 (Quest 탭) > Quest 리스트 Row 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 네비게이션·헤더</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 팬퀘스트 > Fan Quest 관리 > Quest > {Quest 타이틀}</code></li>
+<li>뒤로가기 화살표 (←) 아이콘 → [CEB-BO-FQ-101] 이동</li>
+<li>타이틀: <code>{Quest 타이틀(KO)} [상태 Badge]</code></li>
+<li>탭 메뉴 (3탭, 상호 배타):</li>
+<li><strong>기본정보</strong> (현재 화면)</li>
+<li><strong>대기내역</strong> → [CEB-BO-FQ-202] 이동</li>
+<li><strong>처리내역</strong> → [CEB-BO-FQ-203] 이동</li>
+</ul>
+<h3>2.2 상태별 액션 버튼 (우측 상단)</h3>
+<p>[CEB-BO-006] §7.1 라이프사이클 적용. 권한 매트릭스는 [CEB-BO-006] §4 참조.</p>
+<table>
+<tr><th>Quest 상태</th><th>노출 버튼</th><th>호출 모달</th></tr>
+<tr><td>임시저장(Draft)</td><td>[삭제하기] [수정하기] [게시하기]</td><td>MD-DELETE / EDIT 화면 / MD-OPEN</td></tr>
+<tr><td>진행중(Active)</td><td>[수정하기] [종료하기]</td><td>EDIT 화면 (제한적) / MD-CLOSE</td></tr>
+<tr><td>종료(Ended)</td><td>(버튼 없음)</td><td>—</td></tr>
+</table>
+<blockquote>
+<p>EXTERNAL_ARTIST: 자기 아티스트 한정 [수정하기]만. [게시하기]·[종료하기]·[삭제하기]는 OPERATOR 이상 본사 권한.</p>
+</blockquote>
+<h3>2.3 현황 대시보드 카드 (상단)</h3>
+<p>4개 카드, 실시간 제출 현황:</p>
+<table>
+<tr><th>카드</th><th>아이콘</th><th>의미</th></tr>
+<tr><td>총 제출 수</td><td>people</td><td>전체 참여 건수</td></tr>
+<tr><td>승인</td><td>check</td><td>검수 완료 + 보상 지급 확정 (BIVE 자동 민팅 포함)</td></tr>
+<tr><td>반려</td><td>X</td><td>검수 반려</td></tr>
+<tr><td>대기</td><td>clock</td><td>검수 미처리</td></tr>
+</table>
+<h3>2.4 상세 정보 그리드</h3>
+<h4>A. 대표 이미지 (좌측 상단)</h4>
+<ul>
+<li>Quest 대표 이미지를 큰 썸네일로 표시</li>
+<li>이미지 클릭 → 원본 보기 모달 (lightbox)</li>
+</ul>
+<h4>B. Quest 정보 (우측 상단)</h4>
+<table>
+<tr><th>항목</th><th>값 표시</th></tr>
+<tr><td>아티스트</td><td>그룹명 / 멤버명</td></tr>
+<tr><td>타입</td><td>미션 타입 (예: 이미지 촬영 및 업로드)</td></tr>
+<tr><td>보상</td><td>보상 종류 + 수량 (예: 응모권 1매 + BIVE [V01D Event-005])</td></tr>
+<tr><td>시작 일시</td><td>진행중·종료 상태에서만 표시. 게시 시점 KST</td></tr>
+<tr><td>마감 일시</td><td>모든 상태 표시. 임시저장 상태에서는 단독 표시</td></tr>
+<tr><td>연관 링크</td><td>KO 라벨 + URL (최대 2개). 미등록 "-"</td></tr>
+</table>
+<blockquote>
+<p>임시저장(Draft): 마감 일시만 표시. 진행중·종료: 시작·마감 둘 다 표시.</p>
+</blockquote>
+<h4>C. 관리 정보 (우측 하단)</h4>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>상태</td><td>Status Badge (임시저장 Gray / 진행중 Green / 종료 Black)</td></tr>
+<tr><td>생성 관리자</td><td>생성자 표기 (현재 운영 데이터 부재 — 분석 리포트 §3.4 활동 로그 부재 이슈 참조)</td></tr>
+<tr><td>생성 일시</td><td>YYYY.MM.DD HH:mm KST</td></tr>
+<tr><td>최근 수정자</td><td>수정자 표기</td></tr>
+<tr><td>최근 수정 일시</td><td>YYYY.MM.DD HH:mm KST</td></tr>
+</table>
+<h4>D. Quest 다국어 콘텐츠 (하단)</h4>
+<ul>
+<li>타이틀 KO / EN / JP</li>
+<li>설명 KO / EN / JP</li>
+<li>유저 가이드 KO / EN / JP</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 버튼 동작</h3>
+<table>
+<tr><th>버튼</th><th>동작</th><th>호출</th></tr>
+<tr><td>[삭제하기]</td><td>임시저장 영구 삭제 확인</td><td>[CEB-BO-FQ-201-MD-DELETE]</td></tr>
+<tr><td>[수정하기]</td><td>Quest 수정 화면 진입</td><td>[CEB-BO-FQ-201-EDIT]</td></tr>
+<tr><td>[게시하기]</td><td>게시 확인 → 진행중 전환</td><td>[CEB-BO-FQ-201-MD-OPEN]</td></tr>
+<tr><td>[종료하기]</td><td>종료 확인 → 종료 전환</td><td>[CEB-BO-FQ-201-MD-CLOSE]</td></tr>
+</table>
+<h3>3.2 네비게이션</h3>
+<ul>
+<li>[대기내역] 탭 → [CEB-BO-FQ-202]</li>
+<li>[처리내역] 탭 → [CEB-BO-FQ-203]</li>
+<li>← 뒤로가기 → [CEB-BO-FQ-101]</li>
+</ul>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한별 분기</h3>
+<p>[CEB-BO-006] §4 적용:</p>
+<table>
+<tr><th>권한</th><th>화면 진입</th><th>조회</th><th>[수정]</th><th>[게시]</th><th>[종료]</th><th>[삭제]</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅ (Draft만)</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅ (Draft만)</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>✅ (자기 아티스트만)</td><td>✅</td><td>✅ (자기 아티스트만, 제한적)</td><td>❌</td><td>❌</td><td>❌</td></tr>
+</table>
+<h3>4.2 상태 전환 로직 ([CEB-BO-006] §7.1)</h3>
+<ul>
+<li><strong>게시하기 (Draft → Active)</strong>: [게시하기] → [MD-OPEN] 확인 → 서버 시간(KST)을 시작 일시로 자동 기록 + 상태 Active. 앱 즉시 노출.</li>
+<li><strong>종료하기 (Active → Ended)</strong>: [종료하기] → [MD-CLOSE] 확인 → 참여 차단 + 상태 Ended. 마감일 도래 시 시스템 자동 종료도 동일 결과.</li>
+<li><strong>삭제하기 (Draft 한정)</strong>: [삭제하기] → [MD-DELETE] 확인 → 영구 삭제. 진행중/종료 상태는 [삭제하기] 미노출.</li>
+</ul>
+<h3>4.3 데이터 표시 규칙</h3>
+<ul>
+<li>대기 카운트: 종료 상태가 되어도 미처리 검수 건이 있으면 숫자 잔존. 운영자는 처리내역 탭에서 정리</li>
+<li>날짜 포맷: <code>YYYY.MM.DD HH:mm</code> KST 통일 ([CEB-BO-000] 표준)</li>
+<li>다국어 콘텐츠: 임시저장 상태에서 일부 언어 비어있을 수 있음. 게시 시점에 3언어 검증</li>
+</ul>
+<h3>4.4 수정 가능 범위 (Active 상태)</h3>
+<p>[CEB-BO-006] §7.1·§7.4 적용. 진행중 상태에서는 핵심 정보 수정 제한:</p>
+<table>
+<tr><th>항목</th><th>Draft 수정</th><th>Active 수정</th></tr>
+<tr><td>타이틀·설명·유저 가이드 (다국어)</td><td>✅</td><td>✅ (오타 수정 등)</td></tr>
+<tr><td>대표 이미지</td><td>✅</td><td>✅</td></tr>
+<tr><td>아티스트</td><td>✅</td><td>❌</td></tr>
+<tr><td>퀘스트 타입</td><td>✅</td><td>❌</td></tr>
+<tr><td>마감 일시</td><td>✅</td><td>✅ (연장만 가능, 단축 불가)</td></tr>
+<tr><td>보상 종류·수량</td><td>✅</td><td>❌</td></tr>
+<tr><td>연관 링크</td><td>✅</td><td>✅</td></tr>
+</table>
+<p>상세 제약은 [CEB-BO-FQ-201-EDIT] 참조.</p>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>카드·정보 그리드 영역 Skeleton</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Empty (현황 카드 0건)</td><td>"0" 표시 (대시 사용 안 함)</td></tr>
+<tr><td>Error</td><td>"데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요." + [새로고침] 버튼</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>[CEB-BO-006] §6 적용:</p>
+<table>
+<tr><th>액션</th><th>발생 화면</th><th>로그 메시지 (KO)</th></tr>
+<tr><td>Quest 게시</td><td>[MD-OPEN]</td><td>Quest '{타이틀}'을(를) 게시했습니다. (보상: {보상 BIVE}, 종료: {종료일})</td></tr>
+<tr><td>Quest 종료</td><td>[MD-CLOSE]</td><td>Quest '{타이틀}'을(를) 조기 종료했습니다. (참여자: {n}명, 사유: {요약})</td></tr>
+<tr><td>Quest 삭제</td><td>[MD-DELETE]</td><td>Quest '{타이틀}'을(를) 삭제했습니다. (Draft 상태만 가능)</td></tr>
+</table>
+<p>본 화면 자체(조회)는 로그 미기록 (빈도 과다).</p>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>처리</th></tr>
+<tr><td>삭제 불가 (Active/Ended 상태)</td><td>[삭제하기] 버튼 미노출. 백엔드 추가 검증</td></tr>
+<tr><td>수정 제한 항목 변경 시도 (Active 상태)</td><td>EDIT 화면에서 핵심 항목 비활성화 처리</td></tr>
+<tr><td>종료 후 미처리 검수 건 잔존</td><td>대시보드 대기 카운트 잔존 + 운영자 안내 배너 (Active 종료 시)</td></tr>
+<tr><td>데이터 조회 실패</td><td>Toast (Error) + [재시도] 버튼</td></tr>
+<tr><td>EXTERNAL_ARTIST 자기 아티스트 외 진입</td><td>서버 차단 + Toast (Error) "접근 권한이 없는 Quest입니다."</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-FQ-101</td><td>팬퀘스트 메인 (Quest 탭)</td><td>상위</td></tr>
+<tr><td>CEB-BO-FQ-202</td><td>Quest 상세 (대기내역 탭)</td><td>형제 (탭 이동)</td></tr>
+<tr><td>CEB-BO-FQ-203</td><td>Quest 상세 (처리내역 탭)</td><td>형제 (탭 이동)</td></tr>
+<tr><td>CEB-BO-FQ-201-EDIT</td><td>Quest 수정</td><td>하위 ([수정하기])</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-OPEN</td><td>Quest 게시 모달</td><td>하위 ([게시하기])</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-CLOSE</td><td>Quest 종료 모달</td><td>하위 ([종료하기])</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-DELETE</td><td>Quest 삭제 모달</td><td>하위 ([삭제하기], Draft만)</td></tr>
+</table>
+<hr>
+<h2>9. v1 → v2 변경 사항</h2>
+<table>
+<tr><th>항목</th><th>v1</th><th>v2</th></tr>
+<tr><td>권한 체계</td><td>Super Admin / Admin 쓰기·읽기</td><td>SUPER / OPERATOR / POLICY / EXTERNAL_ARTIST</td></tr>
+<tr><td>EXTERNAL_ARTIST 처리</td><td>미정의</td><td>자기 아티스트 한정 진입 + [수정] 제한적 허용</td></tr>
+<tr><td>Active 수정 제한 항목</td><td>"단순 정보 변경만 허용" 일반 명시</td><td>항목별 매트릭스 명시 (§4.4)</td></tr>
+<tr><td>보상 표기</td><td>"응모권 1개 + NFT (팬퀘스트 iKON)"</td><td>"응모권 1매 + BIVE [에디션-시리즈]" ([CEB-BO-004] §4.3 4탭 캠페인)</td></tr>
+<tr><td>활동 로그</td><td>미정의</td><td>[CEB-BO-006] §6 템플릿 (게시/종료/삭제)</td></tr>
+<tr><td>활동 로그 데이터 부재</td><td>—</td><td>분석 리포트 [CEB-BO-001-A] §3.4 갭 인용 (생성 관리자/수정자 "-" 표시 이슈)</td></tr>
+</table>
+<hr>
+<h2>10. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2025.12.09</td><td>@Nill Yoo</td><td>(v1) 초안 작성</td></tr>
+<tr><td>v1.1</td><td>2026.03.24</td><td>@Nill Yoo</td><td>(v1) PDF 디자인 기준 레이아웃 + 상태 표기 한글화 + 대표 이미지 섹션 + 연관화면 보완</td></tr>
+<tr><td>v1.2</td><td>2026.03.25</td><td>@Nill Yoo</td><td>(v1) 연관 링크 표시 항목 추가</td></tr>
+<tr><td><strong>v2.0</strong></td><td><strong>2026.05.05</strong></td><td><strong>@Nill Yoo</strong></td><td>v2 정책 호환 갱신. ① [CEB-BO-000]/[CEB-BO-006]/[CEB-BO-004] 공통 정책 참조 헤더 ② 권한 4단계 (SUPER/OPERATOR/POLICY/EXTERNAL_ARTIST) + EXTERNAL_ARTIST 자기 아티스트 한정 정책 ③ Active 상태 수정 제한 항목별 매트릭스 (§4.4) 신규 명시 ④ 보상 표기를 [CEB-BO-004] §4.3 BIVE 4탭 캠페인 기준으로 정정 ⑤ 활동 로그 §6 템플릿 (게시/종료/삭제) ⑥ UI 상태별 처리 §5 ⑦ §9 v1→v2 변경 사항 요약 추가 ⑧ 분석 리포트 [CEB-BO-001-A] §3.4 활동 로그 데이터 부재 이슈 인용 ⑨ v1 원본 deprecation 동시 진행</td></tr>
+</table>
+
+</body>
+</html>

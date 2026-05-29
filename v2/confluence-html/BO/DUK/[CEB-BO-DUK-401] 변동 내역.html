@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-DUK-401] DUK 변동 내역</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-DUK-401] DUK 변동 내역</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-DUK-401</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>DUK — 변동 내역</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 덕력 > 변동 내역</td></tr>
+<tr><td>비고</td><td>Phase 9 신규. v2 신규 영역. [CEB-BO-FQ-301] 응모권 거래 9종 코드 패턴 차용</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한(§3·§4), UI 상태(§7), 활동 로그(§6)</td></tr>
+<tr><td>[CEB-BO-DUK-000] DUK 영역 가이드</td><td>적립 출처(§6.4), 소비 출처(§6.5), 활동 로그(§5)</td></tr>
+<tr><td>[CEB-BO-FQ-301] 응모권 거래 내역</td><td>통합 조회 패턴 차용 (코드별 필터·기간 검색)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>전체 회원의 DUK 변동 내역 통합 조회. Quest·Raffle·서포트·기억 게시·일일 출석·시스템 자동 적립·관리자 회수 등 모든 변동 통합. CS 대응·어뷰징 분석·정책 효과 측정에 활용.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>전체 회원 DUK 변동 내역 통합 조회 (read-only)</li>
+<li>거래 코드·시즌·기간·유저 다중 필터</li>
+<li>어뷰징·시스템 오류 추적</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>사이드 메뉴 > 덕력 > 변동 내역</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 검색·필터 영역</h3>
+<table>
+<tr><th>구분</th><th>요소명</th><th>타입</th><th>설명</th></tr>
+<tr><td>필터</td><td>거래 코드</td><td>Dropdown</td><td>전체 / 적립 / 소비 / 회수 / 정산 (코드 매핑은 §3.3)</td></tr>
+<tr><td>필터</td><td>시즌</td><td>Dropdown</td><td>전체 / Active / 특정 시즌</td></tr>
+<tr><td>필터</td><td>기간 (시작)</td><td>Date Picker</td><td></td></tr>
+<tr><td>필터</td><td>기간 (종료)</td><td>Date Picker</td><td></td></tr>
+<tr><td>입력</td><td>닉네임/유저ID</td><td>Text Input</td><td>부분 일치</td></tr>
+<tr><td>버튼</td><td>초기화</td><td>Dark Button</td><td></td></tr>
+</table>
+<h3>2.2 목록 영역 (List Table)</h3>
+<table>
+<tr><th>컬럼</th><th>데이터 예시</th><th>설명</th></tr>
+<tr><td>거래 코드</td><td>DUK_QUEST_REWARD</td><td>Badge ([CEB-BO-DUK-000] §6.4 기준)</td></tr>
+<tr><td>유형</td><td>적립 (Green) / 소비 (Red) / 회수 (Red Dark) / 정산 (Blue) / 만료 (Gray)</td><td>Badge</td></tr>
+<tr><td>출처 영역</td><td>Quest / Raffle / 서포트 / 기억 / 일일 / 가입 / 운영</td><td></td></tr>
+<tr><td>유저</td><td>닉네임 + 유저ID</td><td></td></tr>
+<tr><td>관련 이벤트</td><td>Quest "iKON 인증" / Raffle "콘서트 티켓" 등</td><td></td></tr>
+<tr><td>변동 수량</td><td>+50 / −100</td><td></td></tr>
+<tr><td>변동 후 잔액</td><td>1,234</td><td>거래 후 회원 시즌 잔액</td></tr>
+<tr><td>시즌</td><td>2026 Spring</td><td></td></tr>
+<tr><td>일시</td><td>2026.05.06 14:30</td><td>YYYY.MM.DD HH:mm KST</td></tr>
+</table>
+<ul>
+<li>read-only (Row 클릭 시 별도 동작 없음)</li>
+<li>페이지네이션: 10건 단위</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 규칙·로직</h2>
+<h3>3.1 권한별 분기</h3>
+<table>
+<tr><th>권한</th><th>화면 진입</th><th>조회</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>❌</td><td>—</td></tr>
+</table>
+<p>본 화면은 조회 전용. 모든 권한이 회원 단위 변동 추적 가능 (감사용).</p>
+<h3>3.2 정렬</h3>
+<table>
+<tr><th>기준</th><th>일시 내림차순 (최신순)</th></tr>
+</table>
+<h3>3.3 거래 코드 표준 (DUK-000 §6.4·§6.5 적용)</h3>
+<h4>적립 코드</h4>
+<table>
+<tr><th>코드</th><th>의미</th><th>출처</th></tr>
+<tr><td><code>DUK_QUEST_REWARD</code></td><td>Quest 검수 승인 보상</td><td>FQ-202</td></tr>
+<tr><td><code>DUK_RAFFLE_PARTICIPATION</code></td><td>Raffle 응모 참여</td><td>FQ-205</td></tr>
+<tr><td><code>DUK_SUPPORT_CHEER</code></td><td>서포트 응원</td><td>SUP</td></tr>
+<tr><td><code>DUK_MEMORY_POST</code></td><td>기억 게시 + 좋아요</td><td>MEM</td></tr>
+<tr><td><code>DUK_DAILY_CHECKIN</code></td><td>일일 출석 (+5 DUK)</td><td>(시스템 자동)</td></tr>
+<tr><td><code>DUK_SIGNUP_BONUS</code></td><td>신규 가입 보너스</td><td>(시스템 자동)</td></tr>
+</table>
+<h4>소비 코드</h4>
+<table>
+<tr><th>코드</th><th>의미</th></tr>
+<tr><td><code>DUK_BOOST_USE</code></td><td>Quest·Raffle 부스팅</td></tr>
+<tr><td><code>DUK_TICKET_PURCHASE</code></td><td>응모권 추가 구매</td></tr>
+<tr><td><code>DUK_CONTENT_UNLOCK</code></td><td>독점 콘텐츠 잠금 해제 (INF)</td></tr>
+<tr><td><code>DUK_BIVE_BOOST</code></td><td>BIVE 발행 가속</td></tr>
+</table>
+<h4>시스템 코드</h4>
+<table>
+<tr><th>코드</th><th>의미</th></tr>
+<tr><td><code>DUK_SETTLE_CARRY</code></td><td>시즌 정산 — 이월</td></tr>
+<tr><td><code>DUK_SETTLE_BURN</code></td><td>시즌 정산 — 소멸</td></tr>
+<tr><td><code>DUK_RANKING_REWARD</code></td><td>시즌 랭킹 보상</td></tr>
+<tr><td><code>DUK_TIER_REWARD</code></td><td>티어 보상 (응모권·BIVE 환산 후 추가 DUK)</td></tr>
+</table>
+<h4>운영 코드</h4>
+<table>
+<tr><th>코드</th><th>의미</th></tr>
+<tr><td><code>DUK_RECLAIM</code></td><td>SUPER 자산 회수 (USR §7.4)</td></tr>
+<tr><td><code>DUK_REFUND</code></td><td>SUPER 보정 환급</td></tr>
+</table>
+<h3>3.4 잔액 검증</h3>
+<p>회원 단위 합계 = 회원 현재 시즌 잔액과 일치해야 함. 불일치 시 백엔드 데이터 정합성 이슈 (운영자 알림).</p>
+<hr>
+<h2>4. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>테이블 row Skeleton</td></tr>
+<tr><td>Default</td><td>정상</td></tr>
+<tr><td>Empty</td><td>"검색 결과가 없습니다."</td></tr>
+<tr><td>Error</td><td>"DUK 변동 내역 조회에 실패하였습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>5. 활동 로그</h2>
+<p>본 화면(조회)은 로그 미기록. 변동 자체는 [CEB-BO-DUK-000] §5 + §6.4·§6.5 코드별로 별도 행 자동 기록.</p>
+<hr>
+<h2>6. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>검색 결과 없음</td><td>"검색 결과가 없습니다."</td></tr>
+<tr><td>조회 실패</td><td>Toast (Error) + [재시도]</td></tr>
+<tr><td>권한 부족</td><td>사이드 메뉴 비활성</td></tr>
+</table>
+<hr>
+<h2>7. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>관계</th></tr>
+<tr><td>CEB-BO-DUK-101</td><td>시즌 데이터 소스</td></tr>
+<tr><td>CEB-BO-DUK-201</td><td>정산 정책 데이터 소스</td></tr>
+<tr><td>CEB-BO-DUK-102</td><td>랭킹 검증</td></tr>
+<tr><td>CEB-BO-USR-201 [활동내역]</td><td>회원 단위 통합 노출</td></tr>
+<tr><td>CEB-BO-FQ-301</td><td>응모권 거래 내역 — 자매 패턴</td></tr>
+</table>
+<hr>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 9 신규. ① 통합 조회 패턴 (FQ-301 차용) ② <strong>DUK 거래 코드 표준 14종</strong> §3.3 — 적립 6 (<code>DUK_QUEST_REWARD</code> 등) + 소비 4 + 시스템 4 + 운영 2 ③ 권한 — 모든 운영자 조회 가능, EXTERNAL_ARTIST 차단 ④ 잔액 검증 정책 §3.4 ⑤ USR-201 [활동내역] 탭과의 연동</td></tr>
+</table>
+
+</body>
+</html>

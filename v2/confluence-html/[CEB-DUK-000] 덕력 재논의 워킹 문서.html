@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-DUK-000] 덕력 시스템 v2 재논의 워킹 문서</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-DUK-000] 덕력 시스템 v2 재논의 워킹 문서</h1>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>문서 ID</td><td>CEB-DUK-000</td></tr>
+<tr><td>용도</td><td>덕력 시스템 5대 영역 재논의 의사결정 베이스</td></tr>
+<tr><td>작성자</td><td>@Nill Yoo</td></tr>
+<tr><td>작성일</td><td>2026-04-29</td></tr>
+<tr><td>상태</td><td><strong>논의 중</strong> (Step 2 진행 중)</td></tr>
+<tr><td>후속 산출물</td><td><code>v2/[CEB-000] 공통 정책.md</code> v5.0 + 영향 화면 명세서</td></tr>
+</table>
+<hr>
+<h2>0. 배경 및 목적</h2>
+<p>CELEBUS v2 덕력 시스템은 2026.04.14~23 9일간 집중 정의되었으나 5개 영역에서 정책 미숙성·불일치·미결사항이 식별됨. 본 문서는 5대 영역별 <strong>현황 → 옵션 → 결정 → 후속 액션</strong>을 한 곳에서 추적하기 위한 워킹 문서.</p>
+<p>각 영역마다 의사결정이 완료되면 본 문서에 기록하고, 모든 영역 완료 후 공통 정책 v5.0 및 영향 화면 명세에 일괄 반영한다.</p>
+<hr>
+<h2>1. 보상 균형성 재설계</h2>
+<h3>1.1 현황</h3>
+<p>현재 공통정책 §3.4 획득 표 기준 활동별 보상:</p>
+<table>
+<tr><th>활동</th><th>보상 (DUK)</th><th>추정 소요시간</th><th>시간당 환산</th></tr>
+<tr><td>출석 체크</td><td>10</td><td>5초</td><td>7,200</td></tr>
+<tr><td>일일 미션 완료</td><td>20</td><td>1~2분</td><td>600~1,200</td></tr>
+<tr><td>Quest 완료</td><td>50~100</td><td>5~30분</td><td>100~1,200</td></tr>
+<tr><td>Trivia 정답</td><td>30</td><td>10~20초</td><td>5,400~10,800</td></tr>
+<tr><td>PM 참여</td><td>20</td><td>1분</td><td>1,200</td></tr>
+<tr><td>PM 적중</td><td>100</td><td>(참여 후 시간차)</td><td>—</td></tr>
+<tr><td>SNS 공유</td><td>50 (주 1회)</td><td>30초~2분</td><td>1,500~6,000</td></tr>
+<tr><td>디지털 굿즈 획득</td><td>50</td><td>(즉시)</td><td>—</td></tr>
+<tr><td>응모권 사용</td><td>10</td><td>5초</td><td>7,200</td></tr>
+<tr><td>기억저장소 업로드</td><td>30</td><td>5~30분</td><td>60~360</td></tr>
+<tr><td>스트릭 7일</td><td>200</td><td>(지속 + 중첩 보너스)</td><td>—</td></tr>
+<tr><td>스트릭 14/30/100일</td><td>500/1,000/5,000</td><td>(동일)</td><td>—</td></tr>
+</table>
+<p><strong>핵심 문제</strong>: 시간당 환산값이 최대 <strong>120배 격차</strong> (Quest 100 vs Trivia 10,800). 활동 난이도·핵심 행동 가치 대비 보상 정합성 부재. 일일 상한 없음 → 어뷰징 가능성.</p>
+<h3>1.2 옵션</h3>
+<h4>Option A — 시간 가중 재설계 (밸런스 우선)</h4>
+<p>활동을 3티어로 분류해 시간당 덕력 환산값을 일정 범위로 조정.</p>
+<table>
+<tr><th>티어</th><th>활동</th><th>권장 보상</th></tr>
+<tr><td>Tier 1 (즉시·습관)</td><td>출석·응모권 사용</td><td>5DUK</td></tr>
+<tr><td>Tier 2 (저관여)</td><td>일일미션·Trivia·PM 참여·SNS 공유</td><td>20~30DUK</td></tr>
+<tr><td>Tier 3 (고관여)</td><td>Quest·기억저장소·디지털 굿즈</td><td>50~100DUK</td></tr>
+<tr><td>보너스</td><td>스트릭·PM 적중</td><td>200~5,000DUK</td></tr>
+</table>
+<ul>
+<li><strong>장점</strong>: 활동 난이도와 보상 정합. 핵심 행동(Quest) 가치 강화</li>
+<li><strong>단점</strong>: 출석·응모권 보상 인하 시 기존 유저 반발 가능. 시뮬레이션 필요</li>
+</ul>
+<h4>Option B — 현 보상 유지 + 일일/주간 캡 도입</h4>
+<p>보상값은 그대로 두되, 일일/주간 한도를 추가해 어뷰징 방지.</p>
+<table>
+<tr><th>항목</th><th>한도</th></tr>
+<tr><td>일일 상한 (활동 합산)</td><td>500DUK</td></tr>
+<tr><td>주간 상한</td><td>3,000DUK</td></tr>
+<tr><td>월간 상한</td><td>12,000DUK (시즌 1년 = 144,000DUK 최대)</td></tr>
+</table>
+<ul>
+<li><strong>장점</strong>: 기존 정책 유지, 적용 단순</li>
+<li><strong>단점</strong>: 근본 격차 해결 안 됨. 핵심 행동 인센티브 약화 그대로</li>
+</ul>
+<h4>Option C — 핵심 행동 가중 + 캡 병행</h4>
+<p>A안의 재설계 + B안의 상한 조합.</p>
+<ul>
+<li><strong>장점</strong>: 가장 안정적·확장 가능</li>
+<li><strong>단점</strong>: 변경 폭 가장 큼. 시뮬레이션·소통 비용 ↑</li>
+</ul>
+<h3>1.3 결정 트래커 ✅ 확정 (2026.04.29)</h3>
+<table>
+<tr><th>항목</th><th>결정</th></tr>
+<tr><td>선택 옵션</td><td><strong>C — 다시 설계 + 상한</strong></td></tr>
+<tr><td>보상 매트릭스 최종값</td><td>(아래 §1.4 참조)</td></tr>
+<tr><td>일일/주간 캡</td><td><strong>일일 500DUK + 주간 3,000DUK</strong> (월간 미도입, 보너스는 캡 제외)</td></tr>
+<tr><td>BO 변경 가능 범위</td><td><strong>BO에서 자유 변경 가능</strong> (공식 수치는 권장값, 변경 폭 무제한)</td></tr>
+<tr><td>결정 일자</td><td>2026.04.29</td></tr>
+<tr><td>결정 근거 메모</td><td>핵심 행동 가중 + 어뷰징 차단 + 운영 유연성 3박자 균형. 시간당 환산 격차 ~12배 수준으로 압축. BO 자율을 통해 이벤트성 부스트 대응</td></tr>
+</table>
+<h3>1.4 최종 보상 매트릭스</h3>
+<table>
+<tr><th>Tier</th><th>활동</th><th>최종 보상 (DUK)</th><th>캡 적용</th></tr>
+<tr><td><strong>Tier 1 — 즉시·습관</strong></td><td>출석 체크</td><td><strong>5</strong></td><td>✅ 캡 적용</td></tr>
+<tr><td></td><td>응모권 사용 (래플)</td><td><strong>5</strong></td><td>✅ 캡 적용</td></tr>
+<tr><td><strong>Tier 2 — 저관여</strong></td><td>일일 미션 완료</td><td><strong>25</strong></td><td>✅ 캡 적용</td></tr>
+<tr><td></td><td>Trivia 정답</td><td><strong>25</strong></td><td>✅ 캡 적용</td></tr>
+<tr><td></td><td>PM 참여</td><td><strong>25</strong></td><td>✅ 캡 적용</td></tr>
+<tr><td></td><td>SNS 공유 (주 1회)</td><td><strong>25</strong></td><td>✅ 캡 적용</td></tr>
+<tr><td><strong>Tier 3 — 고관여</strong></td><td>Quest 완료</td><td><strong>75</strong></td><td>✅ 캡 적용</td></tr>
+<tr><td></td><td>기억저장소 업로드</td><td><strong>75</strong></td><td>✅ 캡 적용</td></tr>
+<tr><td></td><td>디지털 굿즈 획득</td><td><strong>75</strong></td><td>✅ 캡 적용</td></tr>
+<tr><td><strong>보너스 (캡 제외)</strong></td><td>PM 적중</td><td><strong>100</strong></td><td>❌ 캡 무관</td></tr>
+<tr><td></td><td>스트릭 7일</td><td><strong>200</strong></td><td>❌</td></tr>
+<tr><td></td><td>스트릭 14일</td><td><strong>500</strong></td><td>❌</td></tr>
+<tr><td></td><td>스트릭 30일</td><td><strong>1,000</strong></td><td>❌</td></tr>
+<tr><td></td><td>스트릭 100일</td><td><strong>5,000</strong></td><td>❌</td></tr>
+</table>
+<p><strong>시뮬레이션</strong> (캡 적용 / 보너스 제외 기준):</p>
+<ul>
+<li>신규 유저 첫날 최대: 출석 5 + 일일미션 25 + Quest 75 × N (캡 500 도달 시 차단)</li>
+<li>이론상 일일 500DUK + 보너스 (스트릭·적중·굿즈) 추가 가능</li>
+<li>시즌 1년 = 365일 × 500DUK = <strong>182,500DUK 기본 + 보너스</strong></li>
+</ul>
+<hr>
+<h2>2. 멀티 아티스트 귀속 정책 완성</h2>
+<h3>2.1 현황</h3>
+<ul>
+<li><strong>2026.04.23 신규 정책 추가</strong> (commit <code>f2f3bad</code>): "출석·일일미션·스트릭은 선택된 아티스트에만 덕력 반영"</li>
+<li><strong>나머지 활동의 귀속은 미명시</strong>: Quest / 기억저장소 / SNS 공유 / 디지털 굿즈 / Trivia / PM / 응모권 사용</li>
+<li><strong>유저 영향</strong>: 멀티 아티스트 팔로우 시 어떤 활동이 어디에 반영되는지 불투명</li>
+</ul>
+<h3>2.2 옵션</h3>
+<h4>Option A — 활동×귀속 명시 매트릭스 (정밀 정책)</h4>
+<p>활동 종류별로 귀속 대상을 매트릭스로 명문화.</p>
+<table>
+<tr><th>활동 분류</th><th>활동 예시</th><th>귀속 대상</th></tr>
+<tr><td><strong>개인 활동</strong></td><td>출석·일일미션·스트릭·SNS 공유·앱 탐색</td><td>선택 아티스트 (현재 정책)</td></tr>
+<tr><td><strong>아티스트 콘텐츠 활동</strong></td><td>Quest·기억저장소·디지털 굿즈·Trivia·PM</td><td>활동 대상 아티스트 (자동 귀속)</td></tr>
+<tr><td><strong>공통 활동</strong></td><td>응모권 사용</td><td>응모한 래플의 아티스트</td></tr>
+</table>
+<ul>
+<li><strong>장점</strong>: 직관적, 어뷰징 방지 (선택 토글 의미 없음 in 콘텐츠 활동)</li>
+<li><strong>단점</strong>: 초기 학습 비용. 유저가 "내 활동이 어디로 갔지" 헷갈릴 수 있음</li>
+</ul>
+<h4>Option B — 모든 활동 = 선택 아티스트 (단순 정책)</h4>
+<p>현재 출석·일일미션 정책을 전 활동에 적용.</p>
+<ul>
+<li><strong>장점</strong>: 룰 단순, 유저 이해 쉬움</li>
+<li><strong>단점</strong>: V01D Quest 깼는데 iKON 랭킹에 반영되는 등 어색 + 어뷰징 가능 (Quest 직전 토글)</li>
+</ul>
+<h4>Option C — 활동 발생 시점에 즉시 자동 귀속 (콘텐츠 기반)</h4>
+<p>활동의 자연스러운 대상에 자동 반영. "선택 아티스트" 개념 폐지.</p>
+<ul>
+<li><strong>장점</strong>: 가장 자연스러운 사용자 경험</li>
+<li><strong>단점</strong>: 4/23 정책 폐기 부담. 출석·SNS공유 같은 "비특정" 활동 처리 곤란</li>
+</ul>
+<h3>2.3 어뷰징 방지 룰 (옵션 무관 공통 검토)</h3>
+<ul>
+<li>아티스트 선택 변경 <strong>쿨다운</strong> (예: 24시간 1회)</li>
+<li>변경 후 일정 기간 <strong>이전 아티스트 활동 소급 X</strong> (시점 이후만)</li>
+<li>동일 활동의 <strong>중복 귀속 금지</strong> (한 활동 = 한 아티스트만)</li>
+</ul>
+<h3>2.4 결정 트래커 ✅ 확정 (2026.04.29)</h3>
+<table>
+<tr><th>항목</th><th>결정</th></tr>
+<tr><td>선택 옵션</td><td><strong>A — 활동×귀속 정밀 매트릭스</strong></td></tr>
+<tr><td>활동×귀속 매트릭스</td><td>(아래 §2.5 참조)</td></tr>
+<tr><td>아티스트 변경 쿨다운</td><td><strong>없음</strong> (자유 변경)</td></tr>
+<tr><td>소급 처리</td><td><strong>시점 이후만 반영</strong> (변경 이전 적립분은 이전 아티스트에 유지)</td></tr>
+<tr><td>결정 일자</td><td>2026.04.29</td></tr>
+<tr><td>결정 근거 메모</td><td>어뷰징 방지는 "시점 이후만" 룰로 자연 차단됨 (변경 행위 자체로 추가 덕력 발생 X). 쿨다운 없는 자유 변경은 멀티 팬덤 유저 UX 보호. 콘텐츠 활동은 자동 귀속이라 토글 의미 없음</td></tr>
+</table>
+<h3>2.5 활동×귀속 매트릭스</h3>
+<table>
+<tr><th>활동</th><th>귀속 대상</th><th>분류</th><th>비고</th></tr>
+<tr><td>출석 체크</td><td><strong>선택 아티스트</strong></td><td>개인</td><td>—</td></tr>
+<tr><td>일일 미션</td><td><strong>선택 아티스트</strong></td><td>개인</td><td>—</td></tr>
+<tr><td>스트릭 보너스</td><td><strong>선택 아티스트</strong></td><td>개인</td><td>보너스 발생 시점 기준</td></tr>
+<tr><td>SNS 공유 (일반)</td><td><strong>선택 아티스트</strong></td><td>개인</td><td>일반 앱 공유</td></tr>
+<tr><td>SNS 공유 (특정 콘텐츠)</td><td><strong>콘텐츠의 아티스트</strong></td><td>콘텐츠</td><td>V01D Quest 공유 → V01D</td></tr>
+<tr><td>Quest 완료</td><td><strong>Quest의 아티스트</strong></td><td>콘텐츠</td><td>자동 귀속</td></tr>
+<tr><td>기억저장소 업로드</td><td><strong>기억의 아티스트</strong></td><td>콘텐츠</td><td>작성 대상 아티스트</td></tr>
+<tr><td>디지털 굿즈 획득</td><td><strong>굿즈의 아티스트</strong></td><td>콘텐츠</td><td>자동 귀속</td></tr>
+<tr><td>Trivia 정답</td><td><strong>Trivia의 아티스트</strong></td><td>콘텐츠</td><td>게임존 ST 콘텐츠 기반</td></tr>
+<tr><td>PM 참여</td><td><strong>PM의 아티스트</strong></td><td>콘텐츠</td><td>게임존 PM 콘텐츠 기반</td></tr>
+<tr><td>PM 적중</td><td><strong>PM의 아티스트</strong></td><td>콘텐츠</td><td>게임존 PM 콘텐츠 기반</td></tr>
+<tr><td>응모권 사용 (래플)</td><td><strong>래플의 아티스트</strong></td><td>콘텐츠</td><td>응모한 래플 기준 자동</td></tr>
+</table>
+<h3>2.6 어뷰징 방지 룰</h3>
+<ul>
+<li><strong>자동 차단</strong>: "시점 이후만 반영" 정책으로 변경 자체에 인센티브 없음</li>
+<li><strong>동일 활동 1귀속 원칙</strong>: 한 활동의 덕력은 1개 아티스트에만 적립 (분할 X)</li>
+<li><strong>모니터링 대상</strong>: 이상 패턴 (1일 N회 이상 토글 + 활동 폭주) 운영 모니터링 권장</li>
+</ul>
+<hr>
+<h2>3. 랭킹 동순위 정책 안정화</h2>
+<h3>3.1 현황</h3>
+<ul>
+<li><strong>2026.04.14</strong>: 동률 + 순번 스킵 (1, 1, 3, 4, …)</li>
+<li><strong>2026.04.21</strong> (commit <code>82f348e</code>): "먼저 도달 우선" — 동률 없음 (1, 2, 3, …)</li>
+<li><strong>CEB-DUK-101 9개 버전</strong> (4/14~21) — 정책 미숙성 신호</li>
+<li><strong>동시성 처리 미명시</strong>: 밀리초 vs 마이크로초 vs DB 트랜잭션 순서</li>
+</ul>
+<h3>3.2 옵션</h3>
+<h4>Option A — 현 정책(먼저 도달 우선) 유지 + 정밀 명문화</h4>
+<ul>
+<li>서버 타임스탬프 기준: <strong>밀리초 (ms)</strong></li>
+<li>동일 ms 내 충돌 시: <strong>DB 자동 증가 ID</strong> 우선</li>
+<li>적립 시점 = 이벤트 발생 시점이 아니라 <strong>DB 트랜잭션 커밋 시점</strong></li>
+<li>운영자 승인이 필요한 활동(Quest 등)은 <strong>승인 시각 기준</strong></li>
+</ul>
+<ul>
+<li><strong>장점</strong>: 결정론적, 구현 명확</li>
+<li><strong>단점</strong>: 운영자 승인 시점에 의존하는 활동의 공정성 우려 (승인 순서가 영향)</li>
+</ul>
+<h4>Option B — 동률 처리 (4/14 정책 복구)</h4>
+<ul>
+<li>동률 시 동순위 부여, 다음 순위 스킵 (1, 1, 3, 4)</li>
+</ul>
+<ul>
+<li><strong>장점</strong>: 사용자 정서에 부합 (실제로 같은 점수면 같은 순위)</li>
+<li><strong>단점</strong>: 보상 지급 룰 복잡 (1위 보상을 2명 모두에게? 분할?)</li>
+</ul>
+<h4>Option C — 동률 처리 + 시즌 보상 분할</h4>
+<ul>
+<li>동률 시 동순위 + 보상 동률 인원수만큼 분할</li>
+</ul>
+<ul>
+<li><strong>장점</strong>: 정서적 공정 + 보상 룰 명확</li>
+<li><strong>단점</strong>: 분할 단위가 작은 경우 보상 의미 약화</li>
+</ul>
+<h3>3.3 결정 트래커 ✅ 확정 (2026.04.29)</h3>
+<table>
+<tr><th>항목</th><th>결정</th></tr>
+<tr><td>선택 옵션</td><td><strong>A — 먼저 도달 우선</strong> (4/21 정책 유지 + 정밀 명문화)</td></tr>
+<tr><td>타임스탬프 정밀도</td><td><strong>밀리초 (ms)</strong> — 충돌 시 DB 자동 증가 ID로 폴백</td></tr>
+<tr><td>적립 시점 기준</td><td><strong>운영자 승인 시각</strong> (운영자 승인 필요 활동: Quest·기억저장소 등)</td></tr>
+<tr><td>즉시 적립 활동의 기준</td><td>이벤트 발생 시점 (출석·일일미션·Trivia·PM 참여 등 자동 적립)</td></tr>
+<tr><td>동률 시 보상 처리</td><td><strong>단독 처리</strong> (먼저 도달 우선이므로 동률 거의 발생 안 함)</td></tr>
+<tr><td>정책 동결 시점</td><td>시즌 1 시작 후 변경 금지 (시즌 시작 시점이 정책 동결 데드라인)</td></tr>
+<tr><td>결정 일자</td><td>2026.04.29</td></tr>
+<tr><td>결정 근거 메모</td><td>4/21 정책 그대로 유지 + 동시성·정밀도 명문화로 재변경 리스크 차단. 운영자 승인 시각 기준은 시스템 적립 시점과 일치하므로 구현 명확. <strong>운영팀은 승인 처리 SOP(FIFO 권장)</strong> 별도 정립 필요</td></tr>
+</table>
+<h3>3.4 운영 SOP 고려사항</h3>
+<ul>
+<li><strong>운영자 승인 시각</strong>이 순위 결정에 영향 → <strong>승인 처리 SOP 표준화 필수</strong></li>
+<li>권장: <strong>FIFO(선착순)</strong> 승인 처리 — 유저 제출 순서가 자연스럽게 적립 시점에 반영</li>
+<li>비정상 지연(시스템 장애 등) 시: 운영팀이 일괄 승인 + 별도 시각 보정 검토 (예외 SOP)</li>
+<li>승인 SLA: 영업일 1~2일 (V01D 기존 운영 기준)</li>
+</ul>
+<h3>3.5 사용자 안내 문구 (UI)</h3>
+<ul>
+<li>"동일 점수 시 먼저 도달한 유저가 상위 순위로 결정됩니다."</li>
+<li>"Quest 등 일부 활동은 운영자 승인 시각을 기준으로 적립됩니다."</li>
+<li>"Tied scores are ranked by who reached the score first."</li>
+</ul>
+<hr>
+<h2>4. 소비 엣지케이스 정의</h2>
+<h3>4.1 현황</h3>
+<p>다음 6개 시나리오에 대해 시스템 동작 + UI 안내가 미정의.</p>
+<h3>4.2 6개 케이스 검토</h3>
+<h4>Case (a) 보유 덕력 0DUK에서 응원 시도</h4>
+<ul>
+<li><strong>현재</strong>: 미정의</li>
+<li><strong>권장</strong>: 응원 버튼 <strong>비활성화</strong> + 툴팁 "덕력이 부족해요"</li>
+<li>결정 ☐ 권장 / ☐ 기타</li>
+</ul>
+<h4>Case (b) 응원 처리 중 시즌 초기화 발생</h4>
+<ul>
+<li><strong>현재</strong>: 미정의 (시즌 초기화는 획득 덕력만, 보유 덕력은 영구)</li>
+<li><strong>권장</strong>: 시즌 초기화는 사전 안내된 시각에 자동. 시각 직전 5분간 응원 입력 잠금 (lock)</li>
+<li>결정 ☐ 권장 / ☐ 기타</li>
+</ul>
+<h4>Case (c) 서포트 응원 → 미달성 → 반환 → 재사용 (이력 트레이스)</h4>
+<ul>
+<li><strong>현재</strong>: "전액 반환" 명시. 이력에 "+500DUK (반환)" 기록</li>
+<li><strong>권장</strong>: 반환된 덕력은 보유 덕력에 즉시 합산, 다음 응원에 사용 가능. 이력에 "반환 사유: 미달성" 명시</li>
+<li>결정 ☐ 권장 / ☐ 기타</li>
+</ul>
+<h4>Case (d) 독점 콘텐츠 해금 후 환불 정책</h4>
+<ul>
+<li><strong>현재</strong>: "영구 해금" 명시, 환불 정책 없음</li>
+<li><strong>권장</strong>: 환불 정책 <strong>도입 안 함</strong> (해금은 즉시 소비 인정). UI에 "해금 후 환불 불가" 사전 고지</li>
+<li>결정 ☐ 권장 (환불 없음) / ☐ 환불 도입 / ☐ 기타</li>
+</ul>
+<h4>Case (e) 응원 도중 BO에서 덕력 단가 변경</h4>
+<ul>
+<li><strong>현재</strong>: 미정의</li>
+<li><strong>권장</strong>: 단가 변경은 <strong>새 응원부터 적용</strong>. 진행 중 응원은 변경 시점의 단가로 잠금</li>
+<li>결정 ☐ 권장 / ☐ 기타</li>
+</ul>
+<h4>Case (f) 다중 응원 동시 클릭 (race condition)</h4>
+<ul>
+<li><strong>현재</strong>: 미정의</li>
+<li><strong>권장</strong>: 클라이언트 디바운스(0.5초) + 서버 트랜잭션 lock. 동시 요청은 <strong>선착 1건만 처리</strong>, 나머지 거부 → 토스트 "잠시 후 다시 시도"</li>
+<li>결정 ☐ 권장 / ☐ 기타</li>
+</ul>
+<h3>4.3 결정 트래커 ✅ 확정 (2026.04.29) — 6개 권장안 일괄 채택</h3>
+<table>
+<tr><th>케이스</th><th>시스템 동작</th><th>UI 안내문 KO</th><th>결정 일자</th></tr>
+<tr><td><strong>(a) 보유 0DUK 응원</strong></td><td>응원 버튼 비활성화</td><td>"덕력이 부족해요" 툴팁 표시</td><td>2026.04.29</td></tr>
+<tr><td><strong>(b) 시즌 초기화 중</strong></td><td>시각 직전 5분 응원 입력 lock</td><td>"잠시 후 새 시즌이 시작돼요. 5분간 응원이 잠시 멈춰요"</td><td>2026.04.29</td></tr>
+<tr><td><strong>(c) 반환 → 재사용</strong></td><td>반환 즉시 보유 덕력 합산, 다음 응원 사용 가능</td><td>이력 "+500DUK (반환 — 미달성)" 명시</td><td>2026.04.29</td></tr>
+<tr><td><strong>(d) 해금 후 환불</strong></td><td>환불 정책 도입 안 함, 해금 즉시 소비 인정</td><td>해금 전 모달 "해금 후 환불 불가" 사전 고지</td><td>2026.04.29</td></tr>
+<tr><td><strong>(e) BO 단가 변경</strong></td><td>새 응원부터 적용. 진행 중 응원은 변경 시점 단가 lock</td><td>(시스템 처리, UI 변동 없음)</td><td>2026.04.29</td></tr>
+<tr><td><strong>(f) 동시 클릭</strong></td><td>클라이언트 디바운스 0.5초 + 서버 트랜잭션 lock. 선착 1건 처리, 나머지 거부</td><td>"잠시 후 다시 시도해주세요" 토스트</td><td>2026.04.29</td></tr>
+</table>
+<h3>4.4 다국어 UI 안내문 (3언어 확정)</h3>
+<table>
+<tr><th>케이스</th><th>KO</th><th>EN</th><th>JP</th></tr>
+<tr><td>(a) 보유 0DUK</td><td>덕력이 부족해요</td><td>Not enough Fan Power</td><td>推し力が足りません</td></tr>
+<tr><td>(b) 시즌 초기화 lock</td><td>잠시 후 새 시즌이 시작돼요. 5분간 응원이 잠시 멈춰요</td><td>A new season starts soon. Cheers paused for 5 minutes</td><td>まもなく新シーズン開始。5分間 応援が一時停止します</td></tr>
+<tr><td>(c) 반환 이력 라벨</td><td>+500DUK (반환 — 미달성)</td><td>+500DUK (Returned — Goal Not Met)</td><td>+500DUK (返却 — 未達成)</td></tr>
+<tr><td>(d) 해금 환불 불가 사전 고지</td><td>해금 후 환불이 불가합니다</td><td>No refund after unlock</td><td>解放後の払い戻しは不可</td></tr>
+<tr><td>(e) BO 단가 변경</td><td>(시스템 처리, UI 변동 없음)</td><td>(System-only, no UI change)</td><td>(システム処理のみ)</td></tr>
+<tr><td>(f) 동시 클릭 거부</td><td>잠시 후 다시 시도해주세요</td><td>Please try again in a moment</td><td>少し待ってから再度お試しください</td></tr>
+</table>
+<h3>4.5 운영 SOP 권장사항</h3>
+<ul>
+<li><strong>(b) 시즌 초기화 시간</strong>: 사용자에게 사전 공지 24시간 전 (앱 푸시 + 인앱 배너)</li>
+<li><strong>(d) 해금 환불 정책</strong>: 약관·이용약관에도 명시 — 법무 검토 권장</li>
+<li><strong>(f) 동시 클릭 디바운스</strong>: 클라이언트 0.5초는 일반적 UX 표준, 필요 시 1초까지 조정 가능</li>
+<li><strong>이상 패턴 모니터링</strong>: (f) 거부 빈도 추이 → 비정상 트래픽 식별</li>
+</ul>
+<hr>
+<h2>5. 다국어 용어 확정</h2>
+<h3>5.1 현황</h3>
+<ul>
+<li>"덕력" 한국어만 존재. 영문·일본어 표기 없음</li>
+<li>화면별 UI 라벨 일관성 부족 (예: "획득 덕력 vs 보유 덕력")</li>
+</ul>
+<h3>5.2 옵션 — 영문</h3>
+<table>
+<tr><th>후보</th><th>평가</th><th>비고</th></tr>
+<tr><td><strong>Fan Power</strong></td><td>직설·이해 쉬움. K-pop 마케팅 일반어</td><td>✅ 보편성 ↑</td></tr>
+<tr><td><strong>Fandom Tier</strong></td><td>등급 뉘앙스 강함, 누적·소비 의미 약함</td><td>△ 의미 부정확</td></tr>
+<tr><td><strong>Stan Score</strong></td><td>친근, 비공식·게이미피케이션 강함</td><td>△ 톤 격식 ↓</td></tr>
+<tr><td><strong>Loyalty Points</strong></td><td>일반 적립금 느낌, K-pop 정서 약함</td><td>❌ 차별화 X</td></tr>
+</table>
+<p>→ 잠정 권장: <strong>Fan Power</strong></p>
+<h3>5.3 옵션 — 일본어</h3>
+<table>
+<tr><th>후보</th><th>평가</th><th>비고</th></tr>
+<tr><td><strong>推し力</strong> (오시리키)</td><td>"오시(최애) + 力" 의미 직관, 일본 팬덤 친숙</td><td>✅ K-pop 팬덤 정합</td></tr>
+<tr><td><strong>ファンパワー</strong></td><td>영문 음차, 익숙하지만 평이</td><td>△ 차별화 ↓</td></tr>
+<tr><td><strong>応援ポイント</strong></td><td>"응원 포인트" 직역, 정확하지만 정서 약함</td><td>△ 정서 ↓</td></tr>
+</table>
+<p>→ 잠정 권장: <strong>推し力</strong></p>
+<h3>5.4 라벨 매핑표 (KO/EN/JP)</h3>
+<table>
+<tr><th>KO</th><th>EN (안)</th><th>JP (안)</th></tr>
+<tr><td>덕력</td><td>Fan Power</td><td>推し力</td></tr>
+<tr><td>획득 덕력</td><td>Earned Fan Power</td><td>獲得 推し力</td></tr>
+<tr><td>보유 덕력</td><td>Available Fan Power</td><td>保有 推し力</td></tr>
+<tr><td>사용 덕력</td><td>Used Fan Power</td><td>使用 推し力</td></tr>
+<tr><td>덕력 랭킹</td><td>Fan Power Ranking</td><td>推し力 ランキング</td></tr>
+<tr><td>서포트 응원</td><td>Support Cheer</td><td>サポート応援</td></tr>
+<tr><td>독점 콘텐츠 해금</td><td>Exclusive Content Unlock</td><td>独占コンテンツ解放</td></tr>
+</table>
+<h3>5.5 결정 트래커 ✅ 확정 (2026.04.29)</h3>
+<table>
+<tr><th>항목</th><th>결정</th></tr>
+<tr><td>영문 공식 표기</td><td><strong>Fan Power</strong></td></tr>
+<tr><td>일본어 공식 표기</td><td><strong>推し力</strong> (오시리키)</td></tr>
+<tr><td>라벨 매핑표 최종</td><td>§5.4 표 확정 (잠정안 그대로 채택)</td></tr>
+<tr><td>적용 범위</td><td><strong>BO · 앱 · SNS · 문서 전부</strong> (단일 소스 원칙)</td></tr>
+<tr><td>결정 일자</td><td>2026.04.29</td></tr>
+<tr><td>결정 근거 메모</td><td>EN: K-pop 마케팅 보편어로 확장성↑·SEO 친화 / JP: 일본 팬덤 친숙어, 영문 음차 회피로 차별화·정서 정합</td></tr>
+</table>
+<h3>5.6 확정 라벨 매핑표 (3언어)</h3>
+<table>
+<tr><th>KO</th><th>EN</th><th>JP</th></tr>
+<tr><td><strong>덕력</strong></td><td><strong>Fan Power</strong></td><td><strong>推し力</strong></td></tr>
+<tr><td>획득 덕력</td><td>Earned Fan Power</td><td>獲得 推し力</td></tr>
+<tr><td>보유 덕력</td><td>Available Fan Power</td><td>保有 推し力</td></tr>
+<tr><td>사용 덕력</td><td>Used Fan Power</td><td>使用 推し力</td></tr>
+<tr><td>덕력 랭킹</td><td>Fan Power Ranking</td><td>推し力 ランキング</td></tr>
+<tr><td>서포트 응원</td><td>Support Cheer</td><td>サポート応援</td></tr>
+<tr><td>독점 콘텐츠 해금</td><td>Exclusive Content Unlock</td><td>独占コンテンツ解放</td></tr>
+<tr><td>덕력 적립</td><td>Fan Power Earned</td><td>推し力 獲得</td></tr>
+<tr><td>덕력 반환</td><td>Fan Power Returned</td><td>推し力 返却</td></tr>
+</table>
+<hr>
+<h2>6. 종합 결정 요약 ✅ Step 2 완료 (2026.04.29)</h2>
+<table>
+<tr><th>영역</th><th>최종 결정</th><th>영향 범위</th></tr>
+<tr><td><strong>1. 보상 균형성</strong></td><td>C안 — 티어별 재설계 (T1 5 / T2 25 / T3 75) + 일일 500·주간 3,000 캡 + BO 자유 변경</td><td>공통정책 §3.4 / FQ-501·FQ-101·MEM-201 등</td></tr>
+<tr><td><strong>2. 멀티 아티스트 귀속</strong></td><td>A안 — 활동×귀속 정밀 매트릭스 + 쿨다운 없음 + 시점 이후만 반영</td><td>공통정책 §3.5 (신규) / 거의 모든 활동 화면</td></tr>
+<tr><td><strong>3. 랭킹 동순위</strong></td><td>A안 — 먼저 도달 우선 + ms 정밀도 + 운영자 승인 시각 기준 + 동률 단독 처리</td><td>공통정책 §3.6 (신규) / DUK-101·EVT-201</td></tr>
+<tr><td><strong>4. 소비 엣지케이스</strong></td><td>6개 권장안 일괄 채택 (a~f) + 3언어 UI 안내문 확정</td><td>공통정책 §3.7 (신규) / DUK-201·MEM-202</td></tr>
+<tr><td><strong>5. 다국어 용어</strong></td><td>EN: <strong>Fan Power</strong> / JP: <strong>推し力</strong> / 라벨 매핑표 9종 확정</td><td>공통정책 §1.3 / 모든 덕력 표시 화면</td></tr>
+</table>
+<h3>핵심 메시지 (한 문장 요약)</h3>
+<blockquote>
+<p><strong>활동 가치 가중 + 어뷰징 차단 + 운영 유연성</strong> 3박자 균형. 다국어는 K-pop 정서에 부합하는 보편어(Fan Power / 推し力)로 통일.</p>
+</blockquote>
+<hr>
+<h2>7. 다음 액션 ✅ Step 3 진행 가능</h2>
+<p>본 워킹 문서의 5대 영역 결정이 모두 완료되어, 정책 반영 단계로 진입 가능.</p>
+<h3>Step 3 — 정책 반영 작업 목록</h3>
+<ol>
+<li><strong><code>v2/[CEB-000] 공통 정책.md</code> v5.0 메이저 업데이트</strong></li>
+</ol>
+<ul>
+<li>§1.3 덕력 용어 → EN/JP 라벨 추가 (Fan Power / 推し力)</li>
+<li>§3.4 획득 표 → 티어별 보상 매트릭스 + 캡 정책</li>
+<li>§3.5 신규 — 멀티 아티스트 귀속 매트릭스</li>
+<li>§3.6 신규 — 동순위·동시성 처리 상세</li>
+<li>§3.7 신규 — 소비 엣지케이스 6종 정책</li>
+<li>변경 이력 v5.0 entry</li>
+</ul>
+<ol>
+<li><strong>영향 화면 명세 동기화</strong> (7개)</li>
+</ol>
+<ul>
+<li><code>v2/APP/[CEB-DUK-101] 덕력 랭킹.md</code> — 동순위·다국어 라벨</li>
+<li><code>v2/APP/[CEB-DUK-201] 서포트 이벤트.md</code> — 엣지케이스·다국어 라벨</li>
+<li><code>v2/APP/[CEB-EVT-201] 팬덤 레벨.md</code> — 귀속 매트릭스·다국어</li>
+<li><code>v2/APP/[CEB-FQ-501] 일일 미션.md</code> — 새 보상값·캡·다국어</li>
+<li><code>v2/APP/[CEB-HOM-001] 홈 메인.md</code> — 덕력 표시 라벨 다국어</li>
+<li><code>v2/APP/[CEB-MEM-201] 기억 작성.md</code> — 새 보상값·귀속</li>
+<li><code>v2/APP/[CEB-FQ-101] Quest 메인.md</code> — 새 보상값·귀속</li>
+</ul>
+<ol>
+<li><strong>Confluence HTML 재생성</strong> (<code>v2/confluence-html/</code>)</li>
+</ol>
+<ol>
+<li><strong>3-way Cross-check 검증</strong></li>
+</ol>
+<ul>
+<li>공통정책 ↔ 화면 명세 ↔ BO 설정값 일치 확인</li>
+<li>다국어 라벨 화면 전수 일관성 확인</li>
+<li>보상 매트릭스 시뮬레이션 (신규 유저 하루 / 일주일 / 시즌)</li>
+<li>6개 엣지케이스 운영 SOP 워크스루</li>
+</ul>
+<hr>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.04.29</td><td>@Nill Yoo</td><td>초안 작성 — 5대 영역 현황·옵션·결정 트래커 + 다국어 라벨 매핑표 잠정안</td></tr>
+<tr><td>v1.1</td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>Step 2 완료</strong> — 5대 영역 모두 의사결정. ① 보상: C안(5/25/75 + 일일 500·주간 3,000 캡 + BO 자유 변경) ② 귀속: A안 정밀 매트릭스 + 쿨다운 없음·시점이후 반영 ③ 동순위: A안 먼저 도달 우선 + ms 정밀도 + 운영자 승인 시각 ④ 엣지케이스 6개 권장안 일괄 채택 + 3언어 UI 안내문 확정 ⑤ 다국어: Fan Power / 推し力 + 9종 라벨 매핑표 확정. §6 종합 요약 + §7 다음 액션 활성화</td></tr>
+<tr><td>v1.2</td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>개발팀 피드백 반영 후속 결정</strong>. ① <strong>PM/ST 보상 단순화</strong> (A안 채택) — 기존 PM 참여/Trivia 정답/PM 적중 3종 → <strong>게임 참여 보상 25(공통) / PM 정답 100 / ST 완주 100</strong> 3단 구조 압축 ② <strong>일일 미션 일괄 지급</strong> — 1건당 25DUK 즉시 지급 → 모든 미션 완료 시 25DUK 일괄 지급. ST 완주 보상은 PM 적중과 동일 100DUK 일관 적용. 공통정책 v5.1 + FQ-501 v2.1 + HOM-001 v2.6 동기화 완료</td></tr>
+</table>
+
+</body>
+</html>

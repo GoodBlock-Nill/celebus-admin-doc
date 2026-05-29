@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-204] Raffle 상세 (기본정보 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-204] Raffle 상세 (기본정보 탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-FQ-204</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트) — Raffle</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.05</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 팬퀘스트 > Fan Quest 관리 > Raffle > {Raffle 타이틀}</td></tr>
+<tr><td>비고</td><td>v1 BO-FQ/[CEB-BO-FQ-204] v1.1 → v2 정책 호환 갱신</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한(§3·§4), UI 상태(§7), 토스트(§9), 활동 로그(§6)</td></tr>
+<tr><td>[CEB-BO-006] Quest·Raffle(FQ) 영역 가이드</td><td>권한 매트릭스(§4), Raffle 라이프사이클(§7.2), 추첨 알고리즘(§7.5), 응모권 거래(§7.6), SUPER 가드레일(§4.2), 활동 로그(§6)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>등록된 Raffle의 전체 설정 정보·생애 주기·실시간 응모 현황을 한눈에 파악하고 라이프사이클 액션 (게시/수정/종료/삭제)을 수행. 응모자 관리·추첨 실행은 형제 탭으로 이동.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>Raffle 핵심 정보 조회 (기본 / 관리 / 다국어 콘텐츠)</li>
+<li>실시간 응모·당첨 대시보드 (4카드)</li>
+<li>Raffle 라이프사이클 관리 ([CEB-BO-006] §7.2)</li>
+<li>형제 탭 진입 (응모내역 / 추첨내역)</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-FQ-102] 팬퀘스트 메인 (Raffle 탭) > Raffle 리스트 Row 클릭</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 네비게이션·헤더</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 팬퀘스트 > Fan Quest 관리 > Raffle > {Raffle 타이틀}</code></li>
+<li>뒤로가기 화살표 (←) → [CEB-BO-FQ-102] 이동</li>
+<li>타이틀: <code>{Raffle 타이틀(KO)} [상태 Badge]</code></li>
+<li>탭 메뉴 (3탭, 상호 배타):</li>
+<li><strong>기본정보</strong> (현재 화면)</li>
+<li><strong>응모내역</strong> → [CEB-BO-FQ-205]</li>
+<li><strong>추첨내역</strong> → [CEB-BO-FQ-206]</li>
+</ul>
+<h3>2.2 상태별 액션 버튼 (우측 상단)</h3>
+<p>[CEB-BO-006] §7.2 라이프사이클 적용:</p>
+<table>
+<tr><th>Raffle 상태</th><th>노출 버튼</th><th>호출 화면/모달</th></tr>
+<tr><td>임시저장(Draft)</td><td>[삭제하기] [수정하기] [게시하기]</td><td>MD-DELETE / EDIT / MD-OPEN</td></tr>
+<tr><td>진행중(Active)</td><td>[수정하기] [종료하기]</td><td>EDIT (제한적) / MD-CLOSE</td></tr>
+<tr><td>추첨대기(Closed)</td><td>(버튼 없음, 추첨은 추첨내역 탭에서)</td><td>—</td></tr>
+<tr><td>종료(Ended)</td><td>(버튼 없음)</td><td>—</td></tr>
+</table>
+<blockquote>
+<p>추첨대기(Closed) 상태에서의 추첨 실행은 [CEB-BO-FQ-206-MD-DRAW]에서 SUPER 가드레일([CEB-BO-006] §4.2) 적용.</p>
+</blockquote>
+<h3>2.3 현황 대시보드 카드 (4카드)</h3>
+<table>
+<tr><th>카드</th><th>아이콘</th><th>의미</th></tr>
+<tr><td>총 응모자</td><td>people</td><td>전체 응모 참여자 수 (중복 제외)</td></tr>
+<tr><td>총 응모권</td><td>ticket</td><td>사용된 응모권 수량 (회원당 N장 응모 시 N)</td></tr>
+<tr><td>목표 당첨자</td><td>trophy</td><td>설정된 당첨 인원</td></tr>
+<tr><td>지급 완료</td><td>check</td><td>보상 지급 완료 인원 (현장/배송/온라인 구분 무관)</td></tr>
+</table>
+<h3>2.4 상세 정보 그리드</h3>
+<h4>A. Raffle 정보 (좌상단)</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>아티스트</td><td>그룹/멤버</td></tr>
+<tr><td>당첨 인원</td><td>최종 당첨자 수 (예: 10명)</td></tr>
+<tr><td>배송 타입</td><td>현장 수령 / 배송 수령 / 온라인 수령</td></tr>
+<tr><td>대표 이미지</td><td>이미지 보기 링크 (lightbox)</td></tr>
+<tr><td>시작 일시</td><td>Active·Closed·Ended 상태에서만 표시</td></tr>
+<tr><td>마감 일시</td><td>YYYY.MM.DD HH:mm KST</td></tr>
+</table>
+<h4>B. 관리 정보 (우상단)</h4>
+<table>
+<tr><th>항목</th><th>표시</th></tr>
+<tr><td>상태</td><td>Status Badge (Draft Gray / Active Green / Closed Orange / Ended Black)</td></tr>
+<tr><td>생성 관리자</td><td>생성자 표기</td></tr>
+<tr><td>생성 일시</td><td>YYYY.MM.DD HH:mm</td></tr>
+<tr><td>최근 수정자</td><td>수정자 표기</td></tr>
+<tr><td>최근 수정 일시</td><td>YYYY.MM.DD HH:mm</td></tr>
+</table>
+<h4>C. Raffle 다국어 콘텐츠 (하단)</h4>
+<ul>
+<li>타이틀 KO/EN/JP</li>
+<li>설명 KO/EN/JP</li>
+<li>경품 상세 KO/EN/JP (단위 + 항목)</li>
+<li>유의사항 KO/EN/JP</li>
+</ul>
+<h4>D. 배송 가이드 (조건부, 배송 타입에 따라)</h4>
+<table>
+<tr><th>배송 타입</th><th>표시</th></tr>
+<tr><td>현장 수령</td><td>수령 기간(시작/마감) / 운영 시간 / 수령 장소 KO/EN/JP / 지참물 KO/EN/JP</td></tr>
+<tr><td>배송 수령</td><td>배송지 입력 마감일시 / 배송지 입력 폼 URL (외부 링크)</td></tr>
+<tr><td>온라인 수령</td><td>(별도 표기 없음 — 추후 정의)</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 버튼 동작</h3>
+<table>
+<tr><th>버튼</th><th>동작</th><th>호출</th></tr>
+<tr><td>[삭제하기]</td><td>Draft 영구 삭제 확인</td><td>[CEB-BO-FQ-204-MD-DELETE]</td></tr>
+<tr><td>[수정하기]</td><td>Raffle 수정 화면 진입</td><td>[CEB-BO-FQ-204-EDIT]</td></tr>
+<tr><td>[게시하기]</td><td>게시 확인 → Active 전환</td><td>[CEB-BO-FQ-204-MD-OPEN]</td></tr>
+<tr><td>[종료하기]</td><td>종료 확인 → Closed 전환</td><td>[CEB-BO-FQ-204-MD-CLOSE]</td></tr>
+</table>
+<h3>3.2 네비게이션</h3>
+<ul>
+<li>[응모내역] 탭 → [CEB-BO-FQ-205]</li>
+<li>[추첨내역] 탭 → [CEB-BO-FQ-206]</li>
+<li>← 뒤로가기 → [CEB-BO-FQ-102]</li>
+</ul>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한별 분기</h3>
+<p>[CEB-BO-006] §4 적용:</p>
+<table>
+<tr><th>권한</th><th>화면 진입</th><th>조회</th><th>[수정]</th><th>[게시]</th><th>[종료]</th><th>[삭제]</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅ (Draft만)</td></tr>
+<tr><td>OPERATOR</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅ (Draft만)</td></tr>
+<tr><td>POLICY</td><td>✅</td><td>✅ (조회)</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>✅ (자기 아티스트)</td><td>✅</td><td>✅ (제한적)</td><td>❌</td><td>❌</td><td>❌</td></tr>
+</table>
+<h3>4.2 상태 전환 로직 ([CEB-BO-006] §7.2)</h3>
+<ul>
+<li><strong>게시 (Draft → Active)</strong>: [게시하기] → [MD-OPEN] 확인 → 시작 일시 자동 기록 + 앱 노출</li>
+<li><strong>종료 (Active → Closed)</strong>: [종료하기] → [MD-CLOSE] 확인 → 응모 마감 + 추첨 대기. 마감일 도래 시 시스템 자동 종료도 동일 결과</li>
+<li><strong>추첨 (Closed → Ended)</strong>: [CEB-BO-FQ-206-MD-DRAW]에서 추첨 실행 시 자동 전환</li>
+<li><strong>삭제 (Draft 한정)</strong>: [삭제하기] → [MD-DELETE] 확인 → 영구 삭제</li>
+</ul>
+<h3>4.3 데이터 표시 규칙</h3>
+<ul>
+<li>날짜 포맷: <code>YYYY.MM.DD HH:mm</code> KST</li>
+<li>응모자 카운트: 중복 응모 시 1명으로 집계 (총 응모자) / 응모권 사용 누적은 별도 카운트 (총 응모권)</li>
+<li>다국어 콘텐츠: 임시저장 일부 빈 칸 가능. 게시 시 3언어 검증 ([CEB-BO-006] §5.2)</li>
+</ul>
+<h3>4.4 수정 정책 (Active 상태)</h3>
+<table>
+<tr><th>항목</th><th>Draft</th><th>Active</th><th>사유</th></tr>
+<tr><td>타이틀·설명·유의사항 (다국어)</td><td>✅</td><td>✅</td><td>운영 대응</td></tr>
+<tr><td>대표 이미지</td><td>✅</td><td>✅</td><td>운영 대응</td></tr>
+<tr><td>아티스트</td><td>✅</td><td>❌</td><td>진행 주체 변경 불가</td></tr>
+<tr><td>마감 일시</td><td>✅</td><td><strong>연장만</strong></td><td>단축 불가 (응모자 보호)</td></tr>
+<tr><td>당첨 인원</td><td>✅</td><td>❌</td><td>응모자 보호</td></tr>
+<tr><td>배송 타입</td><td>✅</td><td>❌</td><td>—</td></tr>
+<tr><td>보상 상세</td><td>✅</td><td>❌</td><td>응모자 보호</td></tr>
+<tr><td>수령 가이드</td><td>✅</td><td>✅</td><td>운영 중 정보 갱신 가능</td></tr>
+</table>
+<p>상세 제약은 [CEB-BO-FQ-204-EDIT] 참조.</p>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>카드·정보 그리드 Skeleton</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Empty (응모자 0명 등)</td><td>"0" 표시</td></tr>
+<tr><td>Error</td><td>"데이터를 불러오지 못했습니다." + [새로고침]</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>[CEB-BO-006] §6 적용:</p>
+<table>
+<tr><th>액션</th><th>발생 화면</th><th>로그 메시지 (KO)</th></tr>
+<tr><td>Raffle 게시</td><td>[MD-OPEN]</td><td>Raffle '{타이틀}'을(를) 게시했습니다. (응모 마감: {일시})</td></tr>
+<tr><td>Raffle 종료</td><td>[MD-CLOSE]</td><td>Raffle '{타이틀}'을(를) 조기 종료했습니다. (응모자: {n}명)</td></tr>
+<tr><td>Raffle 삭제</td><td>[MD-DELETE]</td><td>Raffle '{타이틀}'을(를) 삭제했습니다. (Draft 상태만 가능)</td></tr>
+</table>
+<p>본 화면 자체(조회)는 로그 미기록.</p>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>처리</th></tr>
+<tr><td>삭제 불가 (Active/Closed/Ended)</td><td>[삭제하기] 버튼 미노출</td></tr>
+<tr><td>수정 제한 항목 변경 시도 (Active)</td><td>EDIT 화면에서 비활성 처리</td></tr>
+<tr><td>추첨대기/종료 후 수정 시도</td><td>EDIT 화면 진입 차단</td></tr>
+<tr><td>데이터 조회 실패</td><td>Toast (Error) + [재시도]</td></tr>
+<tr><td>EXTERNAL_ARTIST 자기 아티스트 외 진입</td><td>서버 차단 + Toast (Error) "접근 권한이 없는 Raffle입니다."</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-FQ-102</td><td>팬퀘스트 메인 (Raffle 탭)</td><td>상위</td></tr>
+<tr><td>CEB-BO-FQ-205</td><td>Raffle 상세 (응모내역 탭)</td><td>형제 (탭 이동)</td></tr>
+<tr><td>CEB-BO-FQ-206</td><td>Raffle 상세 (추첨내역 탭)</td><td>형제 (탭 이동)</td></tr>
+<tr><td>CEB-BO-FQ-204-EDIT</td><td>Raffle 수정</td><td>하위 ([수정하기])</td></tr>
+<tr><td>CEB-BO-FQ-204-MD-OPEN</td><td>Raffle 게시 모달</td><td>하위 ([게시하기])</td></tr>
+<tr><td>CEB-BO-FQ-204-MD-CLOSE</td><td>Raffle 종료 모달</td><td>하위 ([종료하기])</td></tr>
+<tr><td>CEB-BO-FQ-204-MD-DELETE</td><td>Raffle 삭제 모달</td><td>하위 ([삭제하기], Draft만)</td></tr>
+</table>
+<hr>
+<h2>9. v1 → v2 변경 사항</h2>
+<table>
+<tr><th>항목</th><th>v1</th><th>v2</th></tr>
+<tr><td>권한</td><td>Super Admin / Admin</td><td>SUPER/OPERATOR/POLICY/EXTERNAL_ARTIST</td></tr>
+<tr><td>EXTERNAL_ARTIST 처리</td><td>미정의</td><td>자기 아티스트 한정 진입</td></tr>
+<tr><td>Active 수정 제한</td><td>"유저 불리 변경 신중" 일반 명시</td><td>항목별 매트릭스 (§4.4), 마감일 연장만 가능</td></tr>
+<tr><td>응모자 카운트 정의</td><td>모호</td><td>중복 제외 카운트(응모자) vs 누적(응모권) 분리</td></tr>
+<tr><td>활동 로그</td><td>미정의</td><td>[CEB-BO-006] §6 (게시/종료/삭제)</td></tr>
+</table>
+<hr>
+<h2>10. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2025.12.09</td><td>@Nill Yoo</td><td>(v1) 초안 작성</td></tr>
+<tr><td>v1.1</td><td>2026.03.24</td><td>@Nill Yoo</td><td>(v1) 대시보드 카드 + 경품 상세/배송 가이드/유의사항 섹션 + 상태 표기 한글화</td></tr>
+<tr><td><strong>v2.0</strong></td><td><strong>2026.05.05</strong></td><td><strong>@Nill Yoo</strong></td><td>v2 정책 호환 갱신. ① [CEB-BO-000]/[CEB-BO-006] 공통 정책 참조 ② 권한 4단계 + EXTERNAL_ARTIST 자기 아티스트 한정 ③ Active 상태 수정 매트릭스 (§4.4) — 마감일 연장만 가능 신규 정책 ④ 응모자 카운트 정의 명확화 (중복 제외 vs 응모권 누적) ⑤ 활동 로그 §6 ⑥ UI 상태별 처리 §5 ⑦ 추첨 가드레일 §4.2 안내 ⑧ v1 deprecation 동시 진행</td></tr>
+</table>
+
+</body>
+</html>

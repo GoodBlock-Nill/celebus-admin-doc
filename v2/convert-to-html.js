@@ -239,34 +239,129 @@ ${bodyHtml}
   console.log(`✅ ${path.basename(mdPath)} → ${path.basename(htmlPath)}`);
 }
 
-// Convert all v2 documents
-const base = __dirname;
-const files = [
-  ['[CEB-000] 공통 정책.md', 'confluence-html/[CEB-000] 공통 정책.html'],
-  ['APP/[CEB-ART-101] 아티스트 메인.md', 'confluence-html/APP/[CEB-ART-101] 아티스트 메인.html'],
-  ['APP/[CEB-FQ-101] Quest 메인.md', 'confluence-html/APP/[CEB-FQ-101] Quest 메인.html'],
-  ['APP/[CEB-FQ-205] Quest 제출.md', 'confluence-html/APP/[CEB-FQ-205] Quest 제출.html'],
-  ['APP/[CEB-FQ-201-MD] 반려 사유 모달.md', 'confluence-html/APP/[CEB-FQ-201-MD] 반려 사유 모달.html'],
-  ['APP/[CEB-FQ-501] 일일 미션.md', 'confluence-html/APP/[CEB-FQ-501] 일일 미션.html'],
-  ['APP/[CEB-DUK-201] 서포트 이벤트.md', 'confluence-html/APP/[CEB-DUK-201] 서포트 이벤트.html'],
-  ['APP/[CEB-DUK-101] 덕력 랭킹.md', 'confluence-html/APP/[CEB-DUK-101] 덕력 랭킹.html'],
-  ['APP/[CEB-EVT-201] 팬덤 레벨.md', 'confluence-html/APP/[CEB-EVT-201] 팬덤 레벨.html'],
-  ['APP/[CEB-EVT-101] Raffle.md', 'confluence-html/APP/[CEB-EVT-101] Raffle.html'],
-  ['APP/[CEB-COL-101] 컬렉션.md', 'confluence-html/APP/[CEB-COL-101] 컬렉션.html'],
-  ['APP/[CEB-INF-101] 정보 피드.md', 'confluence-html/APP/[CEB-INF-101] 정보 피드.html'],
-  ['APP/[CEB-INF-201] 소식 상세.md', 'confluence-html/APP/[CEB-INF-201] 소식 상세.html'],
-  ['APP/[CEB-MEM-101] 기억저장소.md', 'confluence-html/APP/[CEB-MEM-101] 기억저장소.html'],
-  ['APP/[CEB-HOM-001] 홈 메인.md', 'confluence-html/APP/[CEB-HOM-001] 홈 메인.html'],
-  ['APP/[CEB-HOM-101] 이벤트 전체.md', 'confluence-html/APP/[CEB-HOM-101] 이벤트 전체.html'],
-  ['APP/[CEB-ART-201] 아티스트 탐색.md', 'confluence-html/APP/[CEB-ART-201] 아티스트 탐색.html'],
-  ['APP/[CEB-MEM-201] 기억 작성.md', 'confluence-html/APP/[CEB-MEM-201] 기억 작성.html'],
-  ['APP/[CEB-MEM-202] 기억 상세.md', 'confluence-html/APP/[CEB-MEM-202] 기억 상세.html'],
-  ['APP/[CEB-MEM-102] 모두의 기억저장소.md', 'confluence-html/APP/[CEB-MEM-102] 모두의 기억저장소.html'],
-  ['APP/[CEB-MEM-103] {닉네임} 님의 기억저장소.md', 'confluence-html/APP/[CEB-MEM-103] {닉네임} 님의 기억저장소.html'],
-];
+// ──────────────────────────────────────────────────────────────────
+// Glob-based automatic mapping (Phase 2 — 회복탄력 인프라)
+// hardcoded 매핑 제거. v2/{BO|APP}/*.md 와 v2/*.md 를 자동 발견.
+//
+// CLI:
+//   (없음)             1회 변환
+//   --watch            폴링 watch 모드 (의존성 추가 없이 fs.watch 사용)
+//   --validate-only    Page Properties / changelog / 파일명 검증만
+// ──────────────────────────────────────────────────────────────────
 
-for (const [md, html] of files) {
-  convertFile(path.join(base, md), path.join(base, html));
+const base = __dirname;
+
+// 1단계 파일만 (서브디렉토리 미포함)
+function walkMdFlat(dir) {
+  const out = [];
+  if (!fs.existsSync(dir)) return out;
+  for (const name of fs.readdirSync(dir)) {
+    const full = path.join(dir, name);
+    let stat;
+    try { stat = fs.statSync(full); } catch { continue; }
+    if (stat.isFile() && name.endsWith('.md')) out.push(full);
+  }
+  return out;
 }
 
-console.log(`\n총 ${files.length}개 파일 변환 완료`);
+// 재귀 — 폴더 구조를 .md 경로 list 로 평탄화
+function walkMdRecursive(dir) {
+  const out = [];
+  if (!fs.existsSync(dir)) return out;
+  for (const name of fs.readdirSync(dir)) {
+    const full = path.join(dir, name);
+    let stat;
+    try { stat = fs.statSync(full); } catch { continue; }
+    if (stat.isDirectory()) {
+      out.push(...walkMdRecursive(full));
+    } else if (stat.isFile() && name.endsWith('.md')) {
+      out.push(full);
+    }
+  }
+  return out;
+}
+
+function discoverFiles() {
+  const mappings = [];
+  // v2 루트 .md (1단계만 — APP/BO 디렉토리는 walkMdFlat 에서 자동 제외)
+  for (const md of walkMdFlat(base)) {
+    const name = path.basename(md);
+    mappings.push([md, path.join(base, 'confluence-html', name.replace(/\.md$/, '.html'))]);
+  }
+  // v2/BO/ 재귀 — 영역별 폴더(USR/ART/BIVE/FQ/SYS/00-Common 등) 미러 출력
+  const boDir = path.join(base, 'BO');
+  for (const md of walkMdRecursive(boDir)) {
+    const rel = path.relative(boDir, md); // 예: "FQ/[CEB-BO-FQ-101].md"
+    const htmlRel = rel.replace(/\.md$/, '.html');
+    mappings.push([md, path.join(base, 'confluence-html', 'BO', htmlRel)]);
+  }
+  // v2/APP/ 재귀 (현재는 평면이지만 미래 확장 대비)
+  const appDir = path.join(base, 'APP');
+  for (const md of walkMdRecursive(appDir)) {
+    const rel = path.relative(appDir, md);
+    const htmlRel = rel.replace(/\.md$/, '.html');
+    mappings.push([md, path.join(base, 'confluence-html', 'APP', htmlRel)]);
+  }
+  return mappings;
+}
+
+function validatePageProperties(mdPath) {
+  const text = fs.readFileSync(mdPath, 'utf8');
+  const issues = [];
+  if (!/##?\s*Page Properties/i.test(text)) issues.push('Page Properties 섹션 없음');
+  if (!/(변경\s*이력|Changelog|## \d+\.\s*변경)/i.test(text)) issues.push('변경 이력(changelog) 섹션 없음');
+  const fileName = path.basename(mdPath);
+  if (!fileName.startsWith('[CEB-')) issues.push('파일명이 [CEB-...] 패턴이 아님');
+  return issues;
+}
+
+function buildAll(opts) {
+  opts = opts || {};
+  const mappings = discoverFiles();
+  let ok = 0, warn = 0;
+  for (const [md, html] of mappings) {
+    if (opts.validateOnly) {
+      const issues = validatePageProperties(md);
+      if (issues.length) {
+        console.warn(`⚠️  ${path.basename(md)} — ${issues.join(', ')}`);
+        warn++;
+      } else { ok++; }
+    } else {
+      try { convertFile(md, html); ok++; }
+      catch (e) { console.error(`❌ ${path.basename(md)} — ${e.message}`); warn++; }
+    }
+  }
+  console.log(`\n총 ${mappings.length}개 — 성공 ${ok}, 경고/실패 ${warn}`);
+  return { total: mappings.length, ok, warn };
+}
+
+function watchAll() {
+  buildAll();
+  console.log('\n👀 watch 모드 시작 (Ctrl+C로 종료) — recursive');
+  // recursive: BO/APP/ 하위 영역 폴더(USR/ART/BIVE/FQ/SYS 등) 자동 감지 (macOS·Windows 지원)
+  const watchedDirs = [
+    { dir: base, mirrorRoot: path.join(base, 'confluence-html'), recursive: false },
+    { dir: path.join(base, 'BO'), mirrorRoot: path.join(base, 'confluence-html', 'BO'), recursive: true },
+    { dir: path.join(base, 'APP'), mirrorRoot: path.join(base, 'confluence-html', 'APP'), recursive: true },
+  ];
+  for (const { dir, mirrorRoot, recursive } of watchedDirs) {
+    if (!fs.existsSync(dir)) continue;
+    fs.watch(dir, { persistent: true, recursive }, (event, filename) => {
+      if (!filename || !filename.endsWith('.md')) return;
+      const mdPath = path.join(dir, filename);
+      if (!fs.existsSync(mdPath)) return;
+      // base 루트는 평면, BO/APP 는 폴더 구조 미러
+      const htmlPath = path.join(mirrorRoot, filename.replace(/\.md$/, '.html'));
+      try { convertFile(mdPath, htmlPath); }
+      catch (e) { console.error(`❌ ${filename} — ${e.message}`); }
+    });
+  }
+  setInterval(() => {}, 1000 * 60 * 60);
+}
+
+const args = process.argv.slice(2);
+if (args.includes('--watch')) watchAll();
+else if (args.includes('--validate-only')) {
+  const r = buildAll({ validateOnly: true });
+  process.exit(r.warn > 0 ? 1 : 0);
+} else buildAll();

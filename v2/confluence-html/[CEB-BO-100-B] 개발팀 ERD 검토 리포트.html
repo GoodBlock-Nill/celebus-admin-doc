@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-100-B] 개발팀 ERD 검토 리포트</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-100-B] 개발팀 ERD 검토 리포트</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-100-B</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>개발팀 ERD(SQL DDL) 3종 검토 — v2 BO 가이드 정합성 분석</td></tr>
+<tr><td>상태</td><td>Decided (Review→Decided 2026.05.08)</td></tr>
+<tr><td>버전</td><td>v1.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.11</td></tr>
+<tr><td>비고</td><td>v1.2: SQ 구조 정정 합의 5번째 추가 ([CEB-BO-100] v1.7, [CEB-BO-011] v1.1) — §3 에피소드 용어·수량 제약·<code>image_url</code>·<code>bive_reward_yn</code> 반영, §6 갭 12건→13건, §9 합의 4건→5건, §10 추가 자료 요청 상태 컬럼. v1.1: §9 즉시 합의 필요 3건 모두 합의 완료 (덕력=글로벌 시즌 / 팬덤=시즌별 리셋 / 챌린지=SQ 영역 + 아티스트별). v1.0: 개발팀이 2026.05.08 제공한 SQL DDL 3종(62 테이블) 검토 결과. v2 BO 13개 영역 가이드(v1.4) + 11개 멀티아티스트 정책 가이드 기준 정합성 분석. 본 리포트는 운영팀·개발팀 검토용. 패턴: [CEB-BO-001-A], [CEB-BO-100-A]와 동일.</td></tr>
+</table>
+<hr>
+<h2>1. 검토 배경</h2>
+<p>개발팀이 v2 고도화 ERD 3종을 SQL DDL 파일로 제공:</p>
+<table>
+<tr><th>파일</th><th>영역</th><th>테이블 수</th></tr>
+<tr><td><code>v2/BO/Celebus_2025_고도화_배너_응원하기_정보.sql</code></td><td>HOM(배너) / SUP(응원하기) / INF(정보·소식)</td><td>16</td></tr>
+<tr><td><code>v2/BO/Celebus_고도화_덕력_팬덤_기억저장소.sql</code></td><td>DUK(덕력) / EVT(팬덤 레벨) / MEM(기억저장소)</td><td>24</td></tr>
+<tr><td><code>v2/BO/Celebus_고도화_챌린지_일일미션_아티스트.sql</code></td><td><strong>챌린지=<code>story_quest</code></strong> / FQ(일일미션) / ART(아티스트)</td><td>22</td></tr>
+</table>
+<p><strong>총 62개 테이블</strong>. SQL DDL이므로 컬럼·외래키·ENUM·다국어 패턴까지 정밀 검증 가능.</p>
+<hr>
+<h2>2. 영역별 테이블 매핑 (62개)</h2>
+<h3>2.1 SQL 1 — 배너·응원하기·정보 (16 테이블)</h3>
+<table>
+<tr><th>영역</th><th>테이블</th></tr>
+<tr><td><strong>INF</strong> (소식)</td><td><code>info</code>, <code>info_translation</code>, <code>info_link</code>, <code>info_link_translation</code>, <code>info_image</code>, <code>notice</code>, <code>notice_translation</code>, <code>user_info_read</code>, <code>user_info_like</code></td></tr>
+<tr><td><strong>SUP</strong> (응원하기)</td><td><code>support_event</code>, <code>support_event_translation</code>, <code>support_event_participation</code>, <code>support_event_result_media</code></td></tr>
+<tr><td><strong>HOM</strong> (배너)</td><td><code>event_banner</code>, <code>event_banner_translation</code></td></tr>
+<tr><td><strong>공통</strong></td><td><code>artist_group</code>, <code>user</code></td></tr>
+</table>
+<h3>2.2 SQL 2 — 덕력·팬덤·기억저장소 (24 테이블)</h3>
+<table>
+<tr><th>영역</th><th>테이블</th></tr>
+<tr><td><strong>DUK</strong> (덕력)</td><td><code>fan_power_season</code>, <code>fan_power_season_translation</code>, <code>fan_power_season_reward</code>, <code>fan_power_season_reward_translation</code>, <code>fan_power_season_ranking</code>, <code>fan_power_season_ranking_reload</code>, <code>fan_power_limit</code>, <code>user_fan_power</code>, <code>user_fan_power_season</code>, <code>user_fan_power_history</code></td></tr>
+<tr><td><strong>EVT</strong> (팬덤 레벨)</td><td><code>fandom_level_season</code>, <code>fandom_level_policy</code>, <code>fandom_level</code>, <code>fandom_level_reward</code>, <code>fandom_level_reward_translation</code>, <code>fandom_level_up_job</code>, <code>fandom_level_reward_job</code>, <code>user_fandom_level_reward</code></td></tr>
+<tr><td><strong>MEM</strong> (기억저장소)</td><td><code>user_artist_memory</code>, <code>user_artist_memory_media</code>, <code>user_artist_memory_emoji</code>, <code>artist_memory_emoji</code>, <code>artist_memory_emoji_translation</code>, <code>artist_memory_report</code></td></tr>
+<tr><td><strong>공통/뱃지</strong></td><td><code>badge</code>, <code>badge_translation</code>, <code>user_badge</code>, <code>artist_group</code>, <code>user</code></td></tr>
+</table>
+<h3>2.3 SQL 3 — 챌린지·일일미션·아티스트 (22 테이블)</h3>
+<table>
+<tr><th>영역</th><th>테이블</th></tr>
+<tr><td><strong>🆕 SQ</strong> (스토리 퀘스트) ⭐ v1.2 영역 코드 확정</td><td><code>story_quest</code>, <code>story_quest_translation</code>, <code>story_quest_chapter</code>, <code>story_quest_chapter_translation</code>, <code>story_quest_chapter_mission</code>, <code>user_story_quest_chapter</code>, <code>user_story_quest_chapter_mission</code> (테이블명 <code>_chapter</code> 유지, 운영 노출 텍스트만 "에피소드"로 통일)</td></tr>
+<tr><td><strong>FQ-501</strong> (일일미션)</td><td><code>daily_mission</code>, <code>daily_mission_translation</code>, <code>user_daily_mission</code>, <code>daily_mission_group_reward</code>, <code>user_daily_mission_group_reward</code>, <code>daily_mission_streak_reward</code>, <code>user_daily_mission_streak_reward</code>, <code>user_daily_mission_streak_count</code></td></tr>
+<tr><td><strong>BIVE</strong> (민팅 이벤트)</td><td><code>minting_event</code>, <code>minting_event_goods</code></td></tr>
+<tr><td><strong>ART</strong> (아티스트)</td><td><code>artist_group</code>, <code>artist_group_goods</code>, <code>user_favorite_artist</code>, <code>user_artist_group_notification</code></td></tr>
+<tr><td><strong>FQ</strong> (Fan Quest)</td><td><code>fan_quest</code></td></tr>
+<tr><td><strong>게임존</strong> (Trivia)</td><td><code>trivia</code></td></tr>
+<tr><td><strong>COL</strong> (굿즈)</td><td><code>user_goods_history</code></td></tr>
+<tr><td><strong>공통</strong></td><td><code>user</code></td></tr>
+</table>
+<hr>
+<h2>3. 🆕 신규 영역 — <code>story_quest</code> (스토리 퀘스트, SQ) ⭐ v1.2 정정</h2>
+<h3>3.1 구조 분석</h3>
+<p>스토리 퀘스트는 <strong>시리즈형 콘텐츠</strong> — 하나의 큰 줄거리 안에 여러 <strong>에피소드</strong>(ERD 테이블 <code>story_quest_chapter</code>), 에피소드마다 미션이 구성되는 구조.</p>
+<blockquote>
+<p><strong>용어 통일</strong> ⭐ v1.2: 운영 노출 텍스트 "에피소드"(테이블명 <code>_chapter</code> 유지). [CEB-BO-100] v1.7 결정사항 ⑫.</p>
+</blockquote>
+<pre><code>story_quest (1)
+   └─ story_quest_chapter (N≤5) — 에피소드, 순서대로 진행
+         └─ story_quest_chapter_mission (M≤10) — 에피소드 안의 개별 미션
+               ↓ 회원 진행
+         user_story_quest_chapter_mission (회원 × 미션)
+   └─ user_story_quest_chapter (회원 × 에피소드, 잠금/활성/완료 상태)
+</code></pre>
+<h3>3.2 핵심 필드 ⭐ v1.2 정정 (image_url + bive_reward_yn 신규)</h3>
+<table>
+<tr><th>테이블</th><th>핵심 필드</th><th>의미</th></tr>
+<tr><td><code>story_quest</code></td><td><code>story_quest_status</code> (DRAFT/ACTIVE/CLOSED), <code>open_dt</code>, <code>close_dt</code>, <strong><code>artist_group_id NOT NULL</code></strong> ⭐ 추가 요청 ([CEB-BO-100-C] §2.2)</td><td>스토리 퀘스트 마스터 — 아티스트별</td></tr>
+<tr><td><code>story_quest_chapter</code></td><td><code>story_quest_chapter_order</code>, <code>story_quest_chapter_type</code> (FAN_QUEST/PREDICTION_MARKET/SURVIVAL_TRIVIA), <strong><code>image_url varchar(500) NULL</code></strong> ⭐ 추가 요청 (에피소드 메인 이미지), <code>reward_entry_ticket</code>, <code>reward_fan_point</code>, <strong><code>bive_reward_yn boolean DEFAULT false</code></strong> ⭐ 추가 요청 (BIVE 보상 on/off), <code>minting_event_id</code>(NULL 허용 변경 요청), <code>repeat_yn</code></td><td>에피소드 — 보상은 응모권·덕력·BIVE 민팅</td></tr>
+<tr><td><code>story_quest_chapter_mission</code></td><td><code>source_type</code> (FAN_QUEST/PM/ST), <code>source_id</code>, <code>completed_type</code> (ADMIN_APPROVAL/PM_PARTICIPATION/PM_CORRECT/TRIVIA_PARTICIPATION/TRIVIA_CORRECT_COUNT), <code>completed_value</code>, <code>repeat_cycle</code> (MONTHLY/WEEKLY)</td><td>미션 완료 조건</td></tr>
+<tr><td><code>user_story_quest_chapter_mission</code></td><td><code>story_quest_chapter_mission_status</code> (INCOMPLETE/SUBMITTED/APPROVED/REJECTED), <code>progress_round_key</code> (MAIN, yyyy-MM, yyyy-Www)</td><td>회원 진행 — 반복 주기별 라운드 키</td></tr>
+</table>
+<h3>3.3 수량 제약 ⭐ v1.2 신규</h3>
+<table>
+<tr><th>항목</th><th>제약</th><th>검증 위치</th></tr>
+<tr><td>스토리당 에피소드 수</td><td><strong>최대 5</strong></td><td>응용 레벨 (BO + APP)</td></tr>
+<tr><td>에피소드당 미션 수</td><td><strong>최대 10</strong></td><td>응용 레벨 (BO + APP)</td></tr>
+<tr><td>DB 제약</td><td>별도 미적용</td><td>검증 SQL: [CEB-BO-100-C] §8.4</td></tr>
+</table>
+<h3>3.4 기존 가이드와의 관계</h3>
+<ul>
+<li><strong>FQ (팬퀘스트)</strong>: 에피소드 유형 <code>FAN_QUEST</code>로 연결. 단 스토리 퀘스트 자체는 별도 영역.</li>
+<li><strong>게임존 (PM/ST)</strong>: 에피소드 유형 <code>PREDICTION_MARKET</code>, <code>SURVIVAL_TRIVIA</code>로 연결. 스토리 퀘스트가 게임존 콘텐츠를 미션으로 묶음.</li>
+<li><strong>BIVE (민팅)</strong>: <code>bive_reward_yn=true</code> 시 <code>minting_event_id</code> FK — 에피소드 완료 보상으로 BIVE NFT 자동 민팅.</li>
+<li><strong>DUK (덕력)</strong>: <code>reward_fan_point</code> — 에피소드 완료 시 덕력 보상.</li>
+</ul>
+<h3>3.5 권장 조치 — 합의 완료 (2026.05.08 + 05.09)</h3>
+<ol>
+<li>✅ <strong>신규 영역 가이드 작성</strong> — [CEB-BO-011] v1.1 (에피소드 데이터 모델 포함) 작성 완료.</li>
+<li>✅ <strong>[CEB-BO-100] 마스터 §1.2 14번째 영역 SQ 추가</strong> — v1.5에서 완료, v1.7에서 SQ 정정.</li>
+<li>✅ <strong>CLAUDE.md L69 영역 목록에 <code>SQ</code> 추가</strong> — v2 메타 갱신 완료.</li>
+<li>✅ <strong>멀티아티스트 정책 — 아티스트별 확정</strong> — <code>story_quest.artist_group_id NOT NULL</code> 추가 요청 ([CEB-BO-100-C] §2.2).</li>
+<li>⭐ <strong>v1.7 SQ 구조 정정 4건</strong> — [CEB-BO-100-C] §2.3 (image_url + bive_reward_yn + minting_event_id NULL).</li>
+</ol>
+<hr>
+<h2>4. 멀티아티스트 외래키 검증</h2>
+<h3>4.1 정합 ✅ — <code>artist_group_id</code> 보유 13 테이블</h3>
+<table>
+<tr><th>테이블</th><th>FK</th><th>비고</th></tr>
+<tr><td><code>support_event</code></td><td>✅ NOT NULL</td><td>응원 이벤트 — 아티스트별</td></tr>
+<tr><td><code>notice</code></td><td>✅ NOT NULL</td><td>공지 — 아티스트별</td></tr>
+<tr><td><code>info</code></td><td>✅ NOT NULL</td><td>소식·일정 — 아티스트별</td></tr>
+<tr><td><code>user_info_read</code></td><td>✅</td><td>회원 읽음 — 아티스트 컨텍스트 추적</td></tr>
+<tr><td><code>fan_power_season</code></td><td>✅ NOT NULL</td><td>덕력 시즌 — <strong>🔴 시즌이 아티스트별</strong> (정책 갭 #2)</td></tr>
+<tr><td><code>fandom_level_season</code></td><td>✅ NOT NULL</td><td>팬덤 레벨 시즌 — <strong>🔴 시즌제</strong> (정책 갭 #3)</td></tr>
+<tr><td><code>user_fan_power</code></td><td>✅ NOT NULL</td><td>회원 덕력 — 아티스트별 누적</td></tr>
+<tr><td><code>user_artist_memory</code></td><td>✅ NOT NULL</td><td>기억 — 아티스트 단위</td></tr>
+<tr><td><code>artist_memory_emoji</code></td><td>✅ NOT NULL</td><td>이모지 마스터 — 아티스트별</td></tr>
+<tr><td><code>fan_power_limit</code></td><td>✅ NOT NULL</td><td>덕력 한도 — 아티스트별</td></tr>
+<tr><td><code>badge</code></td><td>✅ NOT NULL</td><td>뱃지 — 아티스트별</td></tr>
+<tr><td><code>user_favorite_artist</code></td><td>✅ NOT NULL</td><td>최애 아티스트</td></tr>
+<tr><td><code>user_artist_group_notification</code></td><td>✅ NOT NULL</td><td>알림 설정 — 아티스트별</td></tr>
+</table>
+<h3>4.2 검토 필요 ⚠️ (v1.2 합의 결과 반영)</h3>
+<table>
+<tr><th>테이블</th><th>현황</th><th>합의/조치</th></tr>
+<tr><td><code>event_banner</code></td><td>❌ <code>artist_group_id</code> 없음 — <code>source_type</code>(<code>RAFFLE</code>/<code>SUPPORT_EVENT</code>)로 간접 연결</td><td>⚠️ 미합의 — 아티스트별 배너 직접 FK 추가 또는 nullable FK 추가 검토. [CEB-BO-100-C] §4.1 source_type ENUM 확장과 묶어 차기 합의</td></tr>
+<tr><td><code>story_quest</code></td><td>❌ <code>artist_group_id</code> 없음</td><td>✅ <strong>합의 완료</strong> — 아티스트별 확정 (NOT NULL 추가 요청). [CEB-BO-100-C] §2.2</td></tr>
+<tr><td><code>daily_mission</code></td><td>❌ <code>artist_group_id</code> 없음</td><td>⚠️ 미합의 — 가이드 [CEB-BO-FQ-501]은 전역으로 정의. ERD 정합 (전역 유지 가정)</td></tr>
+<tr><td><code>minting_event</code></td><td>❌ <code>artist_group_id</code> 없음</td><td>⚠️ 미합의 — BIVE 토큰 자체에 아티스트 연결 추정 (BIVE 영역 SQL 확인 필요)</td></tr>
+<tr><td><code>fan_quest</code></td><td>❌ FK 누락 (단순 테이블만 정의)</td><td>⚠️ SQL 3에서 단순 정의 — Fan Quest 영역 SQL 추가 자료 요청</td></tr>
+</table>
+<hr>
+<h2>5. 메타필드 검증</h2>
+<h3>5.1 가이드에서 정의한 메타필드 8종</h3>
+<table>
+<tr><th>메타필드</th><th>정의 위치</th><th>ERD 검증</th></tr>
+<tr><td><code>discoveryContext</code> (회원 정지 발견 아티스트)</td><td>[CEB-BO-USR-501] §4.7</td><td>❌ ERD에 <code>member_sanction</code> 테이블 없음 — <strong>추가 SQL 요청</strong></td></tr>
+<tr><td><code>discoveredFeature</code></td><td>[CEB-BO-USR-501] §4.7</td><td>❌ 동일</td></tr>
+<tr><td><code>artistContext</code> (관리자 활동 로그)</td><td>[CEB-BO-SYS-601] §3.2</td><td>❌ <code>admin_activity_log</code> 테이블 없음 — <strong>추가 SQL 요청</strong></td></tr>
+<tr><td><code>sourceFeature</code> (응모권 출처 6종)</td><td>[CEB-BO-010] §5.1</td><td>❌ <code>rft_ledger</code> 테이블 없음 — <strong>추가 SQL 요청</strong></td></tr>
+<tr><td><code>sourceArtistContext</code></td><td>[CEB-BO-010] §5.1</td><td>⚠️ <code>user_fan_power_history.source_type</code> 패턴 부분 정합 (덕력 출처 메타)</td></tr>
+<tr><td><code>sourceRefId</code> / <code>sourceRefType</code></td><td>[CEB-BO-010] §5.1</td><td>⚠️ <code>user_fan_power_history.source_id</code> 부분 정합</td></tr>
+</table>
+<h3>5.2 부분 정합 사례 — <code>user_fan_power_history</code></h3>
+<pre><code>history_type ENUM('EARN', 'USE')
+source_type ENUM(...)  -- 퀘스트, 일일미션, 바이브활동, 프리딕션 참여, 트리비아 참여, 랭킹보상, 응원하기 참여
+source_id INT
+</code></pre>
+<p>→ 우리 가이드 패턴(<code>sourceFeature</code> + <code>sourceRefId</code>)과 <strong>유사 구조</strong>. 명명만 정렬하면 정합.</p>
+<hr>
+<h2>6. 가이드-ERD 갭 13건 ⭐ v1.2 확장</h2>
+<h3>6.1 🔴 Critical (3건 — 모두 합의 완료)</h3>
+<table>
+<tr><th>#</th><th>항목</th><th>가이드 정책</th><th>ERD 실제</th><th>합의 결과</th></tr>
+<tr><td>1</td><td>"챌린지" 신규 영역</td><td>미정의</td><td><code>story_quest_*</code> 7테이블</td><td>✅ <strong>합의 완료</strong> — 영역 코드 = <code>SQ</code>, [CEB-BO-011] v1.1 작성. §9.3</td></tr>
+<tr><td>2</td><td>덕력 시즌 분리</td><td>[CEB-BO-100] §3 "글로벌 시즌 + 아티스트별 랭킹"</td><td><code>fan_power_season.artist_group_id</code> NOT NULL — 시즌 자체가 아티스트별</td><td>✅ <strong>합의 완료</strong> — 글로벌 시즌 유지, ERD <code>artist_group_id</code> NULL/제거 요청. §9.1</td></tr>
+<tr><td>3</td><td>팬덤 레벨 시즌제</td><td>APP [CEB-EVT-201] "영구 누적"</td><td><code>fandom_level_season</code> 시즌제 + FK</td><td>✅ <strong>합의 완료</strong> — 시즌별 리셋 채택 (연 1회 1.1~12.31), APP 갱신 필요. §9.2</td></tr>
+</table>
+<h3>6.2 🟠 High (3건)</h3>
+<table>
+<tr><th>#</th><th>항목</th><th>가이드</th><th>ERD</th><th>조치</th></tr>
+<tr><td>4</td><td>공지 vs 소식 분리</td><td>[CEB-BO-INF] 통합</td><td><code>notice</code> + <code>info</code> 별도</td><td>⚠️ 미합의 — INF 가이드 갱신 또는 ERD 통합</td></tr>
+<tr><td>5</td><td>배너 source_type</td><td>다양</td><td>2종(RAFFLE/SUPPORT_EVENT)</td><td>⚠️ 미합의 — [CEB-BO-100-C] §4.1 ENUM 확장 제안</td></tr>
+<tr><td>6</td><td>메타필드 부재</td><td>8종 정의</td><td>5개 영역 ERD 누락</td><td>⚠️ 추가 SQL 요청 ([CEB-BO-100-C] §3)</td></tr>
+</table>
+<h3>6.3 🟡 Info (6건)</h3>
+<table>
+<tr><th>#</th><th>항목</th><th>비고</th></tr>
+<tr><td>7</td><td><code>support_event_status</code> 7단계</td><td>가이드와 매핑 검증</td></tr>
+<tr><td>8</td><td><code>info.exclusive_yn</code> 단독 콘텐츠</td><td>INF·EVT 독점 콘텐츠 연결 정책 확인</td></tr>
+<tr><td>9</td><td><code>daily_mission.event_code</code> varchar(50)</td><td>enum 표준화 검토 ([CEB-BO-100-C] §4.2)</td></tr>
+<tr><td>10</td><td><code>minting_event.action_type</code> 5종</td><td>BIVE 가이드와 연결</td></tr>
+<tr><td>11</td><td><code>user_goods_history.acquire_type</code> 11종</td><td>COL 가이드 갱신</td></tr>
+<tr><td>12</td><td><code>fandom_level_reward.reward_type</code> 5종 + <code>distribution_type ALL/LOTTERY</code></td><td>EVT-201 가이드 갱신</td></tr>
+</table>
+<h3>6.4 🔴 SQ 구조 정정 (4건) ⭐ v1.2 신규 — 모두 합의 완료</h3>
+<table>
+<tr><th>#</th><th>항목</th><th>가이드 정책</th><th>ERD 실제</th><th>합의 결과</th></tr>
+<tr><td>13.a</td><td>운영 용어 통일</td><td>"챕터" → "에피소드"</td><td>테이블명 <code>story_quest_chapter</code> 유지</td><td>✅ 운영 노출 텍스트만 "에피소드" ([CEB-BO-100] v1.7)</td></tr>
+<tr><td>13.b</td><td>수량 제약</td><td>스토리당 5 / 에피소드당 10</td><td>DB 제약 미정의</td><td>✅ 응용 레벨 검증 ([CEB-BO-100-C] §8.4 검증 SQL)</td></tr>
+<tr><td>13.c</td><td>에피소드 메인 이미지</td><td>신규 추가</td><td>컬럼 부재</td><td>✅ <code>image_url varchar(500) NULL</code> 추가 요청 ([CEB-BO-100-C] §2.3)</td></tr>
+<tr><td>13.d</td><td>BIVE 보상 on/off 토글</td><td>신규 추가</td><td><code>minting_event_id NOT NULL DEFAULT auto_increment</code>(오류)</td><td>✅ <code>bive_reward_yn boolean DEFAULT false</code> 신규 + <code>minting_event_id NULL</code> 허용 ([CEB-BO-100-C] §2.3)</td></tr>
+</table>
+<hr>
+<h2>7. 다국어 패턴 검증 ✅</h2>
+<p>ERD에 다음 17개 <code>*_translation</code> 테이블 발견 — 가이드 다국어 정책과 정합:</p>
+<p><code>info_translation</code>, <code>notice_translation</code>, <code>support_event_translation</code>, <code>event_banner_translation</code>, <code>info_link_translation</code>, <code>fan_power_season_translation</code>, <code>fan_power_season_reward_translation</code>, <code>fandom_level_reward_translation</code>, <code>badge_translation</code>, <code>artist_memory_emoji_translation</code>, <code>daily_mission_translation</code>, <code>story_quest_translation</code>, <code>story_quest_chapter_translation</code></p>
+<p><strong>공통 패턴</strong>:</p>
+<pre><code>id, {parent}_id, lang_code VARCHAR(10), title VARCHAR(...), description TEXT
+</code></pre>
+<p>→ KO/EN/JP 3언어 분리, [CEB-BO-000] §5 다국어 정책 정합 ✅.</p>
+<blockquote>
+<p><strong>사소한 점</strong>: <code>lang_code</code> DEFAULT가 일부 테이블은 <code>'en'</code>이고 일부는 NULL. 표준 권장: <code>'ko'</code> 폴백 정책 적용 위해 KO를 기본값으로.</p>
+</blockquote>
+<hr>
+<h2>8. 정합성 확인 항목 (8건 추가 검증)</h2>
+<table>
+<tr><th>항목</th><th>가이드</th><th>ERD</th><th>평가</th></tr>
+<tr><td>응원 이벤트 7단계 상태</td><td>미상세</td><td>DRAFT/ACTIVE/ACHIEVED/EXECUTING/COMPLETED/NOT_ACHIEVED/CANCELLED</td><td>✅ 잘 설계됨</td></tr>
+<tr><td>덕력 한도 정책</td><td>일·주·월간 한도</td><td><code>fan_power_limit.daily_limit/weekly_limit/monthly_limit</code></td><td>✅ 정합</td></tr>
+<tr><td>일일미션 스트릭</td><td>보상 지급</td><td><code>daily_mission_streak_reward</code> + <code>user_daily_mission_streak_count</code></td><td>✅ 정합</td></tr>
+<tr><td>일일미션 그룹 보상</td><td>미상세</td><td><code>daily_mission_group_reward.required_mission_count</code></td><td>운영 룰 확인 (3개 완료 시 N 포인트 등)</td></tr>
+<tr><td>덕력 시즌 랭킹 reload</td><td>미명시</td><td><code>fan_power_season_ranking_reload</code> (Redis 키, 재실행)</td><td>운영 도구 — 가이드 추가 권장</td></tr>
+<tr><td>보상 작업 상태 추적</td><td>미명시</td><td><code>fandom_level_up_job</code> + <code>fandom_level_reward_job</code> (READY/PROCESSING/COMPLETED/FAILED)</td><td>비동기 작업 큐 — 운영 모니터링 화면 필요</td></tr>
+<tr><td>추첨 당첨자 처리</td><td>미상세</td><td><code>fandom_level_reward_job.lottery_status NONE/READY/COMPLETED</code></td><td>추첨 워크플로우 가이드 추가 권장</td></tr>
+<tr><td>기억저장소 신고</td><td>정의 ([CEB-BO-MEM])</td><td><code>artist_memory_report</code> 5종 신고 유형(INAPPROPRIATE/SPAM/HATE_SPEECH/PRIVACY/OTHER)</td><td>✅ 정합</td></tr>
+</table>
+<hr>
+<h2>9. ✅ 합의 완료 결정사항 (2026.05.08~05.09)</h2>
+<p>v1.1에서 4건 합의 완료 (2026.05.08), v1.2에서 5번째 SQ 구조 정정 추가 합의 (2026.05.09):</p>
+<h3>9.1 덕력 시즌 모델 — <strong>글로벌 시즌 유지</strong></h3>
+<ul>
+<li><strong>결정</strong>: 글로벌 시즌 1개로 모든 아티스트 동시 시작·종료. 랭킹만 아티스트별 분리 산출.</li>
+<li><strong>근거</strong>: APP [CEB-DUK-101] "통합 누적" 정책과 정합 + 운영 단순성.</li>
+<li><strong>개발팀 ERD 수정 요청</strong>: <code>fan_power_season.artist_group_id</code>를 <strong>NULL 허용</strong> 또는 제거.</li>
+<li><strong>가이드 영향</strong>: [CEB-BO-100] §3 표현 명확화 ("글로벌 시즌 마스터 + 아티스트별 독립 랭킹 산출").</li>
+<li><strong>APP 영향</strong>: 변경 없음 (현재 정책 유지).</li>
+</ul>
+<h3>9.2 팬덤 레벨 시즌제 — <strong>시즌별 리셋 (ERD 따르기)</strong></h3>
+<ul>
+<li><strong>결정</strong>: 시즌 종료 시 회원 팬덤 레벨도 리셋. ERD <code>fandom_level_season</code> 구조 그대로 채택.</li>
+<li><strong>근거</strong>: ERD가 이미 시즌제 구조로 설계됨 (<code>fandom_level.fandom_level_season_id</code> FK + 시즌별 보상 작업 큐).</li>
+<li><strong>개발팀 ERD</strong>: 현재 그대로 유지. 변경 없음.</li>
+<li><strong>가이드 영향</strong>: [CEB-BO-EVT-201] 또는 [CEB-BO-EVT-101]에 시즌별 리셋 정책 명시. [CEB-BO-100] §3 갱신.</li>
+<li><strong>APP 영향</strong>: ⚠️ <strong>APP [CEB-EVT-201] "영구 누적" 정책을 "시즌별 리셋"으로 갱신 필요</strong>.</li>
+</ul>
+<h3>9.3 챌린지 영역 코드 — <strong>SQ (Story Quest)</strong></h3>
+<ul>
+<li><strong>결정</strong>: 영역 코드 = <code>SQ</code>. 가이드 ID 패턴 = <code>[CEB-BO-SQ-*]</code>.</li>
+<li><strong>근거</strong>: ERD 테이블명 <code>story_quest</code>와 일치 → 의미 명확. 운영 용어 "챌린지"는 별칭으로 유지.</li>
+<li><strong>신규 영역 가이드 작성</strong>: <code>[CEB-BO-011] 스토리 퀘스트(SQ) 영역 가이드</code> + 화면 가이드.</li>
+<li><strong>메타 갱신 필요</strong>: [CEB-BO-000] §1.2 13개 → 14개 영역, [CEB-BO-001] §2 14개, CLAUDE.md L69 영역 목록.</li>
+</ul>
+<h3>9.4 SQ 멀티아티스트 정책 — <strong>아티스트별 스토리 퀘스트</strong></h3>
+<ul>
+<li><strong>결정</strong>: 스토리 퀘스트 자체가 아티스트별. V01D 스토리·iKON 스토리 따로 운영.</li>
+<li><strong>근거</strong>: 팬덤 몰입감 + 아티스트별 독립 콘텐츠 제작 자유도.</li>
+<li><strong>개발팀 ERD 수정 요청</strong>: <code>story_quest.artist_group_id INT UNSIGNED NOT NULL</code> 추가.</li>
+<li><strong>가이드 정책 등급</strong>: 🔴 Critical (헤더 토글 + 페이지 필터 모두 적용, EXTERNAL_ARTIST 자기 아티스트만 R/W).</li>
+<li><strong>[CEB-BO-100] §3 정책 매트릭스에 SQ 행 신규 추가</strong> 필요.</li>
+</ul>
+<h3>9.5 SQ 구조 정정 — <strong>에피소드 + 수량 제약 + 메인 이미지 + BIVE 보상 토글</strong> ⭐ v1.2 신규</h3>
+<ul>
+<li><strong>결정</strong> (2026.05.09):</li>
+<li>운영 용어 "챕터" → <strong>"에피소드"</strong> 통일 (테이블명 <code>story_quest_chapter</code> 유지)</li>
+<li>수량 제약: 스토리당 최대 5 에피소드 / 에피소드당 최대 10 미션 (응용 레벨)</li>
+<li>에피소드 메인 이미지 등록 가능</li>
+<li>에피소드별 BIVE 보상 on/off 토글</li>
+<li><strong>근거</strong>: 운영팀 콘텐츠 기획·BO UX 정합성. 1~5장 시리즈 형식이 K-pop 팬덤 콘텐츠 일반 패턴.</li>
+<li><strong>개발팀 ERD 수정 요청</strong>: [CEB-BO-100-C] §2.3 — <code>story_quest_chapter</code> ALTER 3건</li>
+<li><code>ADD COLUMN image_url varchar(500) NULL</code></li>
+<li><code>ADD COLUMN bive_reward_yn boolean NOT NULL DEFAULT false</code></li>
+<li><code>MODIFY COLUMN minting_event_id int unsigned NULL</code> (기존 <code>NOT NULL DEFAULT auto_increment</code> 오류 정정)</li>
+<li><strong>가이드 영향</strong>: [CEB-BO-011] v1.1 (에피소드 데이터 모델), [CEB-BO-SQ-202·202-CREATE] v1.1, [CEB-BO-100] v1.7 §3 SQ 행.</li>
+<li><strong>prototype 영향</strong>: <code>mock/sq.ts</code> v1.1 + <code>/sq/[id]</code> 화면 v1.1 적용 완료.</li>
+</ul>
+<h3>9.6 합의 결과 요약 표 ⭐ v1.2 — 5건으로 확장</h3>
+<table>
+<tr><th>#</th><th>의제</th><th>결정</th><th>영향 — ERD</th><th>영향 — 가이드</th><th>영향 — APP</th></tr>
+<tr><td>1</td><td>덕력 시즌</td><td>글로벌 시즌</td><td><code>fan_power_season.artist_group_id</code> NULL 허용/제거</td><td>[CEB-BO-100] §3 표현 명확화</td><td>변경 없음</td></tr>
+<tr><td>2</td><td>팬덤 레벨</td><td>시즌별 리셋 (연 1회 1.1~12.31)</td><td>변경 없음</td><td>[CEB-BO-EVT-101] v1.3 + [CEB-BO-100] v1.6 갱신 완료</td><td><strong>[CEB-EVT-201] "영구 누적" → "시즌별 리셋" 갱신 필요</strong></td></tr>
+<tr><td>3</td><td>챌린지 영역 코드</td><td>SQ</td><td>변경 없음</td><td>신규 [CEB-BO-011] v1.1 + 메타 14영역 확장 완료</td><td>APP에 신규 SQ 가이드 작성 (별도 트랙)</td></tr>
+<tr><td>4</td><td>SQ 멀티아티스트</td><td>아티스트별</td><td><code>story_quest.artist_group_id NOT NULL</code> 추가</td><td>[CEB-BO-100] v1.5 §3 SQ 행 추가 (🔴 Critical) 완료</td><td>APP SQ 가이드에 아티스트별 정책 반영</td></tr>
+<tr><td>5</td><td><strong>SQ 구조 정정</strong> ⭐ v1.2</td><td>에피소드 용어 + 수량 5/10 + 메인 이미지 + BIVE 보상 on/off</td><td><code>story_quest_chapter</code> ALTER 3건 ([CEB-BO-100-C] §2.3)</td><td>[CEB-BO-011] v1.1 + [CEB-BO-100] v1.7 + SQ 화면 가이드 4건 완료</td><td>APP SQ 가이드에 에피소드 용어·수량·이미지·BIVE 토글 반영 (별도 트랙)</td></tr>
+</table>
+<hr>
+<h2>10. 추가 자료 요청 (5종 SQL) — 상태 트래킹</h2>
+<p>본 SQL 3종에 누락된 다음 5개 영역의 ERD/SQL 추가 제공 요청. v1.2부터 회신 상태 트래킹.</p>
+<table>
+<tr><th>#</th><th>영역</th><th>가이드</th><th>핵심 테이블 추정</th><th>회신 상태</th></tr>
+<tr><td>1</td><td>회원 제재·정지사유</td><td>[CEB-BO-USR-501]</td><td><code>member_sanction</code>, <code>suspension_reason</code></td><td>⏳ 대기 ([CEB-BO-100-C] §3.1 요청)</td></tr>
+<tr><td>2</td><td>반려사유 마스터 (FQ)</td><td>[CEB-BO-FQ-502]</td><td><code>rejection_reason</code> (<code>artist_group_id</code> FK 필수)</td><td>⏳ 대기 ([CEB-BO-100-C] §3.2)</td></tr>
+<tr><td>3</td><td>관리자 활동 로그 컨텍스트</td><td>[CEB-BO-SYS-601]</td><td><code>admin_activity_log</code> (<code>artist_context</code> 컬럼 필수)</td><td>⏳ 대기 ([CEB-BO-100-C] §3.3)</td></tr>
+<tr><td>4</td><td>응모권 변동 로그</td><td>[CEB-BO-RFT-201]</td><td><code>raffle_ticket</code>, <code>rft_ledger</code> (<code>source_artist_context</code> 메타)</td><td>⏳ 대기 ([CEB-BO-100-C] §3.4)</td></tr>
+<tr><td>5</td><td>권한 스코프</td><td>[CEB-BO-SYS-501]</td><td><code>admin_role</code>, <code>admin_role_assignment</code> (<code>scope_artist_ids</code> 메타)</td><td>⏳ 대기 ([CEB-BO-100-C] §3.5)</td></tr>
+</table>
+<p>추가 자료 받으면 본 리포트 v1.3으로 갱신하여 정합성 검증 완성.</p>
+<hr>
+<h2>11. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.05.08</td><td>@Nill Yoo</td><td>최초 작성. 개발팀 SQL DDL 3종(62 테이블) 검토 결과. 영역별 매핑(13 영역 + 신규 CHL) + 멀티아티스트 FK 검증 (정합 13건/검토 5건) + 메타필드 8종 검증 + 가이드-ERD 갭 12건 (🔴 3 / 🟠 3 / 🟡 6) + 다국어 패턴 정합 ✅ + 정합성 확인 8건 + 즉시 합의 3건 (덕력 시즌·팬덤 시즌·챌린지 영역 코드) + 추가 자료 요청 5종 (정지·반려·활동 로그·응모권·권한 스코프). 본 리포트는 운영팀·개발팀 검토용. 정정·신규 가이드 작성은 별도 트랙.</td></tr>
+<tr><td>v1.1</td><td>2026.05.08</td><td>@Nill Yoo</td><td><strong>§9 즉시 합의 4건 결정 완료</strong> (Review → Decided). ① 덕력 시즌 = <strong>글로벌 시즌 유지</strong> (ERD <code>fan_power_season.artist_group_id</code> NULL/제거 요청) ② 팬덤 레벨 = <strong>시즌별 리셋</strong> (ERD 그대로, APP [CEB-EVT-201] 갱신 필요) ③ 챌린지 영역 코드 = <strong>SQ (Story Quest)</strong> — 가이드 ID <code>[CEB-BO-011]</code>·<code>[CEB-BO-SQ-*]</code> ④ SQ 멀티아티스트 = <strong>아티스트별</strong> (ERD <code>story_quest.artist_group_id NOT NULL</code> 추가 요청, 🔴 Critical 등급). §9.5 합의 결과 요약 표 신설. 후속 트랙 5종(A 보고서 갱신 / B 마스터 v1.5 / C 영역 가이드 / D SQ 신규 영역 + 14영역 확장 / E 개발팀 ERD 수정 요청서) 사용자 결정 후 진행.</td></tr>
+<tr><td><strong>v1.2</strong></td><td><strong>2026.05.11</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>SQ 구조 정정 합의 5번째 추가</strong> ([CEB-BO-100] v1.7, [CEB-BO-011] v1.1, [CEB-BO-100-C] v1.2 §2.3). ① §2.3 SQ 영역 코드 "🆕 CHL" → "🆕 SQ" 확정 표기 ② §3 신규 영역 구조 갱신 — 에피소드 용어 통일 + 수량 제약(스토리당 5/에피소드당 10) + <code>image_url</code> + <code>bive_reward_yn</code> 컬럼 추가 요청 반영. §3.3 수량 제약 절·§3.5 권장 조치 합의 완료 표시 ③ §4.2 검토 필요 매트릭스 합의 결과 표시 (story_quest = 아티스트별 확정) ④ <strong>§6 갭 12건 → 13건 확장</strong> — §6.4 SQ 구조 정정 4건(13.a~13.d) 신규 추가 ⑤ §9 합의 4건 → 5건 — §9.5 SQ 구조 정정 신규 + §9.6 요약 표 5건으로 갱신 ⑥ §10 추가 자료 요청 5종 회신 상태 컬럼 추가 (모두 ⏳ 대기) ⑦ Page Properties 버전 v1.1 → v1.2. 본 v1.2는 트랙 G2 산출물. 운영팀·개발팀 SSOT 갱신본.</td></tr>
+</table>
+
+</body>
+</html>

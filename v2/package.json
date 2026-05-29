@@ -1,0 +1,11 @@
+{
+  "name": "celebus-admin-docs-v2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CELEBUS v2 백오피스·앱 기획문서 변환·검증 스크립트 (Phase 2 회복탄력 인프라)",
+  "scripts": {
+    "docs:build": "node convert-to-html.js",
+    "docs:watch": "node convert-to-html.js --watch",
+    "docs:validate": "node convert-to-html.js --validate-only"
+  }
+}

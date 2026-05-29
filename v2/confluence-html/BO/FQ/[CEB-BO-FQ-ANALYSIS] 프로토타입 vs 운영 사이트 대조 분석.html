@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-ANALYSIS] 프로토타입 vs 운영 사이트 대조 분석 (Quest 흐름)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-ANALYSIS] 프로토타입 vs 운영 사이트 대조 분석 (Quest 흐름)</h1>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-12 · 버전: v1.0</p>
+<p>인증/실측: nill@good-block.com (Super Admin) · 운영: https://gb.celebus.xyz/fanquest</p>
+<p>분석 방법: chrome-devtools MCP(상호작용·a11y) + playwright MCP(스크린샷·DOM) 병행. 캡처본 <code>.fq-analysis/screenshots/</code></p>
+</blockquote>
+<h2>1. 분석 개요</h2>
+<ul>
+<li><strong>범위</strong>: Quest 흐름만 (Raffle 제외)</li>
+<li><strong>대상 화면</strong>: 리스트, 반려사유 설정(별도 페이지), Quest 생성, Quest 상세 3탭, Quest 수정 페이지, 모달 6종</li>
+<li><strong>비교 카테고리</strong>:</li>
+<li>🔴 <strong>누락 (Missing)</strong> — 운영에 있고 프로토에 없음</li>
+<li>🟠 <strong>레이아웃·스타일 (Layout)</strong> — 구조/형식 다름</li>
+<li>🟡 <strong>코피·라벨 (Copy)</strong> — 텍스트만 다름</li>
+<li>🟣 <strong>로직·플로우 (Logic)</strong> — 분기/상태 처리 다름</li>
+<li>⚪ <strong>추가 (Extra)</strong> — 프로토에만 있고 운영에 없음</li>
+</ul>
+<p>전체 발견 항목: 🔴 14 / 🟠 5 / 🟡 9 / 🟣 6 / ⚪ 3 (총 37건)</p>
+<h2>2. 라우팅 구조 차이 (최우선 수정)</h2>
+<table>
+<tr><th>항목</th><th>운영</th><th>프로토타입</th><th>카테고리</th></tr>
+<tr><td>반려사유 설정</td><td><code>/fanquest/reject-reasons</code> (별도 페이지)</td><td>모달 <code>RejectionReasonsModal</code></td><td>🔴 라우팅 변경</td></tr>
+<tr><td>Quest 수정</td><td><code>/fanquest/{id}/edit</code> (별도 페이지)</td><td><strong>미구현</strong></td><td>🔴 페이지 신규</td></tr>
+<tr><td>Quest 상세 탭 라우팅</td><td>`?tab=info</td><td>pending</td><td>history` (검증 필요)</td><td>`?tab=info</td><td>pending</td><td>history`</td><td>✅ 일치</td></tr>
+</table>
+<blockquote>
+<p><strong>결정 필요 #R1</strong>: 반려사유 설정을 별도 페이지로 전환할지 vs 모달 유지할지? 본 보고서는 <strong>운영 정합성 우선 → 별도 페이지 전환</strong> 가정으로 작성. 프로토 시연 목적에 모달이 유리하면 알림.</p>
+</blockquote>
+<h2>3. /fanquest 메인(리스트) — FQ-101</h2>
+<h3>3-1. 비교 매트릭스</h3>
+<table>
+<tr><th>요소</th><th>운영</th><th>프로토타입</th><th>카테고리</th><th>수정</th></tr>
+<tr><td>H1 타이틀</td><td><code>Fan Quest 관리</code></td><td><code>Fan Quest 관리</code></td><td>✅</td><td>—</td></tr>
+<tr><td>탭</td><td>Quest / Raffle</td><td>Quest / Raffle</td><td>✅</td><td>—</td></tr>
+<tr><td>상태 필터 옵션</td><td>상태(전체) / <strong>진행중</strong> / <strong>임시저장</strong> / <strong>종료</strong></td><td>상태(전체) / 진행중 / <strong>대기</strong> / 종료</td><td>🟡</td><td><code>대기</code> → <code>임시저장</code></td></tr>
+<tr><td>검색 타입 드롭다운</td><td><strong>타이틀 / 아티스트</strong> (2개)</td><td>타이틀 (1개, 비활성)</td><td>🔴</td><td>아티스트 옵션 추가 + 동작</td></tr>
+<tr><td>검색 textbox</td><td>placeholder "타이틀 입력"</td><td>"타이틀 입력"</td><td>✅</td><td>(검색 타입 변경 시 placeholder도 동적으로)</td></tr>
+<tr><td>초기화</td><td>gray-900 → text-white</td><td>gray-900 → text-white</td><td>✅</td><td>—</td></tr>
+<tr><td>반려사유 설정 CTA</td><td>링크 → 별도 페이지</td><td>버튼 → 모달</td><td>🔴</td><td>링크/Page로 전환</td></tr>
+<tr><td>생성하기 CTA</td><td>링크 → /fanquest/create</td><td>버튼 → /fanquest/create</td><td>✅</td><td>—</td></tr>
+<tr><td>테이블 컬럼</td><td>상태 / 타이틀 / 아티스트 / 기간 / 검토 필요</td><td>상태 / 타이틀 / 아티스트 / 기간 / 검토 필요</td><td>✅</td><td>—</td></tr>
+<tr><td>행 클릭</td><td>상세 진입 (cursor=pointer)</td><td>동일</td><td>✅</td><td>—</td></tr>
+<tr><td>페이지 사이즈</td><td>10 (PAGE_SIZE = 10)</td><td>10</td><td>✅</td><td>—</td></tr>
+<tr><td>페이지네이션</td><td>Previous/1-5/Next</td><td>동일</td><td>✅</td><td>—</td></tr>
+<tr><td>상태 배지 색</td><td>진행중=초록 / 종료=회색 (운영 실측)</td><td>모든 상태 초록 (<code>bg-green-100 text-green-700</code> 고정)</td><td>🟠</td><td>상태별 색 분기</td></tr>
+</table>
+<h3>3-2. 수정 체크리스트</h3>
+<ul>
+<li>[ ] 🟡 [page.tsx#L58](prototype/src/app/fanquest/page.tsx) <code><option value="대기">대기</option></code> → <code><option value="임시저장">임시저장</option></code></li>
+<li>[ ] 🔴 검색 타입 드롭다운에 <code>아티스트</code> 옵션 추가하고 <code>keyword</code> 검색 대상 분기</li>
+<li>[ ] 🔴 [page.tsx#L83-88](prototype/src/app/fanquest/page.tsx) <code>setReasonsOpen(true)</code> → <code>router.push('/fanquest/reject-reasons')</code> 변경. RejectionReasonsModal 컴포넌트 미사용 처리(이후 제거)</li>
+<li>[ ] 🟠 [page.tsx#L100](prototype/src/app/fanquest/page.tsx) 상태 배지 색을 상태별 분기 (<code>진행중</code>=emerald, <code>임시저장</code>=gray-200, <code>종료</code>=gray-400)</li>
+<li>[ ] 🟡 mock <code>QuestStatus</code> 타입: <code>'진행중' | '대기' | '종료'</code> → <code>'진행중' | '임시저장' | '종료'</code> 변경 후 데이터 정합 (현재 mock에 임시저장/종료 entry 없음 — 보완 권장)</li>
+</ul>
+<h2>4. /fanquest/reject-reasons (FQ-101-REJETSET) — <strong>신규 페이지</strong></h2>
+<h3>4-1. 구조</h3>
+<table>
+<tr><th>요소</th><th>운영</th><th>프로토타입</th><th>카테고리</th></tr>
+<tr><td>라우트</td><td><code>/fanquest/reject-reasons</code></td><td>없음</td><td>🔴 신규</td></tr>
+<tr><td>Breadcrumb</td><td>대시보드 / 팬퀘스트 / 반려사유 설정</td><td>—</td><td>🔴</td></tr>
+<tr><td>H1</td><td><code>반려사유 설정</code></td><td>(모달 헤더 텍스트)</td><td>🟠</td></tr>
+<tr><td>상태 필터</td><td>드롭다운</td><td>드롭다운 (옵션 사용/미사용/전체)</td><td>✅ 동일</td></tr>
+<tr><td>새 사유 추가 CTA</td><td>우상단 버튼</td><td>모달 내부 우상단</td><td>🟠</td></tr>
+<tr><td>테이블 컬럼</td><td><strong>상태 / 운영자 노출명</strong> (2개만)</td><td>상태 / 운영자 노출명</td><td>✅</td></tr>
+<tr><td>행 클릭</td><td>수정 모달 열림</td><td>동일</td><td>✅</td></tr>
+<tr><td>페이지네이션</td><td>Previous / 1 / Next</td><td>페이지네이션 없음</td><td>🔴</td></tr>
+</table>
+<h3>4-2. 반려사유 추가 모달 (FQ-101-MD-ADD)</h3>
+<table>
+<tr><th>필드</th><th>운영</th><th>프로토타입</th><th>카테고리</th></tr>
+<tr><td>제목</td><td><code>반려사유 추가</code></td><td><code>새 반려사유 추가</code></td><td>🟡</td></tr>
+<tr><td>운영자 노출명</td><td>textbox + 글자수 <code>0/100자</code> 카운터</td><td>textbox (카운터 없음)</td><td>🟠</td></tr>
+<tr><td><strong>유저 노출 메시지</strong></td><td>textarea + <strong>KO/EN/JA 라디오</strong> + 글자수 <code>0/200자</code> + 다국어 진행 ✓ 표시기</td><td>미구현</td><td>🔴</td></tr>
+<tr><td>내부 코드</td><td><strong>운영에 없음</strong></td><td>textbox <code>(선택)</code></td><td>⚪</td></tr>
+<tr><td>설명</td><td><strong>운영에 없음</strong></td><td>textarea</td><td>⚪</td></tr>
+<tr><td>상태</td><td><strong>운영의 추가 모달에는 없음</strong> (추가 시 기본 사용)</td><td>Segmented Button</td><td>⚪</td></tr>
+<tr><td>푸터 CTA</td><td><code>취소하기</code> / <code>추가하기</code> (disabled 까지 일치)</td><td><code>취소</code> / <code>추가</code></td><td>🟡</td></tr>
+</table>
+<h3>4-3. 반려사유 수정 모달 (FQ-101-MD-EDIT)</h3>
+<table>
+<tr><th>필드</th><th>운영</th><th>프로토타입</th><th>카테고리</th></tr>
+<tr><td>제목</td><td><code>반려사유 수정</code></td><td><code>반려사유 수정</code></td><td>✅</td></tr>
+<tr><td>운영자 노출명</td><td>textbox prefilled + 글자수</td><td>textbox prefilled</td><td>🟠 카운터</td></tr>
+<tr><td>유저 노출 메시지</td><td>KO/EN/JA 다국어 textbox + ✓ 표시기</td><td>미구현</td><td>🔴</td></tr>
+<tr><td><strong>상태설정 드롭다운</strong></td><td>사용/미사용 + 안내 "미사용 처리된 반려사유는 검수 화면에서 노출되지 않습니다."</td><td>Segmented Button (사용/미사용) — 안내 텍스트 없음</td><td>🟡</td></tr>
+<tr><td>내부 코드</td><td>운영에 없음 (실측)</td><td>비활성화 textbox + "코드는 등록 후 수정 불가"</td><td>⚪</td></tr>
+<tr><td>푸터 CTA</td><td><code>취소하기</code> / <code>저장하기</code></td><td><code>취소</code> / <code>저장</code></td><td>🟡</td></tr>
+</table>
+<h3>4-4. 수정 체크리스트</h3>
+<ul>
+<li>[ ] 🔴 신규 페이지 <code>prototype/src/app/fanquest/reject-reasons/page.tsx</code> 생성</li>
+<li>[ ] 🔴 다국어(KO/EN/JA) 유저 노출 메시지 필드 추가 — 운영자 노출명과 분리. mock 타입 <code>RejectionReason</code> 확장: <code>userMessageKO/EN/JA: string</code></li>
+<li>[ ] 🔴 추가/수정 모달 분리(서브 컴포넌트). 추가 모달에는 상태/내부코드/설명 제거 → 운영자 노출명 + 다국어 유저 메시지만</li>
+<li>[ ] 🟡 모달 푸터 CTA: <code>취소하기</code> <code>추가하기</code> <code>저장하기</code>로 통일</li>
+<li>[ ] 🟠 글자수 카운터 추가 (운영자 노출명 100자, 유저 메시지 200자), 다국어 진행 ✓ 표시기</li>
+<li>[ ] 🟡 수정 모달 상태 드롭다운에 안내 문구 표시</li>
+<li>[ ] 🟠 RejectionReasonsModal 컴포넌트 제거 또는 deprecated 표시</li>
+</ul>
+<h2>5. /fanquest/create (FQ-101-CREATE)</h2>
+<h3>5-1. 비교 매트릭스</h3>
+<table>
+<tr><th>요소</th><th>운영</th><th>프로토타입</th><th>카테고리</th></tr>
+<tr><td>Breadcrumb</td><td>대시보드 / 팬퀘스트 / Quest 생성</td><td>팬퀘스트 / Quest 생성</td><td>🟡</td></tr>
+<tr><td>H1</td><td><code>Quest 생성</code></td><td><code>Quest 생성</code></td><td>✅</td></tr>
+<tr><td>CTA</td><td>취소하기 / 생성하기 (disabled until valid)</td><td>동일</td><td>✅</td></tr>
+<tr><td><strong>레이아웃</strong></td><td><strong>세로 1열</strong> (3섹션 위→아래)</td><td>grid-cols-3 (3섹션 가로)</td><td>🟠 큰 차이</td></tr>
+<tr><td>타이틀 다국어</td><td>KO/EN/JA 탭 100자</td><td>동일 (탭 다른 UI but 기능 동일)</td><td>✅</td></tr>
+<tr><td>설명</td><td>200자</td><td>200자</td><td>✅</td></tr>
+<tr><td>유저 가이드</td><td>500자</td><td>500자</td><td>✅</td></tr>
+<tr><td>대표 이미지 안내</td><td><code>권장: 1:1 비율 · jpeg, png, jpg, webp, gif, svg (최대 5MB)</code></td><td>동일</td><td>✅</td></tr>
+<tr><td>아티스트 옵션</td><td><strong>iKON / MADEIN / CELEBUS / V01D / 언더라이트 (UNDER:LIGHT)</strong> (5개)</td><td>V01D / iKON / CELEBUS (3개)</td><td>🔴</td></tr>
+<tr><td>퀘스트 타입 옵션</td><td><strong>이미지 촬영 및 업로드</strong> (1개)</td><td>이미지 촬영 및 업로드 / SNS 공유 (2개)</td><td>⚪</td></tr>
+<tr><td>마감 일시</td><td>date(<code>마감일 선택</code>) + time <code>23:59</code> 별도 버튼</td><td>date input + time input (2 col grid)</td><td>🟠</td></tr>
+<tr><td>마감일 제약</td><td>"오늘 기준 최소 1일 이후"</td><td>안내 동일, 검증 미구현</td><td>🟣</td></tr>
+<tr><td>연관 링크</td><td><strong><code>링크 추가</code> 클릭 시 라벨(KO/EN/JA 다국어 20자) + URL 동적 추가</strong></td><td>"링크 추가" 버튼만 (실제 폼 미구현)</td><td>🔴</td></tr>
+<tr><td>보상 종류 옵션</td><td><strong>응모권 / NFT / 응모권 + NFT</strong></td><td>응모권 / <strong>BIVE</strong> / 응모권 + <strong>BIVE</strong></td><td>🟡 + 🔴</td></tr>
+<tr><td>응모권 수량 단위</td><td>보상 노출 "응모권 N<strong>개</strong>"</td><td>dropdown "1<strong>장</strong> / 2장 ..."</td><td>🟡</td></tr>
+<tr><td><strong>NFT 이벤트 드롭다운</strong></td><td>보상 종류=NFT/응모권+NFT 시 노출. "선택 가능한 NFT 이벤트가 없습니다. BIVE 메뉴에서 이벤트를 먼저 생성해주세요."</td><td>미구현</td><td>🔴</td></tr>
+</table>
+<h3>5-2. 수정 체크리스트</h3>
+<ul>
+<li>[ ] 🟠 레이아웃을 세로 1열로 재구성. 3섹션을 세로 스택, 각 섹션은 카드형</li>
+<li>[ ] 🔴 아티스트 옵션 5개로 확장: <code>iKON / MADEIN / CELEBUS / V01D / 언더라이트 (UNDER:LIGHT)</code></li>
+<li>[ ] 🟡 보상 종류 옵션 <code>BIVE</code> → <code>NFT</code> 일괄 변경 (Create + Detail + Mock)</li>
+<li>[ ] 🟡 응모권 수량 단위 <code>장</code> → <code>개</code>, 옵션 검증</li>
+<li>[ ] 🔴 연관 링크 동적 행: 라벨(KO/EN/JA 탭, 20자) + URL placeholder <code>https://</code> + 삭제 버튼</li>
+<li>[ ] 🔴 NFT 이벤트 드롭다운 추가 (조건부: 보상 종류 in [NFT, 응모권+NFT]) + 빈 상태 안내</li>
+<li>[ ] 🟣 마감일 검증 — 오늘 + 1일 이후만 선택 가능</li>
+<li>[ ] 🟡 시간 입력을 button 클릭 시 popover로 (현재 textbox)</li>
+</ul>
+<h2>6. /fanquest/{id} 상세 — FQ-201/202/203</h2>
+<h3>6-1. 헤더 영역</h3>
+<table>
+<tr><th>요소</th><th>운영</th><th>프로토타입</th><th>카테고리</th></tr>
+<tr><td>Breadcrumb</td><td>대시보드 / 팬퀘스트 / Quest 상세</td><td>팬퀘스트 / Quest 상세</td><td>🟡</td></tr>
+<tr><td>뒤로가기</td><td>← 아이콘 버튼</td><td>동일</td><td>✅</td></tr>
+<tr><td>H1</td><td>타이틀(KO)</td><td>타이틀(KO)</td><td>✅</td></tr>
+<tr><td>상태 배지 색</td><td>상태별 (진행중=초록, 종료=회색)</td><td>모두 emerald</td><td>🟠</td></tr>
+<tr><td><strong>상태별 CTA 분기</strong></td><td>진행중: 수정/종료 · 임시저장: TBD(게시·수정·삭제) · <strong>종료: 버튼 없음</strong></td><td>항상 수정하기/종료하기 노출</td><td>🟣 핵심</td></tr>
+</table>
+<h3>6-2. 기본정보 탭 (FQ-201)</h3>
+<table>
+<tr><th>요소</th><th>운영</th><th>프로토타입</th><th>카테고리</th></tr>
+<tr><td>통계 카드 4개</td><td>총 제출 수 / 승인 / 반려 / 대기 (아이콘 없음)</td><td>동일 + 이모지 아이콘 (📋 ✅ ❌ ⏳)</td><td>🟠</td></tr>
+<tr><td>대표 이미지 카드</td><td>h3 "대표 이미지" + 이미지 (1:1)</td><td>동일</td><td>✅</td></tr>
+<tr><td>Quest 정보 카드</td><td>h3 + Row(아티스트/타입/보상/시작일시/마감일시/연관 링크)</td><td>동일</td><td>✅</td></tr>
+<tr><td>보상 노출 형식</td><td><code>응모권 N개 + NFT (이벤트명 🎧)</code></td><td><code>응모권 5개 + NFT (V01D ...🎤)</code> — mock에 이미 NFT로 변경됨 ✓</td><td>✅</td></tr>
+<tr><td>관리 정보 카드</td><td>상태 / 생성 관리자 / 생성 일시 / 최근 수정자 / 최근 수정 일시</td><td>동일</td><td>✅</td></tr>
+<tr><td>다국어 섹션</td><td>h3 + KO/EN/JA 3 라인</td><td>h3 + KO/EN/JA 3 라인</td><td>✅</td></tr>
+</table>
+<blockquote>
+<p>mock fanquest.ts L84 reward 문자열에 이미 "NFT" 표기되어 일치하지만, <strong>L209-211 생성폼 select 옵션은 BIVE로 남아 있어 불일치</strong>. 수정 필요.</p>
+</blockquote>
+<h3>6-3. 대기내역 탭 (FQ-202) — <strong>레이아웃 전체 재작성</strong></h3>
+<table>
+<tr><th>요소</th><th>운영</th><th>프로토타입</th><th>카테고리</th></tr>
+<tr><td>레이아웃</td><td><strong>카드 그리드</strong> (또는 카드 리스트)</td><td><strong>테이블</strong></td><td>🔴</td></tr>
+<tr><td>상단 일괄 액션</td><td><code>현재 페이지 모두 승인</code> 버튼</td><td>없음</td><td>🔴</td></tr>
+<tr><td>카드 구성</td><td>이미지 / 닉네임 / User ID: {id} / Submit ID: {id} / 제출일시 / [반려][승인] 버튼</td><td>테이블 행: 상태/제출ID/닉네임/반려사유/이미지/제출일시/처리일시/처리자</td><td>🔴</td></tr>
+<tr><td>행 액션</td><td>카드 내 <code>반려</code> <code>승인</code> 버튼</td><td>이미지 확대만</td><td>🔴</td></tr>
+<tr><td>빈 상태</td><td>(실측 없음 — 별도 quest 필요)</td><td>"제출내역이 없습니다."</td><td>🟡</td></tr>
+<tr><td>페이지네이션</td><td>존재</td><td>존재</td><td>✅</td></tr>
+</table>
+<h3>6-4. 반려 사유 선택 모달 (FQ-202-MD-REJECT) — <strong>신규</strong></h3>
+<table>
+<tr><th>요소</th><th>운영</th><th>프로토타입</th></tr>
+<tr><td>제목</td><td><code>반려 사유 선택</code> (h3)</td><td>미구현</td></tr>
+<tr><td>사유 목록</td><td>라디오 (활성 사유 N개)</td><td>—</td></tr>
+<tr><td>CTA</td><td><code>취소</code> / <code>반려하기</code> (disabled 가능)</td><td>—</td></tr>
+</table>
+<h3>6-5. 처리내역 탭 (FQ-203)</h3>
+<table>
+<tr><th>요소</th><th>운영</th><th>프로토타입</th><th>카테고리</th></tr>
+<tr><td>상태 필터</td><td>상태(전체) / 승인 / 반려</td><td>동일</td><td>✅</td></tr>
+<tr><td>검색 타입</td><td>닉네임 / 제출ID (2개)</td><td>닉네임 (1개)</td><td>🔴</td></tr>
+<tr><td>검색 textbox placeholder</td><td><code>닉네임 입력</code></td><td>동일</td><td>✅</td></tr>
+<tr><td>컬럼</td><td>상태 / 제출ID / 유저닉네임 / <strong>반려사유</strong> / 이미지 / 제출일시 / 처리일시 / 처리자</td><td>상태 / 제출ID / 유저닉네임 / <strong>반려 사유</strong> / 이미지 / 제출일시 / 처리일시 / 처리자</td><td>🟡 공백</td></tr>
+<tr><td>이미지 컬럼</td><td>작은 버튼 (확대)</td><td>돋보기+ 아이콘</td><td>🟠</td></tr>
+<tr><td>페이지네이션</td><td>존재</td><td>존재</td><td>✅</td></tr>
+</table>
+<h3>6-6. Quest 수정 페이지 (FQ-201-EDIT) — <strong>신규 페이지</strong></h3>
+<p>운영 동작 요약:</p>
+<ul>
+<li>Breadcrumb: 대시보드 / 팬퀘스트 / Quest 수정</li>
+<li>H1: <code>Quest 수정</code> + 상태 배지</li>
+<li>우측 CTA: <code>취소하기</code> / <code>수정하기</code></li>
+<li><strong>안내 텍스트(진행중일 때)</strong>: "진행중 상태에서는 기본 정보(타이틀, 설명, 가이드, 연관 링크)만 수정 가능합니다."</li>
+<li>진행중 상태에서 입력 가능: 기본 정보 전부 + 연관 링크(다국어 라벨 + URL)</li>
+<li>진행중 상태에서 disabled: 아티스트 / 퀘스트 타입 / 마감 일시 / 보상 종류 / 응모권 수량 / NFT 이벤트</li>
+<li>대표 이미지: 미리보기 + <code>변경</code> <code>제거</code></li>
+<li>임시저장 상태: TBD (실측 데이터 없음 — 모두 활성화 추정)</li>
+<li>종료 상태: 진입 불가 (수정하기 버튼 없음)</li>
+</ul>
+<h3>6-7. 수정 체크리스트 (상세 영역)</h3>
+<ul>
+<li>[ ] 🟣 [page.tsx#L41-49](prototype/src/app/fanquest/[id]/page.tsx) 상태별 CTA 분기 — 진행중: 수정/종료, 임시저장: 게시/수정/삭제, 종료: 버튼 없음</li>
+<li>[ ] 🟠 상태 배지 색 상태별 분기</li>
+<li>[ ] 🟠 [page.tsx#L78-83](prototype/src/app/fanquest/[id]/page.tsx) 통계 카드 이모지 제거</li>
+<li>[ ] 🔴 종료하기 클릭 시 확인 모달 (Quest 종료) 노출 — <code>취소</code> / <code>확인</code></li>
+<li>[ ] 🔴 수정하기 클릭 시 <code>/fanquest/{id}/edit</code>로 이동 (모달 아님)</li>
+<li>[ ] 🔴 <strong><code>/fanquest/[id]/edit/page.tsx</code> 신규 작성</strong> (생성 폼 재사용 + 상태별 disabled 처리 + 안내 텍스트)</li>
+<li>[ ] 🔴 <strong>대기내역 탭 전체 재작성</strong> — 카드 그리드 + 일괄 승인 + 행별 반려/승인 버튼</li>
+<li>[ ] 🔴 반려 모달(<code>SubmissionRejectModal</code>) 신규 — <code>mock.rejectionReasons</code> 중 Active만 라디오</li>
+<li>[ ] 🟡 처리내역 검색 타입 드롭다운에 <code>제출ID</code> 추가</li>
+<li>[ ] 🟡 처리내역 컬럼 라벨 <code>반려 사유</code> → <code>반려사유</code></li>
+<li>[ ] 🟠 Breadcrumb에 <code>대시보드</code> 추가 (전 페이지) — <code>PageHeader</code> 컴포넌트 통일</li>
+</ul>
+<h2>7. Mock 데이터 보강</h2>
+<p>[fanquest.ts](prototype/src/mock/fanquest.ts) 수정:</p>
+<pre><code>export type QuestStatus = '진행중' | '임시저장' | '종료'; // '대기' → '임시저장'
+
+export interface QuestDetail extends Quest {
+  // ... 기존
+  endTime: string; // 마감 일시 분리 가능
+  rewardType: '응모권' | 'NFT' | '응모권 + NFT';
+  ticketCount: number; // 단위 "개"
+  nftEvent?: { id: number; name: string }; // NFT 이벤트 정보
+  relatedLinks: { labelKO: string; labelEN: string; labelJA: string; href: string }[]; // 다국어 라벨
+}
+
+export interface QuestSubmission {
+  // ... 기존
+  userId: number; // 카드에 노출
+}
+
+export interface RejectionReason {
+  id: number;
+  status: 'Active' | 'Inactive';
+  displayName: string;
+  userMessageKO: string; // 신규
+  userMessageEN: string; // 신규
+  userMessageJA: string; // 신규
+  // internalCode, description 제거 권장 (운영에 없음)
+}
+</code></pre>
+<ul>
+<li>임시저장/종료 quest 각 1건 이상 추가 → 상태별 분기 검증 가능</li>
+<li>빈 상태(<code>pending = 0</code>) 데이터 정리: 운영 양상과 맞춤</li>
+</ul>
+<h2>8. 모달 인벤토리 종합</h2>
+<table>
+<tr><th>ID</th><th>모달</th><th>운영</th><th>프로토</th><th>액션</th></tr>
+<tr><td>FQ-101-MD-ADD</td><td>반려사유 추가</td><td>✅ 존재</td><td>⚪ 다른 필드</td><td>재작성</td></tr>
+<tr><td>FQ-101-MD-EDIT</td><td>반려사유 수정</td><td>✅ 존재</td><td>⚪ 다른 필드</td><td>재작성</td></tr>
+<tr><td>FQ-101-MD-CANCEL</td><td>Quest 생성 취소</td><td>운영 미실측(window.confirm 추정)</td><td>window.confirm</td><td>통일 모달 권장</td></tr>
+<tr><td>FQ-101-MD-COMPLE</td><td>Quest 생성 완료</td><td>미실측 (API 호출 후 토스트)</td><td>alert</td><td>토스트</td></tr>
+<tr><td>FQ-201-MD-OPEN</td><td>Quest 게시</td><td>TBD (임시저장 상태 데이터 필요)</td><td>미구현</td><td>신규</td></tr>
+<tr><td>FQ-201-MD-CLOSE</td><td>Quest 종료</td><td>✅ 단순 확인 모달</td><td>미구현</td><td>신규</td></tr>
+<tr><td>FQ-201-MD-DELETE</td><td>Quest 삭제</td><td>미실측</td><td>미구현</td><td>신규</td></tr>
+<tr><td>FQ-201-MD-CANCEL</td><td>Quest 수정 취소</td><td>미실측 (수정 페이지 취소하기)</td><td>—</td><td>confirm 또는 모달</td></tr>
+<tr><td>FQ-201-MD-COMPLE</td><td>Quest 수정 완료</td><td>미실측</td><td>—</td><td>토스트</td></tr>
+<tr><td>FQ-202-MD-REJECT</td><td>제출 반려 사유</td><td>✅ 라디오</td><td>미구현</td><td>신규</td></tr>
+</table>
+<h2>9. 운영 사이트 캡처 인벤토리</h2>
+<table>
+<tr><th>파일</th><th>내용</th></tr>
+<tr><td><code>prod-list-01-main.png</code> (chrome) / <code>prod-list-01-main-pw.png</code> (playwright)</td><td>/fanquest 메인 리스트</td></tr>
+<tr><td><code>prod-reject-reasons-list.png</code></td><td>반려사유 설정 페이지</td></tr>
+<tr><td><code>prod-reject-reason-add-modal.png</code></td><td>반려사유 추가 모달</td></tr>
+<tr><td><code>prod-reject-reason-edit-modal.png</code></td><td>반려사유 수정 모달 + 상태 드롭다운</td></tr>
+<tr><td><code>prod-create-01-full.png</code></td><td>Quest 생성 페이지 풀스크린</td></tr>
+<tr><td><code>prod-detail-active-info.png</code></td><td>진행중 상세 — 기본정보 탭</td></tr>
+<tr><td><code>prod-detail-active-pending.png</code></td><td>진행중 상세 — 대기내역 탭 (카드 그리드)</td></tr>
+<tr><td><code>prod-reject-submission-modal.png</code></td><td>반려 사유 선택 모달</td></tr>
+<tr><td><code>prod-close-modal.png</code></td><td>Quest 종료 확인 모달</td></tr>
+<tr><td><code>prod-edit-active.png</code></td><td>Quest 수정 페이지 (진행중)</td></tr>
+<tr><td><code>prod-detail-closed-info.png</code></td><td>종료 상세 (read-only) ※ id:7 송유찬 인스타 — 추가 캡처 필요 시</td></tr>
+</table>
+<h2>10. 결정 필요 항목 (사용자 답변 요청)</h2>
+<ul>
+<li><strong>R1</strong>: 반려사유 설정을 별도 페이지로 전환할까요? (운영 정합 vs 프로토 모달 유지)</li>
+<li><strong>R2</strong>: 임시저장 상태 Quest mock 데이터를 추가할까요? (현재 운영에 임시저장 quest 없어 액션 실측 불가)</li>
+<li><strong>R3</strong>: NFT 이벤트 드롭다운은 빈 상태(<code>선택 가능한 NFT 이벤트가 없습니다.</code>)만 표시할까요, 아니면 BIVE 메뉴 mock을 연동할까요?</li>
+<li><strong>R4</strong>: 대기내역 카드 그리드를 운영처럼 1열 vs 2~3열 그리드로 할까요? (운영 캡처는 1열로 보임)</li>
+<li><strong>R5</strong>: 반려사유 모달의 운영자 노출명 외 부가 필드(내부코드/설명)는 제거할까요, 프로토 자체 확장으로 유지할까요?</li>
+</ul>
+<h2>11. 작업 추정 (사용자 승인 후)</h2>
+<table>
+<tr><th>그룹</th><th>항목</th><th>난이도</th><th>예상</th></tr>
+<tr><td>A</td><td>라우팅·페이지 신규 (reject-reasons, edit)</td><td>⚙️⚙️</td><td>1.5h</td></tr>
+<tr><td>B</td><td>대기내역 탭 전면 재작성 (카드 그리드 + 모달)</td><td>⚙️⚙️⚙️</td><td>2h</td></tr>
+<tr><td>C</td><td>생성 폼 재구성 (레이아웃·옵션·연관 링크·NFT 이벤트)</td><td>⚙️⚙️</td><td>1.5h</td></tr>
+<tr><td>D</td><td>상태별 분기 (헤더 CTA, 배지 색, 수정 페이지 disabled)</td><td>⚙️⚙️</td><td>1h</td></tr>
+<tr><td>E</td><td>모달 6종 (반려사유 추가/수정, 제출 반려, 종료, 게시, 삭제)</td><td>⚙️⚙️</td><td>1.5h</td></tr>
+<tr><td>F</td><td>Mock·타입 정비</td><td>⚙️</td><td>0.5h</td></tr>
+<tr><td>G</td><td>HTML 미러 동기화 + 플로우 문서 작성</td><td>⚙️</td><td>1h</td></tr>
+</table>
+<p><strong>합계 추정</strong>: 9시간 (휴식·검증 포함)</p>
+<h2>12. 다음 단계</h2>
+<ol>
+<li>사용자 본 보고서 검토 → 결정 필요 항목 R1~R5 답변</li>
+<li>답변 반영하여 [CEB-BO-FQ-FLOW] 플로우/로직 문서 v1.0 작성</li>
+<li>프로토타입 코드 일괄 수정 (Phase 5)</li>
+<li>Confluence HTML 미러 동기화 (Phase 6)</li>
+</ol>
+
+</body>
+</html>

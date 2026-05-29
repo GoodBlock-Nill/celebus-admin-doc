@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-100] 멀티아티스트 운영 가이드</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-100] 멀티아티스트 운영 가이드</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-100</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>BO 전체 — 멀티아티스트 운영 정책 마스터</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.7</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.08</td></tr>
+<tr><td>비고</td><td>v2 BO 전체 멀티아티스트 운영 마스터 가이드. v1.7: SQ 구조 정정 — 운영 용어 "챕터→에피소드", 수량 제약(스토리당 5/에피소드당 10), 에피소드 메인 이미지 + BIVE 보상 on/off. v1.6: 팬덤 레벨 시즌 1.1~12.31 확정. v1.5: ERD 검토 합의 4건.</td></tr>
+</table>
+<hr>
+<h2>목적</h2>
+<p>CELEBUS는 단일 아티스트(V01D) 운영에서 여러 아티스트를 동시 운영하는 멀티아티스트 구조로 확장한다. 본 가이드는 백오피스(BO) 전 영역에 적용되는 <strong>멀티아티스트 운영 메탈 모델·UX 패턴·정책 분리 매트릭스·도입 로드맵</strong>을 정의한다.</p>
+<blockquote>
+<p>본 가이드는 [CEB-BO-000] 백오피스 공통 정책의 멀티아티스트 정책 확장이며, 모든 영역별 가이드(USR·ART·BIVE·FQ·EVT·DUK·SYS·RFT 등)는 본 가이드의 정책을 따른다.</p>
+</blockquote>
+<hr>
+<h2>1. APP vs BO 메탈 모델 차이</h2>
+<table>
+<tr><th>측면</th><th>APP (<code>[CEB-000]</code> 적용)</th><th>BO (본 가이드 적용)</th></tr>
+<tr><td>사용자 시점</td><td>한 명의 팬이 한 번에 한 아티스트를 본다</td><td>한 명의 운영자가 동시에 여러 아티스트를 비교·감독한다</td></tr>
+<tr><td>컨텍스트</td><td>1개 (현재 선택 아티스트)</td><td>0~N개 (전체 비교, 단일 집중 모두 필요)</td></tr>
+<tr><td>권한 모델</td><td>단일 사용자</td><td>4단계 (SUPER / OPERATOR / POLICY / EXTERNAL_ARTIST)</td></tr>
+<tr><td>콘텐츠 귀속</td><td>"현재 선택 아티스트" 또는 "콘텐츠 아티스트"</td><td>콘텐츠는 항상 명시적 아티스트 ID에 귀속, 운영 컨텍스트는 별도</td></tr>
+</table>
+<p><strong>결론</strong>: APP의 컨텍스트 패턴을 BO에 그대로 복제하면 운영자가 비교·감독을 못한다. BO는 <strong>권한별로 다른 컨텍스트 메탈 모델</strong>을 적용한다.</p>
+<hr>
+<h2>2. UX 패턴 — 하이브리드 컨텍스트</h2>
+<h3>2.1 두 축의 결합</h3>
+<p>BO 멀티아티스트 운영은 두 축을 동시에 사용한다.</p>
+<table>
+<tr><th>축</th><th>위치</th><th>역할</th></tr>
+<tr><td><strong>헤더 글로벌 컨텍스트 토글</strong></td><td>상단 헤더 (사이드바 옆)</td><td>전체 BO의 <strong>기본 운영 시야</strong> 결정. "전체 / V01D / iKON / …"</td></tr>
+<tr><td><strong>페이지별 필터</strong></td><td>각 콘텐츠 리스트 상단 필터 행</td><td>헤더 컨텍스트 위에 <strong>덮어쓰기</strong>. 운영자가 페이지에서 일시적으로 다른 아티스트로 전환 가능</td></tr>
+</table>
+<h3>2.2 권한별 적용 룰</h3>
+<table>
+<tr><th>권한</th><th>헤더 토글 동작</th><th>페이지 필터 동작</th></tr>
+<tr><td>SUPER / OPERATOR / POLICY</td><td>기본값 "전체". 변경 가능. 토글 변경 시 페이지 필터 기본값이 따라 바뀜 (사용자가 페이지에서 덮어쓰기 가능)</td><td>"전체" + 모든 아티스트 옵션 노출</td></tr>
+<tr><td>EXTERNAL_ARTIST</td><td>자기 아티스트로 <strong>고정·비활성</strong> (변경 불가)</td><td>다른 아티스트 옵션 미노출. 서버 측에서 본인 아티스트 외 데이터 차단</td></tr>
+</table>
+<h3>2.3 화면 영향 매트릭스 (사이드바 메뉴별 4단계 분류)</h3>
+<p>본 매트릭스는 멀티아티스트 도입 시 <strong>각 사이드바 메뉴의 영향도</strong>를 분류한다.</p>
+<table>
+<tr><th>등급</th><th>정의</th><th>메뉴</th></tr>
+<tr><td>🔴 <strong>Critical</strong></td><td>헤더 토글 + 페이지 필터 모두 적용. 콘텐츠가 명시적으로 아티스트에 귀속</td><td><strong>팬퀘스트 / BIVE / 아티스트 / 모바일티켓 / 스토리 퀘스트(SQ)</strong> ⭐ v1.5</td></tr>
+<tr><td>🟠 <strong>High</strong></td><td>페이지 필터 또는 보조 탭으로 아티스트별 분리 필요</td><td><strong>회원 상세 / Fans / 프로젝트 / 대시보드</strong></td></tr>
+<tr><td>🟡 <strong>Info</strong></td><td>메타필드·라벨·통계만 영향. 본질은 통합 운영</td><td><strong>응모권(RFT) / 회원 리스트 / 권한관리 / 관리자 활동 로그</strong></td></tr>
+<tr><td>⚪ <strong>None</strong></td><td>멀티아티스트와 무관한 전역 운영</td><td><strong>앱 / 게임존 / 재무 / 관리자 리스트 / 정지사유 (회원)</strong></td></tr>
+</table>
+<h4>등급별 적용 패턴</h4>
+<table>
+<tr><th>등급</th><th>헤더 토글</th><th>페이지 필터</th><th>정책 분리</th><th>EXTERNAL_ARTIST</th></tr>
+<tr><td>🔴 Critical</td><td>✅</td><td>✅ (덮어쓰기)</td><td>가이드별 (반려사유=아티스트별 등)</td><td>자기 아티스트만 R/W</td></tr>
+<tr><td>🟠 High</td><td>⚠️ 부분</td><td>✅ 또는 보조 탭</td><td>보통 전역</td><td>회원 영역은 차단, Fans·프로젝트는 자기 아티스트만</td></tr>
+<tr><td>🟡 Info</td><td>❌</td><td>❌ 또는 메타 표시</td><td>메타필드·통계 분기만</td><td>본인 출처 통계만 R</td></tr>
+<tr><td>⚪ None</td><td>❌</td><td>❌</td><td>전역 단일</td><td>진입 차단</td></tr>
+</table>
+<h3>2.4 URL 동기화</h3>
+<ul>
+<li>헤더 컨텍스트 변경 시 URL에 <code>?artistContext={그룹ID}</code> 또는 <code>?artistContext=all</code> 자동 반영.</li>
+<li>페이지 필터 변경 시 URL에 <code>?artistFilter={그룹ID|멤버ID}</code> 추가.</li>
+<li>새로고침·공유 링크에서도 컨텍스트 유지.</li>
+<li>EXTERNAL_ARTIST가 자기 아티스트 외 ID로 직접 URL 접근 시 [CEB-BO-000] §7.2 권한 부족 표시.</li>
+</ul>
+<h3>2.5 도입 시점 (결정사항 ③ 적용)</h3>
+<ul>
+<li><strong>Phase 1</strong>: 헤더 토글 UI는 <strong>placeholder만 노출</strong> (비활성, 회색, 툴팁 "Phase 3에서 활성화"). SUPER 운영자가 미리 메탈 모델을 학습하도록 위치 확보.</li>
+<li><strong>Phase 2</strong>: 페이지별 필터·정책 분리만 우선 동작.</li>
+<li><strong>Phase 3</strong>: 헤더 토글 활성화 + URL 동기화 + 권한별 잠금.</li>
+</ul>
+<hr>
+<h2>3. 정책 분리 매트릭스 (전역 vs 아티스트별)</h2>
+<table>
+<tr><th>항목</th><th>분리 방식</th><th>근거</th></tr>
+<tr><td><strong>정지사유</strong> ⭐ v1.1 변경</td><td><strong>전역 단일 + 발견 컨텍스트 메타</strong></td><td>정지는 회원 단위 행동 판정. 같은 위반 코드로 일관 식별. 발견 컨텍스트(어느 아티스트 활동 중)는 정지 처리 시 메타로 기록해 통계·감사 가능. [CEB-BO-USR-501]</td></tr>
+<tr><td><strong>반려사유</strong> (Quest·BIVE)</td><td><strong>아티스트별</strong></td><td>콘텐츠 스타일 가이드가 아티스트마다 다름. [CEB-BO-FQ-501]</td></tr>
+<tr><td><strong>권한·역할</strong> (Role)</td><td><strong>전역 + 스코프 메타</strong></td><td>역할 정의는 공유, 적용 범위만 "아티스트 ID 배열" 메타필드로 분기. [CEB-BO-SYS-501]</td></tr>
+<tr><td><strong>덕력 시즌</strong> ⭐ v1.5 정정</td><td><strong>글로벌 시즌 마스터 + 아티스트별 독립 랭킹 산출</strong></td><td>시즌 1개로 모든 아티스트 동시 시작·종료. 랭킹·통계만 아티스트별 분리. APP [CEB-DUK-101] "통합 누적" 정책과 정합. ERD <code>fan_power_season.artist_group_id</code> NULL 허용 또는 제거 요청 ([CEB-BO-100-B] §9.1)</td></tr>
+<tr><td><strong>팬덤 레벨 곡선</strong></td><td><strong>아티스트별</strong></td><td>팬 베이스 규모가 다르면 곡선도 달라야 함. [CEB-BO-EVT-101]</td></tr>
+<tr><td><strong>팬덤 레벨 누적·리셋</strong> ⭐ v1.5 / v1.6 정정</td><td><strong>연 1회 리셋 — 매년 1월 1일 ~ 12월 31일 (캘린더 연도)</strong></td><td>K-pop 팬덤 일반 흐름(팬클럽 1기·2기) 채택. 시즌명 권장 패턴: <code>"{아티스트} 팬덤 N기 (YYYY)"</code>. 모든 아티스트 동일 주기 동기화. 12.31 23:59:59 자동 종료 → 정산 → 01.01 00:00:00 신규 시즌. ERD <code>fandom_level_season.season_year year</code> + <code>start_dt</code>/<code>end_dt</code> 채택. APP [CEB-EVT-201] "영구 누적" → "시즌별 리셋(연 1회)" 갱신 필요 ([CEB-BO-100-B] §9.2 + [CEB-BO-EVT-101] v1.3 §0.1)</td></tr>
+<tr><td><strong>스토리 퀘스트(SQ)</strong> ⭐ v1.5 신규 / v1.7 정정</td><td><strong>아티스트별</strong> (🔴 Critical)</td><td>스토리 자체가 아티스트별. V01D 스토리·iKON 스토리 별도. 운영 용어 <strong>"에피소드"</strong> (ERD <code>story_quest_chapter</code> ↔ 운영 "에피소드"). <strong>수량 제약: 스토리당 5 에피소드 / 에피소드당 10 미션</strong>. 에피소드 메인 이미지 + BIVE 보상 on/off 지원. 미션 source_type별 (FAN_QUEST=아티스트별 / PM·ST=게임존 글로벌). 영역 가이드 = [CEB-BO-011] v1.1.</td></tr>
+<tr><td><strong>응모권</strong> ⭐ v1.1 신규</td><td><strong>전역 + 발급 출처 메타</strong></td><td>통합 자산. 발급 출처(<code>sourceArtistContext</code>, <code>sourceFeature</code>)는 메타 기록으로 통계·감사. [CEB-BO-RFT-*]</td></tr>
+<tr><td><strong>응모권 환율</strong></td><td><strong>전역</strong> (Phase 3에 아티스트별 옵션)</td><td>APP 응모권 통합이라 환율도 통합. 차등은 프로모션 한정</td></tr>
+<tr><td><strong>모바일티켓</strong> ⭐ v1.1 신규</td><td><strong>아티스트별 + 공연 단위 추가 분리</strong></td><td>공연·팬미팅마다 아티스트·일정·환불 정책이 다름</td></tr>
+<tr><td><strong>BIVE 등급 정의</strong></td><td><strong>전역</strong></td><td>Event/Ticket/Mix/Pick는 플랫폼 표준</td></tr>
+<tr><td><strong>게임존 운영</strong></td><td><strong>전역</strong></td><td>GP·랭킹·교환소는 통합 화폐</td></tr>
+<tr><td><strong>관리자 활동 로그</strong></td><td><strong>전역 + 컨텍스트 컬럼</strong></td><td>감사 추적은 통합, 검색은 분기. [CEB-BO-SYS-601]</td></tr>
+</table>
+<h3>3.1 아티스트별 정책 데이터 구조 (반려사유 전용)</h3>
+<p>반려사유 등 <strong>아티스트별 분리 정책</strong>은 다음 필드를 갖는다.</p>
+<table>
+<tr><th>필드</th><th>타입</th><th>설명</th></tr>
+<tr><td><code>artistId</code></td><td>ID</td><td>적용 대상 아티스트 그룹 ID (필수)</td></tr>
+<tr><td><code>code</code></td><td>string</td><td>내부 식별 코드 (영문, 등록 후 수정 불가)</td></tr>
+<tr><td><code>displayName</code></td><td>string</td><td>운영자 노출명 (다국어 KO/EN/JA 지원)</td></tr>
+<tr><td><code>description</code></td><td>string</td><td>적용 기준</td></tr>
+<tr><td><code>status</code></td><td>enum</td><td><code>Active</code> / <code>Inactive</code></td></tr>
+</table>
+<blockquote>
+<p>정지사유는 v1.1부터 2단 구조 폐기 → <strong>전역 단일 + <code>discoveryContext</code> 메타</strong> (정지 처리 시점에 어느 아티스트 활동 중 발견되었는지 기록)로 변경.</p>
+</blockquote>
+<h3>3.2 정지사유 변경 근거 (v1.0 → v1.1)</h3>
+<table>
+<tr><th>검토 관점</th><th>v1.0 (2단)</th><th>v1.1 (전역 + 메타) ⭐ 채택</th></tr>
+<tr><td>정지사유 본질</td><td>회원 행동 판정</td><td>동일</td></tr>
+<tr><td>회원 단위 처리</td><td>회원 1명이 여러 아티스트 위반 시 코드 분기</td><td>회원 단위 일관 코드</td></tr>
+<tr><td>식별 일관성</td><td>"V01D 욕설" vs "iKON 욕설" 별도 → 통계 어려움</td><td>욕설 1개로 통합 통계</td></tr>
+<tr><td>운영 복잡도</td><td>scope·artistIds 추가 필드</td><td>메타필드 1개만 추가</td></tr>
+<tr><td>차별 룰 실수요</td><td>거의 없음</td><td>해당</td></tr>
+<tr><td>결과</td><td>폐기</td><td><strong>채택</strong></td></tr>
+</table>
+<hr>
+<h2>4. EXTERNAL_ARTIST 권한 적용 범위 (결정사항 ② 적용)</h2>
+<p>EXTERNAL_ARTIST는 <strong>콘텐츠 영역에만 접근 가능</strong>하다. 회원 데이터·재무·전역 정책 등은 차단.</p>
+<h3>4.1 접근 매트릭스</h3>
+<table>
+<tr><th>영역</th><th>EXTERNAL_ARTIST 접근</th><th>비고</th></tr>
+<tr><td>Quest·Raffle (자기 아티스트)</td><td>R/W (생성·수정)</td><td>검수·삭제·추첨은 OPERATOR 이상</td></tr>
+<tr><td>BIVE 캠페인·등록 (자기 아티스트)</td><td>R/W</td><td>등급 정의·민팅 정책은 SUPER 한정</td></tr>
+<tr><td><strong>모바일티켓 공연·팬미팅 (자기 아티스트)</strong> ⭐ v1.1</td><td>R/W (등록·수정)</td><td>환불·취소는 OPERATOR 이상</td></tr>
+<tr><td><strong>스토리 퀘스트(SQ, 자기 아티스트)</strong> ⭐ v1.5</td><td>R/W (생성·챕터 추가·미션 정의)</td><td>챕터 미션 검수(ADMIN_APPROVAL)는 OPERATOR 이상. 챕터 보상(BIVE 민팅·덕력)은 자기 아티스트 한정</td></tr>
+<tr><td>콘텐츠·소식 (INF, 자기 아티스트)</td><td>R/W</td><td>게시·공지·홈 배너</td></tr>
+<tr><td>디지털 굿즈 (COL, 자기 아티스트)</td><td>R/W</td><td></td></tr>
+<tr><td>서포트 이벤트 (자기 아티스트)</td><td>R</td><td>생성·종료는 OPERATOR 이상</td></tr>
+<tr><td><strong>응모권 (RFT)</strong> ⭐ v1.1</td><td>R (자기 아티스트 출처 통계만)</td><td>회원 보유·거래 내역 차단</td></tr>
+<tr><td>회원 리스트·상세</td><td>❌ 차단</td><td>본인 아티스트 팬 회원이라도 접근 불가</td></tr>
+<tr><td>회원 정지내역·자산 회수</td><td>❌ 차단</td><td></td></tr>
+<tr><td>팬덤 레벨 통계 (자기 아티스트)</td><td>R (집계만)</td><td>개별 회원 식별 정보 미노출</td></tr>
+<tr><td>게임존·재무·교환소</td><td>❌ 차단</td><td></td></tr>
+<tr><td>권한 관리·관리자 활동 로그</td><td>❌ 차단</td><td></td></tr>
+</table>
+<h3>4.2 통계 화면의 비식별 처리</h3>
+<p>EXTERNAL_ARTIST가 자기 아티스트 팬덤 레벨 분포·응모권 발급 통계 등 통계 화면을 볼 때:</p>
+<ul>
+<li>집계 수치(예: "Lv5 이상 회원 1,234명", "이번 달 자사 아티스트 출처 응모권 5,678장 발급")만 노출.</li>
+<li>개별 회원 ID·닉네임·이메일·전화번호 등 식별 정보 모두 마스킹.</li>
+<li>다운로드·CSV 내보내기 비활성화.</li>
+</ul>
+<h3>4.3 직접 URL 접근 시도</h3>
+<ul>
+<li>EXTERNAL_ARTIST가 <code>/members/123</code> 등 차단 영역에 직접 URL로 접근 시 [CEB-BO-000] §7.2 권한 부족 표시 → "권한이 없습니다" + [홈으로].</li>
+<li>자기 아티스트 외 콘텐츠 ID로 접근 시도 시 동일 처리.</li>
+</ul>
+<hr>
+<h2>5. 신규 아티스트 추가 정책 (결정사항 ④ 적용)</h2>
+<p>신규 아티스트 추가 시 <strong>템플릿 아티스트로부터 기본 정책을 1-click 복제</strong>한다.</p>
+<h3>5.1 템플릿 아티스트 개념</h3>
+<ul>
+<li>"템플릿 아티스트"는 실제 운영되지 않는 가상 아티스트로, BO에 1개만 존재.</li>
+<li>운영팀이 합의한 <strong>표준 정책 묶음</strong>(곡선·시즌·반려사유·BIVE 등급 매핑·기본 Quest 템플릿 등)을 보관.</li>
+<li>SUPER만 수정 가능. 일반 콘텐츠 등록·앱 노출 대상이 아님.</li>
+<li>ID: 예약값 (<code>group_id=0</code> 또는 별도 플래그 <code>is_template=true</code>).</li>
+</ul>
+<h3>5.2 복제 항목</h3>
+<p>신규 아티스트 추가 마법사에서 다음 항목을 자동 복제한다.</p>
+<table>
+<tr><th>항목</th><th>출처</th><th>복제 후 편집</th></tr>
+<tr><td>팬덤 레벨 곡선</td><td>템플릿의 곡선</td><td>즉시 편집 가능 ([CEB-BO-EVT-501])</td></tr>
+<tr><td>덕력 시즌 정책</td><td>템플릿의 시즌 캘린더</td><td>시즌 시작일만 조정</td></tr>
+<tr><td>반려사유 마스터</td><td>템플릿의 반려사유 전체</td><td>추가·삭제·수정 모두 가능</td></tr>
+<tr><td>BIVE 등급 매핑</td><td>템플릿의 Event/Ticket/Mix/Pick 등급 정의</td><td>신규 아티스트에서는 일반적으로 그대로 유지</td></tr>
+<tr><td>기본 Quest 템플릿</td><td>템플릿의 "환영 Quest", "SNS 팔로우 Quest" 등</td><td>즉시 게시 또는 수정 후 게시</td></tr>
+<tr><td>응모권 발급 정책 (자기 아티스트 출처) ⭐ v1.1</td><td>템플릿의 출처별 발급 룰</td><td>즉시 편집 가능</td></tr>
+<tr><td>정지사유 (전역)</td><td>복제 안 함 (전역 단일 적용)</td><td>신규 아티스트 추가와 무관</td></tr>
+</table>
+<h3>5.3 신규 아티스트 추가 워크플로우</h3>
+<p>상세 명세는 [CEB-BO-ART-501] 신규 아티스트 추가 체크리스트에서 정의. 본 가이드는 정책 원칙만 제시:</p>
+<ol>
+<li>ART 영역에서 그룹 등록 → 신규 아티스트 추가 마법사 자동 트리거.</li>
+<li>마법사 1단계: 그룹 기본 정보 (이름·로고·이미지·SNS) 입력.</li>
+<li>마법사 2단계: 멤버 등록 (선택, 이후 별도 가능).</li>
+<li>마법사 3단계: <strong>초기화 체크리스트</strong> — 위 §5.2 항목 자동 복제 (체크박스로 항목별 옵트아웃 가능).</li>
+<li>마법사 4단계: 운영 가능 권한자 매핑 (EXTERNAL_ARTIST 권한자 연결).</li>
+<li>활성화 → 앱 노출 시작.</li>
+</ol>
+<hr>
+<h2>6. 도입 로드맵 (Phase 1~3)</h2>
+<h3>6.1 Phase 1 — 기반 (hardcoded 제거 + 공통 컴포넌트 + 응모권 영역 신설)</h3>
+<ol>
+<li><code><ArtistSelector /></code> 공통 컴포넌트 — 그룹·멤버 2단계, 마스터에서 동적 로드, 권한별 옵션 필터.</li>
+<li>콘텐츠 생성 모달의 hardcoded 아티스트 dropdown 제거 → <code><ArtistSelector /></code> 적용.</li>
+<li>콘텐츠 리스트 (Quest·BIVE Edition·BIVE Minting·모바일티켓) 아티스트 필터 추가.</li>
+<li>회원 상세 BIVE 탭·참여 내역 탭에 아티스트별 보조 탭 분리.</li>
+<li>헤더 글로벌 토글 placeholder 노출 (비활성).</li>
+<li>mock·DB 데이터 정합성 — 모든 아티스트 필드를 그룹·멤버 ID 참조로 정규화.</li>
+<li><strong>응모권(RFT) 영역 신설</strong> ⭐ v1.1, MVP 스코프 v1.2 — 사이드바 BIVE 직후 메인 메뉴 추가. MVP 화면 3종(RFT-101/201/301)만 작성. RFT-401·RFT-501은 APP 고도화 완료 후 별도 트랙. [CEB-BO-FQ-301] 거래 내역 → [CEB-BO-RFT-201] 변동 내역으로 이전·확장.</li>
+</ol>
+<h3>6.2 Phase 2 — 정책 분리</h3>
+<ol>
+<li>정지사유 화면에 <code>discoveryContext</code> 메타 컬럼 추가 ([CEB-BO-USR-501]). ⭐ v1.1 변경</li>
+<li>반려사유 마스터 신설 ([CEB-BO-FQ-501]).</li>
+<li>팬덤 레벨 곡선 페이지 신설 ([CEB-BO-EVT-501]).</li>
+<li>신규 아티스트 추가 마법사 ([CEB-BO-ART-501]).</li>
+<li>권한 관리에 역할별 운영 가능 아티스트 다중 선택 필드 ([CEB-BO-SYS-501]).</li>
+<li>콘텐츠 리스트 다중 선택 → 일괄 이관·복제 도구.</li>
+<li>관리자 활동 로그에 <code>artistContext</code> 컬럼 + 필터 ([CEB-BO-SYS-601]).</li>
+<li><strong>응모권 발급 정책 마스터</strong> ([CEB-BO-RFT-301]) — 출처별 발급 룰. ⭐ v1.1</li>
+</ol>
+<h3>6.3 Phase 3 — 고도화</h3>
+<ol>
+<li>헤더 글로벌 토글 활성화 + URL 동기화 + 권한별 잠금.</li>
+<li>EXTERNAL_ARTIST 진입 시 사이드바 메뉴 자동 숨김.</li>
+<li>팬덤 레벨 달성 → 독점 콘텐츠 자동 해금 룰 빌더 (아티스트별).</li>
+<li>아티스트 팔로우 해제·재팔로우 시 데이터 보존·복구 정책 콘솔.</li>
+<li>응모권 환율 차등 옵션 (아티스트별 프로모션 보너스).</li>
+<li>데이터 마이그레이션 정책 콘솔 ([CEB-BO-SYS-701]).</li>
+<li>대시보드에 아티스트별 KPI 비교 위젯 (헤더 컨텍스트=전체일 때만).</li>
+</ol>
+<hr>
+<h2>7. 합의된 핵심 결정사항</h2>
+<p>본 가이드의 정책은 다음 의사결정에 기반한다.</p>
+<table>
+<tr><th>#</th><th>의제</th><th>결정</th><th>적용 위치</th><th>합의일</th></tr>
+<tr><td>①</td><td>정지사유 분리</td><td><strong>전역 단일 + 발견 컨텍스트 메타</strong> ⭐ v1.1 변경</td><td>§3, §3.2, [CEB-BO-USR-501]</td><td>2026.05.07</td></tr>
+<tr><td>②</td><td>EXTERNAL_ARTIST 회원 데이터 접근</td><td><strong>콘텐츠만 (회원 데이터 차단)</strong></td><td>§4</td><td>2026.05.07</td></tr>
+<tr><td>③</td><td>헤더 글로벌 토글 도입 시점</td><td><strong>Phase 1 placeholder, Phase 3 활성화</strong></td><td>§2.5</td><td>2026.05.07</td></tr>
+<tr><td>④</td><td>신규 아티스트 기본 정책 초기화</td><td><strong>템플릿 아티스트에서 복제</strong></td><td>§5</td><td>2026.05.07</td></tr>
+<tr><td>⑤</td><td>모바일티켓 영역 분류 ⭐ v1.1 신규</td><td><strong>🔴 Critical</strong> (아티스트별 공연·팬미팅)</td><td>§2.3, §3, §4.1</td><td>2026.05.07</td></tr>
+<tr><td>⑥</td><td>응모권 영역 분리 ⭐ v1.1 신규</td><td><strong>신규 메인 메뉴 (<code>RFT</code> 영역) — 13개 영역으로 확장</strong></td><td>§3, §8, §10</td><td>2026.05.07</td></tr>
+<tr><td>⑦</td><td>응모권 사이드바 위치 ⭐ v1.1 신규</td><td><strong>BIVE 직후</strong> (자산 영역 묶음)</td><td>§10</td><td>2026.05.07</td></tr>
+<tr><td>⑧</td><td>RFT MVP 스코프 ⭐ v1.2 신규 / v1.4 정정</td><td><strong>만료·환수·캠페인·관리자 수동 지급은 APP 고도화 완료 후 별도 트랙</strong>. 본 가이드 v1.2 + [CEB-BO-010] v1.1에서 라이프사이클 5상태 → 3상태(ISSUED/HELD/USED), 트리거 10종 → 6종, 화면 5종 → 3종. <strong>v1.4 추가 정정: 화면 3종 → 2종</strong>(RFT-301 발급 정책 마스터도 후속 트랙) — 출처 시스템에서 룰 결정. RFT-101 출처 분포 EARN(5종)/USE(1종) 시각 분리</td><td>[CEB-BO-010] §2.3·§3·§7·§11.1, RFT-101 §2.x</td><td>2026.05.07 (v1.2) / 2026.05.08 (v1.4)</td></tr>
+<tr><td>⑨</td><td>덕력 시즌 모델 ⭐ v1.5 신규</td><td><strong>글로벌 시즌 마스터 + 아티스트별 독립 랭킹 산출</strong>. 시즌 1개로 모든 아티스트 동시 시작·종료. ERD <code>fan_power_season.artist_group_id</code> NULL 허용/제거 요청. APP [CEB-DUK-101] 정책과 정합 — APP 변경 없음</td><td>§3, [CEB-BO-100-B] §9.1, [CEB-BO-DUK-000]</td><td>2026.05.08</td></tr>
+<tr><td>⑩</td><td>팬덤 레벨 시즌제 ⭐ v1.5 신규 / v1.6 주기 확정</td><td><strong>연 1회 시즌별 리셋 — 매년 1월 1일 ~ 12월 31일 (캘린더 연도)</strong>. K-pop 팬덤 일반 흐름(팬클럽 1기·2기). ERD <code>fandom_level_season.season_year year</code> 컬럼 + <code>start_dt</code>/<code>end_dt</code> 채택. 시즌명 권장 패턴 <code>"{아티스트} 팬덤 N기 (YYYY)"</code>. 모든 아티스트 동일 주기 동기화. 시즌별 보상 작업 큐(<code>fandom_level_up_job</code>, <code>fandom_level_reward_job</code>) 정합. APP [CEB-EVT-201] "영구 누적" → "시즌별 리셋(연 1회)" 갱신 필요</td><td>§3, [CEB-BO-100-B] §9.2, [CEB-BO-EVT-101] v1.3 §0.1</td><td>2026.05.08</td></tr>
+<tr><td>⑪</td><td>챌린지 영역 코드 ⭐ v1.5 신규</td><td><strong>SQ (Story Quest)</strong>. ERD 테이블명 <code>story_quest</code>와 일치. 가이드 ID = [CEB-BO-011] 영역 가이드 + [CEB-BO-SQ-*] 화면 가이드. 운영 용어 "챌린지"는 별칭 유지. v2 BO 13개 영역 → <strong>14개 영역으로 확장</strong></td><td>§3, §8, §10 (사이드바), [CEB-BO-100-B] §9.3</td><td>2026.05.08</td></tr>
+<tr><td>⑫</td><td>SQ 멀티아티스트 정책 ⭐ v1.5 신규</td><td><strong>아티스트별 스토리 퀘스트</strong> (🔴 Critical). V01D 스토리·iKON 스토리 별도 운영. 챕터 미션은 source_type 별 (FAN_QUEST=아티스트별 / PM·ST=게임존 글로벌). ERD <code>story_quest.artist_group_id NOT NULL</code> 추가 요청. EXTERNAL_ARTIST 자기 아티스트만 R/W</td><td>§3, §4.1, [CEB-BO-100-B] §9.4</td><td>2026.05.08</td></tr>
+</table>
+<hr>
+<h2>8. 연계 가이드</h2>
+<table>
+<tr><th>가이드 ID</th><th>영역</th><th>내용</th><th>상태</th></tr>
+<tr><td>[CEB-BO-USR-501]</td><td>USR</td><td>정지사유 설정 — 전역 단일 + 발견 컨텍스트 메타 (v1.1 갱신) ⭐ ID 충돌 회피: 기존 화면 통합</td><td>✅ v1.1</td></tr>
+<tr><td>[CEB-BO-FQ-502]</td><td>FQ</td><td>반려사유 마스터 (아티스트별) ⭐ FQ-501은 일일 미션 관리로 사용 중이라 FQ-502 부여</td><td>✅ v1.0</td></tr>
+<tr><td>[CEB-BO-EVT-101]</td><td>EVT</td><td>팬덤 레벨 곡선 설정 (v1.1 갱신) ⭐ ID 충돌 회피: 기존 화면 인용 보강</td><td>✅ v1.1</td></tr>
+<tr><td>[CEB-BO-ART-501]</td><td>ART</td><td>신규 아티스트 추가 체크리스트</td><td>후속 작성</td></tr>
+<tr><td>[CEB-BO-SYS-501]</td><td>SYS</td><td>권한 스코프 (역할별 운영 가능 아티스트)</td><td>후속 작성</td></tr>
+<tr><td>[CEB-BO-SYS-701]</td><td>SYS</td><td>데이터 마이그레이션·아티스트 비활성화</td><td>후속 작성</td></tr>
+<tr><td>[CEB-BO-SYS-601]</td><td>SYS</td><td>관리자 활동 로그 — 멀티아티스트 컨텍스트</td><td>후속 작성</td></tr>
+<tr><td>[CEB-BO-RFT-101]</td><td><strong>RFT</strong> ⭐ v1.1</td><td>응모권 현황 (메인) — 발급/사용 분포 명확 분리 (v1.4)</td><td>✅ MVP</td></tr>
+<tr><td>[CEB-BO-RFT-201]</td><td>RFT</td><td>응모권 변동 내역 (FQ-301 이전·확장)</td><td>✅ MVP</td></tr>
+<tr><td>~~[CEB-BO-RFT-301]~~</td><td>RFT</td><td>응모권 발급 정책 마스터</td><td><strong>후속 트랙 (필요 시)</strong> ⭐ v1.4 — 출처 시스템에서 룰 결정</td></tr>
+<tr><td>~~[CEB-BO-RFT-401]~~</td><td>RFT</td><td>응모권 캠페인</td><td><strong>후속 트랙 (APP 고도화 후)</strong> ⭐ v1.2</td></tr>
+<tr><td>~~[CEB-BO-RFT-501]~~</td><td>RFT</td><td>만료·환수 정책</td><td><strong>후속 트랙 (APP 고도화 후)</strong> ⭐ v1.2</td></tr>
+<tr><td>[CEB-BO-DUK-501]</td><td>DUK</td><td>아티스트별 덕력 시즌 분리 (옵션)</td><td>❌ v1.5 폐기 (덕력=글로벌 시즌 채택, [CEB-BO-100-B] §9.1)</td></tr>
+<tr><td><strong>[CEB-BO-011]</strong> ⭐ v1.5 신규</td><td><strong>SQ</strong></td><td><strong>스토리 퀘스트(SQ) 영역 가이드</strong> — 아티스트별 (🔴 Critical)</td><td>후속 트랙 D 작성</td></tr>
+<tr><td><strong>[CEB-BO-SQ-101/201/...]</strong> ⭐ v1.5 신규</td><td>SQ</td><td>스토리 퀘스트 화면 가이드 (스토리 리스트·상세·챕터·미션 등)</td><td>후속 트랙 D 작성</td></tr>
+</table>
+<blockquote>
+<p>[CEB-BO-000] 백오피스 공통 정책 §1.2 영역 표를 <strong>12개 → 13개</strong>로 확장 필요 (RFT 영역 추가). CLAUDE.md <code>v2 화면 ID 패턴</code> 영역 목록도 동일 갱신 필요.</p>
+</blockquote>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.05.07</td><td>@Nill Yoo</td><td>최초 작성. UX 패턴(하이브리드)·정책 분리 매트릭스·도입 로드맵·핵심 결정사항 4종 반영.</td></tr>
+<tr><td>v1.1</td><td>2026.05.07</td><td>@Nill Yoo</td><td>정지사유 2단 → <strong>전역 단일 + 발견 컨텍스트 메타</strong>로 회귀. 모바일티켓 <strong>🔴 Critical</strong> 분류 명시. 응모권 <strong>신규 영역(RFT)</strong> 분리 + 사이드바 BIVE 직후 위치. §2.3 화면 영향 매트릭스 4단계 신설. 결정사항 ⑤·⑥·⑦ 추가.</td></tr>
+<tr><td>v1.2</td><td>2026.05.07</td><td>@Nill Yoo</td><td><strong>RFT 영역 MVP 스코프 축소</strong> (결정사항 ⑧ 신규). ① 만료(EXPIRED)·환수(REVOKED) 상태 → 후속 트랙 ② 관리자 수동 지급 트리거 → 후속 트랙 ③ RFT-401 캠페인·RFT-501 만료·환수 정책 → 후속 트랙 ④ 라이프사이클 5상태 → 3상태(ISSUED/HELD/USED) ⑤ 변동 트리거 10종 → 6종 ⑥ MVP 화면 3종(RFT-101/201/301)만 작성. APP 고도화 완료 후 RFT-401·RFT-501·관리자 수동 지급·캠페인 추가 기획·개발. 데이터 모델 enum은 후속 도입 대비 정의 유지. 동기화: §6.1, §7 결정사항, §8 연계 가이드 표, [CEB-BO-010] v1.1.</td></tr>
+<tr><td>v1.3</td><td>2026.05.07</td><td>@Nill Yoo</td><td><strong>§8 ID 충돌 정정</strong>. 단계 3A 작성 중 발견된 기존 화면과의 ID 충돌 3건 정리: ① <strong>[CEB-BO-USR-501]</strong> — 기존 "정지사유 설정" v1.0 존재 → 신규 작성한 "정지사유.md" 삭제 + 기존을 v1.1로 갱신하여 멀티아티스트 정책 (§3 결정 ① 전역 단일 + 발견 컨텍스트 메타) 인용 보강 ② <strong>[CEB-BO-FQ-501]</strong> — 기존 "일일 미션 관리" 사용 중 → 신규 반려사유 마스터를 <strong>[CEB-BO-FQ-502]</strong>로 ID 변경 ③ <strong>[CEB-BO-EVT-101]</strong> — 기존 "곡선 설정" v1.0이 이미 멀티아티스트 곡선 화면 → 신규 작성한 "EVT-501 팬덤 레벨 곡선.md" 삭제 + 기존 EVT-101을 v1.1로 갱신하여 [CEB-BO-100] §3·§5 인용 명시. ART-501은 충돌 없음 — 그대로 유지. 본 정정으로 §8 연계 가이드 표 ID 매핑 정확화.</td></tr>
+<tr><td>v1.4</td><td>2026.05.08</td><td>@Nill Yoo</td><td><strong>RFT 영역 추가 정정</strong> (prototype 구현 검토 피드백 반영). ① <strong>RFT-301 발급 정책 마스터 화면 후속 트랙으로 이동</strong> — 출처별 발급 룰은 출처 시스템(Quest 생성·미션 생성·BIVE 혜택 등)에서 결정. BO에 별도 마스터 화면 두면 운영 부담만 가중 + 실제 직접 수정 항목은 GP 환율 1종 뿐(게임존 GP 교환소에서 처리 가능). MVP 화면 3개 → 2개(RFT-101 + RFT-201). ② <strong>RFT-101 출처별 분포 EARN/USE 분리 명시</strong> — 발급(EARN) 5종과 사용(USE) 1종이 같은 차트에 섞이면 0장 출처(RAFFLE_ENTRY 발급=0) 표시로 혼란. v1.4부터 발급(에메랄드)과 사용(로즈) 분포를 시각적으로 구분 노출. ③ 동기화: [CEB-BO-010] v1.2, prototype 사이드바 메뉴 제거, <code>/rft/policies</code> 라우트 삭제 완료.</td></tr>
+<tr><td><strong>v1.5</strong></td><td><strong>2026.05.08</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>개발팀 ERD([CEB-BO-100-B]) 검토 합의 4건 반영</strong>. ① <strong>결정사항 ⑨ 덕력 시즌 = 글로벌 시즌 마스터 + 아티스트별 독립 랭킹</strong> — §3 매트릭스 표현 정정. ERD <code>fan_power_season.artist_group_id</code> NULL 허용/제거 요청 ② <strong>결정사항 ⑩ 팬덤 레벨 = 시즌별 리셋</strong> — ERD 그대로 채택, APP [CEB-EVT-201] "영구 누적" → "시즌별 리셋" 갱신 필요 (별도 트랙). §3에 "팬덤 레벨 누적·리셋" 행 신규 추가 ③ <strong>결정사항 ⑪ 챌린지 영역 코드 = SQ (Story Quest)</strong> — v2 BO 13 → <strong>14개 영역으로 확장</strong>. 가이드 ID = [CEB-BO-011] + [CEB-BO-SQ-*] (후속 트랙 D 작성) ④ <strong>결정사항 ⑫ SQ 멀티아티스트 = 아티스트별 (🔴 Critical)</strong> — §3·§4.1·§2.3에 SQ 행 신규. ERD <code>story_quest.artist_group_id NOT NULL</code> 추가 요청. ⑤ §8 연계 가이드 표에 SQ 행 추가 + DUK-501 폐기 표기 (덕력=글로벌이므로 아티스트별 시즌 분리 옵션 불필요). 메타 갱신([CEB-BO-000] §1.2 14영역, [CEB-BO-001] §2 14영역, CLAUDE.md L69) 및 사이드바 시안 갱신은 <strong>트랙 D에서 일괄 처리</strong> 예정.</td></tr>
+<tr><td><strong>v1.6</strong></td><td><strong>2026.05.08</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>팬덤 레벨 시즌 주기 = 매년 1월 1일 ~ 12월 31일 (캘린더 연도) 확정</strong>. ① 사용자 합의 — K-pop 팬덤 일반 흐름(팬클럽 1기·2기) 채택. 모든 아티스트 동일 주기 동기화 ② §3 "팬덤 레벨 누적·리셋" 행 갱신 — "연 1회 리셋 (1.1~12.31)" + 시즌명 권장 패턴 <code>"{아티스트} 팬덤 N기 (YYYY)"</code> 명시 ③ §7 결정사항 ⑩ 갱신 — 주기 확정 ④ 라이프사이클 워크플로우 (12.31 23:59:59 자동 종료 → SETTLING → CLOSED → 01.01 00:00:00 신규 ACTIVE). 근거: ERD <code>fandom_level_season.season_year year</code> 컬럼 1년 단위 설계 일치. 동기화: [CEB-BO-EVT-101] v1.3 §0.1 시즌 주기 정책 신설.</td></tr>
+<tr><td><strong>v1.7</strong></td><td><strong>2026.05.08</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>SQ 스토리 퀘스트 구조 정정 (사용자 합의 4건)</strong>. ① <strong>운영 용어 통일</strong> — "챕터" → <strong>"에피소드"</strong> (ERD <code>story_quest_chapter</code> 테이블명 유지) ② <strong>수량 제약</strong> — 스토리당 최대 5 에피소드 / 에피소드당 최대 10 미션 ③ <strong>에피소드 메인 이미지</strong> 등록 가능 (<code>image_url</code> 컬럼 추가 요청) ④ <strong>에피소드별 BIVE 보상 on/off</strong> 토글 + BIVE 선택 (<code>bive_reward_yn</code> 플래그 추가 요청). §3 SQ 행 정책 갱신. 동기화: [CEB-BO-011] v1.1 + SQ 화면 가이드 12개 + prototype mock·화면 + [CEB-BO-100-C] 개발팀 ERD 요청서 v1.1.</td></tr>
+</table>
+<hr>
+<h2>10. 사이드바 적용 시안 (옵션 A 채택)</h2>
+<h3>10.1 신규 사이드바 구조</h3>
+<pre><code>대시보드
+─── 관리자 메뉴 ───
+회원
+프로젝트
+아티스트
+  ├─ 그룹 리스트
+  └─ 멤버 리스트
+앱
+BIVE
+  ├─ 에디션 관리
+  ├─ 민팅 관리
+  └─ 혜택 관리
+응모권 ⭐ NEW (RFT)
+  ├─ 응모권 현황
+  ├─ 변동 내역
+  ├─ 발급 정책
+  └─ 만료·환수 정책
+Fans
+티켓 (모바일티켓)
+게임존
+  ├─ 게임존 홈
+  ├─ 게임 관리
+  ├─ 랭킹
+  ├─ GP 교환소
+  └─ GP 변동 내역
+팬퀘스트
+재무
+관리자
+  ├─ 관리자 리스트
+  └─ 권한관리
+</code></pre>
+<h3>10.2 적용 작업 (Phase 1)</h3>
+<ol>
+<li><code>prototype/src/components/layout/AdminSidebar.tsx</code> — <code>ADMIN_MENU</code> 배열에 응모권 항목 추가 (BIVE 객체 직후).</li>
+<li><code>prototype/src/app/rft/</code> 디렉터리 신설 — 4개 라우트 (<code>current/page.tsx</code>, <code>history/page.tsx</code>, <code>policies/page.tsx</code>, <code>expiration/page.tsx</code>).</li>
+<li><code>prototype/src/mock/raffle-tickets.ts</code> (가칭) mock 신설 — 출처별 발급 로그·잔량·만료 데이터.</li>
+<li>기존 <code>[CEB-BO-FQ-301]</code> 응모권 거래 내역 → <code>[CEB-BO-RFT-201]</code>로 이전. CLAUDE.md 화면 목록 갱신.</li>
+</ol>
+<hr>
+<h2>11. 비실행 (Out of Scope)</h2>
+<ul>
+<li>본 가이드는 <strong>정책 마스터</strong>다. 즉시 prototype 코드 수정 또는 [CEB-BO-000] 갱신은 수행하지 않는다.</li>
+<li>7개 연계 가이드(USR-501, FQ-501, EVT-501, ART-501, SYS-501·601·701) 본문 작성은 본 가이드 합의 후 후속 작업으로 진행.</li>
+<li>APP 측 멀티아티스트 로직 변경은 본 가이드 범위 밖 (이미 [CEB-000]에 설계 완료).</li>
+</ul>
+
+</body>
+</html>

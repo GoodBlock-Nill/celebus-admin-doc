@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-SYS-102] 권한 그룹 리스트</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-SYS-102] 권한 그룹 리스트</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-SYS-102</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>기능영역(Epic)</td><td>SYS — 권한 그룹</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-06</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 관리자 > 권한관리</td></tr>
+<tr><td>비고</td><td>신규 작성 (Phase 8). 분석 리포트 [CEB-BO-001-A] §3.8.2 운영 화면 기반 (Super Admin/Viewer 2개 그룹). v2 가이드 [CEB-BO-005] §7 하이브리드 정책</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한 4단계(§3), 권한 매트릭스(§4)</td></tr>
+<tr><td>[CEB-BO-005] 관리자(SYS) 영역 가이드</td><td>권한 매트릭스(§4), 4단계 프리셋 + 운영자 커스텀 그룹 하이브리드(§7)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>CELEBUS 백오피스 권한 그룹 통합 관리. <strong>v2 하이브리드 정책</strong> (사용자 결정 2026-05-06): 4단계 기본 프리셋(SUPER/OPERATOR/POLICY/EXTERNAL_ARTIST) + 운영자가 12영역 × R/W/D 매트릭스로 커스터마이징하는 추가 그룹 운영. <strong>SUPER 전용</strong> 영역.</p>
+<h3>주요 기능</h3>
+<ul>
+<li>등록된 권한 그룹 리스트 조회 + 상태별 카운터</li>
+<li>권한 그룹 검색·필터</li>
+<li>신규 권한 그룹 생성 진입 (커스텀 그룹)</li>
+<li>권한 그룹 상세 진입 (3탭 — 기본정보/권한설정/관리자)</li>
+</ul>
+<h3>진입 경로</h3>
+<ul>
+<li>사이드 메뉴 > 관리자 > 권한관리</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 영역</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 관리자 > 권한관리</code></li>
+<li>화면 타이틀: 권한관리</li>
+<li>우측 상단 액션: [권한 생성] (Primary, 커스텀 그룹만 생성 가능)</li>
+</ul>
+<h3>2.2 상태 대시보드 (3카드)</h3>
+<table>
+<tr><th>카드</th><th>의미</th></tr>
+<tr><td>전체</td><td>등록된 권한 그룹 수 (프리셋 4 + 운영자 정의 N)</td></tr>
+<tr><td>Active</td><td>활성 그룹 (관리자에게 부여 가능)</td></tr>
+<tr><td>Inactive</td><td>비활성 그룹 (신규 부여 차단, 기존 매핑은 유지)</td></tr>
+</table>
+<blockquote>
+<p>운영 데이터(2026-05-05): 전체 2 / Active 2 / Inactive 0 — Super Admin (수정불가, 9명) + Viewer (기본값, 0명).</p>
+</blockquote>
+<h3>2.3 검색·필터 영역</h3>
+<table>
+<tr><th>구분</th><th>요소명</th><th>타입</th><th>설명</th></tr>
+<tr><td>필터</td><td>상태</td><td>Dropdown</td><td>전체 (Default) / Active / Inactive</td></tr>
+<tr><td>입력</td><td>권한명</td><td>Text Input</td><td>부분 일치 검색</td></tr>
+<tr><td>버튼</td><td>초기화</td><td>Dark Button</td><td>필터 리셋</td></tr>
+</table>
+<h3>2.4 목록 영역 (List Table)</h3>
+<table>
+<tr><th>컬럼명</th><th>데이터 예시</th><th>설명</th></tr>
+<tr><td>권한상태</td><td>Active (Green) / Inactive (Gray)</td><td>Badge</td></tr>
+<tr><td>권한명</td><td>Super Admin / Operator / Policy / External Artist / Viewer / 콘텐츠 관리자</td><td>권한 그룹명</td></tr>
+<tr><td>그룹 유형</td><td>프리셋 (4단계) / 운영자 정의 / 기본값</td><td>Badge — 프리셋과 커스텀 구분</td></tr>
+<tr><td>비고 라벨</td><td>"수정불가" (프리셋) / "기본값" (Viewer)</td><td>그룹 속성 표시</td></tr>
+<tr><td>관리자 수</td><td>9명 / 0명</td><td>해당 그룹에 속한 관리자</td></tr>
+<tr><td>관리자명</td><td>Oliver, hennie, Kara, ... (콤마 구분, 최대 5명 + "외 N명")</td><td>매핑된 관리자명</td></tr>
+</table>
+<ul>
+<li>Row 클릭 → [CEB-BO-SYS-202] 권한 그룹 상세 (3탭) 이동</li>
+<li>페이지네이션: 하단 중앙 10건 단위</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 피그마 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<h3>3.1 버튼 동작</h3>
+<table>
+<tr><th>버튼</th><th>동작</th><th>권한</th></tr>
+<tr><td>[초기화]</td><td>필터·검색 리셋</td><td>SUPER</td></tr>
+<tr><td>[권한 생성]</td><td>[CEB-BO-SYS-102-Create] 이동 (Phase 8 후속) — 운영자 정의 그룹만 신규 생성 가능</td><td>SUPER만</td></tr>
+<tr><td>Row 클릭</td><td>[CEB-BO-SYS-202] 권한 그룹 상세 (3탭) 이동</td><td>SUPER만</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한별 분기</h3>
+<p>[CEB-BO-005] §4 적용:</p>
+<table>
+<tr><th>권한</th><th>화면 진입</th><th>조회</th><th>[권한 생성]</th><th>Row 클릭</th></tr>
+<tr><td>SUPER</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>OPERATOR/POLICY/EXTERNAL_ARTIST</td><td>❌</td><td>—</td><td>—</td><td>—</td></tr>
+</table>
+<h3>4.2 그룹 유형 정책 ([CEB-BO-005] §7 하이브리드)</h3>
+<table>
+<tr><th>유형</th><th>예시</th><th>설명</th></tr>
+<tr><td><strong>프리셋 (4단계)</strong></td><td>Super Admin / Operator / Policy / External Artist</td><td>v2 BO-000 §3 정의. <strong>수정·삭제 불가</strong> (시스템 기본 그룹)</td></tr>
+<tr><td><strong>기본값</strong></td><td>Viewer (조회 전용)</td><td>운영팀이 사전 정의한 기본값. <strong>삭제 불가</strong>, 수정 가능</td></tr>
+<tr><td><strong>운영자 정의</strong></td><td>"콘텐츠 관리자" / "BIVE 발행 담당자" 등</td><td>SUPER가 12영역 × R/W/D 매트릭스로 커스터마이징. <strong>수정·삭제 가능</strong></td></tr>
+</table>
+<h3>4.3 정렬·필터</h3>
+<table>
+<tr><th>기본 정렬</th><th>그룹 유형 우선 (프리셋 → 기본값 → 운영자 정의) → 등록일 최신순</th></tr>
+</table>
+<ul>
+<li>상태 + 권한명 검색 = AND 조합</li>
+<li>권한명 검색: 부분 일치</li>
+</ul>
+<h3>4.4 그룹 상태 정의</h3>
+<table>
+<tr><th>상태</th><th>의미</th></tr>
+<tr><td>Active</td><td>활성 (관리자에게 신규 부여 가능)</td></tr>
+<tr><td>Inactive</td><td>비활성 (신규 부여 차단). 기존 매핑된 관리자는 권한 유지 (운영자가 다른 그룹으로 재매핑 후 완전 비활성화 가능)</td></tr>
+</table>
+<h3>4.5 [권한 생성] 가능 범위</h3>
+<ul>
+<li>운영자 정의 그룹만 생성 가능</li>
+<li>4단계 프리셋·기본값 신규 생성 불가 (시스템 보장)</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<p>[CEB-BO-000] §7 표준:</p>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>카드 + 테이블 row Skeleton</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Empty (필터 0건)</td><td>"검색 결과가 없습니다."</td></tr>
+<tr><td>Error</td><td>"권한 그룹 목록 조회에 실패하였습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>본 화면(목록 조회)은 로그 미기록. 그룹 단위 액션은 [CEB-BO-SYS-202]·[CEB-BO-SYS-102-Create]에서 발생.</p>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>검색 결과 없음</td><td>Empty 메시지 (§5)</td></tr>
+<tr><td>목록 조회 실패</td><td>Toast (Error): "권한 그룹 목록 조회에 실패하였습니다." + [재시도]</td></tr>
+<tr><td>권한 부족</td><td>사이드 메뉴 비활성</td></tr>
+</table>
+<hr>
+<h2>8. 운영 검증 (분석 리포트 [CEB-BO-001-A] §3.8.2)</h2>
+<p>2026-05-05 운영 환경 검증:</p>
+<table>
+<tr><th>그룹</th><th>유형</th><th>관리자 수</th><th>비고</th></tr>
+<tr><td>Super Admin</td><td>프리셋</td><td>9명</td><td>수정불가</td></tr>
+<tr><td>Viewer</td><td>기본값</td><td>0명</td><td>사용 안 됨</td></tr>
+</table>
+<p>→ v2 하이브리드 도입 시 신규 그룹 추가:</p>
+<ul>
+<li>OPERATOR / POLICY / EXTERNAL_ARTIST 프리셋 (자동 생성)</li>
+<li>운영자 정의 그룹 (필요 시 SUPER 생성)</li>
+</ul>
+<hr>
+<h2>9. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-SYS-101</td><td>관리자 리스트</td><td>형제</td></tr>
+<tr><td>CEB-BO-SYS-202</td><td>권한 그룹 상세 (3탭)</td><td>하위 (Row 클릭)</td></tr>
+<tr><td>CEB-BO-SYS-102-Create</td><td>권한 그룹 생성</td><td>하위 ([권한 생성]) — Phase 8 후속 (운영자 정의 그룹만)</td></tr>
+</table>
+<hr>
+<h2>10. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>Phase 8 신규 작성. ① 분석 리포트 §3.8.2 운영 화면 기반 (Super Admin/Viewer 2개 그룹) ② 3카드 대시보드 ③ <strong>그룹 유형 3종 정책</strong> §4.2 (프리셋 4 + 기본값 + 운영자 정의) — v2 하이브리드 ④ 그룹 상태 Inactive 시 기존 매핑 유지 정책 §4.4 ⑤ [권한 생성]은 운영자 정의 그룹만 §4.5 ⑥ 운영 검증 인용 — 4단계 마이그레이션 시 OPERATOR/POLICY/EXTERNAL_ARTIST 자동 추가 필요</td></tr>
+</table>
+
+</body>
+</html>

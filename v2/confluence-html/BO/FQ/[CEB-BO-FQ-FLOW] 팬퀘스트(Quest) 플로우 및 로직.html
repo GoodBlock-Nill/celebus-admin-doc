@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-FQ-FLOW] 팬퀘스트(Quest) 플로우 및 로직</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-FQ-FLOW] 팬퀘스트(Quest) 플로우 및 로직</h1>
+<blockquote>
+<p>작성자: @Nill Yoo · 작성일: 2026-05-12 · 버전: <strong>v1.1</strong> (사이드바 메뉴 재구성 — Quest는 "에피소드" 그룹으로, Raffle은 "래플" 그룹으로 분리)</p>
+<p>범위: Quest 흐름만 (Raffle 제외). 실측 기반(https://gb.celebus.xyz/fanquest, 2026-05-12).</p>
+<p>본 문서는 운영 BO의 실제 동작을 SSOT로 기록. 프로토타입은 본 문서를 따라 정합화 ([CEB-BO-FQ-ANALYSIS] 참조).</p>
+</blockquote>
+<h2>1. 영역 개요</h2>
+<ul>
+<li><strong>운영 메뉴 (v1.1)</strong>: 좌측 사이드바 <strong><code>에피소드 › 팬퀘스트</code></strong> → <code>/sq/quests</code> 진입. Quest 리스트 단일 페이지</li>
+<li><strong>Raffle</strong>: 별도 메뉴 <code>래플 › 래플</code> → <code>/raffle</code> (본 문서 범위 외)</li>
+<li><strong>권한</strong>: Super Admin 확인. 세부 권한 매트릭스는 [CEB-BO-006](v2/BO/FQ/[CEB-BO-006]%20Quest%C2%B7Raffle(FQ)%20영역%20가이드.md) 참조</li>
+</ul>
+<blockquote>
+<p>⚠️ <strong>v1.1 변경</strong>: ~~사이드바 탑레벨 "팬퀘스트" 단일 항목~~ + ~~<code>/fanquest</code> Quest/Raffle 두 탭~~ 폐기. Quest는 SQ 도메인 메뉴 안 페이지로, Raffle은 응모권과 묶인 "래플" 그룹으로 이전. 기존 <code>/fanquest</code>는 <code>/sq/quests</code>로 redirect 처리.</p>
+</blockquote>
+<h2>2. 화면 ID 매핑</h2>
+<table>
+<tr><th>ID (v1)</th><th>운영 경로</th><th>화면 / 모달</th><th>비고</th></tr>
+<tr><td>FQ-101</td><td><strong>/sq/quests</strong></td><td>팬퀘스트 메인 (Quest 리스트)</td><td>v1.1 — 탭 → 페이지 분리</td></tr>
+<tr><td>(구) FQ-101</td><td>/fanquest</td><td>(redirect → /sq/quests)</td><td>v1.1 — 단순 redirect</td></tr>
+<tr><td>FQ-101-REJETSET</td><td><strong>/fanquest/reject-reasons</strong></td><td>반려사유 설정</td><td>⚠️ 별도 페이지</td></tr>
+<tr><td>FQ-101-MD-ADD</td><td>(모달)</td><td>반려사유 추가</td><td>다국어 메시지</td></tr>
+<tr><td>FQ-101-MD-EDIT</td><td>(모달)</td><td>반려사유 수정</td><td>+ 상태설정</td></tr>
+<tr><td>FQ-101-CREATE</td><td>/fanquest/create</td><td>Quest 생성</td><td>세로 1열</td></tr>
+<tr><td>FQ-101-MD-CANCEL</td><td>(모달)</td><td>생성 취소 확인</td><td>TBD 실측</td></tr>
+<tr><td>FQ-101-MD-COMPLE</td><td>(토스트?)</td><td>생성 완료</td><td>TBD 실측</td></tr>
+<tr><td>FQ-201</td><td>/fanquest/{id} (tab=info)</td><td>Quest 상세 — 기본정보 탭</td><td></td></tr>
+<tr><td>FQ-201-EDIT</td><td><strong>/fanquest/{id}/edit</strong></td><td>Quest 수정</td><td>⚠️ 별도 페이지</td></tr>
+<tr><td>FQ-201-MD-OPEN</td><td>(모달)</td><td>Quest 게시</td><td>TBD</td></tr>
+<tr><td>FQ-201-MD-CLOSE</td><td>(모달)</td><td>Quest 종료 확인</td><td>✅ 실측</td></tr>
+<tr><td>FQ-201-MD-DELETE</td><td>(모달)</td><td>Quest 삭제</td><td>TBD</td></tr>
+<tr><td>FQ-201-MD-CANCEL</td><td>(modal/confirm)</td><td>수정 취소</td><td>TBD</td></tr>
+<tr><td>FQ-201-MD-COMPLE</td><td>(토스트?)</td><td>수정 완료</td><td>TBD</td></tr>
+<tr><td>FQ-202</td><td>/fanquest/{id} (tab=pending)</td><td>Quest 상세 — 대기내역 탭</td><td>카드 그리드</td></tr>
+<tr><td>FQ-202-MD-REJECT</td><td>(모달)</td><td>제출 반려 사유 선택</td><td>✅ 실측</td></tr>
+<tr><td>FQ-203</td><td>/fanquest/{id} (tab=history)</td><td>Quest 상세 — 처리내역 탭</td><td></td></tr>
+</table>
+<h2>3. Quest 상태 머신</h2>
+<pre><code>        [생성 폼] 작성
+            ↓ "임시저장" (임시저장 버튼은 운영 미실측 — 추정)
+        ┌──────────┐
+        │ 임시저장   │ Draft (게시 전, 비공개)
+        └──────────┘
+            │
+       (게시하기)
+            ↓
+        ┌──────────┐
+        │ 진행중    │ Active (시작 일시 도달 → 마감 일시 전까지 참여 가능)
+        └──────────┘
+            │
+   ┌────────┴───────────┐
+(자동: 마감일시 도달)  (수동: 종료하기)
+            ↓                ↓
+        ┌──────────┐
+        │ 종료     │ Ended (read-only)
+        └──────────┘
+</code></pre>
+<ul>
+<li><strong>상태 값</strong>: <code>임시저장 (DRAFT)</code> / <code>진행중 (ACTIVE)</code> / <code>종료 (ENDED)</code> (운영 코피 기준)</li>
+<li><strong>자동 전이</strong>: 마감일시 도달 시 → 종료 (서버 잡)</li>
+<li><strong>수동 전이</strong>:</li>
+<li>임시저장 → 진행중: 게시하기 (<code>FQ-201-MD-OPEN</code>)</li>
+<li>진행중 → 종료: 종료하기 (<code>FQ-201-MD-CLOSE</code>) — 조기 종료</li>
+<li><strong>삭제</strong>: 임시저장 상태에서만 삭제 가능 (추정 — 실측 필요)</li>
+<li><strong>시작 일시</strong>: 게시 시점에 자동 설정 (운영 안내 텍스트 명시)</li>
+</ul>
+<h2>4. 상태별 가능 액션 (상세 헤더 CTA)</h2>
+<table>
+<tr><th>상태</th><th>헤더 우측 CTA</th><th>본문 수정 가능 영역</th></tr>
+<tr><td>임시저장</td><td><code>삭제하기</code> / <code>게시하기</code> / <code>수정하기</code> (추정)</td><td>전 필드 (수정 페이지에서 disabled 없음)</td></tr>
+<tr><td>진행중</td><td><code>수정하기</code> / <code>종료하기</code></td><td><strong>기본 정보 + 연관 링크만</strong> (퀘스트 설정·보상 disabled) — 운영 안내문</td></tr>
+<tr><td>종료</td><td>(버튼 없음 — read-only)</td><td>수정 불가</td></tr>
+</table>
+<blockquote>
+<p>운영 안내 (수정 페이지, 진행중): "진행중 상태에서는 기본 정보(타이틀, 설명, 가이드, 연관 링크)만 수정 가능합니다."</p>
+</blockquote>
+<h2>5. 제출(Submission) 처리 플로우</h2>
+<pre><code>[유저 앱] 인증 사진 업로드 (관련 BO 외부)
+    ↓
+[BO 대기내역 탭] 카드 노출 (이미지·닉네임·User ID·Submit ID·제출일시)
+    ↓
+운영자 액션:
+  ├── (행 단위) 승인 → 상태 = 승인, 처리일시·처리자 기록
+  ├── (행 단위) 반려 → 반려사유 모달 → 사유 선택 후 반려하기 → 상태 = 반려
+  └── (일괄) 현재 페이지 모두 승인 → 페이지 내 모든 대기 행 일괄 승인
+    ↓
+[처리내역 탭] 처리된 카드가 표시 (상태, 반려사유, 처리일시, 처리자 표시)
+</code></pre>
+<h3>5-1. 제출 상태</h3>
+<table>
+<tr><th>상태</th><th>코드</th><th>노출</th></tr>
+<tr><td>대기</td><td>PENDING</td><td>대기내역 탭 + 통계 카드 "대기"</td></tr>
+<tr><td>승인</td><td>APPROVED</td><td>처리내역 탭 + 통계 카드 "승인"</td></tr>
+<tr><td>반려</td><td>REJECTED</td><td>처리내역 탭 + 반려사유 컬럼 표시 + 통계 카드 "반려"</td></tr>
+</table>
+<h3>5-2. 통계 카드 산출</h3>
+<table>
+<tr><th>카드</th><th>정의</th></tr>
+<tr><td>총 제출 수</td><td>승인 + 반려 + 대기</td></tr>
+<tr><td>승인</td><td>승인 처리된 제출 수</td></tr>
+<tr><td>반려</td><td>반려 처리된 제출 수</td></tr>
+<tr><td>대기</td><td>미처리 제출 수</td></tr>
+</table>
+<h3>5-3. 빈 상태</h3>
+<ul>
+<li>대기내역 탭: 대기 0건 → 빈 상태 (코피 TBD — 운영 미실측, 추정 "검수할 제출이 없습니다.")</li>
+<li>처리내역 탭: 처리 0건 → 빈 상태 메시지</li>
+</ul>
+<h2>6. 반려사유 마스터 CRUD</h2>
+<h3>6-1. 위치 및 동작</h3>
+<ul>
+<li>페이지: <code>/fanquest/reject-reasons</code> (별도 페이지, 모달 아님)</li>
+<li>필터: 상태(전체) / 사용 / 미사용 드롭다운</li>
+<li>컬럼: <strong>상태 / 운영자 노출명</strong> (간단)</li>
+<li>행 클릭 → 수정 모달</li>
+<li>우상단 <code>새 사유 추가</code> 버튼 → 추가 모달</li>
+<li>페이지네이션 존재</li>
+</ul>
+<h3>6-2. 데이터 모델</h3>
+<table>
+<tr><th>필드</th><th>추가 모달</th><th>수정 모달</th><th>비고</th></tr>
+<tr><td>운영자 노출명</td><td>textbox (max 100자, 카운터)</td><td>동일</td><td>검수 화면(반려 모달)에서 라벨로 표시</td></tr>
+<tr><td>유저 노출 메시지 KO</td><td>textarea (max 200자)</td><td>동일</td><td>한국어 (기본값)</td></tr>
+<tr><td>유저 노출 메시지 EN</td><td>textarea (max 200자)</td><td>동일</td><td>영어</td></tr>
+<tr><td>유저 노출 메시지 JA</td><td>textarea (max 200자)</td><td>동일</td><td>일본어</td></tr>
+<tr><td>다국어 진행 표시기</td><td>KO/EN/JA에 ✓</td><td>동일</td><td>유저 메시지 입력 완료 표시</td></tr>
+<tr><td>상태 설정</td><td>(없음 — 신규는 항상 사용)</td><td>드롭다운 사용/미사용</td><td>미사용 시 검수 모달 비노출</td></tr>
+<tr><td>안내 (수정만)</td><td>—</td><td>"미사용 처리된 반려사유는 검수 화면에서 노출되지 않습니다."</td><td></td></tr>
+</table>
+<h3>6-3. CTA</h3>
+<ul>
+<li>추가 모달: <code>취소하기</code> / <code>추가하기</code> (운영자 노출명 미입력 시 disabled)</li>
+<li>수정 모달: <code>취소하기</code> / <code>저장하기</code></li>
+</ul>
+<h3>6-4. 사용 중 사유 보호 (정책 추정)</h3>
+<ul>
+<li>이미 반려에 사용된 사유를 삭제할 수 없음 (운영 동작은 미실측; v1 명세 참조)</li>
+<li>미사용 처리 후에도 기존 반려 기록의 사유는 그대로 노출 (히스토리 보존)</li>
+</ul>
+<h2>7. Quest 생성 입력 규격</h2>
+<h3>7-1. 기본 정보</h3>
+<table>
+<tr><th>필드</th><th>타입</th><th>다국어</th><th>글자수</th><th>필수</th><th>검증</th></tr>
+<tr><td>타이틀</td><td>text</td><td>KO/EN/JA</td><td>100</td><td>★</td><td>3개 언어 모두 입력</td></tr>
+<tr><td>설명</td><td>textarea</td><td>KO/EN/JA</td><td>200</td><td>★</td><td>3개 언어 모두 입력</td></tr>
+<tr><td>유저 가이드</td><td>textarea</td><td>KO/EN/JA</td><td>500</td><td>★</td><td>3개 언어 모두 입력</td></tr>
+<tr><td>대표 이미지</td><td>file (드롭존)</td><td>—</td><td>5MB</td><td>★</td><td>1:1 권장, jpeg/png/jpg/webp/gif/svg</td></tr>
+</table>
+<h3>7-2. 퀘스트 설정</h3>
+<table>
+<tr><th>필드</th><th>타입</th><th>옵션 / 규칙</th><th>필수</th></tr>
+<tr><td>아티스트</td><td>dropdown</td><td>iKON / MADEIN / CELEBUS / V01D / 언더라이트 (UNDER:LIGHT)</td><td>★</td></tr>
+<tr><td>퀘스트 타입</td><td>dropdown</td><td>이미지 촬영 및 업로드 (1개)</td><td>★</td></tr>
+<tr><td>마감 일시</td><td>date + time</td><td>오늘 + 1일 이후만 선택 가능. 기본 시간 23:59</td><td>★</td></tr>
+<tr><td>시작 일시</td><td>—</td><td><strong>게시 시점에 자동 설정</strong> (입력 없음)</td><td>자동</td></tr>
+<tr><td>연관 링크</td><td>동적 행</td><td>라벨(KO/EN/JA 20자) + URL. 추가/제거 자유</td><td>optional</td></tr>
+</table>
+<h3>7-3. 보상 설정</h3>
+<table>
+<tr><th>필드</th><th>타입</th><th>옵션 / 규칙</th><th>필수</th></tr>
+<tr><td>보상 종류</td><td>dropdown</td><td>응모권 / NFT / 응모권 + NFT</td><td>★</td></tr>
+<tr><td>응모권 수량</td><td>dropdown</td><td>보상 종류 ∈ {응모권, 응모권 + NFT}일 때 활성. 옵션 1/2/3/5/10 (단위: 개)</td><td>조건부 ★</td></tr>
+<tr><td>NFT 이벤트</td><td>dropdown</td><td>보상 종류 ∈ {NFT, 응모권 + NFT}일 때 활성. BIVE 메뉴에서 생성된 이벤트만 표시. 빈 상태 안내: "선택 가능한 NFT 이벤트가 없습니다. BIVE 메뉴에서 이벤트를 먼저 생성해주세요."</td><td>조건부 ★</td></tr>
+</table>
+<h3>7-4. 검증 (Submit 활성화 조건)</h3>
+<ul>
+<li>다국어 3개 언어 모두 입력 (타이틀·설명·유저 가이드)</li>
+<li>대표 이미지 업로드 완료</li>
+<li>아티스트·퀘스트 타입·마감 일시 선택</li>
+<li>보상 종류 선택 + 조건부 (응모권 수량 or NFT 이벤트) 선택</li>
+</ul>
+<h2>8. 상세 화면 보상 노출 형식</h2>
+<pre><code>응모권 N개 + NFT (이벤트명 🎧)
+응모권 N개
+NFT (이벤트명 🎧)
+</code></pre>
+<ul>
+<li>보상 종류에 따라 동적 조합</li>
+<li>NFT가 포함되면 괄호 안에 이벤트명 표시 (이벤트명에 이모지 포함 가능)</li>
+</ul>
+<h2>9. 검색·필터 정책</h2>
+<h3>9-1. /fanquest 메인 (FQ-101)</h3>
+<table>
+<tr><th>필터</th><th>옵션 / 동작</th></tr>
+<tr><td>상태</td><td>상태(전체) / 진행중 / 임시저장 / 종료</td></tr>
+<tr><td>검색 타입</td><td>타이틀 / 아티스트 (드롭다운으로 전환)</td></tr>
+<tr><td>검색 textbox</td><td>선택한 타입에 따라 placeholder 변경: "타이틀 입력" / "아티스트 입력"</td></tr>
+<tr><td>초기화</td><td>모든 필터 + 페이지 초기화</td></tr>
+<tr><td>페이지 사이즈</td><td>10건 / 페이지</td></tr>
+<tr><td>정렬</td><td>(운영 미실측; 기본 최신순 추정)</td></tr>
+</table>
+<h3>9-2. 처리내역 탭 (FQ-203)</h3>
+<table>
+<tr><th>필터</th><th>옵션</th></tr>
+<tr><td>상태</td><td>상태(전체) / 승인 / 반려</td></tr>
+<tr><td>검색 타입</td><td>닉네임 / 제출ID</td></tr>
+<tr><td>textbox</td><td>placeholder는 선택 타입 기준</td></tr>
+<tr><td>초기화</td><td>동일</td></tr>
+<tr><td>페이지 사이즈</td><td>10건 / 페이지</td></tr>
+</table>
+<h3>9-3. 반려사유 설정 (FQ-101-REJETSET)</h3>
+<table>
+<tr><th>필터</th><th>옵션</th></tr>
+<tr><td>상태</td><td>상태(전체) / 사용 / 미사용</td></tr>
+<tr><td>페이지 사이즈</td><td>(운영 데이터 3건만 — 미상)</td></tr>
+</table>
+<h2>10. 모달 정책</h2>
+<h3>10-1. Quest 종료 확인 (FQ-201-MD-CLOSE)</h3>
+<ul>
+<li>트리거: 진행중 상태 상세에서 <code>종료하기</code> 클릭</li>
+<li>제목: <code>Quest 종료</code></li>
+<li>본문: "확인 버튼을 누르면 Quest가 조기 종료됩니다 / 계속 진행하시겠습니까?"</li>
+<li>CTA: <code>취소</code> / <code>확인</code></li>
+<li>결과: 확인 시 상태 → 종료, 토스트 (TBD), 헤더 CTA 사라짐</li>
+</ul>
+<h3>10-2. 제출 반려 사유 (FQ-202-MD-REJECT)</h3>
+<ul>
+<li>트리거: 대기내역 카드의 <code>반려</code> 버튼</li>
+<li>제목: <code>반려 사유 선택</code></li>
+<li>내용: 활성(사용) 반려사유 라디오 목록</li>
+<li>CTA: <code>취소</code> / <code>반려하기</code> (선택 전 disabled)</li>
+<li>결과: 선택한 사유 ID 저장, 제출 상태 → 반려, 처리내역에 즉시 반영</li>
+</ul>
+<h3>10-3. 신규 사유 / 사유 수정 — §6 참조</h3>
+<h3>10-4. (TBD) Quest 게시 / 삭제 / 수정 취소 / 생성 취소</h3>
+<ul>
+<li>운영 실측 미수행 (임시저장 상태 quest 부재 / 수정 페이지 취소 동작 미실행)</li>
+<li>일반적인 패턴: 단순 확인 모달 (제목·본문·취소/확인)</li>
+</ul>
+<h2>11. 검증·예외 흐름</h2>
+<table>
+<tr><th>케이스</th><th>운영 동작</th><th>비고</th></tr>
+<tr><td>로그인 만료</td><td>/login으로 리다이렉트</td><td>실측 확인</td></tr>
+<tr><td>Quest 미존재 (잘못된 id)</td><td>(TBD — 404/빈 상태 추정)</td><td></td></tr>
+<tr><td>마감일 < 오늘 + 1일</td><td>입력 제한 (안내 메시지)</td><td>시작 일시는 게시 시점</td></tr>
+<tr><td>다국어 미입력</td><td>생성 버튼 disabled (운영 disabled 확인)</td><td></td></tr>
+<tr><td>대표 이미지 미업로드</td><td>생성 버튼 disabled</td><td>검증 미실측</td></tr>
+<tr><td>일괄 승인 0건</td><td>(TBD — 버튼 disabled 또는 토스트 추정)</td><td></td></tr>
+<tr><td>반려사유 0건 활성</td><td>반려 모달 빈 상태 (TBD)</td><td></td></tr>
+<tr><td>종료 후 수정 시도</td><td>수정하기 버튼이 없어 진입 자체 불가</td><td>UI 차단</td></tr>
+</table>
+<h2>12. 토스트 / 알림</h2>
+<ul>
+<li>운영 토스트 텍스트 미실측 (실제 액션 미수행). 추정:</li>
+<li>Quest 생성: "Quest가 생성되었습니다."</li>
+<li>Quest 종료: "Quest가 종료되었습니다."</li>
+<li>제출 승인: "승인 처리되었습니다."</li>
+<li>제출 반려: "반려 처리되었습니다."</li>
+<li>토스트 공통 규격은 [BO 공통 정책](v2/BO/[CEB-BO-000]%20백오피스%20공통%20정책.md) 준수</li>
+</ul>
+<h2>13. API 호출 흐름 (Phase 1 네트워크 캡처 기반 — TBD)</h2>
+<blockquote>
+<p>본 섹션은 prototype Mock 작업이라 Optional. 실제 API 모니터링은 별도 세션에서 진행.</p>
+</blockquote>
+<p>추정 엔드포인트:</p>
+<ul>
+<li><code>GET /api/admin/fanquest?status=&keyword=&page=</code></li>
+<li><code>POST /api/admin/fanquest</code> (생성)</li>
+<li><code>GET /api/admin/fanquest/{id}</code></li>
+<li><code>PUT /api/admin/fanquest/{id}</code> (수정)</li>
+<li><code>POST /api/admin/fanquest/{id}/publish</code></li>
+<li><code>POST /api/admin/fanquest/{id}/close</code></li>
+<li><code>DELETE /api/admin/fanquest/{id}</code></li>
+<li><code>GET /api/admin/fanquest/{id}/submissions?status=&keyword=&page=</code></li>
+<li><code>POST /api/admin/fanquest/{id}/submissions/{sid}/approve</code></li>
+<li><code>POST /api/admin/fanquest/{id}/submissions/{sid}/reject</code> (body: reasonId)</li>
+<li><code>POST /api/admin/fanquest/{id}/submissions/bulk-approve</code></li>
+<li><code>GET /api/admin/fanquest/reject-reasons</code></li>
+<li><code>POST /api/admin/fanquest/reject-reasons</code></li>
+<li><code>PUT /api/admin/fanquest/reject-reasons/{id}</code></li>
+</ul>
+<h2>14. v1 ↔ v2 ↔ 프로토타입 매핑</h2>
+<table>
+<tr><th>v1 ID</th><th>v1 .md</th><th>v2 ID</th><th>프로토타입 경로</th><th>상태</th></tr>
+<tr><td>CEB-BO-FQ-101</td><td>[팬퀘스트 메인 (Quest 탭).md](BO-FQ/[CEB-BO-FQ-101]%20팬퀘스트%20메인%20(Quest%20탭).md)</td><td>CEB-BO-FQ-101</td><td>/fanquest</td><td>부분 일치</td></tr>
+<tr><td>CEB-BO-FQ-101-REJETSET</td><td>팬퀘스트 반려사유 설정.md</td><td>CEB-BO-FQ-101-REJETSET</td><td>(신규 필요)</td><td>🔴 페이지 누락</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-ADD</td><td>팬퀘스트 반려사유 추가.md</td><td>동</td><td>(모달 — 다국어 신규)</td><td>🔴 다국어 누락</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-EDIT</td><td>팬퀘스트 반려사유 수정.md</td><td>동</td><td>(모달 — 다국어 신규)</td><td>🔴 다국어 누락</td></tr>
+<tr><td>CEB-BO-FQ-101-CREATE</td><td>Quest 생성.md</td><td>동</td><td>/fanquest/create</td><td>부분 일치 (옵션·연관 링크)</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-CANCEL</td><td>Quest 생성취소.md</td><td>동</td><td>window.confirm</td><td>🟠</td></tr>
+<tr><td>CEB-BO-FQ-101-MD-COMPLE</td><td>Quest 생성완료.md</td><td>동</td><td>alert</td><td>🟠</td></tr>
+<tr><td>CEB-BO-FQ-201</td><td>퀘스트 상세(기본정보 탭).md</td><td>동</td><td>/fanquest/[id]?tab=info</td><td>부분 일치</td></tr>
+<tr><td>CEB-BO-FQ-201-EDIT</td><td>Quest 수정.md</td><td>동</td><td>(신규 필요)</td><td>🔴 페이지 누락</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-OPEN</td><td>Quest 게시.md</td><td>동</td><td>(모달 신규)</td><td>🔴</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-CLOSE</td><td>Quest 종료.md</td><td>동</td><td>(모달 신규)</td><td>🔴</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-DELETE</td><td>Quest 삭제.md</td><td>동</td><td>(모달 신규)</td><td>🔴</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-CANCEL</td><td>Quest 수정취소.md</td><td>동</td><td>—</td><td>🔴</td></tr>
+<tr><td>CEB-BO-FQ-201-MD-COMPLE</td><td>Quest 수정완료.md</td><td>동</td><td>—</td><td>🔴</td></tr>
+<tr><td>CEB-BO-FQ-202</td><td>퀘스트 상세(대기내역 탭).md</td><td>동</td><td>/fanquest/[id]?tab=pending</td><td>🔴 레이아웃 전면 차이</td></tr>
+<tr><td>CEB-BO-FQ-202-MD-REJECT</td><td>팬퀘스트 Quest 반려사유.md</td><td>동</td><td>(모달 신규)</td><td>🔴</td></tr>
+<tr><td>CEB-BO-FQ-203</td><td>퀘스트 상세(처리내역 탭).md</td><td>동</td><td>/fanquest/[id]?tab=history</td><td>부분 일치</td></tr>
+</table>
+<h2>15. 참고</h2>
+<ul>
+<li>실측 캡처: <code>.fq-analysis/screenshots/prod-*.png</code> (11개)</li>
+<li>비교 분석: [CEB-BO-FQ-ANALYSIS](v2/BO/FQ/[CEB-BO-FQ-ANALYSIS]%20프로토타입%20vs%20운영%20사이트%20대조%20분석.md)</li>
+<li>공통 정책 (게임 상태·토스트·날짜·페이지네이션): [BO 공통 정책](v2/BO/[CEB-BO-000]%20백오피스%20공통%20정책.md)</li>
+<li>운영 SSOT: https://gb.celebus.xyz/fanquest</li>
+</ul>
+<h2>16. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>사이드바 메뉴 재구성</strong> — Quest는 "에피소드" 그룹 하위 <code>/sq/quests</code>로 이동, Raffle은 "래플" 그룹 <code>/raffle</code>로 분리. 기존 <code>/fanquest</code>는 redirect 처리. 상세/생성/수정/반려사유 라우트(<code>/fanquest/[id]/*</code>)는 그대로 유지</td></tr>
+<tr><td>v1.0</td><td>2026-05-12</td><td>@Nill Yoo</td><td>초안 — 운영 BO 실측 기반 Quest 흐름 SSOT 작성</td></tr>
+</table>
+
+</body>
+</html>

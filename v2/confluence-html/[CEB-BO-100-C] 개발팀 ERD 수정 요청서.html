@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-100-C] 개발팀 ERD 수정 요청서</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-100-C] 개발팀 ERD 수정 요청서</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-100-C</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>개발팀 ERD 수정 요청 — 합의 4건 반영용 DDL 변경</td></tr>
+<tr><td>상태</td><td>Action Required</td></tr>
+<tr><td>버전</td><td>v1.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.05.11</td></tr>
+<tr><td>비고</td><td>v1.2: §5 P0 순서 본문 순서와 정렬(§2.1→§2.2→§2.3) + §9 테스트 검증 시나리오 신설(ALTER 적용 후 기존 데이터 영향 점검 SQL 5건). v1.1: 스토리 퀘스트(SQ) 구조 정정 합의 추가 — <code>story_quest_chapter</code>에 <code>image_url</code>, <code>bive_reward_yn</code> 컬럼 추가 요청 (§2.3 신규). v1.0: 2026.05.08 합의 결정사항 4건([CEB-BO-100-B] §9, [CEB-BO-100] v1.5) 반영용 개발팀 작업 요청서.</td></tr>
+</table>
+<hr>
+<h2>1. 작업 배경</h2>
+<p>2026.05.08~05.09 ERD 검토 합의 결과 <strong>5건</strong>:</p>
+<ol>
+<li>덕력 시즌 = <strong>글로벌 시즌</strong> 유지 (가이드 정책 그대로) — 2026.05.08</li>
+<li>팬덤 레벨 = <strong>시즌별 리셋</strong> (ERD 그대로 채택) — 2026.05.08</li>
+<li>챌린지 영역 코드 = <strong>SQ (Story Quest)</strong> + 영역 가이드 14번째로 신설 — 2026.05.08</li>
+<li>SQ 멀티아티스트 = <strong>아티스트별 스토리 퀘스트</strong> (🔴 Critical) — 2026.05.08</li>
+<li><strong>SQ 구조 정정</strong> ⭐ v1.1 추가 — 운영 용어 "챕터→에피소드", 수량 제약(스토리당 5/에피소드당 10), 에피소드 메인 이미지·BIVE 보상 on/off 토글 — 2026.05.09</li>
+</ol>
+<p>상세 근거: [CEB-BO-100-B] 개발팀 ERD 검토 리포트 v1.1 §9 + [CEB-BO-100] v1.7 §3 SQ 행.</p>
+<p>본 요청서는 위 5건 합의를 반영하기 위한 <strong>개발팀 작업 항목</strong>을 정리한다.</p>
+<hr>
+<h2>2. 즉시 수정 요청 (2건, DDL 변경)</h2>
+<h3>2.1 🔴 <code>fan_power_season.artist_group_id</code> NULL 허용/제거</h3>
+<p><strong>현재 ERD</strong> (<code>Celebus_고도화_덕력_팬덤_기억저장소.sql</code>):</p>
+<pre><code>CREATE TABLE `fan_power_season` (
+    `fan_power_season_id` int unsigned NOT NULL DEFAULT auto_increment COMMENT '덕력 시즌 ID',
+    `artist_group_id` int unsigned NOT NULL COMMENT '아티스트 그룹 ID',  -- ⚠️ NOT NULL
+    `name` varchar(100) NOT NULL COMMENT '시즌명',
+    `start_dt` datetime NOT NULL COMMENT '시즌 시작일시',
+    `end_dt` datetime NOT NULL COMMENT '시즌 종료일시',
+    ...
+);
+</code></pre>
+<p><strong>합의 결과</strong>: 덕력 시즌 = <strong>글로벌 시즌 마스터 + 아티스트별 독립 랭킹</strong> ([CEB-BO-100] v1.5 §3, 결정사항 ⑨)</p>
+<p><strong>권장 수정안</strong> (택1):</p>
+<h4>옵션 A — <code>artist_group_id</code> 컬럼 제거 (권장)</h4>
+<pre><code>CREATE TABLE `fan_power_season` (
+    `fan_power_season_id` int unsigned NOT NULL DEFAULT auto_increment COMMENT '덕력 시즌 ID',
+    -- artist_group_id 제거
+    `name` varchar(100) NOT NULL COMMENT '시즌명',
+    `start_dt` datetime NOT NULL COMMENT '시즌 시작일시',
+    `end_dt` datetime NOT NULL COMMENT '시즌 종료일시',
+    ...
+);
+</code></pre>
+<p>랭킹은 <code>fan_power_season_ranking.user_id</code> + <code>user_fan_power.artist_group_id</code> 조인으로 산출.</p>
+<h4>옵션 B — NULL 허용으로 변경</h4>
+<pre><code>ALTER TABLE `fan_power_season`
+  MODIFY COLUMN `artist_group_id` int unsigned NULL COMMENT '아티스트 그룹 ID (NULL=글로벌 시즌)';
+</code></pre>
+<p><code>NULL</code>이면 글로벌 시즌, 값 있으면 아티스트별 시즌(향후 확장 옵션).</p>
+<p><strong>관련 영향</strong>:</p>
+<ul>
+<li><code>user_fan_power_season.fan_power_season_id</code> FK는 유지.</li>
+<li><code>user_fan_power.artist_group_id</code>는 그대로 유지 (아티스트별 누적·랭킹 기준).</li>
+<li><code>fan_power_season_ranking</code> 쿼리는 <code>JOIN user_fan_power ON artist_group_id</code> 추가.</li>
+</ul>
+<hr>
+<h3>2.2 🔴 <code>story_quest.artist_group_id NOT NULL</code> 추가</h3>
+<p><strong>현재 ERD</strong> (<code>Celebus_고도화_챌린지_일일미션_아티스트.sql</code>):</p>
+<pre><code>CREATE TABLE `story_quest` (
+    `id` int unsigned NOT NULL DEFAULT auto_increment COMMENT '스토리 퀘스트 ID',
+    `story_quest_status` enum(DRAFT, ACTIVE, CLOSED) NULL COMMENT '상태',
+    `open_dt` datetime NULL COMMENT '스토리 퀘스트 공개일시',
+    `close_dt` datetime NULL COMMENT '스토리 퀘스트 종료일시',
+    -- ⚠️ artist_group_id 누락
+    ...
+);
+</code></pre>
+<p><strong>합의 결과</strong>: SQ = <strong>아티스트별</strong> (🔴 Critical, [CEB-BO-100] v1.5 §3 결정사항 ⑫)</p>
+<p><strong>권장 수정</strong>:</p>
+<pre><code>ALTER TABLE `story_quest`
+  ADD COLUMN `artist_group_id` int unsigned NOT NULL COMMENT '아티스트 그룹 ID' AFTER `id`,
+  ADD CONSTRAINT `FK_artist_group_TO_story_quest`
+    FOREIGN KEY (`artist_group_id`) REFERENCES `artist_group`(`id`);
+</code></pre>
+<p><strong>관련 정책</strong>:</p>
+<ul>
+<li>스토리 퀘스트 자체는 아티스트별 (V01D 스토리·iKON 스토리 별도).</li>
+<li>챕터 <code>story_quest_chapter.story_quest_chapter_type</code>이 <code>FAN_QUEST</code>면 챕터 미션도 아티스트별. <code>PREDICTION_MARKET</code>/<code>SURVIVAL_TRIVIA</code>는 게임존 글로벌 콘텐츠와 연결.</li>
+<li>EXTERNAL_ARTIST 권한자는 자기 아티스트 SQ만 R/W.</li>
+</ul>
+<hr>
+<h3>2.3 🔴 <code>story_quest_chapter</code>에 <code>image_url</code>·<code>bive_reward_yn</code> 컬럼 추가 ⭐ v1.1 신규</h3>
+<p><strong>현재 ERD</strong> (<code>Celebus_고도화_챌린지_일일미션_아티스트.sql</code> 라인 41~49):</p>
+<pre><code>CREATE TABLE `story_quest_chapter` (
+    `id` int unsigned NOT NULL DEFAULT auto_increment COMMENT '스토리 퀘스트 챕터 ID',
+    `story_quest_chapter_order` tinyint unsigned NOT NULL,
+    `story_quest_chapter_type` enum(FAN_QUEST, PREDICTION_MARKET, SURVIVAL_TRIVIA) NULL,
+    `story_quest_id` int unsigned NOT NULL DEFAULT auto_increment,
+    `reward_entry_ticket` int unsigned NULL,
+    `reward_fan_point` int unsigned NULL,
+    `repeat_yn` VARCHAR(255) NULL,
+    `minting_event_id` int unsigned NOT NULL DEFAULT auto_increment
+);
+</code></pre>
+<p><strong>합의 결과</strong> (2026.05.09 추가 합의 — [CEB-BO-100] v1.7 §3 SQ 행, [CEB-BO-011] v1.1 §4.2):</p>
+<table>
+<tr><th>의제</th><th>결정</th></tr>
+<tr><td>운영 용어</td><td>"챕터" → <strong>"에피소드"</strong> 통일 (테이블명 <code>story_quest_chapter</code> 유지, 운영 노출 텍스트만 변경)</td></tr>
+<tr><td>수량 제약</td><td>스토리당 최대 5 에피소드, 에피소드당 최대 10 미션 (응용 레벨 검증, DB 제약 X)</td></tr>
+<tr><td>에피소드 메인 이미지</td><td><strong>신규 추가</strong></td></tr>
+<tr><td>BIVE 보상 on/off 토글</td><td><strong>신규 추가</strong></td></tr>
+</table>
+<p><strong>권장 수정</strong> (ALTER 2건):</p>
+<pre><code>ALTER TABLE `story_quest_chapter`
+  ADD COLUMN `image_url` varchar(500) NULL COMMENT '에피소드 메인 이미지 URL (16:9 권장, ≤5MB)' AFTER `story_quest_chapter_type`,
+  ADD COLUMN `bive_reward_yn` boolean NOT NULL DEFAULT false COMMENT 'BIVE 보상 활성 여부 (ON 시 minting_event_id 필수)' AFTER `reward_fan_point`,
+  MODIFY COLUMN `minting_event_id` int unsigned NULL COMMENT 'BIVE 민팅 이벤트 ID (bive_reward_yn=true 시 필수, false 시 NULL)';
+</code></pre>
+<p><strong>관련 정책</strong>:</p>
+<ul>
+<li><code>image_url</code>: 16:9 비율 권장 (가로 ≥1280px). PNG·JPG·WebP·GIF. 최대 5MB. 파일 업로드 후 CDN URL 저장.</li>
+<li><code>bive_reward_yn</code>: 기본 <code>false</code>. BO에서 운영자가 토글 (ON/OFF). ON 시 <code>minting_event_id</code> 필수 (응용 레벨 검증).</li>
+<li><code>minting_event_id</code>: 기존 <code>NOT NULL DEFAULT auto_increment</code> → <strong>NULL 허용</strong>으로 변경 (보상 OFF 케이스 대응). FK는 <code>minting_event(id)</code>.</li>
+<li>부가 정정: <code>repeat_yn</code>은 <code>VARCHAR(255)</code> → <code>boolean DEFAULT false</code>로 정정 권장 (별도 의제).</li>
+</ul>
+<p><strong>관련 가이드</strong>:</p>
+<ul>
+<li>[CEB-BO-011] v1.1 §4.2 에피소드 데이터 모델</li>
+<li>[CEB-BO-SQ-202] v1.1 §3 4섹션 (메인 이미지 + BIVE 보상 토글)</li>
+<li>[CEB-BO-SQ-202-CREATE] v1.1 §4.1·4.2 입력 폼</li>
+</ul>
+<hr>
+<h2>3. 추가 SQL 제공 요청 (5건)</h2>
+<p>본 검토에 누락된 5개 영역 ERD/SQL <strong>추가 제공 요청</strong>.</p>
+<h3>3.1 회원 제재·정지사유 영역 (USR)</h3>
+<table>
+<tr><th>테이블</th><th>핵심 컬럼</th><th>가이드</th></tr>
+<tr><td><code>member_sanction</code> (또는 유사)</td><td><code>member_id</code>, <code>suspension_reason_code</code>, <code>suspension_level</code>, <code>discovery_context</code> (NULL 가능, 발견 아티스트 ID), <code>discovered_feature</code> (FANQUEST/RAFFLE/MEM/INF_COMMENT/SUPPORT/OTHER), <code>applied_admin_id</code>, <code>applied_dt</code>, <code>expire_dt</code></td><td>[CEB-BO-USR-501] v1.1 §4.7</td></tr>
+<tr><td><code>suspension_reason</code></td><td><code>code</code> (영문 PK), <code>display_name_ko/en/jp</code>, <code>category</code> (INAPPR/POLICY/FRAUD/OTHER), <code>applicable_steps</code>, <code>active_yn</code></td><td>동일</td></tr>
+</table>
+<p><strong>핵심 메타필드</strong>: <code>discovery_context</code> — 회원 정지 처리 시점에 발견된 아티스트 활동 컨텍스트 메타.</p>
+<h3>3.2 반려사유 마스터 (FQ)</h3>
+<table>
+<tr><th>테이블</th><th>핵심 컬럼</th></tr>
+<tr><td><code>rejection_reason</code></td><td><code>id</code>, <strong><code>artist_group_id</code> NOT NULL</strong> (아티스트별 분리), <code>code</code>, <code>display_name_*</code>, <code>category</code>, <code>apply_to</code> (Quest 검수/Raffle 응모/추첨 후 회수), <code>active_yn</code></td></tr>
+</table>
+<p>가이드: [CEB-BO-FQ-502] (아티스트별 분리, 신규 아티스트 추가 시 템플릿에서 복제).</p>
+<h3>3.3 관리자 활동 로그 (SYS)</h3>
+<table>
+<tr><th>테이블</th><th>핵심 컬럼</th></tr>
+<tr><td><code>admin_activity_log</code></td><td><code>id</code>, <code>admin_id</code>, <code>area</code> (영역 코드), <code>category</code> (대분류·중분류·소분류), <code>message</code>, <code>ip</code>, <strong><code>artist_context</code> (NULL 가능)</strong> ⭐ 메타필드, <code>created_at</code></td></tr>
+</table>
+<p>가이드: [CEB-BO-SYS-601] §3.2.</p>
+<h3>3.4 응모권 변동 로그 (RFT)</h3>
+<table>
+<tr><th>테이블</th><th>핵심 컬럼</th></tr>
+<tr><td><code>raffle_ticket</code> (회원 잔액)</td><td><code>member_id</code>, <code>balance</code></td></tr>
+<tr><td><code>rft_ledger</code> (변동 로그)</td><td><code>id</code>, <code>member_id</code>, <code>delta</code> (+발급/-사용), <code>balance_after</code>, <code>source_feature</code> (enum: FANQUEST_REWARD/RAFFLE_ENTRY/GP_EXCHANGE/DAILY_MISSION/BIVE_BENEFIT/SUPPORT_REWARD), <strong><code>source_artist_context</code> (NULL 가능)</strong> ⭐, <code>source_ref_id</code>, <code>source_ref_type</code>, <code>created_at</code></td></tr>
+</table>
+<p>가이드: [CEB-BO-010] §5, [CEB-BO-RFT-201].</p>
+<h3>3.5 권한 스코프 (SYS)</h3>
+<table>
+<tr><th>테이블</th><th>핵심 컬럼</th></tr>
+<tr><td><code>admin_role</code></td><td><code>id</code>, <code>name</code>, <code>permissions</code> (JSON 또는 영역×CRUD 매트릭스), <strong><code>scope_artist_ids</code> (JSON 배열, NULL=전역)</strong> ⭐</td></tr>
+<tr><td><code>admin_role_assignment</code></td><td><code>admin_id</code>, <code>role_id</code>, <strong><code>scope_artist_ids</code> (JSON, NULL=Role 디폴트 사용)</strong> ⭐, <code>expires_at</code></td></tr>
+</table>
+<p>가이드: [CEB-BO-SYS-501] §4.</p>
+<hr>
+<h2>4. 추가 정합성 갱신 사항 (선택)</h2>
+<h3>4.1 <code>event_banner.source_type</code> ENUM 확장 (선택)</h3>
+<p><strong>현재</strong>:</p>
+<pre><code>`source_type` enum('RAFFLE', 'SUPPORT_EVENT') NOT NULL
+</code></pre>
+<p><strong>권장 확장</strong>:</p>
+<pre><code>`source_type` enum('RAFFLE', 'SUPPORT_EVENT', 'QUEST', 'BIVE_CAMPAIGN', 'INF_NEWS', 'PROMO') NOT NULL
+</code></pre>
+<p>홈 배너에서 Quest·BIVE 캠페인·소식·프로모션도 노출 가능.</p>
+<h3>4.2 <code>daily_mission.event_code</code> enum 표준화 (선택)</h3>
+<p><strong>현재</strong>: <code>event_code varchar(50) NOT NULL</code> — 자유 입력.</p>
+<p><strong>권장</strong>: enum 6종으로 표준화 (<code>FAN_QUEST</code>, <code>RAFFLE</code>, <code>STREAM</code>, <code>SHARE</code>, <code>LOGIN</code>, <code>OTHER</code>).</p>
+<h3>4.3 <code>lang_code DEFAULT</code> 표준화 (선택)</h3>
+<p>일부 <code>*_translation</code> 테이블에서 <code>lang_code DEFAULT 'en'</code>이지만 권장은 <code>'ko'</code> 폴백 정책 일치를 위해 <code>DEFAULT 'ko'</code>.</p>
+<hr>
+<h2>5. 수정 우선순위·일정</h2>
+<table>
+<tr><th>우선순위</th><th>항목</th><th>예상 분량</th><th>차단 의존성</th></tr>
+<tr><td>🔴 P0</td><td>§2.1 <code>fan_power_season.artist_group_id</code> NULL/제거</td><td>작음 (ALTER 1건)</td><td>마이그레이션 (기존 데이터 처리)</td></tr>
+<tr><td>🔴 P0</td><td>§2.2 <code>story_quest.artist_group_id</code> 추가</td><td>작음 (ALTER 1건)</td><td>없음</td></tr>
+<tr><td>🔴 P0</td><td>§2.3 <code>story_quest_chapter.image_url</code> + <code>bive_reward_yn</code> 추가 + <code>minting_event_id</code> NULL 허용 ⭐ v1.1</td><td>작음 (ALTER 3건)</td><td>없음</td></tr>
+<tr><td>🟠 P1</td><td>§3.1 회원 제재 ERD/SQL 제공</td><td>중 (3-4 테이블)</td><td>없음</td></tr>
+<tr><td>🟠 P1</td><td>§3.2 반려사유 마스터 ERD/SQL 제공</td><td>작음 (1 테이블)</td><td>없음</td></tr>
+<tr><td>🟠 P1</td><td>§3.3 관리자 활동 로그 ERD/SQL 제공</td><td>작음 (1 테이블)</td><td>없음</td></tr>
+<tr><td>🟠 P1</td><td>§3.4 응모권 변동 ERD/SQL 제공</td><td>중 (2-3 테이블)</td><td>없음</td></tr>
+<tr><td>🟡 P2</td><td>§3.5 권한 스코프 ERD/SQL 제공</td><td>작음 (2 테이블)</td><td>없음</td></tr>
+<tr><td>🟡 P2</td><td>§4.1 event_banner ENUM 확장</td><td>작음</td><td>없음</td></tr>
+<tr><td>🟡 P2</td><td>§4.2 daily_mission event_code 표준화</td><td>작음</td><td>없음</td></tr>
+<tr><td>🟡 P2</td><td>§4.3 lang_code DEFAULT 표준화</td><td>작음</td><td>없음</td></tr>
+</table>
+<p><strong>총 작업량</strong>: P0 2건 + P1 4건 + P2 4건 = <strong>10건</strong>.</p>
+<hr>
+<h2>6. 응답 형식 요청</h2>
+<p>개발팀 회신은 다음 형식으로 부탁드립니다.</p>
+<table>
+<tr><th>항목</th><th>응답</th></tr>
+<tr><td>§2.1 fan_power_season</td><td>옵션 A(제거) vs 옵션 B(NULL) 중 선택 + 마이그레이션 계획</td></tr>
+<tr><td>§2.2 story_quest</td><td>DDL 적용 일정</td></tr>
+<tr><td>§2.3 story_quest_chapter ⭐ v1.1</td><td>image_url·bive_reward_yn·minting_event_id NULL 허용 적용 일정 + 기존 데이터 처리(<code>bive_reward_yn</code> 기본 false 적용)</td></tr>
+<tr><td>§3.1~3.5 누락 ERD/SQL</td><td>별도 SQL 파일 제공 또는 통합 ERD 갱신본</td></tr>
+<tr><td>§4.1~4.3 선택 사항</td><td>검토 후 적용 여부 회신</td></tr>
+</table>
+<hr>
+<h2>7. 연관 문서</h2>
+<table>
+<tr><th>문서</th><th>역할</th></tr>
+<tr><td>[CEB-BO-100] v1.7</td><td>멀티아티스트 운영 마스터 — 결정사항 ⑨~⑫ 정책 정의 + SQ v1.7 정정</td></tr>
+<tr><td>[CEB-BO-100-B] v1.1</td><td>ERD 검토 리포트 — 합의 결과 §9</td></tr>
+<tr><td>[CEB-BO-011] v1.1</td><td>SQ 영역 가이드 — §4.2 에피소드 데이터 모델</td></tr>
+<tr><td>[CEB-BO-USR-501] v1.1</td><td>회원 정지사유 — <code>discoveryContext</code> 메타</td></tr>
+<tr><td>[CEB-BO-FQ-502]</td><td>반려사유 마스터 — 아티스트별</td></tr>
+<tr><td>[CEB-BO-SYS-601]</td><td>활동 로그 — <code>artistContext</code> 메타</td></tr>
+<tr><td>[CEB-BO-SYS-501]</td><td>권한 스코프 — <code>scopeArtistIds</code></td></tr>
+<tr><td>[CEB-BO-010] v1.2</td><td>응모권 영역 — <code>source_artist_context</code> 메타</td></tr>
+</table>
+<hr>
+<h2>8. 테스트 검증 시나리오 ⭐ v1.2 신규</h2>
+<p>개발팀이 §2 ALTER 적용 후 기존 데이터 영향을 점검하기 위한 SQL 5건. 운영 DB 적용 전 스테이징에서 실행 권장.</p>
+<h3>8.1 <code>fan_power_season</code> 영향 점검 (§2.1)</h3>
+<pre><code>-- 기존 시즌 행 + 회원 시즌 연결 카운트
+SELECT
+  s.fan_power_season_id,
+  s.name,
+  s.artist_group_id AS legacy_artist_group_id,
+  COUNT(DISTINCT u.user_id) AS member_count
+FROM fan_power_season s
+LEFT JOIN user_fan_power_season u ON u.fan_power_season_id = s.fan_power_season_id
+GROUP BY s.fan_power_season_id;
+</code></pre>
+<p>옵션 A(컬럼 제거) 선택 시: 위 결과의 <code>legacy_artist_group_id</code>를 백업 후 DROP. 옵션 B(NULL 허용) 선택 시: 기존 행은 그대로 유지하고 신규 글로벌 시즌만 NULL로 입력.</p>
+<h3>8.2 <code>story_quest</code> 아티스트 매핑 검증 (§2.2)</h3>
+<pre><code>-- artist_group_id ALTER 추가 전: 기존 story_quest 행이 0건인지 확인
+SELECT COUNT(*) AS existing_rows FROM story_quest;
+
+-- 0건이 아니면: 기존 행에 default artist_group_id 매핑 필요
+-- 운영 합의: 기존 story_quest는 모두 V01D(artist_group_id=1)로 매핑
+UPDATE story_quest SET artist_group_id = 1 WHERE artist_group_id IS NULL;  -- ALTER 적용 직후 1회 실행
+</code></pre>
+<p>ALTER <code>NOT NULL</code> 추가 전에 기존 행 매핑 또는 TRUNCATE 결정 필요.</p>
+<h3>8.3 <code>story_quest_chapter</code> 신규 컬럼 영향 점검 (§2.3)</h3>
+<pre><code>-- 기존 챕터 행 + minting_event 연결 상태 확인
+SELECT
+  c.id,
+  c.story_quest_id,
+  c.story_quest_chapter_order AS episode_order,
+  c.minting_event_id,
+  CASE WHEN c.minting_event_id IS NULL OR c.minting_event_id = 0
+    THEN 'OFF'
+    ELSE 'ON'
+  END AS bive_reward_inferred
+FROM story_quest_chapter c
+ORDER BY c.story_quest_id, c.story_quest_chapter_order;
+
+-- ALTER 적용 직후 기존 데이터 백필
+UPDATE story_quest_chapter
+   SET bive_reward_yn = CASE WHEN minting_event_id IS NOT NULL AND minting_event_id &gt; 0 THEN true ELSE false END,
+       minting_event_id = CASE WHEN minting_event_id = 0 THEN NULL ELSE minting_event_id END
+ WHERE 1=1;
+</code></pre>
+<h3>8.4 수량 제약 응용 레벨 검증 (§2.3, 응용 코드 영역)</h3>
+<pre><code>-- 스토리당 에피소드 ≤5 위반 행 탐지
+SELECT story_quest_id, COUNT(*) AS episode_count
+  FROM story_quest_chapter
+ GROUP BY story_quest_id
+HAVING COUNT(*) &gt; 5;
+
+-- 에피소드당 미션 ≤10 위반 행 탐지
+SELECT story_quest_chapter_id, COUNT(*) AS mission_count
+  FROM story_quest_chapter_mission
+ GROUP BY story_quest_chapter_id
+HAVING COUNT(*) &gt; 10;
+</code></pre>
+<p>위반 행이 있으면 BO 응용 레벨에서 별도 정리 (운영팀과 협의 후 삭제 또는 분리).</p>
+<h3>8.5 <code>minting_event</code> 참조 무결성 검증 (§2.3 부수)</h3>
+<pre><code>-- bive_reward_yn=true인데 minting_event_id가 무효한 행 탐지
+SELECT c.id, c.story_quest_id, c.minting_event_id
+  FROM story_quest_chapter c
+  LEFT JOIN minting_event m ON m.id = c.minting_event_id
+ WHERE c.bive_reward_yn = true
+   AND (c.minting_event_id IS NULL OR m.id IS NULL);
+</code></pre>
+<p>응용 레벨 검증: BO에서 BIVE 보상 ON 토글 시 minting_event_id 필수 입력 (드롭다운).</p>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td>v1.0</td><td>2026.05.08</td><td>@Nill Yoo</td><td>최초 작성. [CEB-BO-100-B] v1.1 §9 합의 4건 반영용 개발팀 작업 요청서. P0 2건 (DDL 변경) + P1 4건 (누락 ERD 제공) + P2 4건 (선택 사항) = 총 10건. 개발팀 응답 형식 §6에 정의.</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026.05.09</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>SQ 구조 정정 합의 추가</strong> ([CEB-BO-100] v1.7, [CEB-BO-011] v1.1). ① §2.3 신설 — <code>story_quest_chapter</code>에 <code>image_url varchar(500) NULL</code>(에피소드 메인 이미지) + <code>bive_reward_yn boolean NOT NULL DEFAULT false</code>(BIVE 보상 토글) 컬럼 추가 ② <code>story_quest_chapter.minting_event_id</code>를 NOT NULL → <strong>NULL 허용</strong>으로 변경 (보상 OFF 케이스 대응) ③ P0 우선순위 3건으로 확장 (§2.1 + §2.2 + §2.3) ④ §6 응답 형식에 §2.3 항목 추가 ⑤ 운영 용어 "챕터→에피소드" 통일 명시 (테이블명 유지). 동기화: prototype <code>mock/sq.ts</code> v1.1 (<code>StoryEpisode</code> 인터페이스 + <code>imageUrl</code>/<code>biveRewardYn</code> 필드) 완료.</td></tr>
+<tr><td><strong>v1.2</strong></td><td><strong>2026.05.11</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>개발팀 전달 정리 4건</strong>. ① §1 작업 배경 — 합의 4건 → <strong>5건</strong>(v1.1 SQ 구조 정정 추가)으로 표기 정합 ② §5 우선순위 표 P0 3건 순서를 본문 순서(§2.1→§2.2→§2.3)와 일치하도록 정렬 ③ <strong>§8 테스트 검증 시나리오 신설</strong> — ALTER 적용 후 기존 데이터 영향 점검 SQL 5건 (8.1 <code>fan_power_season</code> / 8.2 <code>story_quest</code> 매핑 / 8.3 <code>story_quest_chapter</code> 백필 / 8.4 수량 제약 위반 탐지 / 8.5 <code>minting_event</code> 무결성) ④ §7 연관 문서에 [CEB-BO-011] v1.1 추가, [CEB-BO-100] v1.5 → v1.7로 갱신. 본 v1.2는 개발팀 전달 직전 최종 정리본.</td></tr>
+</table>
+
+</body>
+</html>
