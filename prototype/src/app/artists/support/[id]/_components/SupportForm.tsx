@@ -68,6 +68,7 @@ export default function SupportForm({
   const targetOk = /^\d+$/.test(form.targetDuk) && parseInt(form.targetDuk, 10) >= 1;
   const datesOk = !!form.startAt && !!form.endAt && form.endAt > form.startAt;
   const groupOk = !!form.groupName;
+  const imageOk = form.imageUrl.trim() !== '';
 
   const missing: string[] = [];
   if (!requiredText) missing.push('기본 정보(이벤트명·설명 한/영/일)');
@@ -75,6 +76,8 @@ export default function SupportForm({
   if (!targetOk) missing.push('목표 응원량(1 이상)');
   if (!form.startAt || !form.endAt) missing.push('시작·마감일시');
   else if (form.endAt <= form.startAt) missing.push('마감일시(시작 이후)');
+  // 대표 이미지는 생성 시 필수 (수정 모드는 기존 이벤트 보호 위해 미강제)
+  if (!imageOk && mode === 'create') missing.push('대표 이미지');
   const valid = missing.length === 0;
 
   const startEdit = () => { setEditing(true); };
@@ -153,13 +156,33 @@ export default function SupportForm({
         </div>
       </Section>
 
-      {/* D. 대표 이미지 */}
-      <Section title="D. 대표 이미지" desc="권장 16:9 · JPG/PNG/WEBP (선택)">
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-          <PhotoIcon className="w-10 h-10 mx-auto text-gray-300 mb-2" />
-          <p className="text-sm text-gray-600">{form.imageUrl || '이미지를 끌어다 놓거나 클릭해 업로드'}</p>
-          <p className="text-xs text-gray-400 mt-1">권장 비율 16:9 (1920×1080)</p>
-        </div>
+      {/* D. 대표 이미지 — 생성 시 필수 */}
+      <Section title="D. 대표 이미지 *" desc="권장 16:9 · JPG/PNG/WEBP · 생성 시 필수">
+        {form.imageUrl ? (
+          <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-12 h-12 rounded bg-indigo-50 flex items-center justify-center shrink-0">
+                <PhotoIcon className="w-6 h-6 text-indigo-400" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">{form.imageUrl}</p>
+                <p className="text-xs text-gray-400">권장 비율 16:9 (1920×1080)</p>
+              </div>
+            </div>
+            {!readOnly && (
+              <button type="button" onClick={() => set('imageUrl', '')}
+                className="h-9 px-3 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 shrink-0">제거</button>
+            )}
+          </div>
+        ) : (
+          <button type="button" disabled={readOnly}
+            onClick={() => set('imageUrl', `support-${form.groupName || 'image'}-16x9.jpg`)}
+            className="w-full border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-indigo-400 transition disabled:opacity-60 disabled:cursor-not-allowed">
+            <PhotoIcon className="w-10 h-10 mx-auto text-gray-300 mb-2" />
+            <p className="text-sm text-gray-600">이미지를 끌어다 놓거나 클릭해 업로드</p>
+            <p className="text-xs text-gray-400 mt-1">권장 비율 16:9 (1920×1080)</p>
+          </button>
+        )}
       </Section>
 
       {/* 생성 액션 (하단 CTA) — create 모드 전용 */}
