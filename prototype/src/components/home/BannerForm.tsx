@@ -71,6 +71,8 @@ export default function BannerForm({
   const [altTextKO, setAltTextKO] = useState(initial?.altTextKO ?? '');
   const [altTextEN, setAltTextEN] = useState(initial?.altTextEN ?? '');
   const [altTextJP, setAltTextJP] = useState(initial?.altTextJP ?? '');
+  // v6.12: 대표 이미지 — 생성 시 필수. 프로토타입은 mock 파일명으로 업로드 시뮬레이션.
+  const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? '');
   const [deeplink, setDeeplink] = useState<Deeplink>({
     sourceType: initial?.sourceType ?? '',
     url: initial?.linkUrl ?? '',
@@ -95,6 +97,7 @@ export default function BannerForm({
     titleKO: initial?.titleKO ?? '', titleEN: initial?.titleEN ?? '', titleJP: initial?.titleJP ?? '',
     subtitleKO: initial?.subtitleKO ?? '', subtitleEN: initial?.subtitleEN ?? '', subtitleJP: initial?.subtitleJP ?? '',
     altTextKO: initial?.altTextKO ?? '', altTextEN: initial?.altTextEN ?? '', altTextJP: initial?.altTextJP ?? '',
+    imageUrl: initial?.imageUrl ?? '',
     sourceType: initial?.sourceType ?? '', linkUrl: initial?.linkUrl ?? '',
     openDt: initialPeriod.type === 'CUSTOM' ? initialPeriod.openDt : '',
     closeDt: initialPeriod.type === 'CUSTOM' ? initialPeriod.closeDt : '',
@@ -105,6 +108,7 @@ export default function BannerForm({
     slotKind: effectiveSlotKind, artist: effectiveArtist,
     titleKO, titleEN, titleJP, subtitleKO, subtitleEN, subtitleJP,
     altTextKO, altTextEN, altTextJP,
+    imageUrl,
     sourceType: deeplink.sourceType, linkUrl: deeplink.url,
     openDt, closeDt, closeUnlimited,
   });
@@ -130,14 +134,16 @@ export default function BannerForm({
     slotEditable && slotMeta.targetMode === 'ARTIST_ONLY' && editArtist === null;
   const canSubmit = !artistMissing;
 
-  // v6.11: [생성하기] 검증 — 기본 정보 다국어 필수 필드(메인·서브 타이틀 KO/EN/JP) + 공개일시 필수.
-  // 이미지 대체 텍스트는 선택(§B 표). 이미지 업로드는 공개일 도달 시 시스템 재검증.
+  // v6.11/v6.12: [생성하기] 검증 — 기본 정보 다국어 필수(메인·서브 타이틀 KO/EN/JP) + 공개일시 + 대표 이미지 필수.
+  // 이미지 대체 텍스트는 선택(§B 표). 대표 이미지는 v6.12부터 생성 시 필수(공개일 도달 시 재확인).
   const requiredTextFilled =
     titleKO.trim() !== '' && titleEN.trim() !== '' && titleJP.trim() !== '' &&
     subtitleKO.trim() !== '' && subtitleEN.trim() !== '' && subtitleJP.trim() !== '';
   const openDtFilled = openDt.trim() !== '';
+  const imageFilled = imageUrl.trim() !== '';
   const missingForCreate: string[] = [];
   if (!requiredTextFilled) missingForCreate.push('기본 정보(메인·서브 타이틀 KO/EN/JP)');
+  if (!imageFilled) missingForCreate.push('대표 이미지');
   if (!openDtFilled) missingForCreate.push('공개일시');
   if (artistMissing) missingForCreate.push('아티스트');
   const canCreate = missingForCreate.length === 0;
@@ -261,18 +267,41 @@ export default function BannerForm({
         </div>
       </Section>
 
-      {/* C. 미디어 — 슬롯별 권장 비율 */}
+      {/* C. 미디어 — 슬롯별 권장 비율 (v6.12: 대표 이미지 생성 시 필수) */}
       <Section
-        title={`C. 미디어 — ${slotMeta.imageSpec.ratio} (권장 ${slotMeta.imageSpec.recommended})`}
-        description="JPG/PNG/WEBP, 최대 50MB"
+        title={`C. 미디어 — ${slotMeta.imageSpec.ratio} (권장 ${slotMeta.imageSpec.recommended}) *`}
+        description="JPG/PNG/WEBP, 최대 50MB · 대표 이미지는 생성 시 필수입니다."
       >
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-indigo-400 transition">
-          <PhotoIcon className="w-10 h-10 mx-auto text-gray-300 mb-2" />
-          <p className="text-sm text-gray-600">이미지를 끌어다 놓거나 클릭해 업로드</p>
-          <p className="text-xs text-gray-400 mt-1">
-            권장 비율 {slotMeta.imageSpec.ratio} ({slotMeta.imageSpec.recommended})
-          </p>
-        </div>
+        {imageUrl ? (
+          <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-12 h-12 rounded bg-indigo-50 flex items-center justify-center shrink-0">
+                <PhotoIcon className="w-6 h-6 text-indigo-400" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">{imageUrl}</p>
+                <p className="text-xs text-gray-400">권장 비율 {slotMeta.imageSpec.ratio} ({slotMeta.imageSpec.recommended})</p>
+              </div>
+            </div>
+            {!readOnly && (
+              <button type="button" onClick={() => setImageUrl('')}
+                className="h-9 px-3 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 shrink-0">제거</button>
+            )}
+          </div>
+        ) : (
+          <button
+            type="button"
+            disabled={readOnly}
+            onClick={() => setImageUrl(`banner-${effectiveSlotKind.toLowerCase()}-${slotMeta.imageSpec.ratio.replace(':', 'x')}.jpg`)}
+            className="w-full border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-indigo-400 transition disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <PhotoIcon className="w-10 h-10 mx-auto text-gray-300 mb-2" />
+            <p className="text-sm text-gray-600">이미지를 끌어다 놓거나 클릭해 업로드</p>
+            <p className="text-xs text-gray-400 mt-1">
+              권장 비율 {slotMeta.imageSpec.ratio} ({slotMeta.imageSpec.recommended})
+            </p>
+          </button>
+        )}
       </Section>
 
       {/* D. 딥링크 */}
