@@ -13,3 +13,15 @@ public/workbox-*.js
 idol/ComfyUI
 .tmp-bive-bo/
 .tmp-gam-bo/
+
+# === 분석·실측 스크린샷 (저장소 루트에 쌓인 일회성 캡처) ===
+# idol/, prototype/ 등 하위 폴더의 의도적 이미지는 영향 없음 (루트 직속만 매칭)
+/*.png
+
+# === 툴·분석 작업 캐시 (커밋 불필요) ===
+.omc/
+.playwright-mcp/
+.v2-screenshots/
+.fq-analysis/
+.raffle-analysis/
+analysis-screenshots/
