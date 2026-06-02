@@ -84,8 +84,8 @@ p {
 <tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
 <tr><td>기능영역(Epic)</td><td>ART — 아티스트 그룹</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
-<tr><td>최근 업데이트</td><td>2026-05-28</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>Breadcrumb</td><td>홈 > 아티스트 > 그룹 리스트 > 그룹 생성</td></tr>
 <tr><td>비고</td><td>운영 BO 실측 정합. 신규 그룹 등록 화면</td></tr>
 </table>
@@ -126,8 +126,12 @@ p {
 <tr><td>TikTok</td><td>선택</td><td>URL</td></tr>
 <tr><td>Homepage</td><td>선택</td><td>URL</td></tr>
 </table>
+<ul>
+<li>로고·대표이미지는 <strong>필수</strong>이며, 등록 시 지정 비율(로고 1:1·대표이미지 16:9)에 맞춰 자르기(크롭) 후 저장한다. 허용 형식·5MB 초과 파일은 거부한다([CEB-BO-003] §7.6).</li>
+<li>SNS·Homepage는 선택이며, 입력 시 올바른 URL 형식이어야 한다.</li>
+</ul>
 <blockquote>
-<p>시각적 스타일은 피그마 참조</p>
+<p>시각적 스타일은 프로토타입 참조</p>
 </blockquote>
 <hr>
 <h2>3. 화면 내 기능설명</h2>
@@ -145,8 +149,9 @@ p {
 </ul>
 <h3>4.2 입력 검증</h3>
 <ul>
-<li>그룹명·그룹 소개는 한국어·영어·일본어 모두 입력해야 한다.</li>
-<li>로고·대표이미지는 필수이다.</li>
+<li>그룹명·그룹 소개는 한국어·영어·일본어 모두 입력해야 한다. 미입력 언어가 있으면 해당 언어 탭에 미입력 표시를 노출한다.</li>
+<li>로고·대표이미지는 필수이다. 등록 비율 크롭 + 형식·용량(5MB) 검증을 통과해야 한다.</li>
+<li>SNS·Homepage 입력값은 URL 형식을 검증한다.</li>
 <li>필수 항목이 모두 충족되어야 [생성하기]가 활성화된다.</li>
 </ul>
 <hr>
@@ -155,7 +160,8 @@ p {
 <tr><th>상태</th><th>표시</th></tr>
 <tr><td>Default</td><td>빈 폼 ([생성하기] 비활성)</td></tr>
 <tr><td>입력 완료</td><td>[생성하기] 활성</td></tr>
-<tr><td>Error (생성 실패)</td><td>Toast (Error): "그룹 생성에 실패했습니다."</td></tr>
+<tr><td>생성 성공</td><td>Toast (Success): "그룹을 생성했습니다." → 그룹 리스트 이동</td></tr>
+<tr><td>Error (생성 실패)</td><td>Toast (Error): "그룹 생성에 실패했습니다." (입력 폼 유지)</td></tr>
 </table>
 <hr>
 <h2>6. 활동 로그</h2>
@@ -167,9 +173,12 @@ p {
 <h2>7. 에러·예외 상황</h2>
 <table>
 <tr><th>상황</th><th>메시지</th></tr>
-<tr><td>필수 미입력</td><td>해당 항목 인라인 에러, [생성하기] 비활성</td></tr>
-<tr><td>이미지 형식·용량 초과</td><td>업로드 에러 안내</td></tr>
-<tr><td>생성 실패</td><td>Toast (Error): "그룹 생성에 실패했습니다."</td></tr>
+<tr><td>필수 미입력</td><td>해당 항목 인라인 에러 "필수 입력 항목입니다.", [생성하기] 비활성</td></tr>
+<tr><td>다국어 일부 미입력</td><td>미입력 언어 탭 표시 + 인라인 에러 "한국어·영어·일본어를 모두 입력하세요."</td></tr>
+<tr><td>URL 형식 오류</td><td>해당 입력 인라인 에러 "올바른 URL 형식이 아닙니다."</td></tr>
+<tr><td>이미지 형식 오류</td><td>업로드 에러 "지원하지 않는 형식입니다. (JPG·PNG·WebP)"</td></tr>
+<tr><td>이미지 용량 초과</td><td>업로드 에러 "이미지 용량은 5MB 이하만 등록할 수 있습니다."</td></tr>
+<tr><td>생성 실패</td><td>Toast (Error): "그룹 생성에 실패했습니다." (입력 폼 유지)</td></tr>
 </table>
 <hr>
 <h2>8. 연관 화면ID</h2>
@@ -184,6 +193,7 @@ p {
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>빌드 준비도 정합. ① 이미지 비율 크롭·형식/용량 초과 거부 명시(§2.2·§4.2) ② URL 형식 검증 추가 ③ 성공 토스트("그룹을 생성했습니다.")·필드별 인라인 에러·업로드 에러 문구 명시(§5·§7)</td></tr>
 <tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>운영 BO 실측 정합 신규 작성. ① 입력 = 그룹명(100자)·그룹 소개(500자) 각 3언어 + 로고(1:1 512×512) + 대표이미지(16:9 1920×1080) + SNS 5종(Instagram·X·YouTube·TikTok·Homepage) ② 필수 충족 시 [생성하기] 활성 ③ 권한은 [CEB-BO-SYS-102] 참조</td></tr>
 </table>
 

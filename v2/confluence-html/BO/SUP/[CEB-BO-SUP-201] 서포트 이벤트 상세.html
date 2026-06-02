@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SUP — 서포트 이벤트</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.3</td></tr>
+<tr><td>버전</td><td>v2.4</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -141,7 +141,7 @@ p {
 <tr><td>목표 응원량</td><td>덕력</td><td>임시저장에서만 수정 가능 (모집중 이후 잠금)</td></tr>
 <tr><td>기간</td><td>시작·마감 (KST)</td><td>임시저장에서만 수정 가능 (모집중 이후 잠금)</td></tr>
 <tr><td>대표 이미지</td><td>운영자 업로드</td><td>수정 가능</td></tr>
-<tr><td>아티스트 홈 카드</td><td>카드 배너 + 카드 타이틀·서브타이틀(다국어) — 아티스트 홈 노출 카드</td><td>수정 가능</td></tr>
+<tr><td>아티스트 홈 카드</td><td>카드 이미지(1:1 아이콘) + 카드 타이틀·서브타이틀(다국어) — 아티스트 홈 노출 카드</td><td>수정 가능</td></tr>
 <tr><td>유의사항</td><td>응원 전 안내·환불 조건(다국어) — 앱 상세 노출</td><td>수정 가능</td></tr>
 </table>
 <blockquote>
@@ -270,6 +270,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v2.4</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — §2.2 아티스트 홈 카드 이미지를 <strong>1:1 아이콘 이미지</strong>(홈 카드 안에 전체 표시)로 정정("카드 배너"→"카드 이미지"). [CEB-BO-SUP-101-CREATE]·프로토타입 동기화</td></tr>
 <tr><td><strong>v2.3</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — ① §2.5 <strong>강제 종료를 모집중·달성·집행중 모두에서 가능</strong>하도록 확대(→ 미달성종료·전액 반환) ② §2.2 기본 정보에 <strong>아티스트 홈 카드(배너·타이틀·서브타이틀)·유의사항</strong> 행 추가(수정 가능). 프로토타입 <code>page.tsx</code>·<code>SupportForm</code>·<code>support.ts</code> 반영</td></tr>
 <tr><td><strong>v2.2</strong></td><td><strong>2026.05.29</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>반환 현황 보강</strong> §2.4 반환 현황을 ① 요약(반환 사유 3종[목표 미달성·집행 취소·강제 종료]·반환 방식[서버 자동·즉시 전액]·반환율·대상·총 덕력·완료 시점) ② <strong>회원별 반환 내역 테이블</strong>(닉네임·반환 덕력·원 응원 횟수·반환 시점·상태)로 확장. 기존 요약 4칸에서 운영자 추적성 강화. 프로토타입 <code>support.ts</code>에 반환 사유 필드 추가</td></tr>
 <tr><td><strong>v2.1</strong></td><td><strong>2026.05.29</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>응원자 내역 보강 — 다회 응원 추적</strong> 한 회원이 동일 이벤트에 여러 번 응원하는 구조([CEB-DUK-201] 누적 응원)를 운영자가 추적할 수 있도록 탭2 응원자 내역을 보강. ① 상단 요약(응원자 수·총 응원 횟수·누적 응원) 추가 ② 회원별 테이블에 <strong>누적 응원량·응원 횟수·최초 응원·최근 응원</strong> 컬럼 추가(기존 단일 응원량·단일 시점 철회) ③ 행 클릭 시 <strong>회차별 응원 내역 모달</strong>(회차/응원량/시점 + 누적 합계, 반환 시 반환 시점 표기) 신규</td></tr>

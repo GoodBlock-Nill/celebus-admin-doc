@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { toast } from '@/components/ui/Toast';
 import SimplePagination from '@/components/clone/SimplePagination';
 import {
-  getAvailablePayoutMonths,
-  getMonthlyPayouts,
-  getMonthlyPayoutStats,
+  computePayoutStats,
+  getDukRankingBySeason,
+  getSeasonPayouts,
   isAutoPaidPrize,
   type DukPayoutStatus,
   type DukPrizeType,
@@ -19,6 +19,8 @@ import PayoutStatusModal from './PayoutStatusModal';
 // [CEB-BO-ART-401-DETAIL] §2.11~§2.13 — 보상 지급 내역 탭
 // - 시즌 = 1개월: 시즌 종료 시 1회 정산 → 단일 지급 내역 (월 선택 드롭다운 없음)
 // - 한 행 = 한 상품 지급 건 (회원 × 상품 조합)
+// - 순위는 시즌 획득 누적 랭킹(getDukRankingBySeason) 기준 (배열 인덱스 아님)
+// - 지급 상태 분포 통계는 화면 현재 상태(payouts)로 computePayoutStats 재계산
 // - 수동 지급(배송·현장)만 [상태 변경] 버튼 노출
 
 interface Props {
@@ -61,19 +63,26 @@ function describeTarget(type: DukRewardTargetType, value: string): string {
 }
 
 export default function HistoryTab({ seasonId, seasonName, groupName }: Props) {
-  const availableMonths = useMemo(() => getAvailablePayoutMonths(seasonId), [seasonId]);
-  // 시즌 = 1개월 → 정산 월 1건. 선택 UI 없이 그 1건을 사용
-  const [selectedMonth] = useState<string>(availableMonths[0] ?? '');
+  // 시즌 = 1개월 → 시즌당 1회 정산. 월 선택 없이 시즌 단위 지급 내역 1건 사용
+  // 순위는 시즌 획득 누적 랭킹(getDukRankingBySeason) 기준으로 정렬 (배열 인덱스가 아닌 실제 순위)
+  const rankByMember = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const r of getDukRankingBySeason(seasonId)) map.set(r.memberId, r.rank);
+    return map;
+  }, [seasonId]);
+
   const [page, setPage] = useState(1);
-  const [payouts, setPayouts] = useState<DukRewardPayout[]>(() =>
-    selectedMonth ? getMonthlyPayouts(seasonId, selectedMonth) : [],
-  );
+  const [payouts, setPayouts] = useState<DukRewardPayout[]>(() => {
+    const rows = getSeasonPayouts(seasonId);
+    // 획득 누적 랭킹의 순위로 정합. 랭킹에 없는 회원은 정산 시점 snapshot rank 유지
+    return rows
+      .map((p) => ({ ...p, rank: rankByMember.get(p.memberId) ?? p.rank }))
+      .sort((a, b) => a.rank - b.rank || a.prizeId - b.prizeId);
+  });
   const [editTarget, setEditTarget] = useState<DukRewardPayout | null>(null);
 
-  const stats = useMemo(
-    () => (selectedMonth ? getMonthlyPayoutStats(seasonId, selectedMonth) : null),
-    [seasonId, selectedMonth, payouts],
-  );
+  // 지급 상태 분포 — 화면 현재 상태(payouts)에서 재계산 (상태 변경 후 즉시 반영)
+  const stats = useMemo(() => computePayoutStats(payouts), [payouts]);
 
   const handlePayoutSave = (updated: DukRewardPayout) => {
     setPayouts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
@@ -81,8 +90,8 @@ export default function HistoryTab({ seasonId, seasonName, groupName }: Props) {
     toast.success('지급 상태가 변경되었습니다.');
   };
 
-  // 미정산 — 빈 상태
-  if (availableMonths.length === 0) {
+  // 미정산 — 빈 상태 (시즌 정산 전이면 지급 내역 없음)
+  if (payouts.length === 0) {
     return (
       <section className="bg-white border border-gray-100 rounded-xl px-6 py-12 text-center">
         <p className="text-sm text-gray-500">아직 정산되지 않았습니다.</p>

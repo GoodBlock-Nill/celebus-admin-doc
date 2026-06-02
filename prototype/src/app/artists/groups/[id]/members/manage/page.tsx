@@ -11,7 +11,10 @@ import { getGroupById, getGroupMembers, artistMembers, artistPositions } from '@
 
 const LEFT_PAGE = 10;
 
-interface Row { id: number; name: string; gender: string; birthday: string; position: string; isNew?: boolean }
+// 사용 상태 포지션만 선택 가능 (미사용은 신규 지정 불가)
+const usablePositions = artistPositions.filter((p) => p.status === '사용');
+
+interface Row { id: number; name: string; gender: string; birthday: string; positionId: number | null; isNew?: boolean }
 
 export default function GroupMemberManagePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -20,7 +23,7 @@ export default function GroupMemberManagePage({ params }: { params: Promise<{ id
   const group = getGroupById(gid);
 
   const initialRight: Row[] = useMemo(
-    () => getGroupMembers(gid).map((m) => ({ id: m.id, name: m.name, gender: m.gender, birthday: m.birthday, position: m.position || '미선택' })),
+    () => getGroupMembers(gid).map((m) => ({ id: m.id, name: m.name, gender: m.gender, birthday: m.birthday, positionId: m.positionId })),
     [gid]
   );
 
@@ -40,9 +43,10 @@ export default function GroupMemberManagePage({ params }: { params: Promise<{ id
   const leftPaged = pool.slice((leftPage - 1) * LEFT_PAGE, leftPage * LEFT_PAGE);
 
   const add = (m: typeof artistMembers[number]) =>
-    setRight((prev) => [...prev, { id: m.id, name: m.name, gender: m.gender, birthday: m.birthday, position: '미선택', isNew: true }]);
+    setRight((prev) => [...prev, { id: m.id, name: m.name, gender: m.gender, birthday: m.birthday, positionId: null, isNew: true }]);
   const remove = (rid: number) => setRight((prev) => prev.filter((r) => r.id !== rid));
-  const setPosition = (rid: number, pos: string) => setRight((prev) => prev.map((r) => (r.id === rid ? { ...r, position: pos } : r)));
+  // 포지션은 ID 참조로 저장. 빈 값('') = 미선택 = null (literal "미선택" 저장 금지). 동일 포지션 중복 허용.
+  const setPosition = (rid: number, posId: number | null) => setRight((prev) => prev.map((r) => (r.id === rid ? { ...r, positionId: posId } : r)));
 
   const back = () => router.push(`/artists/groups/${gid}?tab=members`);
 
@@ -123,13 +127,13 @@ export default function GroupMemberManagePage({ params }: { params: Promise<{ id
                   <td className="px-4 py-2.5">
                     <div className="relative">
                       <select
-                        value={r.position}
-                        onChange={(e) => setPosition(r.id, e.target.value)}
+                        value={r.positionId ?? ''}
+                        onChange={(e) => setPosition(r.id, e.target.value === '' ? null : Number(e.target.value))}
                         className="h-8 pl-2.5 pr-7 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[130px] focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       >
-                        <option value="미선택">미선택</option>
-                        {artistPositions.map((p) => (
-                          <option key={p.id} value={p.nameKO}>{p.nameKO}</option>
+                        <option value="">미선택</option>
+                        {usablePositions.map((p) => (
+                          <option key={p.id} value={p.id}>{p.operatorName}</option>
                         ))}
                       </select>
                       <ChevronUpDownIcon className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />

@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SUP — 서포트 이벤트</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.3</td></tr>
+<tr><td>버전</td><td>v2.5</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,7 +96,7 @@ p {
 </table>
 <hr>
 <h2>1. 개요</h2>
-<p>서포트 이벤트는 팬덤이 <strong>보유 덕력을 응원(차감)</strong> 하여 아티스트 응원(생일 카페·콘서트 응원·차트 인증 등)의 목표 응원량 달성에 함께 참여하는 이벤트다. 운영자는 이벤트를 생성·게시하고, 목표 달성 후 집행·결과물 등록까지 한 화면 흐름에서 관리한다. 생성 시 <strong>아티스트 홈 노출 카드(배너·타이틀·서브타이틀)</strong>와 <strong>유의사항</strong>을 함께 입력한다.</p>
+<p>서포트 이벤트는 팬덤이 <strong>보유 덕력을 응원(차감)</strong> 하여 아티스트 응원(생일 카페·콘서트 응원·차트 인증 등)의 목표 응원량 달성에 함께 참여하는 이벤트다. 운영자는 이벤트를 생성·게시하고, 목표 달성 후 집행·결과물 등록까지 한 화면 흐름에서 관리한다. 생성 시 <strong>아티스트 홈 노출 카드(1:1 아이콘 이미지·타이틀·서브타이틀)</strong>와 <strong>유의사항</strong>을 함께 입력한다.</p>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>사이드 메뉴</td><td><strong>아티스트 > 서포트 관리</strong> (덕력관리·팬덤레벨과 같은 아티스트 메뉴 묶음)</td></tr>
@@ -140,6 +140,20 @@ p {
 <tr><td>미달성종료</td><td>마감까지 미달성 또는 강제 종료</td><td>"미달성·반환 완료" 표시</td><td>서버 자동(마감+미달성) / 운영자 [강제 종료]</td></tr>
 <tr><td>집행취소</td><td>달성 후 집행 불가로 취소</td><td>"취소·반환 완료" 표시</td><td>운영자 [집행 취소]</td></tr>
 </table>
+<p><strong>상태 배지 색상</strong> (백오피스 표기 — 프로토타입 <code>/artists/support</code> 기준)</p>
+<table>
+<tr><th>상태</th><th>배지 색상</th></tr>
+<tr><td>임시저장</td><td>연회색 배경 · 회색 글자</td></tr>
+<tr><td>모집중</td><td>초록 배경 · 흰 글자</td></tr>
+<tr><td>달성</td><td>남색 배경 · 흰 글자</td></tr>
+<tr><td>집행중</td><td>주황 배경 · 흰 글자</td></tr>
+<tr><td>완료</td><td>진회색 배경 · 흰 글자</td></tr>
+<tr><td>미달성종료</td><td>연분홍 배경 · 분홍 글자</td></tr>
+<tr><td>집행취소</td><td>연분홍 배경 · 분홍 글자</td></tr>
+</table>
+<ul>
+<li>상태 배지 색상 등 시각 표현의 기준은 <strong>프로토타입(<code>/artists/support</code>)</strong>으로 한다(피그마 아님). 미달성종료·집행취소는 "종료"로 묶여 동일 색을 쓴다(리스트 대시보드 "종료" 카드 정합, [CEB-BO-SUP-101] §2.2).</li>
+</ul>
 <h3>4.2 응원(차감) 정책</h3>
 <p>회원이 앱에서 서포트 이벤트에 응원하면:</p>
 <ul>
@@ -188,6 +202,8 @@ p {
 <h2>6. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v2.5</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>§4.1에 <strong>상태 배지 색상 표(7상태)</strong> 추가 — 시각 표현 기준을 <strong>프로토타입(<code>/artists/support</code>)</strong>으로 명시(피그마 아님). 미달성종료·집행취소는 "종료"로 동일 색([CEB-BO-SUP-101] §2.2 정합)</td></tr>
+<tr><td><strong>v2.4</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — §1 아티스트 홈 노출 카드 이미지를 <strong>1:1 아이콘 이미지</strong>(홈 카드 안에 전체 표시)로 정정([CEB-BO-SUP-101-CREATE] 동기화)</td></tr>
 <tr><td><strong>v2.3</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>§4.5 변동 유형을 <strong>응원·반환 2종</strong>으로 정리 — 결과물 알림은 덕력 증감이 아니므로 변동 유형 표에서 제외(알림 발송 이력은 [CEB-BO-SUP-201] 상세에서 확인). [CEB-BO-SUP-401]이 응원/반환 탭 구조로 변경된 것과 정합</td></tr>
 <tr><td><strong>v2.2</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — §1 개요에 생성 시 <strong>아티스트 홈 노출 카드(배너·타이틀·서브타이틀)·유의사항</strong> 입력 명시([CEB-BO-SUP-101-CREATE] §2 E·F 정합)</td></tr>
 <tr><td><strong>v2.1</strong></td><td><strong>2026.05.29</strong></td><td><strong>@Nill Yoo</strong></td><td>§4.4 반환 정책에 <strong>반환 사유 3종(목표 미달성·집행 취소·강제 종료) 기록</strong> 명시 — 상세에서 회원별 반환 내역과 함께 조회([CEB-BO-SUP-201] §2.4 반환 현황 보강 정합)</td></tr>

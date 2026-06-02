@@ -61,9 +61,9 @@ export default function PayoutStatusModal({ target, groupName, seasonName, onClo
       paidAt: status === '지급대기' ? undefined : nowText(),
       paidBy: '운영자',
     };
-    // 활동 로그 (콘솔 mock — 실서비스에서는 API 호출)
+    // 활동 로그 (콘솔 mock — 실서비스에서는 API 호출). 시즌 단위 정산이므로 월 표기 없음
     console.info(
-      `[활동 로그] 덕력 시즌 '${groupName} - ${seasonName}' ${target.yearMonth} ${target.memberNickname} '${target.prizeTitle.ko}'의 지급 상태를 '${prevStatus}' → '${status}'(으)로 변경. 메모: '${memoTrimmed.slice(0, 30)}'`,
+      `[활동 로그] 덕력 시즌 '${groupName} - ${seasonName}' ${target.memberNickname} '${target.prizeTitle.ko}'의 지급 상태를 '${prevStatus}' → '${status}'(으)로 변경. 메모: '${memoTrimmed.slice(0, 30)}'`,
     );
     onSave(updated);
   };
@@ -159,11 +159,11 @@ export default function PayoutStatusModal({ target, groupName, seasonName, onClo
           >
             취소
           </button>
+          {/* 저장 버튼은 항상 클릭 가능 — 검증 실패 시에도 재클릭 허용 (handleSave에서 차단) */}
           <button
             type="button"
             onClick={handleSave}
-            disabled={!canSave && touched}
-            className="h-10 px-5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="h-10 px-5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
           >
             저장
           </button>

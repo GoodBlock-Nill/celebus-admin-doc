@@ -18,7 +18,7 @@ export interface DukSeason {
 
 export interface DukLedger {
   id: number;
-  occurredAt: string;
+  occurredAt: string; // YYYY.MM.DD HH:mm:ss (초 단위까지 — 동점 시 먼저 도달 우선 판정용)
   artistGroupId: number;
   artistGroupName: string;
   memberId: string; // 회원 id (mock/members.ts와 정합 — string)
@@ -27,7 +27,7 @@ export interface DukLedger {
   source: string; // 한국어
   amount: number; // 양수
   balanceAfter: number;
-  seasonId?: number;
+  seasonId?: number; // 시즌 귀속 (월 prefix가 아닌 시즌 id로 집계)
 }
 
 // v1.5 — 월별 보상 매트릭스 / v1.6 — 1구간 = 복수 상품 nested
@@ -93,10 +93,10 @@ export interface DukRewardTier {
   prizes: DukRewardPrize[]; // v1.6 — 1구간 = 복수 상품. 최소 1개 필수
 }
 
-export interface DukMonthlyReward {
+// 시즌당 1건의 보상 세트. 시즌 = 1개월, 시즌당 1회 정산 (미팅 정합 2026-06-02).
+export interface DukSeasonReward {
   id: number;
   seasonId: number;
-  yearMonth: string; // YYYY.MM
   tiers: DukRewardTier[];
   settledAt?: string; // 정산 완료 일시 (YYYY.MM.DD HH:mm) — 설정 시 잠금
 }
@@ -128,9 +128,11 @@ export const dukSourcesSpend = ['서포트 응원', '독점 콘텐츠 해금'] a
 // ─────────────────────────────────────────────
 export const dukSeasons: DukSeason[] = [
   // 언더라이트
+  { id: 103, artistGroupId: 1, artistGroupName: '언더라이트 (UNDER:LIGHT)', name: '언더라이트 2025.12 시즌', startAt: '2025.12.01 00:00', endAt: '2025.12.31 23:59', status: '종료' },
   { id: 101, artistGroupId: 1, artistGroupName: '언더라이트 (UNDER:LIGHT)', name: '언더라이트 2026.05 시즌', startAt: '2026.05.01 00:00', endAt: '2026.05.31 23:59', status: '종료' },
   { id: 102, artistGroupId: 1, artistGroupName: '언더라이트 (UNDER:LIGHT)', name: '언더라이트 2026.06 시즌', startAt: '2026.06.01 00:00', endAt: '2026.06.30 23:59', status: '진행중' },
   // V01D
+  { id: 204, artistGroupId: 2, artistGroupName: 'V01D', name: 'V01D 2025.12 시즌', startAt: '2025.12.01 00:00', endAt: '2025.12.31 23:59', status: '종료' },
   { id: 201, artistGroupId: 2, artistGroupName: 'V01D', name: 'V01D 2026.05 시즌', startAt: '2026.05.01 00:00', endAt: '2026.05.31 23:59', status: '종료' },
   { id: 202, artistGroupId: 2, artistGroupName: 'V01D', name: 'V01D 2026.06 시즌', startAt: '2026.06.01 00:00', endAt: '2026.06.30 23:59', status: '진행중' },
   { id: 203, artistGroupId: 2, artistGroupName: 'V01D', name: 'V01D 2026.07 시즌', startAt: '2026.07.01 00:00', endAt: '2026.07.31 23:59', status: '예정' },
@@ -214,8 +216,16 @@ function buildLedger(): DukLedger[] {
   const balance: Record<string, number> = {};
   const k = (mid: string, gid: number) => `${mid}-${gid}`;
 
+  // occurredAt이 "YYYY.MM.DD HH:mm" (분 단위)면 행별 고유 초(:SS)를 자동 부여.
+  // 동점 시 "먼저 도달한 회원 우선" 판정을 위해 초 단위 정밀도가 필요 (미팅 정합 2026-06-02).
+  const withSeconds = (occurredAt: string): string => {
+    if (/\d{2}:\d{2}:\d{2}$/.test(occurredAt)) return occurredAt; // 이미 초 포함
+    const sec = String(id % 60).padStart(2, '0'); // 행 id 기반 결정적 초 부여 (고유성 확보)
+    return `${occurredAt}:${sec}`;
+  };
+
   const push = (
-    occurredAt: string,
+    occurredAtRaw: string,
     seasonId: number | undefined,
     groupId: number,
     groupName: string,
@@ -231,6 +241,7 @@ function buildLedger(): DukLedger[] {
     if (type === '사용' && prev < amount) return;
     const next = type === '획득' ? prev + amount : prev - amount;
     balance[key] = next;
+    const occurredAt = withSeconds(occurredAtRaw);
     rows.push({
       id: id++,
       occurredAt,
@@ -367,16 +378,15 @@ function buildLedger(): DukLedger[] {
       const actCount = 2 + Math.floor(r() * 5);
       for (let ai = 0; ai < actCount; ai++) {
         const isEarn = r() > 0.18; // 82% 획득
-        // 2026.01~05 또는 2025.10~12 분포
-        let year: number;
+        // 시즌 = 1개월 (미팅 정합). 거래 일시를 시즌 존재 월에 분포시켜 시즌 매칭률 확보.
+        // 2026.06(진행중)·2026.05(종료) 중심 + 소수 2026.04(시즌 없음 "—") + 2025.12(전년도 종료 시즌, 연도 선택 데모)
+        let year = 2026;
         let month: number;
-        if (r() < 0.85) {
-          year = 2026;
-          month = 1 + Math.floor(r() * 5);
-        } else {
-          year = 2025;
-          month = 10 + Math.floor(r() * 3);
-        }
+        const mr = r();
+        if (mr < 0.55) month = 6;
+        else if (mr < 0.78) month = 5;
+        else if (mr < 0.88) month = 4;
+        else { year = 2025; month = 12; }
         const day = 1 + Math.floor(r() * 27);
         const hour = 9 + Math.floor(r() * 12);
         const minute = Math.floor(r() * 60);
@@ -427,27 +437,27 @@ export interface DukRankingRow {
   rank: number;
   memberId: string;
   memberNickname: string;
-  totalAmount: number; // 획득 - 사용
-  lastChangedAt: string;
+  totalAmount: number; // 시즌 내 '획득(적립)' 덕력 누적 (사용분 차감 없음)
+  lastChangedAt: string; // 최근 획득 변동 일시 (= 최종 누적 도달 시각, 동점 판정용)
 }
 
-// v1.1 — 년/월 단위 ledger 누적 랭킹
-export function getDukRankingByPeriod(
-  groupId: number,
-  period: { unit: 'year' | 'month'; year: number; month?: number },
-): DukRankingRow[] {
-  const yearStr = String(period.year);
-  const monthStr = period.month ? String(period.month).padStart(2, '0') : null;
-  const prefix = period.unit === 'year' ? `${yearStr}.` : `${yearStr}.${monthStr}.`;
-
-  const filtered = dukLedger.filter(
-    (l) => l.artistGroupId === groupId && l.occurredAt.startsWith(prefix),
-  );
-  const acc: Record<string, { nickname: string; total: number; last: string }> = {};
-  for (const l of filtered) {
-    const cur = acc[l.memberId] ?? { nickname: l.memberNickname, total: 0, last: l.occurredAt };
-    cur.total += l.type === '획득' ? l.amount : -l.amount;
-    if (l.occurredAt > cur.last) cur.last = l.occurredAt;
+// 시즌 단위 획득 누적 랭킹 (미팅 정합 2026-06-02)
+// - 집계 단위: seasonId (월 prefix가 아닌 시즌 귀속 id)
+// - 점수: '획득(적립)' 합계만. '사용(소비)'은 순위에 영향 없음
+// - 노출 대상: 시즌 내 획득 > 0 회원
+// - 동점 처리: 같은 누적이면 '먼저 도달한 회원'이 상위 (최종 획득 일시 빠른 순). 동순위 없음
+export function getDukRankingBySeason(seasonId: number): DukRankingRow[] {
+  const earned = dukLedger.filter((l) => l.seasonId === seasonId && l.type === '획득');
+  const acc: Record<string, { nickname: string; total: number; firstReachAt: string }> = {};
+  for (const l of earned) {
+    const cur = acc[l.memberId] ?? {
+      nickname: l.memberNickname,
+      total: 0,
+      firstReachAt: l.occurredAt,
+    };
+    cur.total += l.amount;
+    // 최종 누적에 도달한 시각 = 가장 늦은 획득 일시 (초 단위 정밀도)
+    if (l.occurredAt > cur.firstReachAt) cur.firstReachAt = l.occurredAt;
     acc[l.memberId] = cur;
   }
   return Object.entries(acc)
@@ -455,10 +465,11 @@ export function getDukRankingByPeriod(
       memberId: mid,
       memberNickname: v.nickname,
       totalAmount: v.total,
-      lastChangedAt: v.last,
+      lastChangedAt: v.firstReachAt,
     }))
     .filter((r) => r.totalAmount > 0)
-    .sort((a, b) => b.totalAmount - a.totalAmount)
+    // 획득 누적 내림차순 → 동점 시 최종 도달 일시 오름차순(먼저 도달 우선)
+    .sort((a, b) => b.totalAmount - a.totalAmount || (a.lastChangedAt < b.lastChangedAt ? -1 : 1))
     .map((r, i) => ({ rank: i + 1, ...r }));
 }
 
@@ -487,15 +498,12 @@ export function getSeasonsByGroup(groupId: number): DukSeason[] {
 // 다국어 헬퍼
 const lang = (ko: string, en: string, ja: string): DukLangText => ({ ko, en, ja });
 
-// 시즌별 월별 보상 mock — v1.6 1구간 = 복수 상품 nested 구조
-// settledAt 채워진 entry = 정산 완료(잠금)
-// 신규 상품 5종 모두 1회 이상 등장하도록 분포
-// 시즌별 보상 mock — 시즌 = 1개월 단위, 시즌당 1건. settledAt 채워진 entry = 정산 완료(잠금)
-// yearMonth = 시즌의 해당 월(시즌과 1:1). 상품 5종 모두 1회 이상 등장
-export const dukMonthlyRewards: DukMonthlyReward[] = [
+// 시즌별 보상 mock — 시즌 = 1개월 단위, 시즌당 1건 (1구간 = 복수 상품 nested 구조).
+// settledAt 채워진 entry = 정산 완료(잠금). 상품 5종 모두 1회 이상 등장하도록 분포
+export const dukSeasonRewards: DukSeasonReward[] = [
   // V01D 2026.06 시즌 (202) — 진행중·미정산 (수정 가능)
   {
-    id: 1, seasonId: 202, yearMonth: '2026.06',
+    id: 1, seasonId: 202,
     tiers: [
       { id: 1, targetType: '등수', targetValue: '1', prizes: [
         { id: 101, type: '배송 수령', title: lang('V01D 사인 앨범', 'V01D Signed Album', 'V01Dサイン入りアルバム'), deliveryDeadlineDt: '2026-07-15', deliveryDeadlineTime: '23:59', deliveryFormUrl: 'https://forms.gle/v01d-202606' },
@@ -511,7 +519,7 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
   },
   // V01D 2026.05 시즌 (201) — 종료·정산 완료
   {
-    id: 2, seasonId: 201, yearMonth: '2026.05', settledAt: '2026.05.31 23:59',
+    id: 2, seasonId: 201, settledAt: '2026.05.31 23:59',
     tiers: [
       { id: 11, targetType: '등수', targetValue: '1', prizes: [
         { id: 201, type: '배송 수령', title: lang('V01D 사인 앨범', 'V01D Signed Album', 'V01Dサイン入りアルバム'), deliveryDeadlineDt: '2026-06-15', deliveryDeadlineTime: '23:59', deliveryFormUrl: 'https://forms.gle/v01d-202605' },
@@ -526,7 +534,7 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
   },
   // 언더라이트 2026.06 시즌 (102) — 진행중·미정산
   {
-    id: 3, seasonId: 102, yearMonth: '2026.06',
+    id: 3, seasonId: 102,
     tiers: [
       { id: 21, targetType: '등수', targetValue: '1', prizes: [
         { id: 301, type: 'BIVE NFT', title: lang('언더라이트 BIVE 에디션', 'UNDER:LIGHT BIVE Edition', 'アンダーライトBIVEエディション'), mintingEventId: 23 },
@@ -538,7 +546,7 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
   },
   // 언더라이트 2026.05 시즌 (101) — 종료·정산 완료
   {
-    id: 4, seasonId: 101, yearMonth: '2026.05', settledAt: '2026.05.31 23:59',
+    id: 4, seasonId: 101, settledAt: '2026.05.31 23:59',
     tiers: [
       { id: 31, targetType: '등수', targetValue: '1', prizes: [
         { id: 401, type: '현장 수령', title: lang('팬미팅 초대권', 'Fanmeeting Invite', 'ファンミ招待券'), pickupStartDt: '2026-06-10', pickupEndDt: '2026-06-20', openTime: '10:00', closeTime: '18:00', location: lang('서울 OO홀', 'Seoul OO Hall', 'ソウルOOホール'), items: lang('신분증 지참', 'Bring ID', '身分証持参') },
@@ -550,7 +558,7 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
   },
   // iKON 2026.05 시즌 (501) — 종료·정산 완료
   {
-    id: 5, seasonId: 501, yearMonth: '2026.05', settledAt: '2026.05.31 23:59',
+    id: 5, seasonId: 501, settledAt: '2026.05.31 23:59',
     tiers: [
       { id: 41, targetType: '등수', targetValue: '1', prizes: [
         { id: 501, type: '응모권', title: lang('iKON 사인회 응모권', 'iKON Fansign Tickets', 'iKONサイン会応募券'), count: 5 },
@@ -559,53 +567,65 @@ export const dukMonthlyRewards: DukMonthlyReward[] = [
   },
   // CELEBUS 2026.06 시즌 (301) — 진행중·미정산
   {
-    id: 6, seasonId: 301, yearMonth: '2026.06',
+    id: 6, seasonId: 301,
     tiers: [
       { id: 51, targetType: '등수', targetValue: '1', prizes: [
         { id: 601, type: '덕력', title: lang('데뷔 시즌 1위 보너스', 'Debut Season 1st Bonus', 'デビューシーズン1位ボーナス'), amount: 500 },
       ] },
     ],
   },
+  // 언더라이트 2025.12 시즌 (103) — 종료·정산 완료 (전년도 시즌)
+  {
+    id: 7, seasonId: 103, settledAt: '2025.12.31 23:59',
+    tiers: [
+      { id: 61, targetType: '등수', targetValue: '1', prizes: [
+        { id: 701, type: '배송 수령', title: lang('연말 사인 굿즈', 'Year-end Signed Goods', '年末サイングッズ'), deliveryDeadlineDt: '2026-01-15', deliveryDeadlineTime: '23:59', deliveryFormUrl: 'https://forms.gle/ul-202512' },
+      ] },
+      { id: 62, targetType: '등수범위', targetValue: '2-10', prizes: [
+        { id: 702, type: '응모권', title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'), count: 3 },
+      ] },
+    ],
+  },
+  // V01D 2025.12 시즌 (204) — 종료·정산 완료 (전년도 시즌)
+  {
+    id: 8, seasonId: 204, settledAt: '2025.12.31 23:59',
+    tiers: [
+      { id: 71, targetType: '등수', targetValue: '1', prizes: [
+        { id: 801, type: '덕력', title: lang('연말 1위 보너스', 'Year-end 1st Bonus', '年末1位ボーナス'), amount: 1000 },
+      ] },
+    ],
+  },
 ];
 
-// 시즌 = 1개월 단위 (미팅 정합 2026-06-02). 시즌의 해당 월(YYYY.MM) 1건만 반환.
-function buildMonthsFromStart(startAt: string): string[] {
-  const m = startAt.match(/^(\d{4})\.(\d{2})\./);
-  if (!m) return [];
-  return [`${m[1]}.${m[2]}`];
-}
-
-// 시즌 보상 조회 — 시즌 = 1개월이므로 1건만 반환 (mock에 없으면 빈 tiers entry 생성)
-export interface DukMonthlyRewardView {
-  yearMonth: string;
+// 시즌 보상 조회 — 시즌 = 1개월, 시즌당 1건 (미팅 정합 2026-06-02). mock에 없으면 빈 tiers 반환.
+export interface DukSeasonRewardView {
   tiers: DukRewardTier[];
   settledAt?: string;
   isLocked: boolean; // 정산 완료 여부
 }
 
-export function getMonthlyRewards(seasonId: number): DukMonthlyRewardView[] {
-  const season = dukSeasons.find((s) => s.id === seasonId);
-  if (!season) return [];
-  const months = buildMonthsFromStart(season.startAt);
-  return months.map((ym) => {
-    const found = dukMonthlyRewards.find((r) => r.seasonId === seasonId && r.yearMonth === ym);
-    return {
-      yearMonth: ym,
-      tiers: found?.tiers ?? [],
-      settledAt: found?.settledAt,
-      isLocked: !!found?.settledAt,
-    };
-  });
+export function getSeasonReward(seasonId: number): DukSeasonRewardView {
+  const found = dukSeasonRewards.find((r) => r.seasonId === seasonId);
+  return {
+    tiers: found?.tiers ?? [],
+    settledAt: found?.settledAt,
+    isLocked: !!found?.settledAt,
+  };
 }
 
-// 정산 완료 월 카운트 (시즌 정보 카드용)
-export function getSettledMonthCount(seasonId: number): number {
-  return getMonthlyRewards(seasonId).filter((m) => m.isLocked).length;
+// 시즌 정산 완료 여부
+export function isSeasonSettled(seasonId: number): boolean {
+  return getSeasonReward(seasonId).isLocked;
+}
+
+// 정산 완료 시각 (정보 카드 표시용)
+export function getSeasonSettledAt(seasonId: number): string | undefined {
+  return getSeasonReward(seasonId).settledAt;
 }
 
 // ─────────────────────────────────────────────
-// 월별 보상 지급 내역 (정산 결과 — 누가 어떤 등수로 어떤 상품을 받았는가)
-// [CEB-BO-ART-401-DETAIL] §2.11~§2.13 — 월별 보상 내역 탭
+// 시즌 보상 지급 내역 (정산 결과 — 누가 어떤 등수로 어떤 상품을 받았는가)
+// [CEB-BO-ART-401-DETAIL] §2.11~§2.13 — 보상 지급 내역 탭 (시즌 단위 1회 정산)
 // ─────────────────────────────────────────────
 
 export type DukPayoutStatus = '지급완료' | '지급대기' | '지급실패' | '재지급대기';
@@ -613,10 +633,9 @@ export type DukPayoutStatus = '지급완료' | '지급대기' | '지급실패' |
 export interface DukRewardPayout {
   id: number;
   seasonId: number;
-  yearMonth: string;                // YYYY.MM
   memberId: string;
   memberNickname: string;           // snapshot — 정산 시점 닉네임
-  rank: number;                     // 정산 시점 회원 순위 (해당 그룹·해당 월 누적 덕력)
+  rank: number;                     // 정산 시점 회원 순위 (시즌 획득 덕력 누적 랭킹)
   tierId: number;                   // 참조
   targetType: DukRewardTargetType;  // snapshot
   targetValue: string;              // snapshot
@@ -695,30 +714,34 @@ function selectTopTierForMember(
   return candidates[0];
 }
 
-// 정산 시점 회원 풀 = dukMembers 50명 (NICKNAMES 정합)
-// 등수 = dukMembers 인덱스 + 1. 실제 운영에서는 그룹·월별 ledger 누적으로 결정되나 mock은 단순 인덱스로 통일
-
+// 정산 시점 회원 순위 = 시즌 획득 덕력 누적 랭킹 (getDukRankingBySeason, 랭킹 탭과 동일 산식)
+// 랭킹이 비어 있는(획득 활동 없는) 시즌은 mock 회원 풀로 fallback해 데모용 지급 내역을 보존
 function buildPayouts(): DukRewardPayout[] {
   const payouts: DukRewardPayout[] = [];
   let nextId = 1;
-  const totalMembers = dukMembers.length;
 
-  for (const mr of dukMonthlyRewards) {
-    if (!mr.settledAt) continue;
-    for (let i = 0; i < totalMembers; i++) {
-      const rank = i + 1;
-      const member = dukMembers[i];
-      const selectedTier = selectTopTierForMember(rank, mr.tiers, totalMembers);
+  for (const sr of dukSeasonRewards) {
+    if (!sr.settledAt) continue;
+
+    // 정산 대상 = 시즌 획득 누적 랭킹. 랭킹이 비면 데모를 위해 회원 풀 인덱스 순으로 대체
+    const ranking = getDukRankingBySeason(sr.seasonId);
+    const ranked: { memberId: string; memberNickname: string; rank: number }[] =
+      ranking.length > 0
+        ? ranking.map((r) => ({ memberId: r.memberId, memberNickname: r.memberNickname, rank: r.rank }))
+        : dukMembers.map((m, i) => ({ memberId: m.id, memberNickname: m.nickname, rank: i + 1 }));
+    const totalMembers = ranked.length;
+
+    for (const member of ranked) {
+      const selectedTier = selectTopTierForMember(member.rank, sr.tiers, totalMembers);
       if (!selectedTier) continue;
       for (const prize of selectedTier.prizes) {
         const auto = isAutoPaidPrize(prize.type);
         payouts.push({
           id: nextId++,
-          seasonId: mr.seasonId,
-          yearMonth: mr.yearMonth,
-          memberId: member.id,
-          memberNickname: member.nickname,
-          rank,
+          seasonId: sr.seasonId,
+          memberId: member.memberId,
+          memberNickname: member.memberNickname,
+          rank: member.rank,
           tierId: selectedTier.id,
           targetType: selectedTier.targetType,
           targetValue: selectedTier.targetValue,
@@ -726,9 +749,9 @@ function buildPayouts(): DukRewardPayout[] {
           prizeType: prize.type,
           prizeTitle: prize.title,
           paidStatus: auto ? '지급완료' : '지급대기',
-          paidAt: auto ? mr.settledAt : undefined,
+          paidAt: auto ? sr.settledAt : undefined,
           paidBy: auto ? '시스템' : undefined,
-          createdAt: mr.settledAt,
+          createdAt: sr.settledAt,
         });
       }
     }
@@ -758,30 +781,21 @@ function buildPayouts(): DukRewardPayout[] {
 
 export const dukRewardPayouts: DukRewardPayout[] = buildPayouts();
 
-// 헬퍼: 시즌별 정산 완료 월 목록 (최신순)
-export function getAvailablePayoutMonths(seasonId: number): string[] {
-  return dukMonthlyRewards
-    .filter((m) => m.seasonId === seasonId && m.settledAt)
-    .map((m) => m.yearMonth)
-    .sort((a, b) => (a < b ? 1 : -1));
-}
-
-// 헬퍼: 해당 시즌·월의 지급 내역 (순위 오름차순)
-export function getMonthlyPayouts(seasonId: number, yearMonth: string): DukRewardPayout[] {
+// 헬퍼: 해당 시즌의 지급 내역 (순위 오름차순) — 시즌당 1회 정산이므로 시즌 단위로 조회
+export function getSeasonPayouts(seasonId: number): DukRewardPayout[] {
   return dukRewardPayouts
-    .filter((p) => p.seasonId === seasonId && p.yearMonth === yearMonth)
+    .filter((p) => p.seasonId === seasonId)
     .sort((a, b) => a.rank - b.rank || a.prizeId - b.prizeId);
 }
 
-// 헬퍼: 지급 상태별 카운트 (통계 카드용)
+// 헬퍼: 지급 상태별 카운트 (통계 카드용). 화면에서 변경된 현재 상태로 재계산할 수 있도록 rows를 인자로 받음
 export interface DukPayoutStats {
   memberCount: number;
   totalPrizes: number;
   byStatus: Record<DukPayoutStatus, number>;
 }
 
-export function getMonthlyPayoutStats(seasonId: number, yearMonth: string): DukPayoutStats {
-  const rows = getMonthlyPayouts(seasonId, yearMonth);
+export function computePayoutStats(rows: DukRewardPayout[]): DukPayoutStats {
   const byStatus: Record<DukPayoutStatus, number> = {
     지급완료: 0,
     지급대기: 0,

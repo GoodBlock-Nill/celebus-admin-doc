@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import { dukActiveGroups, type DukSeason } from '@/mock/duk';
 
-// [CEB-BO-ART-401] v1.8 §2-1 C. 시즌 생성·수정 모달
-// - 시즌 1개월 고정: 시작일시만 입력, 종료 = 시작 + 1개월 자동 산출
+// [CEB-BO-ART-401-MD-SEASON] 시즌 생성·수정 모달
+// - 시즌 = 1개월 단위: 연도 + 월 선택 → 시작 {연}.{월}.01 00:00 ~ 종료 말일 23:59 자동 산출
 // - 생성 모드: 그룹 Dropdown 활성 / 수정 모드: 그룹 readonly
-// - v1.7: 수정 모드 + 진행중·종료 시즌 → 시작일 readonly (보상·정산 데이터 매칭 깨짐 방지)
-// - v1.8: 시즌명·시작일시 필드별 인라인 에러 (touched 후 노출)
+// - 진행중·종료 시즌 → 연도·월 readonly (보상·정산 데이터 매칭 깨짐 방지)
+// - 시즌명은 그룹·연도·월에 맞춰 자동 제안(수동 수정 가능)
 
 interface Props {
   isOpen: boolean;
@@ -19,29 +19,28 @@ interface Props {
   onSubmit: (data: { artistGroupId: number; name: string; startAt: string; endAt: string }) => void;
 }
 
-// "YYYY.MM.DD HH:mm" <-> "YYYY-MM-DDTHH:mm"
-function toLocalInput(v: string): string {
-  if (!v) return '';
-  const m = v.match(/^(\d{4})\.(\d{2})\.(\d{2})\s+(\d{2}):(\d{2})$/);
-  if (!m) return '';
-  return `${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}`;
-}
-function fromLocalInput(v: string): string {
-  if (!v) return '';
-  const m = v.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
-  if (!m) return '';
-  return `${m[1]}.${m[2]}.${m[3]} ${m[4]}:${m[5]}`;
+const pad = (n: number) => String(n).padStart(2, '0');
+const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+// "YYYY.MM.DD HH:mm" → { year, month }
+function parseYearMonth(v?: string): { year: number; month: number } | null {
+  if (!v) return null;
+  const m = v.match(/^(\d{4})\.(\d{2})/);
+  return m ? { year: Number(m[1]), month: Number(m[2]) } : null;
 }
 
-// 시작 "YYYY.MM.DD HH:mm"으로부터 +1개월 - 1분 (= 다음 달 같은 날의 직전 분) "YYYY.MM.DD HH:mm"
-// 미팅 정합 2026-06-02: 시즌 = 1개월 단위
-function addOneMonthMinusMinute(startDot: string): string {
-  const m = startDot.match(/^(\d{4})\.(\d{2})\.(\d{2})\s+(\d{2}):(\d{2})$/);
-  if (!m) return '';
-  const d = new Date(Number(m[1]), Number(m[2]), Number(m[3]), Number(m[4]), Number(m[5]));
-  d.setMinutes(d.getMinutes() - 1);
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+// {연}.{월}.01 00:00 ~ 말일 23:59 (= 다음 달 1일 00:00 직전 1분)
+function seasonRange(year: number, month: number): { startDot: string; endDot: string } {
+  const startDot = `${year}.${pad(month)}.01 00:00`;
+  const end = new Date(year, month, 1, 0, 0); // 다음 달 1일 00:00 (month는 1-indexed → 0-indexed 다음 달)
+  end.setMinutes(end.getMinutes() - 1);
+  const endDot = `${end.getFullYear()}.${pad(end.getMonth() + 1)}.${pad(end.getDate())} ${pad(end.getHours())}:${pad(end.getMinutes())}`;
+  return { startDot, endDot };
+}
+
+function suggestName(groupId: number, year: number, month: number): string {
+  const g = dukActiveGroups.find((x) => x.id === groupId)?.name ?? '';
+  return `${g} ${year}.${pad(month)} 시즌`;
 }
 
 export default function SeasonFormModal({
@@ -52,71 +51,91 @@ export default function SeasonFormModal({
   existingSeasons,
   onSubmit,
 }: Props) {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1;
+
   const [groupId, setGroupId] = useState<number>(dukActiveGroups[0].id);
+  const [year, setYear] = useState<number>(currentYear);
+  const [month, setMonth] = useState<number>(currentMonth);
   const [name, setName] = useState('');
-  const [startAt, setStartAt] = useState(''); // input value (datetime-local)
-  // v1.8 — 인라인 검증용 touched state (포커스 후 첫 이탈 시 true)
+  const [nameManual, setNameManual] = useState(false); // 사용자가 시즌명 직접 수정했는지
   const [nameTouched, setNameTouched] = useState(false);
-  const [startTouched, setStartTouched] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      setGroupId(initial?.artistGroupId ?? dukActiveGroups[0].id);
-      setName(initial?.name ?? '');
-      setStartAt(toLocalInput(initial?.startAt ?? ''));
-      // 모달 재진입 시 touched 초기화
-      setNameTouched(false);
-      setStartTouched(false);
-    }
-  }, [isOpen, initial]);
+    if (!isOpen) return;
+    const gid = initial?.artistGroupId ?? dukActiveGroups[0].id;
+    const ym = parseYearMonth(initial?.startAt) ?? { year: currentYear, month: currentMonth };
+    setGroupId(gid);
+    setYear(ym.year);
+    setMonth(ym.month);
+    setName(initial?.name ?? suggestName(gid, ym.year, ym.month));
+    setNameManual(mode === 'edit'); // 수정 모드는 기존 이름 보존(자동 덮어쓰기 안 함)
+    setNameTouched(false);
+  }, [isOpen, initial, mode, currentYear, currentMonth]);
 
   const isEdit = mode === 'edit';
   const title = isEdit ? '시즌 수정' : '신규 시즌';
-  // v1.7 — 진행중·종료 시즌은 시작일 readonly (보상·정산 데이터 매칭 깨짐 방지)
-  const startReadonly = isEdit && (initial?.status === '진행중' || initial?.status === '종료');
+  // 진행중·종료 시즌은 연도·월 readonly (보상·정산 데이터 매칭 깨짐 방지)
+  const periodReadonly = isEdit && (initial?.status === '진행중' || initial?.status === '종료');
 
-  // 종료 자동 산출 (시작 + 1개월)
-  const computedEndDot = useMemo(() => {
-    const startDot = fromLocalInput(startAt);
-    if (!startDot) return '';
-    return addOneMonthMinusMinute(startDot);
-  }, [startAt]);
+  // 연도 선택 옵션 — 현재·다음 연도 + (수정 시) 기존 시즌 연도
+  const yearOptions = useMemo(() => {
+    const set = new Set<number>([currentYear, currentYear + 1]);
+    const ym = parseYearMonth(initial?.startAt);
+    if (ym) set.add(ym.year);
+    set.add(year);
+    return [...set].sort((a, b) => a - b);
+  }, [currentYear, initial, year]);
+
+  // 그룹·연도·월 변경 시 시즌명 자동 제안 (사용자가 직접 수정하지 않은 경우만)
+  useEffect(() => {
+    if (!isOpen || isEdit || nameManual) return;
+    setName(suggestName(groupId, year, month));
+  }, [isOpen, isEdit, nameManual, groupId, year, month]);
+
+  const { startDot, endDot } = useMemo(() => {
+    if (periodReadonly && initial) return { startDot: initial.startAt, endDot: initial.endAt };
+    return seasonRange(year, month);
+  }, [periodReadonly, initial, year, month]);
 
   const nameValid = name.trim().length >= 1 && name.trim().length <= 50;
-  const dateValid = !!startAt && !!computedEndDot;
-  // v1.8 — 인라인 에러 메시지
   const nameError = nameTouched && name.trim().length === 0 ? '시즌명을 입력하세요' : null;
-  const startError = startTouched && !startAt ? '시작일시를 선택하세요' : null;
 
-  // 동일 그룹의 다른 시즌과 기간 겹침 검증 (1개월 고정으로 충돌 검증 단순화)
-  const conflict = useMemo(() => {
-    if (!dateValid) return false;
-    const startDot = fromLocalInput(startAt);
-    return existingSeasons.some((s) => {
+  // ① 지난 월 차단 — 선택 연·월이 현재 연·월보다 이전이면 생성 불가 (현재·미래만)
+  // 진행중·종료 시즌 수정(연·월 readonly)은 검사 제외
+  const isPastMonth = useMemo(() => {
+    if (periodReadonly) return false;
+    return year < currentYear || (year === currentYear && month < currentMonth);
+  }, [periodReadonly, year, month, currentYear, currentMonth]);
+
+  // ② 동일 월 시즌 존재 — 시즌은 그룹×월 1:1이므로 같은 그룹·같은 월 시즌이 있으면 차단 (수정 시 자기 제외)
+  const sameMonthSeason = useMemo(() => {
+    if (periodReadonly) return undefined;
+    return existingSeasons.find((s) => {
       if (s.artistGroupId !== groupId) return false;
       if (isEdit && initial && s.id === initial.id) return false;
-      // 기간 겹침 판정 — [startDot, computedEndDot] vs [s.startAt, s.endAt]
-      return !(computedEndDot < s.startAt || startDot > s.endAt);
+      const ym = parseYearMonth(s.startAt);
+      return ym?.year === year && ym?.month === month;
     });
-  }, [dateValid, startAt, computedEndDot, groupId, existingSeasons, isEdit, initial]);
+  }, [periodReadonly, existingSeasons, groupId, year, month, isEdit, initial]);
 
-  // 동일 그룹 진행중 시즌 1개 제약 (MD-SEASON §5.2 정합)
-  // 생성 모드에서만 적용. 같은 그룹에 진행중 시즌이 이미 있으면 차단
-  const activeSeasonExists = useMemo(() => {
-    if (isEdit) return false;
-    return existingSeasons.some((s) => s.artistGroupId === groupId && s.status === '진행중');
-  }, [isEdit, groupId, existingSeasons]);
+  // 차단 메시지 — 지난 월 > 동일 월(상태) 우선순위로 하나만 노출
+  const blockMessage = isPastMonth
+    ? '지난 월은 시즌을 생성할 수 없습니다. 현재 또는 이후 월을 선택하세요.'
+    : sameMonthSeason
+      ? sameMonthSeason.status === '진행중'
+        ? '이 달에는 이미 진행중인 시즌이 있습니다.'
+        : sameMonthSeason.status === '예정'
+          ? '이 달에는 이미 예정된 시즌이 등록돼 있습니다.'
+          : '이 달에는 이미 종료된 시즌이 있습니다.'
+      : null;
 
-  const canSubmit = nameValid && dateValid && !conflict && !activeSeasonExists;
+  const canSubmit = nameValid && !isPastMonth && !sameMonthSeason;
 
   const handleSubmit = () => {
     if (!canSubmit) return;
-    onSubmit({
-      artistGroupId: groupId,
-      name: name.trim(),
-      startAt: fromLocalInput(startAt),
-      endAt: computedEndDot,
-    });
+    onSubmit({ artistGroupId: groupId, name: name.trim(), startAt: startDot, endAt: endDot });
   };
 
   return (
@@ -167,77 +186,79 @@ export default function SeasonFormModal({
           )}
         </div>
 
+        {/* 시즌 기간 — 연도 + 월 선택 (시즌 = 1개월) */}
+        <div>
+          <label className="block text-xs font-medium text-gray-600 mb-1">
+            시즌 (연도 · 월) <span className="text-red-500">*</span>
+          </label>
+          {periodReadonly ? (
+            <>
+              <div className="h-10 w-full px-3 inline-flex items-center border border-gray-100 rounded-lg bg-gray-50 text-sm text-gray-700">
+                {year}년 {month}월
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                진행중·종료 시즌은 기간을 변경할 수 없습니다 (보상·정산 데이터 보호)
+              </p>
+            </>
+          ) : (
+            <div className="flex gap-2">
+              <select
+                value={year}
+                onChange={(e) => setYear(Number(e.target.value))}
+                className="h-10 flex-1 px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                {yearOptions.map((y) => (
+                  <option key={y} value={y}>
+                    {y}년
+                  </option>
+                ))}
+              </select>
+              <select
+                value={month}
+                onChange={(e) => setMonth(Number(e.target.value))}
+                className="h-10 flex-1 px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                {MONTHS.map((m) => (
+                  <option key={m} value={m}>
+                    {m}월
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+
         <div>
           <label className="block text-xs font-medium text-gray-600 mb-1">
             시즌명 <span className="text-red-500">*</span>
           </label>
           <input
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              setNameManual(true);
+            }}
             onBlur={() => setNameTouched(true)}
-            placeholder="예: V01D 2026 시즌"
+            placeholder="예: V01D 2026.06 시즌"
             maxLength={50}
             className={`h-10 w-full px-3 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
-              nameError
-                ? 'border-rose-300 focus:ring-rose-500'
-                : 'border-gray-200 focus:ring-indigo-500'
+              nameError ? 'border-rose-300 focus:ring-rose-500' : 'border-gray-200 focus:ring-indigo-500'
             }`}
           />
           {nameError ? (
             <p className="text-xs text-rose-600 mt-1">{nameError}</p>
           ) : (
-            <p className="text-xs text-gray-500 mt-1">1~50자 ({name.length}/50)</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            시작일시 <span className="text-red-500">*</span>
-          </label>
-          {startReadonly ? (
-            <>
-              <div className="h-10 w-full px-3 inline-flex items-center border border-gray-100 rounded-lg bg-gray-50 text-sm text-gray-700">
-                {initial?.startAt ?? '—'}
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                진행중·종료 시즌은 시작일을 변경할 수 없습니다 (보상·정산 데이터 보호)
-              </p>
-            </>
-          ) : (
-            <>
-              <input
-                type="datetime-local"
-                value={startAt}
-                onChange={(e) => setStartAt(e.target.value)}
-                onBlur={() => setStartTouched(true)}
-                className={`h-10 w-full px-3 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
-                  startError
-                    ? 'border-rose-300 focus:ring-rose-500'
-                    : 'border-gray-200 focus:ring-indigo-500'
-                }`}
-              />
-              {startError && (
-                <p className="text-xs text-rose-600 mt-1">{startError}</p>
-              )}
-            </>
+            <p className="text-xs text-gray-500 mt-1">연도·월 선택에 맞춰 자동 제안됩니다. 직접 수정 가능 ({name.length}/50)</p>
           )}
         </div>
 
         <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2">
-          <p className="text-xs text-gray-500 mb-0.5">종료일시 (시작 + 1개월 자동)</p>
-          <p className="text-sm font-medium text-gray-800">{computedEndDot || '시작일시를 선택해 주세요.'}</p>
+          <p className="text-xs text-gray-500 mb-0.5">시즌 기간 (1개월 자동 산출)</p>
+          <p className="text-sm font-medium text-gray-800">{startDot} ~ {endDot}</p>
         </div>
 
-        {conflict && (
-          <p className="text-xs text-rose-600">
-            해당 기간이 같은 그룹의 다른 시즌과 겹칩니다. (그룹별 시즌은 기간 중복 불가)
-          </p>
-        )}
-        {activeSeasonExists && (
-          <p className="text-xs text-rose-600">
-            해당 그룹에 이미 진행중인 시즌이 있습니다. 진행중 시즌은 그룹당 1개만 운영할 수 있습니다.
-          </p>
-        )}
+        {/* 차단 사유는 하나만 노출 — 지난 월 > 동일 월(상태) 우선순위 */}
+        {blockMessage && <p className="text-xs text-rose-600">{blockMessage}</p>}
       </div>
     </Modal>
   );

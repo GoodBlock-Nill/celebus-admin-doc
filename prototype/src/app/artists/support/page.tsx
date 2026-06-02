@@ -9,10 +9,14 @@ import StatCardRow from '@/components/clone/StatCardRow';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import {
-  supportEvents, SUPPORT_GROUPS, SUPPORT_STATUSES,
+  SUPPORT_GROUPS, SUPPORT_STATUSES,
   achieveRate, cheererCount,
   type SupportEvent, type SupportStatus,
 } from '@/mock/support';
+import { useSupportEventStore } from '@/stores/supportEventStore';
+
+// 대시보드 "종료" 카드 = 미달성종료 + 집행취소 묶음 (SUP-101 §2.2)
+const ENDED_STATUSES: SupportStatus[] = ['미달성종료', '집행취소'];
 
 const PAGE_SIZE = 10;
 
@@ -35,19 +39,30 @@ export default function SupportListPage() {
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
 
-  const stats = useMemo(() => ({
-    모집중: supportEvents.filter((e) => e.status === '모집중').length,
-    달성: supportEvents.filter((e) => e.status === '달성').length,
-    집행중: supportEvents.filter((e) => e.status === '집행중').length,
-    완료: supportEvents.filter((e) => e.status === '완료').length,
-    종료: supportEvents.filter((e) => e.status === '미달성종료' || e.status === '집행취소').length,
-  }), []);
+  // 스토어 공유 — 상세에서 상태 변경 시 대시보드·목록 즉시 반영
+  const events = useSupportEventStore((s) => s.events);
 
-  const filtered = useMemo(() => supportEvents
-    .filter((e) => (statusFilter ? e.status === statusFilter : true))
+  const stats = useMemo(() => ({
+    모집중: events.filter((e) => e.status === '모집중').length,
+    달성: events.filter((e) => e.status === '달성').length,
+    집행중: events.filter((e) => e.status === '집행중').length,
+    완료: events.filter((e) => e.status === '완료').length,
+    종료: events.filter((e) => ENDED_STATUSES.includes(e.status)).length,
+  }), [events]);
+
+  // statusFilter는 단일 상태 또는 "종료"(미달성종료+집행취소 묶음)
+  const matchesStatus = (e: SupportEvent) => {
+    if (!statusFilter) return true;
+    if (statusFilter === '종료') return ENDED_STATUSES.includes(e.status);
+    return e.status === statusFilter;
+  };
+
+  const filtered = useMemo(() => events
+    .filter(matchesStatus)
     .filter((e) => (groupFilter ? e.groupName === groupFilter : true))
     .filter((e) => (keyword ? e.titleKo.toLowerCase().includes(keyword.toLowerCase()) : true)),
-  [statusFilter, groupFilter, keyword]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [events, statusFilter, groupFilter, keyword]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -75,12 +90,12 @@ export default function SupportListPage() {
         <StatCardRow label="달성" count={stats.달성} onClick={() => toggleStatus('달성')} active={statusFilter === '달성'} countClassName="text-indigo-600" />
         <StatCardRow label="집행중" count={stats.집행중} onClick={() => toggleStatus('집행중')} active={statusFilter === '집행중'} countClassName="text-amber-600" />
         <StatCardRow label="완료" count={stats.완료} onClick={() => toggleStatus('완료')} active={statusFilter === '완료'} />
-        <StatCardRow label="종료" count={stats.종료} />
+        <StatCardRow label="종료" count={stats.종료} onClick={() => toggleStatus('종료')} active={statusFilter === '종료'} countClassName="text-rose-600" />
       </div>
 
       <div className="flex items-center gap-3 mb-4">
         <div className="relative">
-          <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+          <select value={statusFilter === '종료' ? '' : statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
             className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[150px] focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <option value="">상태(전체)</option>
             {SUPPORT_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}

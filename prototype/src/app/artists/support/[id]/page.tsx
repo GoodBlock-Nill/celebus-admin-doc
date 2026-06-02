@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import ConfirmModal from '@/components/clone/ConfirmModal';
 import { toast } from '@/components/ui/Toast';
-import { getSupportById, cheererCount, type SupportStatus } from '@/mock/support';
+import { cheererCount, type SupportStatus } from '@/mock/support';
+import { useSupportEventStore } from '@/stores/supportEventStore';
 import { statusBadge } from '../page';
 import InfoTab from './_components/InfoTab';
 import CheerListTab from './_components/CheerListTab';
@@ -66,9 +67,12 @@ function actionsFor(status: SupportStatus, refundCount: number, refundDuk: numbe
 export default function SupportDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const event = getSupportById(parseInt(id, 10));
+  // 스토어 공유 — 상태 변경이 대시보드·목록에 즉시 반영
+  const eventId = parseInt(id, 10);
+  const event = useSupportEventStore((s) => s.events.find((e) => e.id === eventId));
+  const setStatus = useSupportEventStore((s) => s.setStatus);
+  const status: SupportStatus = event?.status ?? '임시저장';
   const [tab, setTab] = useState<TabKey>('info');
-  const [status, setStatus] = useState<SupportStatus>(event?.status ?? '임시저장');
   const [openKey, setOpenKey] = useState<string | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [childEditing, setChildEditing] = useState(false);
@@ -90,7 +94,7 @@ export default function SupportDetailPage({ params }: { params: Promise<{ id: st
 
   const confirmAction = () => {
     if (!active) return;
-    setStatus(active.next);
+    setStatus(eventId, active.next);
     setOpenKey(null);
     toast.success(active.toast);
   };

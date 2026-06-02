@@ -104,7 +104,7 @@ URL: `/admins/list/{id}`
 | [계정 잠금] | Active → Locked 전환 (재로그인 차단) | SUPER 전용 |
 | [비활성화] | [CEB-BO-SYS-201-MD-REVOKE] (Phase 8 후속) | SUPER 전용 |
 
-> 시각적 스타일은 피그마 참조
+> 시각적 스타일은 프로토타입 참조
 
 ---
 

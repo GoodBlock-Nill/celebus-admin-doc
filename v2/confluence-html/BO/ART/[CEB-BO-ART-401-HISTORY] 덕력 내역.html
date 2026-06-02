@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>ART — 아티스트 / 덕력 관리</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>버전</td><td>v1.2</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -163,7 +163,7 @@ p {
 <tr><td>그룹</td><td>변동이 귀속된 아티스트 그룹</td></tr>
 <tr><td>출처</td><td>변동 발생 활동 — 획득 탭: 출석 체크·응모권 사용·일일 미션·게임 참여·SNS 공유·Quest 완료·기억저장소 업로드·디지털 굿즈 획득 / 사용 탭: 서포트 응원·독점 콘텐츠 해금</td></tr>
 <tr><td>변동</td><td>획득은 +N DUK (초록) / 사용은 −N DUK (분홍)</td></tr>
-<tr><td>잔액</td><td>해당 그룹 기준 변동 후 잔액</td></tr>
+<tr><td>잔액</td><td>해당 행이 속한 그룹 기준의 변동 후 잔액(그룹별로 독립 누적). 그룹 필터가 "전체"면 각 행은 자기 그룹의 잔액을 그대로 표시하므로, 서로 다른 그룹 행의 잔액은 연속된 단일 잔액이 아니다</td></tr>
 <tr><td>시즌</td><td><strong>획득 탭 전용 컬럼</strong> — 해당 시점 진행 중 시즌명 (시즌이 없으면 "—"). <strong>사용 탭에는 시즌 컬럼이 없다</strong> (미팅 정합 2026-06-02)</td></tr>
 </table>
 <h3>2.4 시각적 스타일</h3>
@@ -235,6 +235,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.2</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>빌드 준비도 정합 — §2.3 잔액 컬럼 표시 규칙 명확화(그룹별 독립 누적, "전체" 그룹 선택 시 행별 잔액은 단일 연속 잔액이 아님). 기간 역전 시 0건 표시(§5.2)는 기존 정의 유지</td></tr>
 <tr><td><strong>v1.1</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — <strong>사용 내역 탭 시즌 컬럼 제거</strong>(획득 탭은 시즌 컬럼 유지). 사용은 시즌 귀속 표기 불필요. §2.1 레이아웃·§2.2·§2.3 정합</td></tr>
 <tr><td>v1.0</td><td>2026.05.27</td><td>@Nill Yoo</td><td>초안 작성</td></tr>
 </table>

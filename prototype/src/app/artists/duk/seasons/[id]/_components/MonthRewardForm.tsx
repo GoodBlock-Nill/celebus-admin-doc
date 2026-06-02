@@ -4,11 +4,11 @@ import { useRef, useState } from 'react';
 import { ChevronDownIcon, ChevronRightIcon, LockClosedIcon, PencilSquareIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { toast } from '@/components/ui/Toast';
 import type { DukLangText, DukRewardPrize, DukRewardTargetType, DukRewardTier } from '@/mock/duk';
-import PrizeForm, { PrizeSummary } from './PrizeForm';
+import PrizeForm from './PrizeForm';
 
 // [CEB-BO-ART-401-DETAIL] §2.5 — 시즌 보상 설정 폼 (시즌 = 1개월, 시즌당 1건)
 // - 잠금 사유는 부모(page.tsx)가 시즌 상태 × 정산을 종합해 lockReason으로 전달
-// - lockReason !== null: 조회만 (PrizeSummary). 사유별 라벨·아이콘·색상 분기
+// - lockReason !== null: 조회만 (입력 폼을 비활성 상태로 그대로 노출). 사유별 라벨·아이콘·색상 분기
 // - lockReason === null: 편집 가능 (1구간 = 복수 상품 nested + PrizeForm 5종 분기)
 // 미팅 정합 2026-06-02: 월 단위 시즌으로 전환 — "월별" 12개 아코디언 → 시즌 단일 보상
 
@@ -222,21 +222,39 @@ export default function MonthRewardForm({
                   : '설정된 보상 구간이 없습니다.'}
               </p>
             ) : (
-              tiers.map((tier) => (
-                <div key={tier.id} className="border-l-2 border-gray-300 pl-3">
-                  <p className="text-xs font-semibold text-gray-600 mb-2">
-                    {tier.targetType === '등수' && `${tier.targetValue}위`}
-                    {tier.targetType === '퍼센트' && `상위 ${tier.targetValue}%`}
-                    {tier.targetType === '등수범위' && `${tier.targetValue}위`}
-                    <span className="ml-2 font-normal text-gray-400">· 상품 {tier.prizes.length}개</span>
-                  </p>
-                  <ul className="space-y-1.5">
-                    {tier.prizes.map((p) => (
-                      <li key={p.id}>
-                        <PrizeSummary prize={p} />
-                      </li>
+              // 잠금 상태: 기존 입력 폼을 비활성(회색)으로 그대로 노출 (요약 텍스트 아님, DETAIL §2.6)
+              tiers.map((tier, tIdx) => (
+                <div key={tier.id} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                  <div className="flex items-end gap-2 mb-4">
+                    <div className="w-28">
+                      <label className="block text-xs font-medium text-gray-600 mb-1">대상 기준</label>
+                      <select
+                        value={tier.targetType}
+                        disabled
+                        className="h-10 w-full px-2 pr-7 border border-gray-200 rounded-lg text-sm bg-gray-100 text-gray-500 cursor-not-allowed"
+                      >
+                        {TARGET_TYPES.map((tt) => (
+                          <option key={tt} value={tt}>{tt}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex-1">
+                      <label className="block text-xs font-medium text-gray-600 mb-1">값</label>
+                      <input
+                        value={tier.targetValue}
+                        disabled
+                        className="h-10 w-full px-3 border border-gray-200 rounded-lg text-sm bg-gray-100 text-gray-500 cursor-not-allowed"
+                      />
+                    </div>
+                    <span className="h-10 inline-flex items-center text-xs text-gray-500 mx-2">
+                      구간 {tIdx + 1} · 상품 {tier.prizes.length}개
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    {tier.prizes.map((prize) => (
+                      <PrizeForm key={prize.id} prize={prize} readonly onChange={() => {}} onRemove={() => {}} />
                     ))}
-                  </ul>
+                  </div>
                 </div>
               ))
             )}

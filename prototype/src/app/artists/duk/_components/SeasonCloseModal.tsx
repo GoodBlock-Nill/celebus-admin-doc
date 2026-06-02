@@ -30,8 +30,8 @@ export default function SeasonCloseModal({ target, onClose, onConfirm }: Props) 
             <span className="font-semibold">{target.artistGroupName} - {target.name}</span> 시즌을 종료합니다.
           </p>
           <ul className="space-y-1.5 text-sm text-gray-600 list-disc pl-5">
-            <li>정산 완료된 월의 보상은 확정 보존됩니다.</li>
-            <li>미정산 월의 보상 설정은 보존되나 신규 적립/소비가 발생하지 않습니다.</li>
+            <li>정산 완료된 보상은 확정 보존됩니다.</li>
+            <li>미정산 시 보상 설정은 보존되나 신규 적립/소비가 발생하지 않습니다.</li>
             <li>시즌 랭킹은 확정 보존되며 신규 적립/소비는 다음 시즌에 귀속됩니다.</li>
           </ul>
           <p className="text-sm font-medium text-rose-600">

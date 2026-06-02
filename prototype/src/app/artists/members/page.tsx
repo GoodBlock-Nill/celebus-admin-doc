@@ -16,7 +16,7 @@ type SearchTarget = 'member' | 'group';
 
 export default function MembersListPage() {
   const router = useRouter();
-  const [statusFilter, setStatusFilter] = useState('Active');
+  const [statusFilter, setStatusFilter] = useState('');
   const [searchTarget, setSearchTarget] = useState<SearchTarget>('member');
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
@@ -29,9 +29,16 @@ export default function MembersListPage() {
       // 검색대상=그룹명: 멤버의 소속 그룹명으로 검색 (보유 관계 데이터 한도)
       return (m.groups ?? []).some((g) => g.name.includes(keyword));
     });
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  // 필터 변경 등으로 현재 페이지가 총 페이지 수를 초과하면 마지막 페이지로 보정
+  const safePage = Math.min(page, totalPages);
+  const paged = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
+  // 검색·필터 적용 여부 (Empty 문구 분기용)
+  const isFilterActive = Boolean(statusFilter) || Boolean(keyword);
+  const emptyMessage = isFilterActive ? '검색 결과가 없습니다.' : '등록된 멤버가 없습니다.';
+
+  // 카운터 클릭: 같은 값 재클릭 시 전체로 토글
   const toggleStatus = (s: string) => { setStatusFilter((prev) => (prev === s ? '' : s)); setPage(1); };
 
   return (
@@ -115,10 +122,10 @@ export default function MembersListPage() {
         ]}
         rows={paged}
         onRowClick={(m) => router.push(`/artists/members/${m.id}?tab=info`)}
-        emptyMessage="등록된 멤버가 없습니다."
+        emptyMessage={emptyMessage}
       />
 
-      <SimplePagination page={page} totalPages={totalPages || 1} onChange={setPage} />
+      <SimplePagination page={safePage} totalPages={totalPages} onChange={setPage} />
     </div>
   );
 }

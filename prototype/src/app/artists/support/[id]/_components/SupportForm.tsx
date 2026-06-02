@@ -17,7 +17,7 @@ interface FormState {
   endAt: string;
   imageUrl: string;
   // 아티스트 홈 카드 (미팅 정합 2026-06-02) — 서포트가 아티스트 홈에 노출되는 카드
-  cardBannerUrl: string;
+  cardImageUrl: string;
   cardTitleKo: string; cardTitleEn: string; cardTitleJp: string;
   cardSubtitleKo: string; cardSubtitleEn: string; cardSubtitleJp: string;
   // 유의사항 (응원 전 안내·환불 조건 등)
@@ -54,7 +54,7 @@ export default function SupportForm({
     targetDuk: initial?.targetDuk ? String(initial.targetDuk) : '',
     startAt: toInputDt(initial?.startAt), endAt: toInputDt(initial?.endAt),
     imageUrl: initial?.imageUrl ?? '',
-    cardBannerUrl: initial?.cardBannerUrl ?? '',
+    cardImageUrl: initial?.cardImageUrl ?? '',
     cardTitleKo: initial?.cardTitleKo ?? '', cardTitleEn: initial?.cardTitleEn ?? '', cardTitleJp: initial?.cardTitleJp ?? '',
     cardSubtitleKo: initial?.cardSubtitleKo ?? '', cardSubtitleEn: initial?.cardSubtitleEn ?? '', cardSubtitleJp: initial?.cardSubtitleJp ?? '',
     noticeKo: initial?.noticeKo ?? '', noticeEn: initial?.noticeEn ?? '', noticeJp: initial?.noticeJp ?? '',
@@ -79,7 +79,7 @@ export default function SupportForm({
   const datesOk = !!form.startAt && !!form.endAt && form.endAt > form.startAt;
   const groupOk = !!form.groupName;
   const imageOk = form.imageUrl.trim() !== '';
-  const cardBannerOk = form.cardBannerUrl.trim() !== '';
+  const cardImageOk = form.cardImageUrl.trim() !== '';
   const cardTitleOk = form.cardTitleKo.trim() && form.cardTitleEn.trim() && form.cardTitleJp.trim();
 
   const missing: string[] = [];
@@ -91,7 +91,7 @@ export default function SupportForm({
   // 대표 이미지·아티스트 홈 카드는 생성 시 필수 (수정 모드는 기존 이벤트 보호 위해 미강제)
   if (mode === 'create') {
     if (!imageOk) missing.push('대표 이미지');
-    if (!cardBannerOk) missing.push('아티스트 홈 카드 배너');
+    if (!cardImageOk) missing.push('아티스트 홈 카드 이미지');
     if (!cardTitleOk) missing.push('아티스트 홈 카드 타이틀(한/영/일)');
   }
   const valid = missing.length === 0;
@@ -202,28 +202,29 @@ export default function SupportForm({
       </Section>
 
       {/* E. 아티스트 홈 카드 — 생성 시 입력 (미팅 정합 2026-06-02) */}
-      <Section title="E. 아티스트 홈 카드" desc="서포트가 아티스트 홈에 노출되는 카드입니다. 배너·타이틀은 생성 시 필수, 서브타이틀은 선택.">
+      <Section title="E. 아티스트 홈 카드" desc="서포트가 아티스트 홈에 노출되는 카드입니다. 카드 이미지(1:1 아이콘)·타이틀은 생성 시 필수, 서브타이틀은 선택.">
         <div className="space-y-4">
-          <Field label="카드 배너" required>
-            {form.cardBannerUrl ? (
+          <Field label="카드 이미지 (1:1 아이콘)" required>
+            {form.cardImageUrl ? (
               <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-12 h-12 rounded bg-indigo-50 flex items-center justify-center shrink-0">
-                    <PhotoIcon className="w-6 h-6 text-indigo-400" />
+                  <div className="w-16 h-16 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0 aspect-square">
+                    <PhotoIcon className="w-7 h-7 text-indigo-400" />
                   </div>
-                  <p className="text-sm font-medium text-gray-900 truncate">{form.cardBannerUrl}</p>
+                  <p className="text-sm font-medium text-gray-900 truncate">{form.cardImageUrl}</p>
                 </div>
                 {!readOnly && (
-                  <button type="button" onClick={() => set('cardBannerUrl', '')}
+                  <button type="button" onClick={() => set('cardImageUrl', '')}
                     className="h-9 px-3 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 shrink-0">제거</button>
                 )}
               </div>
             ) : (
               <button type="button" disabled={readOnly}
-                onClick={() => set('cardBannerUrl', `support-card-${form.groupName || 'image'}.jpg`)}
+                onClick={() => set('cardImageUrl', `support-card-${form.groupName || 'image'}.jpg`)}
                 className="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-400 transition disabled:opacity-60 disabled:cursor-not-allowed">
                 <PhotoIcon className="w-8 h-8 mx-auto text-gray-300 mb-1.5" />
-                <p className="text-sm text-gray-600">홈 카드 배너 업로드</p>
+                <p className="text-sm text-gray-600">홈 카드 아이콘 업로드</p>
+                <p className="text-xs text-gray-400 mt-0.5">1:1 비율 · 카드 안에 전체가 표시됩니다</p>
               </button>
             )}
           </Field>

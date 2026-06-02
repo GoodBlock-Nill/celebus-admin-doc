@@ -18,11 +18,17 @@ export default function AgenciesPage() {
   const [addOpen, setAddOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<ArtistAgency | null>(null);
 
+  // '소속사 없음' 센티넬은 시스템 기본값 — 수정/삭제 불가하므로 리스트에서 제외
   const filtered = artistAgencies
+    .filter((a) => !a.isSentinel)
     .filter((a) => (statusFilter ? a.status === statusFilter : true))
     .filter((a) => (keyword ? a.operatorName.includes(keyword) : true));
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages);
+  const paged = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  const isFilterActive = Boolean(statusFilter) || Boolean(keyword);
+  const emptyMessage = isFilterActive ? '검색 결과가 없습니다.' : '등록된 소속사가 없습니다.';
 
   return (
     <div>
@@ -82,10 +88,10 @@ export default function AgenciesPage() {
         ]}
         rows={paged}
         onRowClick={(a) => setEditTarget(a)}
-        emptyMessage="검색 결과가 없습니다."
+        emptyMessage={emptyMessage}
       />
 
-      <SimplePagination page={page} totalPages={totalPages || 1} onChange={setPage} />
+      <SimplePagination page={safePage} totalPages={totalPages} onChange={setPage} />
 
       <AgencyModal isOpen={addOpen} onClose={() => setAddOpen(false)} mode="add" />
       <AgencyModal isOpen={editTarget !== null} onClose={() => setEditTarget(null)} mode="edit" agency={editTarget} />

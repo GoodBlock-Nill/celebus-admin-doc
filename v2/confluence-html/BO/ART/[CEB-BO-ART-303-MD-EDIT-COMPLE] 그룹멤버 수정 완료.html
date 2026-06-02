@@ -84,8 +84,8 @@ p {
 <tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
 <tr><td>기능영역(Epic)</td><td>ART — 아티스트 그룹</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
-<tr><td>최근 업데이트</td><td>2026-05-28</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>비고</td><td>운영 BO 실측 정합. 멤버 관리 화면에서 [수정하기] 시 노출되는 저장 확인 모달</td></tr>
 </table>
 <hr>
@@ -106,14 +106,14 @@ p {
 <tr><td>버튼</td><td>[다시 돌아가기] / [확인]</td></tr>
 </table>
 <blockquote>
-<p>시각적 스타일은 피그마 참조</p>
+<p>시각적 스타일은 프로토타입 참조</p>
 </blockquote>
 <hr>
 <h2>3. 기능 설명</h2>
 <table>
 <tr><th>버튼</th><th>동작</th></tr>
 <tr><td>다시 돌아가기</td><td>모달 닫고 멤버 관리 화면 유지</td></tr>
-<tr><td>확인</td><td>추가·제거·포지션 변경 일괄 저장 → 완료 토스트 → 그룹 상세로 이동</td></tr>
+<tr><td>확인</td><td>추가·제거·포지션 변경 일괄 저장 → 완료 토스트 "그룹 멤버를 저장했습니다." → 그룹 상세 (멤버 탭)로 이동</td></tr>
 </table>
 <hr>
 <h2>4. 로직·플로우</h2>
@@ -128,12 +128,13 @@ p {
 <table>
 <tr><th>화면 ID</th><th>관계</th></tr>
 <tr><td>CEB-BO-ART-303-EDIT</td><td>진입 ([수정하기])</td></tr>
-<tr><td>CEB-BO-ART-301</td><td>[확인] 시 이동</td></tr>
+<tr><td>CEB-BO-ART-303</td><td>[확인] 시 이동 (멤버 탭)</td></tr>
 </table>
 <hr>
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>완료 토스트 문구 명시("그룹 멤버를 저장했습니다.")·[확인] 이동을 그룹 상세 멤버 탭([CEB-BO-ART-303])으로 정정</td></tr>
 <tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>운영 BO 실측 정합 신규 작성. 문구 "확인 버튼을 누르면 수정사항이 적용됩니다 / 계속 진행하시겠습니까?", 버튼 [다시 돌아가기]/[확인]</td></tr>
 </table>
 

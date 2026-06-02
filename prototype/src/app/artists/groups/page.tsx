@@ -20,7 +20,7 @@ export default function GroupsPage() {
   const router = useRouter();
   const groups = useArtistGroupStore((s) => s.groups);
   const toggleExposure = useArtistGroupStore((s) => s.toggleExposure);
-  const [statusFilter, setStatusFilter] = useState('Active');
+  const [statusFilter, setStatusFilter] = useState('');
   const [searchTarget, setSearchTarget] = useState<SearchTarget>('group');
   const [keyword, setKeyword] = useState('');
   const [page, setPage] = useState(1);
@@ -40,9 +40,11 @@ export default function GroupsPage() {
       // 검색대상=멤버명: 해당 그룹 소속 멤버명으로 검색 (보유 관계 데이터 한도)
       return getGroupMembers(g.id).some((m) => m.name.toLowerCase().includes(kw));
     });
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
+  const safePage = Math.min(page, totalPages); // 필터/검색으로 페이지 초과 시 클램프
+  const paged = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
+  // 카운터 클릭: 해당 상태로 필터, 이미 활성 상태 재클릭 시 전체로 해제(토글)
   const toggleStatus = (s: string) => { setStatusFilter((prev) => (prev === s ? '' : s)); setPage(1); };
 
   const handleToggleExposure = (g: ArtistGroup, e: React.MouseEvent) => {
@@ -148,7 +150,7 @@ export default function GroupsPage() {
         emptyMessage={keyword || statusFilter ? '검색 결과가 없습니다.' : '등록된 그룹이 없습니다.'}
       />
 
-      <SimplePagination page={page} totalPages={totalPages || 1} onChange={setPage} />
+      <SimplePagination page={safePage} totalPages={totalPages} onChange={setPage} />
     </div>
   );
 }

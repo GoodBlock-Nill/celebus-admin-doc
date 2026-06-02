@@ -18,11 +18,20 @@ export default function PositionsPage() {
   const [addOpen, setAddOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<ArtistPosition | null>(null);
 
-  const filtered = artistPositions
+  // 정렬: 사용 먼저(미사용 뒤), 그다음 운영자 노출명 가나다순
+  const sorted = [...artistPositions].sort((a, b) => {
+    if (a.status !== b.status) return a.status === '사용' ? -1 : 1;
+    return a.operatorName.localeCompare(b.operatorName, 'ko');
+  });
+  const filtered = sorted
     .filter((p) => (statusFilter ? p.status === statusFilter : true))
     .filter((p) => (keyword ? p.operatorName.includes(keyword) : true));
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
+  const safePage = Math.min(page, totalPages);
+  const paged = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
+
+  // 중복 검사용 기존 운영자 노출명 (수정 시 자기 자신 제외는 모달에서 처리)
+  const existingNames = artistPositions.map((p) => p.operatorName);
 
   return (
     <div>
@@ -85,10 +94,10 @@ export default function PositionsPage() {
         emptyMessage="검색 결과가 없습니다."
       />
 
-      <SimplePagination page={page} totalPages={totalPages || 1} onChange={setPage} />
+      <SimplePagination page={safePage} totalPages={totalPages} onChange={setPage} />
 
-      <PositionModal isOpen={addOpen} onClose={() => setAddOpen(false)} mode="add" />
-      <PositionModal isOpen={editTarget !== null} onClose={() => setEditTarget(null)} mode="edit" position={editTarget} />
+      <PositionModal isOpen={addOpen} onClose={() => setAddOpen(false)} mode="add" existingNames={existingNames} />
+      <PositionModal isOpen={editTarget !== null} onClose={() => setEditTarget(null)} mode="edit" position={editTarget} existingNames={existingNames} />
     </div>
   );
 }

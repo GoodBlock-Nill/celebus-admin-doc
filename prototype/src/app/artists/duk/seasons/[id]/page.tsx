@@ -10,8 +10,9 @@ import SeasonFormModal from '../../_components/SeasonFormModal';
 import SeasonCloseModal from '../../_components/SeasonCloseModal';
 import {
   dukSeasons as initialSeasons,
-  getMonthlyRewards,
-  getSettledMonthCount,
+  getSeasonReward,
+  getSeasonSettledAt,
+  isSeasonSettled,
   type DukSeason,
   type DukSeasonStatus,
 } from '@/mock/duk';
@@ -64,18 +65,18 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
     );
   }
 
-  // 시즌 = 1개월: 보상 1건 (months 배열 길이 1)
-  const months = getMonthlyRewards(seasonId);
-  const settledCount = getSettledMonthCount(seasonId);
-  const isSettled = settledCount > 0;
+  // 시즌 = 1개월, 시즌당 1건 정산 (미팅 정합 2026-06-02). 단일 보상 세트
+  const seasonReward = getSeasonReward(seasonId);
+  const isSettled = isSeasonSettled(seasonId);
+  const settledAt = getSeasonSettledAt(seasonId);
 
   // 시즌 상태 × 정산 여부로 잠금 사유 결정 (DETAIL §2.6 — 3분기)
-  // 정산 완료 → 조회만 / 종료(미정산) → 조회만 / 예정·진행중(미정산) → 편집
-  const resolveLockReason = (settled: boolean): LockReason => {
-    if (settled) return 'settled';
-    if (season.status === '종료') return 'season-ended';
-    return null;
-  };
+  // 정산 완료 → 잠금(조회) / 종료(미정산) → 잠금(조회) / 예정·진행중(미정산) → 편집
+  const lockReason: LockReason = isSettled
+    ? 'settled'
+    : season.status === '종료'
+      ? 'season-ended'
+      : null;
 
   const handleEdit = (data: {
     artistGroupId: number;
@@ -177,7 +178,9 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
           </div>
           <div className="flex">
             <dt className="w-24 text-gray-500">정산 여부</dt>
-            <dd className="flex-1 text-gray-800">{isSettled ? '정산 완료' : '미정산'}</dd>
+            <dd className="flex-1 text-gray-800">
+              {isSettled ? `정산 완료 (${settledAt})` : '미정산'}
+            </dd>
           </div>
         </dl>
       </section>
@@ -216,18 +219,15 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
             시즌(1개월) 보상을 설정합니다. 예정·진행중(미정산) 시즌은 편집 가능하며, 정산 완료·종료 시즌은 잠금 상태로 조회만 가능합니다. 1구간에 상품 N개(배송·현장·BIVE·응모권·덕력 5종)를 함께 지급할 수 있습니다.
           </p>
           <div className="space-y-3">
-            {months.map((m) => (
-              <MonthRewardForm
-                key={m.yearMonth}
-                yearMonth={m.yearMonth}
-                initialTiers={m.tiers}
-                lockReason={resolveLockReason(m.isLocked)}
-                settledAt={m.settledAt}
-                defaultExpanded
-                groupName={season.artistGroupName}
-                seasonName={season.name}
-              />
-            ))}
+            <MonthRewardForm
+              yearMonth={season.startAt.slice(0, 7)}
+              initialTiers={seasonReward.tiers}
+              lockReason={lockReason}
+              settledAt={settledAt}
+              defaultExpanded
+              groupName={season.artistGroupName}
+              seasonName={season.name}
+            />
           </div>
         </section>
       ) : (

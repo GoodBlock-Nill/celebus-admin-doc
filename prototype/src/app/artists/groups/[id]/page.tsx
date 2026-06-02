@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { GlobeAltIcon } from '@heroicons/react/24/outline';
@@ -8,8 +8,10 @@ import Breadcrumb from '@/components/layout/Breadcrumb';
 import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import { toast } from '@/components/ui/Toast';
-import { getGroupMembers } from '@/mock/artists';
+import { getGroupMembers, type GroupMemberView, type ArtistStatus } from '@/mock/artists';
 import { useArtistGroupStore } from '@/stores/artistGroupStore';
+
+const MEMBER_PAGE_SIZE = 10;
 
 const TABS = [
   { key: 'info', label: '기본정보' },
@@ -36,12 +38,20 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
   const toggleExposure = useArtistGroupStore((s) => s.toggleExposure);
   const [tab, setTab] = useState<TabKey>(sp.tab === 'members' ? 'members' : 'info');
   const [memberKeyword, setMemberKeyword] = useState('');
+  const [memberStatus, setMemberStatus] = useState<'' | ArtistStatus>('');
+  const [memberPage, setMemberPage] = useState(1);
 
   const members = getGroupMembers(gid);
 
-  if (!group) {
-    return <div className="text-center py-20 text-gray-500">그룹을 찾을 수 없습니다.</div>;
-  }
+  // 존재하지 않는 그룹 → 토스트 후 리스트로 리다이렉트 (인라인 텍스트 대체)
+  useEffect(() => {
+    if (!group) {
+      toast.error('존재하지 않는 그룹입니다.');
+      router.replace('/artists/groups');
+    }
+  }, [group, router]);
+
+  if (!group) return null;
 
   const active = group.status === 'Active';
   const exposed = group.exploreExposed ?? true;
@@ -51,6 +61,12 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
     toast.success(`'${group.name}'의 탐색 노출을 ${next ? '켬' : '끔'}(으)로 변경했습니다.`);
   };
 
+  const handleToggleStatus = () => {
+    const next: ArtistStatus = active ? 'Inactive' : 'Active';
+    setStatus(group.id, next);
+    toast.success(`그룹을 ${next === 'Active' ? '활성' : '비활성'} 처리했습니다.`);
+  };
+
   const handleTab = (k: TabKey) => {
     setTab(k);
     const url = new URL(window.location.href);
@@ -58,7 +74,12 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
     window.history.replaceState({}, '', url.toString());
   };
 
-  const filteredMembers = members.filter((m) => (memberKeyword ? m.name.includes(memberKeyword) : true));
+  const filteredMembers = members
+    .filter((m) => (memberStatus ? m.status === memberStatus : true))
+    .filter((m) => (memberKeyword ? m.name.includes(memberKeyword) : true));
+  const memberTotalPages = Math.ceil(filteredMembers.length / MEMBER_PAGE_SIZE) || 1;
+  const memberSafePage = Math.min(memberPage, memberTotalPages);
+  const pagedMembers = filteredMembers.slice((memberSafePage - 1) * MEMBER_PAGE_SIZE, memberSafePage * MEMBER_PAGE_SIZE);
 
   return (
     <div>
@@ -117,7 +138,7 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">로고</p>
-                  <p className="text-sm font-medium text-gray-900">{group.logoSrc ? '등록됨' : '등록됨'}</p>
+                  <p className="text-sm font-medium text-gray-900">{group.logoSrc ? '등록됨' : '미등록'}</p>
                 </div>
               </div>
 
@@ -127,7 +148,7 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
                   <p className="text-xs text-gray-500">{active ? '노출 중' : '비노출'}</p>
                 </div>
                 <button
-                  onClick={() => setStatus(group.id, active ? 'Inactive' : 'Active')}
+                  onClick={handleToggleStatus}
                   role="switch"
                   aria-checked={active}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${active ? 'bg-emerald-500' : 'bg-gray-200'}`}
@@ -217,10 +238,14 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="relative">
-              <select className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[140px]">
-                <option>상태(전체)</option>
-                <option>Active</option>
-                <option>Inactive</option>
+              <select
+                value={memberStatus}
+                onChange={(e) => { setMemberStatus(e.target.value as '' | ArtistStatus); setMemberPage(1); }}
+                className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[140px] focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">상태(전체)</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
               </select>
               <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
@@ -229,33 +254,35 @@ export default function GroupDetailPage({ params, searchParams }: { params: Prom
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 value={memberKeyword}
-                onChange={(e) => setMemberKeyword(e.target.value)}
+                onChange={(e) => { setMemberKeyword(e.target.value); setMemberPage(1); }}
                 placeholder="멤버명 입력"
                 className="h-10 pl-9 pr-3 border border-gray-200 rounded-lg text-sm w-[260px] focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
-            <button onClick={() => setMemberKeyword('')} className="h-10 px-4 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">초기화</button>
+            <button onClick={() => { setMemberKeyword(''); setMemberStatus(''); setMemberPage(1); }} className="h-10 px-4 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">초기화</button>
           </div>
 
-          <SimpleTable
+          <SimpleTable<GroupMemberView>
             columns={[
-              { key: 'status', label: '상태', width: '90px', render: () => (
-                <span className="inline-flex rounded-full px-2.5 py-1 text-xs font-medium bg-emerald-500 text-white">Active</span>
+              { key: 'status', label: '상태', width: '90px', render: (m) => (
+                <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${m.status === 'Active' ? 'bg-emerald-500 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                  {m.status === 'Active' ? 'Active' : 'Inactive'}
+                </span>
               )},
-              { key: 'name', label: '멤버명', width: '180px', render: (m: typeof members[number]) => (
+              { key: 'name', label: '멤버명', width: '180px', render: (m) => (
                 <button onClick={() => router.push(`/artists/members/${m.id}?tab=info`)} className="font-medium text-gray-900 hover:text-indigo-600">
                   {m.name}
                 </button>
               )},
-              { key: 'position', label: '포지션', width: '140px', render: (m: typeof members[number]) => m.position || '-' },
+              { key: 'position', label: '포지션', width: '140px', render: (m) => m.position || '-' },
               { key: 'birthday', label: '생년월일', width: '130px' },
               { key: 'gender', label: '성별', width: '80px' },
               { key: 'registeredAt', label: '등록 일시', width: '160px' },
             ]}
-            rows={filteredMembers}
+            rows={pagedMembers}
             emptyMessage="검색 결과가 없습니다."
           />
-          <SimplePagination page={1} totalPages={1} onChange={() => {}} />
+          <SimplePagination page={memberSafePage} totalPages={memberTotalPages} onChange={setMemberPage} />
         </div>
       )}
     </div>

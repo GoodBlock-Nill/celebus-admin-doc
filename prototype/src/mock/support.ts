@@ -64,7 +64,8 @@ export interface SupportEvent {
   endAt: string; // 마감일시 (KST)
   imageUrl?: string;
   // 아티스트 홈 카드 (미팅 정합 2026-06-02) — 서포트가 아티스트 홈에 노출되는 카드
-  cardBannerUrl?: string;
+  // cardImageUrl: 1:1 비율 아이콘 이미지(홈 카드 안에 전체 표시)
+  cardImageUrl?: string;
   cardTitleKo?: string; cardTitleEn?: string; cardTitleJp?: string;
   cardSubtitleKo?: string; cardSubtitleEn?: string; cardSubtitleJp?: string;
   // 유의사항 (응원 전 안내·환불 조건 등, 다국어)
@@ -167,7 +168,7 @@ export const supportEvents: SupportEvent[] = [
     descKo: '데뷔 200일을 기념해 강남역 지하철 광고를 함께 만들어요!', descEn: 'Celebrate V01D 200 days with a Gangnam subway ad!', descJp: 'デビュー200日記念、江南駅の地下鉄広告を一緒に！',
     targetDuk: 2000000, accumulatedDuk: 1240000,
     startAt: '2026.05.20 10:00', endAt: '2026.06.10 23:59', imageUrl: 'support-v01d-16x9.jpg',
-    cardBannerUrl: 'support-card-v01d.jpg',
+    cardImageUrl: 'support-card-v01d.jpg',
     cardTitleKo: '데뷔 200일 지하철 광고', cardTitleEn: '200th Day Subway Ad', cardTitleJp: 'デビュー200日 地下鉄広告',
     cardSubtitleKo: '강남역에서 함께 축하해요', cardSubtitleEn: "Celebrate at Gangnam", cardSubtitleJp: '江南駅で一緒にお祝い',
     noticeKo: '응원한 덕력은 목표 미달성·취소 시 전액 반환됩니다. 응원 후 취소는 불가합니다.',

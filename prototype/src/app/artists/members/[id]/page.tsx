@@ -1,11 +1,15 @@
 'use client';
 
-import { use, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import SimpleTable from '@/components/clone/SimpleTable';
+import SimplePagination from '@/components/clone/SimplePagination';
+import { toast } from '@/components/ui/Toast';
 import { getMemberById, getGroupById } from '@/mock/artists';
+
+const GROUP_PAGE_SIZE = 10;
 
 const TABS = [
   { key: 'info', label: '기본정보' },
@@ -49,9 +53,25 @@ export default function MemberDetailPage({ params, searchParams }: { params: Pro
   const [tab, setTab] = useState<TabKey>(sp.tab === 'groups' ? 'groups' : 'info');
   const [active, setActive] = useState(true);
   const [groupKeyword, setGroupKeyword] = useState('');
+  const [groupStatus, setGroupStatus] = useState('');
+  const [groupPage, setGroupPage] = useState(1);
 
   const member = getMemberById(parseInt(id, 10));
-  if (!member) return <div className="text-center py-20 text-gray-500">멤버를 찾을 수 없습니다.</div>;
+
+  // 운영 상태 초기값을 멤버 상태에 맞춤 (활성 = Active)
+  useEffect(() => {
+    if (member) setActive(member.status === 'Active');
+  }, [member]);
+
+  // 존재하지 않는 멤버 ID 접근 시 안내 후 리스트로 복귀
+  useEffect(() => {
+    if (!member) {
+      toast.error('존재하지 않는 멤버입니다.');
+      router.replace('/artists/members');
+    }
+  }, [member, router]);
+
+  if (!member) return null;
 
   const handleTab = (k: TabKey) => {
     setTab(k);
@@ -60,21 +80,42 @@ export default function MemberDetailPage({ params, searchParams }: { params: Pro
     window.history.replaceState({}, '', url.toString());
   };
 
-  const genderLabel = member.gender === '여자' ? '여성' : member.gender === '남자' ? '남성' : member.gender;
+  // 운영 상태 토글 (활성 ↔ 비활성) — 즉시 토스트
+  const toggleActive = () => {
+    setActive((prev) => {
+      const next = !prev;
+      toast.success(next ? '멤버를 활성 처리했습니다.' : '멤버를 비활성 처리했습니다.');
+      return next;
+    });
+  };
+
+  const genderLabel = member.gender; // mock 저장값이 이미 남성/여성
 
   // 소속그룹: member.groups → 그룹 조회로 컬럼 보강
-  const groupRows = (member.groups ?? []).map((g) => {
+  const allGroupRows = (member.groups ?? []).map((g) => {
     const full = getGroupById(g.id);
     return {
       id: g.id,
-      status: full?.status ?? 'Active',
+      status: full?.status ?? ('Active' as const),
       name: g.name,
       position: g.position || '-',
       memberCount: full?.memberCount ?? '-',
       description: full?.description ?? '-',
       updatedAt: full?.updatedAt ?? '-',
     };
-  }).filter((r) => (groupKeyword ? r.name.includes(groupKeyword) : true));
+  });
+  const filteredGroupRows = allGroupRows
+    .filter((r) => (groupStatus ? r.status === groupStatus : true))
+    .filter((r) => (groupKeyword ? r.name.includes(groupKeyword) : true));
+  const groupTotalPages = Math.max(1, Math.ceil(filteredGroupRows.length / GROUP_PAGE_SIZE));
+  const groupSafePage = Math.min(groupPage, groupTotalPages);
+  const pagedGroupRows = filteredGroupRows.slice((groupSafePage - 1) * GROUP_PAGE_SIZE, groupSafePage * GROUP_PAGE_SIZE);
+  const isGroupFilterActive = Boolean(groupStatus) || Boolean(groupKeyword);
+  const groupEmptyMessage = allGroupRows.length === 0
+    ? '소속된 그룹이 없습니다.'
+    : isGroupFilterActive
+      ? '검색 결과가 없습니다.'
+      : '소속된 그룹이 없습니다.';
 
   return (
     <div>
@@ -119,9 +160,9 @@ export default function MemberDetailPage({ params, searchParams }: { params: Pro
               <div className="flex items-center justify-between rounded-lg bg-white/70 px-3 py-2.5 mb-4">
                 <div>
                   <p className="text-sm font-medium text-gray-900">운영 상태</p>
-                  <p className="text-xs text-gray-500">{active ? '노출 중' : '비노출'}</p>
+                  <p className="text-xs text-gray-500">{active ? '활성' : '비활성'}</p>
                 </div>
-                <button onClick={() => setActive(!active)} role="switch" aria-checked={active}
+                <button onClick={toggleActive} role="switch" aria-checked={active}
                   className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${active ? 'bg-emerald-500' : 'bg-gray-200'}`}>
                   <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${active ? 'translate-x-5' : 'translate-x-0.5'}`} />
                 </button>
@@ -203,37 +244,42 @@ export default function MemberDetailPage({ params, searchParams }: { params: Pro
         <div>
           <div className="flex items-center gap-3 mb-4">
             <div className="relative">
-              <select className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[140px]">
-                <option>상태(전체)</option>
-                <option>Active</option>
-                <option>Inactive</option>
+              <select
+                value={groupStatus}
+                onChange={(e) => { setGroupStatus(e.target.value); setGroupPage(1); }}
+                className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[140px] focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">상태(전체)</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
               </select>
               <ChevronUpDownIcon className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
             <div className="flex-1" />
             <div className="relative">
               <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input value={groupKeyword} onChange={(e) => setGroupKeyword(e.target.value)} placeholder="그룹명 입력"
+              <input value={groupKeyword} onChange={(e) => { setGroupKeyword(e.target.value); setGroupPage(1); }} placeholder="그룹명 입력"
                 className="h-10 pl-9 pr-3 border border-gray-200 rounded-lg text-sm w-[260px] focus:outline-none focus:ring-2 focus:ring-indigo-500" />
             </div>
-            <button onClick={() => setGroupKeyword('')} className="h-10 px-4 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">초기화</button>
+            <button onClick={() => { setGroupStatus(''); setGroupKeyword(''); setGroupPage(1); }} className="h-10 px-4 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">초기화</button>
           </div>
           <SimpleTable
             columns={[
-              { key: 'status', label: '상태', width: '90px', render: (r: typeof groupRows[number]) => (
+              { key: 'status', label: '상태', width: '90px', render: (r: typeof pagedGroupRows[number]) => (
                 <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${r.status === 'Active' ? 'bg-emerald-500 text-white' : 'bg-red-100 text-red-700'}`}>{r.status}</span>
               )},
-              { key: 'name', label: '소속 그룹명', width: '200px', render: (r: typeof groupRows[number]) => (
-                <button onClick={() => router.push(`/artists/groups/${r.id}?tab=info`)} className="font-medium text-gray-900 hover:text-indigo-600">{r.name}</button>
+              { key: 'name', label: '소속 그룹명', width: '200px', render: (r: typeof pagedGroupRows[number]) => (
+                <button onClick={() => router.push(`/artists/groups/${r.id}`)} className="font-medium text-gray-900 hover:text-indigo-600">{r.name}</button>
               )},
               { key: 'position', label: '그룹내 포지션', width: '130px' },
               { key: 'memberCount', label: '멤버 수', width: '90px' },
-              { key: 'description', label: '설명', render: (r: typeof groupRows[number]) => <span className="line-clamp-1 text-gray-600">{r.description}</span> },
+              { key: 'description', label: '설명', render: (r: typeof pagedGroupRows[number]) => <span className="line-clamp-1 text-gray-600">{r.description}</span> },
               { key: 'updatedAt', label: '업데이트 일시', width: '160px' },
             ]}
-            rows={groupRows}
-            emptyMessage="검색 결과가 없습니다."
+            rows={pagedGroupRows}
+            emptyMessage={groupEmptyMessage}
           />
+          <SimplePagination page={groupSafePage} totalPages={groupTotalPages} onChange={setGroupPage} />
         </div>
       )}
     </div>

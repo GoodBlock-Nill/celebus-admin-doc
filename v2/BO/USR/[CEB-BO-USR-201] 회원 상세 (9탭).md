@@ -120,7 +120,7 @@ URL: `/members/{id}?tab={tab}` (Default tab=basic)
 - 빈 데이터 시 Empty 메시지 (탭별 안내)
 - placeholder 탭(프로젝트·Fans): "해당 영역 운영 시작 시 활성화됩니다."
 
-> 시각적 스타일은 피그마 참조
+> 시각적 스타일은 프로토타입 참조
 
 ---
 

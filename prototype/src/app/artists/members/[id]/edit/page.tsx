@@ -1,14 +1,23 @@
 'use client';
 
-import { use } from 'react';
+import { use, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import MemberForm from '../../MemberForm';
+import { toast } from '@/components/ui/Toast';
 import { getMemberById } from '@/mock/artists';
 
 export default function MemberEditPage({ params }: { params: Promise<{ id: string }> }) {
+  const router = useRouter();
   const { id } = use(params);
   const member = getMemberById(parseInt(id, 10));
-  if (!member) {
-    return <div className="text-center py-20 text-gray-500">멤버를 찾을 수 없습니다.</div>;
-  }
+
+  useEffect(() => {
+    if (!member) {
+      toast.error('존재하지 않는 멤버입니다.');
+      router.replace('/artists/members');
+    }
+  }, [member, router]);
+
+  if (!member) return null;
   return <MemberForm mode="edit" member={member} />;
 }

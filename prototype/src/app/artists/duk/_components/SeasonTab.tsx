@@ -76,7 +76,7 @@ export default function SeasonTab() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-gray-500">
-          그룹별 랭킹 시즌을 생성합니다. 시즌 row를 클릭하면 상세 페이지로 이동하여 월별 보상을 설정할 수 있습니다. 같은 그룹에 진행중 시즌은 1개만 운영됩니다.
+          그룹별 랭킹 시즌(1개월 단위)을 생성합니다. 시즌 row를 클릭하면 상세 페이지로 이동하여 보상을 설정할 수 있습니다. 같은 그룹에 진행중 시즌은 1개만 운영됩니다.
         </p>
         <button
           onClick={() => setRegisterOpen(true)}
