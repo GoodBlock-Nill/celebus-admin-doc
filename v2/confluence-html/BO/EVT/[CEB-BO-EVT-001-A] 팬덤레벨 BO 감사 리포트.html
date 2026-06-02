@@ -112,8 +112,7 @@ p {
 <ul>
 <li>EVT-000/101/201/401 4개 문서가 데이터 모델 enum과 내부 일관성을 갖췄다(감사 시점). 이후 §5.1 재설계로 보상 모델과 라이프사이클을 운영 현실에 맞게 단순화했다.</li>
 <li>생성 → 곡선 설정 → 보상 설정 → 게시 → 레벨업·지급 → 추첨 → 정산 → 종료의 운영 전 과정이 BO 화면에 매핑된다.</li>
-<li>본 감사로 발견된 명세 갭(§5)은 모두 정정 완료.</li>
-</ul>
+<li>본 감사로 발견된 명세 갭(§5)은 모두 정정 완료.</li></ul>
 <hr>
 <h2>2. BO 프로토타입 정합 — ⚠️ 약 45% (핵심 발견)</h2>
 <p><code>prototype/src/app/artists/fandom/</code> 는 <strong>명세 개정(2026-05-29) 이전 버전(v1.0, 2026-05-28) 기준</strong>으로 제작되어, 운영 데이터 모델 정합 개정 내용이 미반영 상태다.</p>
@@ -134,8 +133,7 @@ p {
 <h3>근거 (프로토타입 구버전 증거)</h3>
 <ul>
 <li><code>prototype/src/mock/fandom.ts</code>: <code>FandomStatus = '임시저장' | '진행중' | '종료'</code> (3단계), <code>HistoryType = '덕력 기여' | '레벨업 보상 지급' | '래플 당첨' | '시즌 정산'</code> (구 변동 내역), <code>FandomReward</code>에 보상명 단일·참조/배송/파일/순서 필드 부재.</li>
-<li><code>prototype/src/app/artists/fandom/[id]/page.tsx</code>: 탭3 라벨 "변동 내역", 헤더에 상태 전환 버튼·시즌 상태 뱃지 없음.</li>
-</ul>
+<li><code>prototype/src/app/artists/fandom/[id]/page.tsx</code>: 탭3 라벨 "변동 내역", 헤더에 상태 전환 버튼·시즌 상태 뱃지 없음.</li></ul>
 <p>→ <strong>운영 데이터 모델 정합(2026-05-29) 이후 프로토타입 전면 개정 필요</strong> (§6 후속 권고 1).</p>
 <hr>
 <h2>3. 앱 ↔ BO 커버리지 — 약 80%</h2>
@@ -185,8 +183,7 @@ p {
 <p>추가 심층 검토 결과, 보상 설정이 <strong>기존 BO 보상 SSOT를 파악하지 못한 채 재발명</strong>됐음이 확인됐다 (운영 플로우 = 🔴 곤란). 근본 원인:</p>
 <ul>
 <li>BIVE 민팅 이벤트의 "연결 기능"에 <strong>"아티스트 키우기 보상" 트리거가 이미 존재</strong> ([CEB-BO-BIVE-203]) → 팬덤 레벨업 → BIVE 자동 민팅 아키텍처가 인프라에 이미 있음. 그런데 EVT는 "참조 연결: 바이브"를 라벨로만 둠.</li>
-<li>RFL 래플 = 추첨 SSOT인데 EVT가 자체 [래플 추첨 실행]을 신설 → 추첨 이원화.</li>
-</ul>
+<li>RFL 래플 = 추첨 SSOT인데 EVT가 자체 [래플 추첨 실행]을 신설 → 추첨 이원화.</li></ul>
 <p>사용자 결정(2026-05-29)으로 보상 모델을 <strong>대폭 단순화·SSOT 연계 재설계</strong>:</p>
 <table>
 <tr><th>정정</th><th>내용</th></tr>

@@ -92,8 +92,14 @@ function convertMarkdown(md) {
   let tableHeader = true;
   let inCode = false;
   let inBlockquote = false;
-  let inList = false;
-  let listType = '';
+  const listStack = []; // 중첩 리스트 스택 — 각 레벨 { indent, type }
+
+  const closeAllLists = () => {
+    while (listStack.length) {
+      const l = listStack.pop();
+      html += `</li></${l.type}>\n`;
+    }
+  };
 
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
@@ -114,24 +120,23 @@ function convertMarkdown(md) {
       continue;
     }
 
-    // Close list if not a list item
-    if (inList && !line.match(/^[\s]*[-*]/) && !line.match(/^[\s]*\d+\./) && line.trim() !== '') {
-      html += listType === 'ul' ? '</ul>\n' : '</ol>\n';
-      inList = false;
+    // Close lists if this line is not a list item
+    if (listStack.length && !line.match(/^\s*[-*]\s/) && !line.match(/^\s*\d+\.\s/) && line.trim() !== '') {
+      closeAllLists();
     }
 
     // Empty line
     if (line.trim() === '') {
       if (inBlockquote) { html += '</blockquote>\n'; inBlockquote = false; }
       if (inTable) { html += '</table>\n'; inTable = false; tableHeader = true; }
-      if (inList) { html += listType === 'ul' ? '</ul>\n' : '</ol>\n'; inList = false; }
+      if (listStack.length) { closeAllLists(); }
       continue;
     }
 
     // Horizontal rule
     if (line.match(/^---+\s*$/)) {
       if (inTable) { html += '</table>\n'; inTable = false; tableHeader = true; }
-      if (inList) { html += listType === 'ul' ? '</ul>\n' : '</ol>\n'; inList = false; }
+      if (listStack.length) { closeAllLists(); }
       html += '<hr>\n';
       continue;
     }
@@ -179,28 +184,36 @@ function convertMarkdown(md) {
       tableHeader = true;
     }
 
-    // Unordered list
-    if (line.match(/^[\s]*[-*]\s/)) {
-      if (!inList || listType !== 'ul') {
-        if (inList) html += listType === 'ul' ? '</ul>\n' : '</ol>\n';
-        html += '<ul>\n';
-        inList = true;
-        listType = 'ul';
-      }
-      html += `<li>${convertInline(line.replace(/^[\s]*[-*]\s/, ''))}</li>\n`;
-      continue;
-    }
+    // List item (ordered/unordered) — indentation-aware nesting
+    const ulItem = line.match(/^(\s*)[-*]\s+(.*)$/);
+    const olItem = line.match(/^(\s*)\d+\.\s+(.*)$/);
+    if (ulItem || olItem) {
+      const m = ulItem || olItem;
+      const indent = m[1].replace(/\t/g, '    ').length;
+      const type = ulItem ? 'ul' : 'ol';
+      const content = convertInline(m[2]);
 
-    // Ordered list
-    const olMatch = line.match(/^[\s]*(\d+)\.\s(.+)/);
-    if (olMatch) {
-      if (!inList || listType !== 'ol') {
-        if (inList) html += listType === 'ul' ? '</ul>\n' : '</ol>\n';
-        html += '<ol>\n';
-        inList = true;
-        listType = 'ol';
+      if (listStack.length === 0) {
+        html += `<${type}>\n<li>${content}`;
+        listStack.push({ indent, type });
+      } else if (indent > listStack[listStack.length - 1].indent) {
+        // 더 깊은 들여쓰기 → 현재 열린 <li> 안에 중첩 리스트 시작
+        html += `\n<${type}>\n<li>${content}`;
+        listStack.push({ indent, type });
+      } else {
+        // 같거나 얕은 들여쓰기 → 더 깊은 레벨을 먼저 닫는다
+        while (listStack.length > 1 && indent < listStack[listStack.length - 1].indent) {
+          const l = listStack.pop();
+          html += `</li></${l.type}>\n`;
+        }
+        html += '</li>\n';
+        const top = listStack[listStack.length - 1];
+        if (top.type !== type) {
+          html += `</${top.type}>\n<${type}>\n`;
+          listStack[listStack.length - 1] = { indent: top.indent, type };
+        }
+        html += `<li>${content}`;
       }
-      html += `<li>${convertInline(olMatch[2])}</li>\n`;
       continue;
     }
 
@@ -211,7 +224,7 @@ function convertMarkdown(md) {
   if (inCode) html += '</code></pre>\n';
   if (inBlockquote) html += '</blockquote>\n';
   if (inTable) html += '</table>\n';
-  if (inList) html += (listType === 'ul' ? '</ul>\n' : '</ol>\n');
+  closeAllLists();
 
   return html;
 }

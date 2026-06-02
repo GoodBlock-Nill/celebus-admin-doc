@@ -40,6 +40,7 @@ import {
   BellAlertIcon,
   ArrowTrendingUpIcon,
   HeartIcon,
+  FaceSmileIcon,
 } from '@heroicons/react/24/outline';
 
 interface SubMenu {
@@ -124,6 +125,13 @@ const ADMIN_MENU: MenuItem[] = [
       { label: '응모권 관리', href: '/rft/policy', icon: Cog6ToothIcon },
     ],
   },
+  {
+    label: '기억저장소',
+    icon: FaceSmileIcon,
+    children: [
+      { label: '감정 이모지 관리', href: '/memory/emoji', icon: FaceSmileIcon },
+    ],
+  },
   { label: '재무', href: '/finance', icon: BanknotesIcon },
   {
     label: '관리자',
@@ -138,7 +146,7 @@ const ADMIN_MENU: MenuItem[] = [
 export default function AdminSidebar() {
   const pathname = usePathname();
   const [expanded, setExpanded] = useState<Set<string>>(
-    new Set(['앱', '아티스트', 'BIVE', '게임존', '에피소드', '래플', '관리자']),
+    new Set(['앱', '아티스트', 'BIVE', '게임존', '에피소드', '래플', '기억저장소', '관리자']),
   );
 
   const toggle = (label: string) =>

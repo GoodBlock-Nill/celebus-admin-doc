@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-MEM-501-MD-APPLY] 변경사항 적용 확인</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-MEM-501-MD-APPLY] 변경사항 적용 확인</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-MEM-501-MD-APPLY</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>MEM — 기억저장소 / 감정 이모지</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td>/memory/emoji</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 기억저장소 &gt; 감정 이모지 관리</td></tr>
+<tr><td>비고</td><td>감정 이모지 세트의 미적용 변경을 앱에 적용(게시)하기 전 확인 모달. [CEB-BO-MEM-501]에서 호출.</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>확인 모달 규격, 토스트, 활동 로그</td></tr>
+<tr><td>[CEB-BO-MEM-501] 감정 이모지 관리</td><td>호출 화면·적용(게시) 정책</td></tr>
+<tr><td>[CEB-000] 공통 정책 §7.5 감정 이모지 규격</td><td>앱 반영 규칙</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>감정 이모지 세트의 <strong>미적용 변경(작업본)</strong>을 앱에 <strong>적용(게시)</strong>하기 전 확인하는 모달이다. 적용 즉시 회원 앱에 반영되므로 운영자 확인을 거친다.</p>
+<hr>
+<h2>2. UI 설명</h2>
+<table>
+<tr><th>영역</th><th>내용</th></tr>
+<tr><td>헤더</td><td>"변경사항 적용"</td></tr>
+<tr><td>본문</td><td>"{아티스트명}의 감정 이모지 변경 {N}건을 앱에 적용할까요?" + "적용 즉시 회원 앱에 반영됩니다."</td></tr>
+<tr><td>푸터</td><td>[취소] / [적용]</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 프로토타입 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>요소</th><th>동작</th></tr>
+<tr><td>[적용]</td><td>작업본을 앱 반영본으로 게시 + 모달 닫기 + 완료 토스트. 마지막 적용 일시 갱신</td></tr>
+<tr><td>[취소] / 배경</td><td>모달 닫기 (적용 안 함, 작업본 유지)</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<ul>
+<li>적용은 <strong>선택한 아티스트 세트 전체를 원자적으로</strong> 앱에 반영한다(순서·사용여부·추가·수정·삭제 일괄).</li>
+<li>적용 전까지 앱은 <strong>직전 적용본</strong>을 노출한다(편집 즉시 반영 아님).</li>
+<li>미적용 변경이 0건이면 호출 화면의 [변경사항 적용] 버튼이 비활성이므로 본 모달은 진입하지 않는다.</li>
+<li>적용 후 작업본을 되돌리려면 다시 편집해야 한다(적용 자체의 일괄 되돌리기는 [CEB-BO-MEM-501]의 [되돌리기]가 아닌, 적용 전 단계에서만 가능).</li>
+<li>권한은 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li></ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>Default</td><td>적용 대상 아티스트명·변경 건수 표시</td></tr>
+<tr><td>적용 중</td><td>[적용] 비활성</td></tr>
+<tr><td>Error</td><td>Toast (Error) + 모달 유지(작업본 보존)</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>적용</td><td>감정 이모지 세트를 앱에 적용했습니다. (아티스트: {아티스트명}, 변경: {N}건)</td></tr>
+</table>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>적용 실패</td><td>Toast (Error): "적용에 실패했습니다." (작업본 유지)</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-MEM-501</td><td>감정 이모지 관리</td><td>호출 화면</td></tr>
+<tr><td>CEB-MEM-201</td><td>기억 작성 (앱)</td><td>적용 결과 반영 대상</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 감정 이모지 세트 변경사항 적용(게시) 확인 모달 — 작업본을 앱 반영본으로 원자적 게시, 적용 즉시 앱 반영, 마지막 적용 일시 갱신. [CEB-BO-MEM-501] v1.3 정합.</td></tr>
+</table>
+
+</body>
+</html>

@@ -112,13 +112,14 @@ p {
 <h2>2. 화면 구성</h2>
 <h3>2-1. 헤더 (상태별 액션 분기)</h3>
 <ul>
-<li><strong>좌측 (운영 BO 정합, v1.7)</strong>:</li>
+<li><strong>좌측 (운영 BO 정합, v1.7)</strong>:
+<ul>
 <li>Breadcrumb (상단 라인): 홈 › BIVE › 에디션 관리 › 에디션 BIVE 관리 › BIVE 상세</li>
 <li><strong>← 뒤로가기 버튼</strong> + 페이지 제목 "BIVE 상세" + 인라인 작은 상태 배지 (<code>px-2 py-0.5 text-xs</code>, 알약형) — 페이지 제목 우측에 자연스럽게 흐름</li>
-<li>뒤로가기 버튼: ChevronLeftIcon (w-5 h-5), 클릭 시 [102] BIVE 관리로 이동</li>
+<li>뒤로가기 버튼: ChevronLeftIcon (w-5 h-5), 클릭 시 [102] BIVE 관리로 이동</li></ul>
+</li>
 <li>탭 네비게이션 (헤더 아래): "기본정보 | 기능설정 | 민팅관리 | 민팅이력"</li>
-<li>우측 액션 (상태별 분기):</li>
-</ul>
+<li>우측 액션 (상태별 분기):</li></ul>
 <table>
 <tr><th>상태</th><th>헤더 액션</th></tr>
 <tr><td><strong>Draft (초안)</strong></td><td>[삭제] (BIVE 삭제 모달) + [저장] (저장 토스트) + [활성화] (활성화 모달)</td></tr>
@@ -130,19 +131,16 @@ p {
 <li>Active: <code>bg-emerald-100 text-emerald-700</code></li>
 <li>Draft: <code>bg-amber-100 text-amber-700</code></li>
 <li>Inactive: <code>bg-red-100 text-red-700</code></li>
-<li>사이즈: 작은 알약형 (페이지 제목 옆 자연스러운 인라인 배치, 페이지 제목과 비슷한 높이로 baseline 정렬)</li>
-</ul>
+<li>사이즈: 작은 알약형 (페이지 제목 옆 자연스러운 인라인 배치, 페이지 제목과 비슷한 높이로 baseline 정렬)</li></ul>
 <h3>2-2. 기본정보 탭 (Draft에서 수정 가능, Active/Inactive에서 read-only)</h3>
 <ul>
 <li><strong>BIVE 명칭</strong> (Read-only): <code>{아티스트명} {등급}-{등급번호}</code> 자동 생성/갱신</li>
-<li>나머지 필드는 [CEB-BO-BIVE-202-CREATE] 등록 화면과 동일 (아티스트 그룹·아티스트·등급·등급번호·설명 + <strong>미디어 타입</strong> + 타입별 메인·보조 파일)</li>
-</ul>
+<li>나머지 필드는 [CEB-BO-BIVE-202-CREATE] 등록 화면과 동일 (아티스트 그룹·아티스트·등급·등급번호·설명 + <strong>미디어 타입</strong> + 타입별 메인·보조 파일)</li></ul>
 <p><strong>미디어 카드 (우측, v1.8 — 미디어 타입 분기)</strong>:</p>
 <ul>
 <li>우측 패널 상단에 <strong>미디어 타입 배지</strong> (<code>이미지</code> / <code>영상</code> / <code>음성</code>, 회색 알약형) 노출</li>
 <li>카드 컨테이너 안에 <strong>세로 스택 2장</strong> (각 박스 1열 1장씩, 메인 위·보조 아래)</li>
-<li>카드 하단 라벨은 타입별로 분기:</li>
-</ul>
+<li>카드 하단 라벨은 타입별로 분기:</li></ul>
 <table>
 <tr><th>타입</th><th>메인 카드 라벨</th><th>보조 카드 라벨</th><th>미리보기 UI</th></tr>
 <tr><td>이미지</td><td>"메인 이미지"</td><td>"서브 이미지"</td><td>정사각형 이미지 미리보기 (둘 다)</td></tr>
@@ -152,8 +150,7 @@ p {
 <ul>
 <li><strong>보조 카드 미등록 시</strong>: 회색 dashed border placeholder + 안내 ("서브 이미지 미등록 (선택)" / "썸네일 미등록")</li>
 <li>이미지 타입 서브 이미지는 미등록 허용. 영상·음성 타입 썸네일은 등록 화면에서 필수 검증되므로 정상 데이터에서는 항상 표시</li>
-<li>카드 크기가 우측 패널 폭 전체로 충분히 크게 노출되어 미리보기 가시성 확보</li>
-</ul>
+<li>카드 크기가 우측 패널 폭 전체로 충분히 크게 노출되어 미리보기 가시성 확보</li></ul>
 <p><strong>관리 정보 카드</strong> (우측 하단):</p>
 <table>
 <tr><th>라벨</th><th>값</th></tr>
@@ -167,8 +164,7 @@ p {
 <ul>
 <li>보내기 (Send) ON/OFF</li>
 <li>Mix ON/OFF</li>
-<li>Pick ON/OFF</li>
-</ul>
+<li>Pick ON/OFF</li></ul>
 <h3>2-4. 민팅관리 탭 (모든 상태에서 조회만)</h3>
 <p>본 BIVE가 보상으로 연결된 민팅 이벤트 현황 조회.</p>
 <p><strong>필터 바</strong>:</p>
@@ -176,8 +172,7 @@ p {
 <li>상태 (전체/초안/활성/중지/종료)</li>
 <li>민팅 타입 (전체/Event/Ticket/Mix/Pick/상품)</li>
 <li>연결 일시 정렬 (빠른순 기본 / 오래된 순)</li>
-<li>검색 입력 "캠페인명 입력" + [조회]</li>
-</ul>
+<li>검색 입력 "캠페인명 입력" + [조회]</li></ul>
 <p><strong>테이블</strong>:</p>
 <table>
 <tr><th>컬럼</th><th>설명</th></tr>
@@ -199,8 +194,7 @@ p {
 <li>검색 기준 드롭다운: 닉네임(기본) / 지갑주소</li>
 <li>검색 입력: placeholder 선택값에 따라 변경</li>
 <li>정렬: 민팅일시 최근 순 (기본)</li>
-<li>[조회] 버튼</li>
-</ul>
+<li>[조회] 버튼</li></ul>
 <p><strong>테이블</strong>:</p>
 <table>
 <tr><th>컬럼</th><th>설명</th></tr>
@@ -230,8 +224,7 @@ p {
 <p><strong>Active → Inactive 전환 조건</strong>:</p>
 <ul>
 <li>본 BIVE가 보상으로 연결된 민팅 이벤트가 <strong>없거나 모두 종료 상태</strong>여야 함</li>
-<li>활성/중지 상태 캠페인에 연결되어 있으면 비활성 불가 (토스트로 안내)</li>
-</ul>
+<li>활성/중지 상태 캠페인에 연결되어 있으면 비활성 불가 (토스트로 안내)</li></ul>
 <h2>5. 검증 규칙</h2>
 <table>
 <tr><th>규칙</th><th>내용</th></tr>

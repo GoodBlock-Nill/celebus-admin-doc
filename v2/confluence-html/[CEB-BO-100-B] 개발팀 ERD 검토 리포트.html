@@ -164,16 +164,14 @@ p {
 <li><strong>FQ (팬퀘스트)</strong>: 에피소드 유형 <code>FAN_QUEST</code>로 연결. 단 스토리 퀘스트 자체는 별도 영역.</li>
 <li><strong>게임존 (PM/ST)</strong>: 에피소드 유형 <code>PREDICTION_MARKET</code>, <code>SURVIVAL_TRIVIA</code>로 연결. 스토리 퀘스트가 게임존 콘텐츠를 미션으로 묶음.</li>
 <li><strong>BIVE (민팅)</strong>: <code>bive_reward_yn=true</code> 시 <code>minting_event_id</code> FK — 에피소드 완료 보상으로 BIVE NFT 자동 민팅.</li>
-<li><strong>DUK (덕력)</strong>: <code>reward_fan_point</code> — 에피소드 완료 시 덕력 보상.</li>
-</ul>
+<li><strong>DUK (덕력)</strong>: <code>reward_fan_point</code> — 에피소드 완료 시 덕력 보상.</li></ul>
 <h3>3.5 권장 조치 — 합의 완료 (2026.05.08 + 05.09)</h3>
 <ol>
 <li>✅ <strong>신규 영역 가이드 작성</strong> — [CEB-BO-011] v1.1 (에피소드 데이터 모델 포함) 작성 완료.</li>
 <li>✅ <strong>[CEB-BO-100] 마스터 §1.2 14번째 영역 SQ 추가</strong> — v1.5에서 완료, v1.7에서 SQ 정정.</li>
 <li>✅ <strong>CLAUDE.md L69 영역 목록에 <code>SQ</code> 추가</strong> — v2 메타 갱신 완료.</li>
 <li>✅ <strong>멀티아티스트 정책 — 아티스트별 확정</strong> — <code>story_quest.artist_group_id NOT NULL</code> 추가 요청 ([CEB-BO-100-C] §2.2).</li>
-<li>⭐ <strong>v1.7 SQ 구조 정정 4건</strong> — [CEB-BO-100-C] §2.3 (image_url + bive_reward_yn + minting_event_id NULL).</li>
-</ol>
+<li>⭐ <strong>v1.7 SQ 구조 정정 4건</strong> — [CEB-BO-100-C] §2.3 (image_url + bive_reward_yn + minting_event_id NULL).</li></ol>
 <hr>
 <h2>4. 멀티아티스트 외래키 검증</h2>
 <h3>4.1 정합 ✅ — <code>artist_group_id</code> 보유 13 테이블</h3>
@@ -287,46 +285,45 @@ source_id INT
 <li><strong>근거</strong>: APP [CEB-DUK-101] "통합 누적" 정책과 정합 + 운영 단순성.</li>
 <li><strong>개발팀 ERD 수정 요청</strong>: <code>fan_power_season.artist_group_id</code>를 <strong>NULL 허용</strong> 또는 제거.</li>
 <li><strong>가이드 영향</strong>: [CEB-BO-100] §3 표현 명확화 ("글로벌 시즌 마스터 + 아티스트별 독립 랭킹 산출").</li>
-<li><strong>APP 영향</strong>: 변경 없음 (현재 정책 유지).</li>
-</ul>
+<li><strong>APP 영향</strong>: 변경 없음 (현재 정책 유지).</li></ul>
 <h3>9.2 팬덤 레벨 시즌제 — <strong>시즌별 리셋 (ERD 따르기)</strong></h3>
 <ul>
 <li><strong>결정</strong>: 시즌 종료 시 회원 팬덤 레벨도 리셋. ERD <code>fandom_level_season</code> 구조 그대로 채택.</li>
 <li><strong>근거</strong>: ERD가 이미 시즌제 구조로 설계됨 (<code>fandom_level.fandom_level_season_id</code> FK + 시즌별 보상 작업 큐).</li>
 <li><strong>개발팀 ERD</strong>: 현재 그대로 유지. 변경 없음.</li>
 <li><strong>가이드 영향</strong>: [CEB-BO-EVT-201] 또는 [CEB-BO-EVT-101]에 시즌별 리셋 정책 명시. [CEB-BO-100] §3 갱신.</li>
-<li><strong>APP 영향</strong>: ⚠️ <strong>APP [CEB-EVT-201] "영구 누적" 정책을 "시즌별 리셋"으로 갱신 필요</strong>.</li>
-</ul>
+<li><strong>APP 영향</strong>: ⚠️ <strong>APP [CEB-EVT-201] "영구 누적" 정책을 "시즌별 리셋"으로 갱신 필요</strong>.</li></ul>
 <h3>9.3 챌린지 영역 코드 — <strong>SQ (Story Quest)</strong></h3>
 <ul>
 <li><strong>결정</strong>: 영역 코드 = <code>SQ</code>. 가이드 ID 패턴 = <code>[CEB-BO-SQ-*]</code>.</li>
 <li><strong>근거</strong>: ERD 테이블명 <code>story_quest</code>와 일치 → 의미 명확. 운영 용어 "챌린지"는 별칭으로 유지.</li>
 <li><strong>신규 영역 가이드 작성</strong>: <code>[CEB-BO-011] 스토리 퀘스트(SQ) 영역 가이드</code> + 화면 가이드.</li>
-<li><strong>메타 갱신 필요</strong>: [CEB-BO-000] §1.2 13개 → 14개 영역, [CEB-BO-001] §2 14개, CLAUDE.md L69 영역 목록.</li>
-</ul>
+<li><strong>메타 갱신 필요</strong>: [CEB-BO-000] §1.2 13개 → 14개 영역, [CEB-BO-001] §2 14개, CLAUDE.md L69 영역 목록.</li></ul>
 <h3>9.4 SQ 멀티아티스트 정책 — <strong>아티스트별 스토리 퀘스트</strong></h3>
 <ul>
 <li><strong>결정</strong>: 스토리 퀘스트 자체가 아티스트별. V01D 스토리·iKON 스토리 따로 운영.</li>
 <li><strong>근거</strong>: 팬덤 몰입감 + 아티스트별 독립 콘텐츠 제작 자유도.</li>
 <li><strong>개발팀 ERD 수정 요청</strong>: <code>story_quest.artist_group_id INT UNSIGNED NOT NULL</code> 추가.</li>
 <li><strong>가이드 정책 등급</strong>: 🔴 Critical (헤더 토글 + 페이지 필터 모두 적용, EXTERNAL_ARTIST 자기 아티스트만 R/W).</li>
-<li><strong>[CEB-BO-100] §3 정책 매트릭스에 SQ 행 신규 추가</strong> 필요.</li>
-</ul>
+<li><strong>[CEB-BO-100] §3 정책 매트릭스에 SQ 행 신규 추가</strong> 필요.</li></ul>
 <h3>9.5 SQ 구조 정정 — <strong>에피소드 + 수량 제약 + 메인 이미지 + BIVE 보상 토글</strong> ⭐ v1.2 신규</h3>
 <ul>
-<li><strong>결정</strong> (2026.05.09):</li>
+<li><strong>결정</strong> (2026.05.09):
+<ul>
 <li>운영 용어 "챕터" → <strong>"에피소드"</strong> 통일 (테이블명 <code>story_quest_chapter</code> 유지)</li>
 <li>수량 제약: 스토리당 최대 5 에피소드 / 에피소드당 최대 10 미션 (응용 레벨)</li>
 <li>에피소드 메인 이미지 등록 가능</li>
-<li>에피소드별 BIVE 보상 on/off 토글</li>
+<li>에피소드별 BIVE 보상 on/off 토글</li></ul>
+</li>
 <li><strong>근거</strong>: 운영팀 콘텐츠 기획·BO UX 정합성. 1~5장 시리즈 형식이 K-pop 팬덤 콘텐츠 일반 패턴.</li>
-<li><strong>개발팀 ERD 수정 요청</strong>: [CEB-BO-100-C] §2.3 — <code>story_quest_chapter</code> ALTER 3건</li>
+<li><strong>개발팀 ERD 수정 요청</strong>: [CEB-BO-100-C] §2.3 — <code>story_quest_chapter</code> ALTER 3건
+<ul>
 <li><code>ADD COLUMN image_url varchar(500) NULL</code></li>
 <li><code>ADD COLUMN bive_reward_yn boolean NOT NULL DEFAULT false</code></li>
-<li><code>MODIFY COLUMN minting_event_id int unsigned NULL</code> (기존 <code>NOT NULL DEFAULT auto_increment</code> 오류 정정)</li>
+<li><code>MODIFY COLUMN minting_event_id int unsigned NULL</code> (기존 <code>NOT NULL DEFAULT auto_increment</code> 오류 정정)</li></ul>
+</li>
 <li><strong>가이드 영향</strong>: [CEB-BO-011] v1.1 (에피소드 데이터 모델), [CEB-BO-SQ-202·202-CREATE] v1.1, [CEB-BO-100] v1.7 §3 SQ 행.</li>
-<li><strong>prototype 영향</strong>: <code>mock/sq.ts</code> v1.1 + <code>/sq/[id]</code> 화면 v1.1 적용 완료.</li>
-</ul>
+<li><strong>prototype 영향</strong>: <code>mock/sq.ts</code> v1.1 + <code>/sq/[id]</code> 화면 v1.1 적용 완료.</li></ul>
 <h3>9.6 합의 결과 요약 표 ⭐ v1.2 — 5건으로 확장</h3>
 <table>
 <tr><th>#</th><th>의제</th><th>결정</th><th>영향 — ERD</th><th>영향 — 가이드</th><th>영향 — APP</th></tr>

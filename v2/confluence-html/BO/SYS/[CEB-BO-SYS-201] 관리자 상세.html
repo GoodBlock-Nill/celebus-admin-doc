@@ -105,13 +105,11 @@ p {
 <li>권한 그룹 부여·변경 (SUPER 전용)</li>
 <li>만료일 연장 (EXTERNAL_ARTIST 6개월 만료 정책)</li>
 <li>IP 화이트리스트 관리 (SUPER + EXTERNAL_ARTIST)</li>
-<li>세션 강제 종료·계정 잠금·비활성화</li>
-</ul>
+<li>세션 강제 종료·계정 잠금·비활성화</li></ul>
 <h3>진입 경로</h3>
 <ul>
 <li>[CEB-BO-SYS-101] 관리자 리스트 &gt; Row 클릭</li>
-<li>(자기 정보 수정) 관리자 본인 프로필 메뉴</li>
-</ul>
+<li>(자기 정보 수정) 관리자 본인 프로필 메뉴</li></ul>
 <p>URL: <code>/admins/list/{id}</code></p>
 <hr>
 <h2>2. UI 설명</h2>
@@ -120,8 +118,7 @@ p {
 <li>Breadcrumb: <code>홈 &gt; 관리자 &gt; 관리자 리스트 &gt; {관리자명}</code></li>
 <li>뒤로가기 (←) → [CEB-BO-SYS-101]</li>
 <li>타이틀: <code>관리자상세 ({관리자명})</code> + 계정상태 Badge</li>
-<li>우측 상단 액션: [수정하기] (Primary, SUPER) / [세션 강제 종료] (Danger, SUPER)</li>
-</ul>
+<li>우측 상단 액션: [수정하기] (Primary, SUPER) / [세션 강제 종료] (Danger, SUPER)</li></ul>
 <h3>2.2 상세 정보 그리드</h3>
 <h4>A. 관리정보 섹션</h4>
 <table>
@@ -176,16 +173,14 @@ p {
 <ul>
 <li>현재 그룹 → 신규 그룹 선택 (Active 그룹만 노출)</li>
 <li>변경 사유 입력 (필수, 200자 KO)</li>
-<li>즉시 반영 + 활동 로그 + 회원 푸시 알림 (자기 권한 변경 안내)</li>
-</ul>
+<li>즉시 반영 + 활동 로그 + 회원 푸시 알림 (자기 권한 변경 안내)</li></ul>
 <h3>3.2 만료 연장 (EXTERNAL_ARTIST)</h3>
 <p>[CEB-BO-000] §3.2: EXTERNAL_ARTIST는 만료일 필수. 기본 6개월, [만료 연장] 클릭 시 모달 → 신규 만료일 선택 + 사유 입력.</p>
 <h3>3.3 세션 강제 종료</h3>
 <ul>
 <li>[세션 강제 종료] 클릭 → 확인 모달</li>
 <li>즉시 세션 무효화 (해당 관리자는 다음 요청 시 로그아웃)</li>
-<li>활동 로그 기록 (사유 입력 필수)</li>
-</ul>
+<li>활동 로그 기록 (사유 입력 필수)</li></ul>
 <h3>3.4 계정 잠금·비활성화</h3>
 <table>
 <tr><th>액션</th><th>동작</th></tr>
@@ -221,15 +216,13 @@ p {
 <ul>
 <li>90일 미접속 → Active → Locked 자동 전환</li>
 <li>활동 로그 기록 (시스템 자동)</li>
-<li>SUPER 재승인 시 Active 복구</li>
-</ul>
+<li>SUPER 재승인 시 Active 복구</li></ul>
 <h3>4.4 EXTERNAL_ARTIST 만료 정책</h3>
 <ul>
 <li>등록 시 만료일 필수 (기본 6개월)</li>
 <li>만료 7일 전 → SUPER + 본인에게 푸시 알림</li>
 <li>만료 시 자동 Inactive 전환</li>
-<li>[만료 연장]으로 갱신 가능</li>
-</ul>
+<li>[만료 연장]으로 갱신 가능</li></ul>
 <hr>
 <h2>5. UI 상태별 처리</h2>
 <p>[CEB-BO-000] §7 표준:</p>

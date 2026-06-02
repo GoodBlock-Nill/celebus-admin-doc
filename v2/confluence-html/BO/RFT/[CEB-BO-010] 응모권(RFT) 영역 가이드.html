@@ -144,8 +144,7 @@ p {
 <ul>
 <li><strong>퀘스트 보상 Quest당 발급량</strong>, <strong>BIVE 혜택 등급별 발급량</strong>, <strong>덕력 시즌 티어·랭킹별 보상량</strong>은 각 SSOT 문서(§4-1)에서 별도 운영 설정값으로 관리. 본 영역에서는 변경할 수 없음.</li>
 <li><strong>PM·ST 게임별 응모권 지급 여부 + 수량</strong>은 <strong>[CEB-BO-RFT-301] §4 발급 정책의 기본값 매트릭스</strong>로 SSOT를 두고, <strong>게임별 오버라이드는 [CEB-BO-RFT-302]가 정의하는 게임 생성 폼(BO-GAM-201-CREATE) 토글</strong>에서 설정.</li>
-<li><strong>GP → 응모권 환율</strong>, <strong>회원당 1일 교환 한도</strong>, <strong>앱내 구매 운영 토글(ON/OFF + 점검 사유)</strong>은 <strong>[CEB-BO-RFT-301] 응모권 발급 정책 화면에서 운영자가 직접 조정</strong>. 변경 즉시 회원 앱에 반영.</li>
-</ul>
+<li><strong>GP → 응모권 환율</strong>, <strong>회원당 1일 교환 한도</strong>, <strong>앱내 구매 운영 토글(ON/OFF + 점검 사유)</strong>은 <strong>[CEB-BO-RFT-301] 응모권 발급 정책 화면에서 운영자가 직접 조정</strong>. 변경 즉시 회원 앱에 반영.</li></ul>
 <h2>5. 정책 상수</h2>
 <p>응모권 영역 운영 정책은 다음과 같다.</p>
 <ul>
@@ -155,8 +154,7 @@ p {
 <li><strong>변동 데이터 영구 보존 (append-only)</strong> — 응모권 변동 로그는 수정·삭제되지 않는다. 모든 발급·사용 이력은 시계열로 영구 보존</li>
 <li><strong>공통 페이지네이션 패턴</strong>: 모든 리스트 테이블에 <strong>페이지당 20건</strong>, <strong>항상 노출</strong>(1페이지일 때도 <code>‹ 1 ›</code> 비활성). <strong>윈도잉 규칙</strong>: 총 페이지 ≤ 7이면 전체 노출, 8 이상이면 <code>1 ... cur-1 cur cur+1 ... last</code> 윈도우 + <code>...</code>. 필터·검색 변경 시 1페이지 자동 리셋 ([CEB-BO-012] §5-2 공통 페이지네이션 정합)</li>
 <li><strong>1일 기준 = KST 자정</strong> (00:00 ~ 23:59:59). 회원당 1일 교환 한도는 매일 자정에 자동 리셋. 환율·한도 모두 [CEB-BO-RFT-301]에서 운영자가 조정</li>
-<li><strong>앱내 구매 운영 토글</strong> — [CEB-BO-RFT-301] §3에서 운영자가 즉시 ON/OFF. OFF 시 앱 Buy-RF-Ticket-001 화면의 [구매하기] 버튼이 [점검중] 텍스트로 비활성. 변경 즉시 회원 앱에 반영(캐시 TTL 60초)</li>
-</ul>
+<li><strong>앱내 구매 운영 토글</strong> — [CEB-BO-RFT-301] §3에서 운영자가 즉시 ON/OFF. OFF 시 앱 Buy-RF-Ticket-001 화면의 [구매하기] 버튼이 [점검중] 텍스트로 비활성. 변경 즉시 회원 앱에 반영(캐시 TTL 60초)</li></ul>
 <h2>6. 라이프사이클</h2>
 <p>응모권은 다음 3상태를 거친다.</p>
 <pre><code>[정규 발급 출처 5종]

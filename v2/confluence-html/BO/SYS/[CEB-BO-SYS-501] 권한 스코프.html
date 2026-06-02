@@ -209,14 +209,12 @@ p {
 <ul>
 <li>SUPER 권한 단계의 역할은 디폴트 스코프 = 전역 강제. 다중 선택 시도 시 차단.</li>
 <li>EXTERNAL_ARTIST 권한 단계의 역할은 디폴트 스코프 = 자기 아티스트 1개 강제. 다른 아티스트 추가 시도 시 차단.</li>
-<li>OPERATOR/POLICY는 자유롭게 전역 또는 다중 선택.</li>
-</ul>
+<li>OPERATOR/POLICY는 자유롭게 전역 또는 다중 선택.</li></ul>
 <h3>8.2 디폴트 스코프 변경 영향</h3>
 <ul>
 <li>디폴트 스코프 변경 시 매핑된 모든 운영자의 접근 범위 즉시 재계산.</li>
 <li>매핑 시 별도 좁힘이 있는 운영자는 영향 없음 (Role 스코프 ∩ 매핑 스코프 그대로 유지).</li>
-<li>변경 시 매핑 운영자 N명에게 시스템 알림 (선택).</li>
-</ul>
+<li>변경 시 매핑 운영자 N명에게 시스템 알림 (선택).</li></ul>
 <h3>8.3 권한 분기</h3>
 <table>
 <tr><th>권한</th><th>본 화면 접근</th></tr>
@@ -258,8 +256,7 @@ p {
 <ul>
 <li>Phase 1: Role 데이터 모델에 <code>scopeArtistIds</code> 필드만 추가 (NULL 디폴트).</li>
 <li>Phase 2: 본 화면 활성화 + 운영자 매핑 시 좁힘 가능.</li>
-<li>Phase 3: 헤더 글로벌 토글과 연동하여 EXTERNAL_ARTIST 사이드바 자동 가림.</li>
-</ul>
+<li>Phase 3: 헤더 글로벌 토글과 연동하여 EXTERNAL_ARTIST 사이드바 자동 가림.</li></ul>
 <hr>
 <h2>14. 연관 화면</h2>
 <table>
