@@ -79,7 +79,7 @@ p {
 <h1>[CEB-BO-GZ-202-EDIT] 게임 수정</h1>
 <blockquote>
 <p>⚠️ <strong>DEPRECATED (2026-05-06)</strong>: 본 문서는 v1입니다. <strong>v2 단일 진실원천(SSOT)</strong>: <code>(휴면) PM/ST 운영 중단</code>. 본 문서는 보존 목적이며 운영·작성 시 v2를 참조할 것.</p>
-<p>></p>
+<p>&gt;</p>
 <p>📌 <strong>검증 환경 노트(v2.7)</strong>: 본 문서의 운영 BO 정합 검증은 <strong>테스트 백오피스(<code>https://celebus-backoffice.vercel.app</code>)</strong>의 PM <strong>Pending(결과대기)</strong> 상태 데이터(id=92)로 진행됨. 다른 상태(Draft/Ready/Active/Closed)의 수정 잠금 매트릭스는 v2.6 명세 본문 보존 + 검증 미실시 노트. ST 데이터는 부재.</p>
 </blockquote>
 <h2>Page Properties</h2>
@@ -96,13 +96,13 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
-<tr><td>Breadcrumb</td><td>홈 > 게임존 > 게임 관리 > 게임 생성 (운영 BO 정합 — 수정도 생성 페이지 재사용)</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 게임존 &gt; 게임 관리 &gt; 게임 생성 (운영 BO 정합 — 수정도 생성 페이지 재사용)</td></tr>
 <tr><td>비고</td><td>DEPRECATED 라벨 유지 + 본문은 운영 BO 정합(v2.7, 테스트 BO id=92 Pending 검증). 양식 표준화 (RFT/RFL 정합)</td></tr>
 </table>
 <hr>
 <blockquote>
 <p>작성자: @Nill Yoo · 작성일: 2026-05-26 · 버전: <strong>v2.11</strong> (ST 수정 화면 테스트 BO 실측 정합 — §1 ST 라우트 별도 페이지 분리, §2-3 ST 잠금 매트릭스 임시저장 실측, 운영 구현 불일치 3건 발견 — 탈락자 응모권 필수★/아티스트 그룹 부재/별도 페이지)</p>
-<p>화면 경로: <code>/gamezone/games/create?mode=edit&{predictionMarketId|survivalTriviaId}={gameId}</code> · Breadcrumb: <code>홈 › 게임존 › 게임 관리 › 게임 생성</code> (수정도 동일 표기)</p>
+<p>화면 경로: <code>/gamezone/games/create?mode=edit&amp;{predictionMarketId|survivalTriviaId}={gameId}</code> · Breadcrumb: <code>홈 › 게임존 › 게임 관리 › 게임 생성</code> (수정도 동일 표기)</p>
 </blockquote>
 <blockquote>
 <p><strong>공통 정책 참조</strong>: 게임 상태/액션, 보상 계산, GP 변동 유형, 권한, UI 상태, 토스트/포맷 규격은 <strong>[CEB-BO-GZ-000] 공통 정책</strong>을 참조한다.</p>
@@ -112,12 +112,12 @@ p {
 <p>기존 게임의 정보를 수정하는 <strong>풀페이지 폼 화면</strong>. [201-CREATE] 게임 생성 화면과 같은 컴포넌트이며, <code>?mode=edit</code> 진입 시 페이지 제목·CTA·필드 잠금 매트릭스가 수정 모드로 전환된다. 게임 상태에 따라 수정 가능 필드가 동적 잠금된다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>화면 경로 (PM)</td><td><code>/gamezone/games/create?mode=edit&predictionMarketId={gameId}</code> (생성 페이지 공용)</td></tr>
+<tr><td>화면 경로 (PM)</td><td><code>/gamezone/games/create?mode=edit&amp;predictionMarketId={gameId}</code> (생성 페이지 공용)</td></tr>
 <tr><td>화면 경로 (ST)</td><td><code>/gamezone/games/st/{gameId}/edit</code> (별도 페이지, 테스트 BO 실측 2026-05-26 신규 발견)</td></tr>
 <tr><td>Breadcrumb</td><td>홈 › 게임존 › 게임 관리 › <strong>게임 생성</strong> (운영 표기 그대로 — 수정도 "게임 생성"으로 표시)</td></tr>
 <tr><td>페이지 제목</td><td>"<strong>게임 수정</strong>" (h1, mode=edit일 때만 차별화)</td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-GZ-202] 게임 상세의 [수정하기] 또는 [결과 수정] 버튼</td></tr>
-<tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다 (쓰기 권한 필요)</td></tr>
+<tr><td>접근 권한</td><td>[관리자 &gt; 권한관리] 설정에 따른다 (쓰기 권한 필요)</td></tr>
 <tr><td>용도</td><td>기존 게임의 메타·보상·참여·일정·결과(PM) 또는 퀴즈(ST) 수정</td></tr>
 </table>
 <h2>2. 화면 구성</h2>
@@ -243,7 +243,7 @@ p {
 <tr><td>v2.10</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 본문 보강</strong> — v2.8 변경 이력에서 약속한 잠금 매트릭스 갱신을 본문에 실제 명시 (사용자 점검 발견). ① §2-2 PM 잠금 매트릭스 6행 모두에 신규 3필드(아티스트·응모권 보상·덕력 보상) 명시 + Closed/Ended 안내문 "결과 확정 후에는 아티스트·응모권·덕력 보상값을 수정할 수 없습니다 (이미 분배된 보상)" 추가 ② §2-3 ST 잠금 매트릭스 4행 동일 정합 ③ §3 노출 정보 폼 행에 신규 3필드 명시 ④ §5 검증 규칙에 "결과 확정 후 잠금"·"신규 필드 잠금 매트릭스" 2행 신규 추가. 공용 폼 자동 적용([201-CREATE] §2-3·§2-4)은 v2.7 유지</td></tr>
 <tr><td>v2.9</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>보상 정책 정정 — 탈락자 응모권 선택화 + 덕력 = 참여자 균등 분배로 통일 (공용 폼 자동 적용)</strong> — [GZ-201-CREATE v3.3]과 동일 페이지(`?mode={create\</td><td>edit}` 분기). v3.3 정정 사항 자동 적용: ① ST 보상설정 "탈락자 응모권 수량 (필수)" → "응모권 보상 (탈락자 1인당)" (선택, 기본 0) ② 덕력 보상 라벨 "정답자/생존자 1인당" → "참여자 1인당" (PM·ST 공통, 참여 기반 균등 분배). 잠금 매트릭스 v2.8 정책 유지 (결과 확정 후 보상 필드 잠금)</td></tr>
 <tr><td>v2.8</td><td>2026.05.26</td><td>@Nill Yoo</td><td><strong>신규 기능 — 아티스트 그룹 + 응모권·덕력 보상 필드 추가 (공용 폼 정합)</strong> — 본 화면은 [GZ-201-CREATE v3.2]와 동일 페이지(`?mode={create\</td><td>edit}<code> 분기). v3.2 신규 필드 3종(아티스트·응모권 보상·덕력 보상)이 자동 적용됨. <strong>수정 모드 잠금 매트릭스에 추가</strong>: ① <strong>결과 확정 후</strong>(</code>결과확정<code>·</code>종료`) 아티스트·응모권·덕력 보상값 <strong>모두 잠금</strong> (이미 분배된 보상). ② Draft·Ready·Active(진행중)·Pending(결과대기)에서는 v2.7 기존 잠금 정책 따름 + 신규 필드는 결과 확정 이전 변경 가능. ③ [GZ-000 v2.4] §5 잠금 정책 정합</td></tr>
-<tr><td>v2.7</td><td>2026.05.22</td><td>@Nill Yoo</td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합 + 페이지 재사용 정정</strong> ① 양식 표준화: Page Properties 비고 필드 추가, §1 화면 개요 표, §2 하이픈 표기(§2-1~§2-6), §3 노출 정보, §4 상태별 동작 분기, §5 검증 규칙(+5-1 ST Active), §6 연관 화면, §7 변경 이력 — RFT/RFL 양식 정합 ② 운영 BO 정합(테스트 BO id=92 PM Pending 실측): <strong>라우트 명시(<code>/gamezone/games/create?mode=edit&predictionMarketId={id}</code>)</strong>, <strong>Breadcrumb 마지막 노드 "게임 생성"</strong> (수정도 동일 표기), 페이지 제목 "게임 수정", <strong>Pending 안내문 "결과 대기 중인 게임은 결과 발표 예정일과 결과 확인 기준만 수정할 수 있습니다."</strong>, <strong>Pending 잠금 매트릭스 실측</strong> (결과 발표 예정일·결과 확인 기준만 활성), <strong>CTA 안내문 "변경된 내용이 있을 때만 저장할 수 있습니다."</strong>, [저장하기] 변경 없으면 disabled, 이미지 영역 미리보기+[변경]/[제거] 버튼, 우측 앱 미리보기 사이드 패널 §2-6 명시 ③ <strong>페이지 재사용 정정</strong> — 생성·수정이 동일 페이지(`?mode={create\</td><td>edit}` 분기)임을 명시. 별도 [202-EDIT] 라우트가 아님 ④ Draft/Ready/Active/Closed의 잠금 매트릭스는 v2.6 명세 보존 (운영 검증 미실시) ⑤ ST 폼은 명세 보존 + 검증 미실시 노트 ⑥ DEPRECATED 라벨 유지</td></tr>
+<tr><td>v2.7</td><td>2026.05.22</td><td>@Nill Yoo</td><td><strong>양식 표준화(RFT/RFL 정합) + 운영 BO 정합 + 페이지 재사용 정정</strong> ① 양식 표준화: Page Properties 비고 필드 추가, §1 화면 개요 표, §2 하이픈 표기(§2-1~§2-6), §3 노출 정보, §4 상태별 동작 분기, §5 검증 규칙(+5-1 ST Active), §6 연관 화면, §7 변경 이력 — RFT/RFL 양식 정합 ② 운영 BO 정합(테스트 BO id=92 PM Pending 실측): <strong>라우트 명시(<code>/gamezone/games/create?mode=edit&amp;predictionMarketId={id}</code>)</strong>, <strong>Breadcrumb 마지막 노드 "게임 생성"</strong> (수정도 동일 표기), 페이지 제목 "게임 수정", <strong>Pending 안내문 "결과 대기 중인 게임은 결과 발표 예정일과 결과 확인 기준만 수정할 수 있습니다."</strong>, <strong>Pending 잠금 매트릭스 실측</strong> (결과 발표 예정일·결과 확인 기준만 활성), <strong>CTA 안내문 "변경된 내용이 있을 때만 저장할 수 있습니다."</strong>, [저장하기] 변경 없으면 disabled, 이미지 영역 미리보기+[변경]/[제거] 버튼, 우측 앱 미리보기 사이드 패널 §2-6 명시 ③ <strong>페이지 재사용 정정</strong> — 생성·수정이 동일 페이지(`?mode={create\</td><td>edit}` 분기)임을 명시. 별도 [202-EDIT] 라우트가 아님 ④ Draft/Ready/Active/Closed의 잠금 매트릭스는 v2.6 명세 보존 (운영 검증 미실시) ⑤ ST 폼은 명세 보존 + 검증 미실시 노트 ⑥ DEPRECATED 라벨 유지</td></tr>
 <tr><td>v2.6</td><td>2026.04.07</td><td>@Nill Yoo</td><td>PM 서브타입(타입1/타입2)·상태별 수정 가능 매트릭스 정의 — v2.7에서 PM 서브타입 부분은 운영 미구현으로 제거 ([202] v2.7과 정합)</td></tr>
 <tr><td>v2.x</td><td>—</td><td>—</td><td>(v2 이력은 git history 참조)</td></tr>
 <tr><td>v1.x</td><td>—</td><td>—</td><td>(v1 이력은 git history 참조)</td></tr>

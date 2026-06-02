@@ -91,7 +91,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
-<tr><td>Breadcrumb</td><td>홈 > 응모권 > 변동 내역</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 응모권 &gt; 변동 내역</td></tr>
 <tr><td>비고</td><td></td></tr>
 </table>
 <hr>
@@ -105,7 +105,7 @@ p {
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>화면 경로</td><td><code>/rft/history</code></td></tr>
 <tr><td>Breadcrumb</td><td>홈 / 응모권 / 변동 내역</td></tr>
-<tr><td>진입 경로</td><td>사이드바 "래플 > 변동 내역", [CEB-BO-RFT-101] 분포 막대 클릭, "더 보기 →" 버튼</td></tr>
+<tr><td>진입 경로</td><td>사이드바 "래플 &gt; 변동 내역", [CEB-BO-RFT-101] 분포 막대 클릭, "더 보기 →" 버튼</td></tr>
 <tr><td>용도</td><td>회원별 변동 추적, 출처별 발급 검증, 아티스트 컨텍스트 분석</td></tr>
 </table>
 <h2>2. 화면 구성</h2>
@@ -195,7 +195,7 @@ p {
 <tr><td>최근 변동 패널 진입</td><td>변동 유형 라디오 사전 선택된 상태로 화면 진입 (<code>?type=ISSUED</code> 또는 <code>?type=USED</code>)</td></tr>
 <tr><td>닉네임 클릭</td><td>새 탭으로 [CEB-BO-USR-201] 회원 상세 진입. 회원 삭제된 경우 클릭 비활성 + "(삭제됨)" 라벨 표시</td></tr>
 <tr><td>정렬 기본</td><td><strong>최신 변동 일시 순</strong> (내림차순) 고정. 다른 정렬 옵션 없음</td></tr>
-<tr><td>권한 없음 진입</td><td>[관리자 > 권한관리] 설정에 따라 화면 자체 미노출 또는 접근 차단</td></tr>
+<tr><td>권한 없음 진입</td><td>[관리자 &gt; 권한관리] 설정에 따라 화면 자체 미노출 또는 접근 차단</td></tr>
 </table>
 <h2>5. 검증 규칙</h2>
 <table>
@@ -224,7 +224,7 @@ p {
 <tr><td>v2.3</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>변동 유형 필수 라디오 + 순변동 카드 제거 (개발팀 피드백)</strong> — ① §2-1 변동 유형 드롭다운(전체/발급/사용/운영) → <strong>필수 라디오 2종 (발급 기본 / 사용)</strong>. 운영 카테고리는 부호 기준으로 자동 분류 ② §2-2 요약 카드 4종 → 2종 (필터 결과 + 선택 유형 합계). 순변동 제거 ③ §3 노출 정보 표 정합 ④ §4 [CEB-BO-RFT-101] 최근 변동 패널 진입 시 <code>?type=ISSUED</code> / <code>?type=USED</code> 쿼리 사전 선택 분기 추가 ⑤ §7 변경 이력</td></tr>
 <tr><td>v2.2</td><td>2026-05-14</td><td>@Nill Yoo</td><td><strong>출처 5종 재정의 + 닉네임 새 탭 진입</strong> — ① §2-1 출처 드롭다운 옵션을 정규 발급 5종 (퀘스트 보상·PM·ST 보상·BIVE 보유혜택·덕력 랭킹 보상·GP로 응모권 구매) + 사용 1종 + 운영 4종으로 재편. 일일 미션 옵션 제거 ② §2-1 변동 유형 드롭다운에 "운영" 추가 ③ §2-3 회원 컬럼: <strong>닉네임 클릭 시 [CEB-BO-USR-201] 회원 상세 새 탭 진입</strong>. 호버 밑줄, 회원 삭제 시 비활성 + "(삭제됨)" 라벨 ④ §2-3 출처 컬럼 운영 카테고리 표기 "(운영) {유형}"</td></tr>
 <tr><td>v2.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>출처 드롭다운에서 서포트 이벤트 보상 영구 제거</strong> — 6종 → 5종 (전체 + 발급 4종 + 사용 1종). Page Properties 표 신규(13필드). 프로토타입 mock/rft.ts에서 출처 정책 배열도 동시 정리</td></tr>
-<tr><td>v2.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>RFL 톤 전면 재작성</strong> — 권한 매트릭스 제거 후 "[관리자 > 권한관리] 설정을 따름" 단일화. 개발 용어(ISSUED/USED/sourceFeature/FANQUEST_REWARD 등) 한국어 전면 치환. <strong>엑셀 내보내기 기능 제거</strong> (문서·프로토타입 모두). EXTERNAL_ARTIST 마스킹 항목 모두 삭제 (권한 세부 정책 미확정으로 별도 트랙 위임). 페이지네이션 항상 노출 + 운영 동일 윈도잉 명시</td></tr>
+<tr><td>v2.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>RFL 톤 전면 재작성</strong> — 권한 매트릭스 제거 후 "[관리자 &gt; 권한관리] 설정을 따름" 단일화. 개발 용어(ISSUED/USED/sourceFeature/FANQUEST_REWARD 등) 한국어 전면 치환. <strong>엑셀 내보내기 기능 제거</strong> (문서·프로토타입 모두). EXTERNAL_ARTIST 마스킹 항목 모두 삭제 (권한 세부 정책 미확정으로 별도 트랙 위임). 페이지네이션 항상 노출 + 운영 동일 윈도잉 명시</td></tr>
 <tr><td>(v1.x)</td><td>—</td><td>—</td><td>(v1.x 명세 전면 폐기. 이력 보존 목적의 참고용은 git history에서 확인)</td></tr>
 </table>
 

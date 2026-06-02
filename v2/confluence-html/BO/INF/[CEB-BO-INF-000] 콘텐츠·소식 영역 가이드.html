@@ -91,8 +91,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td>/artists/feed</td></tr>
-<tr><td>Breadcrumb</td><td>홈 > 아티스트 > 소식/일정</td></tr>
-<tr><td>비고</td><td>앱 [CEB-INF-101] 정보 피드 / [CEB-INF-201] 소식 상세 디자인 정합 재정비. 사이드 메뉴 [아티스트 > 소식/일정] 진입. 화면당 1문서·모달당 1문서로 분리</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 아티스트 &gt; 소식/일정</td></tr>
+<tr><td>비고</td><td>앱 [CEB-INF-101] 정보 피드 / [CEB-INF-201] 소식 상세 디자인 정합 재정비. 사이드 메뉴 [아티스트 &gt; 소식/일정] 진입. 화면당 1문서·모달당 1문서로 분리</td></tr>
 </table>
 <hr>
 <h2>1. 개요</h2>
@@ -100,7 +100,7 @@ p {
 <table>
 <tr><th>항목</th><th>위치</th></tr>
 <tr><td>마스터 가이드</td><td>[CEB-BO-001] 마이그레이션·재구성 마스터 가이드</td></tr>
-<tr><td>사이드 메뉴</td><td>아티스트 > 소식/일정</td></tr>
+<tr><td>사이드 메뉴</td><td>아티스트 &gt; 소식/일정</td></tr>
 <tr><td>권한</td><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td></tr>
 <tr><td>활동 로그</td><td>[CEB-BO-000] 백오피스 공통 정책</td></tr>
 <tr><td>앱 연동</td><td>[CEB-INF-101] 정보 피드 · [CEB-INF-201] 소식 상세</td></tr>
@@ -209,7 +209,7 @@ p {
 <h3>4.6 푸시 알림 (별도 알림 영역에서 발송)</h3>
 <ul>
 <li><strong>소식·일정·공지의 게시·재게시는 푸시를 발송하지 않는다.</strong> 게시 모달은 게시 여부만 확인한다.</li>
-<li>푸시 알림이 필요하면 <strong>[앱 운영 > 알림] 작성 화면([CEB-BO-APP-302])</strong>에서 별도로 작성·발송하며, 딥링크로 해당 소식·일정·공지를 연결한다.</li>
+<li>푸시 알림이 필요하면 <strong>[앱 운영 &gt; 알림] 작성 화면([CEB-BO-APP-302])</strong>에서 별도로 작성·발송하며, 딥링크로 해당 소식·일정·공지를 연결한다.</li>
 <li>발송 대상·발송 시점·다국어 메시지·채널(기본/푸시) 규격은 모두 알림 영역([CEB-BO-APP-302])을 단일 기준으로 따른다(소식 영역은 별도 푸시 옵션을 두지 않는다).</li>
 </ul>
 <h3>4.7 리스트 기본 필터·정렬·페이지 규칙 (공통)</h3>
@@ -226,12 +226,12 @@ p {
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
 <tr><td><strong>v2.6</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>공지 <strong>CTA 버튼 라벨을 다국어(한국어·영어·일본어 각 30자)</strong>로 변경(§4.3·§4.5 — 기존 단일 텍스트). 링크 URL은 단일 유지. 프로토타입 <code>FeedForm</code>·<code>FeedDetail</code>·<code>mock</code> 동기화</td></tr>
-<tr><td><strong>v2.5</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>프로토타입 정합 — §4.6 푸시 알림 재서술. <strong>게시·재게시는 푸시를 발송하지 않으며</strong>, 푸시는 [앱 운영 > 알림] 작성 화면([CEB-BO-APP-302])에서 별도 발송(딥링크 연결)·대상/시점/메시지 규격은 알림 영역 단일 기준. 게시 모달 4종·작성 화면의 인라인 푸시 옵션 제거와 동기화</td></tr>
+<tr><td><strong>v2.5</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>프로토타입 정합 — §4.6 푸시 알림 재서술. <strong>게시·재게시는 푸시를 발송하지 않으며</strong>, 푸시는 [앱 운영 &gt; 알림] 작성 화면([CEB-BO-APP-302])에서 별도 발송(딥링크 연결)·대상/시점/메시지 규격은 알림 영역 단일 기준. 게시 모달 4종·작성 화면의 인라인 푸시 옵션 제거와 동기화</td></tr>
 <tr><td><strong>v2.4</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>화면당 1문서·모달당 1문서 구조 정비</strong> ① 화면 목록을 12개 문서(리스트·작성·수정·상세 + 확인 모달 8종)로 재편하고 유형·작성 상태 명시(§2) ② 작성·수정 분리 — 작성은 리스트 하위 [CEB-BO-INF-101-CREATE], 수정은 상세 하위 [CEB-BO-INF-201-EDIT] ③ ID 체계 신설(-CREATE/-EDIT/-MD-{동작}/-EDIT-MD-{동작})·완료는 토스트로 안내(완료 모달 없음, 확인 모달만 별도 문서)(§2-1) ④ 리스트 기본 필터(전체 시작)·카운터 토글·정렬 1·2차 키·탭 전환 초기화·페이지 보정 공통 규칙 신설(§4.7)</td></tr>
 <tr><td><strong>v2.3</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>미팅 정합 — 입력·표시 정리</strong> ① 소식·공지 <strong>게시일을 작성 시 입력하지 않고</strong> [게시] 누른 날짜로 자동 기록(§4.3), <strong>재게시 시 최초 게시일 유지</strong>(§4.2) ② 소식 <strong>썸네일은 등록 이미지 중 첫 번째 사용</strong>(별도 등록 없음) ③ <strong>연관 콘텐츠 썸네일은 URL에서 자동 추출</strong>(운영자 미관리) ④ 연관 <strong>콘텐츠명은 단일 텍스트</strong>(다국어 아님) 명시 ⑤ 일정 <strong>장소는 구글 장소 검색에서 선택한 장소명을 그대로 사용</strong>(직접 텍스트 편집 없음)</td></tr>
 <tr><td><strong>v2.2</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>미팅 정합 — 연관 콘텐츠 플랫폼 7종 → 5종</strong> 유튜브·X·인스타그램·스포티파이·일반(타입에 없는 URL)으로 정정. 틱톡·스레드 제거, 웹→일반. §4.3 콘텐츠 타입 갱신 ([CEB-BO-INF-201-EDIT] 동기화)</td></tr>
 <tr><td><strong>v2.1</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>디자인 세부 보정. ① 소식 "관련 링크"를 연관 콘텐츠(콘텐츠 타입 7종 + 콘텐츠명 + URL, 최대 3)로 정정 ② 일정 부제·썸네일 제거, 장소는 구글 장소 검색 연동 ③ 공지 대표 이미지(1장) 추가 ④ 상세(조회)와 작성·수정 분리 — [CEB-BO-INF-201] 상세 / [CEB-BO-INF-201-EDIT] 작성·수정 ⑤ 화면 목록·다국어 표 정합</td></tr>
-<tr><td><strong>v2.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>앱 정보 피드 디자인 정합 전면 재정비. ① 콘텐츠 타입을 소식·일정·공지 3종으로 정리(독점 콘텐츠 철회) ② 라이프사이클을 임시저장→게시→보관으로 단순화(검수 대기 철회) ③ 외부 아티스트 검수 워크플로우·레벨별 잠금 정책 제거, 운영자 직접 등록·게시 ④ 타입별 입력 필드 정의(일정 장소·소식 관련 링크 최대 3·공지 CTA 버튼 신규) ⑤ 권한을 [CEB-BO-SYS-102] 참조로 전환 ⑥ 공식 출처 플래그·아티스트별 푸시 알림 정합 ⑦ 사이드 메뉴 [아티스트 > 소식/일정] 배치</td></tr>
+<tr><td><strong>v2.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>앱 정보 피드 디자인 정합 전면 재정비. ① 콘텐츠 타입을 소식·일정·공지 3종으로 정리(독점 콘텐츠 철회) ② 라이프사이클을 임시저장→게시→보관으로 단순화(검수 대기 철회) ③ 외부 아티스트 검수 워크플로우·레벨별 잠금 정책 제거, 운영자 직접 등록·게시 ④ 타입별 입력 필드 정의(일정 장소·소식 관련 링크 최대 3·공지 CTA 버튼 신규) ⑤ 권한을 [CEB-BO-SYS-102] 참조로 전환 ⑥ 공식 출처 플래그·아티스트별 푸시 알림 정합 ⑦ 사이드 메뉴 [아티스트 &gt; 소식/일정] 배치</td></tr>
 <tr><td><strong>v1.0</strong></td><td><strong>2026-05-06</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 콘텐츠 라이프사이클·타입·검수 워크플로우·푸시 알림 옵션</td></tr>
 </table>
 

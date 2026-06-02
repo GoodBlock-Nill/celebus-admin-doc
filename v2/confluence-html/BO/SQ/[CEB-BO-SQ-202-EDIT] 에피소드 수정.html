@@ -91,7 +91,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
-<tr><td>Breadcrumb</td><td>홈 > 에피소드 > {그룹명} > {에피소드명} > 수정</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 에피소드 &gt; {그룹명} &gt; {에피소드명} &gt; 수정</td></tr>
 <tr><td>비고</td><td></td></tr>
 </table>
 <hr>
@@ -107,7 +107,7 @@ p {
 <tr><td>Breadcrumb</td><td>홈 / 에피소드 / {그룹명} / {에피소드명} / 수정</td></tr>
 <tr><td>페이지 제목</td><td>"에피소드 수정" + 유형 배지</td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-SQ-202] 에피소드 상세의 [수정] 버튼</td></tr>
-<tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다</td></tr>
+<tr><td>접근 권한</td><td>[관리자 &gt; 권한관리] 설정에 따른다</td></tr>
 </table>
 <h2>2. 화면 구성</h2>
 <h3>2-1. 헤더</h3>
@@ -229,7 +229,7 @@ p {
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
 <tr><td><strong>v3.2</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>메인 이미지 입력에서 이미지 URL 직접 입력 필드 제거</strong>(§2-5) — 이미지는 드래그앤드롭 또는 파일 업로드로만 등록·변경. URL 직접 입력란·안내 문구 삭제. 프로토타입 에피소드 수정 화면 정합</td></tr>
 <tr><td><strong>v3.1</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드 완료 보상 수정 섹션 추가 (메인 에피소드 전용) + 진행중 분기 정합 정정</strong> — ① §2-7 에피소드 완료 보상 섹션 신규 (응모권·덕력·BIVE 토글·민팅 캠페인 4필드). 진행중 상태 진입 시 모든 필드 read-only로 잠금 (회원 기대권 보호) ② 기존 §2-7(관리 정보)·§2-8(하단 액션)을 §2-8·§2-9로 번호 이동 ③ §3 화면 노출 정보 표에 "에피소드 완료 보상" 행 추가 ④ §5 검증 규칙에 4행 추가 (정수 검증·BIVE ON 시 민팅 캠페인 필수·진행중 잠금·반복 에피소드 미노출) ⑤ §4 상태별 동작 분기 "진행중 진입" 행이 "모든 필드 수정 가능"으로 §2-7·§5 신설 정책과 충돌하던 부분 정정 — "다국어·이미지 등은 수정 가능, 완료 보상 섹션은 read-only 잠금"으로 명시 ⑥ [CEB-BO-011] v3.2 정합</td></tr>
-<tr><td>v3.0</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>한국어 도메인 용어 정합 + Page Properties 13필드</strong> — ① Page Properties 표 신설 ② §1 데이터 모델 코드 경로(<code>StoryQuest</code>·<code>prototype/src/mock/sq.ts</code>) 제거 ③ 유형 enum(MAIN/REPEAT)·상태 enum(DRAFT/ACTIVE/CLOSED) → 한국어 ④ 검증 함수 호출(<code>isAllLangsFilled</code>, <code>editableByStatus && isValid</code>) → 운영 동작 설명 ⑤ §3 화면 노출 정보 표 신설 ⑥ §4·§5 양식 정합 ⑦ 변경 이력 5칸 양식</td></tr>
+<tr><td>v3.0</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>한국어 도메인 용어 정합 + Page Properties 13필드</strong> — ① Page Properties 표 신설 ② §1 데이터 모델 코드 경로(<code>StoryQuest</code>·<code>prototype/src/mock/sq.ts</code>) 제거 ③ 유형 enum(MAIN/REPEAT)·상태 enum(DRAFT/ACTIVE/CLOSED) → 한국어 ④ 검증 함수 호출(<code>isAllLangsFilled</code>, <code>editableByStatus &amp;&amp; isValid</code>) → 운영 동작 설명 ⑤ §3 화면 노출 정보 표 신설 ⑥ §4·§5 양식 정합 ⑦ 변경 이력 5칸 양식</td></tr>
 <tr><td>v2.2</td><td>2026-05-12</td><td>@Nill Yoo</td><td><strong>표시 순서 입력 제거</strong> → 그룹 상세 ↑↓ 전용. 헤더 상태 배지 제거 (그룹 상태 상속). 검증 규칙에서 표시 순서 항 삭제</td></tr>
 <tr><td>v2.0</td><td>2026-05-12</td><td>@Nill Yoo</td><td>신규 — 그룹 SSOT 기간, 다국어 필수, 상태 전환 분리 정책 반영</td></tr>
 </table>

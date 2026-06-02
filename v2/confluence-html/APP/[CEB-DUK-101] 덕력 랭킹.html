@@ -92,7 +92,7 @@ p {
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=4-5286</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
-<tr><td>Breadcrumb</td><td>하단 탭 > {아티스트명} > 덕력</td></tr>
+<tr><td>Breadcrumb</td><td>하단 탭 &gt; {아티스트명} &gt; 덕력</td></tr>
 </table>
 <hr>
 <h2>1. 화면 개요</h2>
@@ -107,8 +107,8 @@ p {
 </ul>
 <h5>접근 경로</h5>
 <ul>
-<li>CEB-ART-101 > 덕력 카드 탭</li>
-<li>CEB-HOM-001 > 추천 카드 [랭킹 보기] 탭</li>
+<li>CEB-ART-101 &gt; 덕력 카드 탭</li>
+<li>CEB-HOM-001 &gt; 추천 카드 [랭킹 보기] 탭</li>
 </ul>
 <h5>화면 레이아웃</h5>
 <blockquote>
@@ -166,7 +166,7 @@ p {
 <tr><td>획득 덕력</td><td>"획득 {N} DUK" (랭킹 기준 포인트)</td></tr>
 <tr><td>보유 덕력</td><td>"보유 {N} DUK" (사용 가능 잔액)</td></tr>
 <tr><td>시즌 정보</td><td>시즌 드롭다운에 "{M}월 시즌 [종료 D-{N}]" 표기 (§2.2 참조)</td></tr>
-<tr><td>덕력 내역</td><td>[덕력 내역 보기 >] 탭 시 <strong>별도 화면 CEB-DUK-103</strong>으로 이동 (추후 작성)</td></tr>
+<tr><td>덕력 내역</td><td>[덕력 내역 보기 &gt;] 탭 시 <strong>별도 화면 CEB-DUK-103</strong>으로 이동 (추후 작성)</td></tr>
 <tr><td>랭킹 안내</td><td>"ℹ️ 랭킹은 획득 덕력만 반영돼요."</td></tr>
 <tr><td>시즌 보상 뱃지</td><td>이전 시즌 아카이브 열람 시, 해당 시즌에서 1위/TOP 10/TOP 10% 달성한 경우 해당 보상 뱃지 표시</td></tr>
 </table>
@@ -325,12 +325,12 @@ p {
 <hr>
 <h3>2.6 덕력 내역 (별도 화면)</h3>
 <blockquote>
-<p>v.3 정합: 기존 인앱 바텀시트 → <strong>별도 화면 CEB-DUK-103 덕력 내역 보기</strong>로 분리 (화면 자체는 추후 작성). 내 정보 카드 [덕력 내역 보기 >] 탭 시 진입. 아래 내역 유형은 DUK-103에서 표시할 항목 참조용으로 유지.</p>
+<p>v.3 정합: 기존 인앱 바텀시트 → <strong>별도 화면 CEB-DUK-103 덕력 내역 보기</strong>로 분리 (화면 자체는 추후 작성). 내 정보 카드 [덕력 내역 보기 &gt;] 탭 시 진입. 아래 내역 유형은 DUK-103에서 표시할 항목 참조용으로 유지.</p>
 </blockquote>
 <h4>진입 · 구성 (DUK-103 참조)</h4>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
-<tr><td>트리거</td><td>내 정보 카드 [덕력 내역 보기 >] 탭 → CEB-DUK-103 이동</td></tr>
+<tr><td>트리거</td><td>내 정보 카드 [덕력 내역 보기 &gt;] 탭 → CEB-DUK-103 이동</td></tr>
 <tr><td>구성</td><td>덕력 내역 리스트 (획득 + 사용 통합. 획득: +50DUK 초록 / 사용: -500DUK 빨강)</td></tr>
 <tr><td>정렬</td><td>최신순</td></tr>
 <tr><td>항목 예시</td><td>"퀘스트 미션 완료 +50DUK (04.14)", "출석 체크 +10DUK (04.14)", "서포트 응원 -500DUK (04.13)", "독점 콘텐츠 해금 -100DUK (04.12)"</td></tr>
@@ -394,7 +394,7 @@ p {
 <table>
 <tr><th>화면ID</th><th>화면명</th><th>관계</th></tr>
 <tr><td>CEB-ART-101</td><td>아티스트 메인</td><td>진입원 (덕력 카드 탭)</td></tr>
-<tr><td>CEB-DUK-103</td><td>덕력 내역 보기</td><td>[덕력 내역 보기 >] 탭 시 이동 (별도 화면, 추후 작성)</td></tr>
+<tr><td>CEB-DUK-103</td><td>덕력 내역 보기</td><td>[덕력 내역 보기 &gt;] 탭 시 이동 (별도 화면, 추후 작성)</td></tr>
 <tr><td>CEB-DUK-105</td><td>내 보상</td><td>시즌 보상 카드 [보상 확인] 탭 시 이동 (별도 화면, 추후 작성)</td></tr>
 <tr><td>CEB-DUK-201</td><td>서포트 이벤트</td><td>관련 (서포트 응원 덕력은 랭킹에 영향 없음)</td></tr>
 <tr><td>CEB-FQ-501</td><td>일일 미션</td><td>미션 대상 (덕력 랭킹 확인)</td></tr>

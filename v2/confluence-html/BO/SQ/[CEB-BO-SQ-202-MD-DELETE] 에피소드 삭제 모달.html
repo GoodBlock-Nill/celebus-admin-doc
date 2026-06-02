@@ -91,7 +91,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
-<tr><td>Breadcrumb</td><td>홈 > 에피소드 > {그룹명} > {에피소드명} > 삭제</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 에피소드 &gt; {그룹명} &gt; {에피소드명} &gt; 삭제</td></tr>
 <tr><td>비고</td><td></td></tr>
 </table>
 <hr>
@@ -107,7 +107,7 @@ p {
 <tr><td>트리거</td><td>에피소드 상세의 [삭제] 액션 (임시저장 상태에서만 노출)</td></tr>
 <tr><td>진입 조건</td><td>에피소드 상태가 "임시저장"</td></tr>
 <tr><td>차단 조건</td><td>진행중·종료 상태는 액션 자체 미노출</td></tr>
-<tr><td>접근 권한</td><td>[관리자 > 권한관리] 설정에 따른다</td></tr>
+<tr><td>접근 권한</td><td>[관리자 &gt; 권한관리] 설정에 따른다</td></tr>
 <tr><td>영향 범위</td><td>에피소드 + 하위 모든 미션 (cascade) + 팬퀘스트 매핑 자동 해제</td></tr>
 </table>
 <h2>2. 화면 구성</h2>
@@ -134,7 +134,7 @@ p {
 <ul>
 <li>미션이 1개 이상 있을 때 노란 박스:</li>
 </ul>
-<p>  > ⚠️ 이 에피소드에 등록된 미션이 있습니다. 모두 함께 삭제됩니다.</p>
+<p>  &gt; ⚠️ 이 에피소드에 등록된 미션이 있습니다. 모두 함께 삭제됩니다.</p>
 <h3>2-3. 하단 액션</h3>
 <table>
 <tr><th>버튼</th><th>색상</th><th>동작</th></tr>
@@ -197,7 +197,7 @@ p {
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v3.0</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>한국어 도메인 용어 정합 + 잘못된 모달 ID 참조 정정 + 폐지된 계층 잔존 정리</strong> — ① Page Properties 13필드 신설 ② 권한 enum(OPERATOR/EXTERNAL_ARTIST) → "[관리자 > 권한관리]" 단일화 ③ 데이터 모델 코드 경로(<code>StoryQuest</code>, <code>prototype/src/mock/sq.ts</code>) 제거 ④ 상태 enum(DRAFT/ACTIVE/CLOSED) → 한국어(임시저장/진행중/종료) ⑤ <strong>§7 연관 화면의 잘못된 모달 ID <code>[CEB-BO-SQ-204-MISSION-CREATE/EDIT]</code> (존재하지 않는 ID) 정정</strong> — 미션 관리 진입은 [CEB-BO-SQ-204-CREATE] 미션 추가 + [CEB-BO-SQ-204] 미션 상세로 분리 ⑥ <strong>§6 cascade 다이어그램에서 폐기된 <code>StoryMission[]</code> 잔존 행 정리</strong> (v2.2 완료 조건 계층 폐기 정합) — 본 문서가 v2.0 시점이라 잔존하던 정합 오류 ⑦ <strong>변경 이력 표 4칸 → 5칸</strong>(작성자 칸 추가) — 다른 영역 양식 정합 ⑧ §3 화면 노출 정보·§4 상태별 동작 양식 정합</td></tr>
+<tr><td><strong>v3.0</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>한국어 도메인 용어 정합 + 잘못된 모달 ID 참조 정정 + 폐지된 계층 잔존 정리</strong> — ① Page Properties 13필드 신설 ② 권한 enum(OPERATOR/EXTERNAL_ARTIST) → "[관리자 &gt; 권한관리]" 단일화 ③ 데이터 모델 코드 경로(<code>StoryQuest</code>, <code>prototype/src/mock/sq.ts</code>) 제거 ④ 상태 enum(DRAFT/ACTIVE/CLOSED) → 한국어(임시저장/진행중/종료) ⑤ <strong>§7 연관 화면의 잘못된 모달 ID <code>[CEB-BO-SQ-204-MISSION-CREATE/EDIT]</code> (존재하지 않는 ID) 정정</strong> — 미션 관리 진입은 [CEB-BO-SQ-204-CREATE] 미션 추가 + [CEB-BO-SQ-204] 미션 상세로 분리 ⑥ <strong>§6 cascade 다이어그램에서 폐기된 <code>StoryMission[]</code> 잔존 행 정리</strong> (v2.2 완료 조건 계층 폐기 정합) — 본 문서가 v2.0 시점이라 잔존하던 정합 오류 ⑦ <strong>변경 이력 표 4칸 → 5칸</strong>(작성자 칸 추가) — 다른 영역 양식 정합 ⑧ §3 화면 노출 정보·§4 상태별 동작 양식 정합</td></tr>
 <tr><td>v2.0</td><td>2026-05-12</td><td>@Nill Yoo</td><td>신규 — 임시저장 한정 삭제, cascade 삭제 + 팬퀘스트 매핑 자동 해제, 부모 그룹 에피소드 수 감소 명시</td></tr>
 </table>
 

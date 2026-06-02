@@ -91,7 +91,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
-<tr><td>Breadcrumb</td><td>홈 > 래플 > 래플 상세 > 게시 모달</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 래플 &gt; 래플 상세 &gt; 게시 모달</td></tr>
 <tr><td>비고</td><td></td></tr>
 </table>
 <hr>
@@ -109,7 +109,7 @@ p {
 <tr><td>모달 트리거</td><td>래플 상세 헤더의 [게시하기] 버튼 (활성 상태일 때만)</td></tr>
 <tr><td>진입 조건</td><td>래플 상태 = 임시저장 + [CEB-BO-RFL-201] §4-2의 게시 조건 9개 모두 충족</td></tr>
 <tr><td>영향</td><td>상태가 임시저장 → 진행중으로 전환되고, 시작일시가 현재 시각으로 자동 기록됨</td></tr>
-<tr><td>권한</td><td>[관리자 > 권한관리]에 설정된 권한을 따름</td></tr>
+<tr><td>권한</td><td>[관리자 &gt; 권한관리]에 설정된 권한을 따름</td></tr>
 </table>
 <h2>2. 화면 구성</h2>
 <h3>2-1. 헤더</h3>
@@ -142,7 +142,7 @@ p {
 <tr><th>검증 조건</th><th>동작</th></tr>
 <tr><td>게시 조건 9개 모두 충족 ([CEB-BO-RFL-201] §4-2)</td><td>버튼 활성 → 본 모달 진입 가능</td></tr>
 <tr><td>게시 조건 1개라도 미충족</td><td>버튼 비활성(회색) → 클릭 불가, 모달 진입 차단. 운영자는 [수정하기]에서 누락 항목 직접 확인</td></tr>
-<tr><td>게시 권한 없는 운영자</td><td>래플 상세 헤더에서 [게시하기] 버튼 자체가 노출되지 않음 ([관리자 > 권한관리] 설정에 따름)</td></tr>
+<tr><td>게시 권한 없는 운영자</td><td>래플 상세 헤더에서 [게시하기] 버튼 자체가 노출되지 않음 ([관리자 &gt; 권한관리] 설정에 따름)</td></tr>
 <tr><td>래플 상태 ≠ 임시저장</td><td>헤더 액션 자체가 미노출되어 모달 진입 불가</td></tr>
 </table>
 <blockquote>
@@ -159,7 +159,7 @@ p {
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
 <tr><td>v1.7</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>사전 검증 정책 반영</strong> — [게시하기] 버튼 비활성화로 사전 차단되어 모달이 노출되지 않는 구조 명시. §1 화면 개요 + §4 검증 규칙에서 "다국어 alert 차단" 표현 제거 후 "버튼 비활성 → 모달 미진입"으로 재서술. [CEB-BO-RFL-201] §4-2 게시 조건 9개 참조</td></tr>
 <tr><td>v1.6</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>Page Properties 표 신규(13필드)</strong> — 본문 변경 없음</td></tr>
-<tr><td>v1.3</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>권한 표현 일원화</strong> — "OPERATOR/SUPER (EXTERNAL_ARTIST 불가)" 등의 세부 명세를 "[관리자 > 권한관리] 설정을 따름"으로 변경</td></tr>
+<tr><td>v1.3</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>권한 표현 일원화</strong> — "OPERATOR/SUPER (EXTERNAL_ARTIST 불가)" 등의 세부 명세를 "[관리자 &gt; 권한관리] 설정을 따름"으로 변경</td></tr>
 <tr><td>v1.2</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>다국어 임시저장 정책 명시</strong> — 임시저장은 "1개 언어 이상" 입력이면 가능. 게시 시점에만 3개 언어 모두 필수</td></tr>
 <tr><td>v1.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>기획자 언어로 재작성</strong> — 개발 용어·코드 경로 제거</td></tr>
 <tr><td>v1.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>신규 작성</strong> — 기존 [CEB-BO-FQ-204-MD-OPEN] 폐기. 다국어 검증 정책 명시</td></tr>

@@ -76,7 +76,10 @@ function escapeHtml(text) {
 }
 
 function convertInline(text) {
-  return text
+  // HTML 특수문자(<, >, &)를 먼저 이스케이프한 뒤 마크다운 인라인 서식을 적용한다.
+  // 이스케이프를 먼저 해야 본문의 'N<M' 같은 표기가 태그로 오인되지 않고,
+  // 이후 삽입되는 <strong>/<em>/<code>는 실제 태그로 유지된다. (컨플루언스 붙여넣기 정합)
+  return escapeHtml(text)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
     .replace(/`([^`]+)`/g, '<code>$1</code>');

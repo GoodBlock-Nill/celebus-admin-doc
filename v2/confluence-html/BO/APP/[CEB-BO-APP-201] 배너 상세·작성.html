@@ -91,7 +91,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
-<tr><td>Breadcrumb</td><td>홈 > 앱 > 배너 관리 > {위치} · {아티스트} > {제목}</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 앱 &gt; 배너 관리 &gt; {위치} · {아티스트} &gt; {제목}</td></tr>
 <tr><td>비고</td><td></td></tr>
 </table>
 <hr>
@@ -103,7 +103,7 @@ p {
 <p>배너 1건을 신규 작성·조회·수정·노출 제어하는 단일 화면. 신규(<code>/home/banners/new</code>)와 상세(<code>/home/banners/{id}</code>)를 동일 폼으로 통합한다. 슬롯 컨텍스트(위치 + 아티스트)는 [CEB-BO-APP-202] 슬롯 상세에서 [+ 배너 추가]로 진입할 때 자동 prefill되며, 본 화면에서는 read-only로 표기한다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>화면 경로</td><td><code>/home/banners/new?slot={slotKind}&artist={artist}</code> (신규) · <code>/home/banners/{id}</code> (조회) · <code>/home/banners/{id}?mode=edit</code> (수정)</td></tr>
+<tr><td>화면 경로</td><td><code>/home/banners/new?slot={slotKind}&amp;artist={artist}</code> (신규) · <code>/home/banners/{id}</code> (조회) · <code>/home/banners/{id}?mode=edit</code> (수정)</td></tr>
 <tr><td>Breadcrumb</td><td>홈 / 앱 / 배너 관리 / {위치 · 아티스트} / {제목}</td></tr>
 <tr><td>진입 경로</td><td>[CEB-BO-APP-202] 슬롯 상세 [+ 배너 추가] (신규) · 슬롯 상세 배너 Row 클릭 (조회)</td></tr>
 <tr><td>용도</td><td>배너 1건의 다국어·미디어·소스·딥링크·노출 기간 운영. <strong>노출 시작은 공개일 도달 시 시스템 자동 전이</strong> (운영자 수동 트리거 없음). 비상 시 [노출 종료]만 운영자 수동</td></tr>
@@ -210,13 +210,13 @@ p {
 </table>
 <blockquote>
 <p><strong>v6.8 [노출 재개] 정책 (CRITICAL)</strong>: 한 번 종료된 배너를 운영자가 원클릭으로 다시 켤 수 있도록 추가. CLOSED → ACTIVE 직접 전이. v6.7 "공개일 자동 활성화" 일원화 정책은 <strong>신규 노출에만 적용</strong>, 종료 후 복구는 운영자 수동 트리거(운영자 복구 권한)로 정당화.</p>
-<p>></p>
+<p>&gt;</p>
 <p><strong>종료일 과거 처리</strong>: 재개 시 기존 종료일이 과거인 경우 모달에서 운영자에게 안내 + [수정 후 재개] / [그대로 재개] 분기 선택. "그대로 재개" 선택 시 즉시 다시 종료되므로 경고 강조.</p>
-<p>></p>
+<p>&gt;</p>
 <p><strong>슬롯 한도 검증</strong>: 노출 재개도 신규 노출 시작과 동일한 슬롯 한도 검증 적용. 캐러셀 8개 초과 → 모달 안에서 차단 토스트 + 모달 유지 (운영자가 다른 배너를 먼저 종료할 수 있도록).</p>
-<p>></p>
+<p>&gt;</p>
 <p><strong>단일 슬롯 자동 교체</strong>: 노출 재개 시 동일 슬롯에 기존 ACTIVE 1건이 있으면 모달 내부에 "기존 배너 '{기존 제목}'이(가) 자동 종료됩니다" 안내 + 확인 시 자동 처리.</p>
-<p>></p>
+<p>&gt;</p>
 <p><strong>CLOSED [수정] 허용 (v6.8 신규)</strong>: 종료 후 콘텐츠 수정 → 재개 흐름 자연스러움. 다국어 타이틀·이미지·딥링크 모두 수정 가능. 단, 슬롯 컨텍스트는 read-only (변경하려면 [복제] 사용).</p>
 </blockquote>
 <h3>4-2. 데이터·동작 분기</h3>
@@ -239,7 +239,7 @@ p {
 <tr><td><strong>[← 슬롯으로] 클릭</strong> (v6.8)</td><td>view·수정 모드 모두 — 부모 슬롯 상세 <code>/home/banners/slot/{slotKind}/{artist}</code>로 복귀 (수정 모드 변경 사항 있으면 <code>BannerEditCancelModal</code> 호출 후 복귀)</td></tr>
 <tr><td><strong>캐러셀(메인) 한도 초과</strong> (공개일 도달 시)</td><td><strong>시스템 자동 차단</strong> + 운영자 알림 "이 슬롯의 동시 노출 8개를 이미 채웠습니다. 슬롯 정리 후 재공개일을 설정하세요." (배너는 DRAFT 유지) — 캐러셀 정책은 메인 슬롯에만 적용</td></tr>
 <tr><td>단일 슬롯 자동 교체 (공개일 도달 시)</td><td>기존 ACTIVE 자동 종료 + 신규 배너 ACTIVE 전이 + 활동 로그 "{위치}·{아티스트} 슬롯의 배너 '{새}' 노출 시작으로 '{기존}'이(가) 자동 종료되었습니다." (확인 모달 없음 — 시스템 자동 처리)</td></tr>
-<tr><td>권한 없음 진입</td><td>[관리자 > 권한관리] 설정에 따라 화면 자체 미노출 또는 액션 버튼 비활성</td></tr>
+<tr><td>권한 없음 진입</td><td>[관리자 &gt; 권한관리] 설정에 따라 화면 자체 미노출 또는 액션 버튼 비활성</td></tr>
 </table>
 <h2>5. 검증 규칙</h2>
 <h3>5-1. 다국어 검증 (v6.7 시점 정정)</h3>
@@ -286,7 +286,7 @@ p {
 <tr><td>삭제</td><td>배너 '{제목}'을(를) 삭제했습니다.</td></tr>
 </table>
 <h3>5-5. 복제 동작 (v6.8 정정)</h3>
-<p>[복제] 클릭 → 현재 배너의 모든 입력값을 신규 작성 폼에 프리필 → <code>/home/banners/new?slot={원본 slotKind}&artist={원본 artist}&from={원본 배너ID}</code>로 이동.</p>
+<p>[복제] 클릭 → 현재 배너의 모든 입력값을 신규 작성 폼에 프리필 → <code>/home/banners/new?slot={원본 slotKind}&amp;artist={원본 artist}&amp;from={원본 배너ID}</code>로 이동.</p>
 <ul>
 <li>공개일·종료일·상태·통계는 초기화</li>
 <li><code>?from</code> 쿼리가 있으면 <strong>복제 모드 식별</strong> — §2-2 A 슬롯 컨텍스트가 read-only Badge 대신 <strong>편집 가능 Select</strong>로 노출 (위치·아티스트 변경 허용)</li>
@@ -339,7 +339,7 @@ p {
 <tr><td>v6.3</td><td>2026.05.20</td><td>@Nill Yoo</td><td><strong>안전망 추가 (UI/UX 검증 후속)</strong> — §4-2에 "신규 진입 시 슬롯 쿼리 없으면 배너 관리 리스트로 리다이렉트 + 안내 토스트" 추가. 운영자가 의도 없이 첫 슬롯으로 진입하는 사고 방지</td></tr>
 <tr><td>v6.2</td><td>2026.05.20</td><td>@Nill Yoo</td><td><strong>오버스펙 정리 (UI/UX 검증 후속)</strong> — F "노출 우선순위" 섹션 제거. 안내 1줄(슬라이드 순서는 슬롯 상세에서 드래그)을 E "노출 기간" 섹션 하단 부기로 통합. 입력 폼 6섹션 → 5섹션</td></tr>
 <tr><td>v6.1</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>딥링크 공통 정책 적용</strong> — ① D 섹션 라벨 "소스 타입 + 딥링크" → "딥링크 (선택)" ② 알림(APP-302)과 동일한 <code>DeeplinkPicker</code> 공통 컴포넌트 사용 ③ 소스 타입 7종 → <strong>8종 (이동 없음 추가)</strong>. 배너도 표시 전용 가능 ④ 소스별 딥링크 입력 필드 표 제거 → 공통 컴포넌트의 placeholder/힌트로 대체 ⑤ [CEB-BO-013] §9 공통 정책 참조</td></tr>
-<tr><td>v6.0</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>RFT 양식 정합</strong> — ① Page Properties 13필드 확장 ② 상단 한 줄 헤더 추가 ③ 표 구분자 컴팩트(공백 없음) 형태로 통일 ④ 하이픈 형태 헤딩 번호 ⑤ §3 화면에 노출되는 정보 / §4 상태별 동작 분기 / §5 검증 규칙 신설 ⑥ 권한 표 제거 → "[관리자 > 권한관리] 설정에 따라" 단일화 ⑦ 영역 가이드 ID 참조를 [CEB-BO-013]으로 갱신</td></tr>
+<tr><td>v6.0</td><td>2026.05.19</td><td>@Nill Yoo</td><td><strong>RFT 양식 정합</strong> — ① Page Properties 13필드 확장 ② 상단 한 줄 헤더 추가 ③ 표 구분자 컴팩트(공백 없음) 형태로 통일 ④ 하이픈 형태 헤딩 번호 ⑤ §3 화면에 노출되는 정보 / §4 상태별 동작 분기 / §5 검증 규칙 신설 ⑥ 권한 표 제거 → "[관리자 &gt; 권한관리] 설정에 따라" 단일화 ⑦ 영역 가이드 ID 참조를 [CEB-BO-013]으로 갱신</td></tr>
 <tr><td>v5.0</td><td>2026-05-19</td><td>@Nill Yoo</td><td>운영 도입 공식 발행본</td></tr>
 <tr><td>v4.x</td><td>2026-05-19</td><td>@Nill Yoo</td><td>슬롯 컨텍스트 진입 + 슬롯별 미디어 비율 (메인 1:1 / 그 외 16:9)</td></tr>
 <tr><td>v3.x</td><td>2026-05-18</td><td>@Nill Yoo</td><td>운영자 시나리오 기반 재정의 + 노출 위치 명칭 통일 + 노출 기간 무기한/사용자 지정</td></tr>

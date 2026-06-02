@@ -91,7 +91,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
-<tr><td>Breadcrumb</td><td>홈 > 응모권 > 응모권 현황</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 응모권 &gt; 응모권 현황</td></tr>
 <tr><td>비고</td><td></td></tr>
 </table>
 <hr>
@@ -105,7 +105,7 @@ p {
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>화면 경로</td><td><code>/rft/current</code></td></tr>
 <tr><td>Breadcrumb</td><td>홈 / 응모권 / 응모권 현황</td></tr>
-<tr><td>진입 경로</td><td>사이드바 "래플 > 응모권 현황"</td></tr>
+<tr><td>진입 경로</td><td>사이드바 "래플 &gt; 응모권 현황"</td></tr>
 <tr><td>용도</td><td>응모권 발급·보유·사용 추이 모니터링, 출처별 비중 분석</td></tr>
 </table>
 <h2>2. 화면 구성</h2>
@@ -150,7 +150,7 @@ p {
 <table>
 <tr><th>패널</th><th>좌</th><th>우</th></tr>
 <tr><td>제목</td><td>최근 발급 (5건 배지, 에메랄드 톤)</td><td>최근 사용 (5건 배지, rose 톤)</td></tr>
-<tr><td>데이터</td><td>변동 > 0인 최신 5건</td><td>변동 < 0인 최신 5건</td></tr>
+<tr><td>데이터</td><td>변동 &gt; 0인 최신 5건</td><td>변동 &lt; 0인 최신 5건</td></tr>
 <tr><td>더 보기</td><td>"더 보기 →" 클릭 시 [CEB-BO-RFT-201]?type=ISSUED 진입 (변동 유형 발급 사전 선택)</td><td>"더 보기 →" 클릭 시 [CEB-BO-RFT-201]?type=USED 진입 (변동 유형 사용 사전 선택)</td></tr>
 <tr><td>빈 상태</td><td>"발급 이력이 없습니다."</td><td>"사용 이력이 없습니다."</td></tr>
 </table>
@@ -183,7 +183,7 @@ p {
 <tr><th>데이터 조건</th><th>동작</th></tr>
 <tr><td>기간 내 변동 0건</td><td>통계 카드 3개 모두 "0", 분포 패널 막대 모두 0% (회색), 최근 변동 좌·우 패널 각각 "발급 이력이 없습니다." / "사용 이력이 없습니다." 빈 상태</td></tr>
 <tr><td>분포 0% 카운트</td><td>막대 길이 0%, 텍스트만 회색 처리</td></tr>
-<tr><td>권한 없음 진입</td><td>[관리자 > 권한관리] 설정에 따라 화면 자체 미노출 또는 접근 차단</td></tr>
+<tr><td>권한 없음 진입</td><td>[관리자 &gt; 권한관리] 설정에 따라 화면 자체 미노출 또는 접근 차단</td></tr>
 </table>
 <h2>5. 검증 규칙</h2>
 <table>
@@ -212,7 +212,7 @@ p {
 <tr><td>v2.3</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>최근 변동 좌우 분할 (개발팀 피드백)</strong> — ① §2-4 단일 10건 테이블 → <strong>좌우 분할 (최근 발급 5건 / 최근 사용 5건)</strong>. 발급·사용 본질이 다른 데이터(+/-) 혼재 혼란 해소 ② 각 패널의 "더 보기 →" 클릭 시 [CEB-BO-RFT-201]에 <code>?type=ISSUED</code> 또는 <code>?type=USED</code> 쿼리로 변동 유형 사전 선택 ③ 좁아진 너비 고려 출처 컬럼 호버 툴팁, 아티스트 컨텍스트·참조 컬럼은 제거 (RFT-201에서 풀 정보 조회) ④ §3·§6 정합 갱신 ⑤ §4 빈 상태 메시지 패널별 분리</td></tr>
 <tr><td>v2.2</td><td>2026-05-14</td><td>@Nill Yoo</td><td><strong>출처 분포 5종 재정의 + 닉네임 새 탭 링크화</strong> — ① §2-3 정규 발급 분포 5종 (퀘스트 보상 / PM·ST 보상 / BIVE 보유혜택 / 덕력 랭킹 보상 / GP로 응모권 구매)으로 갱신. 일일 미션 카드 제거 ② §2-4 최근 변동 회원 컬럼: 닉네임 클릭 시 [CEB-BO-USR-201] 회원 상세 새 탭 진입 ③ §6 연관 화면에 [CEB-BO-RFT-301] 추가 ④ 운영 카테고리(래플 취소 환불 / 운영자 보정 적립 / 만료 소멸 / 운영자 회수)는 분포 패널에 노출하지 않음</td></tr>
 <tr><td>v2.1</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>분포 패널 정합</strong> — 아티스트 컨텍스트별 분포 패널 + 보유 회원 분포 4구간 카드 전체 삭제. 출처별 분포 패널을 풀폭(grid-cols-1)으로 확장. 발급 분포 5종 → 4종(서포트 보상 영구 폐기). §3 노출 정보·§4 데이터 분기에서 관련 행 제거. Page Properties 표 신규(13필드)</td></tr>
-<tr><td>v2.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>RFL 톤 전면 재작성</strong> — 권한 매트릭스 제거 후 "[관리자 > 권한관리] 설정을 따름" 단일화. 개발 용어(EARN/USE/FANQUEST_REWARD 등) 한국어 전면 치환. 기간 필터 5종 유지. 최근 변동 10건 고정 + "더 보기" 원클릭. 분포 막대 클릭 시 RFT-201 필터 이동 명시</td></tr>
+<tr><td>v2.0</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>RFL 톤 전면 재작성</strong> — 권한 매트릭스 제거 후 "[관리자 &gt; 권한관리] 설정을 따름" 단일화. 개발 용어(EARN/USE/FANQUEST_REWARD 등) 한국어 전면 치환. 기간 필터 5종 유지. 최근 변동 10건 고정 + "더 보기" 원클릭. 분포 막대 클릭 시 RFT-201 필터 이동 명시</td></tr>
 <tr><td>(v1.x)</td><td>—</td><td>—</td><td>(v1.x 명세 전면 폐기. 이력 보존 목적의 참고용은 git history에서 확인)</td></tr>
 </table>
 

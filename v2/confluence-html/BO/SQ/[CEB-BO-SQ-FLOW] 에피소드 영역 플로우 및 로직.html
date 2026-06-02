@@ -91,7 +91,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
-<tr><td>Breadcrumb</td><td>홈 > 에피소드 > 통합 플로우</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 에피소드 &gt; 통합 플로우</td></tr>
 <tr><td>비고</td><td>본 문서는 화면 단위 명세가 아닌, SQ 영역 전반의 데이터 계층·상태 머신·정책·플로우 통합 정의서. 화면별 UI 명세는 각 화면 ID 문서 참조</td></tr>
 </table>
 <hr>
@@ -104,7 +104,7 @@ p {
 <li><strong>메뉴</strong>: 사이드바 "에피소드" 그룹</li>
 <li><strong>계층 (v2.2부터, 3단계)</strong>: 에피소드 그룹 → 에피소드 → 미션 (미션이 완료 판정을 직접 흡수)</li>
 <li><strong>운영 용어</strong>: 에피소드 그룹 / 에피소드 / <strong>미션</strong></li>
-<li><strong>권한</strong>: [관리자 > 권한관리]에서 설정된 권한을 따른다 ([CEB-BO-011] §3 정합)</li>
+<li><strong>권한</strong>: [관리자 &gt; 권한관리]에서 설정된 권한을 따른다 ([CEB-BO-011] §3 정합)</li>
 </ul>
 <h2>2. 화면 ID 매핑</h2>
 <h3>2-1. 활성 화면</h3>
@@ -455,7 +455,7 @@ p {
 <tr><td>v3.3</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>용어 정정 — "팬덤 포인트" → "덕력(DUK)"</strong> ([CEB-BO-DUK-000] 영역 가이드 표준 정합) — §3-2 에피소드 표·§3-3 미션 표·변경 이력 본문의 보상 화폐 라벨 일괄 정정</td></tr>
 <tr><td><strong>v3.2</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드·미션 정책 4건 정합 갱신 + 정합 정정 보완</strong> — ① §3-2 에피소드 표에 "에피소드 완료 보상" 항목 추가 (메인 전용, 응모권+덕력+BIVE) ② §3-3 미션 표에 "반복 여부 (메인/반복 분기)·반복 주기 (일간/주간/월간, PM·ST 한정)·반복 운영 기간 (그룹 기간 내 검증)" 정합 ③ §5-2-1 메인/반복 에피소드 미션 유형 분기 정책 신설 ④ §5-2-2 메인 에피소드 완료 보상 정책 신설 ⑤ §6-5 미션 추가 플로우 갱신 (메인=단일 잠금, 반복=주기·기간 추가 입력 흐름) ⑥ [CEB-BO-011] v3.2 §5 정책 상수 5행 + 화면별 명세(SQ-202-CREATE/EDIT, SQ-202, SQ-204-CREATE, SQ-204) v3.1 정합 ⑦ <strong>정합 보완(같은 날 추가 정정)</strong>: §5-7 반복 주기 옵션 표기 (월간/주간 잔존) → (일간/주간/월간)으로 정정. §11 관련 문서 섹션에 v3.1 흡수 17개 화면 목록 보충</td></tr>
 <tr><td>v3.1</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>팬퀘스트(Quest) 17개 화면 SQ 영역 흡수</strong> — ① §2-1 활성 화면 매핑에 SQ-302·302-CREATE·302-MD-CANCEL/COMPLE·303·303-EDIT·303-MD-OPEN/CLOSE/DELETE/CANCEL/COMPLE·304·304-MD-REJECT·305·501·501-MD-ADD/EDIT 17개 신규 추가 ② 외부 영역 (외부) 팬퀘스트 Quest 리스트 행 제거 ③ 프로토타입(<code>src/app/sq/quests/page.tsx</code> + <code>src/app/fanquest/*</code>) 1:1 정합 검증 ④ FQ 원본 17개는 DEPRECATED 표기로 이력 보존</td></tr>
-<tr><td>v3.0</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>한국어 도메인 용어 전면 재작성</strong> + 미션 수정 경로 정정<strong> — ① Page Properties 13필드 신설 ② §3 ER 다이어그램(EpisodeGroup·StoryQuest·StoryEpisode 영문 인터페이스 + 영문 필드명) </strong>전면 폐기** → §3 운영 계층 요약으로 재작성 (한국어 도메인 용어, 정책 상수 한국어 표) ③ §4 상태 머신 enum DRAFT/ACTIVE/CLOSED → 임시저장/진행중/종료 한국어 ④ §5 정책에서 코드 함수 호출(<code>hasActiveGroupForArtist()</code>)·테이블명·코드 식별자 모두 한국어 운영 동작 설명으로 치환 ⑤ §6-6 미션 수정 플로우 정정 — v2.2에서 미션 수정 모달이 폐기되고 미션 상세 화면([CEB-BO-SQ-204])에서 진입하므로 잘못된 모달 ID 참조 제거 ⑥ §7 팬퀘스트 연동 표에서 API/헬퍼 코드 식별자 제거 → 운영 동작 설명으로 치환 ⑦ §8 검증 케이스 한국어 ⑧ §9 v1↔v2 매핑 표 정합 갱신 (SQ-204, SQ-204-CREATE 신규 행 추가, 폐지된 화면 명시) ⑨ §1 권한 OPERATOR/EXTERNAL_ARTIST/READ_ONLY 구 enum 제거 → [관리자 > 권한관리] 참조</td></tr>
+<tr><td>v3.0</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>한국어 도메인 용어 전면 재작성</strong> + 미션 수정 경로 정정<strong> — ① Page Properties 13필드 신설 ② §3 ER 다이어그램(EpisodeGroup·StoryQuest·StoryEpisode 영문 인터페이스 + 영문 필드명) </strong>전면 폐기** → §3 운영 계층 요약으로 재작성 (한국어 도메인 용어, 정책 상수 한국어 표) ③ §4 상태 머신 enum DRAFT/ACTIVE/CLOSED → 임시저장/진행중/종료 한국어 ④ §5 정책에서 코드 함수 호출(<code>hasActiveGroupForArtist()</code>)·테이블명·코드 식별자 모두 한국어 운영 동작 설명으로 치환 ⑤ §6-6 미션 수정 플로우 정정 — v2.2에서 미션 수정 모달이 폐기되고 미션 상세 화면([CEB-BO-SQ-204])에서 진입하므로 잘못된 모달 ID 참조 제거 ⑥ §7 팬퀘스트 연동 표에서 API/헬퍼 코드 식별자 제거 → 운영 동작 설명으로 치환 ⑦ §8 검증 케이스 한국어 ⑧ §9 v1↔v2 매핑 표 정합 갱신 (SQ-204, SQ-204-CREATE 신규 행 추가, 폐지된 화면 명시) ⑨ §1 권한 OPERATOR/EXTERNAL_ARTIST/READ_ONLY 구 enum 제거 → [관리자 &gt; 권한관리] 참조</td></tr>
 <tr><td>v2.3</td><td>2026-05-13</td><td>@Nill Yoo</td><td><strong>사이드바 메뉴 재구성</strong> — 팬퀘스트(Quest) 리스트가 본 영역 하위 /sq/quests로 이전. 래플은 별도 "래플" 그룹으로 분리. §2 화면 ID 매핑에 행 추가</td></tr>
 <tr><td>v2.2</td><td>2026-05-12</td><td>@Nill Yoo</td><td><strong>완료 조건 계층 폐기</strong> — 미션이 완료 조건 직접 흡수 (4단계 → 3단계). §3 ER 다이어그램 갱신, §5-7 완료 판정 정책으로 통합, §5-8 cascade에서 완료 조건 행 제거. 화면 매핑에서 완료 조건 추가·수정을 폐지 표기</td></tr>
 <tr><td>v2.1</td><td>2026-05-12</td><td>@Nill Yoo</td><td>용어 통일 — 챕터→미션, 완료 조건 분리. §5-9 미션 순서 변경 정책 신규</td></tr>

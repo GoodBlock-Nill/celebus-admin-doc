@@ -113,7 +113,7 @@ p {
 <tr><td>프레임워크</td><td><strong>Vite + React SPA</strong></td><td>Next.js 아님. 단일 번들 (<code>index-BSosEy4H.js</code>)</td></tr>
 <tr><td>스타일</td><td>TailwindCSS</td><td><code>bg-gray-50 dark:bg-neutral-900</code> — 다크모드 클래스 발견</td></tr>
 <tr><td>폰트</td><td>Pretendard (KO) + Exo 2 (로고)</td><td>jsDelivr CDN</td></tr>
-<tr><td>언어 속성</td><td><code><html lang="ko"></code></td><td>단일 언어. UI 다국어 토글 없음</td></tr>
+<tr><td>언어 속성</td><td><code>&lt;html lang="ko"&gt;</code></td><td>단일 언어. UI 다국어 토글 없음</td></tr>
 <tr><td>인증</td><td>이메일 + 비밀번호</td><td><strong>2FA 미구현</strong></td></tr>
 <tr><td>페이지 타이틀</td><td>"Celebus Backoffice"</td><td></td></tr>
 </table>
@@ -155,12 +155,12 @@ Fans                            ← v2 미정의, placeholder
 <tr><td>서포트 이벤트</td><td>SUP</td><td><strong>(없음)</strong></td><td>❌ 메뉴·화면 미구현</td></tr>
 <tr><td>콘텐츠·소식</td><td>INF</td><td><strong>(없음)</strong></td><td>❌ 메뉴·화면 미구현</td></tr>
 <tr><td>기억저장소 운영</td><td>MEM</td><td><strong>(없음)</strong></td><td>❌ 메뉴·화면 미구현</td></tr>
-<tr><td>BIVE (NFT)</td><td>BIVE</td><td>BIVE > 에디션/민팅/혜택</td><td>✅ 운영 중 (3,196개 NFT 발행)</td></tr>
+<tr><td>BIVE (NFT)</td><td>BIVE</td><td>BIVE &gt; 에디션/민팅/혜택</td><td>✅ 운영 중 (3,196개 NFT 발행)</td></tr>
 <tr><td>디지털 굿즈 (기타)</td><td>COL</td><td><strong>(없음)</strong></td><td>❌ 메뉴·화면 미구현</td></tr>
 <tr><td>회원</td><td>USR</td><td>회원</td><td>⚠️ 부분 구현 (탭 구조 상이)</td></tr>
-<tr><td>아티스트</td><td>ART</td><td>아티스트 > 그룹/멤버</td><td>⚠️ 부분 구현 (활동 통계 탭 없음)</td></tr>
+<tr><td>아티스트</td><td>ART</td><td>아티스트 &gt; 그룹/멤버</td><td>⚠️ 부분 구현 (활동 통계 탭 없음)</td></tr>
 <tr><td>홈·배너</td><td>HOM</td><td><strong>(없음)</strong></td><td>❌ 메뉴·화면 미구현</td></tr>
-<tr><td>관리자</td><td>SYS</td><td>관리자 > 리스트/권한관리</td><td>⚠️ 부분 구현 (4단계 권한 없음)</td></tr>
+<tr><td>관리자</td><td>SYS</td><td>관리자 &gt; 리스트/권한관리</td><td>⚠️ 부분 구현 (4단계 권한 없음)</td></tr>
 </table>
 <p><strong>결과</strong>: v2 12개 영역 중</p>
 <ul>
@@ -258,7 +258,7 @@ Fans                            ← v2 미정의, placeholder
 <table>
 <tr><th>순서</th><th>실제 탭</th><th>v2 BO-003 정의 (4탭)</th><th>매핑</th></tr>
 <tr><td>1</td><td>기본정보</td><td>기본</td><td>✅</td></tr>
-<tr><td>2</td><td>SNS & Link</td><td>SNS&LINK</td><td>✅</td></tr>
+<tr><td>2</td><td>SNS &amp; Link</td><td>SNS&amp;LINK</td><td>✅</td></tr>
 <tr><td>3</td><td>멤버</td><td>멤버</td><td>✅</td></tr>
 <tr><td>—</td><td><strong>(없음)</strong></td><td><strong>활동 통계</strong> ⭐ v2 신규</td><td>❌ 미구현</td></tr>
 </table>
@@ -464,13 +464,13 @@ Show Error
 <h3>4.4 에러 처리</h3>
 <table>
 <tr><th>화면</th><th>에러</th></tr>
-<tr><td>게임존 > 랭킹</td><td>API 500 ("Request failed with status code 500")</td></tr>
-<tr><td>게임존 > GP 교환소</td><td>페이지 크래시 (<code>null.toLowerCase()</code> JS 에러)</td></tr>
+<tr><td>게임존 &gt; 랭킹</td><td>API 500 ("Request failed with status code 500")</td></tr>
+<tr><td>게임존 &gt; GP 교환소</td><td>페이지 크래시 (<code>null.toLowerCase()</code> JS 에러)</td></tr>
 </table>
 <p>→ <strong>에러 바운더리</strong> 동작은 하나, <strong>빠른 수정 필요</strong>한 회귀.</p>
 <h3>4.5 다크모드 지원</h3>
 <ul>
-<li><code><body class="bg-gray-50 dark:bg-neutral-900"></code> — 다크모드 클래스 발견</li>
+<li><code>&lt;body class="bg-gray-50 dark:bg-neutral-900"&gt;</code> — 다크모드 클래스 발견</li>
 <li>토글 UI는 미발견 (UI 테마 전환 인터랙션 미구현 가능성)</li>
 </ul>
 <hr>

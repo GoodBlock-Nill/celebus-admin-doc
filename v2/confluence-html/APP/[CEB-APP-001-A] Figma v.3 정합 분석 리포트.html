@@ -127,7 +127,7 @@ p {
 </table>
 <hr>
 <h2>1. 화면별 차이 카탈로그</h2>
-<p><!-- 영역 배치 순서로 채움: HOM → FQ → EVT/DUK → MEM → ART → INF/COL --></p>
+<p>&lt;!-- 영역 배치 순서로 채움: HOM → FQ → EVT/DUK → MEM → ART → INF/COL --&gt;</p>
 <h2>1-A. HOM 영역</h2>
 <h3>CEB-HOM-001 홈 메인 (문서 v2.7)</h3>
 <ul>
@@ -217,7 +217,7 @@ p {
 <tr><td>E201-1</td><td>🔴</td><td><strong>보상 리스트 구조: 세로 리스트 → 가로 레벨 스텝퍼</strong></td><td>§2.3 Lv.1~최대(10) 세로 리스트(✅/🔓/🔒 "???")</td><td>가로 레벨 스텝퍼(1✓2✓3●4 5) + 선택 레벨 "Lv.3 달성 보상" 카드(디지털 포카세트 지급완료 / 사인앨범 래플 100명 추첨 [참여하기])</td><td>§2.3 보상 표현을 가로 스텝퍼+선택 레벨 카드로 재작성</td></tr>
 <tr><td>E201-2</td><td>🟡</td><td><strong>레벨 카드 표현</strong></td><td>"🏆 팬덤 Lv.{N}" + "{현재}/{목표}DUK"</td><td>"현재 레벨 / Lv.3 / 다음 레벨까지 2,000DUK 남음" + 60% 세그먼트 바 + "3,000/5,000DUK"</td><td>레벨 카드 문구·세그먼트 바 정합</td></tr>
 <tr><td>E201-3</td><td>🟡</td><td><strong>스탯/활동 요약 구성</strong></td><td>§2.4 3종(참여 팬/이번 달 합계/주요 활동 유형)</td><td>2종(참여 인원 324 / 누적 DUK 12,000) + 내 기여도 150DUK 0.4%</td><td>활동 요약 항목 수·명칭 정합</td></tr>
-<tr><td>E201-4</td><td>🟡</td><td><strong>덕력 획득 CTA 종류</strong></td><td>출석 체크·퀘스트·랭킹 3종</td><td>출석체크·도전게임·컬렉션 확인 (각 ✨+10) + "전체 보기 >"</td><td>CTA 항목·라벨·전체 보기 정합</td></tr>
+<tr><td>E201-4</td><td>🟡</td><td><strong>덕력 획득 CTA 종류</strong></td><td>출석 체크·퀘스트·랭킹 3종</td><td>출석체크·도전게임·컬렉션 확인 (각 ✨+10) + "전체 보기 &gt;"</td><td>CTA 항목·라벨·전체 보기 정합</td></tr>
 <tr><td>E201-5</td><td>🟢</td><td>레벨 수</td><td>최대 10레벨</td><td>스텝퍼 5레벨 노출</td><td>시안 5레벨/문서 10레벨 차이 확인(BO 설정값)</td></tr>
 </table>
 <h3>CEB-DUK-101 덕력 랭킹 (문서 v2.1)</h3>
@@ -226,7 +226,7 @@ p {
 </ul>
 <table>
 <tr><th>#</th><th>등급</th><th>차이</th><th>문서 현재</th><th>Figma v.3</th><th>반영 권고</th></tr>
-<tr><td>D101-1</td><td>🔴</td><td><strong>덕력 이력: 바텀시트 → 별도 화면</strong></td><td>§2.6 [덕력 이력 보기 →] 바텀시트</td><td>[덕력 내역 보기 >] → <strong>별도 화면 DUK-103</strong>(신규, D그룹)</td><td>이력을 별도 화면으로 분리(§2.6 재정의) + DUK-103 신규 문서 필요</td></tr>
+<tr><td>D101-1</td><td>🔴</td><td><strong>덕력 이력: 바텀시트 → 별도 화면</strong></td><td>§2.6 [덕력 이력 보기 →] 바텀시트</td><td>[덕력 내역 보기 &gt;] → <strong>별도 화면 DUK-103</strong>(신규, D그룹)</td><td>이력을 별도 화면으로 분리(§2.6 재정의) + DUK-103 신규 문서 필요</td></tr>
 <tr><td>D101-2</td><td>🔴</td><td><strong>시즌 보상: 안내 텍스트 → 별도 카드+화면</strong></td><td>§2.5 리더보드 하단 안내 텍스트</td><td>"🎁 시즌 보상 / 보상을 확인 해보세요" 카드 + [보상 확인] → <strong>DUK-105 내보상 화면</strong>(신규, D그룹)</td><td>시즌 보상 진입을 카드+별도 화면으로 재정의 + DUK-105 신규 문서 필요</td></tr>
 <tr><td>D101-3</td><td>🟡</td><td><strong>내 랭킹 카드에 상위 % 뱃지</strong></td><td>순위 "시즌 {N}위"</td><td>"내 랭킹 / 5위 [상위 9.4%]" + 획득/보유 DUK 2카드</td><td>내 랭킹 카드에 상위 백분위 뱃지 추가</td></tr>
 <tr><td>D101-4</td><td>🟢</td><td>TOP 100 표기</td><td>상위 3 🥇🥈🥉 + 내 행 ⭐보라</td><td>순위 숫자 + 내 행 "YOU" 라벨</td><td>medal/YOU 표기 정합</td></tr>
@@ -319,7 +319,7 @@ p {
 <table>
 <tr><th>#</th><th>등급</th><th>차이</th><th>문서 현재</th><th>Figma v.3</th><th>반영 권고</th></tr>
 <tr><td>C101-1</td><td>🟡</td><td><strong>화면명</strong></td><td>"컬렉션" (대면) / "BIVE"(내부)</td><td>Figma 라벨 "BIVE 도감"·"도감 보기"</td><td>대면 명칭 통일(컬렉션 vs 도감) 결정 + Figma 리네임 권고</td></tr>
-<tr><td>C101-2</td><td>🟢</td><td>BIVE 상세</td><td>상세 보기(이미지+등급+설명)</td><td>바텀시트 + 미보유 시 "해당 바이브 얻기 >" 획득 안내 CTA</td><td>미보유 획득 안내 CTA 정합</td></tr>
+<tr><td>C101-2</td><td>🟢</td><td>BIVE 상세</td><td>상세 보기(이미지+등급+설명)</td><td>바텀시트 + 미보유 시 "해당 바이브 얻기 &gt;" 획득 안내 CTA</td><td>미보유 획득 안내 CTA 정합</td></tr>
 <tr><td>C101-3</td><td>🟢</td><td>—</td><td>필터 3종([아티스트][이벤트][스페셜]) + 2열 그리드</td><td>일치</td><td>Figma 링크만 추가</td></tr>
 </table>
 <h3>CEB-ART-201 아티스트 탐색 (문서 v1.5) — ✅ 일치</h3>
