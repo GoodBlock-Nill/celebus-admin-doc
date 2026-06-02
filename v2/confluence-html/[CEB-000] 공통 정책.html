@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>ALL (전체)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v5.8</td></tr>
+<tr><td>버전</td><td>v5.9</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>비고</td><td>고도화 서비스 전체 공통 정책 정의서. 각 화면 스펙 문서는 이 문서를 참조.</td></tr>
 </table>
@@ -143,8 +143,9 @@ p {
 <h3>1.4 시즌 용어</h3>
 <table>
 <tr><th>구분</th><th>통일 용어</th><th>설명</th></tr>
-<tr><td>시즌</td><td>덕력 시즌</td><td>BO에서 1개월 또는 3개월 시즌 주기 설정 가능 (기본: 월간). 1위/TOP10/TOP10% 보상 지급.</td></tr>
-<tr><td>시즌 (연간)</td><td>랭킹 초기화</td><td>연 1회 획득 덕력 초기화. BO에서 시즌 종료일 설정.</td></tr>
+<tr><td>시즌</td><td>덕력 시즌</td><td>BO에서 <strong>1개월 단위</strong>로 운영 (시작일 + 1개월 자동 종료). 시즌당 1회 정산, 1위/TOP10/TOP10% 보상 지급.</td></tr>
+<tr><td>랭킹 산정</td><td>시즌 랭킹</td><td><strong>해당 시즌(월)에 획득한 덕력 누적</strong> 기준 순위. 시즌 종료 시 정산 후 다음 시즌은 0부터 다시 집계(획득 누적만 리셋).</td></tr>
+<tr><td>보유 덕력</td><td>잔액</td><td><strong>영구 보존</strong> — 시즌 전환·랭킹 리셋과 무관하게 소멸·초기화되지 않으며, 사용(응원·해금) 시에만 차감된다.</td></tr>
 </table>
 <h3>1.5 기존 게임존 용어</h3>
 <blockquote>
@@ -204,7 +205,7 @@ p {
 <p>유저가 인지해야 할 재화는 4종이다. 이원화 구분(획득/보유 덕력, 메인/이벤트 GP)은 내부 로직으로만 관리하며, 유저 화면에서는 통합 표시한다.</p>
 <table>
 <tr><th>재화</th><th>성격</th><th>획득</th><th>소비</th><th>CELB 교환</th><th>소멸</th><th>범위</th></tr>
-<tr><td>덕력</td><td>활동 지표 (XP)</td><td>퀘스트/Trivia/PM/SNS 등 자동 적립</td><td>서포트 이벤트 응원, 독점 콘텐츠 해금</td><td>불가</td><td>랭킹만 연 1회 초기화 (보유 덕력은 소멸 없음)</td><td>아티스트별 별도</td></tr>
+<tr><td>덕력</td><td>활동 지표 (XP)</td><td>퀘스트/Trivia/PM/SNS 등 자동 적립</td><td>서포트 이벤트 응원, 독점 콘텐츠 해금</td><td>불가</td><td>랭킹용 획득 덕력만 시즌(월)마다 리셋 (보유 덕력은 소멸 없음)</td><td>아티스트별 별도</td></tr>
 <tr><td>응모권</td><td>래플 참여권</td><td>퀘스트 보상, ST 탈락 보상, PM/ST 보상 (BO에서 게임별 응모권 지급 여부 설정), GP로 응모권 구매 (BO에서 비율 설정)</td><td>래플 응모 (1장 = 1회)</td><td>불가</td><td>사용 시 소모</td><td><strong>아티스트 무관 통합</strong> (어떤 아티스트 활동으로 획득한 응모권이든 모든 래플에 사용 가능)</td></tr>
 </table>
 <ul>
@@ -221,25 +222,25 @@ p {
 <p>덕력은 <strong>획득 덕력</strong>과 <strong>보유 덕력</strong>으로 이원 관리된다. 유저 화면에서는 통합 표시하고, 상세 페이지에서만 구분한다.</p>
 <table>
 <tr><th>구분</th><th>설명</th><th>용도</th><th>초기화</th></tr>
-<tr><td>획득 덕력</td><td>활동할 때마다 누적</td><td>개인 랭킹 산출 기준</td><td>연 1회 초기화 (<strong>BO에서 시즌 종료일 설정</strong>, 종료 시 자동 초기화)</td></tr>
-<tr><td>보유 덕력</td><td>획득 - 사용</td><td>서포트 이벤트 응원, 독점 콘텐츠 해금</td><td>소멸 없음, 영구 유지</td></tr>
+<tr><td>획득 덕력</td><td>시즌(월) 동안 활동할 때마다 누적</td><td>개인 랭킹 산출 기준</td><td><strong>시즌(월) 종료 시 정산 후 0 리셋</strong> (시즌 = 시작일 + 1개월 자동 종료, 시즌당 1회)</td></tr>
+<tr><td>보유 덕력</td><td>획득 - 사용 (시즌 무관 영구 누적)</td><td>서포트 이벤트 응원, 독점 콘텐츠 해금</td><td><strong>소멸·초기화 없음, 영구 유지</strong></td></tr>
 <tr><td>사용 덕력</td><td>서포트 이벤트 + 독점 콘텐츠에 응원한 총량</td><td>이력 조회용</td><td>-</td></tr>
 </table>
 <ul>
 <li>서포트 이벤트에 덕력을 응원해도 <strong>랭킹에는 영향 없음</strong> (랭킹은 획득 덕력 기준)</li>
 <li>유저 화면: 통합 표시 ("내 덕력 1,234DUK"), 상세에서만 획득/보유/사용 구분</li>
 </ul>
-<h4>연간 시즌 초기화 절차</h4>
+<h4>시즌(월) 정산·리셋 절차</h4>
 <table>
 <tr><th>순서</th><th>절차</th></tr>
-<tr><td>1</td><td>BO에서 시즌 종료일 도래 → 랭킹 동결</td></tr>
-<tr><td>2</td><td>관리자가 TOP 순위 확인 후 보상 수동 지급</td></tr>
-<tr><td>3</td><td>관리자가 "시즌 초기화" 실행 → 획득 덕력 0으로 리셋</td></tr>
-<tr><td>4</td><td>새 시즌 자동 시작</td></tr>
+<tr><td>1</td><td>시즌(월) 종료일(말일 23:59) 도래 → 랭킹 동결</td></tr>
+<tr><td>2</td><td>서버 자동 판정 → 1위/TOP10/TOP10% 보상 지급</td></tr>
+<tr><td>3</td><td>획득 덕력 0으로 리셋</td></tr>
+<tr><td>4</td><td>다음 시즌(월) 자동 시작</td></tr>
 </table>
 <blockquote>
-<p>보유 덕력은 초기화되지 않음. 진행 중인 서포트 이벤트 응원분도 영향 없음.</p>
-<p>시즌 간 공백: 종료~초기화 사이 획득 덕력은 새 시즌에 귀속.</p>
+<p>보유 덕력은 초기화되지 않음(영구). 진행 중인 서포트 이벤트 응원분도 영향 없음.</p>
+<p>시즌 간 공백 없이 다음 시즌으로 즉시 전환.</p>
 </blockquote>
 <h3>3.3 GP 이원화 원칙</h3>
 <blockquote>
@@ -1278,6 +1279,7 @@ p {
 <tr><td><strong>v5.4</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>기억저장소 소셜 기능 추가 — [CEB-MEM-102] 모두의 기억저장소 / [CEB-MEM-103] 닉네임 기억저장소 신규</strong>. 팀 내 기획 제안(<code>docs/CA-[CEB-MEM-102]·[CEB-MEM-103].pdf</code>) 반영. ① <strong>§1.6 기억저장소 용어 신설</strong> — "내/모두의/{닉네임} 님의 기억저장소" 3언어 라벨(KO/EN/JP) + 좋아요·조회수 라벨 ② <strong>§7.1 저장소 공개 UI 위치 명문화</strong> — [CEB-MEM-101] 헤더 우측 ⚙️ 버튼 → 설정 바텀시트. 비공개→공개 전환 시 모달 안내 추가 ③ <strong>§7.6 신설 — 기억저장소 소셜 인터랙션</strong> — 좋아요(본인 게시글 허용·게시글당 1회·푸시 미발송)·조회수(로그인 + 브라우저 세션 + 24시간 쿨다운). 차단(Block)은 본 단계 미도입(신고로 대체) ④ <strong>§15 푸시 정책 — 기억 좋아요 알림 미발송 명시</strong> ⑤ <strong>§16 화면 목록에 MEM-102/103 추가</strong>. 동기화: [CEB-MEM-101] v1.7, [CEB-MEM-202] 좋아요·조회수 UI 추가. <strong>DB 영향</strong>: <code>users.memories_public</code>·<code>profile_photo_url</code>·<code>memories.view_count</code>·<code>like_count</code> 컬럼, <code>memory_likes</code>·<code>memory_views</code> 신규 테이블</td></tr>
 <tr><td><strong>v5.3</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>팬덤 레벨 카운터 모델 명확화 — 리셋 모델 확정</strong>. 사용자(@Nill Yoo)·개발자·디자이너 팀의 공통 이해와 일치시키기 위해 §5.5 표 표현 정정. ① v5.2 표 컬럼명 <strong>"누적 목표 덕력" → "레벨업 목표 덕력"</strong> 변경 (각 레벨 단독 목표값) ② <strong>"직전 대비 증가폭" 컬럼 제거</strong> (누적 모델 전제이므로 리셋 모델에서는 의미 없음) ③ <strong>카운터 모델 명시 문구 신규</strong>: "각 레벨에서 0부터 시작, 목표 도달 시 다음 레벨 진입과 동시에 카운터 0 리셋" ④ 진행률 공식 재명시: <code>현재 레벨 카운터 / 해당 레벨 목표 덕력 × 100</code>. <strong>곡선 수치는 동일 유지</strong> (10K/30K/70K/.../6M). 시드 주석·프로토타입 UI 코드는 이미 리셋 모델로 작동 중이라 코드 변경 불필요. 동기화: [CEB-EVT-201] v2.2 (§2.2.1·§2.2). <strong>Out of scope</strong>: 캡 정책(일일 500/주간 3,000DUK)과 "Lv5 6~12개월 도달" 의도 정합성 — 별도 캘리브레이션 미팅 안건.</td></tr>
 <tr><td><strong>v5.5</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>기억저장소 3대 정책 변경 + 덕력 단위 표기 일괄 변경</strong>. ① <strong>§7.5 캘린더 도트</strong> — "도트 1개 + 우측 +N 표기" → <strong>"도트 1개만 표시 (게시물 수·이모지 종류 미반영, +N 표기 없음)"</strong>. 자세한 구성은 날짜 탭 시 아코디언에서 확인하는 흐름으로 단일화 ② <strong>§7.5 감정 이모지 선택</strong> — "1~3개 멀티 선택 (토글)" → <strong>"1개 단일 선택 (라디오)"</strong>. 미선택 시 [저장하기] 비활성 정책 동일 적용 ③ <strong>이미지 첨부 (MEM-201 §2.5)</strong> — "OS 이미지 Picker" → <strong>"OS 기본 피커 (카메라 촬영 + 갤러리 선택 둘 다 제공)"</strong> 명문화 ④ <strong>§13.2 숫자 포맷 — 덕력 단위 <code>pt</code> → <code>DUK</code> 일괄 변경</strong> (KO/EN/JP 모두 DUK 통일. Fan Power/推し力 라벨은 §1.3 그대로 유지). 본문·changelog 인용·일일/주간 캡·티어 보상·스트릭·서포트 응원·해금 비용·UI 토스트 메시지 등 정책 문서 내 모든 'pt' 표기 일괄 치환. <strong>영향 화면</strong>: MEM-101 v1.8 / MEM-201 v2.1 / MEM-202 v1.4 / DUK-101 v2.0 / DUK-201 v1.5 / EVT-201 v1.9 / HOM-001 v2.5 / FQ-101 v2.1 / FQ-501 v1.6 / FQ-205 v2.5 / ART-101 v1.9 모두 동기화. v2/confluence-html/ HTML 변환본 13개 + prototype-app/src UI 텍스트 동기화. <strong>DB 컬럼명·코드 변수명(<code>reward_pt</code>/<code>target_pt</code>/<code>rewardPt</code> 등) 변경 없음</strong> (UI 라벨만 갱신). <strong>디자인 영향</strong>: 캘린더 +N 표기 제거로 "여러 게시물" 단서가 카드 탭 전까지 미노출 — 디자이너 공유 필요</td></tr>
+<tr><td><strong>v5.9</strong></td><td>2026-06-02</td><td>@Nill Yoo</td><td><strong>덕력 시즌 용어·이원화 정합 (재편 갭 정정)</strong>. ① §1.4 시즌 용어: "1개월 또는 3개월·연 1회 초기화·BO 종료일 설정" → "<strong>시즌=1개월 고정(시작+1개월 자동 종료)·시즌당 1회 정산</strong>", 랭킹 산정은 <strong>해당 시즌(월) 획득 덕력 누적</strong> 기준, <strong>보유 덕력은 영구 보존(소멸·초기화 없음)</strong> 명시 ② §3.1 재화표·§3.2 이원화·"연간 시즌 초기화 절차" → 시즌(월) 정산·리셋 절차로 정정(획득 덕력만 시즌 리셋, 보유 덕력 불변). 정책 결정: 보유 덕력 절대 소멸 금지, 랭킹은 월별 획득 덕력</td></tr>
 <tr><td><strong>v5.8</strong></td><td>2026-06-02</td><td>@Nill Yoo</td><td><strong>§5.2.1 덕력 시즌 보상 정책 — 시즌 1개월·1회 정산으로 재편</strong>. ① 섹션명 "덕력 시즌 보상 (월간 정산)" → "덕력 시즌 보상 (시즌 정산 · 시즌당 1회)" ② 지급 시점 "월간 시즌 종료 시 자동 실행 (말일 23:59 → 보상 처리 → 새 시즌)" → "시즌(1개월) 종료 시 1회 자동 실행 (말일 23:59 → 보상 처리 → 새 시즌)" ③ "월간 시즌 아카이브 보존" 절명 → "시즌 아카이브 보존", 보존 기간 "최근 6개월" → "최근 6개 시즌", 접근 설명 "이전 월 전환" → "이전 시즌 전환". 보상 등급(1위/TOP10/TOP10%)·중복 지급 금지 규칙·자동 지급 방식 내용은 변경 없음.</td></tr>
 <tr><td><strong>v5.7</strong></td><td>2026.05.29</td><td>@Nill Yoo</td><td><strong>§4.8 아티스트 노출·필터 기준 신설</strong> — BO 탐색 노출 정책([CEB-BO-ART-201] §4.4)을 앱 전반과 정합. 아티스트 노출을 두 플래그로 정의: ① 상태 Inactive면 개인화 화면 포함 앱 전 영역 미노출(상태 우선) ② 탐색 노출 끔이면 <strong>발견·신규 선택 영역(아티스트 탐색·추천·전체·신규 추가)에서만 제외</strong>하고, 이미 팔로우/선택한 아티스트의 개인화·콘텐츠 화면(홈 선택·아티스트 메인 전환·알림 필터·해당 아티스트 래플·서포트·팬덤레벨·퀘스트)은 유지(기존 경험 보존). 앱 8개 화면([CEB-HOM-001]·[CEB-ART-101]·[CEB-NTF-510]·[CEB-EVT-101]·[CEB-DUK-201]·[CEB-EVT-201]·[CEB-FQ-101]·[CEB-ART-201])에 §4.8 참조 추가. BO 측 [CEB-BO-ART-201 v1.3]·[CEB-BO-ART-301 v1.2]·[CEB-BO-003 v2.3] 노출 범위 문구를 '발견 영역 한정'으로 정합</td></tr>
 </table>
