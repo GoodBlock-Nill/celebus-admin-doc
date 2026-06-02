@@ -39,7 +39,7 @@ export interface FeedItem {
   relatedContents?: RelatedContent[]; // 최대 3
   // 공지
   coverImage?: string; // 대표 이미지 (파일명)
-  ctaLabel?: string;
+  ctaLabel?: ML; // CTA 버튼 라벨 (다국어 KO/EN/JA, 공지)
   ctaUrl?: string;
 }
 
@@ -72,9 +72,9 @@ export const feedItems: FeedItem[] = [
   { id: 9, type: '소식', status: '보관', groupName: 'MADEIN', official: true, title: ml('MADEIN 데뷔 1주년 기념 화보 공개', 'MADEIN 1st Anniversary Photobook', 'MADEIN デビュー1周年 グラビア公開'), date: '2026.03.02', body: ml('데뷔 1주년을 기념한 화보가 공개되었습니다.', 'A photobook celebrating the 1st debut anniversary has been released.', 'デビュー1周年を記念したグラビアが公開されました。'), images: ['madein-1y-1.jpg', 'madein-1y-2.jpg'], likes: 3100, relatedContents: [] },
 
   // 공지 (다국어 본문 + 대표 이미지 + CTA)
-  { id: 10, type: '공지', status: '게시', groupName: 'V01D', official: false, title: ml('V01D 팬미팅 좌석 배치 변경 안내', 'V01D Fan Meeting Seating Change Notice', 'V01D ファンミーティング 座席変更のお知らせ'), date: '2026.04.20', body: ml('V01D 팬미팅의 좌석 배치가 일부 변경되어 안내드립니다.\n\n변경된 좌석은 CELEBUS 앱 Event 탭에서 확인하세요. 문의사항은 고객센터로 연락해주세요.', 'The seating arrangement for the V01D fan meeting has been partially changed.\n\nPlease check the updated seats in the CELEBUS app Event tab. Contact customer service for inquiries.', 'V01Dファンミーティングの座席配置が一部変更されました。\n\n変更後の座席はCELEBUSアプリのEventタブでご確認ください。お問い合わせはカスタマーセンターまで。'), coverImage: 'fanmeeting-seat.png', ctaLabel: '좌석 배치도 확인하기', ctaUrl: 'https://celebus.app/event/seat' },
-  { id: 11, type: '공지', status: '게시', groupName: 'V01D', official: false, title: ml('V01D 콘서트 MD 사전예약 안내', 'V01D Concert MD Pre-order Notice', 'V01D コンサートMD 事前予約のお知らせ'), date: '2026.04.20', body: ml('콘서트 MD 사전예약 안내입니다.\n\n2026.04.20 오후 12시에 오픈됩니다. 문의사항은 고객센터로 연락해주세요.', 'Concert MD pre-order notice.\n\nOpens at 12:00 PM on 2026.04.20. Contact customer service for inquiries.', 'コンサートMD事前予約のお知らせです。\n\n2026.04.20 12時にオープンします。お問い合わせはカスタマーセンターまで。'), coverImage: '', ctaLabel: '사전예약 링크', ctaUrl: 'https://celebus.app/md/preorder' },
-  { id: 12, type: '공지', status: '임시저장', groupName: 'iKON', official: false, title: ml('iKON 공식 굿즈 입고 지연 안내', '', ''), date: '', body: ml('굿즈 입고가 지연되어 안내드립니다.', '', ''), coverImage: '', ctaLabel: '', ctaUrl: '' },
+  { id: 10, type: '공지', status: '게시', groupName: 'V01D', official: false, title: ml('V01D 팬미팅 좌석 배치 변경 안내', 'V01D Fan Meeting Seating Change Notice', 'V01D ファンミーティング 座席変更のお知らせ'), date: '2026.04.20', body: ml('V01D 팬미팅의 좌석 배치가 일부 변경되어 안내드립니다.\n\n변경된 좌석은 CELEBUS 앱 Event 탭에서 확인하세요. 문의사항은 고객센터로 연락해주세요.', 'The seating arrangement for the V01D fan meeting has been partially changed.\n\nPlease check the updated seats in the CELEBUS app Event tab. Contact customer service for inquiries.', 'V01Dファンミーティングの座席配置が一部変更されました。\n\n変更後の座席はCELEBUSアプリのEventタブでご確認ください。お問い合わせはカスタマーセンターまで。'), coverImage: 'fanmeeting-seat.png', ctaLabel: ml('좌석 배치도 확인하기', 'Check Seating Chart', '座席表を確認する'), ctaUrl: 'https://celebus.app/event/seat' },
+  { id: 11, type: '공지', status: '게시', groupName: 'V01D', official: false, title: ml('V01D 콘서트 MD 사전예약 안내', 'V01D Concert MD Pre-order Notice', 'V01D コンサートMD 事前予約のお知らせ'), date: '2026.04.20', body: ml('콘서트 MD 사전예약 안내입니다.\n\n2026.04.20 오후 12시에 오픈됩니다. 문의사항은 고객센터로 연락해주세요.', 'Concert MD pre-order notice.\n\nOpens at 12:00 PM on 2026.04.20. Contact customer service for inquiries.', 'コンサートMD事前予約のお知らせです。\n\n2026.04.20 12時にオープンします。お問い合わせはカスタマーセンターまで。'), coverImage: '', ctaLabel: ml('사전예약 링크', 'Pre-order Link', '事前予約リンク'), ctaUrl: 'https://celebus.app/md/preorder' },
+  { id: 12, type: '공지', status: '임시저장', groupName: 'iKON', official: false, title: ml('iKON 공식 굿즈 입고 지연 안내', '', ''), date: '', body: ml('굿즈 입고가 지연되어 안내드립니다.', '', ''), coverImage: '', ctaLabel: ml(''), ctaUrl: '' },
 
   // 상태 보강 — 각 타입 탭에 게시/임시저장/보관 3상태 모두 존재 (프로토타입 참고용)
   // 소식 임시저장
@@ -84,7 +84,7 @@ export const feedItems: FeedItem[] = [
   { id: 14, type: '일정', status: '보관', groupName: 'V01D', official: true, title: ml('V01D 데뷔 쇼케이스', 'V01D Debut Showcase', 'V01D デビューショーケース'), date: '2026.02.03', time: '19:00', location: '예스24 라이브홀' },
 
   // 공지 보관
-  { id: 15, type: '공지', status: '보관', groupName: 'V01D', official: false, title: ml('V01D 1st 미니앨범 예약판매 종료 안내', 'V01D 1st Mini Album Pre-order Closed', 'V01D 1stミニアルバム 予約販売終了のお知らせ'), date: '2026.03.15', body: ml('1st 미니앨범 예약판매가 종료되었습니다. 많은 관심에 감사드립니다.', 'Pre-orders for the 1st mini album have closed. Thank you for your interest.', '1stミニアルバムの予約販売は終了しました。たくさんのご関心ありがとうございました。'), coverImage: 'minialbum-preorder.png', ctaLabel: '', ctaUrl: '' },
+  { id: 15, type: '공지', status: '보관', groupName: 'V01D', official: false, title: ml('V01D 1st 미니앨범 예약판매 종료 안내', 'V01D 1st Mini Album Pre-order Closed', 'V01D 1stミニアルバム 予約販売終了のお知らせ'), date: '2026.03.15', body: ml('1st 미니앨범 예약판매가 종료되었습니다. 많은 관심에 감사드립니다.', 'Pre-orders for the 1st mini album have closed. Thank you for your interest.', '1stミニアルバムの予約販売は終了しました。たくさんのご関心ありがとうございました。'), coverImage: 'minialbum-preorder.png', ctaLabel: ml(''), ctaUrl: '' },
 ];
 
 export const FEED_GROUPS = ['V01D', 'iKON', 'MADEIN', 'CELEBUS', '언더라이트 (UNDER:LIGHT)'];

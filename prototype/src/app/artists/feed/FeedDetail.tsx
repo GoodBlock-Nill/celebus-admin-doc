@@ -142,11 +142,11 @@ export default function FeedDetail({ item }: { item: FeedItem }) {
             </div>
           )}
 
-          {item.type === '공지' && item.ctaLabel && (
+          {item.type === '공지' && item.ctaLabel?.[lang] && (
             <div className="border-t border-gray-100 pt-5">
-              <p className="text-xs text-gray-500 mb-2">CTA 버튼</p>
+              <p className="text-xs text-gray-500 mb-2">CTA 버튼 <span className="text-gray-400">({lang})</span></p>
               <a href={item.ctaUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 h-10 px-4 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100">
-                {item.ctaLabel}<ArrowTopRightOnSquareIcon className="w-4 h-4" />
+                {item.ctaLabel[lang]}<ArrowTopRightOnSquareIcon className="w-4 h-4" />
               </a>
             </div>
           )}

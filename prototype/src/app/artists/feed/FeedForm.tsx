@@ -30,7 +30,8 @@ export default function FeedForm({ mode, initial }: { mode: 'create' | 'edit'; i
   const [images, setImages] = useState<string[]>(initial?.images ?? []);
   const [cover, setCover] = useState(initial?.coverImage ?? '');
   const [contents, setContents] = useState<RelatedContent[]>(initial?.relatedContents ?? []);
-  const [ctaLabel, setCtaLabel] = useState(initial?.ctaLabel ?? '');
+  const [ctaLabel, setCtaLabel] = useState<ML>(initial?.ctaLabel ?? { ...emptyML });
+  const [ctaLabelLang, setCtaLabelLang] = useState<Lang>('KO');
   const [ctaUrl, setCtaUrl] = useState(initial?.ctaUrl ?? '');
 
   const [cancelOpen, setCancelOpen] = useState(false);
@@ -166,10 +167,8 @@ export default function FeedForm({ mode, initial }: { mode: 'create' | 'edit'; i
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-900 mb-2">CTA 버튼 <span className="text-gray-400 font-normal">(선택)</span></label>
-                <div className="flex items-center gap-2">
-                  <input value={ctaLabel} onChange={(e) => setCtaLabel(e.target.value)} maxLength={30} placeholder="버튼 라벨 (예: 좌석 배치도 확인하기)" className="w-[260px] h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                  <input value={ctaUrl} onChange={(e) => setCtaUrl(e.target.value)} placeholder="https://" className="flex-1 h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                </div>
+                <LangField label="버튼 라벨" lang={ctaLabelLang} onLangChange={setCtaLabelLang} value={ctaLabel[ctaLabelLang]} onChange={(v) => setCtaLabel({ ...ctaLabel, [ctaLabelLang]: v })} values={ctaLabel} maxLength={30} placeholder="버튼 라벨 (예: 좌석 배치도 확인하기)" />
+                <input value={ctaUrl} onChange={(e) => setCtaUrl(e.target.value)} placeholder="https://" className="mt-2 w-full h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
             </>
           )}

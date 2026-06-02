@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowTopRightOnSquareIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { ArrowTopRightOnSquareIcon, ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import SimpleTable from '@/components/clone/SimpleTable';
 import {
   MINT_STATUSES,
@@ -20,10 +20,12 @@ const mintBadge: Record<MintStatus, string> = {
 };
 
 export default function HistoryTab({ fandom }: { fandom: FandomLevel }) {
+  const [keyword, setKeyword] = useState('');
   const [levelFilter, setLevelFilter] = useState('');
   const [mintFilter, setMintFilter] = useState('');
 
   const grants = fandom.biveGrants
+    .filter((g) => (keyword ? g.member.toLowerCase().includes(keyword.toLowerCase()) : true))
     .filter((g) => (levelFilter ? g.level === parseInt(levelFilter, 10) : true))
     .filter((g) => (mintFilter ? g.mintStatus === mintFilter : true));
 
@@ -62,6 +64,15 @@ export default function HistoryTab({ fandom }: { fandom: FandomLevel }) {
           </div>
           <div className="flex items-center gap-3">
             <div className="relative">
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                placeholder="닉네임 검색"
+                className="h-10 pl-9 pr-3 border border-gray-200 rounded-lg text-sm w-[180px] focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+            <div className="relative">
               <select
                 value={levelFilter}
                 onChange={(e) => setLevelFilter(e.target.value)}
@@ -97,7 +108,7 @@ export default function HistoryTab({ fandom }: { fandom: FandomLevel }) {
             { key: 'date', label: '일시', width: '160px' },
           ]}
           rows={grants}
-          emptyMessage={levelFilter || mintFilter ? '검색 결과가 없습니다.' : 'BIVE 지급 연계 내역이 없습니다.'}
+          emptyMessage={keyword || levelFilter || mintFilter ? '검색 결과가 없습니다.' : 'BIVE 지급 연계 내역이 없습니다.'}
         />
 
         <Link href="/artists/fandom/status" className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-700">

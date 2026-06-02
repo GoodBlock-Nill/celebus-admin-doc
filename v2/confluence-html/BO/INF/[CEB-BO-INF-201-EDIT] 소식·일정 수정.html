@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>INF — 소식·일정</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>버전</td><td>v2.1</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -98,8 +98,8 @@ p {
 <h2>0. 공통 정책 참조</h2>
 <table>
 <tr><th>참조 문서</th><th>적용 범위</th></tr>
-<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한, 다국어, 미디어 업로드, 푸시 알림, 토스트</td></tr>
-<tr><td>[CEB-BO-INF-000] 소식·일정 영역 가이드</td><td>콘텐츠 타입·라이프사이클·타입별 필드·공식 출처·푸시 알림</td></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한, 다국어, 미디어 업로드, 토스트</td></tr>
+<tr><td>[CEB-BO-INF-000] 소식·일정 영역 가이드</td><td>콘텐츠 타입·라이프사이클·타입별 필드·공식 출처</td></tr>
 <tr><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td><td>권한 그룹별 읽기·쓰기·삭제 범위</td></tr>
 </table>
 <hr>
@@ -157,7 +157,7 @@ p {
 <tr><td>제목</td><td>필수</td><td>한국어·영어·일본어, 각 50자</td></tr>
 <tr><td>본문</td><td>필수</td><td>한국어·영어·일본어 위지윅, 각 5,000자</td></tr>
 <tr><td>대표 이미지</td><td>선택</td><td>1장</td></tr>
-<tr><td>CTA 버튼</td><td>선택</td><td>라벨(30자) + 링크 URL</td></tr>
+<tr><td>CTA 버튼</td><td>선택</td><td>라벨(한국어·영어·일본어, 각 30자) + 링크 URL(단일)</td></tr>
 </table>
 <blockquote>
 <p>시각적 스타일은 프로토타입 참조</p>
@@ -265,6 +265,7 @@ p {
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v2.1</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>공지 CTA 버튼 <strong>라벨을 다국어(한국어·영어·일본어 각 30자)</strong>로 변경(§2.3 C — 기존 단일). 링크 URL 단일 유지. 프로토타입 동기화</td></tr>
 <tr><td><strong>v2.0</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>작성·수정 분리 — 수정 전용으로 재편</strong> ① 작성(신규) 내용을 [CEB-BO-INF-101-CREATE]로 이관하고 본 문서는 수정 전용으로 한정(타이틀 "소식·일정 수정", 상세 [수정] 진입) ② 변경 판정 대상·변경 없을 때 저장/수정 로그 미발생·미저장 이탈 확인 규칙 신설(§4.2) ③ [삭제]는 수정 화면 전용 액션 명시 ④ 취소·게시·삭제 확인 모달을 별도 문서(-EDIT-MD-CANCEL/-PUBLISH/-DELETE)로 분리·참조 ⑤ 임시저장·게시·삭제 성공 토스트·게시 차단 토스트 문구 명시</td></tr>
 <tr><td><strong>v1.3</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — 입력 항목 정리. ① 소식·공지 게시일 입력 필드 제거(게시 시 자동 기록, 재게시 시 최초 게시일 유지) ② 소식 첫 번째 이미지가 대표 썸네일 ③ 연관 콘텐츠명 단일·썸네일 URL 자동 추출 ④ 일정 장소는 구글 제안에서 선택한 장소명 그대로 사용</td></tr>
 <tr><td><strong>v1.2</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — 연관 콘텐츠 플랫폼 7종 → 5종(유튜브/X/인스타그램/스포티파이/일반)으로 정정</td></tr>
