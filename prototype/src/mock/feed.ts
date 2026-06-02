@@ -2,9 +2,10 @@
 
 export type FeedType = '소식' | '일정' | '공지';
 export type FeedStatus = '게시' | '임시저장' | '보관';
-export type ContentPlatform = '유튜브' | '틱톡' | '스포티파이' | '스레드' | '인스타그램' | 'X' | '웹';
+// 미팅 정합(2026-06-02): 연관 콘텐츠 플랫폼 5종 — 유튜브/X/인스타그램/스포티파이/일반(타입에 없는 URL)
+export type ContentPlatform = '유튜브' | 'X' | '인스타그램' | '스포티파이' | '일반';
 
-export const CONTENT_PLATFORMS: ContentPlatform[] = ['유튜브', '틱톡', '스포티파이', '스레드', '인스타그램', 'X', '웹'];
+export const CONTENT_PLATFORMS: ContentPlatform[] = ['유튜브', 'X', '인스타그램', '스포티파이', '일반'];
 
 // 다국어 (LangField 키 정합: KO/EN/JA)
 export interface ML {

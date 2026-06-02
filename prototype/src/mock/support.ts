@@ -63,6 +63,12 @@ export interface SupportEvent {
   startAt: string; // 시작일시 (KST)
   endAt: string; // 마감일시 (KST)
   imageUrl?: string;
+  // 아티스트 홈 카드 (미팅 정합 2026-06-02) — 서포트가 아티스트 홈에 노출되는 카드
+  cardBannerUrl?: string;
+  cardTitleKo?: string; cardTitleEn?: string; cardTitleJp?: string;
+  cardSubtitleKo?: string; cardSubtitleEn?: string; cardSubtitleJp?: string;
+  // 유의사항 (응원 전 안내·환불 조건 등, 다국어)
+  noticeKo?: string; noticeEn?: string; noticeJp?: string;
   cheerers: Cheerer[];
   result?: SupportResult;
   refundReason?: RefundReason; // 반환 상태(미달성종료·집행취소)일 때 사유
@@ -160,7 +166,13 @@ export const supportEvents: SupportEvent[] = [
     titleKo: 'V01D 데뷔 200일 지하철 광고 서포트', titleEn: 'V01D 200th Day Subway Ad Support', titleJp: 'V01D デビュー200日 地下鉄広告サポート',
     descKo: '데뷔 200일을 기념해 강남역 지하철 광고를 함께 만들어요!', descEn: 'Celebrate V01D 200 days with a Gangnam subway ad!', descJp: 'デビュー200日記念、江南駅の地下鉄広告を一緒に！',
     targetDuk: 2000000, accumulatedDuk: 1240000,
-    startAt: '2026.05.20 10:00', endAt: '2026.06.10 23:59', imageUrl: undefined,
+    startAt: '2026.05.20 10:00', endAt: '2026.06.10 23:59', imageUrl: 'support-v01d-16x9.jpg',
+    cardBannerUrl: 'support-card-v01d.jpg',
+    cardTitleKo: '데뷔 200일 지하철 광고', cardTitleEn: '200th Day Subway Ad', cardTitleJp: 'デビュー200日 地下鉄広告',
+    cardSubtitleKo: '강남역에서 함께 축하해요', cardSubtitleEn: "Celebrate at Gangnam", cardSubtitleJp: '江南駅で一緒にお祝い',
+    noticeKo: '응원한 덕력은 목표 미달성·취소 시 전액 반환됩니다. 응원 후 취소는 불가합니다.',
+    noticeEn: 'Cheered Fan Power is fully refunded if the goal is not met or cancelled. Cheers cannot be undone.',
+    noticeJp: '応援した推し力は未達成・取消時に全額返却されます。応援後の取消はできません。',
     cheerers: [
       ch('voidlover', [[200000, '2026.05.20 10:12'], [120000, '2026.05.23 08:00']]),
       ch('신노스케fan', [[250000, '2026.05.21 21:30'], [150000, '2026.05.26 22:10']]),

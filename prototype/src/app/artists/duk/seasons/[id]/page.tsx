@@ -23,7 +23,7 @@ type DetailTab = 'setting' | 'history';
 // [CEB-BO-ART-401] v1.6 §2-1-E 시즌 상세 페이지
 // 라우트: /artists/duk/seasons/{id}
 // 상단 액션: [수정] (예정·진행중) · [종료] (진행중) · [목록으로]
-// 월별 보상 12 섹션 — 1구간 = 복수 상품 nested + 5종 분기
+// 시즌 단일 보상 — 시즌 = 1개월 (미팅 정합 2026-06-02). 1구간 = 복수 상품 nested + 5종 분기
 
 const STATUS_BADGE: Record<DukSeasonStatus, string> = {
   예정: 'bg-gray-100 text-gray-700',
@@ -64,42 +64,18 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
     );
   }
 
+  // 시즌 = 1개월: 보상 1건 (months 배열 길이 1)
   const months = getMonthlyRewards(seasonId);
   const settledCount = getSettledMonthCount(seasonId);
-  const settledMonths = months.filter((m) => m.isLocked);
-  const firstSettled = settledMonths[0]?.yearMonth;
-  const lastSettled = settledMonths[settledMonths.length - 1]?.yearMonth;
+  const isSettled = settledCount > 0;
 
-  // 이번 달 yearMonth (현재 시각 기준)
-  const now = new Date();
-  const pad = (n: number) => String(n).padStart(2, '0');
-  const currentYearMonth = `${now.getFullYear()}.${pad(now.getMonth() + 1)}`;
-
-  // 시즌 상태 × 월 시점 × 정산 매트릭스로 잠금 사유 결정 (DETAIL §2.5)
-  const monthPosition = (ym: string): 'past' | 'current' | 'future' => {
-    if (ym < currentYearMonth) return 'past';
-    if (ym > currentYearMonth) return 'future';
-    return 'current';
-  };
-
-  const resolveLockReason = (ym: string, isSettled: boolean): LockReason => {
-    if (isSettled) return 'settled';
+  // 시즌 상태 × 정산 여부로 잠금 사유 결정 (DETAIL §2.6 — 3분기)
+  // 정산 완료 → 조회만 / 종료(미정산) → 조회만 / 예정·진행중(미정산) → 편집
+  const resolveLockReason = (settled: boolean): LockReason => {
+    if (settled) return 'settled';
     if (season.status === '종료') return 'season-ended';
-    if (season.status === '진행중' && monthPosition(ym) === 'past') return 'past-month';
     return null;
   };
-
-  // 자동 펼침 정책 (DETAIL §2.4) — 항상 1개월만 펼침
-  // - 예정: 시즌 첫 월
-  // - 진행중: 이번 달 (시즌 범위 안일 때)
-  // - 종료: 정산 완료 마지막 월 (없으면 시즌 첫 월)
-  const firstMonth = months[0]?.yearMonth;
-  const expandedMonth: string | undefined =
-    season.status === '예정'
-      ? firstMonth
-      : season.status === '진행중'
-        ? months.find((m) => m.yearMonth === currentYearMonth)?.yearMonth ?? firstMonth
-        : lastSettled ?? firstMonth;
 
   const handleEdit = (data: {
     artistGroupId: number;
@@ -200,12 +176,8 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
             </dd>
           </div>
           <div className="flex">
-            <dt className="w-24 text-gray-500">정산 완료</dt>
-            <dd className="flex-1 text-gray-800">
-              {settledCount === 0
-                ? '0개월'
-                : `${settledCount}개월 (${firstSettled}~${lastSettled})`}
-            </dd>
+            <dt className="w-24 text-gray-500">정산 여부</dt>
+            <dd className="flex-1 text-gray-800">{isSettled ? '정산 완료' : '미정산'}</dd>
           </div>
         </dl>
       </section>
@@ -215,8 +187,8 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
         <nav className="flex gap-1" aria-label="시즌 상세 탭">
           {(
             [
-              ['setting', '월별 보상 설정'],
-              ['history', '월별 보상 내역'],
+              ['setting', '보상 설정'],
+              ['history', '보상 지급 내역'],
             ] as const
           ).map(([key, label]) => (
             <button
@@ -237,11 +209,11 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
       </div>
 
       {activeTab === 'setting' ? (
-        /* 월별 보상 12 섹션 */
+        /* 시즌 단일 보상 설정 (시즌 = 1개월) */
         <section>
-          <h2 className="text-base font-semibold text-gray-900 mb-3">월별 보상 설정</h2>
+          <h2 className="text-base font-semibold text-gray-900 mb-3">보상 설정</h2>
           <p className="text-sm text-gray-500 mb-4">
-            시즌(1년) 내 매월 별도 보상을 설정합니다. 편집은 예정 시즌의 모든 월 또는 진행중 시즌의 이번 달·미래 월에서만 가능하며, 진행중 시즌의 지난 월·정산 완료 월·종료 시즌의 모든 월은 잠금 상태로 조회만 가능합니다. 1구간에 상품 N개(배송·현장·BIVE·응모권·덕력 5종)를 함께 지급할 수 있습니다.
+            시즌(1개월) 보상을 설정합니다. 예정·진행중(미정산) 시즌은 편집 가능하며, 정산 완료·종료 시즌은 잠금 상태로 조회만 가능합니다. 1구간에 상품 N개(배송·현장·BIVE·응모권·덕력 5종)를 함께 지급할 수 있습니다.
           </p>
           <div className="space-y-3">
             {months.map((m) => (
@@ -249,9 +221,9 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
                 key={m.yearMonth}
                 yearMonth={m.yearMonth}
                 initialTiers={m.tiers}
-                lockReason={resolveLockReason(m.yearMonth, m.isLocked)}
+                lockReason={resolveLockReason(m.isLocked)}
                 settledAt={m.settledAt}
-                defaultExpanded={m.yearMonth === expandedMonth}
+                defaultExpanded
                 groupName={season.artistGroupName}
                 seasonName={season.name}
               />

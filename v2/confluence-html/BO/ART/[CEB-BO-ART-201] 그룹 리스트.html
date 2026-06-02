@@ -84,8 +84,8 @@ p {
 <tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
 <tr><td>기능영역(Epic)</td><td>ART — 아티스트 그룹</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.2</td></tr>
-<tr><td>최근 업데이트</td><td>2026-05-28</td></tr>
+<tr><td>버전</td><td>v1.3</td></tr>
+<tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
 <tr><td>Breadcrumb</td><td>홈 > 아티스트 > 그룹 리스트</td></tr>
 <tr><td>비고</td><td>운영 BO 실측 정합 기반 신규 작성. 사이드 메뉴 [아티스트 > 그룹 리스트] 진입 화면</td></tr>
 </table>
@@ -148,7 +148,7 @@ p {
 <tr><td>그룹명</td><td>"밀짚모자 일당"</td><td>한국어 우선 표시 (다국어 KO/EN/JA)</td></tr>
 <tr><td>멤버 수</td><td>10</td><td>그룹에 소속된 멤버 수</td></tr>
 <tr><td>팔로워 수</td><td>128,430</td><td>앱에서 해당 그룹을 팔로우 중인 회원 수 (천 단위 콤마)</td></tr>
-<tr><td>탐색 노출</td><td>토글(켬/끔)</td><td>앱 아티스트 탐색 화면 노출 여부 — 토글 즉시 변경(§4.4)</td></tr>
+<tr><td>탐색 노출</td><td>토글(켬/끔)</td><td>앱 아티스트 탐색 화면 + 각종 아티스트 필터 노출 여부 — 토글 즉시 변경(§4.4)</td></tr>
 <tr><td>업데이트 일시</td><td>2026.05.27 17:21</td><td>YYYY.MM.DD HH:mm (KST)</td></tr>
 </table>
 <ul>
@@ -190,14 +190,15 @@ p {
 <tr><td>Inactive</td><td>비활성 그룹</td><td>미노출</td></tr>
 </table>
 <h3>4.4 탐색 노출 정책</h3>
-<p>목록 [탐색 노출] 컬럼 토글로 앱 [CEB-ART-201] 아티스트 탐색 화면 노출 여부를 그룹 단위로 제어한다.</p>
+<p>목록 [탐색 노출] 컬럼 토글로 앱 [CEB-ART-201] 아티스트 탐색 화면 및 <strong>앱 발견·신규 선택 영역의 아티스트 노출 여부</strong>를 그룹 단위로 제어한다. (앱 정합 기준 [CEB-000] §4.8)</p>
 <table>
 <tr><th>항목</th><th>정책</th></tr>
 <tr><td>노출 토글</td><td>그룹 단위 켬/끔. 토글 즉시 저장·반영 + 완료 토스트 (별도 확인 모달 없음)</td></tr>
 <tr><td>기본값</td><td>신규 그룹은 탐색 노출 "켬"으로 등록</td></tr>
-<tr><td>앱 노출 조건</td><td><strong>상태 Active + 탐색 노출 켬</strong> 인 그룹만 앱 아티스트 탐색(추천·전체)에 노출</td></tr>
-<tr><td>Inactive 그룹</td><td>탐색 노출 켬이어도 앱 미노출 (상태가 우선)</td></tr>
-<tr><td>활성 상태와의 관계</td><td>탐색 노출은 활성 상태와 별개 플래그. 활성 그룹이라도 탐색에서 숨길 수 있음</td></tr>
+<tr><td>발견 영역 노출 조건</td><td><strong>상태 Active + 탐색 노출 켬</strong> 인 그룹만 앱 발견 영역에 노출</td></tr>
+<tr><td><strong>노출 범위</strong></td><td>탐색 노출은 <strong>발견·신규 선택 영역</strong>(아티스트 탐색·추천·전체 목록, 홈·아티스트 메인·알림 등에서 <strong>신규로</strong> 아티스트를 추가·선택하는 후보 목록)의 노출을 제어한다. 끔이면 발견 영역에서만 제외되고, <strong>이미 팔로우/선택한 아티스트의 개인화·콘텐츠 화면</strong>(홈 선택·아티스트 메인 전환·알림 필터·해당 아티스트 래플·서포트·팬덤레벨·퀘스트)은 <strong>유지</strong>된다(기존 경험 보존). 상세 기준은 [CEB-000] §4.8</td></tr>
+<tr><td>Inactive 그룹</td><td>탐색 노출과 무관하게 앱 <strong>전 영역</strong> 미노출 (개인화 화면 포함, 상태가 우선). 운영 완전 중단은 상태 Inactive로 처리</td></tr>
+<tr><td>활성 상태와의 관계</td><td>탐색 노출은 활성 상태와 별개 플래그. 활성 그룹이라도 발견 영역에서 숨길 수 있음(이미 팔로우한 유저 경험은 유지)</td></tr>
 </table>
 <hr>
 <h2>5. UI 상태별 처리</h2>
@@ -232,13 +233,14 @@ p {
 <tr><td>CEB-BO-ART-301</td><td>그룹 상세 (기본정보 탭)</td><td>하위 (Row 클릭)</td></tr>
 <tr><td>CEB-BO-ART-201-Create</td><td>그룹 생성</td><td>하위 ([그룹 생성])</td></tr>
 <tr><td>CEB-BO-ART-201-PO</td><td>포지션 설정</td><td>하위 ([포지션 설정])</td></tr>
-<tr><td>CEB-ART-201</td><td>아티스트 탐색 (앱)</td><td>탐색 노출 대상 화면 — 상태 Active + 탐색 노출 켬 그룹만 노출</td></tr>
+<tr><td>CEB-ART-201</td><td>아티스트 탐색 (앱)</td><td>탐색 노출 대상 화면 — 상태 Active + 탐색 노출 켬 그룹만 노출 (탐색 화면 + 앱 전반 아티스트 필터 공통 적용)</td></tr>
 <tr><td>CEB-BO-ART-202</td><td>멤버 리스트</td><td>형제</td></tr>
 </table>
 <hr>
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.3</strong></td><td><strong>2026-05-29</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>탐색 노출 범위 명확화 — 발견 영역 한정 + 앱 정합</strong> ① §4.4에 '노출 범위' 정책 추가: 탐색 노출은 <strong>발견·신규 선택 영역</strong>(아티스트 탐색·추천·전체, 신규 아티스트 추가·선택)의 노출을 제어. 끔이면 발견 영역에서만 제외하고 <strong>이미 팔로우/선택한 아티스트의 개인화·콘텐츠 화면은 유지</strong>(기존 경험 보존), 운영 완전 중단은 상태 Inactive ② §2.4 [탐색 노출] 컬럼·§8 연관 화면 보강 ③ 앱 공통 정책 [CEB-000] §4.8 신설 정합 + [CEB-BO-ART-301]·[CEB-BO-003] 동기화</td></tr>
 <tr><td><strong>v1.2</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>탐색 노출 제어를 별도 페이지(v1.1 [팔로우 노출설정] 버튼)에서 목록 컬럼으로 통합. ① 헤더 [팔로우 노출설정] 버튼 철회 ② 목록 설명 컬럼 제거, 팔로워 수·탐색 노출(토글) 컬럼 추가 ③ §4.4 탐색 노출 정책 신설(앱 노출 조건 = 상태 Active + 탐색 노출 켬, 즉시 토글+토스트, 신규 그룹 기본 켬) ④ 활동 로그에 탐색 노출 변경 추가</td></tr>
 <tr><td><strong>v1.1</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>헤더에 [팔로우 노출설정] 버튼 추가 — [CEB-BO-ART-201-FE] 팔로우 노출 설정 진입. 앱 아티스트 탐색 화면 노출 그룹을 켜고 끄는 신규 운영 화면 연결. 권한 노출 규칙·연관 화면ID 동반 갱신</td></tr>
 <tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>운영 BO 실측 정합 신규 작성. ① 상태 카운터 3종(전체/Active/Inactive) + 클릭 필터 ② 필터 = 상태 Dropdown + 검색 대상(그룹명/멤버명) Dropdown + 검색어 (별도 정렬 Dropdown 없음, 업데이트 일시 내림차순 고정) ③ 컬럼 = 상태·그룹명·멤버 수·설명·업데이트 일시 ④ 헤더 [포지션 설정]·[그룹 생성] ⑤ 권한은 [CEB-BO-SYS-102] 참조</td></tr>

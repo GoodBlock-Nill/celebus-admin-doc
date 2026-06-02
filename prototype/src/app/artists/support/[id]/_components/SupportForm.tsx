@@ -16,6 +16,12 @@ interface FormState {
   startAt: string; // datetime-local
   endAt: string;
   imageUrl: string;
+  // 아티스트 홈 카드 (미팅 정합 2026-06-02) — 서포트가 아티스트 홈에 노출되는 카드
+  cardBannerUrl: string;
+  cardTitleKo: string; cardTitleEn: string; cardTitleJp: string;
+  cardSubtitleKo: string; cardSubtitleEn: string; cardSubtitleJp: string;
+  // 유의사항 (응원 전 안내·환불 조건 등)
+  noticeKo: string; noticeEn: string; noticeJp: string;
 }
 
 interface Props {
@@ -48,6 +54,10 @@ export default function SupportForm({
     targetDuk: initial?.targetDuk ? String(initial.targetDuk) : '',
     startAt: toInputDt(initial?.startAt), endAt: toInputDt(initial?.endAt),
     imageUrl: initial?.imageUrl ?? '',
+    cardBannerUrl: initial?.cardBannerUrl ?? '',
+    cardTitleKo: initial?.cardTitleKo ?? '', cardTitleEn: initial?.cardTitleEn ?? '', cardTitleJp: initial?.cardTitleJp ?? '',
+    cardSubtitleKo: initial?.cardSubtitleKo ?? '', cardSubtitleEn: initial?.cardSubtitleEn ?? '', cardSubtitleJp: initial?.cardSubtitleJp ?? '',
+    noticeKo: initial?.noticeKo ?? '', noticeEn: initial?.noticeEn ?? '', noticeJp: initial?.noticeJp ?? '',
   }), [initial]);
 
   const [form, setForm] = useState<FormState>(initialState);
@@ -69,6 +79,8 @@ export default function SupportForm({
   const datesOk = !!form.startAt && !!form.endAt && form.endAt > form.startAt;
   const groupOk = !!form.groupName;
   const imageOk = form.imageUrl.trim() !== '';
+  const cardBannerOk = form.cardBannerUrl.trim() !== '';
+  const cardTitleOk = form.cardTitleKo.trim() && form.cardTitleEn.trim() && form.cardTitleJp.trim();
 
   const missing: string[] = [];
   if (!requiredText) missing.push('기본 정보(이벤트명·설명 한/영/일)');
@@ -76,8 +88,12 @@ export default function SupportForm({
   if (!targetOk) missing.push('목표 응원량(1 이상)');
   if (!form.startAt || !form.endAt) missing.push('시작·마감일시');
   else if (form.endAt <= form.startAt) missing.push('마감일시(시작 이후)');
-  // 대표 이미지는 생성 시 필수 (수정 모드는 기존 이벤트 보호 위해 미강제)
-  if (!imageOk && mode === 'create') missing.push('대표 이미지');
+  // 대표 이미지·아티스트 홈 카드는 생성 시 필수 (수정 모드는 기존 이벤트 보호 위해 미강제)
+  if (mode === 'create') {
+    if (!imageOk) missing.push('대표 이미지');
+    if (!cardBannerOk) missing.push('아티스트 홈 카드 배너');
+    if (!cardTitleOk) missing.push('아티스트 홈 카드 타이틀(한/영/일)');
+  }
   const valid = missing.length === 0;
 
   const startEdit = () => { setEditing(true); };
@@ -183,6 +199,51 @@ export default function SupportForm({
             <p className="text-xs text-gray-400 mt-1">권장 비율 16:9 (1920×1080)</p>
           </button>
         )}
+      </Section>
+
+      {/* E. 아티스트 홈 카드 — 생성 시 입력 (미팅 정합 2026-06-02) */}
+      <Section title="E. 아티스트 홈 카드" desc="서포트가 아티스트 홈에 노출되는 카드입니다. 배너·타이틀은 생성 시 필수, 서브타이틀은 선택.">
+        <div className="space-y-4">
+          <Field label="카드 배너" required>
+            {form.cardBannerUrl ? (
+              <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-12 h-12 rounded bg-indigo-50 flex items-center justify-center shrink-0">
+                    <PhotoIcon className="w-6 h-6 text-indigo-400" />
+                  </div>
+                  <p className="text-sm font-medium text-gray-900 truncate">{form.cardBannerUrl}</p>
+                </div>
+                {!readOnly && (
+                  <button type="button" onClick={() => set('cardBannerUrl', '')}
+                    className="h-9 px-3 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 shrink-0">제거</button>
+                )}
+              </div>
+            ) : (
+              <button type="button" disabled={readOnly}
+                onClick={() => set('cardBannerUrl', `support-card-${form.groupName || 'image'}.jpg`)}
+                className="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-400 transition disabled:opacity-60 disabled:cursor-not-allowed">
+                <PhotoIcon className="w-8 h-8 mx-auto text-gray-300 mb-1.5" />
+                <p className="text-sm text-gray-600">홈 카드 배너 업로드</p>
+              </button>
+            )}
+          </Field>
+          <MultiLang label="카드 타이틀" required max={30}
+            ko={form.cardTitleKo} en={form.cardTitleEn} jp={form.cardTitleJp}
+            onKo={(v) => set('cardTitleKo', v)} onEn={(v) => set('cardTitleEn', v)} onJp={(v) => set('cardTitleJp', v)}
+            disabled={readOnly} />
+          <MultiLang label="카드 서브타이틀" max={50}
+            ko={form.cardSubtitleKo} en={form.cardSubtitleEn} jp={form.cardSubtitleJp}
+            onKo={(v) => set('cardSubtitleKo', v)} onEn={(v) => set('cardSubtitleEn', v)} onJp={(v) => set('cardSubtitleJp', v)}
+            disabled={readOnly} />
+        </div>
+      </Section>
+
+      {/* F. 유의사항 — 응원 전 안내·환불 조건 등 (선택, 다국어) */}
+      <Section title="F. 유의사항" desc="응원 전 안내·환불 조건 등. 앱 상세에 노출됩니다. (선택)">
+        <MultiLang label="유의사항" max={500} textarea
+          ko={form.noticeKo} en={form.noticeEn} jp={form.noticeJp}
+          onKo={(v) => set('noticeKo', v)} onEn={(v) => set('noticeEn', v)} onJp={(v) => set('noticeJp', v)}
+          disabled={readOnly} />
       </Section>
 
       {/* 생성 액션 (하단 CTA) — create 모드 전용 */}

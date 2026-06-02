@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SUP — 서포트 이벤트</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.1</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.29</td></tr>
+<tr><td>버전</td><td>v2.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -96,7 +96,7 @@ p {
 </table>
 <hr>
 <h2>1. 개요</h2>
-<p>서포트 이벤트는 팬덤이 <strong>보유 덕력을 응원(차감)</strong> 하여 아티스트 응원(생일 카페·콘서트 응원·차트 인증 등)의 목표 응원량 달성에 함께 참여하는 이벤트다. 운영자는 이벤트를 생성·게시하고, 목표 달성 후 집행·결과물 등록까지 한 화면 흐름에서 관리한다.</p>
+<p>서포트 이벤트는 팬덤이 <strong>보유 덕력을 응원(차감)</strong> 하여 아티스트 응원(생일 카페·콘서트 응원·차트 인증 등)의 목표 응원량 달성에 함께 참여하는 이벤트다. 운영자는 이벤트를 생성·게시하고, 목표 달성 후 집행·결과물 등록까지 한 화면 흐름에서 관리한다. 생성 시 <strong>아티스트 홈 노출 카드(배너·타이틀·서브타이틀)</strong>와 <strong>유의사항</strong>을 함께 입력한다.</p>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>사이드 메뉴</td><td><strong>아티스트 > 서포트 관리</strong> (덕력관리·팬덤레벨과 같은 아티스트 메뉴 묶음)</td></tr>
@@ -189,6 +189,7 @@ p {
 <h2>6. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v2.2</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — §1 개요에 생성 시 <strong>아티스트 홈 노출 카드(배너·타이틀·서브타이틀)·유의사항</strong> 입력 명시([CEB-BO-SUP-101-CREATE] §2 E·F 정합)</td></tr>
 <tr><td><strong>v2.1</strong></td><td><strong>2026.05.29</strong></td><td><strong>@Nill Yoo</strong></td><td>§4.4 반환 정책에 <strong>반환 사유 3종(목표 미달성·집행 취소·강제 종료) 기록</strong> 명시 — 상세에서 회원별 반환 내역과 함께 조회([CEB-BO-SUP-201] §2.4 반환 현황 보강 정합)</td></tr>
 <tr><td><strong>v2.0</strong></td><td><strong>2026.05.29</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>앱 SSOT([CEB-DUK-201] v1.8) 전면 정합 + 아티스트 메뉴 편입 + 운영 단순화</strong> ① 사이드 메뉴를 <strong>아티스트 > 서포트 관리</strong>로 명시(덕력관리·팬덤레벨과 동일 묶음) ② 응원을 "적립" → <strong>"보유 덕력 차감"</strong> 으로 정정, 응원 덕력은 랭킹·팬덤 레벨 무영향 명시(기존 "덕력+팬덤레벨 동시 적립" 철회) ③ 라이프사이클을 <strong>한국어 7상태</strong>(임시저장/모집중/달성/집행중/완료/미달성종료/집행취소)로 재정의, 앱 공개 6상태와 1:1 매핑 ④ <strong>반환을 전액·서버 자동</strong>으로 단순화(미달성종료·집행취소·강제 종료 즉시 전액 반환, 기존 운영자 수동 반환·추가 인증 절차 철회) ⑤ 결과물 등록(다국어 메시지·사진/영상 최대 10장) + 회원 알림 ⑥ 권한은 [CEB-BO-SYS-102] 참조로 통일(권한 등급 표 제거) ⑦ 변동 유형(응원/반환/결과물 알림) 한국어 표준화 ⑧ 신규 [CEB-BO-SUP-101-CREATE] 생성 화면 추가</td></tr>
 <tr><td>v1.0</td><td>2026-05-06</td><td>@Nill Yoo</td><td>(폐기) 초안 — 적립 모델·영문 상태·수동 반환 (앱 모델과 불일치하여 v2.0에서 전면 재작성)</td></tr>

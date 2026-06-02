@@ -34,12 +34,18 @@ export default function HistoryTab({ fandom }: { fandom: FandomLevel }) {
       <p className="text-sm font-medium text-gray-500">이 시즌 현황</p>
       {/* 레벨업 이력 */}
       <section>
-        <h2 className="text-base font-bold text-gray-900 mb-3">레벨업 이력</h2>
+        <div className="flex items-end justify-between mb-3">
+          <h2 className="text-base font-bold text-gray-900">레벨업 이력</h2>
+          {/* 참여 유저 수 = 시즌 전체 1DUK 이상 기여 회원 (레벨별이 아닌 시즌 단위) — 미팅 정합 2026-06-02 */}
+          <div className="text-sm text-gray-600">
+            참여 유저 수 <span className="ml-1 font-semibold text-gray-900">{fandom.participants.toLocaleString()}명</span>
+            <span className="ml-1 text-xs text-gray-400">(시즌 전체 기여 회원)</span>
+          </div>
+        </div>
         <SimpleTable<LevelUpHistory>
           columns={[
             { key: 'level', label: '레벨', width: '90px', render: (r) => <span className="font-medium text-gray-900">Lv.{r.level}</span> },
-            { key: 'achievedAt', label: '달성 일시', width: '170px' },
-            { key: 'targetMemberCount', label: '대상 회원 수', width: '130px', render: (r) => `${r.targetMemberCount.toLocaleString()} 명` },
+            { key: 'achievedAt', label: '달성 일시', width: '200px' },
             { key: 'rewardSummary', label: '연결 보상', render: (r) => <span className="text-gray-700">{r.rewardSummary}</span> },
           ]}
           rows={fandom.levelUpHistory}

@@ -201,8 +201,7 @@ export default function FandomStatusPage() {
               <Link href={`/artists/fandom/${r.fandomId}`} className="text-gray-600 hover:text-indigo-600 hover:underline">{r.season}</Link>
             )},
             { key: 'level', label: '레벨', width: '80px', render: (r) => `Lv.${r.level}` },
-            { key: 'achievedAt', label: '달성 일시', width: '160px' },
-            { key: 'targetMemberCount', label: '대상 회원 수', width: '120px', render: (r) => `${r.targetMemberCount.toLocaleString()} 명` },
+            { key: 'achievedAt', label: '달성 일시', width: '190px' },
             { key: 'rewardSummary', label: '연결 보상', render: (r) => <span className="text-gray-700">{r.rewardSummary}</span> },
           ]}
           rows={pagedLevelUps}

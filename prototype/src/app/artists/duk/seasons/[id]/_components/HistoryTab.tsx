@@ -16,8 +16,8 @@ import {
 } from '@/mock/duk';
 import PayoutStatusModal from './PayoutStatusModal';
 
-// [CEB-BO-ART-401-DETAIL] §2.11~§2.13 — 월별 보상 내역 탭
-// - 정산 완료된 월만 드롭다운에 등장 (최신순)
+// [CEB-BO-ART-401-DETAIL] §2.11~§2.13 — 보상 지급 내역 탭
+// - 시즌 = 1개월: 시즌 종료 시 1회 정산 → 단일 지급 내역 (월 선택 드롭다운 없음)
 // - 한 행 = 한 상품 지급 건 (회원 × 상품 조합)
 // - 수동 지급(배송·현장)만 [상태 변경] 버튼 노출
 
@@ -62,7 +62,8 @@ function describeTarget(type: DukRewardTargetType, value: string): string {
 
 export default function HistoryTab({ seasonId, seasonName, groupName }: Props) {
   const availableMonths = useMemo(() => getAvailablePayoutMonths(seasonId), [seasonId]);
-  const [selectedMonth, setSelectedMonth] = useState<string>(availableMonths[0] ?? '');
+  // 시즌 = 1개월 → 정산 월 1건. 선택 UI 없이 그 1건을 사용
+  const [selectedMonth] = useState<string>(availableMonths[0] ?? '');
   const [page, setPage] = useState(1);
   const [payouts, setPayouts] = useState<DukRewardPayout[]>(() =>
     selectedMonth ? getMonthlyPayouts(seasonId, selectedMonth) : [],
@@ -74,24 +75,18 @@ export default function HistoryTab({ seasonId, seasonName, groupName }: Props) {
     [seasonId, selectedMonth, payouts],
   );
 
-  const handleMonthChange = (month: string) => {
-    setSelectedMonth(month);
-    setPayouts(getMonthlyPayouts(seasonId, month));
-    setPage(1);
-  };
-
   const handlePayoutSave = (updated: DukRewardPayout) => {
     setPayouts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
     setEditTarget(null);
     toast.success('지급 상태가 변경되었습니다.');
   };
 
-  // 정산 완료 월 0개 — 빈 상태
+  // 미정산 — 빈 상태
   if (availableMonths.length === 0) {
     return (
       <section className="bg-white border border-gray-100 rounded-xl px-6 py-12 text-center">
-        <p className="text-sm text-gray-500">정산 완료된 월이 없습니다.</p>
-        <p className="text-xs text-gray-400 mt-1">매월 말일 23:59 자동 정산이 완료된 월의 지급 결과가 여기에 노출됩니다.</p>
+        <p className="text-sm text-gray-500">아직 정산되지 않았습니다.</p>
+        <p className="text-xs text-gray-400 mt-1">시즌 종료 시(말일 23:59) 1회 자동 정산되며, 지급 결과가 여기에 노출됩니다.</p>
       </section>
     );
   }
@@ -101,26 +96,8 @@ export default function HistoryTab({ seasonId, seasonName, groupName }: Props) {
 
   return (
     <section className="space-y-4">
-      {/* 월 드롭다운 */}
-      <div className="flex items-end gap-3">
-        <div>
-          <label htmlFor="payout-month" className="block text-xs font-medium text-gray-600 mb-1">
-            정산 완료 월
-          </label>
-          <select
-            id="payout-month"
-            value={selectedMonth}
-            onChange={(e) => handleMonthChange(e.target.value)}
-            className="h-10 px-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            {availableMonths.map((m) => (
-              <option key={m} value={m}>
-                {m}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+      {/* 시즌 = 1개월: 시즌 종료 시 1회 정산 → 단일 지급 내역 (월 선택 없음) */}
+      <p className="text-sm text-gray-500">시즌 종료 시 1회 정산된 지급 결과입니다.</p>
 
       {/* 통계 카드 */}
       {stats && (

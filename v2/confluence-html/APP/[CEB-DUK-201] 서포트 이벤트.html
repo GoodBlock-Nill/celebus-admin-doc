@@ -87,7 +87,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>DUK(덕력)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.8</td></tr>
+<tr><td>버전</td><td>v1.9</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.29</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=328-6538</td></tr>
@@ -105,6 +105,9 @@ p {
 <li>완료 이벤트 결과 확인 (사진/영상 인라인 표시)</li>
 <li>이벤트 상태: 모집중 / 달성 / 진행중 / 완료 / 미달성종료 / 취소</li>
 </ul>
+<blockquote>
+<p>선택한 아티스트의 서포트 이벤트만 노출된다. 아티스트 노출 기준은 [CEB-000] §4.8을 따른다(운영 중단 그룹은 미노출).</p>
+</blockquote>
 <h5>접근 경로</h5>
 <ul>
 <li>CEB-ART-101 > 서포트 카드 탭</li>
@@ -392,6 +395,7 @@ p {
 <tr><td><strong>v1.6</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 덕력 단위 pt→DUK 일괄 변경</strong>. 응원 단가·잔고·증감 단위(100DUK)·반환 안내·진행률 표기 모두 갱신</td></tr>
 <tr><td><strong>v1.7</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. ① §2.2 <strong>[전체]/[참여가능]/[종료] 필터 탭 + "내 참여만 보기" 토글</strong> 신규 ② 카드 구성을 <strong>풀 너비 이미지 + "목표금액 {N} DUK" + 달성률 바 + 인라인 [참여하기]</strong>로 보강. 카드 [참여하기]로 응원 진입(상세·응원은 인라인 또는 별도 화면 CEB-DUK-202 추후) ③ §2.1 헤더 보유 덕력 pill 추가 ④ 사용자 노출 문구 "집행 대기/집행 취소" → "<strong>서포트 진행 예정/서포트가 취소되었어요</strong>" 정합(상태 코드명은 유지) ⑤ 연관화면 DUK-202 추가. 응원·반환·상태 전이 정책 변경 없음</td></tr>
 <tr><td>v1.8</td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 본문 섹션 제목의 버전 메타 표기 제거. 내용 변경 없음 + 상태 코드·코드 식별자·개발 용어 한국어 전환</td></tr>
+<tr><td>v1.9</td><td>2026.05.29</td><td>@Nill Yoo</td><td>아티스트 노출·필터 기준 [CEB-000] §4.8 참조 추가 — 탐색 노출은 발견 영역만 제어, 팔로우/선택 아티스트의 본 화면 노출은 유지(운영 중단 그룹은 미노출).</td></tr>
 </table>
 
 </body>

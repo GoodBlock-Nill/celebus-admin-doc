@@ -193,14 +193,17 @@ function LedgerSection({ type }: LedgerSectionProps) {
             align: 'right',
             render: (r: DukLedger) => `${r.balanceAfter.toLocaleString()} DUK`,
           },
-          {
-            key: 'seasonId',
-            label: '시즌',
-            render: (r: DukLedger) => {
-              const s = dukSeasons.find((x) => x.id === r.seasonId);
-              return s ? s.name : '—';
-            },
-          },
+          // 시즌 컬럼은 획득 탭 전용 — 사용 탭은 제외 (미팅 정합 2026-06-02)
+          ...(isEarn
+            ? [{
+                key: 'seasonId',
+                label: '시즌',
+                render: (r: DukLedger) => {
+                  const s = dukSeasons.find((x) => x.id === r.seasonId);
+                  return s ? s.name : '—';
+                },
+              }]
+            : []),
         ]}
         rows={slice}
         emptyMessage="조건에 일치하는 내역이 없습니다."

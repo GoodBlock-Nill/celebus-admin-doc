@@ -1,5 +1,5 @@
 // [CEB-BO-ART-401] v1.6 정합
-// 덕력(DUK) — 아티스트 그룹 단위 독립 관리. 그룹별 시즌(1년 고정)·획득/사용 ledger.
+// 덕력(DUK) — 아티스트 그룹 단위 독립 관리. 그룹별 시즌(1개월 단위)·획득/사용 ledger.
 // 출처 enum은 [CEB-000] §5.2 v5.6 보상 매트릭스 활동 8종 + §3.2 사용처 2종 SSOT 정합.
 // v1.6 — 1구간 = 복수 상품 nested + 상품 5종 분기 (배송·현장·BIVE·응모권·덕력) + 다국어 KO/EN/JP
 
@@ -12,7 +12,7 @@ export interface DukSeason {
   artistGroupName: string;
   name: string;
   startAt: string; // YYYY.MM.DD HH:mm
-  endAt: string; // 시작일 + 1년 자동 산출
+  endAt: string; // 시작일 + 1개월 자동 산출 (시즌 = 1개월 단위)
   status: DukSeasonStatus;
 }
 
@@ -124,23 +124,23 @@ export const dukSourcesEarn = [
 export const dukSourcesSpend = ['서포트 응원', '독점 콘텐츠 해금'] as const;
 
 // ─────────────────────────────────────────────
-// 시즌 mock (v1.1 — 1년 단위 고정)
+// 시즌 mock — 시즌 = 1개월 단위 (미팅 정합 2026-06-02). 종료일 = 시작일 + 1개월. 시즌당 1회 정산.
 // ─────────────────────────────────────────────
 export const dukSeasons: DukSeason[] = [
   // 언더라이트
-  { id: 101, artistGroupId: 1, artistGroupName: '언더라이트 (UNDER:LIGHT)', name: '언더라이트 2025 시즌', startAt: '2025.01.01 00:00', endAt: '2025.12.31 23:59', status: '종료' },
-  { id: 102, artistGroupId: 1, artistGroupName: '언더라이트 (UNDER:LIGHT)', name: '언더라이트 2026 시즌', startAt: '2026.01.01 00:00', endAt: '2026.12.31 23:59', status: '진행중' },
+  { id: 101, artistGroupId: 1, artistGroupName: '언더라이트 (UNDER:LIGHT)', name: '언더라이트 2026.05 시즌', startAt: '2026.05.01 00:00', endAt: '2026.05.31 23:59', status: '종료' },
+  { id: 102, artistGroupId: 1, artistGroupName: '언더라이트 (UNDER:LIGHT)', name: '언더라이트 2026.06 시즌', startAt: '2026.06.01 00:00', endAt: '2026.06.30 23:59', status: '진행중' },
   // V01D
-  { id: 201, artistGroupId: 2, artistGroupName: 'V01D', name: 'V01D 2025 시즌', startAt: '2025.01.01 00:00', endAt: '2025.12.31 23:59', status: '종료' },
-  { id: 202, artistGroupId: 2, artistGroupName: 'V01D', name: 'V01D 2026 시즌', startAt: '2026.01.01 00:00', endAt: '2026.12.31 23:59', status: '진행중' },
-  { id: 203, artistGroupId: 2, artistGroupName: 'V01D', name: 'V01D 2027 시즌', startAt: '2027.01.01 00:00', endAt: '2027.12.31 23:59', status: '예정' },
+  { id: 201, artistGroupId: 2, artistGroupName: 'V01D', name: 'V01D 2026.05 시즌', startAt: '2026.05.01 00:00', endAt: '2026.05.31 23:59', status: '종료' },
+  { id: 202, artistGroupId: 2, artistGroupName: 'V01D', name: 'V01D 2026.06 시즌', startAt: '2026.06.01 00:00', endAt: '2026.06.30 23:59', status: '진행중' },
+  { id: 203, artistGroupId: 2, artistGroupName: 'V01D', name: 'V01D 2026.07 시즌', startAt: '2026.07.01 00:00', endAt: '2026.07.31 23:59', status: '예정' },
   // CELEBUS
-  { id: 301, artistGroupId: 3, artistGroupName: 'CELEBUS', name: 'CELEBUS 데뷔 시즌', startAt: '2026.05.01 00:00', endAt: '2027.04.30 23:59', status: '진행중' },
+  { id: 301, artistGroupId: 3, artistGroupName: 'CELEBUS', name: 'CELEBUS 2026.06 시즌', startAt: '2026.06.01 00:00', endAt: '2026.06.30 23:59', status: '진행중' },
   // MADEIN
-  { id: 401, artistGroupId: 4, artistGroupName: 'MADEIN', name: 'MADEIN 2026 시즌', startAt: '2026.01.01 00:00', endAt: '2026.12.31 23:59', status: '진행중' },
+  { id: 401, artistGroupId: 4, artistGroupName: 'MADEIN', name: 'MADEIN 2026.06 시즌', startAt: '2026.06.01 00:00', endAt: '2026.06.30 23:59', status: '진행중' },
   // iKON
-  { id: 501, artistGroupId: 5, artistGroupName: 'iKON', name: 'iKON 2025 시즌', startAt: '2025.01.01 00:00', endAt: '2025.12.31 23:59', status: '종료' },
-  { id: 502, artistGroupId: 5, artistGroupName: 'iKON', name: 'iKON 2026 시즌', startAt: '2026.01.01 00:00', endAt: '2026.12.31 23:59', status: '진행중' },
+  { id: 501, artistGroupId: 5, artistGroupName: 'iKON', name: 'iKON 2026.05 시즌', startAt: '2026.05.01 00:00', endAt: '2026.05.31 23:59', status: '종료' },
+  { id: 502, artistGroupId: 5, artistGroupName: 'iKON', name: 'iKON 2026.06 시즌', startAt: '2026.06.01 00:00', endAt: '2026.06.30 23:59', status: '진행중' },
 ];
 
 // ─────────────────────────────────────────────
@@ -490,469 +490,92 @@ const lang = (ko: string, en: string, ja: string): DukLangText => ({ ko, en, ja 
 // 시즌별 월별 보상 mock — v1.6 1구간 = 복수 상품 nested 구조
 // settledAt 채워진 entry = 정산 완료(잠금)
 // 신규 상품 5종 모두 1회 이상 등장하도록 분포
+// 시즌별 보상 mock — 시즌 = 1개월 단위, 시즌당 1건. settledAt 채워진 entry = 정산 완료(잠금)
+// yearMonth = 시즌의 해당 월(시즌과 1:1). 상품 5종 모두 1회 이상 등장
 export const dukMonthlyRewards: DukMonthlyReward[] = [
-  // V01D 2026 시즌 (202) — 1~4월 정산 완료 + 5월 진행중 + 나머지 예정
-  // 정산 완료 4개월은 다양한 tier 조합으로 케이스 풍부화
+  // V01D 2026.06 시즌 (202) — 진행중·미정산 (수정 가능)
   {
-    id: 1,
-    seasonId: 202,
-    yearMonth: '2026.01',
-    settledAt: '2026.01.31 23:59',
-    // 케이스: 단독 등수 3종 + 등수범위 + 퍼센트 (5종 혼합)
+    id: 1, seasonId: 202, yearMonth: '2026.06',
     tiers: [
-      {
-        id: 1,
-        targetType: '등수',
-        targetValue: '1',
-        prizes: [
-          {
-            id: 101,
-            type: '배송 수령',
-            title: lang('V01D 사인 앨범 (1위 한정)', 'V01D Signed Album (1st only)', 'V01Dサイン入りアルバム(1位限定)'),
-            deliveryDeadlineDt: '2026-02-15',
-            deliveryDeadlineTime: '23:59',
-            deliveryFormUrl: 'https://forms.gle/v01d-signed-album-202601',
-          },
-          {
-            id: 102,
-            type: '덕력',
-            title: lang('1위 보너스 덕력', '1st Bonus Fan Power', '1位ボーナス推し力'),
-            amount: 1000,
-          },
-        ],
-      },
-      {
-        id: 2,
-        targetType: '등수',
-        targetValue: '2',
-        prizes: [
-          {
-            id: 121,
-            type: '배송 수령',
-            title: lang('V01D 사인 포카 (2위)', 'V01D Signed Photocard (2nd)', 'V01Dサイン入りフォトカード(2位)'),
-            deliveryDeadlineDt: '2026-02-15',
-            deliveryDeadlineTime: '23:59',
-            deliveryFormUrl: 'https://forms.gle/v01d-photocard-2nd-202601',
-          },
-        ],
-      },
-      {
-        id: 3,
-        targetType: '등수',
-        targetValue: '3',
-        prizes: [
-          {
-            id: 122,
-            type: '덕력',
-            title: lang('3위 보너스 덕력', '3rd Bonus', '3位ボーナス'),
-            amount: 500,
-          },
-        ],
-      },
-      {
-        id: 4,
-        targetType: '등수범위',
-        targetValue: '4-10',
-        prizes: [
-          {
-            id: 103,
-            type: '응모권',
-            title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'),
-            count: 5,
-          },
-        ],
-      },
-      {
-        id: 5,
-        targetType: '퍼센트',
-        targetValue: '30',
-        prizes: [
-          {
-            id: 104,
-            type: '응모권',
-            title: lang('슈퍼팬 응모권', 'Super Fan Tickets', 'スーパーファン応募券'),
-            count: 2,
-          },
-        ],
-      },
+      { id: 1, targetType: '등수', targetValue: '1', prizes: [
+        { id: 101, type: '배송 수령', title: lang('V01D 사인 앨범', 'V01D Signed Album', 'V01Dサイン入りアルバム'), deliveryDeadlineDt: '2026-07-15', deliveryDeadlineTime: '23:59', deliveryFormUrl: 'https://forms.gle/v01d-202606' },
+        { id: 102, type: '덕력', title: lang('1위 보너스 덕력', '1st Bonus Fan Power', '1位ボーナス推し力'), amount: 1000 },
+      ] },
+      { id: 2, targetType: '등수범위', targetValue: '2-10', prizes: [
+        { id: 103, type: '응모권', title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'), count: 5 },
+      ] },
+      { id: 3, targetType: '퍼센트', targetValue: '30', prizes: [
+        { id: 104, type: 'BIVE NFT', title: lang('V01D 시즌 BIVE', 'V01D Season BIVE', 'V01DシーズンBIVE'), mintingEventId: 24 },
+      ] },
     ],
   },
+  // V01D 2026.05 시즌 (201) — 종료·정산 완료
   {
-    id: 2,
-    seasonId: 202,
-    yearMonth: '2026.02',
-    settledAt: '2026.02.28 23:59',
-    // 케이스: 등수 + 작은 등수범위 + 큰 퍼센트
+    id: 2, seasonId: 201, yearMonth: '2026.05', settledAt: '2026.05.31 23:59',
     tiers: [
-      {
-        id: 6,
-        targetType: '등수',
-        targetValue: '1',
-        prizes: [
-          {
-            id: 105,
-            type: '배송 수령',
-            title: lang('V01D 사인 앨범', 'V01D Signed Album', 'V01Dサイン入りアルバム'),
-            deliveryDeadlineDt: '2026-03-15',
-            deliveryDeadlineTime: '23:59',
-            deliveryFormUrl: 'https://forms.gle/v01d-signed-album-202602',
-          },
-        ],
-      },
-      {
-        id: 7,
-        targetType: '등수범위',
-        targetValue: '2-5',
-        prizes: [
-          {
-            id: 106,
-            type: '현장 수령',
-            title: lang('V01D 팬 사인회 초대권', 'V01D Fan Sign Pass', 'V01Dファンサイン招待券'),
-            pickupStartDt: '2026-03-20',
-            pickupEndDt: '2026-03-20',
-            openTime: '14:00',
-            closeTime: '18:00',
-            location: lang('서울시 강남구 도산대로 123 V01D HQ', 'V01D HQ, 123 Dosan-daero, Gangnam-gu, Seoul', 'V01D HQ ソウル江南区島山大路123'),
-            items: lang('신분증·티켓 QR', 'ID + Ticket QR', '身分証・チケットQR'),
-          },
-        ],
-      },
-      {
-        id: 8,
-        targetType: '퍼센트',
-        targetValue: '50',
-        prizes: [
-          {
-            id: 123,
-            type: '덕력',
-            title: lang('상위 50% 참여 보너스', 'TOP 50% Participation Bonus', '上位50%参加ボーナス'),
-            amount: 100,
-          },
-        ],
-      },
+      { id: 11, targetType: '등수', targetValue: '1', prizes: [
+        { id: 201, type: '배송 수령', title: lang('V01D 사인 앨범', 'V01D Signed Album', 'V01Dサイン入りアルバム'), deliveryDeadlineDt: '2026-06-15', deliveryDeadlineTime: '23:59', deliveryFormUrl: 'https://forms.gle/v01d-202605' },
+      ] },
+      { id: 12, targetType: '등수범위', targetValue: '2-10', prizes: [
+        { id: 202, type: '응모권', title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'), count: 3 },
+      ] },
+      { id: 13, targetType: '퍼센트', targetValue: '30', prizes: [
+        { id: 203, type: '덕력', title: lang('상위 30% 보너스', 'Top 30% Bonus', '上位30%ボーナス'), amount: 200 },
+      ] },
     ],
   },
+  // 언더라이트 2026.06 시즌 (102) — 진행중·미정산
   {
-    id: 3,
-    seasonId: 202,
-    yearMonth: '2026.03',
-    settledAt: '2026.03.31 23:59',
-    // 케이스: 퍼센트만 3단 (좁은→넓은) — 매칭 우선순위 검증용
+    id: 3, seasonId: 102, yearMonth: '2026.06',
     tiers: [
-      {
-        id: 9,
-        targetType: '퍼센트',
-        targetValue: '5',
-        prizes: [
-          {
-            id: 107,
-            type: 'BIVE NFT',
-            title: lang('V01D 프로핏 BIVE (TOP 5%)', 'V01D Prophet BIVE (TOP 5%)', 'V01Dプロフェットビーブ(TOP5%)'),
-            mintingEventId: 26,
-          },
-          {
-            id: 108,
-            type: '덕력',
-            title: lang('TOP 5% 덕력 보너스', 'TOP 5% Bonus', 'TOP5% ボーナス'),
-            amount: 1000,
-          },
-        ],
-      },
-      {
-        id: 10,
-        targetType: '퍼센트',
-        targetValue: '20',
-        prizes: [
-          {
-            id: 109,
-            type: '응모권',
-            title: lang('TOP 20% 응모권', 'TOP 20% Tickets', 'TOP20% 応募券'),
-            count: 3,
-          },
-        ],
-      },
-      {
-        id: 11,
-        targetType: '퍼센트',
-        targetValue: '50',
-        prizes: [
-          {
-            id: 124,
-            type: '덕력',
-            title: lang('상위 50% 격려 덕력', 'TOP 50% Encouragement', '上位50%励まし'),
-            amount: 100,
-          },
-        ],
-      },
+      { id: 21, targetType: '등수', targetValue: '1', prizes: [
+        { id: 301, type: 'BIVE NFT', title: lang('언더라이트 BIVE 에디션', 'UNDER:LIGHT BIVE Edition', 'アンダーライトBIVEエディション'), mintingEventId: 23 },
+      ] },
+      { id: 22, targetType: '퍼센트', targetValue: '20', prizes: [
+        { id: 302, type: '응모권', title: lang('슈퍼팬 응모권', 'Super Fan Tickets', 'スーパーファン応募券'), count: 2 },
+      ] },
     ],
   },
+  // 언더라이트 2026.05 시즌 (101) — 종료·정산 완료
   {
-    id: 4,
-    seasonId: 202,
-    yearMonth: '2026.04',
-    settledAt: '2026.04.30 23:59',
-    // 케이스: 등수 + 등수범위 + 퍼센트 3종 표준 혼합
+    id: 4, seasonId: 101, yearMonth: '2026.05', settledAt: '2026.05.31 23:59',
     tiers: [
-      {
-        id: 12,
-        targetType: '등수',
-        targetValue: '1',
-        prizes: [
-          {
-            id: 110,
-            type: '배송 수령',
-            title: lang('V01D 한정판 앨범', 'V01D Limited Album', 'V01D限定版アルバム'),
-            deliveryDeadlineDt: '2026-05-15',
-            deliveryDeadlineTime: '23:59',
-            deliveryFormUrl: 'https://forms.gle/v01d-limited-202604',
-          },
-          {
-            id: 125,
-            type: 'BIVE NFT',
-            title: lang('V01D 1위 기념 BIVE', 'V01D 1st Commemorative BIVE', 'V01D1位記念ビーブ'),
-            mintingEventId: 27,
-          },
-        ],
-      },
-      {
-        id: 13,
-        targetType: '등수범위',
-        targetValue: '2-10',
-        prizes: [
-          {
-            id: 126,
-            type: '응모권',
-            title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'),
-            count: 5,
-          },
-        ],
-      },
-      {
-        id: 14,
-        targetType: '퍼센트',
-        targetValue: '30',
-        prizes: [
-          {
-            id: 111,
-            type: '덕력',
-            title: lang('TOP 30% 덕력 보너스', 'TOP 30% Bonus', 'TOP30% ボーナス'),
-            amount: 200,
-          },
-        ],
-      },
+      { id: 31, targetType: '등수', targetValue: '1', prizes: [
+        { id: 401, type: '현장 수령', title: lang('팬미팅 초대권', 'Fanmeeting Invite', 'ファンミ招待券'), pickupStartDt: '2026-06-10', pickupEndDt: '2026-06-20', openTime: '10:00', closeTime: '18:00', location: lang('서울 OO홀', 'Seoul OO Hall', 'ソウルOOホール'), items: lang('신분증 지참', 'Bring ID', '身分証持参') },
+      ] },
+      { id: 32, targetType: '등수범위', targetValue: '2-10', prizes: [
+        { id: 402, type: '덕력', title: lang('TOP 10 보너스', 'TOP 10 Bonus', 'TOP10ボーナス'), amount: 300 },
+      ] },
     ],
   },
+  // iKON 2026.05 시즌 (501) — 종료·정산 완료
   {
-    id: 5,
-    seasonId: 202,
-    yearMonth: '2026.05',
+    id: 5, seasonId: 501, yearMonth: '2026.05', settledAt: '2026.05.31 23:59',
     tiers: [
-      {
-        id: 10,
-        targetType: '등수',
-        targetValue: '1',
-        prizes: [
-          {
-            id: 112,
-            type: '배송 수령',
-            title: lang('V01D 시즌 앨범', 'V01D Season Album', 'V01Dシーズンアルバム'),
-            deliveryDeadlineDt: '2026-06-15',
-            deliveryDeadlineTime: '23:59',
-            deliveryFormUrl: 'https://forms.gle/v01d-season-202605',
-          },
-          {
-            id: 113,
-            type: 'BIVE NFT',
-            title: lang('V01D 100일 기념 BIVE', 'V01D 100 Days BIVE', 'V01D100日記念ビーブ'),
-            mintingEventId: 27,
-          },
-        ],
-      },
-      {
-        id: 11,
-        targetType: '등수범위',
-        targetValue: '2-10',
-        prizes: [
-          {
-            id: 114,
-            type: '응모권',
-            title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'),
-            count: 3,
-          },
-        ],
-      },
-      {
-        id: 12,
-        targetType: '퍼센트',
-        targetValue: '10',
-        prizes: [
-          {
-            id: 115,
-            type: '덕력',
-            title: lang('TOP 10% 덕력', 'TOP 10% Fan Power', 'TOP10% 推し力'),
-            amount: 300,
-          },
-        ],
-      },
+      { id: 41, targetType: '등수', targetValue: '1', prizes: [
+        { id: 501, type: '응모권', title: lang('iKON 사인회 응모권', 'iKON Fansign Tickets', 'iKONサイン会応募券'), count: 5 },
+      ] },
     ],
   },
-  // 언더라이트 2026 시즌 (102) — 1·2월 정산 완료
+  // CELEBUS 2026.06 시즌 (301) — 진행중·미정산
   {
-    id: 6,
-    seasonId: 102,
-    yearMonth: '2026.01',
-    settledAt: '2026.01.31 23:59',
-    // 케이스: 등수 2종 + 등수범위 + 퍼센트 (4종)
+    id: 6, seasonId: 301, yearMonth: '2026.06',
     tiers: [
-      {
-        id: 15,
-        targetType: '등수',
-        targetValue: '1',
-        prizes: [
-          {
-            id: 116,
-            type: '배송 수령',
-            title: lang('언더라이트 사인 앨범', 'UNDER:LIGHT Signed Album', 'アンダーライトサイン入りアルバム'),
-            deliveryDeadlineDt: '2026-02-15',
-            deliveryDeadlineTime: '23:59',
-            deliveryFormUrl: 'https://forms.gle/underlight-album-202601',
-          },
-        ],
-      },
-      {
-        id: 16,
-        targetType: '등수',
-        targetValue: '2',
-        prizes: [
-          {
-            id: 127,
-            type: '덕력',
-            title: lang('2위 보너스 덕력', '2nd Bonus', '2位ボーナス'),
-            amount: 500,
-          },
-        ],
-      },
-      {
-        id: 17,
-        targetType: '등수범위',
-        targetValue: '3-10',
-        prizes: [
-          {
-            id: 117,
-            type: '응모권',
-            title: lang('TOP 10 응모권', 'TOP 10 Tickets', 'TOP10 応募券'),
-            count: 3,
-          },
-        ],
-      },
-      {
-        id: 18,
-        targetType: '퍼센트',
-        targetValue: '30',
-        prizes: [
-          {
-            id: 128,
-            type: '덕력',
-            title: lang('TOP 30% 격려 덕력', 'TOP 30% Encouragement', 'TOP30%励まし'),
-            amount: 150,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 7,
-    seasonId: 102,
-    yearMonth: '2026.02',
-    settledAt: '2026.02.28 23:59',
-    // 케이스: 등수 + 퍼센트 2단 (좁은→넓은)
-    tiers: [
-      {
-        id: 19,
-        targetType: '등수',
-        targetValue: '1',
-        prizes: [
-          {
-            id: 118,
-            type: '현장 수령',
-            title: lang('언더라이트 팬미팅 초대권', 'UNDER:LIGHT Fan Meeting Pass', 'アンダーライトファンミーティング招待券'),
-            pickupStartDt: '2026-03-20',
-            pickupEndDt: '2026-03-21',
-            openTime: '10:00',
-            closeTime: '20:00',
-            location: lang('서울시 마포구 어울마당로 88 언더라이트홀', '88 Eoulmadang-ro, Mapo-gu, Seoul, UNDER:LIGHT Hall', 'ソウル麻浦区オウルマダン路88 アンダーライトホール'),
-            items: lang('신분증·예매 QR', 'ID + Booking QR', '身分証・予約QR'),
-          },
-        ],
-      },
-      {
-        id: 20,
-        targetType: '퍼센트',
-        targetValue: '5',
-        prizes: [
-          {
-            id: 119,
-            type: '덕력',
-            title: lang('TOP 5% 덕력', 'TOP 5% Fan Power', 'TOP5% 推し力'),
-            amount: 500,
-          },
-        ],
-      },
-      {
-        id: 21,
-        targetType: '퍼센트',
-        targetValue: '20',
-        prizes: [
-          {
-            id: 129,
-            type: '응모권',
-            title: lang('TOP 20% 응모권', 'TOP 20% Tickets', 'TOP20% 応募券'),
-            count: 2,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 8,
-    seasonId: 102,
-    yearMonth: '2026.05',
-    tiers: [
-      {
-        id: 17,
-        targetType: '등수',
-        targetValue: '1',
-        prizes: [
-          {
-            id: 120,
-            type: 'BIVE NFT',
-            title: lang('언더라이트 BIVE 에디션', 'UNDER:LIGHT BIVE Edition', 'アンダーライトビーブエディション'),
-            mintingEventId: 23,
-          },
-        ],
-      },
+      { id: 51, targetType: '등수', targetValue: '1', prizes: [
+        { id: 601, type: '덕력', title: lang('데뷔 시즌 1위 보너스', 'Debut Season 1st Bonus', 'デビューシーズン1位ボーナス'), amount: 500 },
+      ] },
     ],
   },
 ];
 
-// 시즌 시작일시("YYYY.MM.DD HH:mm")로부터 12개월 yearMonth 시퀀스 생성
+// 시즌 = 1개월 단위 (미팅 정합 2026-06-02). 시즌의 해당 월(YYYY.MM) 1건만 반환.
 function buildMonthsFromStart(startAt: string): string[] {
   const m = startAt.match(/^(\d{4})\.(\d{2})\./);
   if (!m) return [];
-  const startYear = Number(m[1]);
-  const startMonth = Number(m[2]);
-  const result: string[] = [];
-  for (let i = 0; i < 12; i++) {
-    const monthIdx = (startMonth - 1 + i) % 12;
-    const yearOffset = Math.floor((startMonth - 1 + i) / 12);
-    const y = startYear + yearOffset;
-    const mm = String(monthIdx + 1).padStart(2, '0');
-    result.push(`${y}.${mm}`);
-  }
-  return result;
+  return [`${m[1]}.${m[2]}`];
 }
 
-// 시즌별 월별 보상 12개 조회 (mock에 없으면 빈 tiers entry 생성)
+// 시즌 보상 조회 — 시즌 = 1개월이므로 1건만 반환 (mock에 없으면 빈 tiers entry 생성)
 export interface DukMonthlyRewardView {
   yearMonth: string;
   tiers: DukRewardTier[];

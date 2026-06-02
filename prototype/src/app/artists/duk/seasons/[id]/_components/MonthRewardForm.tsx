@@ -6,15 +6,16 @@ import { toast } from '@/components/ui/Toast';
 import type { DukLangText, DukRewardPrize, DukRewardTargetType, DukRewardTier } from '@/mock/duk';
 import PrizeForm, { PrizeSummary } from './PrizeForm';
 
-// [CEB-BO-ART-401-DETAIL] §2.5 매트릭스 — 월별 보상 폼 (아코디언)
-// - 잠금 사유는 부모(page.tsx)가 시즌 상태 × 월 시점 × 정산을 종합해 lockReason으로 전달
+// [CEB-BO-ART-401-DETAIL] §2.5 — 시즌 보상 설정 폼 (시즌 = 1개월, 시즌당 1건)
+// - 잠금 사유는 부모(page.tsx)가 시즌 상태 × 정산을 종합해 lockReason으로 전달
 // - lockReason !== null: 조회만 (PrizeSummary). 사유별 라벨·아이콘·색상 분기
 // - lockReason === null: 편집 가능 (1구간 = 복수 상품 nested + PrizeForm 5종 분기)
+// 미팅 정합 2026-06-02: 월 단위 시즌으로 전환 — "월별" 12개 아코디언 → 시즌 단일 보상
 
-export type LockReason = 'settled' | 'past-month' | 'season-ended' | null;
+export type LockReason = 'settled' | 'season-ended' | null;
 
 interface Props {
-  yearMonth: string; // YYYY.MM
+  yearMonth: string; // 시즌의 해당 월 (활동 로그·내부 식별용. 화면 라벨에는 미노출)
   initialTiers: DukRewardTier[];
   lockReason: LockReason;
   settledAt?: string;
@@ -25,7 +26,6 @@ interface Props {
 
 const LOCK_LABEL: Record<Exclude<LockReason, null>, string> = {
   settled: '정산 완료',
-  'past-month': '지난 월 — 수정 불가',
   'season-ended': '시즌 종료로 인해 수정 불가',
 };
 
@@ -162,17 +162,17 @@ export default function MonthRewardForm({
     for (const tier of tiers) {
       const tErr = validateTargetValue(tier);
       if (tErr) {
-        toast.error(`[${yearMonth}] ${tErr}`);
+        toast.error(tErr);
         return;
       }
       if (tier.prizes.length < 1) {
-        toast.error(`[${yearMonth}] 구간에 상품 최소 1개 필수`);
+        toast.error('구간에 상품 최소 1개 필수');
         return;
       }
       for (const prize of tier.prizes) {
         const pErr = validatePrize(prize);
         if (pErr) {
-          toast.error(`[${yearMonth}] ${pErr}`);
+          toast.error(pErr);
           return;
         }
       }
@@ -180,10 +180,10 @@ export default function MonthRewardForm({
     // 활동 로그 (DETAIL §5.5 정합)
     if (groupName && seasonName) {
       console.info(
-        `[활동 로그] 덕력 시즌 '${groupName} - ${seasonName}' ${yearMonth} 보상을 저장했습니다. (구간: ${tiers.length}개, 상품: ${totalPrizes}개)`,
+        `[활동 로그] 덕력 시즌 '${groupName} - ${seasonName}' 보상을 저장했습니다. (구간: ${tiers.length}개, 상품: ${totalPrizes}개)`,
       );
     }
-    toast.success(`${yearMonth} 보상 저장 (구간 ${tiers.length}개 · 상품 ${totalPrizes}개)`);
+    toast.success(`보상 저장 (구간 ${tiers.length}개 · 상품 ${totalPrizes}개)`);
   };
 
   const ChevronIcon = expanded ? ChevronDownIcon : ChevronRightIcon;
@@ -200,7 +200,7 @@ export default function MonthRewardForm({
         >
           <div className="flex items-center gap-2">
             <ChevronIcon className="w-4 h-4 text-gray-500" />
-            <h3 className="text-sm font-semibold text-gray-700">{yearMonth}</h3>
+            <h3 className="text-sm font-semibold text-gray-700">보상 설정</h3>
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-600">
               <LockClosedIcon className="w-3 h-3" />
               {label}
@@ -256,7 +256,7 @@ export default function MonthRewardForm({
       >
         <div className="flex items-center gap-2">
           <ChevronIcon className="w-4 h-4 text-gray-500" />
-          <h3 className="text-sm font-semibold text-gray-900">{yearMonth}</h3>
+          <h3 className="text-sm font-semibold text-gray-900">보상 설정</h3>
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-emerald-100 text-emerald-700">
             <PencilSquareIcon className="w-3 h-3" />
             수정 가능
@@ -352,7 +352,7 @@ export default function MonthRewardForm({
             onClick={handleSave}
             className="h-10 px-5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
           >
-            월 보상 저장
+            보상 저장
           </button>
         </div>
       </div>

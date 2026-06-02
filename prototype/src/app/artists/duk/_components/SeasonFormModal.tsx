@@ -5,9 +5,9 @@ import Modal from '@/components/ui/Modal';
 import { dukActiveGroups, type DukSeason } from '@/mock/duk';
 
 // [CEB-BO-ART-401] v1.8 §2-1 C. 시즌 생성·수정 모달
-// - 시즌 1년 고정: 시작일시만 입력, 종료 = 시작 + 1년 자동 산출
+// - 시즌 1개월 고정: 시작일시만 입력, 종료 = 시작 + 1개월 자동 산출
 // - 생성 모드: 그룹 Dropdown 활성 / 수정 모드: 그룹 readonly
-// - v1.7: 수정 모드 + 진행중·종료 시즌 → 시작일 readonly (12개월 시퀀스 매칭 깨짐 방지)
+// - v1.7: 수정 모드 + 진행중·종료 시즌 → 시작일 readonly (보상·정산 데이터 매칭 깨짐 방지)
 // - v1.8: 시즌명·시작일시 필드별 인라인 에러 (touched 후 노출)
 
 interface Props {
@@ -33,11 +33,12 @@ function fromLocalInput(v: string): string {
   return `${m[1]}.${m[2]}.${m[3]} ${m[4]}:${m[5]}`;
 }
 
-// 시작 "YYYY.MM.DD HH:mm"으로부터 +1년 - 1분 (= 다음 해 같은 날의 직전 분) "YYYY.MM.DD HH:mm"
-function addOneYearMinusMinute(startDot: string): string {
+// 시작 "YYYY.MM.DD HH:mm"으로부터 +1개월 - 1분 (= 다음 달 같은 날의 직전 분) "YYYY.MM.DD HH:mm"
+// 미팅 정합 2026-06-02: 시즌 = 1개월 단위
+function addOneMonthMinusMinute(startDot: string): string {
   const m = startDot.match(/^(\d{4})\.(\d{2})\.(\d{2})\s+(\d{2}):(\d{2})$/);
   if (!m) return '';
-  const d = new Date(Number(m[1]) + 1, Number(m[2]) - 1, Number(m[3]), Number(m[4]), Number(m[5]));
+  const d = new Date(Number(m[1]), Number(m[2]), Number(m[3]), Number(m[4]), Number(m[5]));
   d.setMinutes(d.getMinutes() - 1);
   const pad = (n: number) => String(n).padStart(2, '0');
   return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
@@ -71,14 +72,14 @@ export default function SeasonFormModal({
 
   const isEdit = mode === 'edit';
   const title = isEdit ? '시즌 수정' : '신규 시즌';
-  // v1.7 — 진행중·종료 시즌은 시작일 readonly (12개월 시퀀스 매칭 깨짐 방지)
+  // v1.7 — 진행중·종료 시즌은 시작일 readonly (보상·정산 데이터 매칭 깨짐 방지)
   const startReadonly = isEdit && (initial?.status === '진행중' || initial?.status === '종료');
 
-  // 종료 자동 산출 (시작 + 1년)
+  // 종료 자동 산출 (시작 + 1개월)
   const computedEndDot = useMemo(() => {
     const startDot = fromLocalInput(startAt);
     if (!startDot) return '';
-    return addOneYearMinusMinute(startDot);
+    return addOneMonthMinusMinute(startDot);
   }, [startAt]);
 
   const nameValid = name.trim().length >= 1 && name.trim().length <= 50;
@@ -87,7 +88,7 @@ export default function SeasonFormModal({
   const nameError = nameTouched && name.trim().length === 0 ? '시즌명을 입력하세요' : null;
   const startError = startTouched && !startAt ? '시작일시를 선택하세요' : null;
 
-  // 동일 그룹의 다른 시즌과 기간 겹침 검증 (1년 고정으로 충돌 검증 단순화)
+  // 동일 그룹의 다른 시즌과 기간 겹침 검증 (1개월 고정으로 충돌 검증 단순화)
   const conflict = useMemo(() => {
     if (!dateValid) return false;
     const startDot = fromLocalInput(startAt);
@@ -199,7 +200,7 @@ export default function SeasonFormModal({
                 {initial?.startAt ?? '—'}
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                진행중·종료 시즌은 시작일을 변경할 수 없습니다 (12개월 보상 시퀀스 보호)
+                진행중·종료 시즌은 시작일을 변경할 수 없습니다 (보상·정산 데이터 보호)
               </p>
             </>
           ) : (
@@ -223,7 +224,7 @@ export default function SeasonFormModal({
         </div>
 
         <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2">
-          <p className="text-xs text-gray-500 mb-0.5">종료일시 (시작 + 1년 자동)</p>
+          <p className="text-xs text-gray-500 mb-0.5">종료일시 (시작 + 1개월 자동)</p>
           <p className="text-sm font-medium text-gray-800">{computedEndDot || '시작일시를 선택해 주세요.'}</p>
         </div>
 

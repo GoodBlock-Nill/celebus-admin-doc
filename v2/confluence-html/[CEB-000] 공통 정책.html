@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>ALL (전체)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v5.6</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.27</td></tr>
+<tr><td>버전</td><td>v5.8</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>비고</td><td>고도화 서비스 전체 공통 정책 정의서. 각 화면 스펙 문서는 이 문서를 참조.</td></tr>
 </table>
 <hr>
@@ -375,6 +375,22 @@ p {
 <li>비추첨형 이벤트(서포트 등): <code>진행중(Active)</code> → 기간 종료 → <code>마감됨(Closed)</code> (집계중 생략)</li>
 <li><code>숨김(Hidden)</code>은 BO 관리자가 수동 설정하며, 언제든 토글 가능. 앱 캐러셀 배너 및 이벤트 전체 리스트에서 미노출.</li>
 </ul>
+<h3>4.8 아티스트 노출·필터 기준</h3>
+<p>아티스트 그룹이 앱에 노출되는 기준은 BO 그룹의 두 플래그로 결정된다(제어: [CEB-BO-ART-201] 그룹 리스트 §4.4 · [CEB-BO-ART-301] 그룹 상세).</p>
+<table>
+<tr><th>플래그</th><th>의미</th><th>효과</th></tr>
+<tr><td>운영 상태 (운영 중 / 운영 중단)</td><td>그룹 운영 여부</td><td><strong>운영 중단이면 앱 전 영역에서 미노출</strong> (개인화 화면 포함, 상태 우선)</td></tr>
+<tr><td>탐색 노출 (켬/끔)</td><td>발견 영역 노출 여부</td><td><strong>끔이면 발견·신규 선택 영역에서만 제외</strong> (이미 팔로우한 아티스트의 개인화 화면은 유지)</td></tr>
+</table>
+<h4>영역별 적용</h4>
+<table>
+<tr><th>구분</th><th>해당 화면</th><th>노출 기준</th></tr>
+<tr><td><strong>발견·신규 선택 영역</strong></td><td>아티스트 탐색(추천·전체) [CEB-ART-201], 홈·아티스트 메인·알림 등에서 <strong>신규로 아티스트를 추가·선택</strong>하는 후보 목록</td><td><strong>상태 Active + 탐색 노출 켬</strong> 그룹만 노출</td></tr>
+<tr><td><strong>개인화·콘텐츠 영역</strong></td><td>이미 팔로우/선택한 아티스트의 홈 선택 캐러셀 [CEB-HOM-001], 아티스트 메인 전환 [CEB-ART-101], 알림 필터 [CEB-NTF-510], 선택 아티스트의 래플·서포트·팬덤레벨·퀘스트 [CEB-EVT-101]·[CEB-DUK-201]·[CEB-EVT-201]·[CEB-FQ-101]</td><td>탐색 노출과 <strong>무관하게 노출</strong> (기존 경험 보존). 단 운영 중단 그룹이면 미노출(상태 우선)</td></tr>
+</table>
+<blockquote>
+<p><strong>핵심</strong>: "탐색 노출"은 신규 발견을 제어하는 플래그다. 끔으로 바꿔도 이미 그 아티스트를 팔로우/선택한 유저의 경험은 끊기지 않는다(홈·메인·알림·해당 아티스트 콘텐츠 유지). 운영을 완전히 중단하려면 그룹 운영 상태를 '운영 중단(비활성)'으로 전환한다.</p>
+</blockquote>
 <hr>
 <h2>5. 보상 체계</h2>
 <h3>5.1 보상 이원화 (상시/이벤트)</h3>
@@ -426,7 +442,7 @@ p {
 <blockquote>
 <p>본 표의 포인트값은 <strong>권장값(default)</strong>. 운영자(BO 관리자)는 이벤트성 부스트 등 필요 시 <strong>무제한 자유 변경 가능</strong>. 변경 폭 제한 없음. 단 정책 자체(티어 분류, 캡 단위) 변경은 정책 개정 v.x 필요.</p>
 </blockquote>
-<h3>5.2.1 덕력 시즌 보상 (월간 정산)</h3>
+<h3>5.2.1 덕력 시즌 보상 (시즌 정산 · 시즌당 1회)</h3>
 <table>
 <tr><th>순위</th><th>보상</th></tr>
 <tr><td>시즌 1위</td><td>사인 앨범 확정</td></tr>
@@ -450,19 +466,19 @@ p {
 <blockquote>
 <p><strong>사용자 안내 문구 (UI)</strong>: "동일 점수 시 먼저 도달한 유저가 상위 순위로 결정됩니다. Quest 등 일부 활동은 운영자 승인 시각을 기준으로 적립됩니다." / EN: "Tied scores are ranked by who reached the score first. Some activities (e.g., Quest) are credited at the time of operator approval."</p>
 </blockquote>
-<h4>월간 시즌 아카이브 보존</h4>
+<h4>시즌 아카이브 보존</h4>
 <table>
 <tr><th>항목</th><th>정책</th></tr>
-<tr><td>보존 기간</td><td>최근 6개월 월간 랭킹 스냅샷 보존</td></tr>
+<tr><td>보존 기간</td><td>최근 6개 시즌 랭킹 스냅샷 보존</td></tr>
 <tr><td>스냅샷 내용</td><td>TOP 100 순위 + 각 유저 획득 덕력 + 내 순위 + 보상 이력</td></tr>
-<tr><td>접근</td><td>CEB-DUK-101 시즌 드롭다운으로 이전 월 전환</td></tr>
+<tr><td>접근</td><td>CEB-DUK-101 시즌 드롭다운으로 이전 시즌 전환</td></tr>
 <tr><td>이전 시즌 데이터</td><td>읽기 전용 (변경 불가)</td></tr>
 </table>
 <h4>시즌 보상 지급 방식</h4>
 <table>
 <tr><th>항목</th><th>정책</th></tr>
 <tr><td>지급 방식</td><td>서버 자동 판정 + 보상 분배 (BO 수동 불필요)</td></tr>
-<tr><td>지급 시점</td><td>월간 시즌 종료 시 자동 실행 (말일 23:59 → 보상 처리 → 새 시즌)</td></tr>
+<tr><td>지급 시점</td><td>시즌(1개월) 종료 시 1회 자동 실행 (말일 23:59 → 보상 처리 → 새 시즌)</td></tr>
 <tr><td>동결 기간</td><td>보상 처리 중 랭킹 동결 (최대 수 시간)</td></tr>
 <tr><td>푸시 알림</td><td>"이번 시즌 {순위}위! 보상을 확인하세요"</td></tr>
 <tr><td>동일 포인트 처리</td><td>먼저 도달한 유저가 상위 순위 → 순위별 보상 적용</td></tr>
@@ -1262,6 +1278,8 @@ p {
 <tr><td><strong>v5.4</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>기억저장소 소셜 기능 추가 — [CEB-MEM-102] 모두의 기억저장소 / [CEB-MEM-103] 닉네임 기억저장소 신규</strong>. 팀 내 기획 제안(<code>docs/CA-[CEB-MEM-102]·[CEB-MEM-103].pdf</code>) 반영. ① <strong>§1.6 기억저장소 용어 신설</strong> — "내/모두의/{닉네임} 님의 기억저장소" 3언어 라벨(KO/EN/JP) + 좋아요·조회수 라벨 ② <strong>§7.1 저장소 공개 UI 위치 명문화</strong> — [CEB-MEM-101] 헤더 우측 ⚙️ 버튼 → 설정 바텀시트. 비공개→공개 전환 시 모달 안내 추가 ③ <strong>§7.6 신설 — 기억저장소 소셜 인터랙션</strong> — 좋아요(본인 게시글 허용·게시글당 1회·푸시 미발송)·조회수(로그인 + 브라우저 세션 + 24시간 쿨다운). 차단(Block)은 본 단계 미도입(신고로 대체) ④ <strong>§15 푸시 정책 — 기억 좋아요 알림 미발송 명시</strong> ⑤ <strong>§16 화면 목록에 MEM-102/103 추가</strong>. 동기화: [CEB-MEM-101] v1.7, [CEB-MEM-202] 좋아요·조회수 UI 추가. <strong>DB 영향</strong>: <code>users.memories_public</code>·<code>profile_photo_url</code>·<code>memories.view_count</code>·<code>like_count</code> 컬럼, <code>memory_likes</code>·<code>memory_views</code> 신규 테이블</td></tr>
 <tr><td><strong>v5.3</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>팬덤 레벨 카운터 모델 명확화 — 리셋 모델 확정</strong>. 사용자(@Nill Yoo)·개발자·디자이너 팀의 공통 이해와 일치시키기 위해 §5.5 표 표현 정정. ① v5.2 표 컬럼명 <strong>"누적 목표 덕력" → "레벨업 목표 덕력"</strong> 변경 (각 레벨 단독 목표값) ② <strong>"직전 대비 증가폭" 컬럼 제거</strong> (누적 모델 전제이므로 리셋 모델에서는 의미 없음) ③ <strong>카운터 모델 명시 문구 신규</strong>: "각 레벨에서 0부터 시작, 목표 도달 시 다음 레벨 진입과 동시에 카운터 0 리셋" ④ 진행률 공식 재명시: <code>현재 레벨 카운터 / 해당 레벨 목표 덕력 × 100</code>. <strong>곡선 수치는 동일 유지</strong> (10K/30K/70K/.../6M). 시드 주석·프로토타입 UI 코드는 이미 리셋 모델로 작동 중이라 코드 변경 불필요. 동기화: [CEB-EVT-201] v2.2 (§2.2.1·§2.2). <strong>Out of scope</strong>: 캡 정책(일일 500/주간 3,000DUK)과 "Lv5 6~12개월 도달" 의도 정합성 — 별도 캘리브레이션 미팅 안건.</td></tr>
 <tr><td><strong>v5.5</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>기억저장소 3대 정책 변경 + 덕력 단위 표기 일괄 변경</strong>. ① <strong>§7.5 캘린더 도트</strong> — "도트 1개 + 우측 +N 표기" → <strong>"도트 1개만 표시 (게시물 수·이모지 종류 미반영, +N 표기 없음)"</strong>. 자세한 구성은 날짜 탭 시 아코디언에서 확인하는 흐름으로 단일화 ② <strong>§7.5 감정 이모지 선택</strong> — "1~3개 멀티 선택 (토글)" → <strong>"1개 단일 선택 (라디오)"</strong>. 미선택 시 [저장하기] 비활성 정책 동일 적용 ③ <strong>이미지 첨부 (MEM-201 §2.5)</strong> — "OS 이미지 Picker" → <strong>"OS 기본 피커 (카메라 촬영 + 갤러리 선택 둘 다 제공)"</strong> 명문화 ④ <strong>§13.2 숫자 포맷 — 덕력 단위 <code>pt</code> → <code>DUK</code> 일괄 변경</strong> (KO/EN/JP 모두 DUK 통일. Fan Power/推し力 라벨은 §1.3 그대로 유지). 본문·changelog 인용·일일/주간 캡·티어 보상·스트릭·서포트 응원·해금 비용·UI 토스트 메시지 등 정책 문서 내 모든 'pt' 표기 일괄 치환. <strong>영향 화면</strong>: MEM-101 v1.8 / MEM-201 v2.1 / MEM-202 v1.4 / DUK-101 v2.0 / DUK-201 v1.5 / EVT-201 v1.9 / HOM-001 v2.5 / FQ-101 v2.1 / FQ-501 v1.6 / FQ-205 v2.5 / ART-101 v1.9 모두 동기화. v2/confluence-html/ HTML 변환본 13개 + prototype-app/src UI 텍스트 동기화. <strong>DB 컬럼명·코드 변수명(<code>reward_pt</code>/<code>target_pt</code>/<code>rewardPt</code> 등) 변경 없음</strong> (UI 라벨만 갱신). <strong>디자인 영향</strong>: 캘린더 +N 표기 제거로 "여러 게시물" 단서가 카드 탭 전까지 미노출 — 디자이너 공유 필요</td></tr>
+<tr><td><strong>v5.8</strong></td><td>2026-06-02</td><td>@Nill Yoo</td><td><strong>§5.2.1 덕력 시즌 보상 정책 — 시즌 1개월·1회 정산으로 재편</strong>. ① 섹션명 "덕력 시즌 보상 (월간 정산)" → "덕력 시즌 보상 (시즌 정산 · 시즌당 1회)" ② 지급 시점 "월간 시즌 종료 시 자동 실행 (말일 23:59 → 보상 처리 → 새 시즌)" → "시즌(1개월) 종료 시 1회 자동 실행 (말일 23:59 → 보상 처리 → 새 시즌)" ③ "월간 시즌 아카이브 보존" 절명 → "시즌 아카이브 보존", 보존 기간 "최근 6개월" → "최근 6개 시즌", 접근 설명 "이전 월 전환" → "이전 시즌 전환". 보상 등급(1위/TOP10/TOP10%)·중복 지급 금지 규칙·자동 지급 방식 내용은 변경 없음.</td></tr>
+<tr><td><strong>v5.7</strong></td><td>2026.05.29</td><td>@Nill Yoo</td><td><strong>§4.8 아티스트 노출·필터 기준 신설</strong> — BO 탐색 노출 정책([CEB-BO-ART-201] §4.4)을 앱 전반과 정합. 아티스트 노출을 두 플래그로 정의: ① 상태 Inactive면 개인화 화면 포함 앱 전 영역 미노출(상태 우선) ② 탐색 노출 끔이면 <strong>발견·신규 선택 영역(아티스트 탐색·추천·전체·신규 추가)에서만 제외</strong>하고, 이미 팔로우/선택한 아티스트의 개인화·콘텐츠 화면(홈 선택·아티스트 메인 전환·알림 필터·해당 아티스트 래플·서포트·팬덤레벨·퀘스트)은 유지(기존 경험 보존). 앱 8개 화면([CEB-HOM-001]·[CEB-ART-101]·[CEB-NTF-510]·[CEB-EVT-101]·[CEB-DUK-201]·[CEB-EVT-201]·[CEB-FQ-101]·[CEB-ART-201])에 §4.8 참조 추가. BO 측 [CEB-BO-ART-201 v1.3]·[CEB-BO-ART-301 v1.2]·[CEB-BO-003 v2.3] 노출 범위 문구를 '발견 영역 한정'으로 정합</td></tr>
 </table>
 
 </body>
