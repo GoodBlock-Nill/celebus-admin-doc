@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SUP — 서포트 이벤트</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.0</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.29</td></tr>
+<tr><td>버전</td><td>v2.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -104,7 +104,7 @@ p {
 </table>
 <hr>
 <h2>1. 화면 목적</h2>
-<p>전체 회원의 서포트 응원·반환·결과물 알림 내역을 통합 조회한다. 고객 응대(CS)와 운영 효과 측정에 사용하는 읽기 전용 화면이다.</p>
+<p>전체 회원의 서포트 응원·반환 내역을 <strong>응원 / 반환 두 개의 탭</strong>으로 구분하여 조회한다. 고객 응대(CS)와 운영 효과 측정에 사용하는 읽기 전용 화면이다. (결과물 알림은 덕력 증감이 아니므로 변동 내역에서 다루지 않는다)</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
 <tr><td>화면 경로</td><td><code>/artists/support/history</code></td></tr>
@@ -112,24 +112,25 @@ p {
 </table>
 <hr>
 <h2>2. 화면 구성</h2>
-<h3>2.1 검색·필터</h3>
+<h3>2.1 변동 유형 탭</h3>
+<p>상단에 <strong>응원 / 반환</strong> 두 개의 탭을 둔다. 탭을 선택하면 해당 유형의 내역만 표시되며, 각 탭 라벨 옆에 건수를 함께 노출한다. 변동 유형은 탭으로 고정되므로 별도 유형 필터는 두지 않는다. 기본 진입 탭은 <strong>응원</strong>이다.</p>
+<h3>2.2 검색·필터</h3>
 <table>
 <tr><th>구분</th><th>요소</th><th>설명</th></tr>
-<tr><td>필터</td><td>변동 유형</td><td>전체 / 응원 / 반환 / 결과물 알림</td></tr>
 <tr><td>필터</td><td>이벤트</td><td>전체 / 특정 이벤트</td></tr>
 <tr><td>필터</td><td>그룹</td><td>전체 / 특정 그룹</td></tr>
 <tr><td>필터</td><td>기간</td><td>시작·종료일 (KST)</td></tr>
 <tr><td>입력</td><td>닉네임/회원</td><td>부분 일치</td></tr>
-<tr><td>버튼</td><td>초기화</td><td>필터·검색어 해제</td></tr>
+<tr><td>버튼</td><td>초기화</td><td>필터·검색어 해제 (탭 선택은 유지)</td></tr>
 </table>
-<h3>2.2 목록 테이블</h3>
+<h3>2.3 목록 테이블</h3>
+<p>선택된 탭(응원 또는 반환)에 해당하는 내역만 표시한다. 변동 유형은 탭으로 구분되므로 별도 컬럼으로 두지 않는다.</p>
 <table>
 <tr><th>컬럼</th><th>설명</th></tr>
-<tr><td>변동 유형</td><td>응원 / 반환 / 결과물 알림</td></tr>
 <tr><td>회원</td><td>닉네임</td></tr>
 <tr><td>이벤트명</td><td>응원 대상 이벤트</td></tr>
 <tr><td>그룹</td><td>응원 대상 아티스트</td></tr>
-<tr><td>변동 내용</td><td>"+{N} 덕력 응원" / "−{N} 덕력 반환" / "결과물 알림 발송"</td></tr>
+<tr><td>변동 내용</td><td>응원 탭 "+{N} 덕력 응원" / 반환 탭 "−{N} 덕력 반환"</td></tr>
 <tr><td>일시</td><td>KST</td></tr>
 </table>
 <ul>
@@ -139,11 +140,11 @@ p {
 <hr>
 <h2>3. 규칙·로직</h2>
 <h3>3.1 변동 유형</h3>
+<p>본 화면은 덕력 증감이 일어나는 <strong>응원·반환</strong> 두 유형만 다룬다. 결과물 등록 알림은 덕력 변동이 아니므로 본 변동 내역에 포함하지 않는다(알림 발송 이력은 [CEB-BO-SUP-201] 상세에서 확인).</p>
 <table>
 <tr><th>변동 유형</th><th>의미</th><th>발생</th></tr>
 <tr><td>응원</td><td>회원이 보유 덕력 차감하여 응원</td><td>앱 [CEB-DUK-201] 응원</td></tr>
 <tr><td>반환</td><td>미달성·취소 시 응원 덕력 복구</td><td>서버 자동 (상태 전이 즉시)</td></tr>
-<tr><td>결과물 알림</td><td>결과물 등록 시 회원 알림 발송</td><td>[CEB-BO-SUP-201] [결과물 등록·완료]</td></tr>
 </table>
 <h3>3.2 권한</h3>
 <p>권한은 [CEB-BO-SYS-102] 권한 관리 그룹 설정에 따른다. 외부 아티스트 계정은 자기 아티스트 내역만 조회된다. 본 화면은 조회 전용으로 액션이 없다.</p>
@@ -162,6 +163,7 @@ p {
 <h2>6. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v2.1</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>변동 유형 구조 정리</strong> ① 변동 유형을 필터에서 <strong>응원·반환 2개 탭</strong>으로 분리(탭 라벨에 건수 노출, 기본 응원 탭) ② 목록에서 변동 유형 컬럼 제거(탭으로 고정) ③ <strong>결과물 알림을 변동 내역에서 제외</strong> — 덕력 증감이 아니므로 §1 목적·§2 테이블·§3.1 변동 유형에서 삭제(알림 발송 이력은 [CEB-BO-SUP-201] 상세에서 확인)</td></tr>
 <tr><td><strong>v2.0</strong></td><td><strong>2026.05.29</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>앱 SSOT 정합 + 아티스트 메뉴 편입 재작성</strong> ① 화면 경로 <code>/artists/support/history</code>, Breadcrumb 아티스트 > 서포트 관리로 정정 ② 변동 유형을 <strong>한국어</strong>(응원/반환/결과물 알림)로 표준화(코드 식별자 <code>SUP_CHEER</code>·<code>SUP_REFUND</code> 등 제거) ③ 변동 내용 표기를 "+N 덕력 응원 / −N 덕력 반환"으로 정정(응원=차감 모델 반영) ④ 통합 조회 패턴 참조를 미존재 문서에서 <strong>[CEB-BO-ART-401-HISTORY]</strong>(덕력 내역)로 정정 ⑤ 권한은 [CEB-BO-SYS-102] 참조로 통일</td></tr>
 <tr><td>v1.0</td><td>2026-05-06</td><td>@Nill Yoo</td><td>(폐기) 초안 — 코드 식별자 거래 코드 (v2.0에서 전면 재작성)</td></tr>
 </table>

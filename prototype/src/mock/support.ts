@@ -12,8 +12,8 @@ export type SupportStatus =
   | '미달성종료'
   | '집행취소';
 
-// 변동 유형 — [CEB-BO-SUP-000] §4.5 / [SUP-401]
-export type CheerLedgerType = '응원' | '반환' | '결과물 알림';
+// 변동 유형 — [CEB-BO-SUP-000] §4.5 / [SUP-401] (덕력 증감 2종 — 결과물 알림은 변동 아님 → 제외)
+export type CheerLedgerType = '응원' | '반환';
 
 // 반환 사유 — [CEB-BO-SUP-201] §2.4
 export type RefundReason = '목표 미달성' | '집행 취소' | '강제 종료';
@@ -83,7 +83,7 @@ export interface CheerLedger {
   member: string;
   eventName: string;
   groupName: string;
-  amount: number; // 응원 +N, 반환 -N, 결과물 알림 0
+  amount: number; // 응원 +N, 반환 -N
   at: string;
 }
 
@@ -282,9 +282,7 @@ export const supportLedger: CheerLedger[] = [
   { id: 9, type: '반환', member: 'celebus_one', eventName: 'CELEBUS 1주년 옥외 전광판 서포트', groupName: 'CELEBUS', amount: -600000, at: '2026.04.22 00:01' },
   { id: 10, type: '반환', member: 'day1_celeb', eventName: 'CELEBUS 1주년 옥외 전광판 서포트', groupName: 'CELEBUS', amount: -500000, at: '2026.04.22 00:01' },
   { id: 11, type: '반환', member: 'ikonic_og', eventName: 'iKON 음악방송 응원 도시락 서포트', groupName: 'iKON', amount: -300000, at: '2026.03.28 10:00' },
-  { id: 12, type: '결과물 알림', member: 'voidlover', eventName: 'V01D 첫 단독 콘서트 화환 서포트', groupName: 'V01D', amount: 0, at: '2026.03.22 18:00' },
-  { id: 13, type: '결과물 알림', member: 'first_fan', eventName: 'V01D 첫 단독 콘서트 화환 서포트', groupName: 'V01D', amount: 0, at: '2026.03.22 18:00' },
 ];
 
-export const LEDGER_TYPES: CheerLedgerType[] = ['응원', '반환', '결과물 알림'];
+export const LEDGER_TYPES: CheerLedgerType[] = ['응원', '반환'];
 export const SUPPORT_EVENT_NAMES = Array.from(new Set(supportEvents.map((e) => e.titleKo)));

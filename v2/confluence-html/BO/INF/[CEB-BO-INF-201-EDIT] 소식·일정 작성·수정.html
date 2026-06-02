@@ -84,7 +84,7 @@ p {
 <tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
 <tr><td>기능영역(Epic)</td><td>INF — 소식·일정</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.2</td></tr>
+<tr><td>버전</td><td>v1.3</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>Breadcrumb</td><td>홈 > 아티스트 > 소식/일정 > 작성 / {제목} 수정</td></tr>
 <tr><td>비고</td><td>타입별(소식/일정/공지) 입력 폼. 작성(신규)·수정 공용. 상세는 [CEB-BO-INF-201]</td></tr>
@@ -126,29 +126,33 @@ p {
 <tr><th>항목</th><th>표시</th></tr>
 <tr><td>제목</td><td>다국어(한국어/영어/일본어), 각 50자 필수</td></tr>
 <tr><td>본문</td><td>다국어 위지윅, 각 5,000자 필수</td></tr>
-<tr><td>게시일</td><td>날짜 필수</td></tr>
-<tr><td>이미지</td><td>최대 10장</td></tr>
-<tr><td>연관 콘텐츠</td><td>최대 3건 — 각 행: <strong>콘텐츠 타입(유튜브/X/인스타그램/스포티파이/일반) + 콘텐츠명(50자) + URL</strong>. '일반'은 타입에 없는 URL용. 3건 초과 추가 불가</td></tr>
+<tr><td>이미지</td><td>최대 10장 (첫 번째 이미지가 대표 썸네일로 사용됨 — 별도 썸네일 등록 없음)</td></tr>
+<tr><td>연관 콘텐츠</td><td>최대 3건 — 각 행: <strong>콘텐츠 타입(유튜브/X/인스타그램/스포티파이/일반) + 콘텐츠명(단일, 50자) + URL</strong>. '일반'은 타입에 없는 URL용. 콘텐츠명은 다국어 입력을 받지 않으며, 썸네일은 URL에서 자동 추출(운영자 미관리). 3건 초과 추가 불가</td></tr>
 </table>
+<blockquote>
+<p>게시일은 작성 시 입력하지 않는다. [게시] 누른 날짜가 게시일이 되며, 재게시해도 최초 게시일이 유지된다([CEB-BO-INF-000] §4.2).</p>
+</blockquote>
 <h4>B. 일정</h4>
 <table>
 <tr><th>항목</th><th>표시</th></tr>
 <tr><td>일정명</td><td>다국어, 각 50자 필수</td></tr>
 <tr><td>일시</td><td>날짜 + 시간 (필수)</td></tr>
-<tr><td>장소</td><td>구글 장소 검색 입력 — 검색어 입력 시 장소 제안, 선택 시 장소명 입력 (선택, 100자)</td></tr>
+<tr><td>장소</td><td>구글 장소 검색 — 검색어를 입력하면 장소를 제안하고, 제안에서 <strong>선택한 장소명을 그대로 사용</strong>한다(운영자가 임의 텍스트로 직접 편집하지 않음). 선택, 100자</td></tr>
 </table>
 <blockquote>
-<p>일정에는 부제·썸네일 입력이 없다.</p>
+<p>일정에는 부제·썸네일 입력이 없다. 일정의 일시는 이벤트 일자이며 게시일과 별개다.</p>
 </blockquote>
 <h4>C. 공지</h4>
 <table>
 <tr><th>항목</th><th>표시</th></tr>
 <tr><td>제목</td><td>다국어, 각 50자 필수</td></tr>
 <tr><td>본문</td><td>다국어 위지윅, 각 5,000자 필수</td></tr>
-<tr><td>게시일</td><td>날짜 필수</td></tr>
 <tr><td>대표 이미지</td><td>1장 (선택)</td></tr>
 <tr><td>CTA 버튼</td><td>라벨(30자) + 링크 URL (선택). 입력 시 앱 공지 상세에 버튼 노출</td></tr>
 </table>
+<blockquote>
+<p>공지의 게시일도 작성 시 입력하지 않으며 [게시] 누른 날짜로 자동 기록된다(재게시 시 최초 게시일 유지).</p>
+</blockquote>
 <h3>2.4 모달</h3>
 <table>
 <tr><th>모달</th><th>트리거</th><th>동작</th></tr>
@@ -172,11 +176,12 @@ p {
 <h3>3.3 타입별 필수 검증</h3>
 <table>
 <tr><th>타입</th><th>게시 필수</th></tr>
-<tr><td>소식</td><td>제목·본문(3언어), 게시일</td></tr>
+<tr><td>소식</td><td>제목·본문(3언어)</td></tr>
 <tr><td>일정</td><td>일정명(3언어), 일시</td></tr>
-<tr><td>공지</td><td>제목·본문(3언어), 게시일</td></tr>
+<tr><td>공지</td><td>제목·본문(3언어)</td></tr>
 </table>
 <ul>
+<li>소식·공지의 <strong>게시일은 게시 필수 입력 항목이 아니다.</strong> 작성 시 입력하지 않고 [게시] 누른 날짜로 자동 기록되며, 재게시 시 최초 게시일을 유지한다.</li>
 <li>연관 콘텐츠는 최대 3건(콘텐츠 타입·콘텐츠명·URL). CTA는 선택(라벨·링크 동시 입력 시 유효).</li>
 </ul>
 <hr>
@@ -208,6 +213,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.3</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — 입력 항목 정리. ① 소식·공지 <strong>게시일 입력 필드 제거</strong> — 게시 시 자동 기록, 재게시 시 최초 게시일 유지(§2.3 A·C·§3.3) ② 소식 <strong>첫 번째 이미지가 대표 썸네일</strong>로 사용됨 명시 ③ 연관 콘텐츠명은 <strong>다국어 입력을 받지 않으며</strong> 썸네일은 <strong>URL에서 자동 추출</strong> 명시 ④ 일정 장소는 구글 제안에서 <strong>선택한 장소명을 그대로 사용</strong>(직접 편집 없음)</td></tr>
 <tr><td><strong>v1.2</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — 연관 콘텐츠 플랫폼 7종 → 5종(유튜브/X/인스타그램/스포티파이/일반)으로 정정. §2.3 A 콘텐츠 타입 갱신</td></tr>
 <tr><td><strong>v1.1</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>게시 게이팅 명시 — [게시] 버튼은 다국어 필수·타입별 필수 충족 시에만 활성, 미충족 시 비활성 + 사유 안내, 시도 시 차단 토스트(§2.1·§3.2). 임시저장은 항상 가능</td></tr>
 <tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. [CEB-BO-INF-201] 작성·상세에서 입력 폼 분리. ① 타입별 폼(소식 연관 콘텐츠[타입+콘텐츠명+URL, 최대 3]·일정 장소[구글 장소 검색], 부제·썸네일 없음·공지 대표 이미지/CTA) ② 작성/수정 공용 ③ 취소·게시·삭제 확인 모달 ④ 다국어 게시 검증 ⑤ 권한 [CEB-BO-SYS-102] 참조</td></tr>

@@ -23,15 +23,28 @@ function statusBadge(s: FeedStatus) {
   return 'bg-amber-100 text-amber-700';
 }
 
+// 오늘 날짜 → YYYY.MM.DD (소식·공지 게시일 자동 기록용)
+function todayDot(): string {
+  const d = new Date();
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+}
+
 export default function FeedDetail({ item }: { item: FeedItem }) {
   const router = useRouter();
   const [status, setStatus] = useState<FeedStatus>(item.status);
+  // 게시일: 소식·공지는 최초 [게시] 시점에 1회 기록되고 재게시해도 불변. 일정은 이벤트 일자(item.date)로 별개.
+  const [publishedDate, setPublishedDate] = useState(item.date);
   const [lang, setLang] = useState<Lang>('KO');
   const [publishOpen, setPublishOpen] = useState(false);
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const doPublish = () => { setStatus('게시'); toast.success(`${item.type} '${item.title.KO}'을(를) 게시했습니다.`); };
+  const doPublish = () => {
+    setStatus('게시');
+    // 소식·공지 최초 게시 시에만 오늘 날짜 기록 — 재게시(보관→게시)는 최초 게시일 유지
+    if (item.type !== '일정' && !publishedDate) setPublishedDate(todayDot());
+    toast.success(`${item.type} '${item.title.KO}'을(를) 게시했습니다.`);
+  };
   const doArchive = () => { setStatus('보관'); toast.success(`${item.type} '${item.title.KO}'을(를) 보관 처리했습니다.`); };
 
   const LangTab = (
@@ -148,8 +161,7 @@ export default function FeedDetail({ item }: { item: FeedItem }) {
               ['연결 아티스트', item.groupName],
               ['공식 출처', item.type === '공지' ? '해당 없음' : (item.official ? '공식' : '미표기')],
               ['상태', status],
-              [item.type === '일정' ? '일시' : '게시일', item.type === '일정' ? `${item.date} ${item.time}` : item.date],
-              ['조회수', (item.views ?? 0).toLocaleString()],
+              [item.type === '일정' ? '일시' : '게시일', item.type === '일정' ? `${item.date} ${item.time}` : (publishedDate || '게시 전')],
               ...(item.type === '소식' ? [['좋아요', (item.likes ?? 0).toLocaleString()] as [string, string]] : []),
             ].map(([k, v]) => (
               <div key={k} className="flex items-center justify-between">

@@ -45,9 +45,10 @@ export default function FeedForm({ mode, initial }: { mode: 'create' | 'edit'; i
   const removeContent = (i: number) => setContents(contents.filter((_, idx) => idx !== i));
 
   // 게시 필수 검증 — 다국어 필수 + 타입별 필수
+  // 소식·공지: 게시일은 입력하지 않음(게시 시점 자동 기록) → 검증에서 제외 / 일정: 일시(일자+시간) 필수
   const canPublish = type === '일정'
     ? isAllLangsFilled(title) && !!date && !!time
-    : isAllLangsFilled(title) && isAllLangsFilled(body) && !!date;
+    : isAllLangsFilled(title) && isAllLangsFilled(body);
 
   const backTo = () => router.push(mode === 'edit' && initial ? `/artists/feed/${initial.id}` : '/artists/feed');
 
@@ -78,7 +79,7 @@ export default function FeedForm({ mode, initial }: { mode: 'create' | 'edit'; i
             >게시</button>
           </div>
         </div>
-        {!canPublish && <p className="mt-2 text-xs text-amber-600">게시하려면 제목{type !== '일정' ? '·본문' : ''}의 한국어·영어·일본어와 {type === '일정' ? '일시' : '게시일'}를 모두 입력하세요. (임시저장은 가능)</p>}
+        {!canPublish && <p className="mt-2 text-xs text-amber-600">게시하려면 제목{type !== '일정' ? '·본문' : ''}의 한국어·영어·일본어{type === '일정' ? '와 일시' : ''}를 모두 입력하세요. (임시저장은 가능)</p>}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
@@ -108,10 +109,8 @@ export default function FeedForm({ mode, initial }: { mode: 'create' | 'edit'; i
           {(type === '소식' || type === '공지') && (
             <>
               <LangTextarea label="본문" required rows={8} lang={bodyLang} onLangChange={setBodyLang} value={body[bodyLang]} onChange={(v) => setBody({ ...body, [bodyLang]: v })} values={body} maxLength={5000} placeholder="본문 입력 (위지윅)" />
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">게시일 <span className="text-red-500">*</span></label>
-                <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-              </div>
+              {/* 게시일은 입력하지 않음 — [게시] 누른 날짜가 게시일이 되며, 재게시해도 최초 게시일이 유지된다 */}
+              <p className="text-xs text-gray-500 -mt-2">게시일은 [게시] 버튼을 누른 날짜로 자동 기록됩니다. (재게시 시 최초 게시일 유지)</p>
             </>
           )}
 

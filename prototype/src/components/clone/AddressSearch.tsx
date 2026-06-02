@@ -4,7 +4,8 @@ import { useRef, useState } from 'react';
 import { MapPinIcon } from '@heroicons/react/20/solid';
 import { SAMPLE_PLACES } from '@/mock/feed';
 
-// 구글 장소 검색 UX 목업 — 입력 시 샘플 장소 목록에서 부분 일치 제안.
+// 구글 장소 검색 UX 목업 — 입력은 검색어일 뿐이며, 장소명은 제안 목록에서 "선택"해야 확정된다.
+// (운영자가 임의 텍스트로 직접 입력하지 않고, 구글에 등록된 장소명을 그대로 사용)
 // 실제 연동 시 Google Places Autocomplete로 대체.
 interface Props {
   value: string;
@@ -32,7 +33,8 @@ export default function AddressSearch({ value, onChange, placeholder = '장소 �
       <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
       <input
         value={query}
-        onChange={(e) => { setQuery(e.target.value); onChange(e.target.value); setOpen(true); }}
+        // 타이핑은 검색어일 뿐 — 장소는 제안 선택(pick) 시에만 확정. 단, 비우면 선택 해제로 처리.
+        onChange={(e) => { setQuery(e.target.value); if (e.target.value === '') onChange(''); setOpen(true); }}
         onFocus={() => setOpen(true)}
         onBlur={() => { blurTimer.current = setTimeout(() => setOpen(false), 150); }}
         placeholder={placeholder}
