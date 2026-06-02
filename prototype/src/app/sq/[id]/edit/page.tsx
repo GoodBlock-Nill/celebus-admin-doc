@@ -235,7 +235,7 @@ export default function SqEditPage({ params }: { params: Promise<{ id: string }>
         <h4 className="text-base font-semibold text-gray-900 mb-1">
           메인 이미지 <span className="text-red-500">*</span>
         </h4>
-        <p className="text-[11px] text-gray-500 mb-4">3:4 비율 권장, ≤5MB — 끌어다 놓거나 URL 직접 입력</p>
+        <p className="text-[11px] text-gray-500 mb-4">3:4 비율 권장, ≤5MB — 끌어다 놓거나 파일 업로드</p>
 
         <div className="grid grid-cols-[200px_1fr] gap-5 items-start">
           <div
@@ -256,7 +256,7 @@ export default function SqEditPage({ params }: { params: Promise<{ id: string }>
                 {imageFileName
                   ? `✓ ${imageFileName}`
                   : imageUrl
-                  ? '이미지 URL 등록됨'
+                  ? '이미지 등록됨'
                   : dragOver
                   ? '여기에 놓아주세요'
                   : '이미지를 드래그&드롭'}
@@ -265,18 +265,6 @@ export default function SqEditPage({ params }: { params: Promise<{ id: string }>
           </div>
 
           <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">
-                이미지 URL <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                disabled={!editableByStatus}
-                className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50"
-              />
-            </div>
             <button
               onClick={() => alert('[Mock] 파일 업로드 다이얼로그')}
               disabled={!editableByStatus}
