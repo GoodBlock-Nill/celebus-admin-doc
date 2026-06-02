@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-EVT-201-MD-PUBLISH] 게시 확인</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-EVT-201-MD-PUBLISH] 게시 확인</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-EVT-201-MD-PUBLISH</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>EVT — 팬덤 레벨</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>(모달) 부모: 팬덤 레벨 상세 (레벨·곡선 탭)</td></tr>
+<tr><td>비고</td><td>준비 상태 팬덤 레벨을 게시(준비→진행중)하기 전 확인 모달. 권한은 [CEB-BO-SYS-102] 참조</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>모달·토스트 공통 규격</td></tr>
+<tr><td>[CEB-BO-EVT-000] 팬덤 레벨(EVT) 영역 가이드</td><td>§4.1.1 라이프사이클 (준비→진행중)</td></tr>
+<tr><td>[CEB-BO-EVT-201] 팬덤 레벨 상세 (레벨·곡선 탭)</td><td>진입 경로 (헤더 [게시] 액션)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>운영자가 <strong>준비 상태 팬덤 레벨을 게시</strong>(준비→진행중)하기 전 확인을 받는 모달. 게시하면 앱에 노출되고 운영이 시작되므로 명시적 확인을 거친다.</p>
+<ul>
+<li><strong>누가</strong>: 팬덤 레벨 쓰기 권한이 있는 백오피스 관리자</li>
+<li><strong>결과</strong>: 시즌 상태가 "준비" → "진행중"으로 전환되고 앱 [CEB-EVT-201]에 노출 시작</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 모달 레이아웃</h3>
+<pre><code>┌───────────────────────────────────────────┐
+│  팬덤레벨을 게시할까요?                      │
+├───────────────────────────────────────────┤
+│  · 게시하면 앱에 노출되고 운영이 시작됩니다. │
+│  · 레벨 곡선이 1개 이상 설정되어 있어야      │
+│    합니다.                                  │
+├───────────────────────────────────────────┤
+│                    [ 취소 ]   [ 게시 ]      │
+└───────────────────────────────────────────┘
+</code></pre>
+<h3>2.2 본문 구성</h3>
+<table>
+<tr><th>영역</th><th>내용</th></tr>
+<tr><td>제목</td><td>"팬덤레벨을 게시할까요?"</td></tr>
+<tr><td>본문 (2행)</td><td>"게시하면 앱에 노출되고 운영이 시작됩니다." / "레벨 곡선이 1개 이상 설정되어 있어야 합니다."</td></tr>
+<tr><td>버튼</td><td>[취소] / [게시]</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 프로토타입 참조</p>
+</blockquote>
+<hr>
+<h2>3. 기능 설명</h2>
+<table>
+<tr><th>버튼</th><th>동작</th></tr>
+<tr><td>게시</td><td>게시 검증 통과 시 시즌 상태 "준비" → "진행중" 전환 + 모달 닫기 + 성공 토스트 + 활동 로그. 상세 헤더 자동 갱신(상태 뱃지 변경 + 액션 버튼 [강제 종료]로 교체)</td></tr>
+<tr><td>취소 / [X] / 모달 외부 클릭</td><td>모달 닫기. 상태 유지</td></tr>
+</table>
+<hr>
+<h2>4. 로직·플로우</h2>
+<ol>
+<li>[CEB-BO-EVT-201] 레벨·곡선 탭 헤더 [게시] 클릭(준비 상태에서만 노출)</li>
+<li>본 확인 모달 열림</li>
+<li>[게시] 클릭 → <strong>레벨 곡선 1개 이상 설정 여부 검증</strong></li>
+</ol>
+<ul>
+<li>미설정: 모달 닫고 차단 토스트(§5)</li>
+<li>설정됨: 진행중 전환 + 성공 토스트(§5) + 활동 로그</li>
+</ul>
+<ol>
+<li>[취소]·[X]·외부 클릭: 모달 닫고 준비 상태 유지</li>
+</ol>
+<hr>
+<h2>5. 검증·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>처리·문구</th></tr>
+<tr><td>레벨 곡선 미설정 게시 시도</td><td>Toast (Error): "레벨 곡선을 1개 이상 설정해야 게시할 수 있습니다." (게시 차단, 준비 상태 유지)</td></tr>
+<tr><td>게시 성공</td><td>Toast (Success): "'{시즌명}' 팬덤레벨을 게시했습니다."</td></tr>
+<tr><td>게시 실패</td><td>Toast (Error): "게시에 실패했습니다."</td></tr>
+<tr><td>쓰기 권한 없음</td><td>상세 헤더 [게시] 미노출 → 본 모달 호출되지 않음</td></tr>
+</table>
+<hr>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>화면 ID</th><th>관계</th></tr>
+<tr><td>CEB-BO-EVT-201</td><td>진입 (헤더 [게시]) · 게시 후 자동 갱신</td></tr>
+<tr><td>CEB-EVT-201</td><td>게시 후 앱 노출 대상</td></tr>
+</table>
+<hr>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 게시 확인 모달 — 제목 "팬덤레벨을 게시할까요?", 본문 "게시하면 앱에 노출되고 운영이 시작됩니다. / 레벨 곡선이 1개 이상 설정되어 있어야 합니다.", 버튼 [취소]/[게시]. 곡선 미설정 시 차단 토스트, 성공 토스트("'{시즌명}' 팬덤레벨을 게시했습니다.")</td></tr>
+</table>
+
+</body>
+</html>

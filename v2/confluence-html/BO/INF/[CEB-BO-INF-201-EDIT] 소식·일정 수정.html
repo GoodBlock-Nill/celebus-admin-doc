@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-INF-201-EDIT] 소식·일정 수정</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-INF-201-EDIT] 소식·일정 수정</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-INF-201-EDIT</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>INF — 소식·일정</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v2.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td>/artists/feed/[id]/edit</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 아티스트 > 소식/일정 > {제목} 수정</td></tr>
+<tr><td>비고</td><td>기존 콘텐츠 수정 화면. 입력 폼은 [CEB-BO-INF-101-CREATE] 작성과 동일하며 기존 값이 채워진 상태로 진입. 조회는 [CEB-BO-INF-201]</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한, 다국어, 미디어 업로드, 푸시 알림, 토스트</td></tr>
+<tr><td>[CEB-BO-INF-000] 소식·일정 영역 가이드</td><td>콘텐츠 타입·라이프사이클·타입별 필드·공식 출처·푸시 알림</td></tr>
+<tr><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td><td>권한 그룹별 읽기·쓰기·삭제 범위</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>기존 소식·일정·공지의 내용을 수정하는 입력 폼. 입력 항목 구성은 [CEB-BO-INF-101-CREATE] 작성과 동일하며, 진입 시 기존 값이 채워진다. 조회는 [CEB-BO-INF-201] 소식·일정 상세에서 한다.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-INF-201] 소식·일정 상세 > [수정]</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 헤더</h3>
+<ul>
+<li>Breadcrumb: <code>홈 > 아티스트 > 소식/일정 > {제목} 수정</code></li>
+<li>타이틀: 소식/일정 수정</li>
+<li>우측 상단 액션: [취소] / [삭제] / [임시저장] / [게시]</li>
+<li>[삭제]는 수정 화면에만 노출되는 액션이다(작성 화면에는 없음).</li>
+<li><strong>[게시]는 다국어 필수(한국어·영어·일본어)와 타입별 필수 항목이 모두 충족될 때만 활성</strong>된다. 미충족 시 비활성 처리하고 헤더 하단에 미충족 사유 안내 문구를 노출한다. [임시저장]은 미완성 상태에서도 항상 가능하다.</li>
+</ul>
+<h3>2.2 공통 메타 (사이드 — 설정)</h3>
+<table>
+<tr><th>항목</th><th>형식</th></tr>
+<tr><td>타입</td><td>Dropdown — 소식 / 일정 / 공지 (선택에 따라 §2.3 입력 폼 분기, 기존 타입으로 채워짐)</td></tr>
+<tr><td>연결 아티스트</td><td>Dropdown — 그룹 (기존 값)</td></tr>
+<tr><td>공식 출처</td><td>토글 — 공식 제공 뱃지 표기 (소식·일정만, 공지 미해당)</td></tr>
+</table>
+<h3>2.3 타입별 입력 폼</h3>
+<p>작성([CEB-BO-INF-101-CREATE] §2.3)과 동일한 구성이며, 진입 시 기존 값이 채워진다.</p>
+<h4>A. 소식</h4>
+<table>
+<tr><th>항목</th><th>필수</th><th>형식</th></tr>
+<tr><td>제목</td><td>필수</td><td>한국어·영어·일본어, 각 50자</td></tr>
+<tr><td>본문</td><td>필수</td><td>한국어·영어·일본어 위지윅, 각 5,000자</td></tr>
+<tr><td>이미지</td><td>선택</td><td>최대 10장. 첫 번째 이미지가 대표 썸네일로 사용됨</td></tr>
+<tr><td>연관 콘텐츠</td><td>선택</td><td>최대 3건 — 콘텐츠 타입(유튜브/X/인스타그램/스포티파이/일반) + 콘텐츠명(단일, 50자) + URL</td></tr>
+</table>
+<ul>
+<li>게시일은 수정 화면에서 입력·변경하지 않는다. 최초 게시일은 그대로 유지된다([CEB-BO-INF-000] §4.2).</li>
+<li>연관 콘텐츠 3건을 모두 채우면 [콘텐츠 추가] 버튼이 비활성된다. 콘텐츠명은 단일 텍스트(다국어 아님), 썸네일은 URL에서 자동 추출(운영자 미관리)한다.</li>
+</ul>
+<h4>B. 일정</h4>
+<table>
+<tr><th>항목</th><th>필수</th><th>형식</th></tr>
+<tr><td>일정명</td><td>필수</td><td>한국어·영어·일본어, 각 50자</td></tr>
+<tr><td>날짜</td><td>필수</td><td>날짜 선택</td></tr>
+<tr><td>시간</td><td>필수</td><td>시간 선택</td></tr>
+<tr><td>장소</td><td>선택</td><td>구글 장소 검색에서 선택한 장소명 그대로 사용, 100자</td></tr>
+</table>
+<ul>
+<li>일정에는 본문·이미지·부제·썸네일·게시일 입력이 없다. 일시는 이벤트 일자이며 게시일과 별개다.</li>
+</ul>
+<h4>C. 공지</h4>
+<table>
+<tr><th>항목</th><th>필수</th><th>형식</th></tr>
+<tr><td>제목</td><td>필수</td><td>한국어·영어·일본어, 각 50자</td></tr>
+<tr><td>본문</td><td>필수</td><td>한국어·영어·일본어 위지윅, 각 5,000자</td></tr>
+<tr><td>대표 이미지</td><td>선택</td><td>1장</td></tr>
+<tr><td>CTA 버튼</td><td>선택</td><td>라벨(30자) + 링크 URL</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 프로토타입 참조</p>
+</blockquote>
+<h3>2.4 모달</h3>
+<table>
+<tr><th>모달</th><th>트리거</th><th>문서</th></tr>
+<tr><td>수정 취소 확인</td><td>[취소]</td><td>[CEB-BO-INF-201-EDIT-MD-CANCEL]</td></tr>
+<tr><td>수정 게시 확인</td><td>[게시]</td><td>[CEB-BO-INF-201-EDIT-MD-PUBLISH]</td></tr>
+<tr><td>삭제 확인</td><td>[삭제]</td><td>[CEB-BO-INF-201-EDIT-MD-DELETE]</td></tr>
+</table>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>요소</th><th>동작</th></tr>
+<tr><td>타입 Dropdown</td><td>소식/일정/공지 전환 — §2.3 입력 폼 분기</td></tr>
+<tr><td>[임시저장]</td><td>임시저장 처리 + 완료 토스트 → 상세 복귀 (확인 모달 없음)</td></tr>
+<tr><td>[게시]</td><td>입력 검증 후 수정 게시 확인 모달([CEB-BO-INF-201-EDIT-MD-PUBLISH])</td></tr>
+<tr><td>[삭제]</td><td>삭제 확인 모달([CEB-BO-INF-201-EDIT-MD-DELETE])</td></tr>
+<tr><td>[취소]</td><td>수정 취소 확인 모달([CEB-BO-INF-201-EDIT-MD-CANCEL])</td></tr>
+<tr><td>이미지 추가/[X] (소식)</td><td>등록(최대 10장) / 제거</td></tr>
+<tr><td>[콘텐츠 추가] (소식)</td><td>연관 콘텐츠 행 추가 (3건이면 비활성)</td></tr>
+<tr><td>장소 검색 (일정)</td><td>구글 장소 제안 → 선택 시 장소명 확정</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한</h3>
+<ul>
+<li>권한 그룹별 읽기·쓰기·삭제 범위는 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li>
+<li>수정·삭제는 쓰기·삭제 권한 보유 그룹만 사용한다. 권한이 없으면 [CEB-BO-INF-201] 상세에서 [수정]·[삭제]가 미노출된다.</li>
+</ul>
+<h3>4.2 변경 판정·저장 활성</h3>
+<ul>
+<li>진입 시 기존 값이 채워진 상태이며, <strong>변경 사항이 있을 때만 [임시저장]·[게시]가 저장을 수행</strong>한다. 변경 판정 대상 = 타입·연결 아티스트·공식 출처·제목/일정명(언어별)·본문(언어별)·일시·장소·이미지(추가/삭제/순서)·연관 콘텐츠(추가/삭제/내용)·대표 이미지·CTA 라벨/링크 중 하나라도 진입 시점 값과 달라진 경우다.</li>
+<li>변경이 전혀 없으면 [임시저장]·[게시]를 눌러도 추가 저장 없이 진입 검증만 통과한다(불필요한 수정 로그를 남기지 않음).</li>
+<li>수정 화면을 떠날 때(미저장 이탈)는 [취소] 확인 모달로 안내한다.</li>
+</ul>
+<h3>4.3 다국어 게시 검증</h3>
+<ul>
+<li>[게시] 시 소식·공지의 제목·본문, 일정의 일정명은 한국어·영어·일본어를 모두 입력해야 한다. 1개라도 빈 칸이면 [게시]가 비활성이며, 시도 시 차단 토스트를 노출한다.</li>
+</ul>
+<h3>4.4 타입별 게시 필수 검증</h3>
+<table>
+<tr><th>타입</th><th>게시 필수 항목</th></tr>
+<tr><td>소식</td><td>제목·본문(각 3언어)</td></tr>
+<tr><td>일정</td><td>일정명(3언어), 날짜, 시간</td></tr>
+<tr><td>공지</td><td>제목·본문(각 3언어)</td></tr>
+</table>
+<ul>
+<li>게시일은 게시 필수 항목이 아니며, 수정 시에도 최초 게시일을 변경하지 않는다.</li>
+</ul>
+<h3>4.5 URL 검증</h3>
+<ul>
+<li>연관 콘텐츠 URL·CTA 링크는 올바른 URL 형식이어야 한다. 형식 오류 시 인라인 에러를 노출한다.</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>폼 Skeleton</td></tr>
+<tr><td>Default</td><td>기존 값 채워진 폼 (변경 발생 시 저장 수행)</td></tr>
+<tr><td>입력 충족</td><td>[게시] 활성</td></tr>
+<tr><td>Empty</td><td>해당 없음</td></tr>
+<tr><td>임시저장 성공</td><td>Toast (Success): "{타입} '{제목}'을(를) 임시저장했습니다." → 상세 이동</td></tr>
+<tr><td>게시 성공</td><td>Toast (Success): "{타입} '{제목}'을(를) 게시했습니다." → 상세/리스트 이동</td></tr>
+<tr><td>삭제 성공</td><td>Toast (Success): "{타입} '{제목}'을(를) 삭제했습니다." → 리스트 이동</td></tr>
+<tr><td>Error (저장 실패)</td><td>Toast (Error): "저장에 실패했습니다." (입력 폼 유지)</td></tr>
+<tr><td>권한 없음</td><td>본 화면 진입 불가([수정] 미노출)</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>수정 (임시저장)</td><td>{타입} '{제목}'을(를) 임시저장했습니다.</td></tr>
+<tr><td>수정 후 게시</td><td>{타입} '{제목}'을(를) 게시했습니다.</td></tr>
+<tr><td>정보 수정</td><td>{타입} '{제목}'의 정보를 수정했습니다.</td></tr>
+<tr><td>삭제</td><td>{타입} '{제목}'을(를) 삭제했습니다.</td></tr>
+</table>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>다국어 일부 미입력</td><td>미입력 언어 탭 표시 + [게시] 비활성</td></tr>
+<tr><td>다국어 미입력 게시 시도</td><td>Toast (Error): "한국어·영어·일본어를 모두 입력해야 게시할 수 있습니다."</td></tr>
+<tr><td>연관 콘텐츠 3건 초과</td><td>[콘텐츠 추가] 버튼 비활성</td></tr>
+<tr><td>URL 형식 오류</td><td>인라인 에러 "올바른 URL 형식이 아닙니다."</td></tr>
+<tr><td>이미지 형식·용량 초과</td><td>업로드 에러("지원하지 않는 형식입니다. (JPG·PNG·WebP)" / "이미지 용량은 5MB 이하만 등록할 수 있습니다.")</td></tr>
+<tr><td>일정 장소 검색 무결과</td><td>제안 목록 미노출 (선택 불가)</td></tr>
+<tr><td>변경 없음</td><td>추가 저장·수정 로그 없음</td></tr>
+<tr><td>미저장 이탈</td><td>[취소] 확인 모달</td></tr>
+<tr><td>저장 실패</td><td>Toast (Error): "저장에 실패했습니다." (입력 폼 유지)</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-INF-201</td><td>소식·일정 상세 (조회)</td><td>상위 ([수정] 진입)</td></tr>
+<tr><td>CEB-BO-INF-201-EDIT-MD-CANCEL</td><td>수정 취소 확인</td><td>하위 ([취소])</td></tr>
+<tr><td>CEB-BO-INF-201-EDIT-MD-PUBLISH</td><td>수정 게시 확인</td><td>하위 ([게시])</td></tr>
+<tr><td>CEB-BO-INF-201-EDIT-MD-DELETE</td><td>삭제 확인 (수정)</td><td>하위 ([삭제])</td></tr>
+<tr><td>CEB-BO-INF-101-CREATE</td><td>소식·일정 작성</td><td>동일 입력 폼</td></tr>
+<tr><td>CEB-INF-101</td><td>정보 피드 (앱)</td><td>게시 시 노출 대상</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v2.0</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>작성·수정 분리 — 수정 전용으로 재편</strong> ① 작성(신규) 내용을 [CEB-BO-INF-101-CREATE]로 이관하고 본 문서는 수정 전용으로 한정(타이틀 "소식·일정 수정", 상세 [수정] 진입) ② 변경 판정 대상·변경 없을 때 저장/수정 로그 미발생·미저장 이탈 확인 규칙 신설(§4.2) ③ [삭제]는 수정 화면 전용 액션 명시 ④ 취소·게시·삭제 확인 모달을 별도 문서(-EDIT-MD-CANCEL/-PUBLISH/-DELETE)로 분리·참조 ⑤ 임시저장·게시·삭제 성공 토스트·게시 차단 토스트 문구 명시</td></tr>
+<tr><td><strong>v1.3</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — 입력 항목 정리. ① 소식·공지 게시일 입력 필드 제거(게시 시 자동 기록, 재게시 시 최초 게시일 유지) ② 소식 첫 번째 이미지가 대표 썸네일 ③ 연관 콘텐츠명 단일·썸네일 URL 자동 추출 ④ 일정 장소는 구글 제안에서 선택한 장소명 그대로 사용</td></tr>
+<tr><td><strong>v1.2</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — 연관 콘텐츠 플랫폼 7종 → 5종(유튜브/X/인스타그램/스포티파이/일반)으로 정정</td></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>게시 게이팅 명시 — [게시]는 다국어 필수·타입별 필수 충족 시에만 활성, 미충족 시 비활성 + 사유 안내, 시도 시 차단 토스트. 임시저장은 항상 가능</td></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-05-28</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. [CEB-BO-INF-201] 작성·상세에서 입력 폼 분리. 타입별 폼·작성/수정 공용·취소·게시·삭제 확인 모달·다국어 게시 검증·권한 [CEB-BO-SYS-102] 참조</td></tr>
+</table>
+
+</body>
+</html>

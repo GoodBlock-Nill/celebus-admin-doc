@@ -82,12 +82,17 @@ p {
 <tr><th>Key</th><th>Value</th></tr>
 <tr><td>Screen ID</td><td>CEB-BO-EVT-101</td></tr>
 <tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>EVT — 팬덤 레벨</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.3</td></tr>
-<tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
+<tr><td>버전</td><td>v1.4</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
 <tr><td>Breadcrumb</td><td>홈 > 아티스트 > 팬덤레벨</td></tr>
-<tr><td>비고</td><td>앱 [CEB-EVT-201] 팬덤 레벨 운영 화면. 운영자가 팬덤레벨을 수동 생성·관리</td></tr>
+<tr><td>비고</td><td>앱 [CEB-EVT-201] 팬덤 레벨 운영 화면. 운영자가 팬덤레벨을 수동 생성·관리. 생성 입력은 [CEB-BO-EVT-101-MD-CREATE] 모달로 분리</td></tr>
 </table>
 <hr>
 <h2>0. 공통 정책 참조</h2>
@@ -110,7 +115,7 @@ p {
 <ul>
 <li>Breadcrumb: <code>홈 > 아티스트 > 팬덤레벨</code></li>
 <li>화면 타이틀: 팬덤레벨</li>
-<li>우측 상단 액션: [생성] (Primary) — 팬덤레벨 생성 모달(§2.4)</li>
+<li>우측 상단 액션: [생성] (Primary) — [CEB-BO-EVT-101-MD-CREATE] 팬덤레벨 생성 모달</li>
 </ul>
 <h3>2.2 상태 카운터 (3개)</h3>
 <table>
@@ -120,7 +125,8 @@ p {
 <tr><td>종료</td><td>시즌 마감</td></tr>
 </table>
 <ul>
-<li>각 카운터 클릭 시 해당 상태로 필터링된다.</li>
+<li>첫 진입 시 상태 필터는 <strong>전체</strong>다(특정 상태로 고정하지 않음).</li>
+<li>카운터 클릭 시 해당 상태로 필터링되고, <strong>같은 카운터를 다시 클릭하면 전체로 해제</strong>된다(토글).</li>
 </ul>
 <h3>2.3 검색·필터 영역</h3>
 <table>
@@ -130,18 +136,11 @@ p {
 <tr><td>입력</td><td>그룹명</td><td>Text Input</td><td>부분 일치 검색 (입력 안내: "그룹명 입력")</td></tr>
 <tr><td>버튼</td><td>초기화</td><td>Dark Button</td><td>상태·시즌 필터·검색어 리셋</td></tr>
 </table>
-<h3>2.4 생성 모달</h3>
-<p>운영자가 [생성]으로 팬덤레벨을 직접 만든다(자동 생성 없음).</p>
-<table>
-<tr><th>항목</th><th>표시</th></tr>
-<tr><td>아티스트</td><td>Dropdown — 그룹 선택</td></tr>
-<tr><td>시즌 연도</td><td>Dropdown — 시즌 연도 선택 (기본: 올해). 기간은 해당 연도 1월 1일 ~ 12월 31일 자동 설정</td></tr>
-<tr><td>시즌명</td><td>Text Input — "{아티스트} 팬덤 N기 (YYYY)" 자동 제안(수정 가능)</td></tr>
-<tr><td>액션</td><td>[취소] / [생성] — 생성 시 <strong>준비</strong> 상태로 리스트 추가</td></tr>
-</table>
+<h3>2.4 생성</h3>
 <ul>
-<li>시즌 기간은 캘린더 연도(1.1~12.31)로 자동 설정된다. 동일 아티스트·동일 연도 중복 생성은 차단된다.</li>
-<li>레벨 곡선·보상 등 상세 항목은 생성 후 [CEB-BO-EVT-201] 상세에서 설정한다.</li>
+<li>우측 상단 [생성] 클릭 시 [CEB-BO-EVT-101-MD-CREATE] 팬덤레벨 생성 모달이 열린다(자동 생성 없음).</li>
+<li>모달에서 아티스트·시즌 연도·시즌명을 입력해 <strong>준비</strong> 상태로 생성하면 리스트 최상단에 추가된다. 레벨 곡선·보상 등 상세 항목은 생성 후 [CEB-BO-EVT-201] 상세에서 설정한다.</li>
+<li>입력 항목·중복 차단·성공 토스트 등 상세 규칙은 [CEB-BO-EVT-101-MD-CREATE]를 따른다.</li>
 </ul>
 <h3>2.5 목록 영역 (테이블)</h3>
 <table>
@@ -167,11 +166,11 @@ p {
 <h2>3. 화면 내 기능설명</h2>
 <table>
 <tr><th>요소</th><th>동작</th></tr>
-<tr><td>[생성]</td><td>팬덤레벨 생성 모달(§2.4) → 임시저장 상태로 추가</td></tr>
-<tr><td>상태 카운터</td><td>클릭 시 해당 상태로 목록 필터</td></tr>
+<tr><td>[생성]</td><td>[CEB-BO-EVT-101-MD-CREATE] 팬덤레벨 생성 모달 → 준비 상태로 추가</td></tr>
+<tr><td>상태 카운터</td><td>클릭 시 해당 상태로 목록 필터. 같은 카운터 재클릭 시 전체로 해제(토글)</td></tr>
 <tr><td>상태·시즌 필터</td><td>선택 기준 목록 필터</td></tr>
 <tr><td>[초기화]</td><td>상태·시즌 필터·검색어 리셋</td></tr>
-<tr><td>Row 클릭</td><td>[CEB-BO-EVT-201] 팬덤 레벨 상세 진입</td></tr>
+<tr><td>Row 클릭</td><td>[CEB-BO-EVT-201] 팬덤 레벨 상세 (레벨·곡선 탭) 진입</td></tr>
 </table>
 <hr>
 <h2>4. 규칙·로직</h2>
@@ -181,8 +180,13 @@ p {
 </ul>
 <h3>4.2 정렬·필터</h3>
 <ul>
-<li>기본 정렬: 누적 덕력 내림차순.</li>
+<li>기본 정렬: <strong>누적 덕력 내림차순</strong>(많은 순). 사용자 변경 불가.</li>
+<li>곡선·누적 덕력이 아직 없는 준비 시즌(누적 덕력 0, 레벨 수 "-")은 누적 덕력 0으로 간주되어 목록 하단에 정렬된다.</li>
+<li>누적 덕력이 동일하면 2차 정렬로 업데이트 일시 내림차순(최신순)을 적용한다.</li>
+<li>첫 진입 기본 필터: 전체. 상태 카운터 재클릭 시 전체로 해제(토글).</li>
 <li>상태 필터 + 시즌 필터 + 그룹명 검색 = AND 조합. 그룹명 검색은 한국어·영어 통합 부분 일치.</li>
+<li>필터·검색어 변경 시 1페이지로 이동하며, 결과가 현재 페이지 수보다 적으면 마지막 페이지로 보정한다.</li>
+<li>페이지당 10건.</li>
 </ul>
 <h3>4.3 상태 정의</h3>
 <table>
@@ -206,10 +210,10 @@ p {
 </table>
 <hr>
 <h2>6. 활동 로그</h2>
-<p>목록 조회는 로그를 기록하지 않는다. 단, 팬덤레벨 생성은 로그를 기록한다. 곡선·보상·추첨·상태 전환 액션은 [CEB-BO-EVT-201]에서 발생한다.</p>
+<p>목록 조회는 로그를 기록하지 않는다. 팬덤레벨 생성 로그는 [CEB-BO-EVT-101-MD-CREATE] 생성 모달에서 발생하며, 곡선·보상·상태 전환 로그는 [CEB-BO-EVT-201]·[CEB-BO-EVT-201-EDIT]·[CEB-BO-EVT-203-EDIT]에서 발생한다.</p>
 <table>
-<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
-<tr><td>팬덤레벨 생성</td><td>'{시즌명}' 팬덤레벨을 생성했습니다. (그룹: {그룹명})</td></tr>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th><th>발생 위치</th></tr>
+<tr><td>팬덤레벨 생성</td><td>'{시즌명}' 팬덤레벨을 생성했습니다. (그룹: {그룹명})</td><td>[CEB-BO-EVT-101-MD-CREATE]</td></tr>
 </table>
 <hr>
 <h2>7. 에러·예외 상황</h2>
@@ -222,14 +226,17 @@ p {
 <h2>8. 연관 화면ID</h2>
 <table>
 <tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
-<tr><td>CEB-BO-EVT-201</td><td>팬덤 레벨 상세</td><td>하위 (Row 클릭)</td></tr>
+<tr><td>CEB-BO-EVT-101-MD-CREATE</td><td>팬덤레벨 생성</td><td>하위 ([생성])</td></tr>
+<tr><td>CEB-BO-EVT-201</td><td>팬덤 레벨 상세 (레벨·곡선 탭)</td><td>하위 (Row 클릭)</td></tr>
 <tr><td>CEB-BO-EVT-401</td><td>보상·레벨업 현황</td><td>형제 (보상 지급·레벨업 통합 조회)</td></tr>
 <tr><td>CEB-EVT-201</td><td>팬덤 레벨 (앱)</td><td>노출 대상 화면</td></tr>
+<tr><td>CEB-BO-ART-201</td><td>그룹 리스트</td><td>아티스트 데이터 소스 (활성 그룹)</td></tr>
 </table>
 <hr>
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.4</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>ART 영역 패턴 정합 — ① 인라인 생성 모달(구 §2.4)을 [CEB-BO-EVT-101-MD-CREATE] 독립 문서로 분리, 본문은 진입·참조로 정리 ② 첫 진입 기본 필터 전체·카운터 재클릭 시 전체로 해제(토글) 명시(§2.2·§4.2) ③ 정렬 규칙 보강(누적 덕력 내림차순 1차·준비 시즌 하단·동률 시 업데이트 일시 2차)·페이지당 10건·페이지 보정(§4.2) ④ 활동 로그 발생 위치 정비·연관화면에 MD-CREATE·그룹 리스트 추가</td></tr>
 <tr><td><strong>v1.3</strong></td><td><strong>2026-05-29</strong></td><td><strong>@Nill Yoo</strong></td><td>라이프사이클 단순화 — 보상 단순화로 정산 단계가 불필요해져 <strong>정산중 제거</strong>, 상태 <strong>4종 → 3종(준비/진행중/종료)</strong>: 상태 카운터·Dropdown 필터·상태 컬럼·상태 정의(§4.3) 일괄 정정. 종료는 12.31 자동/[강제 종료]</td></tr>
 <tr><td><strong>v1.2</strong></td><td><strong>2026-05-29</strong></td><td><strong>@Nill Yoo</strong></td><td>운영 데이터 모델 정합 — ① 상태값 3종 → 4종(준비/진행중/정산중/종료): 상태 카운터·Dropdown 필터·상태 컬럼·상태 정의(§4.3) ② 생성 모달에 <strong>시즌 연도</strong> 선택 추가(기간 캘린더 연도 자동 설정·동일 연도 중복 차단) ③ 목록에 <strong>시즌 기간</strong> 컬럼 추가 ④ 연관화면에 EVT-401 추가</td></tr>
 <tr><td><strong>v1.1</strong></td><td><strong>2026-05-29</strong></td><td><strong>@Nill Yoo</strong></td><td>기획 의도 정합 보정 — ① 자동 현황 → <strong>운영자 수동 생성</strong>([생성] 모달: 아티스트·시즌명 → 준비) ② <strong>상태값</strong> 도입: 상태 카운터·상태 Dropdown 필터·상태 컬럼·상태 정의(§4.3) ③ 생성 활동 로그 추가. 상태 전환 액션은 상세([CEB-BO-EVT-201])에서 수행</td></tr>

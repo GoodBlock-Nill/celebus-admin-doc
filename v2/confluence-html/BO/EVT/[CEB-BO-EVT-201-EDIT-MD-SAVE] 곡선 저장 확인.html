@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-EVT-201-EDIT-MD-SAVE] 곡선 저장 확인</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-EVT-201-EDIT-MD-SAVE] 곡선 저장 확인</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-EVT-201-EDIT-MD-SAVE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>EVT — 팬덤 레벨</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>(모달) 부모: 레벨·곡선 수정</td></tr>
+<tr><td>비고</td><td>레벨·곡선 수정 화면에서 [저장] 시 노출되는 확인 모달. 권한은 [CEB-BO-SYS-102] 참조</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>모달·토스트 공통 규격</td></tr>
+<tr><td>[CEB-BO-EVT-201-EDIT] 레벨·곡선 수정</td><td>진입 경로·저장 검증 규칙</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>레벨·곡선 수정 화면에서 [저장] 클릭 시, 변경된 곡선이 앱에 반영됨을 안내하고 저장 여부를 확인받는 모달.</p>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 모달 레이아웃</h3>
+<pre><code>┌───────────────────────────────────────────┐
+│  곡선을 저장할까요?                          │
+├───────────────────────────────────────────┤
+│  · 변경된 레벨 곡선이 앱에 반영됩니다.        │
+├───────────────────────────────────────────┤
+│                    [ 취소 ]   [ 저장 ]      │
+└───────────────────────────────────────────┘
+</code></pre>
+<h3>2.2 본문 구성</h3>
+<table>
+<tr><th>영역</th><th>내용</th></tr>
+<tr><td>제목</td><td>"곡선을 저장할까요?"</td></tr>
+<tr><td>본문</td><td>"변경된 레벨 곡선이 앱에 반영됩니다."</td></tr>
+<tr><td>버튼</td><td>[취소] / [저장]</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 프로토타입 참조</p>
+</blockquote>
+<hr>
+<h2>3. 기능 설명</h2>
+<table>
+<tr><th>버튼</th><th>동작</th></tr>
+<tr><td>저장</td><td>곡선 저장 처리 + 모달 닫기 + 성공 토스트 + 활동 로그 → 조회 모드 복귀</td></tr>
+<tr><td>취소 / [X] / 모달 외부 클릭</td><td>모달 닫기. 수정 화면 유지(입력값 보존)</td></tr>
+</table>
+<hr>
+<h2>4. 로직·플로우</h2>
+<ol>
+<li>[CEB-BO-EVT-201-EDIT]에서 입력 검증 통과 후 [저장] 클릭 → 본 모달</li>
+<li>[저장] 클릭 → 곡선 저장 + 성공 토스트(§5) + 활동 로그 → 조회 모드([CEB-BO-EVT-201]) 복귀</li>
+<li>[취소]: 모달만 닫고 수정 화면 유지</li>
+</ol>
+<ul>
+<li>본 모달은 [저장] 전 입력 검증(목표 덕력 1 이상·최대 10단계 등, [CEB-BO-EVT-201-EDIT] §5)을 통과해야 노출된다.</li>
+</ul>
+<hr>
+<h2>5. 검증·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>처리·문구</th></tr>
+<tr><td>저장 성공</td><td>Toast (Success): "'{그룹명}'의 팬덤 레벨 곡선을 저장했습니다."</td></tr>
+<tr><td>저장 실패</td><td>Toast (Error): "저장에 실패했습니다." (수정 화면 유지)</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>레벨 곡선 변경</td><td>그룹 '{그룹명}'의 팬덤 레벨 곡선을 변경했습니다.</td></tr>
+<tr><td>신규 레벨 추가</td><td>그룹 '{그룹명}'에 Lv.{N}을(를) 추가했습니다.</td></tr>
+</table>
+<hr>
+<h2>7. 연관 화면</h2>
+<table>
+<tr><th>화면 ID</th><th>관계</th></tr>
+<tr><td>CEB-BO-EVT-201-EDIT</td><td>진입 ([저장])</td></tr>
+<tr><td>CEB-BO-EVT-201</td><td>저장 후 조회 모드 복귀</td></tr>
+</table>
+<hr>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 곡선 저장 확인 모달 — 제목 "곡선을 저장할까요?", 본문 "변경된 레벨 곡선이 앱에 반영됩니다.", 버튼 [취소]/[저장]. 성공 토스트("'{그룹명}'의 팬덤 레벨 곡선을 저장했습니다.") + 활동 로그(곡선 변경·신규 레벨 추가)</td></tr>
+</table>
+
+</body>
+</html>

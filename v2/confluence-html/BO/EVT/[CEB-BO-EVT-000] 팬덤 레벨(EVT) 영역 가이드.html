@@ -82,11 +82,16 @@ p {
 <tr><th>Key</th><th>Value</th></tr>
 <tr><td>Screen ID</td><td>CEB-BO-EVT-000</td></tr>
 <tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BO 팬덤 레벨 영역 (EVT)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.6</td></tr>
-<tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
-<tr><td>비고</td><td>보상 모델 재설계 + 라이프사이클 3단계 + MAX 완전 잠금. 사이드 메뉴 [아티스트 > 팬덤레벨] 진입</td></tr>
+<tr><td>버전</td><td>v1.7</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>비고</td><td>ART 영역 패턴 정합 — 화면당 1문서·모달당 1문서로 재편. 상세 3탭을 탭별 문서로 분할(EVT-201 레벨·곡선 / EVT-203 보상 / EVT-205 현황). 사이드 메뉴 [아티스트 > 팬덤레벨] 진입</td></tr>
 </table>
 <hr>
 <h2>1. 개요</h2>
@@ -105,12 +110,59 @@ p {
 </table>
 <hr>
 <h2>2. 화면 목록</h2>
+<h3>리스트 계열</h3>
 <table>
 <tr><th>화면ID</th><th>화면명</th><th>유형</th><th>작성 상태</th></tr>
 <tr><td>CEB-BO-EVT-101</td><td>팬덤 레벨 리스트</td><td>Page</td><td>✅ 작성 완료</td></tr>
-<tr><td>CEB-BO-EVT-201</td><td>팬덤 레벨 상세 (3탭)</td><td>Page (탭)</td><td>✅ 작성 완료</td></tr>
-<tr><td>CEB-BO-EVT-401</td><td>보상·레벨업 현황</td><td>Page</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-101-MD-CREATE</td><td>팬덤레벨 생성</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-101-MD-CREATE-CANCEL</td><td>팬덤레벨 생성 취소</td><td>Modal</td><td>✅ 작성 완료</td></tr>
 </table>
+<h3>상세 계열 (3탭)</h3>
+<p>상세는 3탭 구조이며, 탭마다 독립 문서를 둔다. 시즌 라이프사이클(게시·강제 종료)은 [CEB-BO-EVT-201] 레벨·곡선 탭이 소유한다.</p>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th><th>작성 상태</th></tr>
+<tr><td>CEB-BO-EVT-201</td><td>팬덤 레벨 상세 (레벨·곡선 탭)</td><td>Page (탭)</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-201-EDIT</td><td>레벨·곡선 수정</td><td>Page</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-201-MD-PUBLISH</td><td>게시 확인</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-201-MD-CLOSE</td><td>강제 종료 확인</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-201-EDIT-MD-SAVE</td><td>곡선 저장 확인</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-201-EDIT-MD-CANCEL</td><td>곡선 수정 취소</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-203</td><td>팬덤 레벨 상세 (보상 탭)</td><td>Page (탭)</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-203-EDIT</td><td>레벨별 보상 수정</td><td>Page</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-203-EDIT-MD-SAVE</td><td>보상 저장 확인</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-203-EDIT-MD-CANCEL</td><td>보상 수정 취소</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-EVT-205</td><td>팬덤 레벨 상세 (현황 탭)</td><td>Page (탭)</td><td>✅ 작성 완료</td></tr>
+</table>
+<h3>통합 현황 계열</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th><th>작성 상태</th></tr>
+<tr><td>CEB-BO-EVT-401</td><td>보상·레벨업 현황 (전체 통합)</td><td>Page</td><td>✅ 작성 완료</td></tr>
+</table>
+<hr>
+<h2>2.1 화면 ID 체계 (EVT 영역)</h2>
+<table>
+<tr><th>구분</th><th>번호</th><th>화면</th></tr>
+<tr><td>리스트</td><td>101</td><td>팬덤 레벨 리스트</td></tr>
+<tr><td>상세 탭</td><td>201 / 203 / 205</td><td>상세 레벨·곡선 탭 / 보상 탭 / 현황 탭</td></tr>
+<tr><td>통합 현황</td><td>401</td><td>보상·레벨업 현황 (전체 그룹·시즌 통합)</td></tr>
+</table>
+<p>부속·하위 화면은 상위 번호에 접미사를 붙인다.</p>
+<table>
+<tr><th>접미사</th><th>의미</th><th>예시</th></tr>
+</table>
+<h3>2.2 완료 처리 규칙 (토스트, 완료 모달 미사용)</h3>
+<ul>
+<li>생성·저장·게시·종료 등 액션 <strong>완료는 토스트로 안내</strong>한다. ART 영역의 -MD-COMPLE(생성/수정 완료 모달) 패턴은 <strong>EVT 영역에서 사용하지 않는다.</strong></li>
+<li>액션 <strong>전(前) 확인</strong>이 필요한 동작만 확인 모달을 둔다: 게시 확인·강제 종료 확인·곡선/보상 저장 확인·생성/수정 취소 확인.</li>
+<li>각 화면·모달 문서에 성공 토스트 문구를 명시한다(예: "'{시즌명}' 팬덤레벨을 게시했습니다.").</li>
+</ul>
+<h3>2.3 공통 리스트 규칙 (팬덤 레벨 리스트)</h3>
+<ul>
+<li>리스트 첫 진입 시 상태 필터는 <strong>전체</strong>로 시작한다(특정 상태 고정 안 함).</li>
+<li>상단 상태 카운터 클릭 시 해당 상태로 필터링되고, <strong>같은 카운터를 다시 클릭하면 전체로 해제</strong>된다(토글).</li>
+<li>기본 정렬은 <strong>누적 덕력 내림차순</strong>(사용자 변경 불가)이며, 곡선·누적이 없는 준비 시즌은 하단, 동률 시 업데이트 일시 내림차순을 2차 키로 적용한다.</li>
+<li>필터·검색어 변경 시 1페이지로 이동하고, 결과가 현재 페이지 수보다 적으면 마지막 페이지로 보정한다. 페이지당 10건.</li>
+</ul>
 <hr>
 <h2>3. 권한</h2>
 <ul>
@@ -187,7 +239,7 @@ p {
 <ul>
 <li><strong>디지털 굿즈(BIVE)</strong>: 레벨 달성 시 BIVE 영역이 기여 회원(1DUK 이상)에게 자동 민팅한다. 지급 현황(대상 회원·발행 BIVE·일시)은 BIVE 영역([CEB-BO-BIVE-203] 민팅 이벤트 상세)에서 추적한다.</li>
 <li><strong>래플·서포트 예고</strong>: 앱 안내 표시 전용이므로 EVT에 지급 현황을 두지 않는다 (실제 지급은 RFL·SUP 영역).</li>
-<li>EVT 영역은 <strong>레벨업 이력</strong>(달성 레벨·일시·기여 회원 수)과 <strong>BIVE 지급 연계 현황</strong>을 [CEB-BO-EVT-401]·[CEB-BO-EVT-201] 탭3에서 조회한다. 회원 덕력 변동 자체는 [CEB-BO-ART-401-HISTORY] 덕력 내역에서 조회한다.</li>
+<li>EVT 영역은 <strong>레벨업 이력</strong>(달성 레벨·일시·기여 회원 수)과 <strong>BIVE 지급 연계 현황</strong>을 [CEB-BO-EVT-205] 상세 현황 탭(단일 그룹·시즌)과 [CEB-BO-EVT-401] 보상·레벨업 현황(전체 통합)에서 조회한다. 회원 덕력 변동 자체는 [CEB-BO-ART-401-HISTORY] 덕력 내역에서 조회한다.</li>
 </ul>
 <hr>
 <h2>5. 활동 로그 메시지 템플릿</h2>
@@ -203,6 +255,7 @@ p {
 <h2>6. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.7</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>ART 영역 패턴 정합(화면당 1문서·모달당 1문서) — ① §2 화면 목록을 전체 화면·모달로 재작성: 리스트(EVT-101 + 생성/생성취소 모달), 상세 3탭 분할(EVT-201 레벨·곡선[게시·강제종료 소유] / EVT-203 보상 / EVT-205 현황) + 탭별 -EDIT·확인 모달, 통합 현황(EVT-401) ② §2.1 화면 ID 체계(-EDIT·-MD-·-EDIT-MD- 접미사) 신설 ③ §2.2 완료 처리 규칙 신설(완료=토스트, ART -MD-COMPLE 미사용, 사전 확인 모달만 운영) ④ §2.3 공통 리스트 규칙 신설(첫 진입 전체·카운터 토글·누적 덕력 정렬·페이지 보정)</td></tr>
 <tr><td><strong>v1.6</strong></td><td><strong>2026-05-29</strong></td><td><strong>@Nill Yoo</strong></td><td>최고레벨(MAX) <strong>완전 잠금</strong> — MAX 도달 시 기존 곡선·보상 수정뿐 아니라 <strong>신규 레벨 추가도 불가</strong>, 시즌 곡선 확정. 추가 확장은 차기 시즌(§4.1.2). 기존 "MAX 후 신규 레벨 추가 시 운영중 전환" 규칙 폐기</td></tr>
 <tr><td><strong>v1.5</strong></td><td><strong>2026-05-29</strong></td><td><strong>@Nill Yoo</strong></td><td>라이프사이클 단순화 — 보상 단순화로 시즌 종료 시 운영자 정산 작업이 없어져 <strong>[정산 시작] 버튼·정산중 단계 제거</strong>. 시즌 상태 4단계 → <strong>3단계(준비/진행중/종료)</strong> (§4.1.1). 운영자 수동 전환은 [게시]만, 종료는 12.31 자동(시스템 내부 정산 처리), 조기 종료는 [강제 종료]. 활동 로그 정산 시작 제거·강제 종료 추가</td></tr>
 <tr><td><strong>v1.4</strong></td><td><strong>2026-05-29</strong></td><td><strong>@Nill Yoo</strong></td><td>보상 모델 재설계 (기존 SSOT 연계·단순화) — ① 레벨별 보상 5종 → <strong>활성 3종</strong>(디지털 굿즈=BIVE 민팅 캠페인 연계 / 래플 예고·서포트 예고=안내 텍스트). 독점 콘텐츠·다운로드·실물·이벤트 참여권은 <strong>보류</strong> ② 디지털 굿즈는 <strong>보상 타이틀(다국어)</strong> + "아티스트 키우기 보상" 연결 기능 BIVE 캠페인 선택 → BIVE 자동 민팅 SSOT 연계(§4.4) ③ §4.5 보상 지급 현황 단순화(BIVE는 BIVE 영역 추적, 래플·서포트는 예고 전용) ④ EVT 자체 래플 추첨 로그 제거 ⑤ 덕력 변동은 [CEB-BO-ART-401-HISTORY] 참조</td></tr>

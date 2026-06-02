@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-INF-201-MD-ARCHIVE] 보관 확인</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-INF-201-MD-ARCHIVE] 보관 확인</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-INF-201-MD-ARCHIVE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>INF — 소식·일정</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td>/artists/feed/[id]</td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 아티스트 > 소식/일정 > {제목}</td></tr>
+<tr><td>비고</td><td>상세(조회) 화면에서 게시 콘텐츠를 [보관] 시 노출되는 확인 모달. 데이터 보존</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>모달·토스트 공통 규격</td></tr>
+<tr><td>[CEB-BO-INF-000] 소식·일정 영역 가이드</td><td>라이프사이클(보관)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>상세 화면에서 <strong>게시 상태</strong> 콘텐츠를 [보관]할 때, 앱 노출이 종료되며 데이터는 보존되어 재게시할 수 있음을 안내하고 보관 여부를 확인받는 모달.</p>
+<hr>
+<h2>2. UI 설명</h2>
+<table>
+<tr><th>요소</th><th>내용</th></tr>
+<tr><td>제목</td><td>보관할까요?</td></tr>
+<tr><td>본문</td><td>"앱 노출이 종료됩니다. 데이터는 보존되어 재게시할 수 있습니다."</td></tr>
+<tr><td>버튼</td><td>[다시 돌아가기] / [보관]</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 프로토타입 참조</p>
+</blockquote>
+<hr>
+<h2>3. 기능 설명</h2>
+<table>
+<tr><th>버튼</th><th>동작</th></tr>
+<tr><td>다시 돌아가기</td><td>모달 닫고 상세 화면 유지 (보관 안 함)</td></tr>
+<tr><td>보관</td><td>보관 처리(앱 노출 종료, 데이터 보존) → 완료 토스트 → 상세 화면 상태를 보관으로 갱신</td></tr>
+</table>
+<hr>
+<h2>4. 로직·플로우</h2>
+<ul>
+<li>[CEB-BO-INF-201] 상세 (게시 상태) > [보관] → 본 모달 → [보관] 시 보관 확정.</li>
+<li>보관 성공 시 완료 토스트: "{타입} '{제목}'을(를) 보관 처리했습니다."</li>
+<li>보관은 삭제가 아니며 데이터를 보존한다. 이후 [재게시]([CEB-BO-INF-201-MD-REPUBLISH])로 다시 노출할 수 있고, 재게시해도 최초 게시일은 유지된다([CEB-BO-INF-000] §4.2).</li>
+</ul>
+<hr>
+<h2>5. 검증·예외 상황</h2>
+<ul>
+<li>본 모달은 상세 화면이 <strong>게시 상태</strong>일 때만 진입한다.</li>
+<li>보관 실패 시 Toast (Error): "처리에 실패했습니다."</li>
+</ul>
+<hr>
+<h2>6. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>보관</td><td>{타입} '{제목}'을(를) 보관 처리했습니다.</td></tr>
+</table>
+<hr>
+<h2>7. 연관 화면</h2>
+<table>
+<tr><th>화면 ID</th><th>관계</th></tr>
+<tr><td>CEB-BO-INF-201</td><td>진입 ([보관], 게시 상태)</td></tr>
+<tr><td>CEB-BO-INF-201-MD-REPUBLISH</td><td>보관 → 재게시 (역방향)</td></tr>
+</table>
+<hr>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 게시 콘텐츠 [보관] 확인 모달 분리. 문구 "보관할까요? / 앱 노출이 종료됩니다. 데이터는 보존되어 재게시할 수 있습니다.", 버튼 [다시 돌아가기]/[보관] (프로토타입 정합). 보관 활동 로그·성공 토스트·데이터 보존·재게시 연계 명시</td></tr>
+</table>
+
+</body>
+</html>

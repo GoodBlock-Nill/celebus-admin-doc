@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-SUP-203] 서포트 이벤트 상세 (응원자 내역 탭)</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-SUP-203] 서포트 이벤트 상세 (응원자 내역 탭)</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-SUP-203</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>SUP — 서포트 이벤트</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>홈 > 아티스트 > 서포트 관리 > {이벤트명}</td></tr>
+<tr><td>비고</td><td>서포트 이벤트 상세 3탭 중 [응원자 내역] 탭. 회원별 응원을 합산 조회하고 행 클릭 시 회차별 응원 내역 모달로 진입. 조회 전용</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000]</td><td>권한, UI 상태, 토스트, 날짜·숫자 포맷</td></tr>
+<tr><td>[CEB-BO-SUP-000]</td><td>응원·반환 정책</td></tr>
+<tr><td>[CEB-BO-SYS-102]</td><td>권한 관리 그룹 설정</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>서포트 이벤트에 응원한 회원을 <strong>회원별로 합산</strong>해 조회하는 화면. 서포트 이벤트 상세 <strong>3탭 구조</strong>(기본정보 / 응원자 내역 / 결과물·반환) 중 [응원자 내역] 탭이다. 한 회원은 동일 이벤트에 <strong>여러 번 응원</strong>할 수 있으므로(앱 [CEB-DUK-201] 누적 응원), 회원별 합산을 보여주되 행 클릭으로 회차별 개별 응원 내역까지 확인할 수 있다. 본 탭은 조회 전용이며, 응원은 회원 앱에서만 발생한다.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-SUP-201] 기본정보 탭 > [응원자 내역] 탭</li>
+<li>URL: <code>/artists/support/{id}?tab=cheerers</code></li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 헤더 (세 탭 공통)</h3>
+<ul>
+<li>헤더(Breadcrumb·타이틀·그룹 배지·상태 배지·기간·상태 전환 버튼)는 [CEB-BO-SUP-201]과 동일하게 유지된다. 상태 전환 액션은 [CEB-BO-SUP-201]이 소유한다.</li>
+</ul>
+<h3>2.2 탭 메뉴 (3탭)</h3>
+<table>
+<tr><th>#</th><th>탭명</th><th>URL</th><th>문서</th></tr>
+<tr><td>1</td><td>기본정보</td><td><code>?tab=info</code></td><td>[CEB-BO-SUP-201]</td></tr>
+<tr><td>2</td><td><strong>응원자 내역</strong></td><td><code>?tab=cheerers</code></td><td>본 문서</td></tr>
+<tr><td>3</td><td>결과물·반환</td><td><code>?tab=result</code></td><td>[CEB-BO-SUP-205]</td></tr>
+</table>
+<h3>2.3 요약 (상단)</h3>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>응원자 수</td><td>1 덕력 이상 응원한 회원 수 (중복 제거)</td></tr>
+<tr><td>총 응원 횟수</td><td>이벤트 전체 응원 건수 (회원별 다회 합산)</td></tr>
+<tr><td>누적 응원</td><td>누적 응원 덕력</td></tr>
+</table>
+<h3>2.4 회원별 목록 (테이블)</h3>
+<table>
+<tr><th>컬럼</th><th>데이터 예시</th><th>설명</th></tr>
+<tr><td>닉네임</td><td>"덕력회원05"</td><td>응원 회원</td></tr>
+<tr><td>누적 응원량(덕력)</td><td>1,200</td><td>회원의 전체 응원 합산</td></tr>
+<tr><td>응원 횟수</td><td>3회</td><td>회원이 응원한 횟수 (2회 이상 강조)</td></tr>
+<tr><td>최초 응원</td><td>2026.05.27 14:21</td><td>회원의 첫 응원 시점 (KST)</td></tr>
+<tr><td>최근 응원</td><td>2026.05.30 09:05</td><td>회원의 마지막 응원 시점 (KST)</td></tr>
+<tr><td>반환 여부</td><td>"반환 완료" / "-"</td><td>미달성종료·집행취소 시 "반환 완료" 표시</td></tr>
+</table>
+<ul>
+<li>정렬: <strong>누적 응원량 내림차순(많은 순)</strong> 고정.</li>
+<li>페이지네이션: 하단 중앙, 페이지당 10건. 필터·검색은 없다(조회 전용 합산 목록).</li>
+<li><strong>행 클릭 시 [CEB-BO-SUP-203-MD-CHEER-DETAIL] 응원 상세 모달</strong>(회차별 응원 내역)을 연다.</li>
+<li>읽기 전용 (응원은 회원 앱에서만 발생).</li>
+</ul>
+<blockquote>
+<p>시각적 스타일은 프로토타입 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>요소</th><th>동작</th></tr>
+<tr><td>회원 행 클릭</td><td>[CEB-BO-SUP-203-MD-CHEER-DETAIL] 응원 상세 모달 열기 (회차별 내역)</td></tr>
+<tr><td>[기본정보] 탭</td><td>[CEB-BO-SUP-201]로 전환 (<code>?tab=info</code>)</td></tr>
+<tr><td>[결과물·반환] 탭</td><td>[CEB-BO-SUP-205]로 전환 (<code>?tab=result</code>)</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 정렬·합산</h3>
+<ul>
+<li>정렬: 누적 응원량 내림차순(많은 순) 고정.</li>
+<li>회원별 합산: 동일 회원의 여러 회차 응원을 합산하여 1행으로 표시한다. 회차별 분해는 응원 상세 모달에서 확인한다.</li>
+<li>응원 횟수 2회 이상인 회원은 강조 표시한다.</li>
+</ul>
+<h3>4.2 반환 표기</h3>
+<ul>
+<li>미달성종료·집행취소 상태에서는 응원 회원 전원에게 전액 자동 반환이 이루어지므로, 목록 [반환 여부] 컬럼에 전원 "반환 완료"가 표시된다.</li>
+<li>회원별 반환 시점·반환 덕력 상세는 [CEB-BO-SUP-205] 결과물·반환 탭에서, 회차별 응원과 반환 시점 표기는 응원 상세 모달에서 확인한다.</li>
+</ul>
+<h3>4.3 탭 라우팅</h3>
+<ul>
+<li>URL 쿼리 <code>?tab=cheerers</code>로 본 탭에 진입한다. 새로고침·공유 시 동일 탭 복원, 잘못된 값이면 기본 탭(<code>info</code>)으로 복귀([CEB-BO-SUP-201] §4.7과 동일).</li>
+</ul>
+<h3>4.4 권한</h3>
+<ul>
+<li>권한 그룹별 읽기·쓰기·삭제 범위는 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li>
+<li>본 탭은 조회 전용이므로 별도 쓰기 액션이 없다. 외부 아티스트 계정도 자기 아티스트 이벤트의 응원자 내역을 조회할 수 있다.</li>
+</ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>요약 카드·테이블 Skeleton</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Empty (응원 0건)</td><td>"아직 응원한 회원이 없습니다." (임시저장·모집 직후)</td></tr>
+<tr><td>Error</td><td>"데이터를 불러오지 못했습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<p>본 탭(조회)은 로그를 기록하지 않는다. 응원은 회원 앱에서 발생하며, 응원·반환 내역은 [CEB-BO-SUP-401] 응원·반환 변동 내역에서 추적한다.</p>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>이벤트 미존재</td><td>Toast (Error): "존재하지 않는 서포트 이벤트입니다." → [CEB-BO-SUP-101] 리다이렉트</td></tr>
+<tr><td>조회 실패</td><td>Toast (Error): "데이터를 불러오지 못했습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-SUP-201</td><td>서포트 이벤트 상세 (기본정보 탭)</td><td>형제 탭</td></tr>
+<tr><td>CEB-BO-SUP-205</td><td>서포트 이벤트 상세 (결과물·반환 탭)</td><td>형제 탭</td></tr>
+<tr><td>CEB-BO-SUP-203-MD-CHEER-DETAIL</td><td>응원 상세 (회차별)</td><td>하위 (행 클릭)</td></tr>
+<tr><td>CEB-BO-SUP-401</td><td>응원·반환 변동 내역</td><td>연관 (회차별 추적)</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성(구 [CEB-BO-SUP-201] §2.3 응원자 내역 탭을 별도 문서로 분할). ① 3탭 메뉴 + <code>?tab=cheerers</code> 라우팅 ② 요약(응원자 수·총 응원 횟수·누적 응원) ③ 회원별 합산 테이블(닉네임·누적 응원량·응원 횟수·최초/최근 응원·반환 여부), 누적 응원량 내림차순·10건 페이지네이션 ④ 행 클릭 시 [CEB-BO-SUP-203-MD-CHEER-DETAIL] 응원 상세 모달 ⑤ 반환 표기·빈/로딩/에러 상태 ⑥ 조회 전용(로그 없음), 권한은 [CEB-BO-SYS-102] 참조</td></tr>
+</table>
+
+</body>
+</html>

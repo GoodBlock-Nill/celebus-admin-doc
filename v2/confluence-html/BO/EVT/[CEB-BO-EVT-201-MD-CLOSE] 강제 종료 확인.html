@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-EVT-201-MD-CLOSE] 강제 종료 확인</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-EVT-201-MD-CLOSE] 강제 종료 확인</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-EVT-201-MD-CLOSE</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>EVT — 팬덤 레벨</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>(모달) 부모: 팬덤 레벨 상세 (레벨·곡선 탭)</td></tr>
+<tr><td>비고</td><td>진행중 팬덤 레벨을 예외적으로 조기 종료(진행중→종료)하기 전 확인 모달. 정상 종료는 12.31 자동. 권한은 [CEB-BO-SYS-102] 참조</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>모달·토스트 공통 규격</td></tr>
+<tr><td>[CEB-BO-EVT-000] 팬덤 레벨(EVT) 영역 가이드</td><td>§4.1.1 라이프사이클 (진행중→종료), 자동 종료 정책</td></tr>
+<tr><td>[CEB-BO-EVT-201] 팬덤 레벨 상세 (레벨·곡선 탭)</td><td>진입 경로 (헤더 [강제 종료] 액션)</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>운영자가 <strong>진행중 시즌을 예외적으로 조기 종료</strong>(진행중→종료)하기 전 확인을 받는 모달. 종료는 되돌릴 수 없으므로 신중한 의사결정을 유도한다. 정상 종료는 매년 12월 31일 23:59:59 시스템 자동 종료로 처리되며, 본 [강제 종료]는 아티스트 활동 중단 등 예외 상황에만 사용한다.</p>
+<ul>
+<li><strong>누가</strong>: 팬덤 레벨 쓰기 권한이 있는 백오피스 관리자</li>
+<li><strong>결과</strong>: 시즌 상태가 "진행중" → "종료"로 즉시 전환되고 앱 노출이 중단되며, 종료된 시즌은 읽기 전용이 된다</li>
+</ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 모달 레이아웃</h3>
+<pre><code>┌───────────────────────────────────────────┐
+│  시즌을 강제 종료할까요?                     │
+├───────────────────────────────────────────┤
+│  · 강제 종료 시 시즌이 즉시 마감됩니다.       │
+│  · 종료한 시즌은 수정할 수 없습니다.          │
+├───────────────────────────────────────────┤
+│                  [ 취소 ]   [ 강제 종료 ]   │
+└───────────────────────────────────────────┘
+</code></pre>
+<h3>2.2 본문 구성</h3>
+<table>
+<tr><th>영역</th><th>내용</th></tr>
+<tr><td>제목</td><td>"시즌을 강제 종료할까요?"</td></tr>
+<tr><td>본문 (2행)</td><td>"강제 종료 시 시즌이 즉시 마감됩니다." / "종료한 시즌은 수정할 수 없습니다."</td></tr>
+<tr><td>버튼</td><td>[취소] / [강제 종료] (위험 강조)</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 프로토타입 참조</p>
+</blockquote>
+<hr>
+<h2>3. 기능 설명</h2>
+<table>
+<tr><th>버튼</th><th>동작</th></tr>
+<tr><td>강제 종료</td><td>시즌 상태 "진행중" → "종료" 전환 + 모달 닫기 + 성공 토스트 + 활동 로그. 상세 헤더 자동 갱신(상태 뱃지 "종료", 라이프사이클 액션 버튼 미노출, 곡선·보상 [수정] 비활성)</td></tr>
+<tr><td>취소 / [X] / 모달 외부 클릭</td><td>모달 닫기. 시즌 상태(진행중) 유지</td></tr>
+</table>
+<hr>
+<h2>4. 로직·플로우</h2>
+<ol>
+<li>[CEB-BO-EVT-201] 레벨·곡선 탭 헤더 [강제 종료] 클릭(진행중 상태에서만 노출)</li>
+<li>본 확인 모달 열림</li>
+<li>[강제 종료] 클릭 → 종료 전환 + 성공 토스트(§5) + 활동 로그</li>
+<li>[취소]·[X]·외부 클릭: 모달 닫고 진행중 상태 유지</li>
+</ol>
+<h3>4.1 종료 후 후속 처리 (시스템)</h3>
+<table>
+<tr><th>데이터</th><th>처리</th></tr>
+<tr><td>최종 레벨·누적 덕력</td><td>종료 시점 기준 확정 보존</td></tr>
+<tr><td>디지털 굿즈(BIVE) 지급</td><td>종료 전 달성 레벨의 자동 민팅분은 그대로 보존(BIVE 영역)</td></tr>
+<tr><td>곡선·보상</td><td>읽기 전용 잠금(수정 불가)</td></tr>
+<tr><td>신규 적립·소비</td><td>발생하지 않음 (차기 시즌은 [CEB-BO-EVT-101]에서 신규 생성)</td></tr>
+</table>
+<hr>
+<h2>5. 검증·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>처리·문구</th></tr>
+<tr><td>종료 성공</td><td>Toast (Success): "'{시즌명}' 시즌을 종료했습니다."</td></tr>
+<tr><td>종료 실패</td><td>Toast (Error): "시즌 종료에 실패했습니다."</td></tr>
+<tr><td>진행중이 아닌 시즌</td><td>헤더 [강제 종료] 미노출 → 본 모달 호출되지 않음</td></tr>
+<tr><td>쓰기 권한 없음</td><td>헤더 [강제 종료] 미노출 → 본 모달 호출되지 않음</td></tr>
+</table>
+<hr>
+<h2>6. 연관 화면</h2>
+<table>
+<tr><th>화면 ID</th><th>관계</th></tr>
+<tr><td>CEB-BO-EVT-201</td><td>진입 (헤더 [강제 종료]) · 종료 후 자동 갱신</td></tr>
+<tr><td>CEB-BO-EVT-101</td><td>차기 시즌 신규 생성</td></tr>
+</table>
+<hr>
+<h2>7. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 강제 종료 확인 모달 — 제목 "시즌을 강제 종료할까요?", 본문 "강제 종료 시 시즌이 즉시 마감됩니다. / 종료한 시즌은 수정할 수 없습니다.", 버튼 [취소]/[강제 종료]. 성공 토스트("'{시즌명}' 시즌을 종료했습니다."), 종료 후 후속 처리(레벨·BIVE 지급분 보존, 곡선·보상 잠금)</td></tr>
+</table>
+
+</body>
+</html>

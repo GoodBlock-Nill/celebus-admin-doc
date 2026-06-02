@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SUP — 서포트 이벤트</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.5</td></tr>
+<tr><td>버전</td><td>v2.6</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -110,13 +110,49 @@ p {
 </table>
 <hr>
 <h2>2. 화면 목록</h2>
+<p>서포트 이벤트 상세는 <strong>3탭 구조</strong>(기본정보·응원자 내역·결과물·반환)이며 탭별 문서로 분할한다. 각 화면·모달은 ART 영역과 동일하게 <strong>화면/탭 = 1문서, 모달 = 1문서</strong> 원칙을 따른다.</p>
+<h3>리스트·생성</h3>
 <table>
-<tr><th>화면ID</th><th>화면명</th><th>유형</th></tr>
-<tr><td>CEB-BO-SUP-101</td><td>서포트 이벤트 리스트</td><td>Page</td></tr>
-<tr><td>CEB-BO-SUP-101-CREATE</td><td>서포트 이벤트 생성</td><td>Page</td></tr>
-<tr><td>CEB-BO-SUP-201</td><td>서포트 이벤트 상세</td><td>Page (탭)</td></tr>
-<tr><td>CEB-BO-SUP-401</td><td>응원·반환 변동 내역</td><td>Page</td></tr>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th><th>작성 상태</th></tr>
+<tr><td>CEB-BO-SUP-101</td><td>서포트 이벤트 리스트</td><td>Page</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-SUP-101-CREATE</td><td>서포트 이벤트 생성</td><td>Page</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-SUP-101-MD-CANCEL</td><td>생성 취소 확인</td><td>Modal</td><td>✅ 작성 완료</td></tr>
 </table>
+<h3>상세 (3탭)</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th><th>작성 상태</th></tr>
+<tr><td>CEB-BO-SUP-201</td><td>서포트 이벤트 상세 (기본정보 탭)</td><td>Page (탭)</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-SUP-201-MD-PUBLISH</td><td>게시 확인</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-SUP-201-MD-EXECUTE</td><td>집행 시작 확인</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-SUP-201-MD-CANCEL-EXEC</td><td>집행 취소 확인</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-SUP-201-MD-FORCE-END</td><td>강제 종료 확인</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-SUP-201-MD-DELETE</td><td>이벤트 삭제 확인</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-SUP-203</td><td>서포트 이벤트 상세 (응원자 내역 탭)</td><td>Page (탭)</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-SUP-203-MD-CHEER-DETAIL</td><td>응원 상세 (회차별)</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-SUP-205</td><td>서포트 이벤트 상세 (결과물·반환 탭)</td><td>Page (탭)</td><td>✅ 작성 완료</td></tr>
+<tr><td>CEB-BO-SUP-205-MD-COMPLETE</td><td>결과물 등록·완료</td><td>Modal</td><td>✅ 작성 완료</td></tr>
+</table>
+<h3>변동 내역</h3>
+<table>
+<tr><th>화면ID</th><th>화면명</th><th>유형</th><th>작성 상태</th></tr>
+<tr><td>CEB-BO-SUP-401</td><td>응원·반환 변동 내역</td><td>Page</td><td>✅ 작성 완료</td></tr>
+</table>
+<hr>
+<h2>2-1. 화면 ID 체계 (SUP 영역)</h2>
+<table>
+<tr><th>구분</th><th>번호</th><th>화면</th></tr>
+<tr><td>리스트</td><td>101</td><td>서포트 이벤트 리스트</td></tr>
+<tr><td>상세 탭</td><td>201·203·205</td><td>서포트 이벤트 상세(기본정보·응원자 내역·결과물·반환)</td></tr>
+<tr><td>변동 내역</td><td>401</td><td>응원·반환 변동 내역</td></tr>
+</table>
+<p>부속·하위 화면은 상위 번호에 접미사를 붙인다.</p>
+<table>
+<tr><th>접미사</th><th>의미</th><th>예시</th></tr>
+</table>
+<ul>
+<li>상세는 기본정보(201)가 헤더 라이프사이클(게시·집행 시작·집행 취소·강제 종료·결과물 등록·완료·삭제)을 소유하며, 응원자 내역(203)·결과물·반환(205)은 형제 탭이다.</li>
+<li>상태 전환 확인 모달은 호출 화면/탭의 ID에 <code>-MD-{동작}</code> 접미사를 붙인다(예: 게시·집행은 201, 결과물 완료는 205).</li>
+</ul>
 <hr>
 <h2>3. 권한</h2>
 <p>권한은 [CEB-BO-SYS-102] 권한 관리 그룹 설정에 따른다. 외부 아티스트 계정은 자기 아티스트(그룹) 이벤트만 조회 범위로 제한한다.</p>
@@ -202,6 +238,7 @@ p {
 <h2>6. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v2.6</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>ART 패턴 정합 — 화면/탭 = 1문서, 모달 = 1문서로 재편</strong>. ① §2 화면 목록을 리스트·생성/상세(3탭)/변동 내역으로 재구성하고 신규 분할 문서 전체(유형·작성 상태)를 등재 — 상세는 기본정보(201)·응원자 내역(203)·결과물·반환(205) 3개 탭 문서 + 모달 7종(101-MD-CANCEL·201-MD-PUBLISH·201-MD-EXECUTE·201-MD-CANCEL-EXEC·201-MD-FORCE-END·201-MD-DELETE·203-MD-CHEER-DETAIL·205-MD-COMPLETE) ② §2-1 화면 ID 체계 신설(-CREATE·-MD-{동작} 접미사, 상세 헤더 라이프사이클은 201 소유) ③ §4.1 라이프사이클·상태 배지 색상표 유지(변동 없음)</td></tr>
 <tr><td><strong>v2.5</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>§4.1에 <strong>상태 배지 색상 표(7상태)</strong> 추가 — 시각 표현 기준을 <strong>프로토타입(<code>/artists/support</code>)</strong>으로 명시(피그마 아님). 미달성종료·집행취소는 "종료"로 동일 색([CEB-BO-SUP-101] §2.2 정합)</td></tr>
 <tr><td><strong>v2.4</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — §1 아티스트 홈 노출 카드 이미지를 <strong>1:1 아이콘 이미지</strong>(홈 카드 안에 전체 표시)로 정정([CEB-BO-SUP-101-CREATE] 동기화)</td></tr>
 <tr><td><strong>v2.3</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>§4.5 변동 유형을 <strong>응원·반환 2종</strong>으로 정리 — 결과물 알림은 덕력 증감이 아니므로 변동 유형 표에서 제외(알림 발송 이력은 [CEB-BO-SUP-201] 상세에서 확인). [CEB-BO-SUP-401]이 응원/반환 탭 구조로 변경된 것과 정합</td></tr>
