@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BO 전체 (서비스 영역 공통)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.2</td></tr>
+<tr><td>버전</td><td>v2.3</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>비고</td><td>v2 백오피스 전체 공통 정책 정의서. 모든 BO 화면 스펙 문서는 이 문서를 참조. v2.0: 현재 백오피스 메뉴·작성 문서 기준으로 영역 모델·화면 ID 전면 정합 (미구현 영역·참조 제거, 권한은 권한 그룹 기반으로 위임).</td></tr>
 </table>
@@ -204,18 +204,18 @@ p {
 <li>외부 협력사 관리자는 매핑된 아티스트의 데이터만 검색·조회·편집할 수 있으며, 그 외 아티스트 데이터는 검색 결과·직접 접근 모두 차단한다.</li></ul>
 <hr>
 <h2>5. 다국어 입력 정책</h2>
-<h3>5.1 KO/EN/JP 3언어 동시 필수</h3>
-<p><strong>모든 사용자 노출 텍스트</strong>(타이틀·설명·라벨·CTA·안내 문구)는 KO/EN/JP 3개 언어 모두 입력해야 한다.</p>
+<h3>5.1 한국어·영어·일본어 3언어 동시 필수</h3>
+<p><strong>모든 사용자 노출 텍스트</strong>(타이틀·설명·라벨·CTA·안내 문구)는 한국어·영어·일본어 3개 언어 모두 입력해야 한다.</p>
 <table>
 <tr><th>항목</th><th>정책</th></tr>
-<tr><td>필수 입력</td><td>KO·EN·JP <strong>3개 모두</strong></td></tr>
+<tr><td>필수 입력</td><td>한국어·영어·일본어 <strong>3개 모두</strong></td></tr>
 <tr><td>빈 칸 검증</td><td>1개 이상 빈 칸 → 저장 차단 + 토스트(Error) "모든 언어 필드를 입력해주세요"</td></tr>
 <tr><td>저장 시점</td><td>임시저장(Draft)도 3언어 모두 입력 권장. 단, <strong>임시저장은 1개 언어만 입력해도 허용</strong> (게시 시점에 3언어 강제 검증)</td></tr>
 <tr><td>게시 차단</td><td>게시(Publish) 시 3언어 빈 칸 검증 → 미충족 시 게시 불가</td></tr>
 <tr><td>글자수 제한</td><td>필드별로 화면 명세서에 명시 (예: 타이틀 50자, 설명 500자) — 모든 언어 동일 적용</td></tr>
 </table>
 <h3>5.2 글자수 제한 필드 기준</h3>
-<p>다국어 입력 필드의 <strong>표준 글자수 제한</strong>. 화면 명세 작성 시 본 표를 기준으로 일관 적용. 모든 언어(KO/EN/JP) 동일 적용.</p>
+<p>다국어 입력 필드의 <strong>표준 글자수 제한</strong>. 화면 명세 작성 시 본 표를 기준으로 일관 적용. 모든 언어(한국어·영어·일본어) 동일 적용.</p>
 <table>
 <tr><th>필드 유형</th><th>글자수 제한</th><th>비고</th></tr>
 <tr><td><strong>타이틀</strong> (Quest·Raffle·이벤트·소식 등)</td><td><strong>50자</strong></td><td>카드·리스트 노출용 짧은 제목</td></tr>
@@ -246,49 +246,16 @@ p {
 </table>
 <h3>5.4 다국어 라벨 일관성</h3>
 <ul>
-<li>KO/EN/JP 라벨은 [CEB-000] §1 다국어 라벨 매핑을 따름 (덕력=Fan Power=推し力 등 공식 채택 어휘).</li>
+<li>한국어·영어·일본어 라벨은 [CEB-000] §1 다국어 라벨 매핑을 따름 (덕력=Fan Power=推し力 등 공식 채택 어휘).</li>
 <li>BO에서 신규 라벨 추가 시 [CEB-000]에도 동시 등록.</li>
 <li>모순 발생 시 <strong>앱 [CEB-000] 정책 우선</strong>.</li></ul>
 <hr>
 <h2>6. 관리자 활동 로그</h2>
-<p>모든 BO 작업(쓰기·삭제·승인·반려·권한 변경)은 활동 로그에 자동 기록된다.</p>
-<h3>6.1 로그 필수 필드</h3>
-<table>
-<tr><th>필드</th><th>내용</th><th>예시</th></tr>
-<tr><td>일시</td><td>YYYY.MM.DD HH:mm:ss (KST)</td><td>2026.05.05 14:32:18</td></tr>
-<tr><td>권한 그룹</td><td>작업자가 속한 권한 그룹명</td><td>콘텐츠 운영 그룹</td></tr>
-<tr><td>작업자</td><td>이메일</td><td>nill@celebus.xyz</td></tr>
-<tr><td>영역</td><td>영역명</td><td>에피소드</td></tr>
-<tr><td>액션</td><td>생성·수정·삭제·승인·반려·게시·종료 등</td><td>승인</td></tr>
-<tr><td>대상</td><td>화면 ID + 대상 ID</td><td>CEB-BO-SQ-304 / 팬퀘스트 제출 #1042</td></tr>
-<tr><td>변경 내용</td><td>자유 텍스트 (변경 전/후 자동 기록 또는 운영자 수동 입력)</td><td>보상 50덕력 → 75덕력</td></tr>
-<tr><td>IP</td><td>접속 IP</td><td>1.2.3.4</td></tr>
-</table>
-<h3>6.2 영역별 활동 로그 메시지 템플릿</h3>
-<table>
-<tr><th>영역</th><th>액션</th><th>로그 메시지 (KO)</th></tr>
-<tr><td>에피소드</td><td>생성</td><td>팬퀘스트 '{타이틀}' 생성 (보상: 응모권 {N}장 + 디지털 포토카드 {N}장)</td></tr>
-<tr><td>에피소드</td><td>검수 승인</td><td>팬퀘스트 제출 #{ID} 승인 (작업자: {이메일}, 보상 자동 지급)</td></tr>
-<tr><td>에피소드</td><td>검수 반려</td><td>팬퀘스트 제출 #{ID} 반려 (사유: {코드} — {텍스트})</td></tr>
-<tr><td>래플</td><td>추첨</td><td>래플 '{타이틀}' 추첨 실행 — 당첨자 {N}명 확정</td></tr>
-<tr><td>덕력관리</td><td>정책 변경</td><td>덕력 정책 변경 — 일일 캡: {변경 전}덕력 → {변경 후}덕력</td></tr>
-<tr><td>팬덤레벨</td><td>곡선 변경</td><td>팬덤 레벨 Lv{N} 목표 변경: {변경 전}덕력 → {변경 후}덕력</td></tr>
-<tr><td>서포트</td><td>결과물 등록</td><td>서포트 이벤트 '{타이틀}' 결과물 등록 ({파일 수}개)</td></tr>
-<tr><td>소식/일정</td><td>등록</td><td>소식 '{타이틀}' 등록 (다국어: 한국어/영어/일본어)</td></tr>
-<tr><td>소식/일정</td><td>삭제</td><td>소식 '{타이틀}' 삭제</td></tr>
-<tr><td>BIVE</td><td>등록</td><td>BIVE '{이름}' 등록 (등급: {등급}, 아티스트: {아티스트명})</td></tr>
-<tr><td>관리자</td><td>권한 부여</td><td>권한 부여: {대상 이메일} → {권한 그룹} (만료: {YYYY.MM.DD})</td></tr>
-<tr><td>관리자</td><td>권한 회수</td><td>권한 회수: {대상 이메일} (사유: {텍스트})</td></tr>
-</table>
-<h3>6.3 로그 보관·조회</h3>
-<table>
-<tr><th>항목</th><th>정책</th></tr>
-<tr><td>보관 기간</td><td>최소 3년 (감사·법적 요구 대비)</td></tr>
-<tr><td>조회</td><td>SUPER 전체. OPERATOR/POLICY/EXTERNAL_ARTIST는 본인 활동만</td></tr>
-<tr><td>검색</td><td>일자·작업자·영역·액션 필터</td></tr>
-<tr><td>내보내기</td><td>CSV·JSON 다운로드 (SUPER 전용)</td></tr>
-<tr><td>변경 불가</td><td>활동 로그는 <strong>append-only</strong> — 수정·삭제 불가</td></tr>
-</table>
+<p>모든 BO 쓰기·삭제·승인·반려·권한 변경은 활동 로그에 기록한다.</p>
+<ul>
+<li>공통 기록 항목: 일시 · 작업자 · 영역 · 액션 · 대상 · IP</li>
+<li>기록 항목 상세·영역별 메시지·보관·조회·내보내기 등 표준은 [CEB-BO-SYS-601] 관리자 활동 로그에서 정의한다.</li>
+<li>조회 범위는 [CEB-BO-SYS-102] 권한 그룹 설정을 따른다.</li></ul>
 <hr>
 <h2>7. 공통 UI 상태</h2>
 <p>모든 BO 화면에서 아래 5가지 상태를 고려한다.</p>
@@ -314,13 +281,10 @@ p {
 <p>[CEB-000] §공통 토스트 규격을 그대로 적용한다.</p>
 <table>
 <tr><th>항목</th><th>값</th></tr>
-<tr><td>위치</td><td>화면 상단 중앙</td></tr>
-<tr><td>상단 여백</td><td>20px</td></tr>
-<tr><td>Z-index</td><td>9999 (최상위 레이어)</td></tr>
-<tr><td>자동 닫힘</td><td>3초 (Error는 5초)</td></tr>
-<tr><td>닫기 버튼</td><td>[X] 아이콘 버튼 (우측)</td></tr>
-<tr><td>페이드인</td><td>0.2초 (opacity 0→100%, translateY -10→0px)</td></tr>
-<tr><td>페이드아웃</td><td>0.3초 (opacity 100→0%, translateY 0→-10px)</td></tr>
+<tr><td>위치</td><td>화면 상단 중앙 (상단 여백 20px)</td></tr>
+<tr><td>레이어</td><td>최상위 — 모달 위에 노출</td></tr>
+<tr><td>자동 닫힘</td><td>3초 (자동 닫힘 전용, 수동 닫기 버튼 없음)</td></tr>
+<tr><td>페이드인</td><td>0.2초</td></tr>
 <tr><td>최대 스택</td><td>3개 (오래된 것부터 자동 닫힘)</td></tr>
 </table>
 <table>
@@ -351,173 +315,31 @@ p {
 <h3>9.3 모달 동작</h3>
 <table>
 <tr><th>동작</th><th>정책</th></tr>
-<tr><td>ESC 키</td><td>모달 닫기 (취소와 동일)</td></tr>
-<tr><td>배경 클릭</td><td>모달 닫기 (확인 모달은 닫기 차단 옵션)</td></tr>
-<tr><td>닫기 시 입력값</td><td>폐기. 단 "확인 모달"은 입력값 유지</td></tr>
-<tr><td>모달 안의 모달</td><td>금지 (UX 혼란). 단계적 워크플로우는 단일 모달 내 step 전환</td></tr>
+<tr><td>배경 클릭</td><td>모달 닫기</td></tr>
+<tr><td>닫기 시 입력값</td><td>폐기</td></tr>
+<tr><td>모달 안의 모달</td><td>금지 (단계적 워크플로우는 단일 모달 내 step 전환)</td></tr>
 </table>
-<h3>9.4 특화 모달 상세 규격</h3>
-<h4>9.4.1 결과 입력 모달</h4>
-<p>PM 결과·SETLIST 결과·서포트 이벤트 결과 등 <strong>확정형 결과 입력</strong>에 사용.</p>
-<table>
-<tr><th>영역</th><th>구성</th></tr>
-<tr><td>헤더</td><td>"결과 입력" + [✕] 닫기</td></tr>
-<tr><td>정보 요약</td><td>대상 항목의 핵심 정보 테이블 (타이틀·기간·참여자 수·예상 보상 미리보기)</td></tr>
-<tr><td>결과 선택</td><td>카드형 라디오 버튼 (예: YES/NO 카드, 정답·오답·무효 등). 선택 즉시 미리보기 갱신</td></tr>
-<tr><td>다국어 입력</td><td>결과 발표용 텍스트 KO/EN/JP 3언어 필수 입력 (각 50자)</td></tr>
-<tr><td>참고 링크 (선택)</td><td>결과 근거 URL 입력</td></tr>
-<tr><td>경고 박스</td><td>"결과 확정 후 수정 시 보상 재계산이 필요합니다" 황색 박스</td></tr>
-<tr><td>푸터</td><td>[취소] / [결과 확정] (강조 컬러)</td></tr>
-</table>
-<p><strong>2차 확인 정책</strong>: [결과 확정] 클릭 시 <code>"정말 확정하시겠어요? 보상 지급 단계로 진행됩니다."</code> 추가 모달 → [최종 확정] 1회 더 클릭 필요.</p>
-<h4>9.4.2 반려사유 선택 모달</h4>
-<p>Quest 검수 반려·콘텐츠 반려·서포트 이벤트 결과물 반려 등 <strong>반려 처리</strong>에 사용.</p>
-<table>
-<tr><th>영역</th><th>구성</th></tr>
-<tr><td>헤더</td><td>"반려사유 선택" + [✕] 닫기</td></tr>
-<tr><td>반려사유 선택</td><td>드롭다운 (반려사유 코드 목록 — <code>§10.5</code> 참조). 사용 중 사유만 표시</td></tr>
-<tr><td>추가 메시지</td><td>자유 텍스트 200자 (선택). 코드만으로 안내 부족 시</td></tr>
-<tr><td>미리보기</td><td>"유저에게 보일 안내 메시지" 미리보기 (코드 → 다국어 메시지 + 추가 텍스트 결합)</td></tr>
-<tr><td>푸터</td><td>[취소] / [반려] (빨강)</td></tr>
-</table>
-<p><strong>저장 후</strong>: 유저에게 푸시·앱 알림 자동 전송. 활동 로그에 코드+텍스트 기록.</p>
-<h4>9.4.3 수정 취소 모달</h4>
-<p>Form (Create·Edit) 화면에서 <strong>이탈 시 입력값 폐기 경고</strong>.</p>
-<table>
-<tr><th>영역</th><th>구성</th></tr>
-<tr><td>헤더</td><td>"수정 취소" + [✕] 닫기</td></tr>
-<tr><td>본문</td><td>"수정 내용이 사라져요. 그래도 취소하시겠어요?" 황색 경고 아이콘</td></tr>
-<tr><td>푸터</td><td>[계속 수정] (좌, 기본) / [취소하기] (우, 빨강)</td></tr>
-</table>
-<p><strong>트리거</strong>: 입력 변경 후 ① 뒤로가기 ② 다른 메뉴 클릭 ③ 브라우저 닫기 시도 — 자동 표시. 변경 내용 없을 시 모달 미표시.</p>
-<h4>9.4.4 추첨 실행 모달</h4>
-<p>Raffle 추첨 시 사용. 비가역 작업이라 신중한 확인 절차.</p>
-<table>
-<tr><th>영역</th><th>구성</th></tr>
-<tr><td>헤더</td><td>"추첨 실행" + [✕] 닫기</td></tr>
-<tr><td>정보 요약</td><td>응모자 수·당첨자 수·중복 검증 옵션 (1·2차 당첨자 제외 등)</td></tr>
-<tr><td>옵션</td><td>중복 제외 체크박스 (이전 회차 당첨자 자동 제외)</td></tr>
-<tr><td>경고 박스</td><td>"추첨은 1회만 실행 가능합니다. 재추첨 불가." 빨간색 박스</td></tr>
-<tr><td>푸터</td><td>[취소] / [추첨 실행] (보라)</td></tr>
-</table>
-<p><strong>2차 확인</strong>: 클릭 시 <code>"추첨 결과는 즉시 SNS 발표 절차로 진행됩니다. 실행할까요?"</code> 추가 모달 → [최종 실행] 1회 더 클릭.</p>
+<h3>9.4 특화 모달</h3>
+<p>결과 입력·반려·추첨 등 영역 특화 모달의 상세 구성(입력 항목·경고·확인 절차)은 <strong>각 영역 화면 명세</strong>를 따른다. 대표 예:</p>
+<ul>
+<li>추첨 실행 — [CEB-BO-RFL-203-MD-DRAW]</li>
+<li>검수 반려 — [CEB-BO-SQ-304-MD-REJECT]</li>
+<li>시즌 종료 — [CEB-BO-ART-401-MD-CLOSE]</li></ul>
 <hr>
 <h2>10. 검수·승인 워크플로우</h2>
-<h3>10.1 Quest 제출 검수 (대표 흐름)</h3>
-<pre><code>유저 제출 (SUBMITTED)
-    ↓
-[CEB-BO-SQ-304] 검수 대기 (Quest 상세 대기내역 탭)
-    ↓
-운영자 검토
-    ↓
-승인 (APPROVED) ─→ 보상 자동 지급 (응모권·덕력·디지털 포토카드)
-    또는
-반려 (REJECTED) ─→ 반려사유 코드 + 텍스트 입력 → 유저 알림
-</code></pre>
-<table>
-<tr><th>항목</th><th>정책</th></tr>
-<tr><td>검수 SLA</td><td>평일 09:30~18:30 KST 내 24시간 처리 목표</td></tr>
-<tr><td>유저 안내</td><td>제출 직후 "하루 안에 결과를 알려드릴게요" 안내</td></tr>
-<tr><td>검수자 권한</td><td>OPERATOR 이상</td></tr>
-<tr><td>동시 검수 방지</td><td>한 운영자가 검수 중인 항목은 다른 운영자에게 잠금 (5분 idle 후 자동 해제)</td></tr>
-<tr><td>반려사유 코드</td><td><code>[CEB-BO-SQ-501]</code> 반려사유 설정 화면에서 관리</td></tr>
-<tr><td>재제출</td><td>반려 후 유저 재제출 가능 (제한 횟수: 별도 정책)</td></tr>
-</table>
-<h3>10.2 콘텐츠 등록 (소식·디지털 굿즈)</h3>
-<pre><code>EXTERNAL_ARTIST 등록 (DRAFT)
-    ↓
-운영자(OPERATOR) 검수
-    ↓
-승인 (PUBLISHED) ─→ 앱 노출 시작
-    또는
-반려 (REJECTED) ─→ 사유 → 외부 권한자 알림
-</code></pre>
-<blockquote>
-<p>EXTERNAL_ARTIST가 직접 게시(PUBLISH)하는 경우는 <strong>사전 승인 받은 카테고리에 한정</strong>. 그 외는 운영자 검수 필수.</p>
-</blockquote>
-<h3>10.3 Raffle 추첨</h3>
-<pre><code>응모 마감 (자동 상태 전환)
-    ↓
-[CEB-BO-RFL-203] 추첨 화면
-    ↓
-운영자 [추첨 실행] → BO 알고리즘 자동 추첨
-    ↓
-당첨자 명단 확정 → SNS 발표 + 당첨자 개별 안내
-    ↓
-배송 처리 (실물) 또는 자동 지급 (디지털)
-</code></pre>
-<h3>10.4 서포트 이벤트 상태 전환</h3>
-<pre><code>생성 (DRAFT)
-    ↓
-게시 (ACTIVE) — 응원 수집 중
-    ↓
-달성 (ACHIEVED) — 자동 판정. 운영자 [집행중] 수동 전환
-    또는
-미달성 (FAILED) — 자동 종료 + 덕력 자동 반환 (3회 재시도)
-    ↓
-결과물 등록 → 종료 (CLOSED)
-</code></pre>
-<h3>10.5 반려사유 코드 체계</h3>
-<p>검수·반려 처리 시 사용하는 <strong>표준 반려사유 코드</strong>. <code>[CEB-BO-SQ-501]</code> 반려사유 설정 화면에서 관리.</p>
-<h4>표준 반려사유 코드 (전 영역 공통)</h4>
-<table>
-<tr><th>코드</th><th>사유 (KO)</th><th>EN</th><th>JP</th><th>비고</th></tr>
-<tr><td><code>IMG_BLUR</code></td><td>흐리거나 어두워 식별 불가</td><td>Image too blurry to verify</td><td>画像がぼやけていて確認できません</td><td>캡처 제출 퀘스트</td></tr>
-<tr><td><code>WRONG_OBJ</code></td><td>지정 대상과 다른 캡처</td><td>Submission shows the wrong target</td><td>指定された対象と異なります</td><td>Quest·이벤트 인증</td></tr>
-<tr><td><code>DUP_ENTRY</code></td><td>동일 캡처 재제출 의심</td><td>Duplicate or reused submission detected</td><td>重複または再使用が検出されました</td><td>어뷰징 방지</td></tr>
-<tr><td><code>DATE_EXP</code></td><td>캠페인 기간 외 캡처</td><td>Submitted outside campaign period</td><td>キャンペーン期間外の提出</td><td>기간 검증</td></tr>
-<tr><td><code>MENTION_MISSING</code></td><td>필수 멘션 누락</td><td>Required mentions missing</td><td>必須メンション抜け</td><td>SNS 게시 퀘스트</td></tr>
-<tr><td><code>HASHTAG_MISSING</code></td><td>필수 해시태그 누락</td><td>Required hashtags missing</td><td>必須ハッシュタグ抜け</td><td>SNS 게시 퀘스트</td></tr>
-<tr><td><code>PRIVATE_ACCOUNT</code></td><td>비공개 계정 게시</td><td>Private account, cannot verify</td><td>非公開アカウントのため確認不可</td><td>SNS 게시 퀘스트</td></tr>
-<tr><td><code>INAPPROPRIATE</code></td><td>부적절한 콘텐츠</td><td>Inappropriate content</td><td>不適切なコンテンツ</td><td>콘텐츠</td></tr>
-<tr><td><code>COPYRIGHT</code></td><td>저작권 위반 의심</td><td>Suspected copyright violation</td><td>著作権侵害の疑い</td><td>콘텐츠</td></tr>
-<tr><td><code>ETC_INPUT</code></td><td>기타 (운영자 직접 입력)</td><td>Other (operator note)</td><td>その他(運営者記入)</td><td>코드 외 자유</td></tr>
-</table>
-<h4>반려사유 관리 정책</h4>
-<table>
-<tr><th>항목</th><th>정책</th></tr>
-<tr><td>추가 권한</td><td>SUPER만 가능</td></tr>
-<tr><td>수정 권한</td><td>SUPER만 가능. 사용 중 사유 수정 시 영향 범위 경고 표시</td></tr>
-<tr><td>삭제 권한</td><td><strong>사용 중인 사유 삭제 불가</strong> (활성 → 비활성 전환만 가능)</td></tr>
-<tr><td>활성/비활성</td><td>비활성 사유는 신규 반려 시 선택 불가. 기존 반려 이력은 보존</td></tr>
-<tr><td>다국어 필수</td><td>사유 텍스트 KO/EN/JP 3언어 동시 입력 (<code>§5</code> 정책 적용)</td></tr>
-<tr><td>코드 표기</td><td>영문 대문자 + 언더스코어 (<code>MENTION_MISSING</code> 패턴)</td></tr>
-<tr><td>변경 활동 로그</td><td>추가·수정·비활성화 모두 활동 로그 자동 기록</td></tr>
-</table>
-<h3>10.6 검수 SLA·인계 정책</h3>
-<h4>검수 처리 기준</h4>
-<table>
-<tr><th>항목</th><th>기준</th></tr>
-<tr><td>운영 시간</td><td><strong>평일 09:30 ~ 18:30 KST</strong> (공휴일 제외)</td></tr>
-<tr><td>처리 목표</td><td><strong>24시간 내</strong> (운영 시간 기준 — 금요일 18:30 이후 제출은 월요일까지)</td></tr>
-<tr><td>유저 안내</td><td>제출 직후 "하루 안에 결과를 알려드릴게요" 안내. 24시간 초과 시 자동 알림 "조금 더 시간이 걸려요"</td></tr>
-<tr><td>우선순위</td><td>① 캠페인 마감 임박 항목 (D-3 이내) ② 일반 ③ 재제출 (반려 후 재도전)</td></tr>
-<tr><td>한계 (1인)</td><td>한 운영자가 1시간 내 검수 가능 권장량: <strong>50건 이하</strong> (피로 누적 방지)</td></tr>
-</table>
-<h4>운영자 간 인계</h4>
-<table>
-<tr><th>시나리오</th><th>처리</th></tr>
-<tr><td>검수 중 휴가·퇴근</td><td>"내가 잠금 중인 항목 일괄 해제" 버튼 → 다음 운영자가 이어 검수</td></tr>
-<tr><td>인계 노트</td><td>항목별 운영자 메모 (KO 만, 200자) — 다음 운영자에게 전달용</td></tr>
-<tr><td>의심 케이스 인계</td><td>"운영 매니저 검토 요청" 플래그 → SUPER가 별도 큐에서 확인</td></tr>
-<tr><td>일괄 처리 한도</td><td>일괄 승인은 한 번에 최대 <strong>20건</strong>. 일괄 반려는 한 번에 최대 <strong>10건</strong> (반려사유 일괄 적용)</td></tr>
-</table>
-<h4>검수 품질 관리</h4>
+<p>검수·승인·반려가 필요한 영역의 처리 흐름·상태 전환·검수 기준·반려사유는 <strong>각 영역 가이드/화면 명세</strong>를 따른다.</p>
 <ul>
-<li><strong>샘플링 감사</strong>: SUPER가 OPERATOR 검수 결과를 무작위 샘플링 감사. 잘못 승인·반려 발견 시 시정 + 활동 로그 기록.</li>
-<li><strong>반려율 모니터링</strong>: OPERATOR별 반려율 통계. 비정상적으로 높거나 낮으면 검토.</li>
-<li><strong>유저 이의 제기</strong>: 반려 후 유저가 이의 제기 가능 (CS 채널). SUPER가 재검토 후 결정.</li></ul>
+<li>팬퀘스트 검수·반려 — [CEB-BO-SQ-304] / 반려사유 설정 [CEB-BO-SQ-501]</li>
+<li>래플 추첨 — [CEB-BO-RFL-203]</li>
+<li>서포트 이벤트 상태 — [CEB-BO-SUP-201]</li>
+<li>소식·일정 게시 — [CEB-BO-INF-201]</li></ul>
+<h3>10.5 반려사유 코드 체계</h3>
+<p>검수 반려 시 사용하는 표준 반려사유는 [CEB-BO-SQ-501] 반려사유 설정 화면에서 관리한다(영역별 반려사유 목록·다국어 안내 메시지 포함).</p>
 <hr>
 <h2>11. 발급·관리 자산 정의</h2>
-<table>
-<tr><th>자산</th><th>발급 주체</th><th>BO에서 임의 지급</th><th>BO에서 회수</th><th>관련 화면</th></tr>
-<tr><td>덕력 (DUK)</td><td>시스템 자동 (활동 즉시·승인 시)</td><td>최고 권한 그룹만 가능 (감사 로그 필수)</td><td>최고 권한 그룹만 가능 (감사 로그 필수)</td><td>CEB-BO-ART-401-HISTORY (덕력 내역)</td></tr>
-<tr><td>응모권</td><td>팬퀘스트 보상·이벤트 자동</td><td>운영 권한 그룹 가능 (수동 보상)</td><td>최고 권한 그룹만 가능</td><td>CEB-BO-RFT-201 (변동 내역)</td></tr>
-<tr><td>BIVE (디지털 굿즈)</td><td>시스템 자동 (팬퀘스트·레벨업)</td><td>운영 권한 그룹 가능 (수동 배포)</td><td>최고 권한 그룹만 가능</td><td>CEB-BO-BIVE-102 (BIVE 관리)</td></tr>
-<tr><td>응모권 (실물 경품)</td><td>래플 당첨 시 운영자 수동 배송</td><td>— (실물)</td><td>— (실물)</td><td>CEB-BO-RFL-203 (추첨내역)</td></tr>
-</table>
+<p>자산(덕력·응모권·BIVE·실물 경품)의 발급·임의 지급·회수 권한과 내역은 각 영역 가이드/화면을 따른다 — 덕력 [CEB-BO-ART-401], 응모권 [CEB-BO-RFT-101], BIVE [CEB-BO-004], 래플 경품 [CEB-BO-RFL-203].</p>
 <blockquote>
-<p><strong>임의 지급·회수는 모두 활동 로그 자동 기록</strong>. 사유 텍스트 필수 입력.</p>
+<p>임의 지급·회수는 모두 활동 로그에 기록하고 사유를 남긴다.</p>
 </blockquote>
 <hr>
 <h2>12. 에러 처리·예외 상황</h2>
@@ -539,319 +361,47 @@ p {
 <tr><td>보상 지급 중 오류</td><td>부분 지급 방지 — 트랜잭션 롤백 + 운영자 수동 재시도</td></tr>
 <tr><td>검수 중 항목 삭제</td><td>OPERATOR 검수 잠금 상태에서는 SUPER도 삭제 차단. 잠금 해제 후 가능</td></tr>
 </table>
-<h3>12.3 임시저장·자동 복구</h3>
-<table>
-<tr><th>항목</th><th>정책</th></tr>
-<tr><td>자동 저장 트리거</td><td>Form 입력 변경 후 30초 idle. 변경 사항 없으면 미작동</td></tr>
-<tr><td>저장 위치</td><td>서버 저장 (브라우저 임시 저장 보조). 모든 운영자 단말 동기화</td></tr>
-<tr><td>복구 트리거</td><td>화면 재진입 시 "이어서 작성하시겠어요?" 모달 → [이어쓰기] / [새로 시작]</td></tr>
-<tr><td>복구 가능 기간</td><td><strong>자동 저장 후 7일</strong> (이후 자동 삭제)</td></tr>
-<tr><td>다국어 입력</td><td>부분 입력 (KO만)도 자동 저장 OK. 게시 시점에 3언어 검증</td></tr>
-<tr><td>충돌 처리</td><td>다른 운영자가 같은 항목 자동 저장한 경우 → "다른 사용자 변경 사항이 있습니다" 경고 + 비교 화면</td></tr>
-<tr><td>임시저장(Draft) 차이</td><td>"자동 저장"은 시스템 내부 백업. "임시저장(Draft)"은 운영자 명시 저장 — 서로 별개</td></tr>
-</table>
-<h3>12.4 동시 수정 충돌 처리</h3>
-<p>여러 운영자가 같은 항목을 동시 수정하는 경우.</p>
-<table>
-<tr><th>시나리오</th><th>처리</th></tr>
-<tr><td>동일 항목 Edit 진입</td><td>두 번째 진입자에게 "현재 {운영자명}이 수정 중입니다" 경고 표시. 진입 가능하나 저장 시 충돌 발생 가능</td></tr>
-<tr><td>검수 중 잠금</td><td>OPERATOR 검수 시 5분 idle 잠금 (<code>§10</code> 기준). 다른 운영자 진입 시 "검수 잠금 중" 표시</td></tr>
-<tr><td>저장 시 충돌 감지</td><td>저장 시 <code>version</code> 비교. 다른 운영자가 먼저 저장 시 → 토스트(Error) "다른 운영자가 변경했습니다. 최신 상태를 확인하세요" + [최신 새로고침]</td></tr>
-<tr><td>충돌 해결 UI</td><td>"내 변경 사항 vs 최신 상태" 비교 화면 (좌·우 분할). 운영자가 항목별 선택 후 재저장</td></tr>
-<tr><td>자동 병합</td><td>다른 필드 수정인 경우 자동 병합 시도. 같은 필드 충돌 시에만 수동 해결 요청</td></tr>
-</table>
-<h3>12.5 삭제 복구 정책</h3>
-<p>BO에서 삭제된 데이터의 <strong>복구 가능 기간</strong>과 <strong>권한</strong>.</p>
-<table>
-<tr><th>영역</th><th>삭제 유형</th><th>복구 가능 기간</th><th>복구 권한</th></tr>
-<tr><td>Quest·Raffle</td><td>논리 삭제 (soft delete)</td><td><strong>30일</strong></td><td>SUPER만</td></tr>
-<tr><td>콘텐츠 (소식·일정)</td><td>논리 삭제</td><td>30일</td><td>SUPER만</td></tr>
-<tr><td>디지털 굿즈</td><td>논리 삭제</td><td><strong>90일</strong> (지급 이력 추적)</td><td>SUPER만</td></tr>
-<tr><td>회원 계정</td><td>논리 삭제 (탈퇴 처리)</td><td><strong>30일 유예 후 물리 삭제</strong> (개인정보보호법 준수)</td><td>자동 / SUPER 강제</td></tr>
-<tr><td>활동 로그</td><td>삭제 불가 (append-only)</td><td>—</td><td>—</td></tr>
-<tr><td>권한 변경 이력</td><td>삭제 불가</td><td>—</td><td>—</td></tr>
-</table>
-<p><strong>복구 절차</strong>:</p>
-<ol>
-<li>SUPER가 [삭제 항목 조회] 메뉴에서 삭제된 항목 검색</li>
-<li>항목 선택 → [복구] 버튼 → 복구 사유 입력 (필수, 100자)</li>
-<li>복구 즉시 활동 로그 자동 기록</li>
-<li>복구된 항목은 이전 상태(예: 임시저장)로 복원</li></ol>
-<p><strong>물리 삭제</strong>:</p>
-<ul>
-<li>복구 가능 기간 경과 시 자동 물리 삭제 (DB에서 완전 삭제, 복구 불가)</li>
-<li>회원 정보는 개인정보보호법에 따라 30일 후 물리 삭제 강제</li></ul>
 <hr>
-<h2>13. 다국어 라벨 매핑</h2>
-<p>BO 화면에서 사용하는 표준 라벨. 화면 명세 작성 시 본 표를 참조해 일관 적용.</p>
-<h3>13.1 액션·CTA</h3>
-<table>
-<tr><th>KO</th><th>EN</th><th>JP</th></tr>
-<tr><td>등록하기</td><td>Create</td><td>登録する</td></tr>
-<tr><td>수정하기</td><td>Edit</td><td>編集する</td></tr>
-<tr><td>삭제하기</td><td>Delete</td><td>削除する</td></tr>
-<tr><td>게시하기</td><td>Publish</td><td>公開する</td></tr>
-<tr><td>임시저장</td><td>Save Draft</td><td>下書き保存</td></tr>
-<tr><td>승인</td><td>Approve</td><td>承認</td></tr>
-<tr><td>반려</td><td>Reject</td><td>却下</td></tr>
-<tr><td>결과 입력</td><td>Submit Result</td><td>結果入力</td></tr>
-<tr><td>보상 지급</td><td>Pay Reward</td><td>報酬支給</td></tr>
-<tr><td>추첨 실행</td><td>Run Draw</td><td>抽選実行</td></tr>
-<tr><td>강제 종료</td><td>Force End</td><td>強制終了</td></tr>
-<tr><td>다시 불러오기</td><td>Retry</td><td>再読み込み</td></tr>
-<tr><td>검색</td><td>Search</td><td>検索</td></tr>
-<tr><td>필터</td><td>Filter</td><td>フィルター</td></tr>
-<tr><td>정렬</td><td>Sort</td><td>並び替え</td></tr>
-<tr><td>내보내기</td><td>Export</td><td>エクスポート</td></tr>
-<tr><td>닫기</td><td>Close</td><td>閉じる</td></tr>
-<tr><td>취소</td><td>Cancel</td><td>キャンセル</td></tr>
-<tr><td>확인</td><td>Confirm</td><td>確認</td></tr>
-</table>
-<h3>13.2 상태</h3>
-<table>
-<tr><th>KO</th><th>EN</th><th>JP</th></tr>
-<tr><td>임시저장 (Draft)</td><td>Draft</td><td>下書き</td></tr>
-<tr><td>게시대기 (Ready)</td><td>Ready</td><td>公開待機</td></tr>
-<tr><td>진행중 (Active)</td><td>Active</td><td>進行中</td></tr>
-<tr><td>결과 대기 (Pending)</td><td>Pending</td><td>結果待機</td></tr>
-<tr><td>결과 확정 (Closed)</td><td>Closed</td><td>結果確定</td></tr>
-<tr><td>종료 (Ended)</td><td>Ended</td><td>終了</td></tr>
-<tr><td>검수 대기 (Submitted)</td><td>Submitted</td><td>審査待機</td></tr>
-<tr><td>승인됨 (Approved)</td><td>Approved</td><td>承認済み</td></tr>
-<tr><td>반려됨 (Rejected)</td><td>Rejected</td><td>却下済み</td></tr>
-</table>
-<h3>13.3 시스템·메뉴</h3>
-<table>
-<tr><th>KO</th><th>EN</th><th>JP</th></tr>
-<tr><td>백오피스</td><td>Admin</td><td>バックオフィス</td></tr>
-<tr><td>대시보드</td><td>Dashboard</td><td>ダッシュボード</td></tr>
-<tr><td>활동 로그</td><td>Activity Log</td><td>活動ログ</td></tr>
-<tr><td>권한 관리</td><td>Permissions</td><td>権限管理</td></tr>
-<tr><td>운영자</td><td>Operator</td><td>運営者</td></tr>
-<tr><td>정책관리자</td><td>Policy Manager</td><td>ポリシー管理者</td></tr>
-<tr><td>슈퍼관리자</td><td>Super Admin</td><td>スーパー管理者</td></tr>
-<tr><td>외부 권한자</td><td>External Partner</td><td>外部権限者</td></tr>
-<tr><td>변경 이력</td><td>Change History</td><td>変更履歴</td></tr>
-</table>
-<blockquote>
-<p>위 표 외 영역별 라벨(덕력·팬덤레벨·서포트 등)은 [CEB-000] §1 다국어 라벨 매핑을 참조.</p>
-</blockquote>
+<h2>13. 라벨·용어 표준</h2>
+<ul>
+<li>백오피스 화면은 <strong>한국어</strong>로 표기한다. 앱 노출 텍스트의 다국어(한국어·영어·일본어) 라벨은 [CEB-000] §1 다국어 라벨 매핑을 따른다.</li>
+<li><strong>상태 용어 표준</strong>: 임시저장 / 게시대기 / 진행중 / 결과 대기 / 결과 확정 / 종료 / 검수 대기 / 승인됨 / 반려됨.</li>
+<li><strong>액션 버튼 어휘</strong>는 화면 맥락에 맞춰 사용한다(생성·추가·저장·수정·삭제·게시·적용·되돌리기 등). 본 문서는 고정 라벨을 강제하지 않는다.</li></ul>
 <hr>
 <h2>14. 회원 제재 정책</h2>
-<p>위반 행위 적발 시 회원에 대한 제재를 BO에서 운영한다. 모든 제재는 활동 로그 자동 기록.</p>
-<h3>14.1 위반 행위 코드</h3>
-<table>
-<tr><th>코드</th><th>위반 유형</th><th>설명</th><th>기본 제재</th></tr>
-<tr><td><code>V_ABUSE</code></td><td>어뷰징 (다중 계정·자동화)</td><td>동일 인물의 여러 계정 운영, 봇 사용</td><td>영구 정지</td></tr>
-<tr><td><code>V_DUPLICATE</code></td><td>중복 제출·반복 부정</td><td>동일 캡처 반복 제출</td><td>7일 정지 → 영구 정지 (3회 누적)</td></tr>
-<tr><td><code>V_TRANSFER</code></td><td>계정 양도·매매</td><td>응모권·당첨 권리 양도 의심</td><td>영구 정지 + 당첨 취소</td></tr>
-<tr><td><code>V_FRAUD</code></td><td>사기·기망</td><td>허위 정보 입력, 타인 도용</td><td>영구 정지</td></tr>
-<tr><td><code>V_HARASSMENT</code></td><td>괴롭힘·혐오</td><td>기억저장소·댓글 공격</td><td>30일 정지 → 영구 정지</td></tr>
-<tr><td><code>V_INAPPROPRIATE</code></td><td>부적절한 콘텐츠</td><td>음란·폭력·차별 콘텐츠</td><td>게시물 삭제 + 7일 정지</td></tr>
-<tr><td><code>V_COPYRIGHT</code></td><td>저작권 침해</td><td>무단 도용 콘텐츠</td><td>게시물 삭제 + 경고</td></tr>
-<tr><td><code>V_SPAM</code></td><td>스팸·광고</td><td>외부 링크 무단 배포</td><td>게시물 삭제 + 경고</td></tr>
-<tr><td><code>V_OTHER</code></td><td>기타</td><td>운영자 직접 입력</td><td>운영자 판단</td></tr>
-</table>
-<h3>14.2 제재 단계</h3>
-<table>
-<tr><th>제재</th><th>효과</th><th>권한</th></tr>
-<tr><td><strong>경고</strong> (Warning)</td><td>안내 메시지 발송. 제재 이력에만 기록. 서비스 이용 가능</td><td>OPERATOR</td></tr>
-<tr><td><strong>부분 정지</strong> (Partial Restriction)</td><td>특정 기능만 차단 (예: 기억저장소 작성 금지, 댓글 금지)</td><td>OPERATOR</td></tr>
-<tr><td><strong>임시 정지</strong> (Suspension)</td><td>1·7·30·90일 — 로그인 가능하나 활동 차단. 응모권 사용·신규 응모 불가</td><td>OPERATOR (1·7일) / SUPER (30·90일)</td></tr>
-<tr><td><strong>영구 정지</strong> (Permanent Ban)</td><td>로그인 불가. 모든 활동 차단. 보유 자산 소멸</td><td>SUPER만</td></tr>
-<tr><td><strong>당첨 취소</strong></td><td>진행 중·완료된 당첨 권리 회수</td><td>SUPER만</td></tr>
-<tr><td><strong>계정 삭제</strong></td><td>회원 정보 삭제 (개인정보보호법 30일 유예)</td><td>SUPER만</td></tr>
-</table>
-<h3>14.3 제재 처리 절차</h3>
-<pre><code>위반 적발 (자동 탐지·신고·운영자 인지)
-    ↓
-[CEB-BO-USR-201] 회원 상세 → [제재 처리] 버튼
-    ↓
-모달: 위반 코드 선택 + 제재 단계 선택 + 사유 텍스트 (필수, 200자)
-    ↓
-저장 → 즉시 적용 + 회원에게 알림 + 활동 로그 기록
-    ↓
-회원이 이의 제기 시: SUPER 재검토 → 제재 해제 또는 유지 결정
-</code></pre>
-<h3>14.4 제재 해제·복구</h3>
-<table>
-<tr><th>항목</th><th>정책</th></tr>
-<tr><td>자동 해제</td><td>임시 정지는 기간 만료 시 자동 해제</td></tr>
-<tr><td>수동 해제</td><td>SUPER가 [제재 해제] 버튼으로 즉시 해제. 사유 필수</td></tr>
-<tr><td>영구 정지 해제</td><td>SUPER만 가능. 매우 신중하게 — 활동 로그에 해제 사유 상세 기록</td></tr>
-<tr><td>당첨 권리 복구</td><td>잘못된 제재로 당첨 취소된 경우 SUPER가 수동 복구</td></tr>
-<tr><td>보유 자산 복구</td><td>영구 정지 시 소멸된 응모권·덕력은 해제 시 자동 복구되지 않음 (별도 운영 결정)</td></tr>
-</table>
-<h3>14.5 제재 이력 조회</h3>
-<ul>
-<li>모든 제재는 회원 상세 화면([CEB-BO-USR-201])의 [제재 이력] 탭에서 회원별로 조회</li>
-<li>활동 로그와 별도로 제재 이력 전용 보관 (3년)</li></ul>
+<p>회원 위반 행위·제재 단계·처리 절차·제재 이력은 <strong>회원(USR) 영역</strong>에서 운영한다 — [CEB-BO-002] 회원 영역 가이드 / [CEB-BO-USR-201] 회원 상세 [제재] 참조.</p>
 <hr>
 <h2>15. 외부 지갑·정산 정책</h2>
-<p>CELB ↔ GP 교환·외부 지갑 관리 정책. v1 BO-GAM/[CEB-BO-GZ-501·502·503] 패턴 차용.</p>
-<h3>15.1 지갑 유형</h3>
-<table>
-<tr><th>유형</th><th>용도</th><th>비고</th></tr>
-<tr><td><strong>충전용 지갑</strong></td><td>사용자 → CELB 입금 받음 (GP 전환의 입구)</td><td>1개 이상 등록 가능</td></tr>
-<tr><td><strong>출금용 지갑</strong></td><td>사용자에게 CELB 송금 (GP → CELB 출금)</td><td>1개 이상 등록 가능</td></tr>
-<tr><td><strong>대표 지갑</strong></td><td>각 유형별 1개. 신규 거래 기본 사용</td><td>변경 가능, 활동 로그 기록</td></tr>
-</table>
-<h3>15.2 지갑 등록·관리</h3>
-<table>
-<tr><th>항목</th><th>정책</th></tr>
-<tr><td>등록 권한</td><td>SUPER만 가능</td></tr>
-<tr><td>입력 정보</td><td>이름·유형(충전/출금)·주소·Private Key (암호화 저장)</td></tr>
-<tr><td>Private Key 저장</td><td><strong>암호화 저장 + DB 분리 보관</strong>. BO 화면에서는 마스킹 (<code>0x...<em>*</em>*...</code>)</td></tr>
-<tr><td>Private Key 조회</td><td>SUPER만 가능. 조회 시 2FA 추가 인증 + 활동 로그 기록</td></tr>
-<tr><td>잔액 표시</td><td>실시간 BNB·CELB 잔고 표시. 5분마다 자동 갱신</td></tr>
-<tr><td>비활성화</td><td>거래 중단 시 비활성화 가능. 잔액 0 또는 다른 지갑으로 이체 후</td></tr>
-</table>
-<h3>15.3 잔고 경고</h3>
-<table>
-<tr><th>시나리오</th><th>경고</th></tr>
-<tr><td>BNB 잔고 &lt; 0.01 BNB</td><td>빨간 경고 + 슈퍼관리자에게 푸시 알림 (가스비 부족)</td></tr>
-<tr><td>출금용 CELB 잔고 &lt; 일일 평균 출금량의 3배</td><td>주황 경고 + 운영자 노티</td></tr>
-<tr><td>충전용 지갑 폭증 (시간당 거래 수 평균 ×3 초과)</td><td>의심 거래 알림</td></tr>
-</table>
-<h3>15.4 교환 정책</h3>
-<table>
-<tr><th>항목</th><th>기본 정책</th><th>조정 권한</th></tr>
-<tr><td>교환 비율 (CELB↔GP)</td><td>1 CELB = 1,000 GP (예시)</td><td>POLICY 변경 가능</td></tr>
-<tr><td>일일 출금 한도 (1인당)</td><td>100,000 GP 상당</td><td>POLICY 변경 가능</td></tr>
-<tr><td>주간 출금 한도 (1인당)</td><td>500,000 GP 상당</td><td>POLICY 변경 가능</td></tr>
-<tr><td>최소 출금 단위</td><td>10,000 GP</td><td>POLICY 변경 가능</td></tr>
-<tr><td>출금 수수료</td><td>1% (가스비 별도)</td><td>POLICY 변경 가능</td></tr>
-<tr><td>교환 검증</td><td>KYC 인증 회원만 출금 가능</td><td>정책 고정</td></tr>
-</table>
-<h3>15.5 정산 워크플로우</h3>
-<pre><code>사용자 출금 요청 (앱)
-    ↓
-BO 자동 검증 (잔고·한도·KYC)
-    ↓
-검증 통과 → 출금 큐에 적재
-    ↓
-일괄 출금 실행 (일 1회·UTC 02:00 기준 / SUPER 수동 트리거 가능)
-    ↓
-트랜잭션 발송 → 블록 컨펌 대기
-    ↓
-완료 → 사용자 알림 + 활동 로그
-</code></pre>
-<h3>15.6 변동 내역 조회</h3>
-<ul>
-<li>CEB-BO-GZ-601 패턴 차용. 모든 GP·CELB 거래 내역 시계열 조회.</li>
-<li>필터: 회원·유형·기간·금액 범위</li>
-<li>내보내기: CSV (SUPER 전용, 감사 대비)</li></ul>
+<p>CELB ↔ GP 교환·외부 지갑·출금 정산은 <strong>게임존(GP 교환소) 영역</strong>에서 운영한다 — [CEB-BO-GZ-000] / [CEB-BO-GZ-503] 지갑 관리 참조. (게임존은 현재 운영 휴면.)</p>
 <hr>
 <h2>16. BO 푸시·알림 정책</h2>
-<p>BO에서 회원에게 발송하는 푸시·앱 알림 운영 정책.</p>
-<h3>16.1 발송 권한</h3>
-<table>
-<tr><th>발송 유형</th><th>권한</th><th>비고</th></tr>
-<tr><td>자동 푸시 (시스템 트리거)</td><td>자동</td><td>검수 승인·당첨·보상 지급 등 — 시스템이 자동 발송</td></tr>
-<tr><td>수동 푸시 (캠페인)</td><td>SUPER + POLICY</td><td>캠페인 안내·이벤트 알림 등 — 운영자 수동 발송</td></tr>
-<tr><td>긴급 공지 푸시</td><td>SUPER만</td><td>점검·장애·보안 등</td></tr>
-</table>
-<p>OPERATOR는 <strong>자동 푸시만</strong> (검수 승인 시 자동 발송). 임의 캠페인 푸시 발송 권한 없음.</p>
-<h3>16.2 푸시 메시지 템플릿</h3>
-<table>
-<tr><th>시나리오</th><th>템플릿 (KO)</th><th>영역</th></tr>
-<tr><td>팬퀘스트 검수 승인</td><td>"팬퀘스트 '{타이틀}' 승인! 응모권 {N}장 + 디지털 포토카드 1장이 지급됐어요 🎁"</td><td>에피소드</td></tr>
-<tr><td>팬퀘스트 검수 반려</td><td>"팬퀘스트 제출이 반려됐어요. 사유: {반려사유 메시지}. 다시 제출해보세요!"</td><td>에피소드</td></tr>
-<tr><td>래플 당첨</td><td>"🎉 {래플 명} 당첨을 축하드려요! 자세한 안내는 메일을 확인하세요"</td><td>래플</td></tr>
-<tr><td>덕력 적립</td><td>"덕력 +{N}DUK 획득! 현재 잔액: {잔액}DUK"</td><td>덕력관리</td></tr>
-<tr><td>팬덤 레벨업</td><td>"🎊 {아티스트명} 팬덤이 Lv.{N}에 도달했어요! 보상을 확인하세요"</td><td>팬덤레벨</td></tr>
-<tr><td>서포트 이벤트 달성</td><td>"🎉 '{이벤트명}' 응원 목표 달성! 결과물이 곧 공개돼요"</td><td>서포트</td></tr>
-<tr><td>응모권 만료 안내</td><td>"보유 응모권 {N}장이 곧 만료돼요. ({만료일}까지)"</td><td>응모권</td></tr>
-</table>
-<p>각 템플릿은 KO/EN/JP 3언어 동시 작성 (<code>§5</code> 적용). 변수 <code>{N}·{타이틀}</code> 등은 발송 시점에 치환.</p>
-<h3>16.3 수동 푸시 발송 절차</h3>
-<p>수동 푸시·앱 알림은 [앱 &gt; 알림 관리] 영역에서 작성·발송한다. 작성 화면은 [CEB-BO-APP-302] 알림 상세·작성, 반복 문구는 [CEB-BO-APP-303] 알림 템플릿 관리를 사용한다.</p>
-<pre><code>[CEB-BO-APP-302] 알림 상세·작성
-    ↓
-대상 선정 (전체·아티스트별·등급별·기간 활동·태그 등)
-    ↓
-메시지 입력 (KO/EN/JP 3언어 + 클릭 시 이동 링크)
-    ↓
-미리보기 (모바일 화면 시뮬레이션)
-    ↓
-발송 시점 (즉시 발송 / 예약 발송)
-    ↓
-[발송] → 2차 확인 모달 → 최종 발송
-    ↓
-발송 결과 자동 집계 (수신·표시·클릭 수)
-</code></pre>
-<h3>16.4 발송 한도·SPAM 방지</h3>
-<table>
-<tr><th>항목</th><th>정책</th></tr>
-<tr><td>회원당 푸시 한도</td><td>1일 최대 5회 (시스템 자동 + 캠페인 합산)</td></tr>
-<tr><td>캠페인 푸시 한도</td><td>1일 1회 (전체 발송 기준)</td></tr>
-<tr><td>야간 발송 차단</td><td>22:00~08:00 KST 발송 차단 (긴급 공지 제외)</td></tr>
-<tr><td>수신 거부</td><td>회원이 푸시 알림 끄기 가능 (시스템 알림은 강제 발송)</td></tr>
-<tr><td>다국어 매칭</td><td>회원 앱 언어 설정에 따라 자동 매칭 발송</td></tr>
-</table>
-<h3>16.5 발송 로그</h3>
+<p>회원 대상 푸시·앱 알림의 발송 권한·대상·메시지·발송 로그는 <strong>앱 알림 영역</strong>에서 관리한다 — 작성 [CEB-BO-APP-302], 템플릿 [CEB-BO-APP-303], 발송 로그 조회 [CEB-BO-APP-301].</p>
 <ul>
-<li>모든 푸시 발송은 로그 보관 (3년)</li>
-<li>로그 항목: 발송 시각·발송자(시스템 또는 운영자 이메일)·대상 수·수신 성공/실패·클릭률</li>
-<li>전체 발송 로그는 [CEB-BO-APP-301] 알림 관리에서 조회 (최고 권한 그룹)</li></ul>
-<h3>16.6 발송 실패 재시도</h3>
-<table>
-<tr><th>실패 유형</th><th>재시도</th></tr>
-<tr><td>일시적 네트워크 오류</td><td>자동 재시도 (3회, 지수 백오프)</td></tr>
-<tr><td>토큰 만료</td><td>자동 토큰 갱신 후 재시도</td></tr>
-<tr><td>회원 비활성·탈퇴</td><td>재시도 안 함. 로그에 "수신 불가" 기록</td></tr>
-<tr><td>FCM/APNs 오류</td><td>운영자 알림 + SUPER 검토</td></tr>
-</table>
+<li>자동 푸시(검수 승인·당첨·보상 지급 등)는 시스템이 발송한다.</li>
+<li>캠페인·긴급 공지 등 수동 발송은 알림 작성 화면에서 처리한다.</li></ul>
 <hr>
 <h2>17. 미디어 업로드 규격</h2>
-<p>BO에서 등록하는 이미지·영상·파일의 표준 규격.</p>
-<h3>17.1 이미지 업로드</h3>
+<p>BO 이미지 업로드 공통 규격.</p>
 <table>
 <tr><th>항목</th><th>정책</th></tr>
-<tr><td>지원 포맷</td><td>JPG / PNG / WebP / SVG (벡터)</td></tr>
-<tr><td>최대 용량</td><td>10 MB (배너·포스터) / 5 MB (일반) / 2 MB (썸네일·아이콘)</td></tr>
-<tr><td>권장 해상도</td><td>화면 명세서별 명시. 일반: 1080×1080 (정사각) / 1080×1920 (세로) / 1920×1080 (가로)</td></tr>
-<tr><td>자동 리사이징</td><td>업로드 시 썸네일 자동 생성 (300×300, 600×600)</td></tr>
-<tr><td>자동 압축</td><td>JPG 품질 85, PNG 무손실 최적화</td></tr>
-<tr><td>알파 채널</td><td>PNG·WebP·SVG는 투명 배경 지원</td></tr>
-<tr><td>메타데이터</td><td>EXIF 자동 제거 (개인정보 보호)</td></tr>
+<tr><td>지원 포맷</td><td>JPG / PNG / WebP</td></tr>
+<tr><td>최대 용량</td><td>5MB</td></tr>
+<tr><td>비율</td><td>화면별 지정 (정사각 1:1 / 가로 16:9 등)</td></tr>
+<tr><td>업로드 방식</td><td>클릭 또는 드래그&amp;드롭</td></tr>
+<tr><td>검증</td><td>형식·용량 위반 시 토스트(Error)로 안내 후 거부</td></tr>
 </table>
-<h3>17.2 영상 업로드</h3>
-<table>
-<tr><th>항목</th><th>정책</th></tr>
-<tr><td>지원 포맷</td><td>MP4 (H.264 + AAC) / MOV</td></tr>
-<tr><td>최대 용량</td><td>100 MB (홍보영상·릴스용)</td></tr>
-<tr><td>최대 길이</td><td>60초 (BO 직접 업로드). 더 긴 영상은 외부 CDN URL 등록 권장</td></tr>
-<tr><td>권장 해상도</td><td>1080×1920 (세로 9:16) / 1920×1080 (가로 16:9)</td></tr>
-<tr><td>자동 썸네일</td><td>영상 첫 프레임 자동 캡처</td></tr>
-<tr><td>자동 트랜스코딩</td><td>다양한 해상도 변환 (480p·720p·1080p)</td></tr>
-</table>
-<h3>17.3 파일 업로드 (문서·CSV 등)</h3>
-<table>
-<tr><th>항목</th><th>정책</th></tr>
-<tr><td>지원 포맷</td><td>PDF·CSV·XLSX·TXT·JSON</td></tr>
-<tr><td>최대 용량</td><td>50 MB</td></tr>
-<tr><td>보안 검사</td><td>업로드 시 자동 바이러스 스캔</td></tr>
-<tr><td>보관 기간</td><td>영구 (또는 운영자 수동 삭제까지)</td></tr>
-</table>
-<h3>17.4 업로드 동작</h3>
-<table>
-<tr><th>시나리오</th><th>처리</th></tr>
-<tr><td>업로드 중</td><td>진행률 바 + 취소 버튼</td></tr>
-<tr><td>업로드 실패</td><td>토스트(Error) "업로드 실패. 다시 시도하세요" + 자동 재시도 1회</td></tr>
-<tr><td>용량 초과</td><td>토스트(Error) "최대 {N}MB까지 가능합니다" + 업로드 차단</td></tr>
-<tr><td>포맷 불일치</td><td>토스트(Error) "지원하지 않는 파일 형식입니다 ({지원 목록})"</td></tr>
-<tr><td>보안 검사 실패</td><td>토스트(Error) "보안 위험이 감지됐습니다. 운영진에 문의하세요" + 운영진 자동 알림</td></tr>
-<tr><td>중복 업로드</td><td>"동일한 파일이 이미 등록돼 있어요. 그래도 등록할까요?" 확인 모달</td></tr>
-</table>
+<blockquote>
+<p>서버측 자동 리사이징·압축·EXIF 제거, 영상·문서 파일 업로드는 <strong>향후 구현 대상</strong>.</p>
+</blockquote>
 <hr>
 <h2>18. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v2.3</strong></td><td>2026-06-03</td><td>@Nill Yoo</td><td><strong>근거 없는 투기 운영정책 정리 + 프로토타입 정합 (§1~§17 검토)</strong>. ① §6 활동 로그 상세 → [CEB-BO-SYS-601] 위임·축약 ② §8 토스트·§9.3 모달 동작을 프로토타입 기준으로 정합(Error 5초·z-index 9999·ESC·배경클릭 차단옵션 제거), §9.4 특화 모달 투기 세부 삭제 → 영역 화면 참조 ③ §10 검수 워크플로우·SLA·운영자 인계·반려사유 코드 삭제 → 영역 가이드/[CEB-BO-SQ-501] 위임 ④ §11 자산 정의 표·§12.3~12.5(자동저장·동시수정·삭제복구) 삭제(미구현) ⑤ §13 다국어 라벨 영어·일본어 표 정리(BO 한국어 기준) ⑥ §14 회원 제재 → 회원(USR) 영역, §15 외부 지갑·정산 → 게임존 영역, §16 푸시 → 앱 알림 영역 위임 ⑦ §17 미디어 업로드 프로토타입 정합(JPG/PNG/WebP·5MB, SVG·영상·파일·서버처리 제거) ⑧ 다국어 코드 표기 한국어 통일. 미구현·추측 내용 제거로 디자이너·개발자·기획자 혼란 방지.</td></tr>
 <tr><td><strong>v2.2</strong></td><td>2026-06-03</td><td>@Nill Yoo</td><td><strong>기억저장소 미구현 신고 참조 정리 + 커스텀 이미지 명시</strong> — ① §1.2 MEM 영역 행에 "유니코드/커스텀 이미지" 명시 ② §12.5 삭제 복구 표에서 "기억저장소 신고 처리" 행 제거(BO 신고 처리 미구현) ③ §10.5 반려사유 <code>INAPPROPRIATE</code> 비고 "콘텐츠·기억 신고" → "콘텐츠". 감정 이모지(구현)/신고·차단(추후)로 [CEB-BO-MEM-000]·[CEB-000]과 정합.</td></tr>
 <tr><td><strong>v2.1</strong></td><td>2026-06-02</td><td>@Nill Yoo</td><td><strong>기억저장소(MEM) 영역 재등재</strong> — 프로토타입에 기억저장소 메뉴(감정 이모지 관리)가 신설되어 §1.2 영역 표에 기억저장소(MEM, [CEB-BO-MEM-000]) 행 추가. 첫 화면 [CEB-BO-MEM-501] 감정 이모지 관리(아티스트별 세트). 신고·차단은 후속.</td></tr>
 <tr><td><strong>v2.0</strong></td><td>2026-06-02</td><td>@Nill Yoo</td><td><strong>현재 백오피스 메뉴·작성 문서 기준으로 전면 정합</strong>. ① §1.2 영역 표를 실제 노출 메뉴(회원·아티스트·앱·BIVE·게임존·에피소드·래플·관리자) 기준으로 재작성 — 문서·화면이 없는 FQ·DUK·HOM 제거(FQ→에피소드+래플, 덕력→아티스트 덕력관리, 홈 배너→앱), 프로토타입 메뉴 없는 기억저장소·디지털 굿즈 제외 ② §3·§4 4단계 고정 권한 표·매트릭스 제거 → 권한 그룹 기반([CEB-BO-SYS-102]·[CEB-BO-SYS-202]·[CEB-BO-SYS-501])으로 위임 ③ 본문 화면 ID 정합·제거 — 검수=에피소드([CEB-BO-SQ-304]·[CEB-BO-SQ-501]), 추첨=[CEB-BO-RFL-203], 덕력 내역=[CEB-BO-ART-401-HISTORY], 응모권=[CEB-BO-RFT-201], 푸시=[CEB-BO-APP-302](구 푸시 발송 화면), 미디어 자산 라이브러리·통합 제재 이력·독점 콘텐츠 해금 등 미구현 항목 삭제 ④ 대시보드(구 §17) 삭제 — 화면 미확정</td></tr>
-<tr><td>v1.0</td><td>2026.05.05</td><td>@Nill Yoo</td><td>초안 작성. v2 백오피스 공통 정책 정의서. ① §1 BO 8개 영역 (FQ·DUK·EVT·SUP·INF·MEM·COL·HOM) ② §2 화면 ID 체계 <code>CEB-BO-{서비스}-{번호}</code> ③ §3 권한 4단계 (<code>SUPER</code>·<code>OPERATOR</code>·<code>POLICY</code>·<code>EXTERNAL_ARTIST</code>) + IP·시간대 제한 ④ §4 권한·역할 매트릭스 (8개 영역 × 4개 권한 × CRUD) ⑤ §5 다국어 입력 정책 (KO/EN/JP 동시 필수, 임시저장 예외, AI 번역 보조) ⑥ §6 관리자 활동 로그 표준 (필수 필드·영역별 메시지 템플릿·append-only·3년 보관) ⑦ §7 공통 UI 상태 (List·Detail·Form·Modal × Loading·Default·Empty·Error·Disabled) ⑧ §8 공통 토스트 규격 ([CEB-000] 동일 적용) ⑨ §9 공통 모달 규격 (확인·삭제·반려·결과·지급·수정 취소) ⑩ §10 검수·승인 워크플로우 (Quest·콘텐츠·Raffle·서포트) ⑪ §11 발급·관리 자산 정의 (덕력·응모권·BIVE·포토카드·독점 콘텐츠·뱃지) ⑫ §12 에러 처리·예외 상황 표준 ⑬ §13 다국어 라벨 매핑 (액션·상태·시스템 메뉴). 게임존 BO-GZ-000 패턴 차용 + v2 신규 8개 영역 통합</td></tr>
+<tr><td>v1.0</td><td>2026.05.05</td><td>@Nill Yoo</td><td>초안 작성. v2 백오피스 공통 정책 정의서. ① §1 BO 8개 영역 (FQ·DUK·EVT·SUP·INF·MEM·COL·HOM) ② §2 화면 ID 체계 <code>CEB-BO-{서비스}-{번호}</code> ③ §3 권한 4단계 (<code>SUPER</code>·<code>OPERATOR</code>·<code>POLICY</code>·<code>EXTERNAL_ARTIST</code>) + IP·시간대 제한 ④ §4 권한·역할 매트릭스 (8개 영역 × 4개 권한 × CRUD) ⑤ §5 다국어 입력 정책 (한국어·영어·일본어 동시 필수, 임시저장 예외, AI 번역 보조) ⑥ §6 관리자 활동 로그 표준 (필수 필드·영역별 메시지 템플릿·append-only·3년 보관) ⑦ §7 공통 UI 상태 (List·Detail·Form·Modal × Loading·Default·Empty·Error·Disabled) ⑧ §8 공통 토스트 규격 ([CEB-000] 동일 적용) ⑨ §9 공통 모달 규격 (확인·삭제·반려·결과·지급·수정 취소) ⑩ §10 검수·승인 워크플로우 (Quest·콘텐츠·Raffle·서포트) ⑪ §11 발급·관리 자산 정의 (덕력·응모권·BIVE·포토카드·독점 콘텐츠·뱃지) ⑫ §12 에러 처리·예외 상황 표준 ⑬ §13 다국어 라벨 매핑 (액션·상태·시스템 메뉴). 게임존 BO-GZ-000 패턴 차용 + v2 신규 8개 영역 통합</td></tr>
 <tr><td><strong>v1.1</strong></td><td>2026.05.05</td><td>@Nill Yoo</td><td><strong>v1 BO 60개 화면 명세 갭 분석 반영 — P0+P1+P2 풀세트 보강</strong>. ① <strong>AI 번역 보조 §5.2 제거</strong> (사용자 결정 — 도입 보류) ② <strong>§5.2 신설 — 글자수 제한 필드 기준 표</strong> (타이틀 50자·설명 500자·반려사유 200자 등 10종 표준 + 검증 정책) ③ <strong>§9.4 신설 — 특화 모달 4종</strong> (결과 입력·반려사유 선택·수정 취소·추첨 실행 — v1 BO-GZ-202-MD-RESULT, BO-FQ-202-MD-REJECT, BO-FQ-206-MD-DRAW 패턴 차용) ④ <strong>§10.5 신설 — 반려사유 코드 체계</strong> (10종 표준 코드 + 다국어 메시지 + 추가/수정/비활성화 정책) ⑤ <strong>§10.6 신설 — 검수 SLA·인계 정책</strong> (평일 09:30~18:30 KST·24시간 처리·운영자 인계 노트·일괄 처리 한도·샘플링 감사) ⑥ <strong>§12.3~12.5 신설</strong> — 임시저장 자동 복구 (7일 보관) / 동시 수정 충돌 처리 (version 비교) / 삭제 복구 정책 (영역별 30~90일) ⑦ <strong>§14 신설 — 회원 제재 정책</strong> (위반 행위 9종 코드·6단계 제재·해제·복구·이력) ⑧ <strong>§15 신설 — 외부 지갑·정산 정책</strong> (충전/출금 지갑·PK 암호화·잔고 경고·교환 비율·한도·정산 워크플로우) ⑨ <strong>§16 신설 — BO 푸시·알림 정책</strong> (자동/수동/긴급·메시지 템플릿 7종·발송 한도·재시도) ⑩ <strong>§17 신설 — BO 대시보드·진입 화면</strong> (4개 권한별 다른 KPI·할 일·알림 + 위젯 사용자 정의) ⑪ <strong>§18 신설 — 미디어 업로드 규격</strong> (이미지·영상·파일 포맷·용량·자동 압축·보안 검사·자산 라이브러리). 챕터 14개 → <strong>18개 + 변경 이력</strong>으로 확장. 화면 명세 작성 전 정책 완성도 80% → 95% 향상</td></tr>
 <tr><td><strong>v1.2</strong></td><td>2026.05.05</td><td>@Nill Yoo</td><td><strong>§1.2 영역 표 8개 → 12개로 확장</strong>. v1 기존 BO 영역(회원·아티스트·BIVE·관리자)을 v2 정책으로 흡수하며 4영역 추가: ① <strong>USR (회원)</strong> — 8탭 회원 상세·검색·필터·제재·자산 회수 ② <strong>ART (아티스트)</strong> — 그룹·멤버·소속사·포지션 + <code>EXTERNAL_ARTIST</code> 1:N 매핑 + 활동 통계 탭 ③ <strong>BIVE (NFT)</strong> — <code>COL</code>(디지털 굿즈)에서 분리. 에디션·BIVE·민팅 캠페인·혜택 4서브 영역 + Quest·Raffle 자동 민팅 연결 ④ <strong>SYS (관리자)</strong> — 4단계 + 그룹 하이브리드 권한 + 활동 로그 통합 조회. 영역별 가이드 [CEB-BO-002]·[CEB-BO-003]·[CEB-BO-004]·[CEB-BO-005]에서 상세. 동기화: [CEB-BO-001] §2 12영역 매핑 표.</td></tr>
 <tr><td><strong>v1.3</strong></td><td>2026.05.07</td><td>@Nill Yoo</td><td><strong>§1.2 영역 표 12개 → 13개로 확장 + 멀티아티스트 운영 정책 마스터 연계</strong>. 신규 영역 1종 추가: <strong>RFT (응모권)</strong> — 출처(팬퀘스트·게임존 GP·BIVE 보유 혜택·일일미션 등) 통합 자산 영역. 발급·보유·사용·만료·환수 라이프사이클 + 출처별 통계 메타. 사이드바 위치 = BIVE 직후 (자산 영역 그룹). 영역 가이드 = [CEB-BO-010]. 화면 ID = [CEB-BO-RFT-101/201/301/401/501] + [CEB-BO-FQ-301]은 [CEB-BO-RFT-201]로 이전 처리. 멀티아티스트 운영 마스터 = [CEB-BO-100] (영향 등급: 🟡 Info — 전역 + 발급 출처 메타). 동기화: [CEB-BO-001] §2 13영역 매핑 표 + CLAUDE.md 영역 목록 갱신.</td></tr>
