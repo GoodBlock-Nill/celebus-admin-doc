@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
-import { MISSION_TARGETS, type DailyMission } from '@/mock/dailyMission';
+import { MISSION_TARGETS, isTargetComingSoon, type DailyMission } from '@/mock/dailyMission';
 import type { MissionInput } from '@/stores/dailyMissionStore';
 
 const LANGS = ['KO', 'EN', 'JA'] as const;
@@ -39,7 +39,10 @@ export default function MissionFormModal({ mode, mission, missions, onClose, onS
     targetScreen.length > 0 &&
     missions.some((m) => m.targetScreen === targetScreen && m.id !== mission?.id);
 
+  const targetComingSoon = targetScreen.length > 0 && isTargetComingSoon(targetScreen);
+
   const allLangLabelFilled = label.KO.trim() && label.EN.trim() && label.JA.trim();
+  // 준비 중 대상은 저장 허용(사전 등록) — 중복만 차단
   const canSubmit = !!allLangLabelFilled && targetScreen.length > 0 && !duplicateTarget;
 
   const handleSubmit = () => {
@@ -123,13 +126,16 @@ export default function MissionFormModal({ mode, mission, missions, onClose, onS
               >
                 <option value="">이동 대상 선택</option>
                 {MISSION_TARGETS.map((t) => (
-                  <option key={t.id} value={t.id}>{t.label}</option>
+                  <option key={t.id} value={t.id}>{t.label}{t.comingSoon ? ' (준비 중)' : ''}</option>
                 ))}
               </select>
               <ChevronUpDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
             {duplicateTarget && (
               <p className="text-xs text-rose-600 mt-1.5">이미 같은 이동 대상을 사용하는 미션이 있습니다. 다른 대상을 선택하세요.</p>
+            )}
+            {!duplicateTarget && targetComingSoon && (
+              <p className="text-xs text-amber-600 mt-1.5">앱 노출 전까지 이 미션은 매일 미션 선택에서 제외됩니다.</p>
             )}
             <p className="text-[11px] text-gray-500 mt-1">회원이 미션 카드를 누르면 이동하는 앱 화면입니다. 1회 진입 시 미션 완료로 처리됩니다.</p>
           </div>

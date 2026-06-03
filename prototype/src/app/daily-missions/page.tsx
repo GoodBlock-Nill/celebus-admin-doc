@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PlusIcon, PencilSquareIcon, TrashIcon, ClockIcon } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/layout/PageHeader';
 import { toast } from '@/components/ui/Toast';
@@ -24,6 +24,7 @@ export default function DailyMissionsPage() {
   // 모달 상태
   const [missionModal, setMissionModal] = useState<{ mode: 'add' | 'edit'; mission?: DailyMission } | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<DailyMission | null>(null);
+  const [toggleZeroTarget, setToggleZeroTarget] = useState<DailyMission | null>(null); // 마지막 사용 미션 미사용 전환 확인
   const [saveConfirmOpen, setSaveConfirmOpen] = useState(false);
 
   // 검증
@@ -45,7 +46,31 @@ export default function DailyMissionsPage() {
     attendanceNum !== settings.attendanceReward ||
     missionRewardNum !== settings.missionReward;
   const streakChanged = streak.some((m) => Number(streakInput[m.days]) !== m.reward);
-  const canSave = allValid && (settingsChanged || streakChanged);
+  const hasUnsaved = settingsChanged || streakChanged;
+  const canSave = allValid && hasUnsaved;
+
+  const activeCount = missions.filter((m) => m.active).length;
+  // 수급 경고: 하루 제시 수가 사용 중인 미션 수보다 큼
+  const supplyWarning =
+    isDailyCountValid && dailyCountNum > activeCount
+      ? `사용 중인 미션이 ${activeCount}건이라 매일 최대 ${activeCount}건만 제시됩니다.`
+      : undefined;
+  // 0 보상 안내
+  const zeroRewardCaution =
+    (isAttendanceValid && attendanceNum === 0) || (isMissionRewardValid && missionRewardNum === 0)
+      ? '출석/일일미션 보상이 0 덕력입니다(보상 없이 동작).'
+      : '';
+
+  // 미저장 이탈 가드 (브라우저 새로고침·닫기·외부 이동)
+  useEffect(() => {
+    if (!hasUnsaved) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [hasUnsaved]);
 
   const confirmMessage = useMemo(() => {
     const lines: string[] = [];
@@ -60,8 +85,9 @@ export default function DailyMissionsPage() {
       if (next !== m.reward)
         lines.push(`연속 ${m.days}일 보너스를 ${m.reward} → ${next} 덕력으로 변경합니다.`);
     });
+    if (zeroRewardCaution) lines.push(`\n⚠ ${zeroRewardCaution}`);
     return lines.join('\n');
-  }, [dailyCountNum, attendanceNum, missionRewardNum, streakInput, settings, streak]);
+  }, [dailyCountNum, attendanceNum, missionRewardNum, streakInput, settings, streak, zeroRewardCaution]);
 
   const handleSaveConfirm = () => {
     saveSettings({
@@ -92,7 +118,18 @@ export default function DailyMissionsPage() {
     setDeleteTarget(null);
   };
 
-  const activeCount = missions.filter((m) => m.active).length;
+  // 사용여부 토글 — 마지막 사용 미션을 미사용으로 끄면 확인
+  const doToggle = (id: number) => {
+    const next = toggleMissionActive(id);
+    toast.success(next ? '미션을 사용으로 전환했습니다.' : '미션을 미사용으로 전환했습니다.');
+  };
+  const handleToggleClick = (m: DailyMission) => {
+    if (m.active && activeCount === 1) {
+      setToggleZeroTarget(m);
+      return;
+    }
+    doToggle(m.id);
+  };
 
   return (
     <div>
@@ -125,6 +162,7 @@ export default function DailyMissionsPage() {
             valid={isDailyCountValid}
             error="1 이상의 정수만 입력 가능합니다."
             hint="미션 풀에서 매일 자동 선택해 제시하는 미션 개수."
+            warning={supplyWarning}
           />
           <NumberField
             label="출석 체크 보상"
@@ -194,10 +232,7 @@ export default function DailyMissionsPage() {
                 <td className="px-4 py-3 text-center">
                   <button
                     type="button"
-                    onClick={() => {
-                      const next = toggleMissionActive(m.id);
-                      toast.success(next ? '미션을 사용으로 전환했습니다.' : '미션을 미사용으로 전환했습니다.');
-                    }}
+                    onClick={() => handleToggleClick(m)}
                     className="inline-flex items-center cursor-pointer"
                     aria-label="사용여부 전환"
                   >
@@ -277,11 +312,30 @@ export default function DailyMissionsPage() {
       {deleteTarget && (
         <ConfirmModal
           title="미션을 삭제하시겠어요?"
-          message={`'${deleteTarget.labelKO}' 미션을 미션 풀에서 삭제합니다. 삭제 후에는 그날의 미션 선택 대상에서 제외됩니다.`}
+          message={
+            `'${deleteTarget.labelKO}' 미션을 미션 풀에서 삭제합니다. 다음날 미션 선택부터 제외되며, 오늘 이미 배정된 회원의 미션은 유지됩니다.` +
+            (deleteTarget.active && activeCount === 1
+              ? '\n\n⚠ 삭제 후 사용 중인 미션이 0건이 되어 앱에 일일미션이 표시되지 않습니다.'
+              : '')
+          }
           confirmLabel="삭제하기"
           size="sm"
           onCancel={() => setDeleteTarget(null)}
           onConfirm={handleDelete}
+        />
+      )}
+
+      {toggleZeroTarget && (
+        <ConfirmModal
+          title="미사용으로 전환하시겠어요?"
+          message={`'${toggleZeroTarget.labelKO}'을(를) 미사용으로 전환하면 사용 중인 미션이 0건이 되어 앱에 일일미션이 표시되지 않습니다. 계속할까요?`}
+          confirmLabel="전환하기"
+          size="sm"
+          onCancel={() => setToggleZeroTarget(null)}
+          onConfirm={() => {
+            doToggle(toggleZeroTarget.id);
+            setToggleZeroTarget(null);
+          }}
         />
       )}
 
@@ -300,7 +354,7 @@ export default function DailyMissionsPage() {
 }
 
 function NumberField({
-  label, suffix, value, onChange, valid, error, hint,
+  label, suffix, value, onChange, valid, error, hint, warning,
 }: {
   label: string;
   suffix: string;
@@ -309,6 +363,7 @@ function NumberField({
   valid: boolean;
   error: string;
   hint?: string;
+  warning?: string;
 }) {
   return (
     <div>
@@ -327,7 +382,8 @@ function NumberField({
         <span className="text-sm text-gray-600 shrink-0">{suffix}</span>
       </div>
       {!valid && <p className="text-xs text-rose-600 mt-1">{error}</p>}
-      {hint && valid && <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">{hint}</p>}
+      {valid && warning && <p className="text-xs text-amber-600 mt-1 leading-relaxed">{warning}</p>}
+      {hint && valid && !warning && <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">{hint}</p>}
     </div>
   );
 }

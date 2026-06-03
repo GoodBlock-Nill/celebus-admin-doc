@@ -15,18 +15,27 @@ export interface DailyMission {
 }
 
 // 이동 대상 후보 — [CEB-FQ-501] 미션 풀 8종의 이동 대상 앱 화면
-export const MISSION_TARGETS: { id: string; label: string }[] = [
+// comingSoon: 앱 미오픈(준비 중) 대상. 미션 등록은 가능하나 노출 전까지 미션 선택에서 자동 제외.
+//   실제 가용성은 운영 데이터 기준이며, 아래 플래그는 프로토타입 시연용 예시값이다.
+export interface MissionTarget {
+  id: string;
+  label: string;
+  comingSoon?: boolean;
+}
+
+export const MISSION_TARGETS: MissionTarget[] = [
   { id: 'CEB-ART-101', label: '아티스트 메인' },
   { id: 'CEB-GAM-101', label: '게임존 메인' },
   { id: 'CEB-MEM-101', label: '기억저장소' },
   { id: 'CEB-DUK-101', label: '덕력 랭킹' },
   { id: 'CEB-EVT-101', label: '래플 리스트' },
-  { id: 'CEB-COL-101', label: '컬렉션 메인' },
+  { id: 'CEB-COL-101', label: '컬렉션 메인', comingSoon: true }, // 예시: 준비 중
   { id: 'CEB-DUK-201', label: '서포트 이벤트' },
   { id: 'CEB-INF-101', label: '정보 피드' },
 ];
 
 export const targetLabel = (id: string) => MISSION_TARGETS.find((t) => t.id === id)?.label ?? id;
+export const isTargetComingSoon = (id: string) => MISSION_TARGETS.find((t) => t.id === id)?.comingSoon ?? false;
 
 // 일일미션 설정값 — 보상값은 BO 자유 변경
 export interface DailySettings {
