@@ -87,8 +87,8 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>FQ(팬퀘스트)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.4</td></tr>
-<tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
+<tr><td>버전</td><td>v2.6</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-03</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=2-3613</td></tr>
 <tr><td>다국어 영향</td><td>Yes</td></tr>
@@ -131,7 +131,7 @@ p {
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>미완료 상태</td><td>☐ "출석 체크" + [출석하기] 버튼 + "+5DUK"</td></tr>
 <tr><td>완료 상태</td><td>✅ "출석 완료!" + "+5DUK 획득" (비활성)</td></tr>
-<tr><td>보상</td><td><strong>5DUK 덕력 (Fan Power / 推し力) — T1 즉시·습관 / 일일·주간 캡 적용</strong> (BO 자유 변경 가능)</td></tr>
+<tr><td>보상</td><td><strong>5DUK 덕력 (Fan Power / 推し力) — T1 즉시·습관</strong> (BO 자유 변경 가능)</td></tr>
 </table>
 <h4>동작</h4>
 <ul>
@@ -151,7 +151,7 @@ p {
 <tr><th>항목</th><th>내용</th></tr>
 <tr><td>미완료 상태</td><td>☐ 미션명(예: "V01D 페이지 방문") + 설명 + [하러가기 →]</td></tr>
 <tr><td>완료 상태</td><td>✅ 미션명 + "완료" (비활성) — <strong>개별 보상 표시 없음</strong></td></tr>
-<tr><td>보상 지급 방식</td><td><strong>모든 일일 미션 완료 시 25DUK 일괄 지급</strong> (Fan Power / 推し力 — T2 저관여 / 일일·주간 캡 적용. BO 자유 변경 가능)</td></tr>
+<tr><td>보상 지급 방식</td><td><strong>모든 일일 미션 완료 시 25DUK 일괄 지급</strong> (Fan Power / 推し力 — T2 저관여. BO 자유 변경 가능)</td></tr>
 <tr><td>보상 표시 위치</td><td>일일 미션 영역 하단에 "오늘의 미션 완료 보상: +25DUK" 표시. 모두 완료 전까지 회색 비활성, 모두 완료 시 즉시 지급 + 상태 강조</td></tr>
 <tr><td>하루 미션 수</td><td>시스템이 미션 풀에서 자동 선택 (현 <strong>2건/일</strong>, 향후 BO 다건 확장 가능)</td></tr>
 </table>
@@ -310,7 +310,7 @@ p {
 <h5>BO 측 운영</h5>
 <table>
 <tr><th>BO 화면ID</th><th>BO 화면명</th><th>운영 액션</th></tr>
-<tr><td>CEB-BO-FQ-501</td><td>일일 미션 관리</td><td>미션 풀 8종 + 보상·캡·스트릭 정책 + 통계</td></tr>
+<tr><td>CEB-BO-DLY-101</td><td>일일미션 관리</td><td>미션 풀 + 출석·일일미션·스트릭 보상값</td></tr>
 </table>
 <h2>5. 변경 이력</h2>
 <table>
@@ -326,6 +326,8 @@ p {
 <tr><td><strong>v2.2</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 덕력 단위 pt→DUK 일괄 변경</strong>. 일일 미션 일괄 지급 25DUK·출석 5DUK·캡 500DUK/3,000DUK 표기 갱신. 정책 변경 없음</td></tr>
 <tr><td><strong>v2.3</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. ① 유저 대면 화면명 "일일 미션" → <strong>"오늘의 할 일"</strong> (§2.1 타이틀·Breadcrumb·HOM-001 §2.4와 통일) ② 일일 미션 수 <strong>1건 → 2건/일</strong> (§1·§2.3 하루 미션 수·미션 선택 규칙 — 당일 2건 서로 다른 미션, 모두 완료 시 25DUK 일괄 지급). HOM-001 "0/2" 표기와 정합. 보상·스트릭·캡 정책 변경 없음</td></tr>
 <tr><td><strong>v2.4</strong></td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 영문 상태 코드 한국어 표준명 전환 + 코드 식별자·개발 용어 한국어화. 정책 변경 없음</td></tr>
+<tr><td><strong>v2.5</strong></td><td>2026.06.03</td><td>@Nill Yoo</td><td>BO 운영 화면 정정 — §BO 측 운영 화면을 무효 ID(CEB-BO-FQ-501)에서 신설 [CEB-BO-DLY-101] 일일미션 관리로 변경. 미션 풀·출석·일일미션·스트릭 보상값을 관리. 앱 화면 동작·정책 변경 없음</td></tr>
+<tr><td><strong>v2.6</strong></td><td>2026.06.03</td><td>@Nill Yoo</td><td>덕력 일일/주간 적립 상한(캡) 폐기 정합([CEB-000] v6.4) — §2.2 출석·§2.3 일일미션 보상의 "일일·주간 캡 적용" 문구 제거. 보상값(출석 5DUK·일일미션 일괄 25DUK)·스트릭·앱 동작 변경 없음</td></tr>
 </table>
 
 </body>

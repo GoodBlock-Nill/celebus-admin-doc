@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-DLY-101-MD-MISSION] 일일미션 추가·수정</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-DLY-101-MD-MISSION] 일일미션 추가·수정</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-DLY-101-MD-MISSION</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>DLY — 일일미션</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-03</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>(모달) 부모: 일일미션 관리</td></tr>
+<tr><td>비고</td><td>일일미션 관리 [미션 추가] 또는 미션 행 [수정] 클릭 시 노출되는 추가·수정 겸용 입력 모달. 추가·수정 모드는 동일 입력 폼을 공유한다. 권한은 [CEB-BO-SYS-102] 참조</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>모달·토스트 공통 규격, UI 상태</td></tr>
+<tr><td>[CEB-BO-DLY-000] 일일미션(DLY) 영역 가이드</td><td>미션 풀·이동 대상·선택 규칙</td></tr>
+<tr><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td><td>권한 그룹별 읽기·쓰기 범위</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>운영자가 일일미션 풀의 미션 1건을 <strong>추가하거나 수정</strong>하는 입력 모달. 미션명(한국어·영어·일본어)·설명(선택)·이동 대상·사용여부를 입력한다. 추가·수정 모드는 동일한 입력 폼을 공유하며, 수정 모드는 기존 값을 채운 채로 시작한다.</p>
+<ul>
+<li><strong>누가</strong>: 일일미션 쓰기 권한이 있는 백오피스 관리자</li>
+<li><strong>왜</strong>: 데일리 루프에서 회원에게 제시할 페이지 방문형 미션을 운영하기 위해</li>
+<li><strong>결과</strong>: 미션 풀에 미션 1건이 추가되거나 기존 미션이 갱신된다</li></ul>
+<h3>진입 경로</h3>
+<ul>
+<li>[CEB-BO-DLY-101] 일일미션 관리 &gt; [미션 추가] (추가 모드)</li>
+<li>[CEB-BO-DLY-101] 일일미션 관리 &gt; 미션 행 [수정] (수정 모드)</li></ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 모달 레이아웃</h3>
+<pre><code>┌─────────────────────────────────────────────┐
+│  일일미션 추가                          [X]  │
+├─────────────────────────────────────────────┤
+│  미션명 *                                     │
+│  ( ○ 한국어  ○ 영어  ○ 일본어 )              │
+│  [ 게임존 방문                          ]    │
+│                                  0/50자       │
+│  [KO ✓] [EN] [JA]                             │
+│  한국어·영어·일본어 3개 언어를 모두 입력      │
+│                                               │
+│  설명 (선택)                                  │
+│  ( ○ 한국어  ○ 영어  ○ 일본어 )              │
+│  [ 게임존을 둘러봐요                     ]    │
+│  미션 카드에서 미션명과 함께 노출됩니다       │
+│                                               │
+│  이동 대상 *                                  │
+│  [ 게임존 메인                          ▾ ]  │
+│  1회 진입 시 미션 완료로 처리됩니다           │
+│                                               │
+│  사용여부                                     │
+│  ( ● 사용   ○ 미사용 )                        │
+├─────────────────────────────────────────────┤
+│              [ 취소하기 ]   [ 추가하기 ]      │
+└─────────────────────────────────────────────┘
+</code></pre>
+<h3>2.2 입력 항목</h3>
+<table>
+<tr><th>항목</th><th>필수</th><th>타입</th><th>설명</th></tr>
+<tr><td>미션명</td><td>필수</td><td>다국어 텍스트 (한국어·영어·일본어)</td><td>미션 카드에 노출. 언어 선택 후 각 언어별 입력. 최대 50자. <strong>세 언어 모두 입력 필수</strong></td></tr>
+<tr><td>설명</td><td>선택</td><td>다국어 텍스트 (한국어·영어·일본어)</td><td>미션 카드에서 미션명과 함께 노출되는 안내 문구. 최대 60자. 미입력 시 미션명만 노출</td></tr>
+<tr><td>이동 대상</td><td>필수</td><td>Dropdown</td><td>회원이 미션 카드를 누르면 이동하는 앱 화면. 미션 풀 후보 화면 중 선택</td></tr>
+<tr><td>사용여부</td><td>필수</td><td>라디오</td><td>사용 / 미사용. 미사용 미션은 미션 선택 대상에서 제외 (기본: 사용)</td></tr>
+</table>
+<p>이동 대상 후보:</p>
+<table>
+<tr><th>이동 대상</th><th>앱 화면</th></tr>
+<tr><td>아티스트 메인</td><td>CEB-ART-101</td></tr>
+<tr><td>게임존 메인</td><td>CEB-GAM-101</td></tr>
+<tr><td>기억저장소</td><td>CEB-MEM-101</td></tr>
+<tr><td>덕력 랭킹</td><td>CEB-DUK-101</td></tr>
+<tr><td>래플 리스트</td><td>CEB-EVT-101</td></tr>
+<tr><td>컬렉션 메인</td><td>CEB-COL-101</td></tr>
+<tr><td>서포트 이벤트</td><td>CEB-DUK-201</td></tr>
+<tr><td>정보 피드</td><td>CEB-INF-101</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 프로토타입 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>요소</th><th>동작</th></tr>
+<tr><td>미션명 언어 선택</td><td>한국어·영어·일본어 전환. 각 언어 입력 상태를 표시(입력 완료 시 ✓)</td></tr>
+<tr><td>미션명 입력</td><td>언어별 최대 50자 입력</td></tr>
+<tr><td>설명 언어 선택·입력</td><td>언어별 최대 60자 입력(선택)</td></tr>
+<tr><td>이동 대상 Dropdown</td><td>후보 화면 중 1개 선택. 이미 다른 미션이 쓰는 대상 선택 시 중복 안내(§5)</td></tr>
+<tr><td>사용여부 라디오</td><td>사용/미사용 선택</td></tr>
+<tr><td>[추가하기]/[저장하기]</td><td>필수 충족 + 중복 아님 시 활성. 클릭 시 미션 풀에 반영 + 모달 닫기 + 완료 토스트(§5)</td></tr>
+<tr><td>[취소하기] / [X] / 외부 클릭</td><td>입력 폐기 + 모달 닫기</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한</h3>
+<ul>
+<li>권한 그룹별 읽기·쓰기 범위는 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li>
+<li>쓰기 권한이 없으면 리스트의 [미션 추가]·[수정]이 미노출되므로 본 모달은 호출되지 않는다.</li></ul>
+<h3>4.2 입력 규칙</h3>
+<ul>
+<li>미션명은 한국어·영어·일본어 <strong>세 언어를 모두 입력</strong>해야 [추가하기]/[저장하기]가 활성화된다.</li>
+<li>이동 대상은 필수이며, <strong>같은 이동 대상을 쓰는 미션이 이미 존재하면 선택할 수 없다</strong>(미션 풀 중복 금지). 수정 모드에서 자기 자신은 중복 대상에서 제외한다.</li>
+<li>설명은 선택이며 미입력 시 앱에서 미션명만 노출된다.</li>
+<li>완료 조건(이동 대상 1회 진입)은 시스템 고정이며 본 모달에서 설정하지 않는다.</li></ul>
+<hr>
+<h2>5. 검증·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>처리·문구</th></tr>
+<tr><td>미션명 일부 언어 미입력</td><td>[추가하기]/[저장하기] 비활성 (입력 안내 유지)</td></tr>
+<tr><td>이동 대상 미선택</td><td>[추가하기]/[저장하기] 비활성</td></tr>
+<tr><td>이동 대상 중복</td><td>인라인 안내(빨강): "이미 같은 이동 대상을 사용하는 미션이 있습니다. 다른 대상을 선택하세요." + 버튼 비활성</td></tr>
+<tr><td>추가 성공</td><td>Toast (Success): "일일미션이 추가되었습니다." → 모달 닫기 + 미션 풀에 추가</td></tr>
+<tr><td>수정 성공</td><td>Toast (Success): "일일미션이 수정되었습니다." → 모달 닫기 + 행 갱신</td></tr>
+<tr><td>저장 실패</td><td>Toast (Error): "저장에 실패했습니다." (모달·입력값 유지)</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>미션 추가</td><td>일일미션 '{미션명}'을(를) 추가했습니다. (이동 대상: {대상 화면})</td></tr>
+<tr><td>미션 수정</td><td>일일미션 '{미션명}'을(를) 수정했습니다.</td></tr>
+</table>
+<hr>
+<h2>7. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-DLY-101</td><td>일일미션 관리</td><td>진입 ([미션 추가]·[수정]) · 반영 대상</td></tr>
+<tr><td>CEB-BO-DLY-101-MD-DELETE</td><td>일일미션 삭제 확인</td><td>형제 (미션 행 [삭제])</td></tr>
+<tr><td>CEB-FQ-501</td><td>일일 미션 (앱)</td><td>미션 노출 대상 화면</td></tr>
+</table>
+<hr>
+<h2>8. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-06-03</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 일일미션 추가·수정 겸용 입력 모달 — ① 입력 = 미션명(한국어·영어·일본어 필수)·설명(선택 3개 언어)·이동 대상(후보 8종 Dropdown)·사용여부 ② 미션명 3개 언어 모두 입력 시 저장 활성 ③ 이동 대상 중복 금지 + 인라인 안내(수정 모드는 자기 자신 제외) ④ 추가/수정 성공 토스트 ⑤ 권한 [CEB-BO-SYS-102] 참조. 미션 노출 대상 [CEB-FQ-501]</td></tr>
+</table>
+
+</body>
+</html>

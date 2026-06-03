@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-DLY-101] 일일미션 관리</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-DLY-101] 일일미션 관리</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-DLY-101</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>DLY — 일일미션</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-03</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td></td></tr>
+<tr><td>Breadcrumb</td><td>일일미션 &gt; 일일미션 관리</td></tr>
+<tr><td>비고</td><td>데일리 루프 운영 단일 페이지(설정·미션 풀·스트릭). 앱 [CEB-FQ-501] 일일 미션 운영 화면. 미션 추가·수정은 [CEB-BO-DLY-101-MD-MISSION], 삭제는 [CEB-BO-DLY-101-MD-DELETE] 모달</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>권한, UI 상태, 토스트 공통 규격</td></tr>
+<tr><td>[CEB-BO-DLY-000] 일일미션(DLY) 영역 가이드</td><td>데일리 루프 구성·보상 정책·미션 풀·선택 규칙</td></tr>
+<tr><td>[CEB-000] 공통 정책 §5.2·§6</td><td>보상 매트릭스·데일리 루프</td></tr>
+<tr><td>[CEB-BO-SYS-102] 권한 관리 그룹 설정</td><td>권한 그룹별 읽기·쓰기 범위</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>운영자가 회원 <strong>데일리 루프</strong>(출석 체크·일일미션·연속 출석 스트릭)를 운영하는 단일 페이지. 출석·일일미션·스트릭 보너스의 <strong>보상값</strong>을 조정하고, 일일미션 <strong>미션 풀</strong>을 추가·수정·삭제·사용여부 전환한다. 회원 대면 동작은 앱 [CEB-FQ-501]에서 이뤄지며, 본 화면은 그 운영 설정만 담당한다.</p>
+<p>데일리 루프는 계정 단위 기능이므로 아티스트 구분 없이 모든 회원에게 동일하게 적용된다.</p>
+<h3>진입 경로</h3>
+<ul>
+<li>사이드 메뉴 &gt; 일일미션</li></ul>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 상단 영역</h3>
+<ul>
+<li>Breadcrumb: <code>일일미션 &gt; 일일미션 관리</code></li>
+<li>화면 타이틀: 일일미션 관리</li>
+<li>안내 문구: 출석·일일미션·연속 출석(스트릭) 보상과 미션 풀을 운영한다는 설명</li>
+<li>자정 리셋 안내 박스: "1일 기준 KST 자정(00:00~23:59:59). 매일 자정에 출석·일일미션 진행 상태가 리셋되며 미션 풀에서 그날 제시할 미션이 자동 선택됩니다."</li></ul>
+<p>본 페이지는 아래 3개 섹션으로 구성된다: <strong>일일미션 설정 · 미션 풀 · 연속 출석(스트릭) 보너스</strong>.</p>
+<h3>2.2 일일미션 설정 (섹션 1)</h3>
+<p>운영자가 입력하는 숫자 설정 3종으로 구성된다.</p>
+<table>
+<tr><th>항목</th><th>타입</th><th>단위</th><th>설명</th></tr>
+<tr><td>하루 제시 미션 수</td><td>숫자 입력</td><td>건</td><td>미션 풀에서 매일 자동 선택해 제시하는 미션 개수 (현 2건)</td></tr>
+<tr><td>출석 체크 보상</td><td>숫자 입력</td><td>덕력</td><td>앱 진입 시 1일 1회 지급</td></tr>
+<tr><td>일일미션 전체 완료 보상</td><td>숫자 입력</td><td>덕력</td><td>그날 제시된 미션을 모두 완료하면 일괄 지급</td></tr>
+</table>
+<h3>2.3 미션 풀 (섹션 2)</h3>
+<table>
+<tr><th>영역</th><th>내용</th></tr>
+<tr><td>섹션 헤더</td><td>"미션 풀 (사용 N종 / 전체 M종)" + 우측 [미션 추가]</td></tr>
+<tr><td>시스템 안내 박스</td><td>"미션 선택은 시스템 자동입니다." — 매일 사용 중인 미션 중 설정 개수만큼 자동 선택, 전일 중복 회피, 당일 상이, 부족 시 미노출. 운영자는 미션 풀 구성만 관리</td></tr>
+</table>
+<p>미션 풀 테이블 컬럼:</p>
+<table>
+<tr><th>컬럼</th><th>데이터 예시</th><th>설명</th></tr>
+<tr><td>미션명</td><td>게임존 방문</td><td>한국어 미션명(기본 언어). 설명 입력 시 하단에 회색 보조 텍스트로 노출</td></tr>
+<tr><td>이동 대상</td><td>게임존 메인</td><td>회원이 미션 카드를 누르면 이동하는 앱 화면</td></tr>
+<tr><td>사용여부</td><td>사용 / 미사용</td><td>토글. 미사용 미션은 미션 선택 대상에서 제외</td></tr>
+<tr><td>관리</td><td>수정 / 삭제</td><td>행별 [수정]·[삭제] 아이콘 버튼</td></tr>
+</table>
+<ul>
+<li>[미션 추가] / 행 [수정] → [CEB-BO-DLY-101-MD-MISSION] 추가·수정 모달</li>
+<li>행 [삭제] → [CEB-BO-DLY-101-MD-DELETE] 삭제 확인 모달</li>
+<li>사용여부 토글은 클릭 즉시 반영되며 완료 토스트를 노출한다.</li></ul>
+<h3>2.4 연속 출석(스트릭) 보너스 (섹션 3)</h3>
+<ul>
+<li>안내 문구: 출석을 연속으로 달성한 마일스톤에서 1회성으로 지급. 마일스톤(연속 일수)은 정책 고정이며 보상값만 조정 가능. 출석이 하루라도 끊기면 연속 일수 0으로 초기화.</li>
+<li>마일스톤 4종(연속 7일 / 14일 / 30일 / 100일) 각각의 보상값을 숫자 입력(덕력)으로 편집한다. 연속 일수는 변경할 수 없다.</li></ul>
+<h3>2.5 변경사항 저장</h3>
+<ul>
+<li>섹션 1(일일미션 설정)과 섹션 3(스트릭 보너스)의 변경은 페이지 하단 [변경사항 저장] 버튼으로 일괄 커밋한다.</li>
+<li>변경 사항이 없거나 입력값이 유효하지 않으면 버튼은 비활성이다.</li>
+<li>클릭 시 [변경 내용 요약]을 담은 저장 확인 동작을 거친 뒤 반영된다(§3).</li>
+<li>미션 풀(섹션 2)의 추가·수정·삭제·사용여부 전환은 [변경사항 저장]과 무관하게 각 액션 시점에 즉시 반영된다.</li></ul>
+<blockquote>
+<p>시각적 스타일은 프로토타입 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>요소</th><th>동작</th></tr>
+<tr><td>하루 제시 미션 수 / 출석 보상 / 일일미션 완료 보상 입력</td><td>값 입력 → [변경사항 저장] 활성 조건 갱신</td></tr>
+<tr><td>[미션 추가]</td><td>[CEB-BO-DLY-101-MD-MISSION] 추가 모달 → 미션 풀에 즉시 추가 + 완료 토스트</td></tr>
+<tr><td>미션 행 [수정]</td><td>[CEB-BO-DLY-101-MD-MISSION] 수정 모달 → 즉시 반영 + 완료 토스트</td></tr>
+<tr><td>미션 행 [삭제]</td><td>[CEB-BO-DLY-101-MD-DELETE] 삭제 확인 모달 → 확인 시 제거 + 완료 토스트</td></tr>
+<tr><td>사용여부 토글</td><td>클릭 즉시 사용/미사용 전환 + 완료 토스트</td></tr>
+<tr><td>스트릭 마일스톤 보상값 입력</td><td>값 입력 → [변경사항 저장] 활성 조건 갱신</td></tr>
+<tr><td>[변경사항 저장]</td><td>변경 있고 입력 유효 시 활성. 클릭 시 변경 요약 확인 → 설정·스트릭 일괄 저장 + 완료 토스트</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<h3>4.1 권한</h3>
+<ul>
+<li>권한 그룹별 읽기·쓰기 범위는 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li>
+<li>쓰기 권한이 없으면 입력·토글·버튼이 비활성 또는 미노출된다.</li></ul>
+<h3>4.2 보상값</h3>
+<ul>
+<li>출석·일일미션·스트릭 보상값은 운영자가 자유롭게 변경할 수 있다(권장 기본: 출석 5 덕력 / 일일미션 일괄 25 덕력 / 스트릭 7·14·30·100일 = 200·500·1,000·5,000 덕력).</li>
+<li>보상 티어·구조 자체의 변경은 [CEB-000] 공통 정책 개정 사항이다.</li></ul>
+<h3>4.3 미션 풀·선택 규칙</h3>
+<ul>
+<li>미션 풀은 페이지 방문형 미션으로 구성되며, 각 미션은 이동 대상 앱 화면을 1개 가진다. 완료 조건은 해당 화면 1회 진입이다.</li>
+<li>같은 이동 대상은 미션 풀에서 <strong>중복 등록할 수 없다</strong>(미션 풀 8종은 서로 다른 대상이 원칙). 중복 검증은 [CEB-BO-DLY-101-MD-MISSION]에서 수행한다.</li>
+<li>미션 <strong>선택은 시스템 자동</strong>이다. 매일 사용 중인 미션 중 설정 개수만큼 자동 선택하며, 전일과 중복을 피하고 당일 제시 미션은 서로 다르게 선택한다. 이동 대상이 준비 중(Coming Soon)인 미션은 제외하며, 제시 가능한 미션이 0건이면 앱에서 일일미션 카드가 숨겨지고 출석 체크만 노출된다.</li>
+<li>운영자는 미션 풀 구성(추가·수정·삭제·사용여부)과 하루 제시 개수만 관리하며, 그날의 개별 미션을 직접 지정하지는 않는다.</li></ul>
+<h3>4.4 입력 검증</h3>
+<table>
+<tr><th>항목</th><th>검증</th></tr>
+<tr><td>하루 제시 미션 수</td><td>1 이상의 정수</td></tr>
+<tr><td>출석 보상 / 일일미션 완료 보상 / 스트릭 보상값</td><td>0 이상의 정수</td></tr>
+<tr><td>[변경사항 저장] 활성</td><td>모든 입력 유효 + 직전 저장값 대비 변경 존재</td></tr>
+</table>
+<h3>4.5 시간 기준</h3>
+<ul>
+<li>하루 기준은 KST 자정(00:00 ~ 23:59:59)이며, 매일 00:00 KST에 출석·일일미션이 리셋되고 그날 제시 미션이 자동 선택된다.</li></ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>표시</th></tr>
+<tr><td>Loading</td><td>설정·미션 풀·스트릭 영역 Skeleton</td></tr>
+<tr><td>Default</td><td>정상 데이터</td></tr>
+<tr><td>Empty (미션 풀 0건)</td><td>미션 풀 테이블에 "등록된 미션이 없습니다. [미션 추가]로 미션 풀을 구성하세요."</td></tr>
+<tr><td>입력 오류</td><td>해당 입력 필드 강조 + 인라인 안내(예: "0 이상의 정수만 입력 가능합니다.") + [변경사항 저장] 비활성</td></tr>
+<tr><td>Error</td><td>"설정 조회에 실패하였습니다." + [재시도]</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th><th>발생 위치</th></tr>
+<tr><td>미션 추가</td><td>일일미션 '{미션명}'을(를) 추가했습니다. (이동 대상: {대상 화면})</td><td>[CEB-BO-DLY-101-MD-MISSION]</td></tr>
+<tr><td>미션 수정</td><td>일일미션 '{미션명}'을(를) 수정했습니다.</td><td>[CEB-BO-DLY-101-MD-MISSION]</td></tr>
+<tr><td>미션 삭제</td><td>일일미션 '{미션명}'을(를) 삭제했습니다.</td><td>[CEB-BO-DLY-101-MD-DELETE]</td></tr>
+<tr><td>사용여부 전환</td><td>일일미션 '{미션명}'을(를) {사용/미사용}으로 전환했습니다.</td><td>본 화면</td></tr>
+<tr><td>설정 저장</td><td>일일미션 설정을 변경했습니다. (변경 항목: {항목 목록})</td><td>본 화면</td></tr>
+</table>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지·처리</th></tr>
+<tr><td>입력값 오류</td><td>인라인 안내 + [변경사항 저장] 비활성</td></tr>
+<tr><td>설정 조회 실패</td><td>Toast (Error): "설정 조회에 실패하였습니다." + [재시도]</td></tr>
+<tr><td>설정 저장 실패</td><td>Toast (Error): "저장에 실패했습니다." (입력값 유지)</td></tr>
+<tr><td>사용 중인 미션 부족</td><td>사용 미션이 하루 제시 수보다 적으면 가능한 범위 내에서만 제시되며, 0건이면 앱에서 일일미션 카드가 숨겨진다(운영자 안내)</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-DLY-101-MD-MISSION</td><td>일일미션 추가·수정</td><td>하위 ([미션 추가]·[수정])</td></tr>
+<tr><td>CEB-BO-DLY-101-MD-DELETE</td><td>일일미션 삭제 확인</td><td>하위 ([삭제])</td></tr>
+<tr><td>CEB-BO-DLY-000</td><td>일일미션(DLY) 영역 가이드</td><td>상위 (영역 정책)</td></tr>
+<tr><td>CEB-FQ-501</td><td>일일 미션 (앱)</td><td>운영 대상 화면</td></tr>
+<tr><td>CEB-BO-SYS-102</td><td>권한 관리 그룹 설정</td><td>권한 기준</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-06-03</strong></td><td><strong>@Nill Yoo</strong></td><td>덕력 일일/주간 적립 상한(캡) 폐기 정합([CEB-000] v6.4) — §2.2 한도 참조(읽기 전용) 박스 삭제, §4.2 제목 "보상값·한도" → "보상값"으로 한도 문단 삭제, §0 공통정책 참조의 한도 문구 제거. 설정 입력(하루 제시 수·출석·일일미션 보상)·미션 풀·스트릭은 불변.</td></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-06-03</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 데일리 루프 운영 단일 페이지 — ① 일일미션 설정(하루 제시 미션 수·출석 보상·일일미션 완료 보상 + 일일/주간 한도 읽기 전용 참조) ② 미션 풀 테이블(미션명·이동 대상·사용여부 토글·수정/삭제) + 시스템 자동 선택 안내 ③ 연속 출석(스트릭) 보너스 마일스톤 4종 보상값 편집 ④ [변경사항 저장](설정·스트릭 일괄, 변경 요약 확인) / 미션 풀 CRUD 즉시 반영 ⑤ 보상값 BO 변경·한도 정책값 읽기 전용·미션 선택 시스템 자동·자정 리셋(§4) ⑥ 활동 로그·에러 처리. 보상·한도 단일 기준 [CEB-000] §5.2·§6, 앱 연동 [CEB-FQ-501]</td></tr>
+</table>
+
+</body>
+</html>

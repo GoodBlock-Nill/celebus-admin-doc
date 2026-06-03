@@ -106,6 +106,7 @@ const ADMIN_MENU: MenuItem[] = [
       { label: 'GP 변동 내역', href: '/gamezone/gp-history', icon: ClockIcon },
     ],
   },
+  { label: '일일미션', href: '/daily-missions', icon: CalendarDaysIcon },
   {
     label: '에피소드',
     icon: BookOpenIcon,
