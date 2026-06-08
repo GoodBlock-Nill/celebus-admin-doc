@@ -130,7 +130,8 @@ const ADMIN_MENU: MenuItem[] = [
     label: '기억저장소',
     icon: FaceSmileIcon,
     children: [
-      { label: '감정 이모지 관리', href: '/memory/emoji', icon: FaceSmileIcon },
+      { label: '감정 이모지 연결', href: '/memory/emoji', icon: FaceSmileIcon },
+      { label: '감정 이모지 라이브러리', href: '/memory/emoji/library', icon: PhotoIcon },
     ],
   },
   { label: '재무', href: '/finance', icon: BanknotesIcon },

@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>[CEB-BO-MEM-501-MD-DELETE] 감정 이모지 삭제 확인</title>
+  <title>[CEB-BO-MEM-502-MD-DELETE] 라이브러리 삭제 확인</title>
   <style>
     body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -76,40 +76,40 @@ p {
   </style>
 </head>
 <body>
-<h1>[CEB-BO-MEM-501-MD-DELETE] 감정 이모지 삭제 확인</h1>
+<h1>[CEB-BO-MEM-502-MD-DELETE] 라이브러리 삭제 확인</h1>
 <h2>Page Properties</h2>
 <table>
 <tr><th>Key</th><th>Value</th></tr>
-<tr><td>Screen ID</td><td>CEB-BO-MEM-501-MD-DELETE</td></tr>
+<tr><td>Screen ID</td><td>CEB-BO-MEM-502-MD-DELETE</td></tr>
 <tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
 <tr><td>디자인담당자</td><td></td></tr>
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>MEM — 기억저장소 / 감정 이모지</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.1</td></tr>
-<tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-08</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
-<tr><td>프로토타입 링크</td><td>/memory/emoji</td></tr>
-<tr><td>Breadcrumb</td><td>홈 &gt; 기억저장소 &gt; 감정 이모지 관리</td></tr>
-<tr><td>비고</td><td>감정 이모지 삭제 확인 모달. [CEB-BO-MEM-501] 감정 이모지 관리에서 호출. 사용 상태·회원 사용 이력 이모지는 [삭제] 비활성으로 진입 차단.</td></tr>
+<tr><td>프로토타입 링크</td><td>/memory/emoji/library</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 기억저장소 &gt; 감정 이모지 라이브러리</td></tr>
+<tr><td>비고</td><td>감정 이모지를 라이브러리에서 전역 삭제하기 전 확인하는 모달. [CEB-BO-MEM-502]에서 호출. 연결 아티스트·회원 사용 이력 있으면 [삭제] 비활성으로 진입 차단.</td></tr>
 </table>
 <hr>
 <h2>0. 공통 정책 참조</h2>
 <table>
 <tr><th>참조 문서</th><th>적용 범위</th></tr>
 <tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>삭제 확인 모달 규격, 토스트, 활동 로그</td></tr>
-<tr><td>[CEB-BO-MEM-501] 감정 이모지 관리</td><td>호출 화면·사용 중 삭제 차단 규칙</td></tr>
+<tr><td>[CEB-BO-MEM-502] 감정 이모지 라이브러리</td><td>호출 화면·전역 삭제 차단 규칙</td></tr>
 </table>
 <hr>
 <h2>1. 화면 목적</h2>
-<p>세트에서 감정 이모지를 삭제하기 전 확인하는 모달이다. 비가역 작업이므로 운영자 확인을 거친다.</p>
+<p>라이브러리에서 감정 이모지를 <strong>전역 삭제</strong>하기 전 확인하는 모달이다. 비가역 작업이므로 운영자 확인을 거친다.</p>
 <hr>
 <h2>2. UI 설명</h2>
 <table>
 <tr><th>영역</th><th>내용</th></tr>
 <tr><td>헤더</td><td>"감정 이모지 삭제"</td></tr>
-<tr><td>본문</td><td>"'{라벨}' {이모지} 이모지를 삭제할까요?" + "{아티스트명} 세트에서 제거되며 복구할 수 없습니다."</td></tr>
+<tr><td>본문</td><td>"'{라벨}' 이모지를 라이브러리에서 삭제할까요?" + "전역에서 영구 제거되며 복구할 수 없습니다."</td></tr>
 <tr><td>푸터</td><td>[취소] / [삭제]</td></tr>
 </table>
 <blockquote>
@@ -119,24 +119,25 @@ p {
 <h2>3. 화면 내 기능설명</h2>
 <table>
 <tr><th>요소</th><th>동작</th></tr>
-<tr><td>[삭제]</td><td>세트에서 해당 이모지 제거 + 모달 닫기 + 완료 토스트</td></tr>
+<tr><td>[삭제]</td><td>라이브러리에서 해당 이모지 영구 제거 + 모달 닫기 + 완료 토스트</td></tr>
 <tr><td>[취소] / 배경</td><td>모달 닫기 (삭제 안 함)</td></tr>
 </table>
 <hr>
 <h2>4. 규칙·로직</h2>
 <ul>
-<li>호출 화면([CEB-BO-MEM-501])에서 <strong>사용여부가 미사용이고 회원 사용 이력이 없는</strong> 이모지만 [삭제] 버튼이 활성화되어 본 모달로 진입한다.</li>
+<li>호출 화면([CEB-BO-MEM-502])에서 <strong>연결 아티스트가 0</strong> 이고 <strong>회원 사용 이력이 없는</strong> 이모지만 [삭제] 버튼이 활성화되어 본 모달로 진입한다.</li>
 <li>다음은 [삭제] 버튼이 <strong>비활성</strong>이므로 본 모달에 진입하지 않는다(버튼 툴팁으로 사유 안내).
 <ul>
-<li>사용여부가 <strong>사용</strong>인 이모지 → 먼저 미사용으로 전환해야 함.</li>
-<li><strong>회원이 이미 사용한 이모지</strong> → 미사용 전환만 가능, 삭제 불가(기억 기록 보존).</li></ul>
+<li><strong>연결 아티스트가 1개 이상</strong> → 먼저 각 아티스트에서 연결 해제([CEB-BO-MEM-501-MD-UNLINK])해야 한다.</li>
+<li><strong>회원이 이미 사용한 이모지</strong> → 삭제 불가(기억 기록 보존).</li></ul>
 </li>
+<li>특정 아티스트에서만 제거하려면 삭제가 아니라 [CEB-BO-MEM-501]에서 <strong>연결 해제</strong>한다.</li>
 <li>권한은 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li></ul>
 <hr>
 <h2>5. UI 상태별 처리</h2>
 <table>
 <tr><th>상태</th><th>처리</th></tr>
-<tr><td>Default</td><td>삭제 대상 라벨·이모지·아티스트명 표시</td></tr>
+<tr><td>Default</td><td>삭제 대상 라벨·이미지 표시</td></tr>
 <tr><td>삭제 중</td><td>[삭제] 비활성</td></tr>
 <tr><td>Error</td><td>Toast (Error) + 모달 유지</td></tr>
 </table>
@@ -144,28 +145,28 @@ p {
 <h2>6. 활동 로그</h2>
 <table>
 <tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
-<tr><td>삭제</td><td>감정 이모지 '{라벨}'({이모지})을(를) 삭제했습니다. (아티스트: {아티스트명})</td></tr>
+<tr><td>삭제</td><td>감정 이모지 '{라벨}'을(를) 라이브러리에서 삭제했습니다.</td></tr>
 </table>
 <hr>
 <h2>7. 에러·예외 상황</h2>
 <table>
 <tr><th>상황</th><th>메시지</th></tr>
-<tr><td>삭제 불가 항목</td><td>호출 화면에서 [삭제] 버튼 비활성(클릭 불가) — 본 모달 미진입. 사용 상태이거나 회원 사용 이력이 있는 항목, 버튼 툴팁으로 사유 안내</td></tr>
+<tr><td>삭제 불가 항목</td><td>호출 화면에서 [삭제] 버튼 비활성(클릭 불가) — 본 모달 미진입. 연결 아티스트가 있거나 회원 사용 이력이 있는 항목, 툴팁으로 사유 안내</td></tr>
 <tr><td>삭제 실패</td><td>Toast (Error): "삭제에 실패했습니다."</td></tr>
 </table>
 <hr>
 <h2>8. 연관 화면ID</h2>
 <table>
 <tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
-<tr><td>CEB-BO-MEM-501</td><td>감정 이모지 관리</td><td>호출 화면</td></tr>
-<tr><td>CEB-BO-MEM-501-MD-EMOJI</td><td>감정 이모지 추가·수정</td><td>형제 모달</td></tr>
+<tr><td>CEB-BO-MEM-502</td><td>감정 이모지 라이브러리</td><td>호출 화면</td></tr>
+<tr><td>CEB-BO-MEM-502-MD-EMOJI</td><td>감정 이모지 등록·수정</td><td>형제 모달</td></tr>
+<tr><td>CEB-BO-MEM-501-MD-UNLINK</td><td>연결 해제 확인</td><td>아티스트별 제거(구분)</td></tr>
 </table>
 <hr>
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
-<tr><td><strong>v1.1</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>삭제 차단 방식 변경 — 토스트 차단 → <strong>호출 화면 [삭제] 버튼 비활성</strong>(클릭 차단). 비활성 조건을 "회원 사용 이력" + "사용여부=사용"으로 확장(§4·§7·비고). 삭제 가능 = 미사용 + 회원 사용 이력 없음.</td></tr>
-<tr><td><strong>v1.0</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 감정 이모지 삭제 확인 모달 — 사용 중 이모지는 진입 전 차단(미사용 전환 안내), 사용 중 아닌 이모지만 삭제. [CEB-BO-MEM-501]에서 호출.</td></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-06-08</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 라이브러리 <strong>전역 삭제 확인</strong> 모달 — ① 연결 아티스트 0 + 회원 사용 이력 없음일 때만 진입(둘 중 하나라도 있으면 [삭제] 비활성) ② 전역 영구 제거(비가역) ③ 특정 아티스트만 제거는 [CEB-BO-MEM-501] 연결 해제로 안내. 라이브러리 연결 구조 전환에 따라 아티스트별 삭제([CEB-BO-MEM-501-MD-UNLINK])와 전역 삭제를 분리. [CEB-000] §7.5 v6.5 정합.</td></tr>
 </table>
 
 </body>

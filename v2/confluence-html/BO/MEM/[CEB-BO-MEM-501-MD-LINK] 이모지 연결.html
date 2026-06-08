@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-MEM-501-MD-LINK] 이모지 연결</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-MEM-501-MD-LINK] 이모지 연결</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-MEM-501-MD-LINK</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>MEM — 기억저장소 / 감정 이모지</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-08</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td>/memory/emoji</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 기억저장소 &gt; 감정 이모지 연결 관리</td></tr>
+<tr><td>비고</td><td>라이브러리에서 감정 이모지를 선택해 선택 아티스트에 연결하는 모달. [CEB-BO-MEM-501] 감정 이모지 연결 관리에서 호출.</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>모달 규격, 토스트, 활동 로그</td></tr>
+<tr><td>[CEB-000] 공통 정책 §7.5 감정 이모지 규격</td><td>라이브러리 연결 구조·연결 상한 (SSOT)</td></tr>
+<tr><td>[CEB-BO-MEM-501] 감정 이모지 연결 관리</td><td>호출 화면·연결 규칙</td></tr>
+<tr><td>[CEB-BO-MEM-502] 감정 이모지 라이브러리</td><td>이모지 등록 원천</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>라이브러리에 등록된 감정 이모지를 <strong>선택해 현재 아티스트에 연결</strong>하는 모달이다. 라이브러리에 원하는 이모지가 없으면 신규 등록 경로로 진입한다.</p>
+<hr>
+<h2>2. UI 설명</h2>
+<h3>2.1 모달 구성</h3>
+<table>
+<tr><th>영역</th><th>내용</th></tr>
+<tr><td>헤더</td><td>"이모지 연결 — {아티스트명}" + [✕] 닫기</td></tr>
+<tr><td>안내</td><td>"라이브러리에서 연결할 이모지를 선택하세요. (연결 {N} / 40종)"</td></tr>
+<tr><td>검색</td><td>라벨(한국어·영어·일본어) 기준 검색</td></tr>
+<tr><td>라이브러리 목록</td><td>이미지 썸네일 + 3언어 라벨 그리드. <strong>다중 선택(체크)</strong>. 이미 연결된 항목은 "연결됨" 배지 + 선택 비활성</td></tr>
+<tr><td>신규 등록 진입</td><td>"원하는 이모지가 없나요? [신규 등록]" → 등록 모달([CEB-BO-MEM-502-MD-EMOJI]) 열기. 등록 후 목록에 반영</td></tr>
+<tr><td>푸터</td><td>[취소] / [연결] (선택 0건이면 비활성)</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 프로토타입 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>요소</th><th>동작</th></tr>
+<tr><td>항목 체크</td><td>연결할 이모지 다중 선택</td></tr>
+<tr><td>검색</td><td>라벨 기준 목록 필터</td></tr>
+<tr><td>[신규 등록]</td><td>라이브러리 등록 모달 열기 ([CEB-BO-MEM-502-MD-EMOJI]). 등록 완료 시 목록 갱신</td></tr>
+<tr><td>[연결]</td><td>선택 항목을 현재 아티스트 세트에 연결(작업본 누적) + 모달 닫기 + 완료 토스트</td></tr>
+<tr><td>[취소] / [✕]</td><td>선택 폐기 후 닫기</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<ul>
+<li>연결은 <strong>작업본에 누적</strong>되며, 앱 반영은 [CEB-BO-MEM-501]의 [변경사항 적용] 시점이다(즉시 반영 아님).</li>
+<li>신규 연결 항목은 세트의 <strong>마지막 순서</strong>로 추가되며, 기본 <strong>미사용</strong>으로 연결된다(사용 6종 여유가 있으면 운영자가 [CEB-BO-MEM-501]에서 사용으로 전환).</li>
+<li><strong>이미 연결된 이모지는 중복 선택할 수 없다</strong>(연결됨 배지·비활성).</li>
+<li>연결 후 세트 총량이 <strong>40종을 초과할 수 없다</strong>. 남은 여유 칸을 초과하는 선택은 [연결] 차단 + 안내.</li>
+<li>[신규 등록]으로 라이브러리에 추가한 이모지도 본 모달에서 선택해야 아티스트에 연결된다(등록 자체는 연결이 아님).</li>
+<li>권한은 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li></ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>Default</td><td>라이브러리 목록 표시(연결됨 항목 비활성)</td></tr>
+<tr><td>Empty (라이브러리 0건)</td><td>"라이브러리에 등록된 이모지가 없습니다. [신규 등록]으로 추가하세요."</td></tr>
+<tr><td>선택 0건</td><td>[연결] 비활성</td></tr>
+<tr><td>여유 칸 초과 선택</td><td>[연결] 차단 + "연결은 최대 40종까지 가능합니다" 안내</td></tr>
+<tr><td>연결 중</td><td>[연결] 비활성</td></tr>
+<tr><td>Error</td><td>Toast (Error) + 선택 유지</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>연결</td><td>감정 이모지 '{라벨}'을(를) 연결했습니다. (아티스트: {아티스트명})</td></tr>
+</table>
+<blockquote>
+<p>다중 연결 시 항목별로 기록하거나 "{N}건 연결" 요약으로 기록(운영 로그 규격은 [CEB-BO-000] §6 준용).</p>
+</blockquote>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>라이브러리 비어 있음</td><td>"라이브러리에 등록된 이모지가 없습니다. [신규 등록]으로 추가하세요."</td></tr>
+<tr><td>여유 칸 초과</td><td>"연결은 최대 40종까지 가능합니다." + [연결] 차단</td></tr>
+<tr><td>연결 실패</td><td>Toast (Error): "연결에 실패했습니다." + 선택 유지</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-MEM-501</td><td>감정 이모지 연결 관리</td><td>호출 화면</td></tr>
+<tr><td>CEB-BO-MEM-502</td><td>감정 이모지 라이브러리</td><td>선택 원천</td></tr>
+<tr><td>CEB-BO-MEM-502-MD-EMOJI</td><td>감정 이모지 등록·수정</td><td>[신규 등록] 진입</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-06-08</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 라이브러리에서 감정 이모지를 다중 선택해 아티스트에 연결하는 모달 — ① 이미 연결된 항목 비활성(중복 연결 차단) ② 신규 연결은 마지막 순서·미사용으로 추가 ③ 연결 40종 상한 검증 ④ 라이브러리에 없으면 [신규 등록] → [CEB-BO-MEM-502-MD-EMOJI] 진입 ⑤ 연결은 작업본 누적, 앱 반영은 [CEB-BO-MEM-501]의 [변경사항 적용] 시점. 구 [CEB-BO-MEM-501-MD-EMOJI](아티스트별 직접 등록)의 연결 역할을 대체. [CEB-000] §7.5 v6.5 정합.</td></tr>
+</table>
+
+</body>
+</html>

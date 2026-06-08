@@ -87,7 +87,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>MEM(기억저장소)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.5</td></tr>
+<tr><td>버전</td><td>v2.6</td></tr>
 <tr><td>최근 업데이트</td><td>2026.06.03</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=1584-9428</td></tr>
@@ -147,13 +147,17 @@ p {
 <h4>UI 구성</h4>
 <table>
 <tr><th>항목</th><th>내용</th></tr>
-<tr><td>구성</td><td>6개 이모지 버튼 가로 나열</td></tr>
-<tr><td>이모지 목록</td><td>😍 설렘 / 😭 감동 / 🎉 신남 / 💜 사랑 / 🤩 우와 / ✨ 행복</td></tr>
+<tr><td>구성</td><td>감정 이모지 버튼 가로 나열 (최대 6개)</td></tr>
+<tr><td>이모지 출처</td><td>현재 아티스트에 <strong>연결·적용된 '사용' 이모지(이미지)</strong>를 백오피스 설정 순서대로 노출 ([CEB-BO-MEM-501] 감정 이모지 연결 관리에서 관리). 기본 제공 이미지 6종(설렘·감동·신남·사랑·우와·행복)</td></tr>
+<tr><td>표시 형태</td><td>이모지는 <strong>이미지</strong>로 노출(유니코드 문자 아님). 라벨은 다국어(한국어·영어·일본어)</td></tr>
 <tr><td>선택 방식</td><td><strong>라디오 (1개 단일 선택)</strong>. 다른 이모지 탭 시 이전 선택 자동 해제</td></tr>
 <tr><td>필수 여부</td><td><strong>필수</strong>. 미선택 시 [저장하기] 비활성</td></tr>
 <tr><td>선택 상태</td><td>선택된 이모지 하이라이트 (보더/배경 변경)</td></tr>
 <tr><td>스타일</td><td>피그마 참조</td></tr>
 </table>
+<blockquote>
+<p>노출되는 이모지 종류·순서·사용 여부는 아티스트별로 다르며, 모두 백오피스([CEB-BO-MEM-501])의 [변경사항 적용] 결과를 따른다. 규격은 [CEB-000] §7.5.</p>
+</blockquote>
 <h3>2.4 위치 입력 (장소 검색 + 지도)</h3>
 <h4>UI 구성</h4>
 <table>
@@ -334,6 +338,7 @@ p {
 <tr><td><strong>v2.3</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합 (주소 등록 서브플로우)</strong>. §2.4 위치 입력을 <strong>장소 검색(<code>1618-11073</code> 검색 결과 리스트) + 지도 확인(<code>1618-11104</code> 핀 표시) 서브 화면</strong>으로 보강. 입력 장소는 기억저장소 지도 뷰(MEM-101)에서 위치 기반 표시</td></tr>
 <tr><td>v2.4</td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 영문 상태 코드 한국어 표준명 전환 + 코드 식별자·개발 용어 한국어화. 정책 변경 없음</td></tr>
 <tr><td><strong>v2.5</strong></td><td>2026.06.03</td><td>@Nill Yoo</td><td>덕력 일일/주간 적립 상한(캡) 폐기 정합([CEB-000] v6.4) — §2.8 저장의 "캡 적용: 일일 500DUK·주간 3,000DUK 캡에 합산" 줄 삭제. 기억 저장 보상(75DUK)·귀속·앱 동작 변경 없음</td></tr>
+<tr><td><strong>v2.6</strong></td><td>2026.06.08</td><td>@Nill Yoo</td><td><strong>§2.3 감정 이모지 출처 정합 — 이미지 전용 + BO 적용 세트</strong> ([CEB-000] §7.5 v6.5). 고정 유니코드 6종 나열 → <strong>현재 아티스트에 연결·적용된 '사용' 이모지(이미지)를 백오피스 설정 순서대로 노출</strong>로 변경(종류·순서·사용 여부는 아티스트별로 다르며 [CEB-BO-MEM-501] [변경사항 적용] 결과를 따름). 이모지는 이미지로 노출(유니코드 문자 아님), 기본 제공 이미지 6종(설렘·감동·신남·사랑·우와·행복). 선택 방식(라디오 1개·필수)·앱 동작 변경 없음</td></tr>
 </table>
 
 </body>

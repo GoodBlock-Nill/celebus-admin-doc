@@ -1,31 +1,26 @@
 import { create } from 'zustand';
-import { emotionEmojis as seed, type EmotionEmoji } from '@/mock/memoryEmoji';
+import {
+  libraryEmojis as libSeed,
+  emojiLinks as linkSeed,
+  type LibraryEmoji,
+  type EmojiLink,
+} from '@/mock/memoryEmoji';
 
-// 세션 메모리 스토어 — 감정 이모지 관리 화면.
-// 이중 상태: draft(BO 작업본) / applied(앱 반영본). 편집은 draft만 수정하고,
-// [변경사항 적용] 시에만 draft → applied 게시(앱 반영). 적용 전까지 앱은 직전 적용본 유지.
-// 새로고침 시 mock 초기값으로 복귀(프로토타입 동작).
+// 기억저장소 감정 이모지 스토어
+// - library: 전역 라이브러리 (즉시 반영, draft/applied 없음)
+// - linksApplied/linksDraft: 아티스트별 연결 (draft 편집 → apply로 게시)
+// 새로고침 시 mock 초기값 복귀 (non-persist).
 
-export type EmojiInput = {
-  emoji: string; // 유니코드 이모지 (이미지 방식이면 빈 문자열)
-  imageSrc?: string; // 커스텀 이미지 파일명 (있으면 이미지 방식)
+export interface LibraryEmojiInput {
+  imageSrc: string;
   labelKO: string;
   labelEN: string;
   labelJA: string;
-  active: boolean;
-};
+}
 
-// 동일 항목 변경 여부(필드·순서 포함)
-function isChanged(a: EmotionEmoji, b: EmotionEmoji): boolean {
-  return (
-    a.emoji !== b.emoji ||
-    (a.imageSrc ?? '') !== (b.imageSrc ?? '') ||
-    a.labelKO !== b.labelKO ||
-    a.labelEN !== b.labelEN ||
-    a.labelJA !== b.labelJA ||
-    a.active !== b.active ||
-    a.order !== b.order
-  );
+export interface LinkedItem {
+  link: EmojiLink;
+  emoji: LibraryEmoji;
 }
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -34,129 +29,195 @@ function nowStamp(): string {
   return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
+// draft vs applied 비교: 신규 연결·해제·order·active 변경 건수
+function calcPending(draft: EmojiLink[], applied: EmojiLink[], artistGroupId: number): number {
+  const a = applied.filter((l) => l.artistGroupId === artistGroupId);
+  const d = draft.filter((l) => l.artistGroupId === artistGroupId);
+  const aById = new Map(a.map((l) => [l.id, l]));
+  const dById = new Map(d.map((l) => [l.id, l]));
+  let n = 0;
+  for (const l of d) {
+    const prev = aById.get(l.id);
+    if (!prev) { n++; continue; } // 신규 연결
+    if (prev.order !== l.order || prev.active !== l.active) n++;
+  }
+  for (const l of a) {
+    if (!dById.has(l.id)) n++; // 연결 해제됨
+  }
+  return n;
+}
+
 interface MemoryEmojiState {
-  applied: EmotionEmoji[]; // 앱 반영본
-  draft: EmotionEmoji[]; // BO 작업본
+  library: LibraryEmoji[];
+  linksApplied: EmojiLink[];
+  linksDraft: EmojiLink[];
   lastAppliedAt: Record<number, string>;
-  /** 작업본(draft) 세트 — order 오름차순 */
-  setOf: (artistGroupId: number) => EmotionEmoji[];
-  /** 미적용 변경 건수 (draft vs applied) */
+
+  // ── 라이브러리 액션 (전역 즉시 반영) ──────────────────────────────────────
+  addLibraryEmoji: (input: LibraryEmojiInput) => void;
+  updateLibraryEmoji: (id: number, input: LibraryEmojiInput) => void;
+  /** 연결 아티스트 0 && !memberUsed 일 때만 삭제. 조건 미충족 시 무시. */
+  deleteLibraryEmoji: (id: number) => void;
+
+  // ── 연결 액션 (linksDraft 대상) ───────────────────────────────────────────
+  /** 이미 연결된 것 제외, 마지막 order 뒤에 active:false로 추가, 40 상한 내 */
+  linkEmojis: (artistGroupId: number, emojiIds: number[]) => void;
+  unlink: (linkId: number) => void;
+  moveLink: (linkId: number, dir: 'up' | 'down') => void;
+  /** 미사용→사용은 사용 6 여유일 때만. 반환값: 토글 성공 여부 */
+  toggleActive: (linkId: number) => boolean;
+  applyLinks: (artistGroupId: number) => void;
+  revertLinks: (artistGroupId: number) => void;
+
+  // ── 셀렉터 ────────────────────────────────────────────────────────────────
+  /** linksDraft를 library와 조인해 order 오름차순으로 반환 */
+  linkedSetOf: (artistGroupId: number) => LinkedItem[];
+  /** 그 이모지를 연결한 distinct artistGroup 수 (linksDraft 기준) */
+  linkedArtistCount: (emojiId: number) => number;
   pendingCount: (artistGroupId: number) => number;
-  add: (artistGroupId: number, data: EmojiInput) => void;
-  update: (id: number, data: EmojiInput) => void;
-  remove: (id: number) => void;
-  move: (id: number, dir: 'up' | 'down') => void;
-  toggleActive: (id: number) => boolean; // 변경 후 값 반환 (토스트 문구용)
-  apply: (artistGroupId: number) => void; // draft → applied 게시
-  revert: (artistGroupId: number) => void; // draft ← applied 복원
 }
 
 export const useMemoryEmojiStore = create<MemoryEmojiState>((set, get) => ({
-  applied: seed.map((e) => ({ ...e })),
-  draft: seed.map((e) => ({ ...e })),
+  library: libSeed.map((e) => ({ ...e })),
+  linksApplied: linkSeed.map((l) => ({ ...l })),
+  linksDraft: linkSeed.map((l) => ({ ...l })),
   lastAppliedAt: { 1: '2026.06.01 10:00', 2: '2026.06.01 10:00' },
 
-  setOf: (artistGroupId) =>
-    get()
-      .draft.filter((e) => e.artistGroupId === artistGroupId)
-      .sort((a, b) => a.order - b.order),
-
-  pendingCount: (artistGroupId) => {
-    const a = get().applied.filter((e) => e.artistGroupId === artistGroupId);
-    const d = get().draft.filter((e) => e.artistGroupId === artistGroupId);
-    const aById = new Map(a.map((e) => [e.id, e]));
-    const dById = new Map(d.map((e) => [e.id, e]));
-    let n = 0;
-    for (const e of d) {
-      const prev = aById.get(e.id);
-      if (!prev || isChanged(prev, e)) n++;
-    }
-    for (const e of a) if (!dById.has(e.id)) n++; // 삭제됨
-    return n;
-  },
-
-  add: (artistGroupId, data) =>
+  // ── 라이브러리 액션 ──────────────────────────────────────────────────────
+  addLibraryEmoji: (input) =>
     set((s) => {
-      const maxOrder = s.draft
-        .filter((e) => e.artistGroupId === artistGroupId)
-        .reduce((mx, e) => Math.max(mx, e.order), 0);
-      const nextId =
-        Math.max(0, ...s.draft.map((e) => e.id), ...s.applied.map((e) => e.id)) + 1;
-      const created: EmotionEmoji = {
+      const nextId = Math.max(0, ...s.library.map((e) => e.id)) + 1;
+      const created: LibraryEmoji = {
         id: nextId,
-        artistGroupId,
-        emoji: data.emoji,
-        imageSrc: data.imageSrc,
-        labelKO: data.labelKO,
-        labelEN: data.labelEN,
-        labelJA: data.labelJA,
-        order: maxOrder + 1,
-        active: data.active,
-        inUse: false,
+        imageSrc: input.imageSrc,
+        labelKO: input.labelKO,
+        labelEN: input.labelEN,
+        labelJA: input.labelJA,
+        isPreset: false,
+        memberUsed: false,
       };
-      return { draft: [...s.draft, created] };
+      return { library: [...s.library, created] };
     }),
 
-  update: (id, data) =>
+  updateLibraryEmoji: (id, input) =>
     set((s) => ({
-      draft: s.draft.map((e) =>
+      library: s.library.map((e) =>
         e.id === id
-          ? {
-              ...e,
-              emoji: data.emoji,
-              imageSrc: data.imageSrc,
-              labelKO: data.labelKO,
-              labelEN: data.labelEN,
-              labelJA: data.labelJA,
-              active: data.active,
-            }
+          ? { ...e, imageSrc: input.imageSrc, labelKO: input.labelKO, labelEN: input.labelEN, labelJA: input.labelJA }
           : e,
       ),
     })),
 
-  remove: (id) => set((s) => ({ draft: s.draft.filter((e) => e.id !== id) })),
-
-  move: (id, dir) =>
+  deleteLibraryEmoji: (id) =>
     set((s) => {
-      const target = s.draft.find((e) => e.id === id);
+      const emoji = s.library.find((e) => e.id === id);
+      if (!emoji) return {};
+      if (emoji.memberUsed) return {};
+      const isLinked = s.linksDraft.some((l) => l.emojiId === id);
+      if (isLinked) return {};
+      return { library: s.library.filter((e) => e.id !== id) };
+    }),
+
+  // ── 연결 액션 ────────────────────────────────────────────────────────────
+  linkEmojis: (artistGroupId, emojiIds) =>
+    set((s) => {
+      const existing = s.linksDraft.filter((l) => l.artistGroupId === artistGroupId);
+      const existingEmojiIds = new Set(existing.map((l) => l.emojiId));
+      const newIds = emojiIds.filter((id) => !existingEmojiIds.has(id));
+      const capacity = 40 - existing.length;
+      const toAdd = newIds.slice(0, capacity);
+      if (toAdd.length === 0) return {};
+      const maxOrder = existing.reduce((mx, l) => Math.max(mx, l.order), 0);
+      const maxLinkId = Math.max(0, ...s.linksDraft.map((l) => l.id), ...s.linksApplied.map((l) => l.id));
+      const newLinks: EmojiLink[] = toAdd.map((emojiId, i) => ({
+        id: maxLinkId + 1 + i,
+        artistGroupId,
+        emojiId,
+        order: maxOrder + 1 + i,
+        active: false,
+      }));
+      return { linksDraft: [...s.linksDraft, ...newLinks] };
+    }),
+
+  unlink: (linkId) =>
+    set((s) => ({ linksDraft: s.linksDraft.filter((l) => l.id !== linkId) })),
+
+  moveLink: (linkId, dir) =>
+    set((s) => {
+      const target = s.linksDraft.find((l) => l.id === linkId);
       if (!target) return {};
-      const siblings = s.draft
-        .filter((e) => e.artistGroupId === target.artistGroupId)
+      const siblings = s.linksDraft
+        .filter((l) => l.artistGroupId === target.artistGroupId)
         .sort((a, b) => a.order - b.order);
-      const idx = siblings.findIndex((e) => e.id === id);
+      const idx = siblings.findIndex((l) => l.id === linkId);
       const swapIdx = dir === 'up' ? idx - 1 : idx + 1;
       if (swapIdx < 0 || swapIdx >= siblings.length) return {};
       const a = siblings[idx];
       const b = siblings[swapIdx];
       return {
-        draft: s.draft.map((e) => {
-          if (e.id === a.id) return { ...e, order: b.order };
-          if (e.id === b.id) return { ...e, order: a.order };
-          return e;
+        linksDraft: s.linksDraft.map((l) => {
+          if (l.id === a.id) return { ...l, order: b.order };
+          if (l.id === b.id) return { ...l, order: a.order };
+          return l;
         }),
       };
     }),
 
-  toggleActive: (id) => {
-    const next = !(get().draft.find((e) => e.id === id)?.active ?? true);
-    set((s) => ({ draft: s.draft.map((e) => (e.id === id ? { ...e, active: next } : e)) }));
-    return next;
+  toggleActive: (linkId) => {
+    const s = get();
+    const link = s.linksDraft.find((l) => l.id === linkId);
+    if (!link) return false;
+    if (!link.active) {
+      // 미사용 → 사용 시도: 사용 상한 확인
+      const activeCount = s.linksDraft.filter(
+        (l) => l.artistGroupId === link.artistGroupId && l.active,
+      ).length;
+      if (activeCount >= 6) return false;
+    }
+    const next = !link.active;
+    set((st) => ({
+      linksDraft: st.linksDraft.map((l) => (l.id === linkId ? { ...l, active: next } : l)),
+    }));
+    return true;
   },
 
-  apply: (artistGroupId) =>
+  applyLinks: (artistGroupId) =>
     set((s) => ({
-      applied: [
-        ...s.applied.filter((e) => e.artistGroupId !== artistGroupId),
-        ...s.draft.filter((e) => e.artistGroupId === artistGroupId).map((e) => ({ ...e })),
+      linksApplied: [
+        ...s.linksApplied.filter((l) => l.artistGroupId !== artistGroupId),
+        ...s.linksDraft.filter((l) => l.artistGroupId === artistGroupId).map((l) => ({ ...l })),
       ],
       lastAppliedAt: { ...s.lastAppliedAt, [artistGroupId]: nowStamp() },
     })),
 
-  revert: (artistGroupId) =>
+  revertLinks: (artistGroupId) =>
     set((s) => ({
-      draft: [
-        ...s.draft.filter((e) => e.artistGroupId !== artistGroupId),
-        ...s.applied.filter((e) => e.artistGroupId === artistGroupId).map((e) => ({ ...e })),
+      linksDraft: [
+        ...s.linksDraft.filter((l) => l.artistGroupId !== artistGroupId),
+        ...s.linksApplied.filter((l) => l.artistGroupId === artistGroupId).map((l) => ({ ...l })),
       ],
     })),
+
+  // ── 셀렉터 ──────────────────────────────────────────────────────────────
+  linkedSetOf: (artistGroupId) => {
+    const s = get();
+    const libMap = new Map(s.library.map((e) => [e.id, e]));
+    return s.linksDraft
+      .filter((l) => l.artistGroupId === artistGroupId)
+      .sort((a, b) => a.order - b.order)
+      .flatMap((l) => {
+        const emoji = libMap.get(l.emojiId);
+        if (!emoji) return [];
+        return [{ link: l, emoji }];
+      });
+  },
+
+  linkedArtistCount: (emojiId) => {
+    const s = get();
+    const groups = new Set(s.linksDraft.filter((l) => l.emojiId === emojiId).map((l) => l.artistGroupId));
+    return groups.size;
+  },
+
+  pendingCount: (artistGroupId) =>
+    calcPending(get().linksDraft, get().linksApplied, artistGroupId),
 }));

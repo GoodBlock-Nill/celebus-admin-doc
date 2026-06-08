@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-MEM-501-MD-UNLINK] 연결 해제 확인</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-MEM-501-MD-UNLINK] 연결 해제 확인</h1>
+<h2>Page Properties</h2>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>Screen ID</td><td>CEB-BO-MEM-501-MD-UNLINK</td></tr>
+<tr><td>기획담당자</td><td>@Nill Yoo</td></tr>
+<tr><td>디자인담당자</td><td></td></tr>
+<tr><td>개발담당자</td><td></td></tr>
+<tr><td>기능영역(Epic)</td><td>MEM — 기억저장소 / 감정 이모지</td></tr>
+<tr><td>상태</td><td>Draft</td></tr>
+<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-08</td></tr>
+<tr><td>API</td><td></td></tr>
+<tr><td>피그마 링크</td><td></td></tr>
+<tr><td>프로토타입 링크</td><td>/memory/emoji</td></tr>
+<tr><td>Breadcrumb</td><td>홈 &gt; 기억저장소 &gt; 감정 이모지 연결 관리</td></tr>
+<tr><td>비고</td><td>감정 이모지를 선택 아티스트 세트에서 연결 해제하기 전 확인하는 모달. [CEB-BO-MEM-501]에서 호출. 라이브러리 이모지 자체는 보존된다.</td></tr>
+</table>
+<hr>
+<h2>0. 공통 정책 참조</h2>
+<table>
+<tr><th>참조 문서</th><th>적용 범위</th></tr>
+<tr><td>[CEB-BO-000] 백오피스 공통 정책</td><td>확인 모달 규격, 토스트, 활동 로그</td></tr>
+<tr><td>[CEB-BO-MEM-501] 감정 이모지 연결 관리</td><td>호출 화면·연결 해제 규칙</td></tr>
+</table>
+<hr>
+<h2>1. 화면 목적</h2>
+<p>선택 아티스트 세트에서 감정 이모지를 <strong>연결 해제</strong>하기 전 확인하는 모달이다. 연결 해제는 해당 아티스트에서만 제거하며 라이브러리 이모지는 보존된다.</p>
+<hr>
+<h2>2. UI 설명</h2>
+<table>
+<tr><th>영역</th><th>내용</th></tr>
+<tr><td>헤더</td><td>"연결 해제"</td></tr>
+<tr><td>본문</td><td>"'{라벨}' 이모지를 {아티스트명} 세트에서 연결 해제할까요?" + "라이브러리에는 보존되며, 다른 아티스트 연결과 회원 기록에는 영향이 없습니다."</td></tr>
+<tr><td>푸터</td><td>[취소] / [연결 해제]</td></tr>
+</table>
+<blockquote>
+<p>시각적 스타일은 프로토타입 참조</p>
+</blockquote>
+<hr>
+<h2>3. 화면 내 기능설명</h2>
+<table>
+<tr><th>요소</th><th>동작</th></tr>
+<tr><td>[연결 해제]</td><td>세트에서 해당 이모지 연결 제거(작업본 누적) + 모달 닫기 + 완료 토스트</td></tr>
+<tr><td>[취소] / 배경</td><td>모달 닫기 (연결 해제 안 함)</td></tr>
+</table>
+<hr>
+<h2>4. 규칙·로직</h2>
+<ul>
+<li>호출 화면([CEB-BO-MEM-501])에서 <strong>사용여부가 미사용인</strong> 이모지만 [연결 해제] 버튼이 활성화되어 본 모달로 진입한다.
+<ul>
+<li>사용여부가 <strong>사용</strong>인 이모지 → 먼저 미사용으로 전환해야 한다([연결 해제] 버튼 비활성, 툴팁 안내).</li></ul>
+</li>
+<li>연결 해제는 <strong>해당 아티스트 세트에서만 제거</strong>하며, <strong>라이브러리 이모지·다른 아티스트 연결·회원 기억 기록은 보존</strong>된다.</li>
+<li>라이브러리에서 이모지 자체를 전역 삭제하려면 [CEB-BO-MEM-502-MD-DELETE]를 사용한다.</li>
+<li>연결 해제는 작업본에 누적되며, 앱 반영은 [CEB-BO-MEM-501]의 [변경사항 적용] 시점이다.</li>
+<li>권한은 [CEB-BO-SYS-102] 권한 관리 그룹 설정을 따른다.</li></ul>
+<hr>
+<h2>5. UI 상태별 처리</h2>
+<table>
+<tr><th>상태</th><th>처리</th></tr>
+<tr><td>Default</td><td>연결 해제 대상 라벨·아티스트명 표시</td></tr>
+<tr><td>처리 중</td><td>[연결 해제] 비활성</td></tr>
+<tr><td>Error</td><td>Toast (Error) + 모달 유지</td></tr>
+</table>
+<hr>
+<h2>6. 활동 로그</h2>
+<table>
+<tr><th>액션</th><th>로그 메시지 (한국어)</th></tr>
+<tr><td>연결 해제</td><td>감정 이모지 '{라벨}'을(를) 연결 해제했습니다. (아티스트: {아티스트명})</td></tr>
+</table>
+<hr>
+<h2>7. 에러·예외 상황</h2>
+<table>
+<tr><th>상황</th><th>메시지</th></tr>
+<tr><td>연결 해제 불가 항목</td><td>호출 화면에서 [연결 해제] 버튼 비활성(클릭 불가) — 본 모달 미진입. 사용 중인 항목은 먼저 미사용으로 전환 안내(툴팁)</td></tr>
+<tr><td>처리 실패</td><td>Toast (Error): "연결 해제에 실패했습니다."</td></tr>
+</table>
+<hr>
+<h2>8. 연관 화면ID</h2>
+<table>
+<tr><th>화면 ID</th><th>화면명</th><th>관계</th></tr>
+<tr><td>CEB-BO-MEM-501</td><td>감정 이모지 연결 관리</td><td>호출 화면</td></tr>
+<tr><td>CEB-BO-MEM-501-MD-LINK</td><td>이모지 연결</td><td>형제 모달</td></tr>
+<tr><td>CEB-BO-MEM-502-MD-DELETE</td><td>라이브러리 삭제 확인</td><td>전역 삭제(구분)</td></tr>
+</table>
+<hr>
+<h2>9. 변경 이력</h2>
+<table>
+<tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.0</strong></td><td><strong>2026-06-08</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성(구 [CEB-BO-MEM-501-MD-DELETE] 폐기·재정의). 라이브러리 연결 구조 전환에 따라 "세트 삭제"를 <strong>"연결 해제"</strong>로 변경 — ① 해당 아티스트 세트에서만 제거, 라이브러리 이모지·다른 아티스트 연결·회원 기록 보존 ② 사용여부 미사용일 때만 진입(사용 중은 미사용 전환 선행) ③ 전역 삭제는 [CEB-BO-MEM-502-MD-DELETE]로 분리. [CEB-000] §7.5 v6.5 정합.</td></tr>
+</table>
+
+</body>
+</html>

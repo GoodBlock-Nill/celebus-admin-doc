@@ -1,82 +1,125 @@
-// 기억저장소 감정 이모지 — 아티스트별 세트 (BO 등록·관리)
-// 규격: [CEB-000] §7.5 — OS 유니코드 이모지 또는 커스텀 이미지, 아티스트별 세트, 등록 최대 40종/사용 최대 6종, 기본 6종 프리셋
+// 기억저장소 감정 이모지 — 전역 라이브러리 + 아티스트 연결 구조
+// 규격: [CEB-000] §7.5 — 이미지 업로드 전용, 전역 라이브러리 1회 등록 후 아티스트 연결
 // 프로토타입 100% mock. 새로고침 시 초기값 복귀.
 
-export interface EmotionEmoji {
+export interface LibraryEmoji {
   id: number;
+  imageSrc: string;     // 이미지 파일명 (이미지 업로드 전용)
+  labelKO: string;
+  labelEN: string;
+  labelJA: string;
+  isPreset: boolean;    // 기본 제공 6종 여부
+  memberUsed: boolean;  // 회원 사용 이력 — true면 전역 삭제 차단
+}
+
+export interface EmojiLink {
+  id: number;           // 연결 id
   artistGroupId: number;
-  emoji: string; // 시스템 유니코드 이모지 (이미지 방식이면 빈 문자열)
-  imageSrc?: string; // 커스텀 이미지 파일명 (있으면 이미지 방식)
-  labelKO: string;
-  labelEN: string;
-  labelJA: string;
-  order: number; // 앱 노출 순서 (1부터)
-  active: boolean; // 사용 여부 (미사용 시 앱 선택지에서 숨김, 기존 기록 보존)
-  inUse: boolean; // 회원 기억 게시물에서 사용 중 — true면 삭제 차단
+  emojiId: number;      // → LibraryEmoji.id
+  order: number;        // 아티스트 내 표시 순서 (1부터)
+  active: boolean;      // 사용여부 (미사용 시 앱 숨김)
 }
 
-// [CEB-000] §7.5 기본 6종 프리셋
-interface Preset {
-  emoji: string;
-  labelKO: string;
-  labelEN: string;
-  labelJA: string;
-}
+export const MAX_LINK_PER_ARTIST = 40;
+export const MAX_ACTIVE_EMOJI = 6;
 
-export const DEFAULT_EMOJI_PRESETS: Preset[] = [
-  { emoji: '😍', labelKO: '설렘', labelEN: 'Flutter', labelJA: 'ときめき' },
-  { emoji: '😭', labelKO: '감동', labelEN: 'Moved', labelJA: '感動' },
-  { emoji: '🎉', labelKO: '신남', labelEN: 'Excited', labelJA: 'ワクワク' },
-  { emoji: '💜', labelKO: '사랑', labelEN: 'Love', labelJA: '愛' },
-  { emoji: '🤩', labelKO: '어마', labelEN: 'Amazed', labelJA: 'びっくり' },
-  { emoji: '✨', labelKO: '행복', labelEN: 'Happy', labelJA: '幸せ' },
-];
-
-export const MAX_EMOJI_PER_ARTIST = 40; // 세트당 등록 상한
-export const MAX_ACTIVE_EMOJI = 6; // 사용(앱 노출) 상한
-
-// 그룹 1·2에 기본 프리셋 세트 시드. 그 외 그룹은 빈 세트(미등록 상태 시연).
-function seedSet(artistGroupId: number, inUseLabels: string[], startId: number): EmotionEmoji[] {
-  return DEFAULT_EMOJI_PRESETS.map((p, idx) => ({
-    id: startId + idx,
-    artistGroupId,
-    emoji: p.emoji,
-    labelKO: p.labelKO,
-    labelEN: p.labelEN,
-    labelJA: p.labelJA,
-    order: idx + 1,
-    active: true,
-    inUse: inUseLabels.includes(p.labelKO),
-  }));
-}
-
-export const emotionEmojis: EmotionEmoji[] = [
-  // 그룹 1 — 기본 6종 사용(정확히 6), 설렘·사랑은 사용 중(삭제 차단)
-  ...seedSet(1, ['설렘', '사랑'], 101),
-  // 그룹 2 — 기본 6종 사용 + 커스텀 2종(미사용, 사용 상한 6 보호), 감동 사용 중
-  ...seedSet(2, ['감동'], 201),
+// ─── 라이브러리 시드 ───────────────────────────────────────────────────────────
+// 기본 제공 6종 (isPreset: true)
+export const libraryEmojis: LibraryEmoji[] = [
   {
-    id: 207,
-    artistGroupId: 2,
-    emoji: '🔥',
+    id: 1,
+    imageSrc: 'preset-seollem.png',
+    labelKO: '설렘',
+    labelEN: 'Flutter',
+    labelJA: 'ときめき',
+    isPreset: true,
+    memberUsed: true,
+  },
+  {
+    id: 2,
+    imageSrc: 'preset-gamdong.png',
+    labelKO: '감동',
+    labelEN: 'Moved',
+    labelJA: '感動',
+    isPreset: true,
+    memberUsed: true,
+  },
+  {
+    id: 3,
+    imageSrc: 'preset-sinnam.png',
+    labelKO: '신남',
+    labelEN: 'Excited',
+    labelJA: 'ワクワク',
+    isPreset: true,
+    memberUsed: false,
+  },
+  {
+    id: 4,
+    imageSrc: 'preset-sarang.png',
+    labelKO: '사랑',
+    labelEN: 'Love',
+    labelJA: '愛',
+    isPreset: true,
+    memberUsed: true,
+  },
+  {
+    id: 5,
+    imageSrc: 'preset-uwa.png',
+    labelKO: '우와',
+    labelEN: 'Amazed',
+    labelJA: 'びっくり',
+    isPreset: true,
+    memberUsed: false,
+  },
+  {
+    id: 6,
+    imageSrc: 'preset-haengbok.png',
+    labelKO: '행복',
+    labelEN: 'Happy',
+    labelJA: '幸せ',
+    isPreset: true,
+    memberUsed: false,
+  },
+  // 커스텀 예시 2종 (isPreset: false)
+  {
+    id: 7,
+    imageSrc: 'custom-passion.png',
     labelKO: '열정',
     labelEN: 'Passion',
     labelJA: '情熱',
-    order: 7,
-    active: false,
-    inUse: false,
+    isPreset: false,
+    memberUsed: false,
   },
-  // 커스텀 이미지 방식 예시 (그룹 2, 미사용)
   {
-    id: 208,
-    artistGroupId: 2,
-    emoji: '',
-    imageSrc: 'v01d-cheer.png',
+    id: 8,
+    imageSrc: 'custom-lightstick.png',
     labelKO: '응원봉',
     labelEN: 'Lightstick',
     labelJA: 'ペンライト',
-    order: 8,
-    active: false,
-    inUse: false,
+    isPreset: false,
+    memberUsed: false,
   },
+];
+
+// ─── 연결 시드 ────────────────────────────────────────────────────────────────
+// 그룹 1: 기본 6종 전부 연결, 모두 active (사용 6/6)
+// 그룹 2: 기본 6종 + 커스텀 2종 연결 (커스텀은 active:false — 사용 상한 6 보호)
+// 그룹 3+: 빈 연결(미연결 상태 시연)
+export const emojiLinks: EmojiLink[] = [
+  // 그룹 1
+  { id: 101, artistGroupId: 1, emojiId: 1, order: 1, active: true },
+  { id: 102, artistGroupId: 1, emojiId: 2, order: 2, active: true },
+  { id: 103, artistGroupId: 1, emojiId: 3, order: 3, active: true },
+  { id: 104, artistGroupId: 1, emojiId: 4, order: 4, active: true },
+  { id: 105, artistGroupId: 1, emojiId: 5, order: 5, active: true },
+  { id: 106, artistGroupId: 1, emojiId: 6, order: 6, active: true },
+  // 그룹 2
+  { id: 201, artistGroupId: 2, emojiId: 1, order: 1, active: true },
+  { id: 202, artistGroupId: 2, emojiId: 2, order: 2, active: true },
+  { id: 203, artistGroupId: 2, emojiId: 3, order: 3, active: true },
+  { id: 204, artistGroupId: 2, emojiId: 4, order: 4, active: true },
+  { id: 205, artistGroupId: 2, emojiId: 5, order: 5, active: true },
+  { id: 206, artistGroupId: 2, emojiId: 6, order: 6, active: true },
+  { id: 207, artistGroupId: 2, emojiId: 7, order: 7, active: false },
+  { id: 208, artistGroupId: 2, emojiId: 8, order: 8, active: false },
 ];
