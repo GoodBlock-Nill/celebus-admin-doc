@@ -4,7 +4,7 @@ import { use, useState } from 'react';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import ConfirmModal from '@/components/clone/ConfirmModal';
 import { toast } from '@/components/ui/Toast';
-import { getFandomById, computeLevelStatus, type FandomStatus } from '@/mock/fandom';
+import { getFandomById, computeLevelStatus, FANDOM_MIN_PUBLISH_LEVELS, type FandomStatus } from '@/mock/fandom';
 import CurveTab from './_components/CurveTab';
 import RewardTab from './_components/RewardTab';
 import HistoryTab from './_components/HistoryTab';
@@ -50,6 +50,7 @@ export default function FandomDetailPage({ params }: { params: Promise<{ id: str
 
   const levelStatus = computeLevelStatus(fandom.currentLevel, fandom.levels.length);
   const hasCurve = fandom.levels.length > 0;
+  const canPublish = fandom.levels.length >= FANDOM_MIN_PUBLISH_LEVELS; // 게시 = 레벨 5개 이상
 
   // 상태별 전환 액션 (확인 모달 → 상태 전환 → 완료 토스트)
   // 정산중 단계 제거 — [CEB-BO-EVT-000 v1.5] §4.1.1 / [CEB-BO-EVT-101 v1.3]
@@ -59,7 +60,7 @@ export default function FandomDetailPage({ params }: { params: Promise<{ id: str
           label: '게시',
           next: '진행중',
           title: '팬덤레벨을 게시할까요?',
-          lines: ['게시하면 앱에 노출되고 운영이 시작됩니다.', '레벨 곡선이 1개 이상 설정되어 있어야 합니다.'],
+          lines: ['게시하면 앱에 노출되고 운영이 시작됩니다.', '레벨이 5개 이상 설정되어 있어야 합니다.'],
           toast: `'${fandom.season}' 팬덤레벨을 게시했습니다.`,
         }
       : status === '진행중'
@@ -74,10 +75,10 @@ export default function FandomDetailPage({ params }: { params: Promise<{ id: str
 
   const handleTransition = () => {
     if (!transition) return;
-    // 게시 전 곡선 설정 검증 — [CEB-BO-EVT-201] §3.5 / §5
-    if (transition.next === '진행중' && !hasCurve) {
+    // 게시 전 레벨 수 검증 — [CEB-BO-EVT-201] §7 / [CEB-BO-EVT-201-MD-PUBLISH] §5 (최소 5개)
+    if (transition.next === '진행중' && !canPublish) {
       setTransitionOpen(false);
-      toast.error('레벨 곡선을 1개 이상 설정해야 게시할 수 있습니다.');
+      toast.error('레벨을 5개 이상 설정해야 게시할 수 있습니다.');
       return;
     }
     setStatus(transition.next);

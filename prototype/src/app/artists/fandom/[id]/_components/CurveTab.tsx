@@ -88,7 +88,7 @@ export default function CurveTab({ fandom, onEditingChange }: { fandom: FandomLe
       {/* 레벨 곡선 테이블 */}
       <div className="bg-white border border-gray-200 rounded-2xl p-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold text-gray-900">레벨 곡선 <span className="text-gray-400 font-normal text-sm">(최대 10레벨)</span></h2>
+          <h2 className="text-base font-bold text-gray-900">레벨 곡선 <span className="text-gray-400 font-normal text-sm">(5~10레벨 · 게시하려면 5개 이상)</span></h2>
           <div className="flex gap-2">
             {editing ? (
               <>

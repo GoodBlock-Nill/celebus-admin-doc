@@ -15,8 +15,14 @@ export const FANDOM_STATUSES: FandomStatus[] = ['준비', '진행중', '종료']
 export const REWARD_TYPES: RewardType[] = ['디지털 굿즈', '래플 예고', '서포트 예고'];
 export const MINT_STATUSES: MintStatus[] = ['대기', '민팅중', '완료'];
 
-// 생성 모달용 시즌 연도 목록 — [CEB-BO-EVT-101] §2.4
-export const FANDOM_SEASON_YEARS = [2024, 2025, 2026];
+// 생성 모달용 시즌 연도 목록 — [CEB-BO-EVT-101-MD-CREATE] §2.3 (올해 ~ 내년, 과거 제외)
+export const FANDOM_SEASON_YEARS = (() => {
+  const y = new Date().getFullYear();
+  return [y, y + 1];
+})();
+
+// 게시(준비→진행중) 최소 레벨 — [CEB-BO-EVT-201] §2.3 / [CEB-BO-EVT-000] §4.2
+export const FANDOM_MIN_PUBLISH_LEVELS = 5;
 
 // 권장 레벨링 곡선 (단위 DUK) — [CEB-BO-EVT-000] §4.2
 export const RECOMMENDED_CURVE = [10000, 30000, 70000, 150000, 300000, 550000, 1000000, 1800000, 3200000, 6000000];
