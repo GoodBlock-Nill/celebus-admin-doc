@@ -15,10 +15,19 @@ import {
 } from '@/mock/support';
 import { useSupportEventStore } from '@/stores/supportEventStore';
 
-// 대시보드 "종료" 카드 = 미달성종료 + 집행취소 묶음 (SUP-101 §2.2)
-const ENDED_STATUSES: SupportStatus[] = ['미달성종료', '집행취소'];
-
+// 대시보드 = 7상태 개별 카드 (SUP-101 §2.2). 각 카드 클릭 시 해당 상태 단일 필터
 const PAGE_SIZE = 10;
+
+// 카드 카운트 색상 (상태 배지 톤과 정합)
+const STATUS_COUNT_CLASS: Record<SupportStatus, string> = {
+  임시저장: 'text-gray-500',
+  모집중: 'text-emerald-600',
+  달성: 'text-indigo-600',
+  집행중: 'text-amber-600',
+  완료: 'text-gray-800',
+  미달성종료: 'text-rose-600',
+  집행취소: 'text-rose-600',
+};
 
 export function statusBadge(s: SupportStatus): string {
   switch (s) {
@@ -42,26 +51,17 @@ export default function SupportListPage() {
   // 스토어 공유 — 상세에서 상태 변경 시 대시보드·목록 즉시 반영
   const events = useSupportEventStore((s) => s.events);
 
-  const stats = useMemo(() => ({
-    모집중: events.filter((e) => e.status === '모집중').length,
-    달성: events.filter((e) => e.status === '달성').length,
-    집행중: events.filter((e) => e.status === '집행중').length,
-    완료: events.filter((e) => e.status === '완료').length,
-    종료: events.filter((e) => ENDED_STATUSES.includes(e.status)).length,
-  }), [events]);
-
-  // statusFilter는 단일 상태 또는 "종료"(미달성종료+집행취소 묶음)
-  const matchesStatus = (e: SupportEvent) => {
-    if (!statusFilter) return true;
-    if (statusFilter === '종료') return ENDED_STATUSES.includes(e.status);
-    return e.status === statusFilter;
-  };
+  // 상태별 카운트 (7상태 개별)
+  const countByStatus = useMemo(() => {
+    const acc = Object.fromEntries(SUPPORT_STATUSES.map((s) => [s, 0])) as Record<SupportStatus, number>;
+    for (const e of events) acc[e.status] += 1;
+    return acc;
+  }, [events]);
 
   const filtered = useMemo(() => events
-    .filter(matchesStatus)
+    .filter((e) => (statusFilter ? e.status === statusFilter : true))
     .filter((e) => (groupFilter ? e.groupName === groupFilter : true))
     .filter((e) => (keyword ? e.titleKo.toLowerCase().includes(keyword.toLowerCase()) : true)),
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   [events, statusFilter, groupFilter, keyword]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
@@ -85,17 +85,22 @@ export default function SupportListPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-5 gap-4 mb-6">
-        <StatCardRow label="모집중" count={stats.모집중} onClick={() => toggleStatus('모집중')} active={statusFilter === '모집중'} countClassName="text-emerald-600" />
-        <StatCardRow label="달성" count={stats.달성} onClick={() => toggleStatus('달성')} active={statusFilter === '달성'} countClassName="text-indigo-600" />
-        <StatCardRow label="집행중" count={stats.집행중} onClick={() => toggleStatus('집행중')} active={statusFilter === '집행중'} countClassName="text-amber-600" />
-        <StatCardRow label="완료" count={stats.완료} onClick={() => toggleStatus('완료')} active={statusFilter === '완료'} />
-        <StatCardRow label="종료" count={stats.종료} onClick={() => toggleStatus('종료')} active={statusFilter === '종료'} countClassName="text-rose-600" />
+      <div className="grid grid-cols-7 gap-3 mb-6">
+        {SUPPORT_STATUSES.map((s) => (
+          <StatCardRow
+            key={s}
+            label={s}
+            count={countByStatus[s]}
+            onClick={() => toggleStatus(s)}
+            active={statusFilter === s}
+            countClassName={STATUS_COUNT_CLASS[s]}
+          />
+        ))}
       </div>
 
       <div className="flex items-center gap-3 mb-4">
         <div className="relative">
-          <select value={statusFilter === '종료' ? '' : statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+          <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
             className="h-10 pl-3 pr-9 border border-gray-200 rounded-lg text-sm bg-white appearance-none cursor-pointer min-w-[150px] focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <option value="">상태(전체)</option>
             {SUPPORT_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
