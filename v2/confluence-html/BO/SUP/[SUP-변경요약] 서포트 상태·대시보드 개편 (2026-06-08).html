@@ -82,13 +82,13 @@ p {
 <tr><td>일자</td><td>2026-06-08</td></tr>
 <tr><td>정리</td><td>@Nill Yoo</td></tr>
 <tr><td>대상</td><td>개발팀 · 디자인팀</td></tr>
-<tr><td>계기</td><td>강제 종료 로직 괴리 + 대시보드 혼란 + 개발자 질문(게시·노출 시점)</td></tr>
-<tr><td>관련 문서</td><td>[CEB-BO-SUP-000] · [CEB-BO-SUP-101] · [CEB-BO-SUP-201] · [CEB-BO-SUP-201-MD-PUBLISH] · [CEB-BO-SUP-201-MD-FORCE-END] · [CEB-BO-SUP-201-MD-DELETE]</td></tr>
+<tr><td>계기</td><td>강제 종료 로직 괴리 + 대시보드 혼란 + 개발자 질문(게시·노출 시점, 응원 상세 페이징)</td></tr>
+<tr><td>관련 문서</td><td>[CEB-BO-SUP-000] · [CEB-BO-SUP-101] · [CEB-BO-SUP-201] · [CEB-BO-SUP-201-MD-PUBLISH] · [CEB-BO-SUP-201-MD-FORCE-END] · [CEB-BO-SUP-201-MD-DELETE] · [CEB-BO-SUP-203-MD-CHEER-DETAIL]</td></tr>
 </table>
 <hr>
 <h2>1. 한 줄 요약</h2>
 <blockquote>
-<p>서포트 이벤트의 <strong>상태 모델·버튼·대시보드</strong>를 운영 의도에 맞게 정리했습니다. 3가지: ① <strong>강제 종료 = 모집중 전용</strong> ② <strong>대시보드 = 상태별 개별 카드</strong> ③ <strong>모집대기 상태 신설</strong>(게시 후 시작 전 구간 분리).</p>
+<p>서포트 이벤트의 <strong>상태 모델·버튼·대시보드</strong>를 운영 의도에 맞게 정리했습니다. ① <strong>강제 종료 = 모집중 전용</strong> ② <strong>대시보드 = 상태별 개별 카드</strong> ③ <strong>모집대기 상태 신설</strong>(게시 후 시작 전 구간 분리) ④ <strong>응원 상세(회차) 페이지네이션</strong>(개발팀 댓글).</p>
 </blockquote>
 <p>세 변경 모두 <strong>프로토타입과 문서를 함께</strong> 맞췄습니다.</p>
 <hr>
@@ -98,6 +98,7 @@ p {
 <tr><td>①</td><td>강제 종료 노출</td><td>달성·집행중에도 노출(오류)</td><td><strong>모집중 전용</strong>. 집행 단계 중단은 [집행 취소]가 전담</td></tr>
 <tr><td>②</td><td>대시보드 카드</td><td>5장(완료 별도·미달성종료+집행취소 묶음·임시저장 제외)</td><td><strong>상태별 개별 카드</strong>(라이프사이클 순)</td></tr>
 <tr><td>③</td><td>게시 후 ~ 시작 전</td><td>게시 즉시 모집중 → "모집중인데 미노출" 모순</td><td><strong>모집대기 상태 신설</strong>(앱 미노출), 시작일시 도달 시 자동 모집중</td></tr>
+<tr><td>④</td><td>응원 상세(회차) 내역</td><td>페이징 없음 (다회 응원 시 길어짐)</td><td><strong>10건/페이지 페이지네이션</strong>(회차 번호 전체 기준 연속, 누적=전체 고정)</td></tr>
 </table>
 <hr>
 <h2>3. 핵심 개념 — 8상태 라이프사이클 + 상태별 버튼</h2>
@@ -163,6 +164,7 @@ p {
 <tr><td>CEB-BO-SUP-201-MD-PUBLISH</td><td>v1.1</td><td>게시 → 모집대기, 필수값 전체 검증</td></tr>
 <tr><td>CEB-BO-SUP-201-MD-FORCE-END</td><td>v1.1</td><td>노출 상태 "모집중·달성·집행중" → <strong>"모집중"</strong></td></tr>
 <tr><td>CEB-BO-SUP-201-MD-DELETE</td><td>v1.1</td><td>삭제 가능 = 임시저장·모집대기</td></tr>
+<tr><td>CEB-BO-SUP-203-MD-CHEER-DETAIL</td><td>v1.1</td><td>응원 상세 회차 테이블 페이지네이션(10건/페이지) — 개발팀 댓글 반영</td></tr>
 </table>
 <p>영역 가이드(SSOT): <strong>[CEB-BO-SUP-000] §4.1</strong> · 프로토타입: <code>prototype/src/app/artists/support/</code></p>
 <hr>

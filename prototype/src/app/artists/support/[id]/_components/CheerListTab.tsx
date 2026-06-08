@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import SimpleTable from '@/components/clone/SimpleTable';
+import SimplePagination from '@/components/clone/SimplePagination';
 import {
   isRefundedStatus, cheerTotal, cheerCount, firstCheerAt, lastCheerAt,
   cheererCount, totalCheerCount,
@@ -62,9 +63,14 @@ function Summary({ label, value }: { label: string; value: string }) {
   );
 }
 
+const CHEER_PER_PAGE = 10; // 회차 내역 페이지네이션 (긴 다회 응원 대비)
+
 function CheerDetailModal({ cheerer, refundedAll, onClose }: { cheerer: Cheerer; refundedAll: boolean; onClose: () => void }) {
   const refunded = refundedAll || cheerer.refunded;
   const ordered = [...cheerer.cheers].sort((a, b) => a.at.localeCompare(b.at));
+  const [page, setPage] = useState(1);
+  const totalPages = Math.ceil(ordered.length / CHEER_PER_PAGE) || 1;
+  const paged = ordered.slice((page - 1) * CHEER_PER_PAGE, page * CHEER_PER_PAGE);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
@@ -89,23 +95,31 @@ function CheerDetailModal({ cheerer, refundedAll, onClose }: { cheerer: Cheerer;
               </tr>
             </thead>
             <tbody>
-              {ordered.map((c, i) => (
-                <tr key={i} className="border-b border-gray-50">
-                  <td className="py-2 text-gray-500">{i + 1}회차</td>
-                  <td className="py-2 text-right font-medium text-gray-900">{c.amount.toLocaleString()}</td>
-                  <td className="py-2 text-right text-gray-500">{c.at}</td>
-                </tr>
-              ))}
+              {paged.map((c, i) => {
+                const seq = (page - 1) * CHEER_PER_PAGE + i + 1; // 전체 기준 회차 번호
+                return (
+                  <tr key={seq} className="border-b border-gray-50">
+                    <td className="py-2 text-gray-500">{seq}회차</td>
+                    <td className="py-2 text-right font-medium text-gray-900">{c.amount.toLocaleString()}</td>
+                    <td className="py-2 text-right text-gray-500">{c.at}</td>
+                  </tr>
+                );
+              })}
             </tbody>
             <tfoot>
               <tr className="border-t border-gray-200">
-                <td className="py-2 font-semibold text-gray-700">누적</td>
+                <td className="py-2 font-semibold text-gray-700">누적(전체)</td>
                 <td className="py-2 text-right font-bold text-indigo-600">{cheerTotal(cheerer).toLocaleString()}</td>
                 <td />
               </tr>
             </tfoot>
           </table>
         </div>
+        {totalPages > 1 && (
+          <div className="px-5 pb-1">
+            <SimplePagination page={page} totalPages={totalPages} onChange={setPage} />
+          </div>
+        )}
         <div className="px-5 py-3 border-t border-gray-200 flex justify-end">
           <button onClick={onClose} className="h-10 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">닫기</button>
         </div>
