@@ -6,7 +6,7 @@ import SimpleTable from '@/components/clone/SimpleTable';
 import SimplePagination from '@/components/clone/SimplePagination';
 import { toast } from '@/components/ui/Toast';
 import SeasonFormModal from './SeasonFormModal';
-import { dukActiveGroups, dukSeasons as initialSeasons, type DukSeason, type DukSeasonStatus } from '@/mock/duk';
+import { dukActiveGroups, dukSeasons as initialSeasons, type DukLangText, type DukSeason, type DukSeasonStatus } from '@/mock/duk';
 
 // [CEB-BO-ART-401] v1.8 §2-1 탭 1 — 랭킹 시즌 설정
 // - 시즌 리스트 + [신규 시즌] 버튼 + 그룹 Dropdown 필터 (v1.8)
@@ -38,7 +38,7 @@ export default function SeasonTab() {
 
   const handleCreate = (data: {
     artistGroupId: number;
-    name: string;
+    name: DukLangText;
     startAt: string;
     endAt: string;
   }) => {
@@ -64,9 +64,9 @@ export default function SeasonTab() {
         status,
       },
     ]);
-    // 활동 로그 (MD-SEASON §5.5 정합)
+    // 활동 로그 (MD-SEASON §5.5 정합) — 한국어 표기
     console.info(
-      `[활동 로그] 덕력 시즌 '${groupName} - ${data.name}'을(를) 등록했습니다. (기간: ${data.startAt} ~ ${data.endAt})`,
+      `[활동 로그] 덕력 시즌 '${groupName} - ${data.name.ko}'을(를) 등록했습니다. (기간: ${data.startAt} ~ ${data.endAt})`,
     );
     toast.success('시즌이 저장되었습니다.');
     setRegisterOpen(false);
@@ -115,7 +115,18 @@ export default function SeasonTab() {
       <SimpleTable
         columns={[
           { key: 'artistGroupName', label: '그룹' },
-          { key: 'name', label: '시즌명' },
+          {
+            key: 'name',
+            label: '시즌명',
+            render: (r: DukSeason) => (
+              <span className="flex items-center gap-1.5">
+                {r.name.ko}
+                {r.closeType === 'forced' && (
+                  <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-rose-100 text-rose-600">강제종료</span>
+                )}
+              </span>
+            ),
+          },
           {
             key: 'range',
             label: '기간',

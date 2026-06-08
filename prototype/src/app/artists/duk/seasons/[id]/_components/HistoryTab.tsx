@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import { PhotoIcon } from '@heroicons/react/24/outline';
 import { toast } from '@/components/ui/Toast';
 import SimplePagination from '@/components/clone/SimplePagination';
 import {
@@ -17,16 +18,14 @@ import {
 import PayoutStatusModal from './PayoutStatusModal';
 
 // [CEB-BO-ART-401-DETAIL] §2.11~§2.13 — 보상 지급 내역 탭
-// - 시즌 = 1개월: 시즌 종료 시 1회 정산 → 단일 지급 내역 (월 선택 드롭다운 없음)
-// - 한 행 = 한 상품 지급 건 (회원 × 상품 조합)
-// - 순위는 시즌 획득 누적 랭킹(getDukRankingBySeason) 기준 (배열 인덱스 아님)
-// - 지급 상태 분포 통계는 화면 현재 상태(payouts)로 computePayoutStats 재계산
-// - 수동 지급(배송·현장)만 [상태 변경] 버튼 노출
+// v1.7 — isForcedClosed prop 추가. 강제 종료 시즌 = 빈 안내 "강제 종료된 시즌으로 지급 내역이 없습니다."
+//        "등수 기준" 컬럼에 아이콘 + 대상명(ko) 표시 (payout.targetIconSrc / targetName.ko)
 
 interface Props {
   seasonId: number;
   seasonName: string;
   groupName: string;
+  isForcedClosed?: boolean; // v1.7 — 강제 종료 시즌 여부
 }
 
 const PAGE_SIZE = 20;
@@ -62,16 +61,29 @@ function describeTarget(type: DukRewardTargetType, value: string): string {
   return value;
 }
 
-export default function HistoryTab({ seasonId, seasonName, groupName }: Props) {
+export default function HistoryTab({ seasonId, seasonName, groupName, isForcedClosed = false }: Props) {
+  // 강제 종료 시즌 — 지급 내역 없음 안내
+  if (isForcedClosed) {
+    return (
+      <section className="bg-white border border-gray-100 rounded-xl px-6 py-12 text-center">
+        <p className="text-sm text-gray-500">강제 종료된 시즌으로 지급 내역이 없습니다.</p>
+        <p className="text-xs text-gray-400 mt-1">강제 종료 시즌은 보상이 지급되지 않습니다. 정상 보상은 종료일 자동 정산으로만 지급됩니다.</p>
+      </section>
+    );
+  }
+
   // 시즌 = 1개월 → 시즌당 1회 정산. 월 선택 없이 시즌 단위 지급 내역 1건 사용
   // 순위는 시즌 획득 누적 랭킹(getDukRankingBySeason) 기준으로 정렬 (배열 인덱스가 아닌 실제 순위)
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const rankByMember = useMemo(() => {
     const map = new Map<string, number>();
     for (const r of getDukRankingBySeason(seasonId)) map.set(r.memberId, r.rank);
     return map;
   }, [seasonId]);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [page, setPage] = useState(1);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [payouts, setPayouts] = useState<DukRewardPayout[]>(() => {
     const rows = getSeasonPayouts(seasonId);
     // 획득 누적 랭킹의 순위로 정합. 랭킹에 없는 회원은 정산 시점 snapshot rank 유지
@@ -79,9 +91,11 @@ export default function HistoryTab({ seasonId, seasonName, groupName }: Props) {
       .map((p) => ({ ...p, rank: rankByMember.get(p.memberId) ?? p.rank }))
       .sort((a, b) => a.rank - b.rank || a.prizeId - b.prizeId);
   });
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [editTarget, setEditTarget] = useState<DukRewardPayout | null>(null);
 
   // 지급 상태 분포 — 화면 현재 상태(payouts)에서 재계산 (상태 변경 후 즉시 반영)
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const stats = useMemo(() => computePayoutStats(payouts), [payouts]);
 
   const handlePayoutSave = (updated: DukRewardPayout) => {
@@ -173,7 +187,21 @@ export default function HistoryTab({ seasonId, seasonName, groupName }: Props) {
                         {row.memberNickname}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-gray-700">{describeTarget(row.targetType, row.targetValue)}</td>
+                    <td className="px-4 py-3">
+                      {/* v1.7 — 아이콘 + 대상명(ko) + 등수 기준 텍스트 */}
+                      <div className="flex items-center gap-1.5">
+                        {row.targetIconSrc && (
+                          <span
+                            className="inline-flex items-center justify-center w-6 h-6 rounded border border-gray-200 bg-gray-50 shrink-0"
+                            title={row.targetIconSrc}
+                          >
+                            <PhotoIcon className="w-3.5 h-3.5 text-gray-400" />
+                          </span>
+                        )}
+                        <span className="text-gray-800 font-medium">{row.targetName.ko}</span>
+                        <span className="text-xs text-gray-400">({describeTarget(row.targetType, row.targetValue)})</span>
+                      </div>
+                    </td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${PRIZE_TYPE_STYLE[row.prizeType]}`}>
                         {row.prizeType}

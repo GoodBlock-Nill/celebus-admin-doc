@@ -164,7 +164,7 @@ export default function RankingTab() {
             {seasonsInYear.length === 0 && <option value="">시즌 없음</option>}
             {seasonsInYear.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.name} ({s.status})
+                {s.name.ko} ({s.status})
               </option>
             ))}
           </select>
@@ -189,7 +189,7 @@ export default function RankingTab() {
         <span className="font-semibold text-gray-900">{groupName}</span>
         {season ? (
           <>
-            <span className="text-gray-700">{season.name}</span>
+            <span className="text-gray-700">{season.name.ko}</span>
             <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${STATUS_BADGE[season.status]}`}>
               {season.status}
             </span>

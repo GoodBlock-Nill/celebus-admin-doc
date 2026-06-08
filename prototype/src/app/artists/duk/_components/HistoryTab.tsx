@@ -200,7 +200,7 @@ function LedgerSection({ type }: LedgerSectionProps) {
                 label: '시즌',
                 render: (r: DukLedger) => {
                   const s = dukSeasons.find((x) => x.id === r.seasonId);
-                  return s ? s.name : '—';
+                  return s ? s.name.ko : '—';
                 },
               }]
             : []),

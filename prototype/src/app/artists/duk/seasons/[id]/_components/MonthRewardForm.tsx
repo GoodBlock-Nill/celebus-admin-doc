@@ -3,6 +3,8 @@
 import { useRef, useState } from 'react';
 import { ChevronDownIcon, ChevronRightIcon, LockClosedIcon, PencilSquareIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { toast } from '@/components/ui/Toast';
+import { LangField, type Lang } from '@/components/clone/LangField';
+import ImageUpload from '@/components/clone/ImageUpload';
 import type { DukLangText, DukRewardPrize, DukRewardTargetType, DukRewardTier } from '@/mock/duk';
 import PrizeForm from './PrizeForm';
 
@@ -31,8 +33,13 @@ const LOCK_LABEL: Record<Exclude<LockReason, null>, string> = {
 
 const TARGET_TYPES: DukRewardTargetType[] = ['등수', '퍼센트', '등수범위'];
 
-function emptyTitle(): DukLangText {
+function emptyLangText(): DukLangText {
   return { ko: '', en: '', ja: '' };
+}
+
+// 하위 호환 — PrizeForm에서 emptyTitle()을 직접 쓰는 곳 없음. MonthRewardForm 내부에서만 사용
+function emptyTitle(): DukLangText {
+  return emptyLangText();
 }
 
 function isLangFilled(t: DukLangText): boolean {
@@ -97,15 +104,25 @@ export default function MonthRewardForm({
 }: Props) {
   const isLocked = lockReason !== null;
   const [tiers, setTiers] = useState<DukRewardTier[]>(initialTiers);
+  // 구간별 언어 탭 state — tier.id → Lang
+  const [tierNameLang, setTierNameLang] = useState<Record<number, Lang>>({});
   const [expanded, setExpanded] = useState(defaultExpanded);
   const nextLocalIdRef = useRef(-1);
   const nextPrize = () => nextLocalIdRef.current--;
   const totalPrizes = tiers.reduce((sum, t) => sum + t.prizes.length, 0);
 
   const addTier = () => {
+    const newId = nextPrize();
     setTiers((prev) => [
       ...prev,
-      { id: nextPrize(), targetType: '등수', targetValue: '', prizes: [] },
+      {
+        id: newId,
+        targetType: '등수',
+        targetValue: '',
+        targetName: emptyLangText(),
+        iconSrc: '',
+        prizes: [],
+      },
     ]);
   };
 
@@ -163,6 +180,22 @@ export default function MonthRewardForm({
       const tErr = validateTargetValue(tier);
       if (tErr) {
         toast.error(tErr);
+        return;
+      }
+      if (!tier.targetName.ko.trim() || !tier.targetName.en.trim() || !tier.targetName.ja.trim()) {
+        toast.error('대상명 한/영/일 모두 입력해주세요');
+        return;
+      }
+      if (
+        tier.targetName.ko.trim().length > 30 ||
+        tier.targetName.en.trim().length > 30 ||
+        tier.targetName.ja.trim().length > 30
+      ) {
+        toast.error('대상명은 각 30자 이하');
+        return;
+      }
+      if (!tier.iconSrc.trim()) {
+        toast.error('대상 아이콘 이미지를 등록해주세요');
         return;
       }
       if (tier.prizes.length < 1) {
@@ -250,6 +283,21 @@ export default function MonthRewardForm({
                       구간 {tIdx + 1} · 상품 {tier.prizes.length}개
                     </span>
                   </div>
+
+                  {/* 대상명·아이콘 조회 (잠금) — v1.7 */}
+                  <div className="flex items-center gap-3 mb-4 p-3 bg-white rounded-lg border border-gray-100">
+                    {tier.iconSrc && (
+                      <div className="w-10 h-10 rounded border border-gray-200 bg-gray-50 flex items-center justify-center overflow-hidden shrink-0">
+                        <span className="text-xs text-gray-400 break-all line-clamp-2 text-center px-1">{tier.iconSrc}</span>
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-xs text-gray-500 mb-0.5">대상명</p>
+                      <p className="text-sm font-medium text-gray-800">{tier.targetName.ko}</p>
+                      <p className="text-xs text-gray-400">{tier.targetName.en} / {tier.targetName.ja}</p>
+                    </div>
+                  </div>
+
                   <div className="space-y-3">
                     {tier.prizes.map((prize) => (
                       <PrizeForm key={prize.id} prize={prize} readonly onChange={() => {}} onRemove={() => {}} />
@@ -334,6 +382,54 @@ export default function MonthRewardForm({
                   <TrashIcon className="w-3.5 h-3.5" />
                   구간 삭제
                 </button>
+              </div>
+
+              {/* 대상명 (한/영/일) + 대상 아이콘 — v1.7 신규 */}
+              <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4 mb-4 p-3 bg-white rounded-lg border border-gray-100">
+                <div>
+                  <LangField
+                    label="대상명"
+                    required
+                    lang={tierNameLang[tier.id] ?? 'KO'}
+                    onLangChange={(l) => setTierNameLang((prev) => ({ ...prev, [tier.id]: l }))}
+                    value={
+                      (() => {
+                        const l = tierNameLang[tier.id] ?? 'KO';
+                        if (l === 'KO') return tier.targetName.ko;
+                        if (l === 'EN') return tier.targetName.en;
+                        return tier.targetName.ja;
+                      })()
+                    }
+                    onChange={(v) => {
+                      const l = tierNameLang[tier.id] ?? 'KO';
+                      const next = { ...tier.targetName };
+                      if (l === 'KO') next.ko = v;
+                      else if (l === 'EN') next.en = v;
+                      else next.ja = v;
+                      updateTier(tier.id, { targetName: next });
+                    }}
+                    values={{ KO: tier.targetName.ko, EN: tier.targetName.en, JA: tier.targetName.ja }}
+                    maxLength={30}
+                    placeholder={
+                      (tierNameLang[tier.id] ?? 'KO') === 'KO' ? '예: 최우수 팬'
+                        : (tierNameLang[tier.id] ?? 'KO') === 'EN' ? 'e.g. Best Fan'
+                        : '例: ベストファン'
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 mb-2">
+                    대상 아이콘 <span className="text-red-500">*</span>
+                  </label>
+                  <ImageUpload
+                    value={tier.iconSrc}
+                    onChange={(filename) => updateTier(tier.id, { iconSrc: filename })}
+                    ratio="1/1"
+                    required
+                    mode="create"
+                  />
+                  <p className="text-xs text-gray-400 mt-1">정사각형 · JPG·PNG·WebP · 5MB</p>
+                </div>
               </div>
 
               {/* 구간 안 상품 N개 */}

@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Modal from '@/components/ui/Modal';
-import { dukActiveGroups, type DukSeason } from '@/mock/duk';
+import { LangField, isAllLangsFilled, type Lang } from '@/components/clone/LangField';
+import { dukActiveGroups, type DukLangText, type DukSeason } from '@/mock/duk';
 
-// [CEB-BO-ART-401-MD-SEASON] 시즌 생성·수정 모달
+// [CEB-BO-ART-401-MD-SEASON] v1.7 시즌 생성·수정 모달
 // - 시즌 = 1개월 단위: 연도 + 월 선택 → 시작 {연}.{월}.01 00:00 ~ 종료 말일 23:59 자동 산출
 // - 생성 모드: 그룹 Dropdown 활성 / 수정 모드: 그룹 readonly
 // - 진행중·종료 시즌 → 연도·월 readonly (보상·정산 데이터 매칭 깨짐 방지)
-// - 시즌명은 그룹·연도·월에 맞춰 자동 제안(수동 수정 가능)
+// - 시즌명은 한/영/일 3언어 입력 (LangField). 그룹·연도·월 변경 시 3언어 자동 제안 (수동 수정 가능)
 
 interface Props {
   isOpen: boolean;
@@ -16,7 +17,7 @@ interface Props {
   mode: 'create' | 'edit';
   initial?: DukSeason;
   existingSeasons: DukSeason[]; // 동일 그룹 기간 겹침 검증용
-  onSubmit: (data: { artistGroupId: number; name: string; startAt: string; endAt: string }) => void;
+  onSubmit: (data: { artistGroupId: number; name: DukLangText; startAt: string; endAt: string }) => void;
 }
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -38,9 +39,19 @@ function seasonRange(year: number, month: number): { startDot: string; endDot: s
   return { startDot, endDot };
 }
 
-function suggestName(groupId: number, year: number, month: number): string {
+// 3언어 자동 제안 — 그룹명·연도·월 기준
+function suggestName(groupId: number, year: number, month: number): DukLangText {
   const g = dukActiveGroups.find((x) => x.id === groupId)?.name ?? '';
-  return `${g} ${year}.${pad(month)} 시즌`;
+  return {
+    ko: `${g} ${year}.${pad(month)} 시즌`,
+    en: `${g} ${year}.${pad(month)} Season`,
+    ja: `${g} ${year}.${pad(month)} シーズン`,
+  };
+}
+
+// DukLangText → LangField values 형식
+function toLangValues(t: DukLangText): { KO: string; EN: string; JA: string } {
+  return { KO: t.ko, EN: t.en, JA: t.ja };
 }
 
 export default function SeasonFormModal({
@@ -58,9 +69,9 @@ export default function SeasonFormModal({
   const [groupId, setGroupId] = useState<number>(dukActiveGroups[0].id);
   const [year, setYear] = useState<number>(currentYear);
   const [month, setMonth] = useState<number>(currentMonth);
-  const [name, setName] = useState('');
+  const [name, setName] = useState<DukLangText>({ ko: '', en: '', ja: '' });
+  const [nameLang, setNameLang] = useState<Lang>('KO');
   const [nameManual, setNameManual] = useState(false); // 사용자가 시즌명 직접 수정했는지
-  const [nameTouched, setNameTouched] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -71,7 +82,7 @@ export default function SeasonFormModal({
     setMonth(ym.month);
     setName(initial?.name ?? suggestName(gid, ym.year, ym.month));
     setNameManual(mode === 'edit'); // 수정 모드는 기존 이름 보존(자동 덮어쓰기 안 함)
-    setNameTouched(false);
+    setNameLang('KO');
   }, [isOpen, initial, mode, currentYear, currentMonth]);
 
   const isEdit = mode === 'edit';
@@ -99,8 +110,9 @@ export default function SeasonFormModal({
     return seasonRange(year, month);
   }, [periodReadonly, initial, year, month]);
 
-  const nameValid = name.trim().length >= 1 && name.trim().length <= 50;
-  const nameError = nameTouched && name.trim().length === 0 ? '시즌명을 입력하세요' : null;
+  const nameValues = toLangValues(name);
+  const nameValid = isAllLangsFilled(nameValues) &&
+    name.ko.trim().length <= 50 && name.en.trim().length <= 50 && name.ja.trim().length <= 50;
 
   // ① 지난 월 차단 — 선택 연·월이 현재 연·월보다 이전이면 생성 불가 (현재·미래만)
   // 진행중·종료 시즌 수정(연·월 readonly)은 검사 제외
@@ -133,9 +145,18 @@ export default function SeasonFormModal({
 
   const canSubmit = nameValid && !isPastMonth && !sameMonthSeason;
 
+  const handleNameChange = (v: string) => {
+    const next = { ...name };
+    if (nameLang === 'KO') next.ko = v;
+    else if (nameLang === 'EN') next.en = v;
+    else next.ja = v;
+    setName(next);
+    setNameManual(true);
+  };
+
   const handleSubmit = () => {
     if (!canSubmit) return;
-    onSubmit({ artistGroupId: groupId, name: name.trim(), startAt: startDot, endAt: endDot });
+    onSubmit({ artistGroupId: groupId, name, startAt: startDot, endAt: endDot });
   };
 
   return (
@@ -228,28 +249,22 @@ export default function SeasonFormModal({
           )}
         </div>
 
+        {/* 시즌명 — 한/영/일 3언어 (LangField) */}
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            시즌명 <span className="text-red-500">*</span>
-          </label>
-          <input
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              setNameManual(true);
-            }}
-            onBlur={() => setNameTouched(true)}
-            placeholder="예: V01D 2026.06 시즌"
+          <LangField
+            label="시즌명"
+            required
+            lang={nameLang}
+            onLangChange={setNameLang}
+            value={nameValues[nameLang]}
+            onChange={handleNameChange}
+            values={nameValues}
             maxLength={50}
-            className={`h-10 w-full px-3 border rounded-lg text-sm focus:outline-none focus:ring-2 ${
-              nameError ? 'border-rose-300 focus:ring-rose-500' : 'border-gray-200 focus:ring-indigo-500'
-            }`}
+            placeholder={nameLang === 'KO' ? '예: V01D 2026.06 시즌' : nameLang === 'EN' ? 'e.g. V01D 2026.06 Season' : '例: V01D 2026.06 シーズン'}
           />
-          {nameError ? (
-            <p className="text-xs text-rose-600 mt-1">{nameError}</p>
-          ) : (
-            <p className="text-xs text-gray-500 mt-1">연도·월 선택에 맞춰 자동 제안됩니다. 직접 수정 가능 ({name.length}/50)</p>
-          )}
+          <p className="text-xs text-gray-500 mt-1">
+            연도·월 선택에 맞춰 3언어 자동 제안됩니다. 각 언어 직접 수정 가능 · 한/영/일 모두 필수
+          </p>
         </div>
 
         <div className="rounded-lg border border-gray-100 bg-gray-50 px-3 py-2">

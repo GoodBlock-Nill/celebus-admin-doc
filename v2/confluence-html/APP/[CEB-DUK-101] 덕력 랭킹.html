@@ -87,7 +87,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>DUK(덕력)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.4</td></tr>
+<tr><td>버전</td><td>v2.5</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=4-5286</td></tr>
@@ -294,8 +294,8 @@ p {
 <tr><td>시즌 보상</td><td>시즌 종료 시 서버 자동 판정 + 보상 분배</td></tr>
 <tr><td>랭킹 산정·리셋</td><td><strong>해당 시즌(월)에 획득한 덕력 누적</strong> 기준 순위. 시즌 종료 시 정산 후 획득 덕력 0 리셋</td></tr>
 <tr><td>보유 덕력</td><td>시즌 리셋과 무관. <strong>소멸·초기화 없이 영구 유지</strong> (사용 시에만 차감)</td></tr>
-<tr><td>아카이브</td><td>최근 6개 시즌 랭킹 스냅샷 보존</td></tr>
-<tr><td>동결 흐름</td><td>시즌 종료일 도래 → 랭킹 동결 → 보상 처리 → 새 시즌 시작</td></tr>
+<tr><td>아카이브</td><td>최근 6개 시즌 랭킹 스냅샷 보존. <strong>강제 종료(BO 운영자 수동 종료) 시즌도 아카이브에 포함</strong>되어 이전 시즌 드롭다운으로 조회 가능(랭킹 스냅샷 보존, 단 보상은 미지급이라 보상 이력 비어 있음)</td></tr>
+<tr><td>동결 흐름</td><td>(자연 종료) 시즌 종료일 도래 → 랭킹 동결 → 보상 처리 → 새 시즌 시작. (강제 종료) BO 운영자가 종료일 이전에 강제 종료 시 보상 미지급·시즌 즉시 취소, 랭킹 스냅샷만 보존</td></tr>
 </table>
 <h5>랭킹 동결 기간</h5>
 <table>
@@ -416,6 +416,7 @@ p {
 <tr><td><strong>v2.1</strong></td><td>2026.04.29</td><td>@Nill Yoo</td><td><strong>공통정책 v5.5 동기화 — 덕력 단위 pt→DUK 일괄 변경</strong>. 랭킹·획득 덕력·시즌 보상 안내 등 단위 표기 모두 갱신. 변동 정책 없음</td></tr>
 <tr><td><strong>v2.2</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. ① 덕력 이력 인앱 바텀시트 → <strong>별도 화면 CEB-DUK-103 덕력 내역 보기</strong>로 분리(진입점만 제공, 화면 추후 작성). [덕력 이력 보기]→[덕력 내역 보기] 라벨 정합 ② 시즌 보상 — "🎁 시즌 보상" 카드 + [보상 확인] → <strong>별도 화면 CEB-DUK-105 내 보상</strong>으로 진입(추후 작성) ③ 내 정보 카드에 <strong>"상위 {N}%" 뱃지</strong> 추가 ④ 연관화면에 DUK-103·DUK-105 추가. 랭킹·시즌·보상 정책 변경 없음</td></tr>
 <tr><td><strong>v2.4</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>덕력 시즌 월 단위 재편 정합 — 시즌 드롭다운 "월 리스트/이전 월/6개월"→"시즌 리스트/이전 시즌/6개 시즌", §2.5 시즌 규칙 "1개월 또는 3개월·연간 리셋"→"<strong>1개월 단위·시즌(월)별 획득 덕력 랭킹·시즌 종료 시 획득 덕력 0 리셋</strong>", 보유 덕력 <strong>소멸·초기화 없이 영구 유지</strong> 명시 ([CEB-000] v5.9 정합)</td></tr>
+<tr><td><strong>v2.5</strong></td><td>2026-06-08</td><td>@Nill Yoo</td><td>덕력 피드백 정합 — §2.5 시즌 규칙에 <strong>강제 종료(BO 운영자 수동 종료) 구분</strong> 추가: 강제 종료 시즌도 아카이브·이전 시즌 드롭다운에 포함되어 랭킹 스냅샷 조회 가능(보상 미지급이라 보상 이력 비어 있음), 동결 흐름에 자연 종료/강제 종료 분기 명시. 시즌명 다국어(KO/EN/JP)는 기존 §시즌명 관리 유지. ([CEB-000] §5.2.1 v6.6·[CEB-BO-ART-401-MD-CLOSE] 정합)</td></tr>
 <tr><td>v2.3</td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 본문 섹션 제목의 버전 메타 표기 제거(이력은 변경 이력 표로 일원화). 내용 변경 없음 + 상태 코드·코드 식별자·개발 용어 한국어 전환</td></tr>
 </table>
 

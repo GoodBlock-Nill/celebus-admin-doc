@@ -13,6 +13,8 @@ import {
   getSeasonReward,
   getSeasonSettledAt,
   isSeasonSettled,
+  isSeasonForcedClosed,
+  type DukLangText,
   type DukSeason,
   type DukSeasonStatus,
 } from '@/mock/duk';
@@ -21,10 +23,10 @@ import HistoryTab from './_components/HistoryTab';
 
 type DetailTab = 'setting' | 'history';
 
-// [CEB-BO-ART-401] v1.6 §2-1-E 시즌 상세 페이지
+// [CEB-BO-ART-401] v1.7 §2-1-E 시즌 상세 페이지
 // 라우트: /artists/duk/seasons/{id}
-// 상단 액션: [수정] (예정·진행중) · [종료] (진행중) · [목록으로]
-// 시즌 단일 보상 — 시즌 = 1개월 (미팅 정합 2026-06-02). 1구간 = 복수 상품 nested + 5종 분기
+// 상단 액션: [수정] (예정·진행중) · [강제 종료] (진행중) · [목록으로]
+// v1.7 — 시즌명 name.ko 표시, 강제 종료 closeType:'forced', 정산 표시 분기
 
 const STATUS_BADGE: Record<DukSeasonStatus, string> = {
   예정: 'bg-gray-100 text-gray-700',
@@ -69,6 +71,7 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
   const seasonReward = getSeasonReward(seasonId);
   const isSettled = isSeasonSettled(seasonId);
   const settledAt = getSeasonSettledAt(seasonId);
+  const isForcedClosed = isSeasonForcedClosed(seasonId);
 
   // 시즌 상태 × 정산 여부로 잠금 사유 결정 (DETAIL §2.6 — 3분기)
   // 정산 완료 → 잠금(조회) / 종료(미정산) → 잠금(조회) / 예정·진행중(미정산) → 편집
@@ -80,7 +83,7 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
 
   const handleEdit = (data: {
     artistGroupId: number;
-    name: string;
+    name: DukLangText;
     startAt: string;
     endAt: string;
   }) => {
@@ -91,33 +94,39 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
           : s,
       ),
     );
-    // 활동 로그 (MD-SEASON §5.5 정합)
+    // 활동 로그 (MD-SEASON §5.5 정합) — 한국어 표기
     console.info(
-      `[활동 로그] 덕력 시즌 '${season.artistGroupName} - ${data.name}'의 정보를 수정했습니다.`,
+      `[활동 로그] 덕력 시즌 '${season.artistGroupName} - ${data.name.ko}'의 정보를 수정했습니다.`,
     );
     toast.success('시즌이 저장되었습니다.');
     setEditOpen(false);
   };
 
   const handleClose = (target: DukSeason) => {
-    setSeasons((prev) => prev.map((s) => (s.id === target.id ? { ...s, status: '종료' } : s)));
-    // 활동 로그 (MD-CLOSE §5.3 정합)
-    console.info(
-      `[활동 로그] 덕력 시즌 '${target.artistGroupName} - ${target.name}'을(를) 종료했습니다.`,
+    setSeasons((prev) =>
+      prev.map((s) =>
+        s.id === target.id ? { ...s, status: '종료', closeType: 'forced' } : s,
+      ),
     );
-    toast.success('시즌이 종료되었습니다.');
+    // 활동 로그 (MD-CLOSE §5.3 정합) — 강제 종료
+    console.info(
+      `[활동 로그] 덕력 시즌 '${target.artistGroupName} - ${target.name.ko}'을(를) 강제 종료했습니다.`,
+    );
+    toast.success('시즌을 강제 종료했습니다.');
     setCloseTarget(null);
   };
+
+  const seasonNameKo = season.name.ko;
 
   return (
     <div>
       <PageHeader
-        title={`${season.artistGroupName} — ${season.name}`}
+        title={`${season.artistGroupName} — ${seasonNameKo}`}
         breadcrumbItems={[
           { label: '아티스트' },
           { label: '덕력관리', href: '/artists/duk' },
           { label: '랭킹 시즌 설정', href: '/artists/duk?tab=season' },
-          { label: season.name },
+          { label: seasonNameKo },
         ]}
         actions={
           <>
@@ -134,7 +143,7 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
                 onClick={() => setCloseTarget(season)}
                 className="h-10 px-4 text-sm font-medium text-rose-600 bg-white border border-rose-200 rounded-lg hover:bg-rose-50"
               >
-                종료
+                강제 종료
               </button>
             )}
             <Link
@@ -158,7 +167,7 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
           </div>
           <div className="flex">
             <dt className="w-24 text-gray-500">시즌명</dt>
-            <dd className="flex-1 font-medium text-gray-900">{season.name}</dd>
+            <dd className="flex-1 font-medium text-gray-900">{seasonNameKo}</dd>
           </div>
           <div className="flex">
             <dt className="w-24 text-gray-500">기간</dt>
@@ -168,18 +177,27 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
           </div>
           <div className="flex items-center">
             <dt className="w-24 text-gray-500">상태</dt>
-            <dd className="flex-1">
+            <dd className="flex items-center gap-2">
               <span
                 className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${STATUS_BADGE[season.status]}`}
               >
                 {season.status}
               </span>
+              {isForcedClosed && (
+                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-rose-100 text-rose-700">
+                  강제 종료
+                </span>
+              )}
             </dd>
           </div>
           <div className="flex">
             <dt className="w-24 text-gray-500">정산 여부</dt>
             <dd className="flex-1 text-gray-800">
-              {isSettled ? `정산 완료 (${settledAt})` : '미정산'}
+              {isForcedClosed
+                ? '강제 종료 (미지급)'
+                : isSettled
+                  ? `정산 완료 (${settledAt})`
+                  : '미정산'}
             </dd>
           </div>
         </dl>
@@ -226,12 +244,17 @@ export default function SeasonDetailPage({ params }: { params: Promise<{ id: str
               settledAt={settledAt}
               defaultExpanded
               groupName={season.artistGroupName}
-              seasonName={season.name}
+              seasonName={seasonNameKo}
             />
           </div>
         </section>
       ) : (
-        <HistoryTab seasonId={seasonId} seasonName={season.name} groupName={season.artistGroupName} />
+        <HistoryTab
+          seasonId={seasonId}
+          seasonName={seasonNameKo}
+          groupName={season.artistGroupName}
+          isForcedClosed={isForcedClosed}
+        />
       )}
 
       <SeasonFormModal
