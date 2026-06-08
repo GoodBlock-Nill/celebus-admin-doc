@@ -2,9 +2,11 @@
 // 명세: [CEB-BO-SUP-000 v2.0] / [SUP-101 v2.0] / [SUP-101-CREATE v1.0] / [SUP-201 v2.0] / [SUP-401 v2.0]
 // 응원 = 보유 덕력 차감(소비). 반환 = 미달성종료·집행취소·강제 종료 시 전액·서버 자동.
 
-// 서포트 이벤트 라이프사이클 7상태 — [CEB-BO-SUP-000] §4.1
+// 서포트 이벤트 라이프사이클 8상태 — [CEB-BO-SUP-000] §4.1
+// 모집대기 = 게시됨·시작일시 전(앱 미노출). 시작일시 도달 시 서버 자동으로 모집중 전환·앱 노출
 export type SupportStatus =
   | '임시저장'
+  | '모집대기'
   | '모집중'
   | '달성'
   | '집행중'
@@ -19,7 +21,7 @@ export type CheerLedgerType = '응원' | '반환';
 export type RefundReason = '목표 미달성' | '집행 취소' | '강제 종료';
 
 export const SUPPORT_STATUSES: SupportStatus[] = [
-  '임시저장', '모집중', '달성', '집행중', '완료', '미달성종료', '집행취소',
+  '임시저장', '모집대기', '모집중', '달성', '집행중', '완료', '미달성종료', '집행취소',
 ];
 
 // 응원 대상 그룹(아티스트) — 팬덤레벨과 동일 활성 아티스트
@@ -262,6 +264,16 @@ export const supportEvents: SupportEvent[] = [
     startAt: '2026.06.01 10:00', endAt: '2026.06.20 23:59',
     cheerers: [],
     createdAt: '2026.05.27 17:00', updatedAt: '2026.05.27 17:00',
+  },
+  {
+    // 모집대기 — 게시 완료·시작일시 전(앱 미노출). 시작일시 도달 시 서버 자동 모집중 전환
+    id: 8, status: '모집대기', groupName: '언더라이트 (UNDER:LIGHT)',
+    titleKo: '언더라이트 데뷔 1주년 전광판 서포트', titleEn: 'UNDER:LIGHT 1st Anniversary Billboard', titleJp: 'アンダーライト1周年ビルボード応援',
+    descKo: '데뷔 1주년 기념 전광판 서포트입니다.', descEn: '1st anniversary billboard support.', descJp: 'デビュー1周年記念のビルボード応援です。',
+    targetDuk: 1500000, accumulatedDuk: 0,
+    startAt: '2026.07.01 00:00', endAt: '2026.07.20 23:59',
+    cheerers: [],
+    createdAt: '2026.06.05 11:00', updatedAt: '2026.06.05 11:00',
   },
 ];
 

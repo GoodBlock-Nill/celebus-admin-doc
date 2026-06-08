@@ -36,9 +36,12 @@ function actionsFor(status: SupportStatus, refundCount: number, refundDuk: numbe
   switch (status) {
     case '임시저장':
       return [
-        { key: 'publish', label: '게시', next: '모집중', primary: true, title: '이벤트를 게시할까요?',
-          lines: ['게시하면 시작일시 도달 시 앱에 노출되어 응원이 시작됩니다.', '목표 응원량·기간이 설정되어 있어야 합니다.'], toast: '서포트 이벤트를 게시했습니다.' },
+        { key: 'publish', label: '게시', next: '모집대기', primary: true, title: '이벤트를 게시할까요?',
+          lines: ['게시하면 모집대기 상태가 되고, 시작일시에 도달하면 자동으로 모집이 시작되어 앱에 노출됩니다.', '모든 필수 항목이 입력되어 있어야 게시할 수 있습니다.'], toast: '서포트 이벤트를 게시했습니다. (시작일시에 모집 시작)' },
       ];
+    case '모집대기':
+      // 게시 완료·시작 대기(앱 미노출). 헤더 확인-모달 액션 없음. 수정은 본문 [수정], 중단은 [삭제] 버튼
+      return [];
     case '모집중':
       return [
         forceEndAction(refundCount, refundDuk),
@@ -121,7 +124,7 @@ export default function SupportDetailPage({ params }: { params: Promise<{ id: st
                   a.primary ? 'text-white bg-indigo-600 hover:bg-indigo-700' : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                 }`}>{a.label}</button>
             ))}
-            {status === '임시저장' && (
+            {(status === '임시저장' || status === '모집대기') && (
               <button onClick={() => setDeleteOpen(true)}
                 className="h-10 px-4 text-sm font-medium text-rose-600 bg-white border border-rose-200 rounded-lg hover:bg-rose-50">삭제</button>
             )}

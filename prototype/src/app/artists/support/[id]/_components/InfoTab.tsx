@@ -9,7 +9,7 @@ import SupportForm, { type EditableScope } from './SupportForm';
 
 // 상태 → 수정 가능 범위 — [CEB-BO-SUP-201] §3.1
 function scopeOf(status: SupportStatus): EditableScope {
-  if (status === '임시저장') return 'all';
+  if (status === '임시저장' || status === '모집대기') return 'all'; // 모집대기: 시작 전이라 전 항목 수정 가능
   if (status === '모집중') return 'limited';
   return 'none';
 }
@@ -22,7 +22,7 @@ export default function InfoTab({
   onEditingChange?: (editing: boolean) => void;
 }) {
   const scope = scopeOf(status);
-  const showStats = status !== '임시저장';
+  const showStats = status !== '임시저장' && status !== '모집대기'; // 시작 전(미노출)은 응원 0이라 통계 숨김
 
   return (
     <div className="space-y-6">

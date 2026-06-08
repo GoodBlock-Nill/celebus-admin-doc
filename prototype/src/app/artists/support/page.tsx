@@ -21,6 +21,7 @@ const PAGE_SIZE = 10;
 // 카드 카운트 색상 (상태 배지 톤과 정합)
 const STATUS_COUNT_CLASS: Record<SupportStatus, string> = {
   임시저장: 'text-gray-500',
+  모집대기: 'text-sky-600',
   모집중: 'text-emerald-600',
   달성: 'text-indigo-600',
   집행중: 'text-amber-600',
@@ -31,6 +32,7 @@ const STATUS_COUNT_CLASS: Record<SupportStatus, string> = {
 
 export function statusBadge(s: SupportStatus): string {
   switch (s) {
+    case '모집대기': return 'bg-sky-500 text-white';
     case '모집중': return 'bg-emerald-500 text-white';
     case '달성': return 'bg-indigo-500 text-white';
     case '집행중': return 'bg-amber-500 text-white';
@@ -85,7 +87,7 @@ export default function SupportListPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-3 mb-6">
+      <div className="grid grid-cols-8 gap-2 mb-6">
         {SUPPORT_STATUSES.map((s) => (
           <StatCardRow
             key={s}

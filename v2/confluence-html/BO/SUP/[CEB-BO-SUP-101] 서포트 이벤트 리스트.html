@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SUP — 서포트 이벤트</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.3</td></tr>
+<tr><td>버전</td><td>v2.4</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-02</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -121,10 +121,11 @@ p {
 <tr><td>[이벤트 생성]</td><td>우측 주요 버튼 → [CEB-BO-SUP-101-CREATE] 생성 화면 (<code>/artists/support/new</code>)</td></tr>
 </table>
 <h3>2.2 상태 카운터</h3>
-<p><strong>7개 상태값을 각각 개별 카드로 한 줄에 표시</strong>한다(묶음 없음). 카드에 상태별 이벤트 수를 표기하고, 카드 클릭 시 해당 상태로 필터가 적용된다. <strong>같은 카드를 다시 클릭하면 "전체"로 해제</strong>된다(토글). 첫 진입 시 카운터는 어느 것도 선택되지 않은 <strong>전체</strong> 상태다. 카드 순서는 라이프사이클 순(임시저장 → 모집중 → 달성 → 집행중 → 완료 → 미달성종료 → 집행취소).</p>
+<p><strong>8개 상태값을 각각 개별 카드로 한 줄에 표시</strong>한다(묶음 없음). 카드에 상태별 이벤트 수를 표기하고, 카드 클릭 시 해당 상태로 필터가 적용된다. <strong>같은 카드를 다시 클릭하면 "전체"로 해제</strong>된다(토글). 첫 진입 시 카운터는 어느 것도 선택되지 않은 <strong>전체</strong> 상태다. 카드 순서는 라이프사이클 순(임시저장 → 모집대기 → 모집중 → 달성 → 집행중 → 완료 → 미달성종료 → 집행취소).</p>
 <table>
 <tr><th>카드</th><th>의미</th></tr>
 <tr><td>임시저장</td><td>작성 중, 미게시</td></tr>
+<tr><td>모집대기</td><td>게시 완료, 시작일시 전 대기 (앱 미노출)</td></tr>
 <tr><td>모집중</td><td>응원 진행 중</td></tr>
 <tr><td>달성</td><td>목표 도달, 집행 대기</td></tr>
 <tr><td>집행중</td><td>서포트 집행 진행 중</td></tr>
@@ -133,12 +134,12 @@ p {
 <tr><td>집행취소</td><td>집행 취소, 전액 반환 완료</td></tr>
 </table>
 <ul>
-<li>카운터 클릭 = <strong>단일 상태 필터</strong>(7상태 각각). 재클릭 시 전체로 해제하고 카드 선택 표시도 함께 풀린다.</li>
+<li>카운터 클릭 = <strong>단일 상태 필터</strong>(8상태 각각). 재클릭 시 전체로 해제하고 카드 선택 표시도 함께 풀린다.</li>
 <li>카운터와 상태 드롭다운(§2.3)은 동일한 상태 필터를 공유한다(카드 = 드롭다운의 단일 상태 선택과 동일).</li></ul>
 <h3>2.3 검색·필터</h3>
 <table>
 <tr><th>구분</th><th>요소</th><th>설명</th></tr>
-<tr><td>필터</td><td>상태</td><td>전체 / 임시저장 / 모집중 / 달성 / 집행중 / 완료 / 미달성종료 / 집행취소</td></tr>
+<tr><td>필터</td><td>상태</td><td>전체 / 임시저장 / 모집대기 / 모집중 / 달성 / 집행중 / 완료 / 미달성종료 / 집행취소</td></tr>
 <tr><td>필터</td><td>그룹</td><td>전체 / 그룹(아티스트) 목록</td></tr>
 <tr><td>입력</td><td>이벤트명</td><td>부분 일치 (한국어 기준)</td></tr>
 <tr><td>버튼</td><td>초기화</td><td>모든 필터·검색어 해제</td></tr>
@@ -190,6 +191,7 @@ p {
 <h2>6. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v2.4</strong></td><td><strong>2026-06-08</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>모집대기 상태 신설 반영</strong> — 대시보드 카드 7 → <strong>8개</strong>(임시저장·<strong>모집대기</strong>·모집중·달성·집행중·완료·미달성종료·집행취소, 라이프사이클 순), 상태 필터 드롭다운에 모집대기 추가(§2.2·§2.3). 모집대기 = 게시 완료·시작일시 전 대기(앱 미노출). [CEB-BO-SUP-000] v2.8 정합.</td></tr>
 <tr><td><strong>v2.3</strong></td><td><strong>2026-06-08</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>상태 카운터 7상태 개별 카드로 재구성</strong> — 기존 5카드(모집중·달성·집행중·완료·종료묶음, 임시저장 제외)가 그룹 기준 혼재로 혼란 → <strong>7상태(임시저장·모집중·달성·집행중·완료·미달성종료·집행취소) 각각 개별 카드</strong>, 라이프사이클 순 한 줄 배치. "종료" 묶음·임시저장 제외 폐지. 카드 = 드롭다운 단일 상태 필터와 동일(§2.2). 프로토타입 <code>/artists/support</code> 대시보드 정합.</td></tr>
 <tr><td><strong>v2.2</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>빌드 준비도 정합. ① 상태 카운터 첫 진입 = 전체, <strong>같은 카드 재클릭 시 전체로 해제(토글)</strong>·카운터↔드롭다운 상태 필터 공유 명시(§2.2) ② 임시저장은 카운터 제외·드롭다운에서 "임시저장" 선택으로 조회 명시 ③ 정렬 기준(마감 임박순→생성 최신순·종료군 하단)을 <strong>고정·사용자 변경 불가</strong>로 명시(§3.1) ④ Row 클릭 목적지를 분할된 [CEB-BO-SUP-201] 기본정보 탭(<code>?tab=info</code>)으로 연결, 필터·검색 변경 시 1페이지 이동 명시</td></tr>
 <tr><td><strong>v2.1</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>§2.4 상태 Badge 색상 기준을 [CEB-BO-SUP-000] §4.1 상태 배지 색상 표(= 프로토타입 기준)로 연결 명시(피그마 아님)</td></tr>
