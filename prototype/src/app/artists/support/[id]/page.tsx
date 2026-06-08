@@ -23,7 +23,7 @@ type TabKey = (typeof TABS)[number]['key'];
 // 상태별 헤더 전환 액션 — [CEB-BO-SUP-201] §2.5
 type ActionDef = { key: string; label: string; next: SupportStatus; primary?: boolean; title: string; lines: string[]; toast: string };
 
-// 강제 종료 — 미팅 정합(2026-06-02): 모집중·달성·집행중 모두에서 가능 (→ 미달성종료·전액 반환)
+// 강제 종료 — 모집중 전용 (→ 미달성종료·전액 반환). 집행 단계(달성·집행중) 중단은 [집행 취소]가 전담
 function forceEndAction(refundCount: number, refundDuk: number): ActionDef {
   return {
     key: 'forceEnd', label: '강제 종료', next: '미달성종료', title: '이벤트를 강제 종료할까요?',
@@ -49,7 +49,6 @@ function actionsFor(status: SupportStatus, refundCount: number, refundDuk: numbe
           lines: ['집행을 시작하면 응원 덕력이 서포트에 사용되며 반환되지 않습니다.'], toast: '서포트 집행을 시작했습니다.' },
         { key: 'cancel', label: '집행 취소', next: '집행취소', title: '집행을 취소할까요?',
           lines: [`응원 회원 ${refundCount}명에게 ${refundDuk.toLocaleString()} 덕력이 전액 반환됩니다.`], toast: '집행을 취소하고 전액 반환했습니다.' },
-        forceEndAction(refundCount, refundDuk),
       ];
     case '집행중':
       return [
@@ -57,7 +56,6 @@ function actionsFor(status: SupportStatus, refundCount: number, refundDuk: numbe
           lines: ['결과물·반환 탭에 입력한 결과 메시지와 사진·영상이 회원 앱에 공개됩니다.', '응원 회원에게 결과물 알림이 발송됩니다.'], toast: '결과물을 등록하고 완료 처리했습니다.' },
         { key: 'cancel', label: '집행 취소', next: '집행취소', title: '집행을 취소할까요?',
           lines: [`응원 회원 ${refundCount}명에게 ${refundDuk.toLocaleString()} 덕력이 전액 반환됩니다.`], toast: '집행을 취소하고 전액 반환했습니다.' },
-        forceEndAction(refundCount, refundDuk),
       ];
     default:
       return [];
