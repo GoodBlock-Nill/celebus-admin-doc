@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUpTrayIcon, PlusIcon, CalendarIcon, ClockIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, CalendarIcon, ClockIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import {
   EMPTY_REWARD,
@@ -35,7 +35,6 @@ export interface QuestFormValues {
   guideKO: string;
   guideEN: string;
   guideJA: string;
-  imageSrc: string;
   artist: string;
   questType: string;
   endDate: string; // 'YYYY-MM-DD'
@@ -56,7 +55,6 @@ export const EMPTY_FORM_VALUES: QuestFormValues = {
   guideKO: '',
   guideEN: '',
   guideJA: '',
-  imageSrc: '',
   artist: '',
   questType: '이미지 촬영 및 업로드',
   endDate: '',
@@ -128,50 +126,6 @@ export function QuestForm({ mode, questStatus, values, onChange }: QuestFormProp
           rows={6}
         />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-900 mb-2">
-            대표 이미지 <span className="text-red-500">*</span>
-          </label>
-          {values.imageSrc ? (
-            <div className="flex items-center gap-3">
-              <div className="w-32 h-32 rounded-lg overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center">
-                <span className="text-xs text-gray-500">이미지</span>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => alert('[Mock] 파일 변경 다이얼로그')}
-                  className="h-9 px-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
-                >
-                  변경
-                </button>
-                <button
-                  type="button"
-                  onClick={() => update('imageSrc', '')}
-                  className="h-9 px-3 text-sm font-medium text-red-600 bg-red-50 border border-red-100 rounded-lg hover:bg-red-100"
-                >
-                  제거
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
-                update('imageSrc', '/sq/placeholder.jpg');
-              }}
-              className="w-full px-4 py-5 border-2 border-dashed border-gray-300 rounded-lg flex items-center gap-3 cursor-pointer hover:border-indigo-300 hover:bg-indigo-50/30 transition-colors text-left"
-            >
-              <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                <ArrowUpTrayIcon className="w-5 h-5 text-gray-500" />
-              </div>
-              <div className="text-xs text-gray-500 flex-1 min-w-0">
-                <div className="font-medium text-gray-700">클릭하거나 파일을 드래그하세요</div>
-                <div className="mt-0.5 truncate">권장: 1:1 비율 · jpeg, png, jpg, webp, gif, svg (최대 5MB)</div>
-              </div>
-            </button>
-          )}
-        </div>
       </section>
 
       {/* 퀘스트 설정 */}
@@ -402,8 +356,7 @@ export function canSubmitQuest(values: QuestFormValues, mode: 'create' | 'edit',
   const triCheck = (a: string, b: string, c: string) => !!(a.trim() && b.trim() && c.trim());
   const basicOk = triCheck(values.titleKO, values.titleEN, values.titleJA) &&
                   triCheck(values.descKO, values.descEN, values.descJA) &&
-                  triCheck(values.guideKO, values.guideEN, values.guideJA) &&
-                  !!values.imageSrc;
+                  triCheck(values.guideKO, values.guideEN, values.guideJA);
 
   if (mode === 'edit' && questStatus === '진행중') {
     return basicOk;

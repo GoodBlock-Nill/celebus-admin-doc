@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,7 +96,6 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v1.0</strong> (FQ 영역에서 SQ 영역으로 이전 신규 작성)</p>
 <p>화면 경로: <code>/fanquest/{id}?tab=info</code> (목표 <code>/sq/quests/{id}?tab=info</code>) · Breadcrumb: <code>홈 › 에피소드 › 팬퀘스트 › Quest 상세</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
@@ -138,12 +137,8 @@ p {
 <tr><td>반려</td><td>운영자가 반려한 건수</td></tr>
 <tr><td>대기</td><td>검수 대기 중인 건수 (앰버 톤 강조)</td></tr>
 </table>
-<h3>2-5. 정보 그리드 (좌 360px / 우 flex 2열)</h3>
-<h4>A. 대표 이미지 카드 (좌)</h4>
-<ul>
-<li>1:1 정사각형</li>
-<li>이미지 등록되어 있으면 풀 사이즈 노출, 없으면 그라데이션 배경 + 아티스트 명 표시</li></ul>
-<h4>B. Quest 정보 카드 (우상)</h4>
+<h3>2-5. 정보 그리드 (2열: Quest 정보 / 관리 정보)</h3>
+<h4>A. Quest 정보 카드</h4>
 <table>
 <tr><th>항목</th><th>표시</th></tr>
 <tr><td>아티스트</td><td>V01D / iKON / CELEBUS</td></tr>
@@ -154,7 +149,7 @@ p {
 <tr><td>마감일시</td><td>운영 종료 시각</td></tr>
 <tr><td>연관 링크</td><td>다국어 라벨로 표시되는 외부 링크 N개 (새 탭 진입). 없으면 "—"</td></tr>
 </table>
-<h4>C. 관리 정보 카드 (우하)</h4>
+<h4>B. 관리 정보 카드</h4>
 <table>
 <tr><th>항목</th><th>표시</th></tr>
 <tr><td>상태</td><td>상태 배지</td></tr>
@@ -183,7 +178,6 @@ p {
 <tr><td>헤더</td><td>타이틀·상태 배지·상태별 액션</td><td>Quest 컨텍스트 한눈에</td></tr>
 <tr><td>탭</td><td>기본정보 / 대기내역 / 처리내역 + 대기 카운트 배지</td><td>3탭 진입</td></tr>
 <tr><td>통계 카드</td><td>총 제출 / 승인 / 반려 / 대기</td><td>검수 운영 지표</td></tr>
-<tr><td>대표 이미지</td><td>1:1 비율 이미지</td><td>회원 노출 이미지</td></tr>
 <tr><td>Quest 정보 카드</td><td>아티스트·타입·진행 방식·보상·시작·마감·연관 링크</td><td>7종 운영 항목</td></tr>
 <tr><td>관리 정보 카드</td><td>상태·생성자·생성일시·최근 수정자·최근 수정일시</td><td>5종 운영 메타</td></tr>
 <tr><td>에피소드 사용 현황</td><td>매핑된 미션 목록 (SQ 영역 컨텍스트)</td><td>본 Quest의 SQ 미션 매핑</td></tr>
@@ -241,6 +235,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-06-09</strong></td><td><strong>@Nill Yoo</strong></td><td>Quest 대표 이미지 제거 정합(개발팀 질문) — 앱 미노출로 §2-5 정보 그리드에서 <strong>대표 이미지 카드(좌) 삭제</strong>, 2열(Quest 정보 / 관리 정보) 레이아웃으로 단순화. §3 노출 정보에서 대표 이미지 제거. [CEB-BO-SQ-302-CREATE] v1.1 정합.</td></tr>
 <tr><td><strong>v1.0</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>FQ 영역에서 SQ 영역으로 신규 이전</strong> — 기존 [CEB-BO-FQ-201] Quest 상세 (기본정보 탭) v2.0을 SQ 영역 컨텍스트로 신규 작성. 사이드바 "에피소드 &gt; 팬퀘스트" 메뉴 정합. 프로토타입(<code>src/app/fanquest/[id]/page.tsx</code> InfoTab) 1:1 정합 검증 (통계 4카드·정보 카드·관리 카드·다국어 3섹션·에피소드 사용 패널). Page Properties 13필드, 변경 이력 5칸</td></tr>
 </table>
 

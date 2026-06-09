@@ -96,7 +96,6 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v1.0</strong> (FQ 영역에서 SQ 영역으로 이전 신규 작성)</p>
 <p>화면 경로: <code>/fanquest/create</code> (목표 <code>/sq/quests/create</code>) · Breadcrumb: <code>홈 › 에피소드 › 팬퀘스트 › Quest 생성</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
@@ -127,7 +126,6 @@ p {
 <tr><td>타이틀</td><td>한국어/영어/일본어 탭 입력</td><td>각 100자 이내. 미입력 언어는 탭 우상단 빨강 점 표시</td><td>★ (3개 언어 모두)</td></tr>
 <tr><td>설명</td><td>한국어/영어/일본어 탭 입력 (4행)</td><td>각 200자 이내</td><td>★ (3개 언어 모두)</td></tr>
 <tr><td>유저 가이드</td><td>한국어/영어/일본어 탭 입력 (6행)</td><td>각 500자 이내</td><td>★ (3개 언어 모두)</td></tr>
-<tr><td>대표 이미지</td><td>드래그앤드롭 또는 파일 업로드</td><td>권장 1:1 비율, 최대 5MB, jpeg/png/jpg/webp/gif/svg</td><td>★</td></tr>
 </table>
 <h4>B. 퀘스트 설정 섹션</h4>
 <table>
@@ -157,7 +155,7 @@ p {
 <table>
 <tr><th>영역</th><th>정보</th><th>의미</th></tr>
 <tr><td>헤더</td><td>페이지 제목·취소·생성 버튼</td><td>화면 식별 + 액션</td></tr>
-<tr><td>A 기본 정보</td><td>타이틀·설명·유저 가이드·대표 이미지</td><td>회원 노출 콘텐츠</td></tr>
+<tr><td>A 기본 정보</td><td>타이틀·설명·유저 가이드</td><td>회원 노출 콘텐츠</td></tr>
 <tr><td>B 퀘스트 설정</td><td>아티스트·타입·참여 방식·반복 주기·기간·연관 링크</td><td>운영 메타</td></tr>
 <tr><td>C 보상 설정</td><td>응모권·덕력·NFT 보상 정의</td><td>회원 보상</td></tr>
 <tr><td>자동 기록</td><td>식별값·상태(임시저장 자동)·생성자·생성일시·최근 수정자·최근 수정일시</td><td>저장 시 시스템 자동 부여</td></tr>
@@ -177,7 +175,6 @@ p {
 <table>
 <tr><th>항목</th><th>조건</th></tr>
 <tr><td>타이틀·설명·유저 가이드</td><td>한국어/영어/일본어 3개 언어 모두 입력</td></tr>
-<tr><td>대표 이미지</td><td>등록 (URL 또는 업로드)</td></tr>
 <tr><td>아티스트</td><td>선택</td></tr>
 <tr><td>퀘스트 타입</td><td>선택 (기본 "이미지 촬영 및 업로드")</td></tr>
 <tr><td>참여 방식</td><td>"일반" 또는 "반복" 선택</td></tr>
@@ -198,6 +195,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-06-09</strong></td><td><strong>@Nill Yoo</strong></td><td>Quest 대표 이미지 입력 필드 제거(개발팀 질문) — 앱에 Quest(미션) 대표 이미지를 노출하는 화면이 없어 미사용 필드 제거. §A 기본 정보·§3 노출 정보·§5 검증에서 대표 이미지 삭제(필수 항목에서도 제외). 에피소드 대표 이미지([CEB-BO-SQ-202], 앱 카드 노출)는 별개로 유지. [CEB-BO-SQ-303]·[CEB-BO-SQ-303-EDIT]·프로토타입 정합.</td></tr>
 <tr><td><strong>v1.0</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>FQ 영역에서 SQ 영역으로 신규 이전</strong> — 기존 [CEB-BO-FQ-101-CREATE] Quest 생성 v2.0을 SQ 영역 컨텍스트로 신규 작성. 사이드바 "에피소드 &gt; 팬퀘스트" 메뉴 정합. 프로토타입(<code>src/app/fanquest/create/page.tsx</code> + <code>_components/QuestForm.tsx</code>) 1:1 정합 검증 (3섹션·필수 항목·검증 룰 동일). Page Properties 13필드, 변경 이력 5칸. FQ 원본은 DEPRECATED 표기로 이력 보존</td></tr>
 </table>
 

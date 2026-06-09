@@ -25,7 +25,6 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
     guideKO: quest.guideKO,
     guideEN: quest.guideEN,
     guideJA: quest.guideJA,
-    imageSrc: quest.imageSrc || '/sq/placeholder.jpg',
     artist: quest.artist,
     questType: quest.questType,
     endDate: quest.endDate,

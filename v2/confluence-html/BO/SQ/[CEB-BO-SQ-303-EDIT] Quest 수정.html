@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.0</td></tr>
+<tr><td>버전</td><td>v1.1</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -96,7 +96,6 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v1.0</strong> (FQ 영역에서 SQ 영역으로 이전 신규 작성)</p>
 <p>화면 경로: <code>/fanquest/{id}/edit</code> (목표 <code>/sq/quests/{id}/edit</code>) · Breadcrumb: <code>홈 › 에피소드 › 팬퀘스트 › Quest 수정</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
@@ -132,7 +131,6 @@ p {
 <table>
 <tr><th>섹션</th><th>임시저장 수정 가능</th><th>진행중 수정 가능</th></tr>
 <tr><td>A. 기본 정보 — 타이틀·설명·유저 가이드 (다국어)</td><td>✅</td><td>✅</td></tr>
-<tr><td>A. 기본 정보 — 대표 이미지</td><td>✅</td><td>❌ (잠금)</td></tr>
 <tr><td>B. 퀘스트 설정 — 아티스트·타입</td><td>✅</td><td>❌ (잠금)</td></tr>
 <tr><td>B. 퀘스트 설정 — 참여 방식·반복 주기·기간</td><td>✅</td><td>❌ (잠금)</td></tr>
 <tr><td>B. 퀘스트 설정 — 연관 링크</td><td>✅</td><td>✅</td></tr>
@@ -147,7 +145,7 @@ p {
 <tr><td>헤더</td><td>페이지 제목·상태 배지·취소·수정 버튼</td><td>화면 식별 + 액션</td></tr>
 <tr><td>진행중 배너</td><td>수정 제한 안내 (조건부)</td><td>운영자 영향도 안내</td></tr>
 <tr><td>에피소드 사용 현황</td><td>본 Quest 사용 미션 목록</td><td>수정 영향 범위</td></tr>
-<tr><td>A 기본 정보</td><td>타이틀·설명·가이드·이미지</td><td>회원 노출 콘텐츠 (가이드 500자)</td></tr>
+<tr><td>A 기본 정보</td><td>타이틀·설명·가이드</td><td>회원 노출 콘텐츠 (가이드 500자)</td></tr>
 <tr><td>B 퀘스트 설정</td><td>아티스트·타입·참여 방식·기간·링크</td><td>운영 메타</td></tr>
 <tr><td>C 보상 설정</td><td>응모권·덕력·NFT</td><td>회원 보상</td></tr>
 </table>
@@ -155,7 +153,7 @@ p {
 <table>
 <tr><th>Quest 상태</th><th>동작</th></tr>
 <tr><td>임시저장</td><td>모든 필드 수정 가능. 검증 통과 시 [수정하기] 활성</td></tr>
-<tr><td>진행중</td><td>기본 정보 4종(타이틀·설명·가이드·연관 링크)만 수정 가능. 다국어 KO/EN/JA 모두 입력 + 이미지 존재 검증만 필요</td></tr>
+<tr><td>진행중</td><td>기본 정보 4종(타이틀·설명·가이드·연관 링크)만 수정 가능. 다국어 KO/EN/JA 모두 입력 검증만 필요</td></tr>
 <tr><td>종료</td><td>안내 화면만 노출, 폼 미렌더링</td></tr>
 <tr><td>[취소하기] / ← 뒤로가기</td><td>[CEB-BO-SQ-303-MD-CANCEL] Quest 수정 취소 모달</td></tr>
 <tr><td>[수정하기] 성공</td><td>[CEB-BO-SQ-303-MD-COMPLE] Quest 수정 완료 모달</td></tr>
@@ -168,7 +166,6 @@ p {
 <table>
 <tr><th>항목</th><th>조건</th></tr>
 <tr><td>타이틀·설명·유저 가이드</td><td>한국어/영어/일본어 3개 언어 모두 입력</td></tr>
-<tr><td>대표 이미지</td><td>등록</td></tr>
 </table>
 <blockquote>
 <p>보상·기간·아티스트·타입·참여 방식 검증은 진행중 수정에서 제외 (잠금 필드).</p>
@@ -192,6 +189,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.1</strong></td><td><strong>2026-06-09</strong></td><td><strong>@Nill Yoo</strong></td><td>Quest 대표 이미지 제거 정합(개발팀 질문) — 앱 미노출로 [CEB-BO-SQ-302-CREATE]에서 필드 삭제됨에 따라 수정 매트릭스(§2-4)·노출 정보(§3)·진행중 검증(§4·§5-2)에서 대표 이미지 제거. [CEB-BO-SQ-302-CREATE] v1.1 정합.</td></tr>
 <tr><td><strong>v1.0</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>FQ 영역에서 SQ 영역으로 신규 이전</strong> — 기존 [CEB-BO-FQ-201-EDIT] v2.0을 SQ 영역 컨텍스트로 신규 작성. 사이드바 "에피소드 &gt; 팬퀘스트" 메뉴 정합. 프로토타입(<code>src/app/fanquest/[id]/edit/page.tsx</code>) 1:1 정합 검증 (진행중 잠금 매트릭스·검증 룰 동일). Page Properties 13필드, 변경 이력 5칸</td></tr>
 </table>
 

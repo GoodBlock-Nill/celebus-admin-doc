@@ -1,7 +1,6 @@
 'use client';
 
 import { use, useMemo, useState } from 'react';
-import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid';
 import { ArrowLeftIcon, MagnifyingGlassPlusIcon } from '@heroicons/react/24/outline';
@@ -203,61 +202,49 @@ function InfoTab({ quest }: { quest: NonNullable<ReturnType<typeof getQuestById>
         <StatCard label="대기" value={quest.pendingCount} />
       </div>
 
-      <div className="grid grid-cols-[360px_1fr] gap-5 items-start">
-        <div className="bg-white border border-gray-200 rounded-xl p-4">
-          <h4 className="text-sm font-semibold text-gray-900 mb-3">대표 이미지</h4>
-          <div className="aspect-square bg-gradient-to-br from-gray-900 to-gray-700 rounded-lg flex items-center justify-center text-white text-2xl font-bold relative overflow-hidden">
-            {quest.imageSrc ? (
-              <Image src={quest.imageSrc} alt="Quest 대표 이미지" fill className="object-cover" />
-            ) : (
-              <span>{quest.artist}</span>
-            )}
+      <div className="grid grid-cols-2 gap-5 items-start">
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <h4 className="text-sm font-semibold text-gray-900 mb-4">Quest 정보</h4>
+          <div className="space-y-3 text-sm">
+            <Row label="아티스트" value={quest.artist} />
+            <Row label="타입" value={quest.questType} />
+            <Row label="진행 방식" value={kindLabel} />
+            <Row label="보상" value={reward} />
+            <Row label="시작일시" value={quest.startAt} />
+            <Row label="마감일시" value={quest.endAt} />
+            <div className="flex items-start justify-between gap-4">
+              <span className="text-gray-500 shrink-0">연관 링크</span>
+              <div className="flex flex-wrap gap-2 justify-end">
+                {quest.relatedLinks.length === 0 ? (
+                  <span className="text-gray-400">-</span>
+                ) : (
+                  quest.relatedLinks.map((l, i) => (
+                    <a
+                      key={i}
+                      href={l.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-indigo-600 hover:underline"
+                    >
+                      {l.labelKO || l.labelEN || l.labelJA}
+                    </a>
+                  ))
+                )}
+              </div>
+            </div>
           </div>
         </div>
-        <div className="space-y-4">
-          <div className="bg-white border border-gray-200 rounded-xl p-5">
-            <h4 className="text-sm font-semibold text-gray-900 mb-4">Quest 정보</h4>
-            <div className="space-y-3 text-sm">
-              <Row label="아티스트" value={quest.artist} />
-              <Row label="타입" value={quest.questType} />
-              <Row label="진행 방식" value={kindLabel} />
-              <Row label="보상" value={reward} />
-              <Row label="시작일시" value={quest.startAt} />
-              <Row label="마감일시" value={quest.endAt} />
-              <div className="flex items-start justify-between gap-4">
-                <span className="text-gray-500 shrink-0">연관 링크</span>
-                <div className="flex flex-wrap gap-2 justify-end">
-                  {quest.relatedLinks.length === 0 ? (
-                    <span className="text-gray-400">-</span>
-                  ) : (
-                    quest.relatedLinks.map((l, i) => (
-                      <a
-                        key={i}
-                        href={l.href}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-indigo-600 hover:underline"
-                      >
-                        {l.labelKO || l.labelEN || l.labelJA}
-                      </a>
-                    ))
-                  )}
-                </div>
-              </div>
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <h4 className="text-sm font-semibold text-gray-900 mb-4">관리 정보</h4>
+          <div className="space-y-3 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-gray-500">상태</span>
+              <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${QUEST_STATUS_BADGE[quest.status]}`}>{quest.status}</span>
             </div>
-          </div>
-          <div className="bg-white border border-gray-200 rounded-xl p-5">
-            <h4 className="text-sm font-semibold text-gray-900 mb-4">관리 정보</h4>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500">상태</span>
-                <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${QUEST_STATUS_BADGE[quest.status]}`}>{quest.status}</span>
-              </div>
-              <Row label="생성 관리자" value={quest.createdBy} />
-              <Row label="생성 일시" value={quest.createdAt} />
-              <Row label="최근 수정자" value={quest.updatedBy} />
-              <Row label="최근 수정 일시" value={quest.updatedAt} />
-            </div>
+            <Row label="생성 관리자" value={quest.createdBy} />
+            <Row label="생성 일시" value={quest.createdAt} />
+            <Row label="최근 수정자" value={quest.updatedBy} />
+            <Row label="최근 수정 일시" value={quest.updatedAt} />
           </div>
         </div>
       </div>

@@ -61,7 +61,6 @@ export interface RelatedLink {
 }
 
 export interface QuestDetail extends Quest {
-  imageSrc: string;
   questType: string;
   startAt: string;
   endAt: string;
@@ -265,7 +264,6 @@ const baseGuide = (kind: 'event' | 'follow' = 'event') => kind === 'event' ? {
 
 export const questDetail1: QuestDetail = {
   ...quests[0],
-  imageSrc: '',
   questType: '이미지 촬영 및 업로드',
   startAt: '2026.05.04 15:49',
   endAt: '2026.05.14 23:59',
@@ -294,7 +292,6 @@ export const questDetail1: QuestDetail = {
 
 const questDetail11: QuestDetail = {
   ...quests[10],
-  imageSrc: '',
   questType: '이미지 촬영 및 업로드',
   startAt: '-',
   endAt: '-',
@@ -322,7 +319,6 @@ const questDetail11: QuestDetail = {
 
 const questDetail12: QuestDetail = {
   ...quests[11],
-  imageSrc: '',
   questType: '이미지 촬영 및 업로드',
   startAt: '2026.02.19 15:09',
   endAt: '2026.03.31 14:29',
