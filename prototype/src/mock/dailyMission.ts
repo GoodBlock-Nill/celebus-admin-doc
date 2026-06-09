@@ -45,7 +45,7 @@ export interface DailySettings {
 }
 
 export interface StreakMilestone {
-  days: number; // 연속 일수 (정책 고정: 7/14/30/100)
+  days: number; // 연속 일수 (정책 고정: 7/14/30, 30일 주기마다 순환·반복)
   reward: number; // 보너스 보상 (DUK, BO 설정)
 }
 
@@ -67,10 +67,9 @@ export const dailySettings: DailySettings = {
   missionReward: 25,
 };
 
-// 스트릭 보너스 — 마일스톤(7/14/30/100일)은 정책 고정, 보상값은 BO 설정
+// 스트릭 보너스 — 마일스톤(7/14/30일) 정책 고정, 30일 주기마다 반복 지급, 보상값은 BO 설정
 export const streakMilestones: StreakMilestone[] = [
   { days: 7, reward: 200 },
   { days: 14, reward: 500 },
   { days: 30, reward: 1000 },
-  { days: 100, reward: 5000 },
 ];

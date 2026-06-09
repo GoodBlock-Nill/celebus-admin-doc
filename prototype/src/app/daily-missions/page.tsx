@@ -269,9 +269,9 @@ export default function DailyMissionsPage() {
       <h2 className="text-base font-semibold text-gray-900 mt-8 mb-3">연속 출석(스트릭) 보너스</h2>
       <div className="bg-white border border-gray-200 rounded-xl p-5 mb-4">
         <p className="text-xs text-gray-500 mb-4">
-          출석을 연속으로 달성한 마일스톤에서 1회성으로 지급하는 보너스입니다. 마일스톤(연속 일수)은 정책 고정이며 보상값만 조정할 수 있습니다. 출석이 하루라도 끊기면 연속 일수는 0으로 초기화됩니다.
+          출석을 연속으로 달성한 마일스톤에서 지급하는 보너스입니다. 마일스톤(연속 일수)은 정책 고정이며 보상값만 조정할 수 있습니다. 스트릭은 30일 주기로 순환하여, 30일 도달 시 보너스 지급 후 다음날 1일차로 초기화되어 주기마다 반복 지급됩니다. 출석이 하루라도 끊기면 연속 일수는 0으로 초기화됩니다.
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           {streak.map((m) => (
             <NumberField
               key={m.days}
