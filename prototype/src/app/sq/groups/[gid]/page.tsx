@@ -14,6 +14,7 @@ import {
   MAX_MAIN_EPISODES,
   MAX_REPEAT_EPISODES,
   type EpisodeGroupStatus,
+  type StoryQuestStatus,
   type StoryQuest,
 } from '@/mock/sq';
 
@@ -21,6 +22,18 @@ const GROUP_STATUS_STYLE: Record<EpisodeGroupStatus, string> = {
   DRAFT: 'bg-gray-100 text-gray-700',
   ACTIVE: 'bg-emerald-100 text-emerald-700',
   CLOSED: 'bg-gray-100 text-gray-500',
+};
+
+// 에피소드 독립 상태 배지 (그룹과 별개 — 그룹=컨테이너 게이트)
+const EP_STATUS_STYLE: Record<StoryQuestStatus, string> = {
+  DRAFT: 'bg-gray-100 text-gray-600 border-gray-200',
+  ACTIVE: 'bg-emerald-500 text-white border-emerald-500',
+  CLOSED: 'bg-gray-700 text-white border-gray-700',
+};
+const EP_STATUS_LABEL: Record<StoryQuestStatus, string> = {
+  DRAFT: '임시저장',
+  ACTIVE: '진행중',
+  CLOSED: '종료',
 };
 
 export default function GroupDetailPage({ params }: { params: Promise<{ gid: string }> }) {
@@ -291,11 +304,16 @@ function EpisodeCard({
             </div>
           )}
         </div>
-        {isRepeat && (
-          <span className="absolute top-2 right-2 inline-flex rounded-full px-2 py-0.5 text-[9px] font-bold bg-violet-600 text-white">
-            REPEAT
+        <div className="absolute top-2 right-2 flex flex-col items-end gap-1">
+          <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold border ${EP_STATUS_STYLE[ep.status]}`}>
+            {EP_STATUS_LABEL[ep.status]}
           </span>
-        )}
+          {isRepeat && (
+            <span className="inline-flex rounded-full px-2 py-0.5 text-[9px] font-bold bg-violet-600 text-white">
+              REPEAT
+            </span>
+          )}
+        </div>
       </div>
       <button onClick={onCardClick} className="block w-full text-left p-4">
         <div className="flex items-center justify-end mb-2">

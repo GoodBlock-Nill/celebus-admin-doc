@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.1</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.20</td></tr>
+<tr><td>버전</td><td>v3.2</td></tr>
+<tr><td>최근 업데이트</td><td>2026.06.09</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -96,7 +96,6 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-20 · 버전: <strong>v3.1</strong> (에피소드 완료 보상 카드 신규 — 메인 에피소드 전용)</p>
 <p>화면 경로: <code>/sq/{id}</code> · Breadcrumb: <code>홈 › 에피소드 › {그룹명} › {에피소드명}</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
@@ -114,10 +113,11 @@ p {
 <ul>
 <li>좌측: ← 뒤로가기 → 그룹 상세 복귀</li>
 <li>페이지 제목: 에피소드 한국어 타이틀</li>
-<li><strong>유형 배지 (v2.2)</strong>: 메인 / 반복 — 에피소드 종류 노출 (상태 배지는 미노출, 그룹 상태 상속)</li>
-<li>우측 액션 (상태별):
+<li><strong>유형 배지</strong>: 메인 / 반복 — 에피소드 종류 노출</li>
+<li><strong>상태 배지 (v3.2)</strong>: 임시저장 / 진행중 / 종료 — 에피소드 <strong>자체 독립 상태</strong> 노출 (그룹과 별개)</li>
+<li>우측 액션 (에피소드 자체 상태별):
 <ul>
-<li>임시저장: [수정] · [삭제] · [게시]</li>
+<li>임시저장: [수정] · [삭제] · [게시] — <strong>[게시]는 부모 그룹이 진행중일 때만 활성</strong>(게이트)</li>
 <li>진행중: [수정] · [종료]</li>
 <li>종료: (없음 — read-only)</li></ul>
 </li></ul>
@@ -217,7 +217,7 @@ p {
 <tr><td>미션 한도</td><td>10개 초과 시 [미션 추가] 비활성</td></tr>
 <tr><td>게시 검증</td><td>부모 그룹이 진행중 + 다국어 3개 언어 + 메인 이미지 모두 충족 시에만 게시 가능</td></tr>
 <tr><td>순서 변경 가능 조건</td><td>부모 에피소드가 임시저장 상태일 때만 ↑↓ 활성</td></tr>
-<tr><td>상태 배지</td><td>에피소드 자체 상태 배지는 노출하지 않음 (그룹 상태 상속 정책)</td></tr>
+<tr><td>상태 배지</td><td>에피소드 자체 독립 상태 배지(임시저장/진행중/종료) 노출. 게시는 부모 그룹 진행중 선행, 앱 노출 = 그룹 진행중 AND 에피소드 진행중</td></tr>
 </table>
 <h2>6. 연관 화면</h2>
 <table>
@@ -232,6 +232,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v3.2</strong></td><td><strong>2026-06-09</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드 독립 상태 배지 노출 (개발자 피드백)</strong> — 그룹 상태 종속 → 독립. ① §2-1 헤더 "상태 배지 미노출(그룹 상태 상속)" → <strong>에피소드 자체 상태 배지(임시저장/진행중/종료) 노출</strong>, [게시]는 부모 그룹 진행중일 때만 활성(게이트) 명시 ② §5 검증 "상태 배지 미노출" → "독립 상태 배지 노출 + 앱 노출=그룹 진행중 AND 에피소드 진행중". 게시 검증(부모 그룹 진행중 선행)·종료·삭제 흐름은 기존 유지. [CEB-BO-011] v3.9·[CEB-BO-SQ-201] v3.1 정합</td></tr>
 <tr><td><strong>v3.1</strong></td><td><strong>2026-05-20</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>에피소드 완료 보상 카드 신규 (메인 에피소드 전용)</strong> — ① §2-3 에피소드 완료 보상 카드 신규 (응모권 보상·덕력 보상·BIVE 보상 토글 상태·민팅 캠페인 이름). 메인 에피소드에서만 노출. 모든 값이 0/OFF여도 카드는 노출되며 "보상 없음" 안내 ② 기존 §2-3(다국어)·§2-4(통계 카드)·§2-5(미션 그리드)·§2-6(순서 변경 동작)을 §2-4·§2-5·§2-6·§2-7로 번호 이동 ③ §3 화면 노출 정보 표에 "에피소드 완료 보상 카드" 행 추가 ④ [CEB-BO-011] v3.2 정합</td></tr>
 <tr><td>v3.0</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>한국어 도메인 용어 정합 + Page Properties 13필드</strong> — ① Page Properties 표 신설 ② §3 데이터 모델 표(<code>StoryQuest</code>·<code>StoryEpisode</code> + 영문 필드명 + 코드 경로) 폐기 → §3 화면 노출 정보 표로 재구성 ③ 유형 enum(MAIN/REPEAT) → 한국어(메인/반복) ④ 상태 enum(DRAFT/ACTIVE/CLOSED) → 한국어(임시저장/진행중/종료) ⑤ 미션 유형 영문(FAN_QUEST/PREDICTION_MARKET/SURVIVAL_TRIVIA) → 한국어(팬퀘스트/예측 마켓/서바이벌 트리비아) ⑥ 헬퍼 함수(<code>getEpisodesByStoryId(id)</code>) 제거 → 운영 동작 설명 ⑦ §4·§5 분기·검증 양식 정합 ⑧ 변경 이력 5칸 양식</td></tr>
 <tr><td>v2.2</td><td>2026-05-12</td><td>@Nill Yoo</td><td><strong>헤더 상태 배지 제거</strong> (그룹 상태 상속 정책) — 유형 배지만 유지. 통계 카드 파스텔 톤. 미션 카드에서 "완료 조건 수" 행 제거 (완료 조건 계층 폐기)</td></tr>

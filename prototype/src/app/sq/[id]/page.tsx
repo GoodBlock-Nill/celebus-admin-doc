@@ -14,6 +14,13 @@ const TYPE_BADGE: Record<EpisodeType, { bg: string; text: string; label: string 
   SURVIVAL_TRIVIA: { bg: 'bg-blue-100', text: 'text-blue-700', label: '서바이벌 트리비아' },
 };
 
+// [CEB-BO-SQ-202] §2-1 정합 — 에피소드 독립 상태 배지 (그룹=컨테이너 게이트)
+const EP_STATUS_BADGE: Record<'DRAFT' | 'ACTIVE' | 'CLOSED', { cls: string; label: string }> = {
+  DRAFT: { cls: 'bg-gray-100 text-gray-600', label: '임시저장' },
+  ACTIVE: { cls: 'bg-emerald-500 text-white', label: '진행중' },
+  CLOSED: { cls: 'bg-gray-700 text-white', label: '종료' },
+};
+
 export default function SqDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const storyId = parseInt(id, 10);
@@ -28,6 +35,8 @@ export default function SqDetailPage({ params }: { params: Promise<{ id: string 
 
   const canAddMission = story.episodeCount < MAX_EPISODES_PER_STORY;
   const canReorder = story.status === 'DRAFT';
+  // 그룹=컨테이너 게이트: 에피소드 게시는 부모 그룹이 진행중일 때만 가능
+  const groupActive = group?.status === 'ACTIVE';
 
   const handleReorder = (index: number, direction: -1 | 1) => {
     const target = index + direction;
@@ -58,6 +67,10 @@ export default function SqDetailPage({ params }: { params: Promise<{ id: string 
           <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-bold ${
             story.episodeKind === 'REPEAT' ? 'bg-violet-100 text-violet-700' : 'bg-indigo-100 text-indigo-700'
           }`}>{story.episodeKind === 'REPEAT' ? '반복' : '메인'}</span>
+          {/* 에피소드 독립 상태 배지 */}
+          <span className={`inline-flex rounded-full px-3 py-1.5 text-xs font-bold ${EP_STATUS_BADGE[story.status].cls}`}>
+            {EP_STATUS_BADGE[story.status].label}
+          </span>
           <button
             onClick={() => router.push(`/sq/${storyId}/edit`)}
             className="h-10 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
@@ -75,8 +88,13 @@ export default function SqDetailPage({ params }: { params: Promise<{ id: string 
           )}
           {story.status === 'DRAFT' ? (
             <button
-              onClick={() => alert(`[Mock] 게시 — '${story.titleKO}'`)}
-              className="h-10 px-4 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+              onClick={() => {
+                if (!groupActive) return;
+                alert(`[Mock] 게시 — '${story.titleKO}'`);
+              }}
+              disabled={!groupActive}
+              title={groupActive ? '' : '그룹이 진행중일 때만 에피소드를 게시할 수 있습니다.'}
+              className="h-10 px-4 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               게시하기
             </button>
