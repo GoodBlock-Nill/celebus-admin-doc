@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.3</td></tr>
-<tr><td>최근 업데이트</td><td>2026.05.21</td></tr>
+<tr><td>버전</td><td>v3.4</td></tr>
+<tr><td>최근 업데이트</td><td>2026.06.09</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -96,7 +96,6 @@ p {
 </table>
 <hr>
 <blockquote>
-<p>작성자: @Nill Yoo · 작성일: 2026-05-21 · 버전: <strong>v3.3</strong> (PM/ST 미션 다국어 타이틀 검증 정정 — KO 필수 + EN/JA 선택 → <strong>KO/EN/JA 3종 모두 필수</strong>. [CEB-BO-011] §5 다국어 필수 표준 정합)</p>
 <p>화면 경로: <code>/sq/{id}/quests/create</code> · Breadcrumb: <code>홈 › 에피소드 › {그룹명} › {에피소드명} › 새 미션 추가</code></p>
 </blockquote>
 <h2>1. 화면 개요</h2>
@@ -137,8 +136,8 @@ p {
 <blockquote>
 <p><strong>미션 유형별 정책</strong>:</p>
 <p>- <strong>팬퀘스트</strong>: 팬퀘스트 영역에서 관리되는 Quest를 참조만 합니다. 보상·이미지·타이틀은 자동 상속.</p>
-<p>- <strong>예측 마켓</strong>: 예측 마켓 콘텐츠 참조 없음. 판정 유형·보상을 본 화면에서 직접 입력.</p>
-<p>- <strong>서바이벌 트리비아</strong>: 서바이벌 트리비아 콘텐츠 참조 없음. 판정 유형·보상을 본 화면에서 직접 입력.</p>
+<p>- <strong>예측 마켓</strong>: 예측 마켓 콘텐츠 참조 없음. 판정 유형·<strong>덕력 보상</strong>을 본 화면에서 직접 입력 (응모권·BIVE 미지원).</p>
+<p>- <strong>서바이벌 트리비아</strong>: 서바이벌 트리비아 콘텐츠 참조 없음. 판정 유형·<strong>덕력 보상</strong>을 본 화면에서 직접 입력 (응모권·BIVE 미지원).</p>
 </blockquote>
 <h3>2-5. 기본 정보</h3>
 <table>
@@ -177,9 +176,8 @@ p {
 <blockquote>
 <p>v2.2부터 별도 완료 조건 모달 없이 미션 생성 시 1:1로 완료 판정 필드가 같이 저장된다.</p>
 </blockquote>
-<p><strong>보상 섹션</strong>:</p>
+<p><strong>보상 섹션</strong> (PM/ST는 <strong>덕력만</strong> — 응모권·BIVE 미지원):</p>
 <ul>
-<li>응모권: 정수 입력 (단위: 장)</li>
 <li>덕력: 정수 입력</li></ul>
 <p><strong>반복 여부 섹션</strong> (부모 에피소드 유형에 따라 분기):</p>
 <table>
@@ -197,10 +195,9 @@ p {
 <blockquote>
 <p>정합 근거: [CEB-BO-011] §5 정책 상수 "반복 미션 반복 주기 / 반복 미션 운영 기간" 2행. 팬퀘스트 생성 화면의 반복 주기·기간 입력 UI와 동일 패턴.</p>
 </blockquote>
-<p><strong>BIVE 보상 섹션</strong> (토글):</p>
-<ul>
-<li>OFF: 비활성 안내</li>
-<li>ON: 민팅 캠페인 드롭다운 (등록된 캠페인 6종 — V01D Welcome ED / Trivia Master / Final Boss / Prophet / 100 Days 등)</li></ul>
+<blockquote>
+<p><strong>PM/ST 미션 보상은 덕력만 지원</strong>한다. 응모권 입력·BIVE 보상(자동 민팅) 토글은 PM/ST 미션에서 제공하지 않는다. (BIVE 자동 민팅은 팬퀘스트 미션 고유 메타·메인 에피소드 완료 보상에서만 운영)</p>
+</blockquote>
 <h3>2-8. 하단 액션 (Sticky 푸터)</h3>
 <ul>
 <li>[취소하기] (빨강)</li>
@@ -215,7 +212,7 @@ p {
 <tr><td>팬퀘스트 영역</td><td>팬퀘스트 참조 (유형이 팬퀘스트일 때)</td><td>1:1 매핑. 반복 주기·타이틀·이미지·보상 모두 팬퀘스트 자체 설정 상속</td></tr>
 <tr><td>PM/ST 기본 정보 (v3.2 신규)</td><td>다국어 타이틀 KO/EN/JP (PM/ST일 때만)</td><td>운영자 직접 입력. <strong>KO/EN/JA 3개 언어 모두 필수</strong> ([CEB-BO-011] §5 다국어 필수 정합)</td></tr>
 <tr><td>판정 영역</td><td>판정 유형·기준값·소스 참조값 (예측 마켓·서바이벌 트리비아일 때)</td><td>미션 흡수 필드</td></tr>
-<tr><td>보상</td><td>응모권·덕력·BIVE</td><td>회원 보상 정의</td></tr>
+<tr><td>보상</td><td>덕력 (PM/ST는 덕력만 — 응모권·BIVE 미지원)</td><td>회원 보상 정의</td></tr>
 <tr><td>반복 여부·반복 주기·기간</td><td>부모=반복 + PM/ST일 때만 노출 (메인 진입 시 미노출)</td><td>반복 미션 운영 정의</td></tr>
 </table>
 <h2>4. 상태별 동작 분기</h2>
@@ -241,7 +238,7 @@ p {
 <tr><td>팬퀘스트 유형 + 팬퀘스트 미선택</td><td>[미션 추가] 비활성</td></tr>
 <tr><td>팬퀘스트 유형 + 이미 사용 중인 팬퀘스트</td><td>드롭다운에 노출되지 않음</td></tr>
 <tr><td>예측 마켓·서바이벌 트리비아 + 판정 유형/기준값 미입력</td><td>[미션 추가] 비활성</td></tr>
-<tr><td>BIVE ON + 민팅 캠페인 미선택</td><td>[미션 추가] 비활성</td></tr>
+<tr><td>PM/ST 보상 = 덕력만</td><td>응모권·BIVE 입력 미제공 (덕력만 입력)</td></tr>
 <tr><td>메인 에피소드 + PM/ST 미션</td><td>반복 여부 자동 OFF·잠금. 단일 미션으로만 저장 가능</td></tr>
 <tr><td>반복 에피소드 + PM/ST + 반복 ON</td><td>반복 주기(일간/주간/월간) 1개 선택 필수</td></tr>
 <tr><td>반복 ON + 시작일자 &gt; 종료일자</td><td>종료일자 인라인 에러 + [미션 추가] 비활성</td></tr>
@@ -267,6 +264,7 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v3.4</strong></td><td><strong>2026-06-09</strong></td><td><strong>@Nill Yoo</strong></td><td>PM/ST 미션 보상 덕력만으로 축소 (개발자 요청). §2-7 보상 섹션에서 응모권 입력·BIVE 보상 토글·민팅 캠페인 드롭다운 삭제(덕력 1종만). §2-4 정책 안내·§3 노출 정보·§5 검증 규칙에서 응모권·BIVE 항목 제거(BIVE ON 민팅 검증 행 삭제). 팬퀘스트 미션·메인 에피소드 완료 보상은 불변. [CEB-BO-011]·[CEB-BO-SQ-204]·[CEB-BO-SQ-204-EDIT]·[CEB-BO-SQ-FLOW]·프로토타입 정합</td></tr>
 <tr><td><strong>v3.3</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>PM/ST 다국어 타이틀 검증 정정 — KO·EN·JA 3종 모두 필수 (사용자 정정 반영)</strong> — v3.2에서 "KO 필수 + EN/JA 선택"으로 디폴트 설정했으나 사용자 정정: [CEB-BO-011] §5 다국어 필수 표준("타이틀·설명·가이드는 한국어/영어/일본어 3개 언어 모두 입력 필수")에 정합하여 PM/ST 미션 다국어 타이틀도 <strong>3개 언어 모두 필수</strong>로 통일. §2-7 표 "필수" 컬럼·§3 노출 정보·§5 검증 규칙 동시 정정. 프로토타입 <code>isAllLangsFilled(title)</code> 사용. [CEB-BO-011] v3.5·[CEB-BO-SQ-FLOW] v3.5 동시 정합</td></tr>
 <tr><td>v3.2</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>PM/ST 미션 다국어 타이틀 입력 필드 신설 (사용자 피드백 반영)</strong> — §2-7 PM/ST 섹션 가장 위에 "기본 정보 (PM/ST 직접 입력)" 그룹 신설. 타이틀(KO/EN/JP) 다국어 탭 입력 필드 추가 — 각 50자, KO 필수 + EN/JA 선택 (게시 시점에 부모 에피소드 다국어 검증으로 일괄 처리). 팬퀘스트 유형은 본 입력 미노출(팬퀘스트 자체 타이틀 상속). §3 노출 정보 표 행 추가, §5 검증 규칙 "PM/ST + 타이틀 KO 미입력 → [미션 추가] 비활성" 추가. [CEB-BO-011] v3.4 정책 상수 정합</td></tr>
 <tr><td>v3.1</td><td>2026-05-20</td><td>@Nill Yoo</td><td><strong>메인/반복 에피소드 미션 유형 분기 정책 + PM·ST 반복 미션 반복 주기·기간 설정 UI 신설</strong> — ① §2-3 부모 에피소드 유형 안내 박스 재작성 (메인=인디고 박스 "단일 미션만" / 반복=바이올렛 박스 "팬퀘스트 반복 종류만 + PM·ST 단일·반복 모두") ② §2-6 팬퀘스트 유형 섹션에 반복 주기 안내 추가 — 팬퀘스트 자체 설정 상속 (본 화면에서 별도 설정 불가) ③ §2-7 PM·ST 섹션에 반복 여부 토글 + 반복 주기·기간 설정 신규: 부모=메인 진입 시 토글 미노출 (자동 단일), 부모=반복 진입 시 토글 노출 (기본 OFF), ON 시 반복 주기(일간/주간/월간 버튼 그룹) + 시작·종료일자 입력 노출 ④ §3 화면 노출 정보 표 갱신 (부모 에피소드 유형 안내·반복 여부·반복 주기·기간 추가) ⑤ §4 상태별 동작 분기 4행 추가 ⑥ §5 검증 규칙 5행 추가 (메인+PM/ST 단일 자동·반복 ON 주기 필수·시작&gt;종료 검증·그룹 기간 내 검증·팬퀘스트 본 화면 검증 제외) ⑦ [CEB-BO-011] v3.2 정합</td></tr>

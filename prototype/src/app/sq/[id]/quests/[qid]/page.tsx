@@ -100,15 +100,15 @@ export default function QuestDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      {/* 섹션 1 — 기본 정보 + BIVE 보상 (2열) */}
-      <div className="grid grid-cols-2 gap-5 mb-6">
+      {/* 섹션 1 — 기본 정보 (+ BIVE 보상은 팬퀘스트 한정. PM/ST는 덕력만 — 2026-06-09 개발자 요청) */}
+      <div className={`grid ${isFanQuest ? 'grid-cols-2' : 'grid-cols-1'} gap-5 mb-6`}>
         <div className="bg-white border border-gray-200 rounded-xl p-5">
           <h4 className="text-sm font-semibold text-gray-900 mb-4">기본 정보</h4>
           <div className="space-y-3 text-sm">
             <Row label="순서" value={`${quest.order} / 10`} />
             <Row label="유형" value={typeBadge.label} />
             <Row label="반복 여부" value={quest.repeat ? '반복' : '단일'} />
-            <Row label="응모권 보상" value={`${quest.rewardEntryTicket}장`} />
+            {isFanQuest && <Row label="응모권 보상" value={`${quest.rewardEntryTicket}장`} />}
             <Row label="덕력 보상" value={quest.rewardFanPoint.toLocaleString('ko-KR')} />
           </div>
           <div className="border-t border-gray-100 pt-3 mt-3 text-[11px] text-gray-500 leading-relaxed">
@@ -116,6 +116,7 @@ export default function QuestDetailPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
 
+        {isFanQuest && (
         <div className="bg-white border border-gray-200 rounded-xl p-5">
           <h4 className="text-sm font-semibold text-gray-900 mb-4">BIVE 보상</h4>
           {quest.biveRewardYn ? (
@@ -146,6 +147,7 @@ export default function QuestDetailPage({ params }: { params: Promise<{ id: stri
             </div>
           )}
         </div>
+        )}
       </div>
 
       {/* [CEB-BO-SQ-204] §2-3 v3.2 신규 — 예측 마켓·서바이벌 트리비아 미션 다국어 타이틀 노출 카드 (2026-05-21 sync 정정) */}

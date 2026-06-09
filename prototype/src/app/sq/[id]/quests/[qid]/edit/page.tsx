@@ -70,7 +70,6 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
   const [completedType, setCompletedType] = useState<EpisodeCompletedType | ''>(quest?.completedType ?? '');
   const [completedValue, setCompletedValue] = useState<number>(quest?.completedValue ?? 1);
   const [sourceRefName, setSourceRefName] = useState<string>(quest?.sourceRefName ?? '');
-  const [rewardEntryTicket, setRewardEntryTicket] = useState<number>(quest?.rewardEntryTicket ?? 0);
   const [rewardFanPoint, setRewardFanPoint] = useState<number>(quest?.rewardFanPoint ?? 0);
   const [repeat, setRepeat] = useState<boolean>(quest?.repeat ?? false);
   const [repeatCycle, setRepeatCycle] = useState<'DAILY' | 'WEEKLY' | 'MONTHLY'>(
@@ -307,7 +306,7 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
       {isGameType && (
         <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
           <div className="flex items-center gap-2 mb-4">
-            <h4 className="text-base font-semibold text-gray-900">보상 설정</h4>
+            <h4 className="text-base font-semibold text-gray-900">보상 설정 <span className="text-[11px] text-gray-400 font-normal ml-1">(예측 마켓·서바이벌 트리비아는 덕력만)</span></h4>
             {isRewardLocked && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-100 text-amber-800">
                 <LockClosedIcon className="w-3 h-3" />
@@ -315,18 +314,7 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
               </span>
             )}
           </div>
-          <div className="grid grid-cols-2 gap-5 mb-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">응모권 (장) <span className="text-red-500">*</span></label>
-              <input
-                type="number"
-                min={0}
-                value={rewardEntryTicket}
-                onChange={(e) => setRewardEntryTicket(parseInt(e.target.value || '0', 10))}
-                disabled={isRewardLocked}
-                className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
-              />
-            </div>
+          <div className="mb-5">
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-2">덕력 (DUK) <span className="text-red-500">*</span></label>
               <input
@@ -412,7 +400,8 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
         </div>
       )}
 
-      {/* 섹션 4 — BIVE 보상 (PM/ST + FAN_QUEST 공통 · 진행중·종료 시 read-only) */}
+      {/* 섹션 4 — BIVE 보상 (팬퀘스트 미션 고유 메타 한정. PM/ST는 덕력만이라 미노출 — 2026-06-09 개발자 요청) */}
+      {isFanQuest && (
       <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -460,6 +449,7 @@ export default function QuestEditPage({ params }: { params: Promise<{ id: string
           </p>
         )}
       </div>
+      )}
 
       {/* 하단 액션 */}
       <div className="flex items-center justify-end gap-2 sticky bottom-0 bg-gradient-to-t from-white via-white to-transparent pt-6 pb-2">

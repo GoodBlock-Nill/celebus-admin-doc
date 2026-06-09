@@ -23,15 +23,6 @@ const TYPE_OPTIONS: { value: EpisodeType; label: string; bg: string; text: strin
   { value: 'SURVIVAL_TRIVIA', label: 'SURVIVAL_TRIVIA', bg: 'bg-blue-100', text: 'text-blue-700' },
 ];
 
-const MINTING_EVENT_OPTIONS = [
-  { id: '', name: '민팅 이벤트 선택...' },
-  { id: '23', name: 'V01D Welcome ED' },
-  { id: '24', name: 'V01D Trivia Master' },
-  { id: '25', name: 'V01D Final Boss' },
-  { id: '26', name: 'V01D Prophet' },
-  { id: '27', name: 'V01D 100 Days' },
-];
-
 export default function QuestCreatePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const storyId = parseInt(id, 10);
@@ -51,15 +42,12 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
   const [sourceRefId, setSourceRefId] = useState<string>('');
   const [gameCondition, setGameCondition] = useState<GameCondition>('PARTICIPATION_COUNT');
   const [conditionValue, setConditionValue] = useState<number>(1);
-  const [rewardEntryTicket, setRewardEntryTicket] = useState(5);
   const [rewardFanPoint, setRewardFanPoint] = useState(100);
   const [repeat, setRepeat] = useState(false);
   // [CEB-BO-SQ-204-CREATE] §2-7 v3.1 — PM/ST 반복 주기·기간 설정 (반복 ON일 때만)
   const [repeatCycle, setRepeatCycle] = useState<'DAILY' | 'WEEKLY' | 'MONTHLY'>('WEEKLY');
   const [repeatStartDt, setRepeatStartDt] = useState('');
   const [repeatEndDt, setRepeatEndDt] = useState('');
-  const [biveRewardYn, setBiveRewardYn] = useState(false);
-  const [mintingEventId, setMintingEventId] = useState('');
 
   if (!story || !group || !artist) {
     return <div className="p-8 text-sm text-gray-500">에피소드 또는 그룹을 찾을 수 없습니다.</div>;
@@ -85,9 +73,8 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
     type !== '' &&
     // FAN_QUEST: 팬퀘스트 참조 필수 / PM·ST: 참조 불필요(아티스트 누적)
     (isFanQuest ? sourceRefId !== '' : true) &&
-    // PM·ST만 보상·조건 검증
-    (!isGameType || (rewardEntryTicket >= 0 && rewardFanPoint >= 0 && conditionValue >= 1)) &&
-    (!isGameType || !biveRewardYn || mintingEventId !== '') &&
+    // PM·ST 보상은 덕력만 — 덕력·완료 조건 검증 (응모권·BIVE 미지원)
+    (!isGameType || (rewardFanPoint >= 0 && conditionValue >= 1)) &&
     // [CEB-BO-SQ-204-CREATE] §2-7 v3.3 — PM/ST 다국어 타이틀 KO/EN/JA 3종 모두 필수 ([CEB-BO-011] §5 다국어 필수 정합)
     (!isGameType || isAllLangsFilled(title));
 
@@ -104,7 +91,7 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
       const sourceLabel = selectedSource?.title ?? `#${sourceRefId}`;
       summary = `[Mock] 미션 추가 — FAN_QUEST 참조 '${sourceLabel}' (보상은 팬퀘스트 자체 정책 적용)`;
     } else {
-      summary = `[Mock] 미션 추가 — ${type} / 조건: ${artist} 아티스트의 모든 ${type === 'PREDICTION_MARKET' ? 'PM' : 'ST'} ${GAME_CONDITION_LABEL[gameCondition]} ${conditionValue}회 이상 / 응모권 +${rewardEntryTicket}장 / 덕력 +${rewardFanPoint} / BIVE ${biveRewardYn ? 'ON' : 'OFF'}`;
+      summary = `[Mock] 미션 추가 — ${type} / 조건: ${artist} 아티스트의 모든 ${type === 'PREDICTION_MARKET' ? 'PM' : 'ST'} ${GAME_CONDITION_LABEL[gameCondition]} ${conditionValue}회 이상 / 덕력 +${rewardFanPoint} (응모권·BIVE 미지원)`;
     }
     alert(summary);
     router.push(`/sq/${storyId}`);
@@ -331,18 +318,8 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
       {/* 섹션 3 — 보상 설정 (PM/ST 전용 — 미선택·FAN_QUEST는 숨김) */}
       {isGameType && (
         <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
-          <h4 className="text-base font-semibold text-gray-900 mb-4">보상 설정</h4>
-          <div className="grid grid-cols-2 gap-5 mb-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">응모권 (장) <span className="text-red-500">*</span></label>
-              <input
-                type="number"
-                min={0}
-                value={rewardEntryTicket}
-                onChange={(e) => setRewardEntryTicket(parseInt(e.target.value || '0', 10))}
-                className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
+          <h4 className="text-base font-semibold text-gray-900 mb-4">보상 설정 <span className="text-[11px] text-gray-400 font-normal ml-1">(예측 마켓·서바이벌 트리비아는 덕력만)</span></h4>
+          <div className="mb-5">
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-2">덕력 (DUK) <span className="text-red-500">*</span></label>
               <input
@@ -433,48 +410,7 @@ export default function QuestCreatePage({ params }: { params: Promise<{ id: stri
         </div>
       )}
 
-      {/* 섹션 4 — BIVE 보상 (PM/ST만, FAN_QUEST는 팬퀘스트 자체에서 관리) */}
-      {isGameType && (
-        <div className="bg-white border border-gray-200 rounded-xl p-5 mb-5">
-          <div className="flex items-center justify-between mb-4">
-            <h4 className="text-base font-semibold text-gray-900">BIVE 보상</h4>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={biveRewardYn}
-                onChange={(e) => setBiveRewardYn(e.target.checked)}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-5" />
-              <span className="ml-2 text-sm font-medium text-gray-700">
-                {biveRewardYn ? <span className="text-indigo-700">ON</span> : 'OFF'}
-              </span>
-            </label>
-          </div>
-
-          {biveRewardYn ? (
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">
-                민팅 이벤트 <span className="text-red-500">*</span>
-                <span className="text-[11px] text-gray-400 font-normal ml-1">(ON 시 필수)</span>
-              </label>
-              <select
-                value={mintingEventId}
-                onChange={(e) => setMintingEventId(e.target.value)}
-                className="w-full h-11 px-3 border border-gray-200 rounded-lg text-sm bg-white"
-              >
-                {MINTING_EVENT_OPTIONS.map((m) => (
-                  <option key={m.id} value={m.id}>{m.name}</option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <p className="text-xs text-gray-500 leading-relaxed">
-              BIVE 보상이 OFF 상태입니다. 본 미션 완료 시 BIVE NFT 민팅이 발생하지 않습니다.
-            </p>
-          )}
-        </div>
-      )}
+      {/* PM/ST 미션 보상은 덕력만 — 응모권·BIVE 미지원 (개발자 요청 2026-06-09). BIVE 자동 민팅은 팬퀘스트 미션·메인 에피소드 완료 보상에서만 운영 */}
 
       {type && (
         <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6">

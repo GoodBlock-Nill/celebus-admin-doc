@@ -328,26 +328,30 @@ export default function SqDetailPage({ params }: { params: Promise<{ id: string 
                     {/* 타이틀 */}
                     <h5 className="text-sm font-bold text-gray-900 mb-4 line-clamp-2 min-h-[2.5rem]">{ep.titleKO}</h5>
 
-                    {/* 통계 3행 — 보상 + BIVE */}
+                    {/* 보상 — PM/ST는 덕력만, 응모권·BIVE는 팬퀘스트 한정 (2026-06-09 개발자 요청) */}
                     <div className="space-y-1.5 text-xs">
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-500">응모권</span>
-                        <span className="text-emerald-600 font-medium">+{ep.rewardEntryTicket}장</span>
-                      </div>
+                      {ep.type === 'FAN_QUEST' && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-500">응모권</span>
+                          <span className="text-emerald-600 font-medium">+{ep.rewardEntryTicket}장</span>
+                        </div>
+                      )}
                       <div className="flex items-center justify-between">
                         <span className="text-gray-500">덕력</span>
                         <span className="text-emerald-600 font-medium">+{ep.rewardFanPoint}</span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-gray-500">BIVE 보상</span>
-                        {ep.biveRewardYn ? (
-                          <span className="inline-flex items-center gap-1 text-indigo-700 font-semibold">
-                            <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full" />ON
-                          </span>
-                        ) : (
-                          <span className="text-gray-400">OFF</span>
-                        )}
-                      </div>
+                      {ep.type === 'FAN_QUEST' && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-500">BIVE 보상</span>
+                          {ep.biveRewardYn ? (
+                            <span className="inline-flex items-center gap-1 text-indigo-700 font-semibold">
+                              <span className="w-1.5 h-1.5 bg-indigo-600 rounded-full" />ON
+                            </span>
+                          ) : (
+                            <span className="text-gray-400">OFF</span>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     {ep.biveRewardYn && ep.mintingEventName && (
