@@ -54,7 +54,7 @@ export interface FandomLevelStep {
 }
 
 // 레벨별 보상 — [CEB-BO-EVT-201] §2.4
-// 디지털 굿즈: biveCampaignId / 래플·서포트 예고: announceKo/En/Jp
+// 디지털 굿즈: biveCampaignId / 래플·서포트 예고: 연결 Draft 객체 + 다국어 타이틀(announceKo/En/Jp)
 export interface FandomReward {
   level: number;
   kind: RewardType;
@@ -63,9 +63,14 @@ export interface FandomReward {
   titleKo?: string; // 디지털 굿즈 — 보상 타이틀 (한국어, 앱 표시명)
   titleEn?: string; // 디지털 굿즈 — 보상 타이틀 (영어)
   titleJp?: string; // 디지털 굿즈 — 보상 타이틀 (일본어)
-  announceKo?: string; // 래플·서포트 예고 — 안내 텍스트 (한국어)
-  announceEn?: string; // 래플·서포트 예고 — 안내 텍스트 (영어)
-  announceJp?: string; // 래플·서포트 예고 — 안내 텍스트 (일본어)
+  // 래플·서포트 예고 — 앱 팬덤레벨 화면에 표시되는 다국어 타이틀 (연결 객체 자체 타이틀과 별개)
+  announceKo?: string; // 다국어 타이틀 (한국어)
+  announceEn?: string; // 다국어 타이틀 (영어)
+  announceJp?: string; // 다국어 타이틀 (일본어)
+  // 래플·서포트 예고 — 연결된 임시저장(Draft) 객체 식별값. 레벨 달성 시 자동 게시하지 않고
+  // 운영자가 래플·서포트 영역에서 검토 후 수동 게시 — [CEB-BO-EVT-203-EDIT] §2.2
+  linkedRaffleId?: number | null; // 래플 예고 — 연결 Draft 래플
+  linkedSupportId?: number | null; // 서포트 예고 — 연결 Draft 서포트
 }
 
 // 레벨업 이력 — [CEB-BO-EVT-201] §2.5

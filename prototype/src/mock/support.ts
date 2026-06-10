@@ -281,6 +281,12 @@ export function getSupportById(id: number): SupportEvent | undefined {
   return supportEvents.find((e) => e.id === id);
 }
 
+// 임시저장(Draft) 서포트 목록 — 팬덤레벨 서포트 보상 연결 드롭다운 데이터 소스
+// [CEB-BO-EVT-203-EDIT] §2.2 — 레벨 보상은 Draft 서포트만 연결 가능(레벨 달성 시 자동 게시 없음)
+export function getDraftSupports(groupName?: string): SupportEvent[] {
+  return supportEvents.filter((e) => e.status === '임시저장' && (!groupName || e.groupName === groupName));
+}
+
 // 응원·반환 변동 내역 시드 — [CEB-BO-SUP-401]
 // 개별 응원 건 단위로 기록 (동일 회원의 다회 응원이 각각 1행) — [CEB-DUK-201] §2.4
 export const supportLedger: CheerLedger[] = [

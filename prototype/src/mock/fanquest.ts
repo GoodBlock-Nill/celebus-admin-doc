@@ -868,6 +868,12 @@ export const raffles: Raffle[] = [
   },
 ];
 
+// 임시저장(Draft) 래플 목록 — 팬덤레벨 래플 보상 연결 드롭다운 데이터 소스
+// [CEB-BO-EVT-203-EDIT] §2.2 — 레벨 보상은 Draft 래플만 연결 가능(레벨 달성 시 자동 게시 없음)
+export function getDraftRaffles(artist?: string): Raffle[] {
+  return raffles.filter((r) => r.status === '임시저장' && (!artist || r.artist === artist));
+}
+
 // ── Entries (응모자 — 진행중·추첨대기·종료) ──────────────
 
 const ENTRY_NICKNAMES = [

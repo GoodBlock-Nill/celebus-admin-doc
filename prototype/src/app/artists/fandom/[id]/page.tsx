@@ -1,6 +1,7 @@
 'use client';
 
 import { use, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Breadcrumb from '@/components/layout/Breadcrumb';
 import ConfirmModal from '@/components/clone/ConfirmModal';
 import { toast } from '@/components/ui/Toast';
@@ -29,10 +30,12 @@ type Transition = { label: string; next: FandomStatus; title: string; lines: str
 
 export default function FandomDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const router = useRouter();
   const fandom = getFandomById(parseInt(id, 10));
   const [tab, setTab] = useState<TabKey>('curve');
   const [status, setStatus] = useState<FandomStatus>(fandom?.status ?? '준비');
   const [transitionOpen, setTransitionOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   // 미저장 이탈 가드 — 편집 중 탭 전환 시 확인
   const [childEditing, setChildEditing] = useState(false);
 
@@ -86,6 +89,13 @@ export default function FandomDetailPage({ params }: { params: Promise<{ id: str
     toast.success(transition.toast);
   };
 
+  // 삭제 — 준비(Draft) 상태에서만 가능 — [CEB-BO-EVT-201] §2.1 / [CEB-BO-EVT-201-MD-DELETE]
+  const handleDelete = () => {
+    setDeleteOpen(false);
+    toast.success(`'${fandom.season}' 팬덤레벨을 삭제했습니다.`);
+    router.push('/artists/fandom');
+  };
+
   return (
     <div>
       <div className="mb-6">
@@ -101,12 +111,21 @@ export default function FandomDetailPage({ params }: { params: Promise<{ id: str
               </span>
             )}
           </div>
-          {transition && (
-            <button
-              onClick={() => setTransitionOpen(true)}
-              className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
-            >{transition.label}</button>
-          )}
+          <div className="flex items-center gap-2">
+            {/* 삭제 — 준비(Draft) 상태에서만 노출 */}
+            {status === '준비' && (
+              <button
+                onClick={() => setDeleteOpen(true)}
+                className="h-10 px-4 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-lg hover:bg-red-50"
+              >삭제</button>
+            )}
+            {transition && (
+              <button
+                onClick={() => setTransitionOpen(true)}
+                className="h-10 px-4 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+              >{transition.label}</button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -138,6 +157,15 @@ export default function FandomDetailPage({ params }: { params: Promise<{ id: str
           confirmLabel={transition.label}
         />
       )}
+
+      <ConfirmModal
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={handleDelete}
+        title="팬덤레벨을 삭제할까요?"
+        lines={['삭제하면 복구할 수 없습니다.', '준비 상태 팬덤레벨만 삭제할 수 있습니다.']}
+        confirmLabel="삭제"
+      />
     </div>
   );
 }

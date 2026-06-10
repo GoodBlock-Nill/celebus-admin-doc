@@ -13,6 +13,8 @@ import {
   type FandomReward,
   type RewardType,
 } from '@/mock/fandom';
+import { getDraftRaffles } from '@/mock/fanquest';
+import { getDraftSupports } from '@/mock/support';
 
 // 보상 종류 뱃지 — [CEB-BO-EVT-201] §2.4
 function kindBadge(kind: RewardType) {
@@ -33,6 +35,10 @@ export default function RewardTab({ fandom, onEditingChange }: { fandom: FandomL
   // 종료 시즌 또는 최고레벨이면 읽기 전용 잠금
   const isLocked = fandom.status === '종료' || isMaxSeason;
 
+  // 래플·서포트 보상 연결용 임시저장(Draft) 객체 — 같은 그룹/아티스트만
+  const draftRaffles = getDraftRaffles(fandom.groupName);
+  const draftSupports = getDraftSupports(fandom.groupName);
+
   const setEditingWithNotify = (v: boolean) => {
     setEditing(v);
     onEditingChange?.(v);
@@ -52,7 +58,7 @@ export default function RewardTab({ fandom, onEditingChange }: { fandom: FandomL
       // 기본값: 활성 캠페인이 있으면 디지털 굿즈 + 첫 캠페인, 없으면 래플 예고
       hasActiveCampaign
         ? { level: selectedLevel, kind: '디지털 굿즈', biveCampaignId: BIVE_CAMPAIGNS[0].id, titleKo: '', titleEn: '', titleJp: '', sortOrder: nextOrder }
-        : { level: selectedLevel, kind: '래플 예고', announceKo: '', announceEn: '', announceJp: '', sortOrder: nextOrder },
+        : { level: selectedLevel, kind: '래플 예고', announceKo: '', announceEn: '', announceJp: '', linkedRaffleId: null, sortOrder: nextOrder },
     ]);
   };
 
@@ -65,8 +71,8 @@ export default function RewardTab({ fandom, onEditingChange }: { fandom: FandomL
       if (kind === '디지털 굿즈') {
         return { level: x.level, kind, sortOrder: x.sortOrder, biveCampaignId: x.biveCampaignId ?? BIVE_CAMPAIGNS[0]?.id, titleKo: x.titleKo ?? '', titleEn: x.titleEn ?? '', titleJp: x.titleJp ?? '' };
       }
-      // 래플·서포트 예고
-      return { level: x.level, kind, sortOrder: x.sortOrder, announceKo: x.announceKo ?? '', announceEn: x.announceEn ?? '', announceJp: x.announceJp ?? '' };
+      // 래플·서포트 예고 — 다국어 타이틀 유지 + 연결 Draft 객체 초기화
+      return { level: x.level, kind, sortOrder: x.sortOrder, announceKo: x.announceKo ?? '', announceEn: x.announceEn ?? '', announceJp: x.announceJp ?? '', linkedRaffleId: null, linkedSupportId: null };
     }));
   };
 
@@ -75,6 +81,14 @@ export default function RewardTab({ fandom, onEditingChange }: { fandom: FandomL
     const i = idxOf(r);
     const numeric = key === 'sortOrder';
     setRewards(rewards.map((x, idx) => (idx === i ? { ...x, [key]: numeric ? (parseInt(v, 10) || 0) : v } : x)));
+  };
+
+  // 래플·서포트 연결 Draft 객체 선택 ('' = 연결 안 함)
+  const updateLink = (r: FandomReward, key: 'linkedRaffleId' | 'linkedSupportId', v: string) => {
+    if (isAchieved(r.level)) { toast.error('이미 달성된 레벨의 보상은 수정·삭제할 수 없습니다.'); return; }
+    const i = idxOf(r);
+    const num = v === '' ? null : parseInt(v, 10);
+    setRewards(rewards.map((x, idx) => (idx === i ? { ...x, [key]: num } : x)));
   };
 
   const removeReward = (r: FandomReward) => {
@@ -248,26 +262,58 @@ export default function RewardTab({ fandom, onEditingChange }: { fandom: FandomL
                     </div>
                   )}
 
-                  {/* 래플·서포트 예고 — 안내 텍스트 (한/영/일) */}
-                  {(r.kind === '래플 예고' || r.kind === '서포트 예고') && (
-                    <div>
-                      <div className="grid grid-cols-1 gap-2">
-                        <input value={r.announceKo ?? ''} onChange={(e) => updateField(r, 'announceKo', e.target.value)} readOnly={locked || readOnly} placeholder="안내 텍스트 (한국어) — 예: Lv.5 달성 시 사인 굿즈 래플 진행 예정" className="h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 read-only:bg-gray-100 read-only:text-gray-400" />
-                        <input value={r.announceEn ?? ''} onChange={(e) => updateField(r, 'announceEn', e.target.value)} readOnly={locked || readOnly} placeholder="Announcement text (EN)" className="h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 read-only:bg-gray-100 read-only:text-gray-400" />
-                        <input value={r.announceJp ?? ''} onChange={(e) => updateField(r, 'announceJp', e.target.value)} readOnly={locked || readOnly} placeholder="案内テキスト (日本語)" className="h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 read-only:bg-gray-100 read-only:text-gray-400" />
+                  {/* 래플·서포트 예고 — 연결 Draft 객체 + 다국어 타이틀 (한/영/일) */}
+                  {(r.kind === '래플 예고' || r.kind === '서포트 예고') && (() => {
+                    const isRaffle = r.kind === '래플 예고';
+                    const word = isRaffle ? '래플' : '서포트';
+                    const draftList = isRaffle ? draftRaffles : draftSupports;
+                    const linkKey = isRaffle ? 'linkedRaffleId' : 'linkedSupportId';
+                    const linkVal = isRaffle ? r.linkedRaffleId : r.linkedSupportId;
+                    return (
+                      <div className="space-y-3">
+                        {/* 연결 Draft 객체 선택 (임시저장 상태만) */}
+                        <div>
+                          <p className="text-xs text-gray-400 mb-1.5">연결 {word} (임시저장 상태만)</p>
+                          <div className="relative">
+                            <select
+                              value={linkVal ?? ''}
+                              onChange={(e) => updateLink(r, linkKey, e.target.value)}
+                              disabled={locked || readOnly}
+                              className="h-10 pl-3 pr-8 border border-gray-200 rounded-lg text-sm bg-white appearance-none w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                            >
+                              <option value="">연결 안 함 (타이틀만 노출)</option>
+                              {draftList.map((o) => (
+                                <option key={o.id} value={o.id}>{'titleKO' in o ? o.titleKO : o.titleKo}</option>
+                              ))}
+                            </select>
+                            <ChevronUpDownIcon className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                          </div>
+                          {draftList.length === 0 && (
+                            <p className="mt-1 text-[11px] text-amber-600">연결 가능한 임시저장 {word}가 없습니다. {word} 영역에서 먼저 임시저장으로 생성해주세요.</p>
+                          )}
+                        </div>
+                        {/* 다국어 타이틀 (앱 팬덤레벨 화면 표시명) */}
+                        <div>
+                          <p className="text-xs text-gray-400 mb-1.5">다국어 타이틀 (앱 표시명)</p>
+                          <div className="grid grid-cols-1 gap-2">
+                            <input value={r.announceKo ?? ''} onChange={(e) => updateField(r, 'announceKo', e.target.value)} readOnly={locked || readOnly} placeholder="타이틀 (한국어) — 예: Lv.5 달성 기념 사인 굿즈 래플" className="h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 read-only:bg-gray-100 read-only:text-gray-400" />
+                            <input value={r.announceEn ?? ''} onChange={(e) => updateField(r, 'announceEn', e.target.value)} readOnly={locked || readOnly} placeholder="Title (EN)" className="h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 read-only:bg-gray-100 read-only:text-gray-400" />
+                            <input value={r.announceJp ?? ''} onChange={(e) => updateField(r, 'announceJp', e.target.value)} readOnly={locked || readOnly} placeholder="タイトル (日本語)" className="h-10 px-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 read-only:bg-gray-100 read-only:text-gray-400" />
+                          </div>
+                        </div>
+                        <p className="mt-2 text-[11px] text-gray-400">
+                          레벨 달성 시 자동 게시되지 않습니다. 연결된 {word}는 임시저장 상태로 유지되며, 운영자가 {word} 영역에서 검토 후 수동 게시합니다.
+                        </p>
                       </div>
-                      <p className="mt-2 text-[11px] text-gray-400">
-                        앱 예고 표시 전용입니다. 실제 {r.kind === '래플 예고' ? '래플은 래플 영역' : '서포트는 서포트 영역'}에서 별도 운영합니다.
-                      </p>
-                    </div>
-                  )}
+                    );
+                  })()}
                 </div>
               );
             })}
           </div>
         )}
 
-        <p className="mt-4 text-xs text-gray-400">디지털 굿즈(BIVE)는 레벨 달성 시 BIVE 영역이 기여 회원 전원에게 자동 민팅합니다. 래플·서포트 예고는 앱 안내 표시 전용이며, 실제 운영은 각 영역(래플·서포트)에서 별도 진행합니다.</p>
+        <p className="mt-4 text-xs text-gray-400">디지털 굿즈(BIVE)는 레벨 달성 시 BIVE 영역이 기여 회원 전원에게 자동 민팅합니다. 래플·서포트 예고는 임시저장 상태의 객체를 연결하며, 레벨 달성 시 자동 게시하지 않고 운영자가 각 영역(래플·서포트)에서 검토 후 수동 게시합니다.</p>
       </div>
 
       <ConfirmModal
