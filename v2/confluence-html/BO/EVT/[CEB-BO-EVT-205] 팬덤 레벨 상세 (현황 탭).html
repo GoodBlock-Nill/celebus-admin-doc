@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>EVT — 팬덤 레벨</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.2</td></tr>
-<tr><td>최근 업데이트</td><td>2026-06-09</td></tr>
+<tr><td>버전</td><td>v1.3</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-10</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -132,8 +132,8 @@ p {
 </table>
 <table>
 <tr><th>컬럼</th><th>설명</th></tr>
-<tr><td>레벨</td><td>달성 레벨 (Lv.{N})</td></tr>
-<tr><td>달성 일시</td><td>레벨업 달성 일시 (YYYY.MM.DD HH:mm KST)</td></tr>
+<tr><td>레벨</td><td>레벨업 레벨 (Lv.{N})</td></tr>
+<tr><td>레벨업 일시</td><td>레벨업 일시 (YYYY.MM.DD HH:mm KST)</td></tr>
 <tr><td>연결 보상</td><td>해당 레벨 보상 요약 (디지털 굿즈 캠페인명 / 래플·서포트 예고 문구)</td></tr>
 </table>
 <ul>
@@ -182,7 +182,7 @@ p {
 <h3>4.2 조회 기준</h3>
 <ul>
 <li>본 탭은 진입한 그룹·시즌 1건의 데이터만 조회한다.</li>
-<li>레벨업 이력 정렬: 달성 일시 내림차순(최신순).</li>
+<li>레벨업 이력 정렬: 레벨업 일시 내림차순(최신순).</li>
 <li>BIVE 지급 연계 현황 = 닉네임 검색 + 레벨 + 민팅 상태 AND 조합 필터. BIVE 영역 민팅 상태를 실시간 반영한다.</li>
 <li>"참여 유저 수"는 시즌 전체 1DUK 이상 기여 회원 단위로만 집계하며 레벨별로 분해하지 않는다.</li></ul>
 <h3>4.3 EVT-205(본 탭) vs EVT-401 구분</h3>
@@ -228,6 +228,7 @@ p {
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.3</strong></td><td><strong>2026-06-10</strong></td><td><strong>@Nill Yoo</strong></td><td>레벨업 이력 용어 정정(피드백) — "달성" 표현 혼란 해소로 레벨업 이력 컬럼을 '레벨업 레벨/레벨업 일시'로, 정렬을 '레벨업 일시 내림차순'으로 정정(§2.4). 표시 데이터·동작 불변.</td></tr>
 <tr><td><strong>v1.2</strong></td><td><strong>2026-06-09</strong></td><td><strong>@Nill Yoo</strong></td><td>래플·서포트 보상 로직 정합(개발팀 피드백) — 래플·서포트 표기를 "앱 안내 표시 전용" → "임시저장 객체 연결·운영자 수동 게시"로 정정(§1·§2.4 안내). 현황 지급 대상은 디지털 굿즈(BIVE)만으로 동일. [CEB-BO-EVT-203]·[CEB-BO-EVT-000] 정합</td></tr>
 <tr><td><strong>v1.1</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>프로토타입 정합 — BIVE 지급 연계 현황에 <strong>닉네임 검색</strong> 필드 추가(회원 닉네임 부분 일치, 레벨·민팅 상태와 AND 조합)(§2.4·§3·§4.2). 회원별 지급 행 조회 누락 보정</td></tr>
 <tr><td><strong>v1.0</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>신규 작성. 구 [CEB-BO-EVT-201] 탭3(보상·레벨업 현황)을 [현황] 탭 독립 문서로 분리. ① 레벨업 이력(참여 유저 수=시즌 전체 기여 회원 시즌 지표, 레벨별 회원 수 미표기) + BIVE 지급 연계 현황(레벨·민팅 상태 필터, 지급 상태 대기/민팅중/완료) ② <strong>EVT-205(단일 그룹·시즌) vs EVT-401(전체 통합) 구분 표</strong> 명시(§4.3) ③ 전체 통합 조회 링크 → [CEB-BO-EVT-401] ④ 탭 URL <code>?tab=status</code></td></tr>

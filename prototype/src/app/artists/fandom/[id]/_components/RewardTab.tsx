@@ -51,7 +51,7 @@ export default function RewardTab({ fandom, onEditingChange }: { fandom: FandomL
   const isAchieved = (level: number) => level <= fandom.currentLevel;
 
   const addReward = () => {
-    if (isAchieved(selectedLevel)) { toast.error('이미 달성된 레벨의 보상은 수정·삭제할 수 없습니다.'); return; }
+    if (isAchieved(selectedLevel)) { toast.error('현재 레벨 이하의 보상은 수정·삭제할 수 없습니다.'); return; }
     const nextOrder = Math.max(0, ...rewards.filter((r) => r.level === selectedLevel).map((r) => r.sortOrder)) + 1;
     setRewards([
       ...rewards,
@@ -64,7 +64,7 @@ export default function RewardTab({ fandom, onEditingChange }: { fandom: FandomL
 
   // 보상 종류 변경 시 무효 필드 초기화 — [CEB-BO-EVT-201] §2.4
   const changeKind = (r: FandomReward, kind: RewardType) => {
-    if (isAchieved(r.level)) { toast.error('이미 달성된 레벨의 보상은 수정·삭제할 수 없습니다.'); return; }
+    if (isAchieved(r.level)) { toast.error('현재 레벨 이하의 보상은 수정·삭제할 수 없습니다.'); return; }
     const i = idxOf(r);
     setRewards(rewards.map((x, idx) => {
       if (idx !== i) return x;
@@ -77,7 +77,7 @@ export default function RewardTab({ fandom, onEditingChange }: { fandom: FandomL
   };
 
   const updateField = (r: FandomReward, key: keyof FandomReward, v: string) => {
-    if (isAchieved(r.level)) { toast.error('이미 달성된 레벨의 보상은 수정·삭제할 수 없습니다.'); return; }
+    if (isAchieved(r.level)) { toast.error('현재 레벨 이하의 보상은 수정·삭제할 수 없습니다.'); return; }
     const i = idxOf(r);
     const numeric = key === 'sortOrder';
     setRewards(rewards.map((x, idx) => (idx === i ? { ...x, [key]: numeric ? (parseInt(v, 10) || 0) : v } : x)));
@@ -85,14 +85,14 @@ export default function RewardTab({ fandom, onEditingChange }: { fandom: FandomL
 
   // 래플·서포트 연결 Draft 객체 선택 ('' = 연결 안 함)
   const updateLink = (r: FandomReward, key: 'linkedRaffleId' | 'linkedSupportId', v: string) => {
-    if (isAchieved(r.level)) { toast.error('이미 달성된 레벨의 보상은 수정·삭제할 수 없습니다.'); return; }
+    if (isAchieved(r.level)) { toast.error('현재 레벨 이하의 보상은 수정·삭제할 수 없습니다.'); return; }
     const i = idxOf(r);
     const num = v === '' ? null : parseInt(v, 10);
     setRewards(rewards.map((x, idx) => (idx === i ? { ...x, [key]: num } : x)));
   };
 
   const removeReward = (r: FandomReward) => {
-    if (isAchieved(r.level)) { toast.error('이미 달성된 레벨의 보상은 수정·삭제할 수 없습니다.'); return; }
+    if (isAchieved(r.level)) { toast.error('현재 레벨 이하의 보상은 수정·삭제할 수 없습니다.'); return; }
     const i = idxOf(r);
     setRewards(rewards.filter((_, idx) => idx !== i));
   };
@@ -132,8 +132,8 @@ export default function RewardTab({ fandom, onEditingChange }: { fandom: FandomL
           <h2 className="text-base font-bold text-gray-900">
             Lv.{selectedLevel} 보상
             {isAchieved(selectedLevel)
-              ? <span className="ml-2 inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium bg-emerald-100 text-emerald-700">달성</span>
-              : <span className="ml-2 inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium bg-gray-100 text-gray-500">미달성</span>}
+              ? <span className="ml-2 inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium bg-emerald-100 text-emerald-700">레벨업 완료</span>
+              : <span className="ml-2 inline-flex rounded-full px-2 py-0.5 text-[11px] font-medium bg-gray-100 text-gray-500">미완료</span>}
           </h2>
           <div className="flex gap-2">
             {editing ? (
@@ -159,7 +159,7 @@ export default function RewardTab({ fandom, onEditingChange }: { fandom: FandomL
         )}
 
         {editing && isAchieved(selectedLevel) && (
-          <p className="mb-3 text-xs text-amber-600 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">이미 달성된 레벨의 보상은 수정·삭제할 수 없습니다.</p>
+          <p className="mb-3 text-xs text-amber-600 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">현재 레벨 이하의 보상은 수정·삭제할 수 없습니다.</p>
         )}
 
         {levelRewards.length === 0 ? (

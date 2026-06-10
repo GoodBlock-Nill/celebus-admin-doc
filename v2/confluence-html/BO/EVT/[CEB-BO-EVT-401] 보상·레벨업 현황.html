@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>EVT — 팬덤 레벨</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.4</td></tr>
-<tr><td>최근 업데이트</td><td>2026-06-09</td></tr>
+<tr><td>버전</td><td>v1.5</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-10</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -131,12 +131,12 @@ p {
 <tr><th>컬럼</th><th>설명</th></tr>
 <tr><td>그룹</td><td>아티스트 그룹명</td></tr>
 <tr><td>시즌</td><td>"{아티스트} 팬덤 N기 (YYYY)"</td></tr>
-<tr><td>레벨</td><td>달성 레벨 (Lv.{N})</td></tr>
-<tr><td>달성 일시</td><td>레벨업 달성 일시 (KST)</td></tr>
+<tr><td>레벨</td><td>레벨업 레벨 (Lv.{N})</td></tr>
+<tr><td>레벨업 일시</td><td>레벨업 일시 (KST)</td></tr>
 <tr><td>연결 보상</td><td>보상 요약 (디지털 굿즈 캠페인명 / 래플·서포트 예고 문구)</td></tr>
 </table>
 <ul>
-<li>read-only 조회. 기본 정렬: 달성 일시 내림차순. 페이지네이션 하단 중앙.</li>
+<li>read-only 조회. 기본 정렬: 레벨업 일시 내림차순. 페이지네이션 하단 중앙.</li>
 <li><strong>레벨업 이력에는 레벨별 회원 수를 표기하지 않는다</strong>(미팅 정합 2026-06-02). "참여 유저 수"는 특정 레벨이 아닌 <strong>시즌 전체 기여 회원(1DUK 이상)</strong> 단위로만 집계하며, 시즌 상세([CEB-BO-EVT-201] §2.5)의 시즌 단위 지표로 노출한다.</li></ul>
 <h3>2.3 디지털 굿즈(BIVE) 지급 연계 현황</h3>
 <p>디지털 굿즈 보상은 레벨 달성 시 BIVE 영역이 자동 민팅한다. 본 표는 그 연계 결과를 조회한다(상세는 [CEB-BO-BIVE-203]).</p>
@@ -191,6 +191,7 @@ p {
 <h2>6. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.5</strong></td><td><strong>2026-06-10</strong></td><td><strong>@Nill Yoo</strong></td><td>레벨업 이력 용어 정정(피드백) — "달성" 표현 혼란 해소로 레벨업 이력 컬럼을 '레벨업 레벨/레벨업 일시', 정렬을 '레벨업 일시 내림차순'으로 정정(§2.4·§2.6). 표시 데이터·동작 불변.</td></tr>
 <tr><td><strong>v1.4</strong></td><td><strong>2026-06-09</strong></td><td><strong>@Nill Yoo</strong></td><td>래플·서포트 보상 로직 정합(개발팀 피드백) — 래플·서포트 표기를 "앱 안내 표시 전용" → "임시저장 객체 연결·운영자 수동 게시"로 정정(§1 안내). 통합 현황 지급 대상은 디지털 굿즈(BIVE)만으로 동일. [CEB-BO-EVT-203]·[CEB-BO-EVT-000] 정합</td></tr>
 <tr><td><strong>v1.3</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>ART 영역 패턴 정합 — ① 단일 그룹·시즌 조회([CEB-BO-EVT-205] 현황 탭)와 전체 통합 조회(본 화면) 구분 안내 추가(§1) ② 진입 경로·연관화면 정정: 상세 분할(EVT-201 곡선·EVT-203-EDIT 보상·EVT-205 현황)에 맞춰 연계 링크 정비, 래플·서포트 영역 화면 ID 명시([CEB-BO-RFL-101]·[CEB-BO-SUP-101])</td></tr>
 <tr><td><strong>v1.2</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>미팅 정합 — 레벨업 이력 <strong>대상 회원 수(레벨별) 컬럼 제거</strong>. "참여 유저 수"는 특정 레벨이 아닌 <strong>시즌 전체 기여 회원</strong>만 집계해 시즌 단위 지표로 노출([CEB-BO-EVT-201] §2.5 동기화)</td></tr>

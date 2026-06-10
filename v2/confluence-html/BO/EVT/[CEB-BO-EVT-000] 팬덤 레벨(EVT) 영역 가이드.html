@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BO 팬덤 레벨 영역 (EVT)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.9</td></tr>
-<tr><td>최근 업데이트</td><td>2026-06-09</td></tr>
+<tr><td>버전</td><td>v1.10</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-10</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -195,7 +195,7 @@ p {
 <table>
 <tr><th>상태</th><th>가능 액션</th></tr>
 <tr><td>준비</td><td>[수정](곡선·보상) · [삭제](영구 삭제, 준비에서만) · [게시](레벨 5개 이상)</td></tr>
-<tr><td>진행중</td><td>[수정](미달성 레벨 곡선·보상) · [강제 종료]</td></tr>
+<tr><td>진행중</td><td>[수정](현재 레벨 초과 레벨 곡선·보상) · [강제 종료]</td></tr>
 <tr><td>종료</td><td>(없음 — 읽기 전용)</td></tr>
 </table>
 <ul>
@@ -204,7 +204,7 @@ p {
 <p>진행중 시즌의 팬덤 레벨은 누적 덕력 달성에 따라 다음 운영 상태를 가진다.</p>
 <table>
 <tr><th>운영 상태</th><th>의미</th></tr>
-<tr><td>운영중</td><td>최고 레벨 미만. 다음 레벨 목표를 향해 누적 진행 중. 미달성 레벨에 한해 운영자가 신규 레벨 추가·곡선·보상 수정 가능</td></tr>
+<tr><td>운영중</td><td>최고 레벨 미만. 다음 레벨 목표를 향해 누적 진행 중. 현재 레벨을 초과한(미진입) 레벨에 한해 운영자가 신규 레벨 추가·곡선·보상 수정 가능(현재 레벨 이하는 진입 시점에 잠금)</td></tr>
 <tr><td>최고레벨(MAX)</td><td>설정된 최고 레벨에 도달. <strong>시즌 곡선·보상이 확정되어 수정·신규 레벨 추가 모두 불가</strong></td></tr>
 </table>
 <ul>
@@ -241,7 +241,7 @@ p {
 <ul>
 <li><strong>디지털 굿즈(BIVE)</strong>: 레벨 달성 시 BIVE 영역이 기여 회원(1DUK 이상)에게 자동 민팅한다. 지급 현황(대상 회원·발행 BIVE·일시)은 BIVE 영역([CEB-BO-BIVE-203] 민팅 이벤트 상세)에서 추적한다.</li>
 <li><strong>래플·서포트 예고</strong>: EVT는 임시저장 객체 연결·예고 타이틀만 관리하므로 지급 현황을 두지 않는다. 실제 게시·추첨·집행 현황은 운영자가 수동 게시한 RFL·SUP 영역에서 추적한다.</li>
-<li>EVT 영역은 <strong>레벨업 이력</strong>(달성 레벨·일시·기여 회원 수)과 <strong>BIVE 지급 연계 현황</strong>을 [CEB-BO-EVT-205] 상세 현황 탭(단일 그룹·시즌)과 [CEB-BO-EVT-401] 보상·레벨업 현황(전체 통합)에서 조회한다. 회원 덕력 변동 자체는 [CEB-BO-ART-401-HISTORY] 덕력 내역에서 조회한다.</li></ul>
+<li>EVT 영역은 <strong>레벨업 이력</strong>(레벨업 레벨·일시·기여 회원 수)과 <strong>BIVE 지급 연계 현황</strong>을 [CEB-BO-EVT-205] 상세 현황 탭(단일 그룹·시즌)과 [CEB-BO-EVT-401] 보상·레벨업 현황(전체 통합)에서 조회한다. 회원 덕력 변동 자체는 [CEB-BO-ART-401-HISTORY] 덕력 내역에서 조회한다.</li></ul>
 <hr>
 <h2>5. 활동 로그 메시지 템플릿</h2>
 <table>
@@ -257,6 +257,7 @@ p {
 <h2>6. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v1.10</strong></td><td><strong>2026-06-10</strong></td><td><strong>@Nill Yoo</strong></td><td>곡선·보상 수정 잠금 용어 정정(피드백) — "달성"이 목표 도달로 오해되어 잠금 기준을 "<strong>현재 레벨 이하(진입한 레벨)는 수정·삭제 불가</strong>"(현재 레벨에 진입하는 순간 잠김)로 통일. §4.1.2 운영중 수정 가능 범위를 "현재 레벨 초과(미진입) 레벨"로, 레벨업 이력 표기를 "레벨업 레벨·일시"로 정정. 잠금 동작·범위 불변. [CEB-BO-EVT-201]·[CEB-BO-EVT-201-EDIT]·[CEB-BO-EVT-203-EDIT] 정합</td></tr>
 <tr><td><strong>v1.9</strong></td><td><strong>2026-06-09</strong></td><td><strong>@Nill Yoo</strong></td><td>삭제 액션·래플서포트 보상 로직 정합(개발팀 피드백) — ① §4.1.1 상태별 가능 액션 표 신설, 준비(게시 전) 상태에서만 [삭제] 가능 명문화(진행중·종료는 강제 종료·자동 종료로 마감), 삭제 확인 [CEB-BO-EVT-201-MD-DELETE] 연계 ② §4.4 래플·서포트 보상을 "안내 텍스트(예고)" → "임시저장(Draft) 객체 연결 + 다국어 타이틀"로 재정의, 레벨 달성 시 자동 게시 없음·운영자 각 영역 수동 게시 ③ §4.5 지급 현황·§5 활동 로그(삭제) 정합. 디지털 굿즈 BIVE 자동 민팅은 불변</td></tr>
 <tr><td><strong>v1.8</strong></td><td><strong>2026-06-08</strong></td><td><strong>@Nill Yoo</strong></td><td>레벨 수 정책에 <strong>최소 5</strong> 추가(개발팀 피드백) — §4.2 "최대 10레벨" → "<strong>최소 5(게시 가능 최소) ~ 최대 10레벨</strong>". 게시(준비→진행중)는 레벨 5개 이상 필요. [CEB-BO-EVT-201]·[CEB-BO-EVT-201-MD-PUBLISH]·[CEB-BO-EVT-201-EDIT] 정합.</td></tr>
 <tr><td><strong>v1.7</strong></td><td><strong>2026-06-02</strong></td><td><strong>@Nill Yoo</strong></td><td>ART 영역 패턴 정합(화면당 1문서·모달당 1문서) — ① §2 화면 목록을 전체 화면·모달로 재작성: 리스트(EVT-101 + 생성/생성취소 모달), 상세 3탭 분할(EVT-201 레벨·곡선[게시·강제종료 소유] / EVT-203 보상 / EVT-205 현황) + 탭별 -EDIT·확인 모달, 통합 현황(EVT-401) ② §2.1 화면 ID 체계(-EDIT·-MD-·-EDIT-MD- 접미사) 신설 ③ §2.2 완료 처리 규칙 신설(완료=토스트, ART -MD-COMPLE 미사용, 사전 확인 모달만 운영) ④ §2.3 공통 리스트 규칙 신설(첫 진입 전체·카운터 토글·누적 덕력 정렬·페이지 보정)</td></tr>

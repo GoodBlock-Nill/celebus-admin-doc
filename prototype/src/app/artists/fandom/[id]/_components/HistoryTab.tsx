@@ -47,7 +47,7 @@ export default function HistoryTab({ fandom }: { fandom: FandomLevel }) {
         <SimpleTable<LevelUpHistory>
           columns={[
             { key: 'level', label: '레벨', width: '90px', render: (r) => <span className="font-medium text-gray-900">Lv.{r.level}</span> },
-            { key: 'achievedAt', label: '달성 일시', width: '200px' },
+            { key: 'achievedAt', label: '레벨업 일시', width: '200px' },
             { key: 'rewardSummary', label: '연결 보상', render: (r) => <span className="text-gray-700">{r.rewardSummary}</span> },
           ]}
           rows={fandom.levelUpHistory}
