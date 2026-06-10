@@ -19,6 +19,25 @@ OUT = os.path.join(os.path.dirname(__file__), "..", "BO", "00-Common",
 
 # 파일명(stem) -> (정렬 순서, 시트명). 영역 확장 시 여기에 추가.
 SHEETS = {
+    "usr-members": (5, "회원"),
+    "banners": (6, "배너 관리"),
+    "notifications": (7, "알림 관리"),
+    "bive-editions": (8, "에디션 관리"),
+    "bive-minting": (9, "민팅 관리"),
+    "bive-benefits": (9.5, "혜택 관리"),
+    "gz-home": (9.6, "게임존 홈"),
+    "gz-games": (9.7, "게임 관리"),
+    "gz-ranking": (9.8, "랭킹"),
+    "gz-exchange": (9.85, "GP 교환소"),
+    "gz-gphistory": (9.9, "GP 변동 내역"),
+    "rfl-raffle": (9.92, "래플"),
+    "rft-current": (9.94, "응모권 현황"),
+    "rft-history": (9.96, "응모권 변동내역"),
+    "rft-policy": (9.98, "응모권 관리"),
+    "mem-link": (9.991, "감정 이모지 연결"),
+    "mem-library": (9.992, "감정 이모지 라이브러리"),
+    "sys-admins": (9.995, "관리자 리스트"),
+    "sys-permissions": (9.996, "권한관리"),
     "dly": (10, "일일미션"),
     "groups": (20, "그룹 리스트"),
     "members": (30, "멤버 리스트"),
@@ -27,6 +46,9 @@ SHEETS = {
     "fandom-status": (55, "보상·레벨업 현황"),
     "duk": (60, "덕력관리"),
     "support": (70, "서포트 관리"),
+    "episode": (80, "에피소드 그룹"),
+    "pending": (82, "팬퀘스트 대기내역"),
+    "quests": (84, "팬퀘스트"),
 }
 
 # 컬럼 폭 (Excel 문자 단위)
