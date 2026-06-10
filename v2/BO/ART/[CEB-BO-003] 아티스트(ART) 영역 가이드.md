@@ -82,6 +82,7 @@
 | CEB-BO-ART-401-SEASON | 랭킹 시즌 설정 | Page (탭 본문) | ✅ |
 | CEB-BO-ART-401-RANKING | 덕력 랭킹 | Page (탭 본문) | ✅ |
 | CEB-BO-ART-401-HISTORY | 덕력 내역 | Page (탭 본문) | ✅ |
+| CEB-BO-ART-401-POLICY | 덕력 지급 정책 | Page (탭 본문) | ✅ |
 | CEB-BO-ART-401-DETAIL | 시즌 상세 (2탭) | Page | ✅ |
 | CEB-BO-ART-401-MD-SEASON | 시즌 생성·수정 모달 | Modal | ✅ |
 | CEB-BO-ART-401-MD-CLOSE | 시즌 강제 종료 확인 모달 | Modal | ✅ |

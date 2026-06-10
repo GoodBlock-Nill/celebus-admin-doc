@@ -6,16 +6,18 @@ import PageHeader from '@/components/layout/PageHeader';
 import SeasonTab from './_components/SeasonTab';
 import RankingTab from './_components/RankingTab';
 import HistoryTab from './_components/HistoryTab';
+import PolicyTab from './_components/PolicyTab';
 
-// [CEB-BO-ART-401] 덕력 관리 (3탭) v1.0
-// 라우트: /artists/duk?tab={season|ranking|history}
+// [CEB-BO-ART-401] 덕력 관리 (4탭) v1.3
+// 라우트: /artists/duk?tab={season|ranking|history|policy}
 
-type Tab = 'season' | 'ranking' | 'history';
+type Tab = 'season' | 'ranking' | 'history' | 'policy';
 
 const TABS: { key: Tab; label: string }[] = [
   { key: 'season', label: '랭킹 시즌 설정' },
   { key: 'ranking', label: '덕력랭킹' },
   { key: 'history', label: '덕력내역' },
+  { key: 'policy', label: '덕력 지급 정책' },
 ];
 
 function DukContent() {
@@ -58,6 +60,7 @@ function DukContent() {
       {tab === 'season' && <SeasonTab />}
       {tab === 'ranking' && <RankingTab />}
       {tab === 'history' && <HistoryTab />}
+      {tab === 'policy' && <PolicyTab />}
     </div>
   );
 }

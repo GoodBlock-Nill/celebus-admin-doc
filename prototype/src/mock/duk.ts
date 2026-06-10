@@ -127,6 +127,63 @@ export const dukSourcesEarn = [
 export const dukSourcesSpend = ['서포트 응원', '독점 콘텐츠 해금'] as const;
 
 // ─────────────────────────────────────────────
+// 덕력 지급 정책 ([CEB-BO-ART-401-POLICY] / [CEB-000] §5.2 아티스트별 활동별 지급 정책)
+// 자동 적립 활동만 정책 매트릭스 대상 (Quest 완료·게임 참여는 콘텐츠별 직접 입력 → 제외)
+// 신규 아티스트 생성 시 권장값으로 기본 정책 자동 생성 → '미설정' 상태 부재
+// ─────────────────────────────────────────────
+export type DukPolicyTier = 'T1' | 'T2' | 'T3' | '보너스';
+
+export interface DukPolicyActivity {
+  key: string;
+  label: string;
+  tier: DukPolicyTier;
+  recommended: number; // [CEB-000] §5.2 권장값
+}
+
+// 정책 매트릭스 대상 자동 적립 활동 9종 (권장값)
+export const DUK_POLICY_ACTIVITIES: DukPolicyActivity[] = [
+  { key: 'attendance', label: '출석 체크', tier: 'T1', recommended: 5 },
+  { key: 'ticket_use', label: '응모권 사용', tier: 'T1', recommended: 5 },
+  { key: 'daily_mission', label: '일일 미션 모두 완료', tier: 'T2', recommended: 25 },
+  { key: 'sns_share', label: 'SNS 공유', tier: 'T2', recommended: 25 },
+  { key: 'memory_upload', label: '기억저장소 업로드', tier: 'T3', recommended: 75 },
+  { key: 'goods_acquire', label: '디지털 굿즈 획득', tier: 'T3', recommended: 75 },
+  { key: 'streak_7', label: '스트릭 7일', tier: '보너스', recommended: 200 },
+  { key: 'streak_14', label: '스트릭 14일', tier: '보너스', recommended: 500 },
+  { key: 'streak_30', label: '스트릭 30일', tier: '보너스', recommended: 1000 },
+];
+
+export interface DukPolicyRow {
+  activityKey: string;
+  duk: number; // 지급 덕력 (0 이상 정수)
+  enabled: boolean; // 사용 여부 (미사용 시 미지급)
+}
+
+export interface DukGroupPolicy {
+  groupId: number;
+  rows: DukPolicyRow[];
+  updatedAt: string;
+  updatedBy: string;
+}
+
+// 신규 아티스트 기본 정책 생성 (권장값·전부 사용 ON) — 미설정 상태 부재
+export function createDefaultDukPolicy(groupId: number): DukGroupPolicy {
+  return {
+    groupId,
+    rows: DUK_POLICY_ACTIVITIES.map((a) => ({ activityKey: a.key, duk: a.recommended, enabled: true })),
+    updatedAt: '2026.06.10 14:30',
+    updatedBy: 'nill',
+  };
+}
+
+// 그룹별 정책 시드 — 전 활성 그룹이 권장값 기본 정책 보유(미설정 없음)
+export const dukPolicies: DukGroupPolicy[] = dukActiveGroups.map((g) => createDefaultDukPolicy(g.id));
+
+export function getDukPolicy(groupId: number): DukGroupPolicy {
+  return dukPolicies.find((p) => p.groupId === groupId) ?? createDefaultDukPolicy(groupId);
+}
+
+// ─────────────────────────────────────────────
 // 시즌 mock — 시즌 = 1개월 단위 (미팅 정합 2026-06-02). 종료일 = 시작일 + 1개월. 시즌당 1회 정산.
 // v1.7 — name: DukLangText (ko/en/ja). iKON 2026.05 시즌(501)을 강제 종료 데모로 지정.
 // ─────────────────────────────────────────────
