@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[변경 요약] 일일미션 — 덕력 보상값 일원화 + 스트릭 7/14/21/28</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[변경 요약] 일일미션 — 덕력 보상값 일원화 + 스트릭 7/14/21/28</h1>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>일자</td><td>2026-06-11</td></tr>
+<tr><td>정리</td><td>@Nill Yoo</td></tr>
+<tr><td>대상</td><td>개발팀 · 디자인팀</td></tr>
+<tr><td>계기</td><td>기획 검토 — ① 일일미션의 출석·전체완료·스트릭 보상값이 [CEB-BO-ART-401-POLICY] 덕력 지급 정책과 중복 ② 스트릭 마일스톤 일자 변경 요청(7/14/30 → 7/14/21/28)</td></tr>
+<tr><td>관련 문서</td><td>[CEB-000] · [CEB-FQ-501] · [CEB-BO-DLY-000] · [CEB-BO-DLY-101] · [CEB-BO-ART-401-POLICY]</td></tr>
+</table>
+<hr>
+<h2>1. 한 줄 요약</h2>
+<blockquote>
+<p>일일미션 관리에서 <strong>덕력 보상값(출석·일일미션 완료·스트릭)을 전면 제거</strong>하고, 덕력 지급량은 <strong>[CEB-BO-ART-401-POLICY] 덕력 지급 정책</strong>을 단일 기준(SSOT)으로 일원화했습니다. 동시에 연속 출석 스트릭 마일스톤을 <strong>7/14/30일 3종 → 7/14/21/28일 4종·28일 주기(4주)</strong> 로 변경했습니다.</p>
+</blockquote>
+<blockquote>
+<p>일일미션 관리의 역할은 이제 <strong>미션 풀 + 하루 제시 미션 수 운영</strong>으로 한정됩니다(덕력 지급량 설정 없음).</p>
+</blockquote>
+<hr>
+<h2>2. 무엇이 바뀌었나 (Before → After)</h2>
+<h3>2.1 덕력 보상값 일원화</h3>
+<table>
+<tr><th>구분</th><th>Before</th><th>After</th></tr>
+<tr><td>출석 체크 보상값</td><td>일일미션 관리에서 입력(권장 5)</td><td><strong>입력 제거</strong> — 지급 정책에서 관리</td></tr>
+<tr><td>일일미션 전체완료 보상값</td><td>일일미션 관리에서 입력(권장 25)</td><td><strong>입력 제거</strong> — 지급 정책에서 관리</td></tr>
+<tr><td>스트릭 보상값</td><td>일일미션 관리에서 입력</td><td><strong>입력 제거</strong> — 지급 정책에서 관리</td></tr>
+<tr><td>덕력 지급량 기준</td><td>일일미션 관리(전역) ↔ 지급 정책(아티스트별) <strong>중복</strong></td><td><strong>지급 정책 단일 기준(SSOT)</strong></td></tr>
+<tr><td>덕력 귀속</td><td>(전역, 모호)</td><td><strong>선택(현재) 아티스트 그룹 정책</strong> ([CEB-000] §5.2.2)</td></tr>
+<tr><td>일일미션 관리 역할</td><td>미션 풀 + 보상값</td><td><strong>미션 풀 + 하루 제시 미션 수</strong></td></tr>
+</table>
+<h3>2.2 스트릭 마일스톤</h3>
+<table>
+<tr><th>구분</th><th>Before</th><th>After</th></tr>
+<tr><td>마일스톤</td><td>3종 (7 / 14 / 30일)</td><td><strong>4종 (7 / 14 / 21 / 28일)</strong></td></tr>
+<tr><td>순환 주기</td><td>30일</td><td><strong>28일 (4주)</strong></td></tr>
+<tr><td>권장 덕력값</td><td>200 / 500 / 1,000</td><td><strong>200 / 500 / 750 / 1,000</strong> (21일 750 신설)</td></tr>
+<tr><td>주기 완료</td><td>30일 도달 후 다음날 1일차 초기화</td><td><strong>28일 도달 후 다음날 1일차 초기화</strong></td></tr>
+</table>
+<hr>
+<h2>3. 핵심 개념</h2>
+<ul>
+<li><strong>덕력은 아티스트별 재화</strong>다. 데일리 루프 미션(출석·일일미션·스트릭)은 <strong>계정 단위로 1일 1회 수행</strong>하되, 적립 덕력은 회원이 활동한 시점의 <strong>선택(현재) 아티스트 그룹 지급 정책</strong>을 따른다.</li>
+<li>일일미션 관리는 <strong>덕력 지급량을 일절 설정하지 않는다</strong>. 미션 풀 구성(추가·수정·삭제·사용여부)과 하루 제시 미션 수만 운영한다.</li>
+<li>스트릭은 <strong>28일(4주) 단위 순환 루프</strong>다. 7·14·21·28일 마일스톤에서 보너스를 받고, 28일째 보너스 수령 후 다음날이 새 주기의 1일차가 된다(연속 출석 유지 시 주기 반복, 1일 끊기면 0 초기화).</li></ul>
+<hr>
+<h2>4. 디자이너가 알아야 할 것</h2>
+<ul>
+<li><strong>BO 일일미션 관리([CEB-BO-DLY-101])</strong>:
+<ul>
+<li>§2.2 일일미션 설정: 입력 필드 <strong>하루 제시 미션 수 1개만</strong> 노출(출석·일일미션 보상 입력칸 제거). 하단 안내 "덕력 지급량은 지급 정책".</li>
+<li>§2.4 연속 출석(스트릭): <strong>읽기 전용 안내</strong>로 환원 — 보상값 입력칸 없음. 마일스톤 칩 <strong>7일/14일/21일/28일 4종</strong> 표시 + "덕력 지급량은 지급 정책" 안내.</li></ul>
+</li>
+<li><strong>앱 일일 미션([CEB-FQ-501]) §2.4 스트릭</strong>: 마일스톤 라벨·프로그레스·축하 모달 <strong>7/14/21/28</strong>(28일 주기 순환).</li>
+<li><strong>덕력 지급 정책([CEB-BO-ART-401-POLICY])</strong>: 스트릭 행이 <strong>4개</strong>(7/14/21/28일)로 노출.</li></ul>
+<hr>
+<h2>5. 개발자가 알아야 할 것</h2>
+<ul>
+<li>출석·일일미션·스트릭 적립 덕력의 단일 기준은 <strong>지급 정책(아티스트 그룹 × 활동)</strong>. 일일미션 관리는 지급량 미보유.</li>
+<li>적립 시 귀속 아티스트 = <strong>활동 시점 선택(현재) 아티스트 그룹</strong>. 미사용 토글된 활동은 해당 그룹에서 미지급.</li>
+<li>스트릭 카운터는 <strong>28일 주기 순환</strong>: <code>day ∈ [1..28]</code>. 28일 보너스 지급 직후 다음 출석일에 day=1 리셋(연속 유지 시). 마일스톤 7/14/21/28은 매 주기 반복 지급.</li>
+<li>프로토타입 정합:
+<ul>
+<li><code>mock/dailyMission.ts</code>: <code>DailySettings</code>에서 <code>attendanceReward</code>·<code>missionReward</code> 제거, <code>StreakMilestone</code> 보상값 제거(일수만), <code>streakMilestones</code> = 7/14/21/28.</li>
+<li><code>mock/duk.ts</code>: <code>DUK_POLICY_ACTIVITIES</code> 스트릭 4행(streak_7 200·streak_14 500·streak_21 750·streak_28 1000).</li>
+<li><code>daily-missions/page.tsx</code>: 보상값 입력 UI 제거, 스트릭 섹션 읽기 전용, 저장 로직 하루 제시 미션 수 기준.</li></ul>
+</li></ul>
+<hr>
+<h2>6. 문서·화면 변경 목록</h2>
+<table>
+<tr><th>문서 ID</th><th>버전</th><th>변경</th></tr>
+<tr><td>CEB-000 (공통 정책)</td><td>v6.9</td><td>§5.2 보너스 매트릭스(스트릭 4종·21일 750·28일)·§6.3 누적 스트릭/리셋(28일 주기)</td></tr>
+<tr><td>CEB-FQ-501 (앱 일일 미션)</td><td>v2.8</td><td>§2.4 스트릭 4마일스톤·28일 주기·§2.5 모달 조건</td></tr>
+<tr><td>CEB-BO-DLY-000 (영역 가이드)</td><td>v1.5</td><td>§1·§4.2 보상값 제거·지급 정책 단일 기준·§4.1·§4.4 스트릭 4종·28일</td></tr>
+<tr><td>CEB-BO-DLY-101 (일일미션 관리)</td><td>v1.6</td><td>§2.2·§2.4·§3·§4.2·§4.4·§7 보상값 입력 제거·스트릭 4종·28일</td></tr>
+<tr><td>CEB-BO-ART-401-POLICY (덕력 지급 정책)</td><td>v1.2</td><td>데일리 루프 단일 기준·매트릭스 스트릭 4행(21일 신설)</td></tr>
+<tr><td>QA 단위테스트 (dly·duk)</td><td>—</td><td>dly 보상값 TC 정리·스트릭 안내 4종, duk 정책 활동 10종·귀속 TC</td></tr>
+</table>
+<p>SSOT: <strong>[CEB-000] §5.2·§5.2.2·§6.3</strong> · 덕력 지급량: <strong>[CEB-BO-ART-401-POLICY]</strong> · 영역 가이드: <strong>[CEB-BO-DLY-000]</strong></p>
+<hr>
+<h2>7. 확인 필요 (Open Items)</h2>
+<table>
+<tr><th>#</th><th>내용</th><th>담당</th></tr>
+<tr><td>1</td><td>데일리 루프 덕력의 선택 아티스트 귀속 시, 미선택(앱 진입 직후) 상태 처리 기준</td><td>기획·개발</td></tr>
+<tr><td>2</td><td>28일 주기 순환 시 주기 내 마일스톤 중복 지급 방지 키(유저 × 활동 × 주기 회차)</td><td>개발팀</td></tr>
+<tr><td>3</td><td>기존 30일 주기 기준으로 적립된 스트릭 데이터의 28일 주기 마이그레이션</td><td>개발팀</td></tr>
+</table>
+
+</body>
+</html>

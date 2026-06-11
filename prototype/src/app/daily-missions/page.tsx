@@ -13,13 +13,8 @@ export default function DailyMissionsPage() {
   const { missions, settings, streak, addMission, updateMission, removeMission, toggleMissionActive, saveSettings } =
     useDailyMissionStore();
 
-  // 설정값 입력 상태 (저장 전까지 미반영)
+  // 설정값 입력 상태 (저장 전까지 미반영) — 하루 제시 미션 수만. 덕력 지급량은 지급 정책 소관.
   const [dailyCountInput, setDailyCountInput] = useState(String(settings.dailyCount));
-  const [attendanceInput, setAttendanceInput] = useState(String(settings.attendanceReward));
-  const [missionRewardInput, setMissionRewardInput] = useState(String(settings.missionReward));
-  const [streakInput, setStreakInput] = useState<Record<number, string>>(
-    Object.fromEntries(streak.map((m) => [m.days, String(m.reward)])),
-  );
 
   // 모달 상태
   const [missionModal, setMissionModal] = useState<{ mode: 'add' | 'edit'; mission?: DailyMission } | null>(null);
@@ -27,26 +22,13 @@ export default function DailyMissionsPage() {
   const [toggleZeroTarget, setToggleZeroTarget] = useState<DailyMission | null>(null); // 마지막 사용 미션 미사용 전환 확인
   const [saveConfirmOpen, setSaveConfirmOpen] = useState(false);
 
-  // 검증
+  // 검증 — 하루 제시 미션 수만
   const dailyCountNum = Number(dailyCountInput);
-  const attendanceNum = Number(attendanceInput);
-  const missionRewardNum = Number(missionRewardInput);
   const isDailyCountValid = Number.isInteger(dailyCountNum) && dailyCountNum >= 1;
-  const isAttendanceValid = Number.isInteger(attendanceNum) && attendanceNum >= 0;
-  const isMissionRewardValid = Number.isInteger(missionRewardNum) && missionRewardNum >= 0;
-  const streakValid = streak.every((m) => {
-    const n = Number(streakInput[m.days]);
-    return Number.isInteger(n) && n >= 0;
-  });
-  const allValid = isDailyCountValid && isAttendanceValid && isMissionRewardValid && streakValid;
+  const allValid = isDailyCountValid;
 
   // 변경 감지
-  const settingsChanged =
-    dailyCountNum !== settings.dailyCount ||
-    attendanceNum !== settings.attendanceReward ||
-    missionRewardNum !== settings.missionReward;
-  const streakChanged = streak.some((m) => Number(streakInput[m.days]) !== m.reward);
-  const hasUnsaved = settingsChanged || streakChanged;
+  const hasUnsaved = dailyCountNum !== settings.dailyCount;
   const canSave = allValid && hasUnsaved;
 
   const activeCount = missions.filter((m) => m.active).length;
@@ -55,11 +37,6 @@ export default function DailyMissionsPage() {
     isDailyCountValid && dailyCountNum > activeCount
       ? `사용 중인 미션이 ${activeCount}건이라 매일 최대 ${activeCount}건만 제시됩니다.`
       : undefined;
-  // 0 보상 안내
-  const zeroRewardCaution =
-    (isAttendanceValid && attendanceNum === 0) || (isMissionRewardValid && missionRewardNum === 0)
-      ? '출석/일일미션 보상이 0 덕력입니다(보상 없이 동작).'
-      : '';
 
   // 미저장 이탈 가드 (브라우저 새로고침·닫기·외부 이동)
   useEffect(() => {
@@ -73,29 +50,13 @@ export default function DailyMissionsPage() {
   }, [hasUnsaved]);
 
   const confirmMessage = useMemo(() => {
-    const lines: string[] = [];
     if (dailyCountNum !== settings.dailyCount)
-      lines.push(`하루 제시 미션 수를 ${settings.dailyCount}건 → ${dailyCountNum}건으로 변경합니다.`);
-    if (attendanceNum !== settings.attendanceReward)
-      lines.push(`출석 체크 보상을 ${settings.attendanceReward} → ${attendanceNum} 덕력으로 변경합니다.`);
-    if (missionRewardNum !== settings.missionReward)
-      lines.push(`일일미션 전체 완료 보상을 ${settings.missionReward} → ${missionRewardNum} 덕력으로 변경합니다.`);
-    streak.forEach((m) => {
-      const next = Number(streakInput[m.days]);
-      if (next !== m.reward)
-        lines.push(`연속 ${m.days}일 보너스를 ${m.reward} → ${next} 덕력으로 변경합니다.`);
-    });
-    if (zeroRewardCaution) lines.push(`\n⚠ ${zeroRewardCaution}`);
-    return lines.join('\n');
-  }, [dailyCountNum, attendanceNum, missionRewardNum, streakInput, settings, streak, zeroRewardCaution]);
+      return `하루 제시 미션 수를 ${settings.dailyCount}건 → ${dailyCountNum}건으로 변경합니다.`;
+    return '';
+  }, [dailyCountNum, settings]);
 
   const handleSaveConfirm = () => {
-    saveSettings({
-      dailyCount: dailyCountNum,
-      attendanceReward: attendanceNum,
-      missionReward: missionRewardNum,
-      streak: streak.map((m) => ({ days: m.days, reward: Number(streakInput[m.days]) })),
-    });
+    saveSettings({ dailyCount: dailyCountNum });
     setSaveConfirmOpen(false);
     toast.success('일일미션 설정이 저장되었습니다.');
   };
@@ -139,7 +100,7 @@ export default function DailyMissionsPage() {
       />
 
       <p className="text-sm text-gray-600 -mt-2 mb-5">
-        출석·일일미션·연속 출석(스트릭) 보상과 미션 풀을 운영합니다. 일일미션은 계정 단위 기능으로 아티스트 구분 없이 동일하게 적용됩니다.
+        미션 풀과 하루 제시 미션 수를 운영합니다. 데일리 루프 미션은 계정 단위로 1일 1회 수행하며, 적립 덕력은 선택 아티스트 그룹의 덕력 지급 정책([CEB-BO-ART-401-POLICY])을 따릅니다(본 화면에서 지급량을 설정하지 않음).
       </p>
 
       {/* 자정 리셋 안내 */}
@@ -164,25 +125,10 @@ export default function DailyMissionsPage() {
             hint="미션 풀에서 매일 자동 선택해 제시하는 미션 개수."
             warning={supplyWarning}
           />
-          <NumberField
-            label="출석 체크 보상"
-            suffix="덕력"
-            value={attendanceInput}
-            onChange={setAttendanceInput}
-            valid={isAttendanceValid}
-            error="0 이상의 정수만 입력 가능합니다."
-            hint="앱 진입 시 1일 1회 지급."
-          />
-          <NumberField
-            label="일일미션 전체 완료 보상"
-            suffix="덕력"
-            value={missionRewardInput}
-            onChange={setMissionRewardInput}
-            valid={isMissionRewardValid}
-            error="0 이상의 정수만 입력 가능합니다."
-            hint="그날 제시된 미션을 모두 완료하면 일괄 지급."
-          />
         </div>
+        <p className="text-[11px] text-gray-500 mt-4 leading-relaxed">
+          출석 체크·일일미션 완료의 덕력 지급량은 본 화면에서 설정하지 않습니다. 선택 아티스트 그룹의 덕력 지급 정책([CEB-BO-ART-401-POLICY])을 따릅니다.
+        </p>
       </div>
 
       {/* ───── §2 미션 풀 ───── */}
@@ -265,28 +211,25 @@ export default function DailyMissionsPage() {
         </table>
       </div>
 
-      {/* ───── §3 스트릭 보너스 ───── */}
-      <h2 className="text-base font-semibold text-gray-900 mt-8 mb-3">연속 출석(스트릭) 보너스</h2>
+      {/* ───── §3 스트릭 안내 (읽기 전용) ───── */}
+      <h2 className="text-base font-semibold text-gray-900 mt-8 mb-3">연속 출석(스트릭) 안내</h2>
       <div className="bg-white border border-gray-200 rounded-xl p-5 mb-4">
         <p className="text-xs text-gray-500 mb-4">
-          출석을 연속으로 달성한 마일스톤에서 지급하는 보너스입니다. 마일스톤(연속 일수)은 정책 고정이며 보상값만 조정할 수 있습니다. 스트릭은 30일 주기로 순환하여, 30일 도달 시 보너스 지급 후 다음날 1일차로 초기화되어 주기마다 반복 지급됩니다. 출석이 하루라도 끊기면 연속 일수는 0으로 초기화됩니다.
+          출석을 연속으로 달성한 마일스톤에서 보너스를 지급합니다. 마일스톤(연속 일수)은 정책 고정입니다. 스트릭은 28일 주기(4주)로 순환하여, 28일 도달 시 보너스 지급 후 다음날 1일차로 초기화되어 주기마다 반복 지급됩니다. 출석이 하루라도 끊기면 연속 일수는 0으로 초기화됩니다.
         </p>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="flex flex-wrap gap-2 mb-3">
           {streak.map((m) => (
-            <NumberField
-              key={m.days}
-              label={`연속 ${m.days}일`}
-              suffix="덕력"
-              value={streakInput[m.days] ?? ''}
-              onChange={(v) => setStreakInput({ ...streakInput, [m.days]: v })}
-              valid={(() => { const n = Number(streakInput[m.days]); return Number.isInteger(n) && n >= 0; })()}
-              error="0 이상의 정수만 입력 가능합니다."
-            />
+            <span key={m.days} className="inline-flex items-center px-3 py-1.5 rounded-lg bg-gray-100 text-sm font-medium text-gray-700">
+              연속 {m.days}일
+            </span>
           ))}
         </div>
+        <p className="text-[11px] text-gray-500 leading-relaxed">
+          스트릭 보너스의 덕력 지급량·사용 여부는 본 화면에서 설정하지 않습니다. 선택 아티스트 그룹의 덕력 지급 정책([CEB-BO-ART-401-POLICY])을 따릅니다.
+        </p>
       </div>
 
-      {/* 저장 버튼 — 설정·스트릭 일괄 */}
+      {/* 저장 버튼 — 하루 제시 미션 수 */}
       <div className="flex items-center justify-end mt-5">
         <button
           type="button"

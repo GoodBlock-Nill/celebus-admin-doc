@@ -150,7 +150,8 @@ export const DUK_POLICY_ACTIVITIES: DukPolicyActivity[] = [
   { key: 'goods_acquire', label: '디지털 굿즈 획득', tier: 'T3', recommended: 75 },
   { key: 'streak_7', label: '스트릭 7일', tier: '보너스', recommended: 200 },
   { key: 'streak_14', label: '스트릭 14일', tier: '보너스', recommended: 500 },
-  { key: 'streak_30', label: '스트릭 30일', tier: '보너스', recommended: 1000 },
+  { key: 'streak_21', label: '스트릭 21일', tier: '보너스', recommended: 750 },
+  { key: 'streak_28', label: '스트릭 28일', tier: '보너스', recommended: 1000 },
 ];
 
 export interface DukPolicyRow {

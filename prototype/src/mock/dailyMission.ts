@@ -1,5 +1,6 @@
-// 일일미션(DLY) — BO 관리 (미션 풀 + 보상값 + 스트릭 보너스)
-// 근거: [CEB-FQ-501] 일일 미션 앱 명세 + [CEB-000] §5.2·§6 데일리 루프
+// 일일미션(DLY) — BO 관리 (미션 풀 + 하루 제시 수)
+// 덕력 지급량은 본 영역에서 설정하지 않음 — [CEB-BO-ART-401-POLICY] 덕력 지급 정책 단일 기준(선택 아티스트 귀속).
+// 근거: [CEB-FQ-501] 일일 미션 앱 명세 + [CEB-000] §5.2·§5.2.2·§6 데일리 루프
 // 프로토타입 100% mock. 새로고침 시 초기값 복귀.
 
 export interface DailyMission {
@@ -37,16 +38,14 @@ export const MISSION_TARGETS: MissionTarget[] = [
 export const targetLabel = (id: string) => MISSION_TARGETS.find((t) => t.id === id)?.label ?? id;
 export const isTargetComingSoon = (id: string) => MISSION_TARGETS.find((t) => t.id === id)?.comingSoon ?? false;
 
-// 일일미션 설정값 — 보상값은 BO 자유 변경
+// 일일미션 설정값 — 덕력 보상값은 지급 정책 소관(여기서 설정하지 않음)
 export interface DailySettings {
   dailyCount: number; // 하루 제시 수 (현 2건)
-  attendanceReward: number; // 출석 보상 (DUK)
-  missionReward: number; // 일일미션 모두 완료 시 일괄 보상 (DUK)
 }
 
+// 스트릭 마일스톤 — 연속 일수만 정책 고정(읽기 전용 안내). 보너스 덕력 지급량은 지급 정책 소관.
 export interface StreakMilestone {
-  days: number; // 연속 일수 (정책 고정: 7/14/30, 30일 주기마다 순환·반복)
-  reward: number; // 보너스 보상 (DUK, BO 설정)
+  days: number; // 연속 일수 (정책 고정: 7/14/21/28, 28일 주기마다 순환·반복)
 }
 
 // 미션 풀 8종 (페이지 방문형) — 완료 조건 "1회 진입"
@@ -63,13 +62,12 @@ export const dailyMissions: DailyMission[] = [
 
 export const dailySettings: DailySettings = {
   dailyCount: 2,
-  attendanceReward: 5,
-  missionReward: 25,
 };
 
-// 스트릭 보너스 — 마일스톤(7/14/30일) 정책 고정, 30일 주기마다 반복 지급, 보상값은 BO 설정
+// 스트릭 마일스톤 — 7/14/21/28일 정책 고정, 28일 주기(4주)마다 순환·반복. 보너스 덕력 지급량은 지급 정책 소관.
 export const streakMilestones: StreakMilestone[] = [
-  { days: 7, reward: 200 },
-  { days: 14, reward: 500 },
-  { days: 30, reward: 1000 },
+  { days: 7 },
+  { days: 14 },
+  { days: 21 },
+  { days: 28 },
 ];
