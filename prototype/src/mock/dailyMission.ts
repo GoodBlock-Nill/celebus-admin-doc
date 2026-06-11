@@ -50,7 +50,7 @@ export interface StreakMilestone {
 
 // 미션 풀 8종 (페이지 방문형) — 완료 조건 "1회 진입"
 export const dailyMissions: DailyMission[] = [
-  { id: 1, labelKO: 'V01D 페이지 방문', labelEN: 'Visit V01D page', labelJA: 'V01Dページ訪問', descKO: '아티스트 페이지에 방문해요', descEN: 'Visit the artist page', descJA: 'アーティストページを訪問', targetScreen: 'CEB-ART-101', active: true },
+  { id: 1, labelKO: '아티스트 페이지 방문', labelEN: 'Visit artist page', labelJA: 'アーティストページ訪問', descKO: '아티스트 페이지에 방문해요', descEN: 'Visit the artist page', descJA: 'アーティストページを訪問', targetScreen: 'CEB-ART-101', active: true },
   { id: 2, labelKO: '게임존 방문', labelEN: 'Visit Game Zone', labelJA: 'ゲームゾーン訪問', descKO: '게임존을 둘러봐요', descEN: 'Explore the Game Zone', descJA: 'ゲームゾーンを見る', targetScreen: 'CEB-GAM-101', active: true },
   { id: 3, labelKO: '기억저장소 방문', labelEN: 'Visit Memories', labelJA: '思い出訪問', descKO: '기억저장소를 둘러봐요', descEN: 'Browse memories', descJA: '思い出を見る', targetScreen: 'CEB-MEM-101', active: true },
   { id: 4, labelKO: '덕력 랭킹 확인', labelEN: 'Check ranking', labelJA: 'ランキング確認', descKO: '덕력 랭킹을 확인해요', descEN: 'Check the Fan Power ranking', descJA: '推し力ランキングを確認', targetScreen: 'CEB-DUK-101', active: true },
