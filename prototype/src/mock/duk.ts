@@ -145,7 +145,7 @@ export const DUK_POLICY_ACTIVITIES: DukPolicyActivity[] = [
   { key: 'attendance', label: '출석 체크', tier: 'T1', recommended: 5 },
   { key: 'ticket_use', label: '응모권 사용', tier: 'T1', recommended: 5 },
   { key: 'daily_mission', label: '일일 미션 모두 완료', tier: 'T2', recommended: 25 },
-  { key: 'sns_share', label: 'SNS 공유', tier: 'T2', recommended: 25 },
+  { key: 'sns_share', label: 'SNS 공유 (기억 공유)', tier: 'T2', recommended: 25 },
   { key: 'memory_upload', label: '기억저장소 업로드', tier: 'T3', recommended: 75 },
   { key: 'goods_acquire', label: '디지털 굿즈 획득', tier: 'T3', recommended: 75 },
   { key: 'streak_7', label: '스트릭 7일', tier: '보너스', recommended: 200 },
