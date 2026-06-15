@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>ALL (전체)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v6.10</td></tr>
+<tr><td>버전</td><td>v6.11</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-12</td></tr>
 <tr><td>비고</td><td>고도화 서비스 전체 공통 정책 정의서. 각 화면 스펙 문서는 이 문서를 참조.</td></tr>
 </table>
@@ -410,7 +410,7 @@ p {
 <tr><td></td><td>SNS 공유 (기억 공유)</td><td><strong>25DUK</strong></td><td>1일 1회 (계정)</td><td>기억저장소 기억 상세 공유 버튼 탭 시 즉시 지급 (외부 공유 완료 무관). 상세 §5.2.3</td></tr>
 <tr><td><strong>T3 — 고관여</strong></td><td>Quest 완료</td><td><strong>75DUK</strong></td><td>미션별</td><td>난이도별 ±50% BO 조정 가능</td></tr>
 <tr><td></td><td>기억저장소 업로드</td><td><strong>75DUK</strong></td><td>업로드당</td><td>사진/영상</td></tr>
-<tr><td></td><td>디지털 굿즈 획득</td><td><strong>75DUK</strong></td><td>획득당</td><td>등급별 차등 가능 (BO 설정)</td></tr>
+<tr><td></td><td>디지털 굿즈 획득</td><td><strong>등급별</strong></td><td>획득(민팅)당</td><td>BIVE 6등급별 차등 지급 — 권장값·규칙 §5.2.4 (BO 그룹·등급별 설정)</td></tr>
 <tr><td><strong>보너스</strong></td><td>스트릭 7일</td><td><strong>200DUK</strong></td><td>주기당</td><td>28일 주기마다 반복</td></tr>
 <tr><td></td><td>스트릭 14일</td><td><strong>500DUK</strong></td><td>주기당</td><td>28일 주기마다 반복</td></tr>
 <tr><td></td><td>스트릭 21일</td><td><strong>750DUK</strong></td><td>주기당</td><td>28일 주기마다 반복</td></tr>
@@ -500,7 +500,7 @@ p {
 <tr><td>SNS 공유 (기억저장소 기억 공유)</td><td><strong>기억의 아티스트</strong></td><td>콘텐츠</td><td>기억 상세 공유 버튼 — 계정 1일 1회·즉시 지급. 일반 앱 공유·Quest 결과 공유 등은 SNS 공유 덕력 비대상</td></tr>
 <tr><td>Quest 완료</td><td><strong>Quest의 아티스트</strong></td><td>콘텐츠</td><td>자동 귀속</td></tr>
 <tr><td>기억저장소 업로드</td><td><strong>기억의 아티스트</strong></td><td>콘텐츠</td><td>작성 대상 아티스트</td></tr>
-<tr><td>디지털 굿즈 획득</td><td><strong>굿즈의 아티스트</strong></td><td>콘텐츠</td><td>자동 귀속</td></tr>
+<tr><td>디지털 굿즈 획득</td><td><strong>굿즈의 아티스트</strong></td><td>콘텐츠</td><td>자동 귀속. 민팅 시 등급별 덕력 적립(§5.2.4)</td></tr>
 <tr><td>PM 참여</td><td><strong>PM의 아티스트</strong></td><td>콘텐츠</td><td>게임존 PM 콘텐츠 (참여 시 1회. v5.6에서 PM 적중·Trivia 정답 보상 폐기됨)</td></tr>
 <tr><td>응모권 사용 (래플)</td><td><strong>래플의 아티스트</strong></td><td>콘텐츠</td><td>응모한 래플 기준 자동</td></tr>
 </table>
@@ -522,6 +522,28 @@ p {
 <tr><td>귀속</td><td><strong>기억의 아티스트</strong> (그날 첫 공유한 기억이 귀속된 아티스트 정책으로 지급, §5.2.2)</td></tr>
 <tr><td>비대상</td><td>타인 기억 공유, 일반 앱 공유, Quest 결과 공유, 디지털 굿즈 이미지 공유 등 — 덕력 미지급</td></tr>
 </table>
+<h3>5.2.4 디지털 굿즈 획득 등급별 덕력</h3>
+<p>디지털 굿즈(BIVE) 획득 덕력은 <strong>BIVE 등급(6종)별로 차등</strong> 지급한다.</p>
+<table>
+<tr><th>등급</th><th>권장 덕력</th></tr>
+<tr><td>Normal</td><td>50</td></tr>
+<tr><td>Event</td><td>75</td></tr>
+<tr><td>Special</td><td>100</td></tr>
+<tr><td>Wicked</td><td>200</td></tr>
+<tr><td>Next</td><td>350</td></tr>
+<tr><td>Final</td><td>500</td></tr>
+</table>
+<table>
+<tr><th>항목</th><th>정책</th></tr>
+<tr><td>지급 시점</td><td>BIVE <strong>민팅(획득) 시 자동 적립</strong> — 발행된 BIVE의 등급을 조회해 해당 등급 덕력 지급</td></tr>
+<tr><td>설정</td><td>아티스트 그룹별 × 등급별 지급량·사용 여부는 [CEB-BO-ART-401-POLICY] 덕력 지급 정책에서 설정. 위 값은 권장 기본값(운영자 조정 가능)</td></tr>
+<tr><td>사용 여부</td><td>등급별 사용/미사용 토글 — 미사용 등급은 해당 그룹에서 미지급</td></tr>
+<tr><td>귀속</td><td><strong>굿즈의 아티스트</strong> (§5.2.2 — 콘텐츠 귀속, 자동)</td></tr>
+<tr><td>등급 SSOT</td><td>BIVE 6등급(Event/Normal/Special/Wicked/Next/Final) = [CEB-BO-004]</td></tr>
+</table>
+<blockquote>
+<p>권장값의 등급 순서는 희귀도 추정 기준이며, 실제 지급량은 그룹·등급별로 운영자가 조정한다.</p>
+</blockquote>
 <h3>5.3 Quest 보상 설정 (BO)</h3>
 <p>Quest 보상은 원타임(5장 스토리)과 반복 퀘스트 모두 동일한 방식으로 설정한다.</p>
 <table>
@@ -1247,6 +1269,7 @@ p {
 <h2>변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경 내용</th></tr>
+<tr><td><strong>v6.11</strong></td><td>2026-06-12</td><td>@Nill Yoo</td><td>디지털 굿즈(BIVE) 획득 등급별 덕력 신설 — §5.2 매트릭스 "디지털 굿즈 획득"을 단일 75 → 등급별 차등(§5.2.4 참조)으로 정정. §5.2.4 신설(BIVE 6등급 권장 덕력 Normal 50/Event 75/Special 100/Wicked 200/Next 350/Final 500, 민팅 시 등급 조회 자동 적립, 귀속=굿즈의 아티스트, 그룹·등급별 설정은 [CEB-BO-ART-401-POLICY]). §5.2.2 귀속 행에 민팅 등급별 적립 명시. 동기화: [CEB-BO-ART-401-POLICY]·[CEB-BO-BIVE-FLOW]·[CEB-BO-004]·QA</td></tr>
 <tr><td><strong>v6.10</strong></td><td>2026-06-12</td><td>@Nill Yoo</td><td>SNS 공유 덕력 정책 정정 — 기억저장소 기억 공유 전용으로 재정의. 빈도 "주 1회 한정" → "계정 1일 1회(00:00 KST 초기화)", 기억 상세 공유 버튼 탭 시 즉시 지급(외부 공유 완료 무관), 귀속=기억의 아티스트. §5.2 매트릭스 행·§5.2.2 귀속(SNS 공유 2행 → 기억 공유 1행)·§5.2.3 상세 정책 신설. 일반 앱 공유·Quest 결과 공유·디지털 굿즈 이미지 공유는 SNS 공유 덕력 비대상. 동기화: [CEB-BO-ART-401-POLICY]·[CEB-MEM-202]·QA</td></tr>
 <tr><td><strong>v6.9</strong></td><td>2026-06-11</td><td>@Nill Yoo</td><td>스트릭 마일스톤 7/14/30일 → <strong>7/14/21/28일 4종·28일 주기(4주)</strong> 순환으로 변경. §5.2 보너스 매트릭스(스트릭 21일 750DUK 신설, 30일→28일, 권장값 200/500/750/1,000)·§6.3 누적 스트릭·리셋 규칙(28일 주기)·§5.2 정책 매트릭스 대상 활동 목록 정합. 동기화: [CEB-BO-DLY-000]·[CEB-BO-DLY-101]·[CEB-BO-ART-401-POLICY]·[CEB-FQ-501]·프로토타입·QA.</td></tr>
 <tr><td><strong>v6.8</strong></td><td>2026-06-10</td><td>@Nill Yoo</td><td>덕력 아티스트별 지급 정책 명문화 (개발팀 [CEB-000] §5.2 댓글 반영) — 덕력은 아티스트 그룹별 활동별 지급 정책에 따라 적립되며, 신규 아티스트 생성 시 권장값으로 기본 정책을 자동 생성해 '미설정' 상태가 발생하지 않음을 명시. 정책 매트릭스 대상은 자동 적립 활동(출석·응모권·일일미션·SNS·기억저장소·디지털 굿즈·스트릭), Quest·게임 참여는 콘텐츠별 직접 입력으로 매트릭스 제외. BO 설정 화면 [CEB-BO-ART-401-POLICY] 신설 연계. §5.2 '아티스트별 활동별 지급 정책' 소절 추가.</td></tr>
