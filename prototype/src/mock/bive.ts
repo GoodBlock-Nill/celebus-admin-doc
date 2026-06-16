@@ -29,8 +29,12 @@ export const LINKED_FEATURES: LinkedFeature[] = [
 // 미디어 타입 — BIVE 등록 시 운영자 선택
 export type MediaType = 'image' | 'video' | 'audio';
 
-// 미디어 타입별 파일 정책 ([CEB-BO-004] v1.12 §5 정합)
-export const MEDIA_POLICY: Record<MediaType, { mainAccept: string; mainLabel: string; mainMaxMB: number; altAccept: string; altLabel: string; altMaxMB: number; mainRequired: true; altRequired: boolean; mainName: string; altName: string }> = {
+// 미디어 타입별 파일 정책 ([CEB-BO-004] v1.14 §5 정합)
+// 모든 타입은 저용량 썸네일(★, 필수) 보유 — 단일 규격(PNG·JPG·GIF·WebP, 최대 2MB, 권장 가로 640px, WebP 우선).
+// 이미지 타입: 메인 이미지 + 서브 이미지(선택) + 썸네일(필수, thumb 슬롯).
+// 영상·음성 타입: 메인 + 썸네일(필수, alt 슬롯이 썸네일).
+const THUMB_SPEC = { accept: '.png,.jpg,.jpeg,.gif,.webp', label: 'PNG, JPG, GIF, WebP', maxMB: 2 } as const;
+export const MEDIA_POLICY: Record<MediaType, { mainAccept: string; mainLabel: string; mainMaxMB: number; altAccept: string; altLabel: string; altMaxMB: number; mainRequired: true; altRequired: boolean; mainName: string; altName: string; thumb?: { name: string; accept: string; label: string; maxMB: number } }> = {
   image: {
     mainName: '메인 이미지',
     mainAccept: '.png,.jpg,.jpeg,.gif,.webp',
@@ -42,6 +46,8 @@ export const MEDIA_POLICY: Record<MediaType, { mainAccept: string; mainLabel: st
     altLabel: 'PNG, JPG, GIF, WebP',
     altMaxMB: 20,
     altRequired: false,
+    // 이미지 타입은 저용량 썸네일(필수)을 별도 슬롯으로 보유
+    thumb: { name: '썸네일', ...THUMB_SPEC },
   },
   video: {
     mainName: '영상',
@@ -50,9 +56,9 @@ export const MEDIA_POLICY: Record<MediaType, { mainAccept: string; mainLabel: st
     mainMaxMB: 50,
     mainRequired: true,
     altName: '썸네일',
-    altAccept: '.png,.jpg,.jpeg,.gif,.webp',
-    altLabel: 'PNG, JPG, GIF, WebP',
-    altMaxMB: 20,
+    altAccept: THUMB_SPEC.accept,
+    altLabel: THUMB_SPEC.label,
+    altMaxMB: THUMB_SPEC.maxMB,
     altRequired: true,
   },
   audio: {
@@ -62,9 +68,9 @@ export const MEDIA_POLICY: Record<MediaType, { mainAccept: string; mainLabel: st
     mainMaxMB: 10,
     mainRequired: true,
     altName: '썸네일',
-    altAccept: '.png,.jpg,.jpeg,.gif,.webp',
-    altLabel: 'PNG, JPG, GIF, WebP',
-    altMaxMB: 20,
+    altAccept: THUMB_SPEC.accept,
+    altLabel: THUMB_SPEC.label,
+    altMaxMB: THUMB_SPEC.maxMB,
     altRequired: true,
   },
 };
@@ -138,10 +144,11 @@ export interface BiveToken {
   mintedCount: number;
   registeredAt: string;
   description?: string;
-  // 미디어 (v1.12 — 타입 분기) — [CEB-BO-004] v1.12 §5 정합
+  // 미디어 (v1.14 — 타입 분기 + 저용량 썸네일 필수) — [CEB-BO-004] v1.14 §5 정합
   mediaType: MediaType; // 'image' | 'video' | 'audio'
   mediaUrl?: string;    // 메인 파일 (이미지: 메인 이미지 / 영상 / 음성) — 등록 시 필수
   mediaAltUrl?: string; // 서브 파일 (이미지: 서브 이미지(선택) / 영상·음성: 썸네일(필수))
+  mediaThumbUrl?: string; // 이미지 타입 전용 저용량 썸네일(필수) — 리스트·도감·앱 미리보기용. 영상·음성은 mediaAltUrl이 썸네일
   toggles: { send: boolean; mix: boolean; pick: boolean };
 }
 
@@ -180,7 +187,7 @@ function makeV01dEditionTokens(): BiveToken[] {
   // 추가 3건 (운영 등록된 BIVE=23 충족용 — Event 등급 005, 양면 데모 포함)
   tokens.push(
     // 이미지 타입 데모 (메인 + 서브)
-    { id: id++, editionId: 1, status: 'Active', name: '송유찬 Event-005', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 12, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaType: 'image', mediaUrl: '/mock/bive/v01d-005-songyuchan-main.webp', mediaAltUrl: '/mock/bive/v01d-005-songyuchan-sub.webp' },
+    { id: id++, editionId: 1, status: 'Active', name: '송유찬 Event-005', artistGroup: 'V01D', artist: '송유찬', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 12, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaType: 'image', mediaUrl: '/mock/bive/v01d-005-songyuchan-main.webp', mediaAltUrl: '/mock/bive/v01d-005-songyuchan-sub.webp', mediaThumbUrl: '/mock/bive/v01d-005-songyuchan-thumb.webp' },
     // 영상 타입 데모 (MP4 + 썸네일)
     { id: id++, editionId: 1, status: 'Active', name: '정지섭 Event-005', artistGroup: 'V01D', artist: '정지섭', grade: 'Event', gradeNumber: '005', mintEvent: 1, mintedCount: 8, registeredAt: '2026.05.10', toggles: { send: true, mix: true, pick: true }, mediaType: 'video', mediaUrl: '/mock/bive/v01d-005-jeongjiseop.mp4', mediaAltUrl: '/mock/bive/v01d-005-jeongjiseop-thumb.webp' },
     // 음성 타입 데모 (MP3 + 썸네일)
@@ -191,7 +198,7 @@ function makeV01dEditionTokens(): BiveToken[] {
 
 function makeCelebusEditionTokens(): BiveToken[] {
   return [
-    { id: 1, editionId: 2, status: 'Active', name: 'CELEBUS Event-001', artistGroup: 'CELEBUS', artist: 'CELEBUS', grade: 'Event', gradeNumber: '001', mintEvent: 1, mintedCount: 439, registeredAt: '2026.02.19', toggles: { send: true, mix: true, pick: true }, description: 'CELEBUS 1st Welcome Edition', mediaType: 'image', mediaUrl: '/mock/bive/celebus-1-main.webp', mediaAltUrl: '/mock/bive/celebus-1-sub.webp' },
+    { id: 1, editionId: 2, status: 'Active', name: 'CELEBUS Event-001', artistGroup: 'CELEBUS', artist: 'CELEBUS', grade: 'Event', gradeNumber: '001', mintEvent: 1, mintedCount: 439, registeredAt: '2026.02.19', toggles: { send: true, mix: true, pick: true }, description: 'CELEBUS 1st Welcome Edition', mediaType: 'image', mediaUrl: '/mock/bive/celebus-1-main.webp', mediaAltUrl: '/mock/bive/celebus-1-sub.webp', mediaThumbUrl: '/mock/bive/celebus-1-thumb.webp' },
   ];
 }
 

@@ -87,7 +87,7 @@ p {
 <tr><td>API</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>HOM(홈)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v2.10</td></tr>
+<tr><td>버전</td><td>v2.11</td></tr>
 <tr><td>최근 업데이트</td><td>2026-05-29</td></tr>
 <tr><td>Jira 링크</td><td></td></tr>
 <tr><td>Figma 링크</td><td>https://www.figma.com/design/aWAHLOx8ntuOExQ06deNnY/Celebus-App_v.3?node-id=2-3075</td></tr>
@@ -353,7 +353,7 @@ p {
 <tr><td>아티스트</td><td>선택된 아티스트 기준</td></tr>
 <tr><td>섹션 타이틀</td><td>"{아티스트명} 바이브" (예: "V01D 바이브")</td></tr>
 <tr><td>구성</td><td>2열 그리드. BIVE 카드 4~6개 표시</td></tr>
-<tr><td>카드 구성</td><td>BIVE 이미지 + 등급 뱃지(Grade 1~5 / 스페셜) + BIVE 이름</td></tr>
+<tr><td>카드 구성</td><td>BIVE 저용량 썸네일 + 등급 뱃지(Grade 1~5 / 스페셜) + BIVE 이름 (프리뷰 카드는 썸네일 사용, 원본은 상세에서 노출 — [CEB-BO-004] "BIVE 썸네일 규격")</td></tr>
 <tr><td>보유 상태 (로그인)</td><td>보유 BIVE: "보유 중" 뱃지 (성취감). 미보유 BIVE: 뱃지 없음 (소유욕 자극)</td></tr>
 <tr><td>보유 상태 (비로그인)</td><td>전체 뱃지 없음 (보유 여부 판별 불가)</td></tr>
 <tr><td>카드 탭</td><td>BIVE 상세 미리보기 바텀시트 표시 (아래 동작 참조)</td></tr>
@@ -476,6 +476,7 @@ p {
 <tr><td><strong>v2.8</strong></td><td>2026.05.28</td><td>@Nill Yoo</td><td><strong>Figma v.3 시안 정합</strong>. ① §2.1 상단 [HOME]/[EVENTS] 2탭 구조 추가 — EVENTS 탭은 이벤트 전체(CEB-HOM-101)로 동일 화면 내 전환, 캐러셀 "전체 보기"도 EVENTS 탭 전환으로 변경 ② §2.4 오늘의 할 일 — 단일 "일일 미션 바" → <strong>개별 미션 인라인 리스트</strong>(미션별 [미션하기] + 진행 헤더 "{완료}/{전체}" + 섹션 "전체 보기"), 일일 미션 수 <strong>하루 2건</strong> 반영 ③ §2.7 BIVE 프리뷰 섹션 라벨 "{아티스트} 바이브" + CTA "도감 보기" 정합 ④ §3.6 하단 글로벌 내비게이션(Home/{아티스트}/CELEBUS/Game/My 5분할) 추가 ⑤ 헤더 우측 배치 순서(응모권 pill→알림) 정합 ⑥ §2.5 추천 카드 "챌린지"→"퀘스트"·"장"→"에피소드" 용어 정합 (FQ-101 표준) ⑦ 알림 센터 참조 CEB-NTF-101 → <strong>CEB-NTF-510</strong> 일원화</td></tr>
 <tr><td><strong>v2.9</strong></td><td>2026.05.29</td><td>@Nill Yoo</td><td>기획자 언어 정합 — 영문 상태 코드 한국어 표준명 전환 + 코드 식별자·개발 용어 한국어화. 정책 변경 없음</td></tr>
 <tr><td><strong>v2.10</strong></td><td>2026.05.29</td><td>@Nill Yoo</td><td>아티스트 노출·필터 기준 [CEB-000] §4.8 참조 추가 — 탐색 노출은 발견 영역만 제어, 팔로우/선택 아티스트의 본 화면 노출은 유지(운영 중단 그룹은 미노출).</td></tr>
+<tr><td><strong>v2.11</strong></td><td>2026.06.16</td><td>@Nill Yoo</td><td>§2.7 BIVE 프리뷰 카드 저용량 썸네일 명시 — 카드 구성을 "BIVE 저용량 썸네일"로 정합(프리뷰=썸네일, 상세=원본, 로딩 성능). BO에서 전 미디어 타입 썸네일 필수 등록(최대 2MB). ([CEB-BO-004] v1.14 "BIVE 썸네일 규격" 정합)</td></tr>
 </table>
 
 </body>

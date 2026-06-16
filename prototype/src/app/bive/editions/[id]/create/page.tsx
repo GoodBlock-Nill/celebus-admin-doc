@@ -40,10 +40,11 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
   const [descEN, setDescEN] = useState('');
   const [grade, setGrade] = useState('');
   const [gradeNum, setGradeNum] = useState('');
-  // BIVE 미디어 — 타입 분기 ([CEB-BO-BIVE-202-CREATE] §2-2 v1.5)
+  // BIVE 미디어 — 타입 분기 + 저용량 썸네일 필수 ([CEB-BO-BIVE-202-CREATE] §2-2 v1.6)
   const [mediaType, setMediaType] = useState<MediaType>('image');
   const [mediaMain, setMediaMain] = useState('');
   const [mediaAlt, setMediaAlt] = useState('');
+  const [mediaThumb, setMediaThumb] = useState(''); // 이미지 타입 전용 썸네일 슬롯(필수)
   const [toggles, setToggles] = useState({ send: true, mix: true, pick: true });
 
   if (!edition) {
@@ -52,7 +53,9 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
 
   const policy = MEDIA_POLICY[mediaType];
   const altRequired = policy.altRequired;
-  const mediaValid = !!mediaMain && (altRequired ? !!mediaAlt : true);
+  // 이미지 타입은 별도 썸네일 슬롯(필수). 영상·음성은 alt 슬롯이 썸네일(필수).
+  const thumbValid = policy.thumb ? !!mediaThumb : true;
+  const mediaValid = !!mediaMain && (altRequired ? !!mediaAlt : true) && thumbValid;
   const canSubmit = group && artist && grade && gradeNum && mediaValid;
   const availableArtists = group ? getArtistsByGroup(group) : [];
 
@@ -62,6 +65,7 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
     setMediaType(t);
     setMediaMain('');
     setMediaAlt('');
+    setMediaThumb('');
   };
 
   return (
@@ -86,7 +90,7 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
           <button
             disabled={!canSubmit}
             onClick={() => {
-              alert(`[Mock] BIVE 등록\n그룹: ${group} / 아티스트: ${artist} / 등급: ${grade}-${gradeNum}\n미디어 타입: ${mediaType}\n${policy.mainName}: ${mediaMain} / ${policy.altName}: ${mediaAlt || '(미등록)'}\n기능: 보내기=${toggles.send} Mix=${toggles.mix} Pick=${toggles.pick}`);
+              alert(`[Mock] BIVE 등록\n그룹: ${group} / 아티스트: ${artist} / 등급: ${grade}-${gradeNum}\n미디어 타입: ${mediaType}\n${policy.mainName}: ${mediaMain} / ${policy.altName}: ${mediaAlt || '(미등록)'}${policy.thumb ? ` / ${policy.thumb.name}: ${mediaThumb}` : ''}\n기능: 보내기=${toggles.send} Mix=${toggles.mix} Pick=${toggles.pick}`);
               router.push(`/bive/editions/${editionId}`);
             }}
             className="h-10 px-5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:bg-indigo-300"
@@ -246,6 +250,26 @@ export default function BiveCreatePage({ params }: { params: Promise<{ id: strin
                   <p className="text-[11px] text-gray-500 mt-1.5">{policy.altLabel} · 최대 {policy.altMaxMB}MB</p>
                 </div>
               </div>
+
+              {/* 이미지 타입 전용 — 저용량 썸네일 (필수). 영상·음성은 위 보조 박스가 곧 썸네일 */}
+              {policy.thumb && (
+                <div className="mt-3 max-w-[calc(50%-0.375rem)]">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <span className="text-sm font-medium text-gray-900">{policy.thumb.name}</span>
+                    <span className="text-red-500">*</span>
+                    <span className="text-xs text-gray-400">(저용량)</span>
+                  </div>
+                  <MediaDropzone
+                    value={mediaThumb}
+                    onChange={setMediaThumb}
+                    accept={policy.thumb.accept}
+                    acceptLabel={policy.thumb.label}
+                    maxSizeMB={policy.thumb.maxMB}
+                  />
+                  <p className="text-[11px] text-gray-500 mt-1.5">{policy.thumb.label} · 최대 {policy.thumb.maxMB}MB · 권장 가로 640px · WebP 우선</p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">도감·컬렉션 리스트·앱 미리보기에 사용 (상세는 원본)</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -346,7 +346,7 @@ function HistoryTab({ token }: { token: BiveToken }) {
   );
 }
 
-// 미디어 미리보기 — 타입별 분기 (v1.5 / [CEB-BO-BIVE-202] v1.6)
+// 미디어 미리보기 — 타입별 분기 (v1.6 / [CEB-BO-BIVE-202] v1.9 — 이미지 타입 썸네일 추가)
 function MediaPreview({ token }: { token: BiveToken }) {
   if (token.mediaType === 'image') {
     return (
@@ -362,6 +362,12 @@ function MediaPreview({ token }: { token: BiveToken }) {
             {token.mediaAltUrl ? '서브 이미지 미리보기' : '서브 이미지 미등록 (선택)'}
           </div>
           <div className="text-xs text-center mt-2 text-gray-600">서브 이미지</div>
+        </div>
+        <div>
+          <div className={`aspect-square rounded-lg flex items-center justify-center text-xs ${token.mediaThumbUrl ? 'bg-gradient-to-br from-sky-100 to-teal-100 text-gray-600' : 'bg-gray-50 border border-dashed border-gray-300 text-gray-400'}`}>
+            {token.mediaThumbUrl ? '썸네일 미리보기' : '썸네일 미등록'}
+          </div>
+          <div className="text-xs text-center mt-2 text-gray-600">썸네일 (저용량)</div>
         </div>
       </div>
     );
