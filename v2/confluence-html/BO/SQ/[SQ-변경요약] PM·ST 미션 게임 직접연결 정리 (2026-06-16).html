@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[변경 요약] 에피소드 PM/ST 미션 — 게임 직접연결 잔존 정리</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[변경 요약] 에피소드 PM/ST 미션 — 게임 직접연결 잔존 정리</h1>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>일자</td><td>2026-06-16</td></tr>
+<tr><td>정리</td><td>@Nill Yoo</td></tr>
+<tr><td>대상</td><td>개발팀 · 디자인팀</td></tr>
+<tr><td>계기</td><td>프론트 개발자 검수 질문(Slack) — PM 미션이 "게임 직접 생성/연결"에서 "아티스트 게임 참여 시 조건 체크 자동완료"로 바뀐 듯하며, 미션에 연결된 특정 게임이 없어 앱 "참여하기"가 동작 어렵다. 첨부=[CEB-BO-SQ-204-CREATE]의 "소스 참조값(예: 예측 마켓 #34)"</td></tr>
+<tr><td>관련 문서</td><td>[CEB-BO-011] · [CEB-BO-SQ-204-CREATE] · [CEB-BO-SQ-204-EDIT] · [CEB-BO-SQ-204] · [CEB-BO-SQ-FLOW] · [CEB-FQ-101]</td></tr>
+</table>
+<hr>
+<h2>1. 한 줄 요약</h2>
+<blockquote>
+<p><strong>개발자 이해가 맞습니다.</strong> PM/ST(예측 마켓·서바이벌 트리비아) 미션은 <strong>특정 게임에 직접 연결되지 않습니다.</strong> 회원이 해당 아티스트의 PM/ST 게임에 참여(또는 정답·승리)하면 미션의 <strong>판정 유형 × 기준 횟수 N</strong>에 따라 서버가 자동으로 미션을 완료 처리합니다. 혼선을 준 잔존 항목(BO "소스 참조값", 앱 PM 딥링크의 특정 게임 지정)을 정리했고, <strong>백오피스↔앱 완료 조건도 통일</strong>했습니다 — 모든 PM/ST 판정 유형은 "N회 참여" 또는 "N번 정답·승리" 모델이며(예측 정답=예측 적중, <strong>트리비아 승리=게임 자체 생존(서바이벌 규칙)</strong>), 앱에 남아 있던 고정 임계치(트리비아 10문제 중 7문제) 표기를 폐기했습니다.</p>
+</blockquote>
+<hr>
+<h2>2. 무엇이 바뀌었나 (Before → After)</h2>
+<table>
+<tr><th>구분</th><th>Before</th><th>After</th></tr>
+<tr><td>미션-게임 연결</td><td>"소스 참조값(예: 예측 마켓 #34)"이 특정 게임 연결처럼 보임</td><td><strong>소스 참조값 항목 제거.</strong> PM/ST 미션은 특정 게임 연결 없음</td></tr>
+<tr><td>완료 판정</td><td>(판정 유형은 있었으나 소스 참조값과 혼재)</td><td><strong>판정 유형만으로 완료</strong> — 아티스트 게임 참여/정답을 서버 자동검증</td></tr>
+<tr><td>앱 PM [참여하기]</td><td>→ CEB-GAM-202(특정 PM 상세) 딥링크</td><td>→ <strong>해당 아티스트 진행 중 예측 마켓 게임</strong>으로 일반화(특정 게임 연결 없음)</td></tr>
+<tr><td>앱 자동검증 조건</td><td>"게임 승리(정답) 필수"로 단정, 트리비아는 고정 임계치(10문제 중 7문제) 표기</td><td>미션 <strong>판정 유형 × 기준 횟수 N에 정합</strong> — 참여형(예측 참여/트리비아 참여)=N회 참여로 완료, 정답·승리형(예측 정답/트리비아 승리)=N번 충족 시 완료. 고정 임계치 폐기</td></tr>
+<tr><td>트리비아 승리 정의</td><td>(앱) 10문제 중 7문제 이상 정답</td><td><strong>게임 자체 생존(서바이벌 규칙)</strong> — 별도 정답 개수 임계치 없음</td></tr>
+</table>
+<blockquote>
+<p>참고: ST(트리비아) 미션 앱 딥링크는 이미 Trivia 홈(CEB-GAM-204, 일반)으로 돼 있어 변경 없음. 캡처 제출형 미션(수동 심사)도 불변.</p>
+</blockquote>
+<hr>
+<h2>3. 핵심 개념</h2>
+<ul>
+<li>PM/ST 미션은 <strong>판정 유형</strong>(예측 참여 / 예측 정답 / 트리비아 참여 / 트리비아 승리)과 <strong>기준 횟수 N</strong>만 미션에 저장한다. 특정 게임 ID·소스 참조값 같은 하드링크는 없다.</li>
+<li>기준 횟수 N은 <strong>모든 PM/ST 판정 유형에 적용</strong>한다(참여형=N회 참여, 정답·승리형=N번 정답·승리). 예측 정답=예측 적중, <strong>트리비아 승리=게임 자체 생존(서바이벌 규칙)</strong>.</li>
+<li>완료는 <strong>회원이 그 아티스트의 PM/ST 게임에 참여/정답·승리</strong> → 서버가 판정 유형 × N 기준으로 자동검증 → 미션 자동 완료(승인).</li>
+<li>완료 인정 조건: ① 해당 아티스트 게임일 것 ② 판정 유형 × N 충족(참여형=N회 참여 / 정답·승리형=N번 정답·승리) ③ 에피소드 해금 이후 참여분.</li>
+<li>팬퀘스트 미션만 1:1 매핑(하드링크)을 유지한다.</li></ul>
+<hr>
+<h2>4. 디자이너가 알아야 할 것</h2>
+<ul>
+<li><strong>앱 [CEB-FQ-101] PM 미션</strong>: [참여하기] 버튼·문구는 유지하되, 누르면 <strong>해당 아티스트의 진행 중 예측 마켓 게임</strong>으로 이동(미션에 묶인 특정 게임 화면 아님). 진행 중 게임 없으면 기존대로 "게임 준비중" + [알림 설정].</li>
+<li>미션 카드에 특정 게임명/번호를 노출하지 않는다(미션은 판정 유형만 보유).</li></ul>
+<h2>5. 개발자가 알아야 할 것</h2>
+<ul>
+<li>BO 미션 필드에서 <strong>소스 참조값 제거</strong>. PM/ST 미션 저장 필드 = 다국어 타이틀 · 판정 유형 · <strong>기준 횟수 N(모든 PM/ST 판정 유형)</strong> · 덕력 · 반복 주기/기간.</li>
+<li>완료 처리: 회원의 아티스트 PM/ST 게임 참여/정답·승리 이벤트 → 미션 판정 유형 × N 매칭 → 자동 완료. 퀘스트 화면 진입/게임 종료 복귀 시 서버가 이력 확인해 상태 갱신. <strong>트리비아 승리 판정 = 게임 자체 생존(서바이벌 규칙)</strong>이며 고정 정답 개수 임계치는 사용하지 않는다.</li>
+<li>앱 PM [참여하기] 딥링크 타겟 = 아티스트 진행 중 PM 게임(리스트 CEB-GAM-201 / 진행 게임 CEB-GAM-202). 특정 미션-게임 매핑을 조회하지 않는다.</li></ul>
+<hr>
+<h2>6. 문서·화면 변경 목록</h2>
+<table>
+<tr><th>문서 ID</th><th>버전</th><th>변경</th></tr>
+<tr><td>CEB-BO-SQ-204-CREATE (미션 추가)</td><td>v3.5</td><td>"소스 참조값" 입력 항목 삭제 + 판정 유형 자동완료 안내 + 기준 횟수 N 전 판정 유형 적용·ST 판정 유형=트리비아 참여/승리</td></tr>
+<tr><td>CEB-BO-SQ-204-EDIT (미션 수정)</td><td>v1.3</td><td>잠금 매트릭스 소스 참조값 행 삭제 + 기준 횟수 N 일반화</td></tr>
+<tr><td>CEB-BO-SQ-204 (미션 상세)</td><td>v3.6</td><td>완료 판정 카드·v2.2 설명에서 소스 참조값 제거 + 기준 횟수 N 전 판정 유형 노출·ST 승리 표기</td></tr>
+<tr><td>CEB-BO-SQ-FLOW (플로우)</td><td>v3.10</td><td>§3-3·§5-7·§6-5 소스 참조값 삭제 + PM/ST 자동완료 로직·N회 모델·ST 승리=게임 생존 명시</td></tr>
+<tr><td>CEB-BO-011 (영역 가이드)</td><td>v3.11</td><td>§7 PM/ST 연동에서 소스 참조값 제거 + 특정 게임 연결 없음·N회 모델·ST 승리=게임 생존 명시</td></tr>
+<tr><td>CEB-FQ-101 (앱 Quest 메인)</td><td>v2.6</td><td>PM [참여하기] 딥링크 일반화 + 자동검증 조건 판정 유형×N 정합 + 트리비아 고정 임계치(7/10) 폐기·승리=게임 생존</td></tr>
+<tr><td>CEB-BO-SQ-204-COND-CREATE/EDIT (폐지)</td><td>—</td><td>대체 흐름 문구에서 소스 참조값 제거</td></tr>
+<tr><td>QA episode.tsv</td><td>—</td><td>PM/ST 미션 자동검증 완료 TC(특정 게임 연결 없음·판정 유형×N·ST 승리=게임 생존)</td></tr>
+</table>
+<p>SSOT: 에피소드 미션 로직 = <strong>[CEB-BO-SQ-FLOW]</strong> · 영역 정책 = <strong>[CEB-BO-011]</strong> · 앱 = <strong>[CEB-FQ-101]</strong></p>
+<hr>
+<h2>7. 확인 필요 (Open Items)</h2>
+<table>
+<tr><th>#</th><th>내용</th><th>담당</th></tr>
+<tr><td>1</td><td>PM/ST 미션 자동완료 매칭 주기(이벤트 즉시 / 진입 시 폴링)·중복 완료 방지</td><td>개발팀</td></tr>
+<tr><td>2</td><td>운영: 미션 진행을 위해 해당 아티스트 PM/ST 게임 상시 등록(미가용 시 "게임 준비중") 운영 합의</td><td>기획·운영</td></tr>
+<tr><td>3</td><td>참여형(예측 참여/트리비아 참여) vs 정답·승리형(예측 정답/트리비아 승리) 판정의 게임 결과 수신 스펙 — 기준 횟수 N 누적 카운트, 트리비아 승리=게임 생존 판정 신호</td><td>개발팀</td></tr>
+</table>
+
+</body>
+</html>

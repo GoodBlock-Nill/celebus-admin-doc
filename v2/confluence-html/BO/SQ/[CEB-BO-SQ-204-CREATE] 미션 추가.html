@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.4</td></tr>
-<tr><td>최근 업데이트</td><td>2026.06.09</td></tr>
+<tr><td>버전</td><td>v3.5</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-16</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -169,12 +169,12 @@ p {
 <li>판정 유형 드롭다운:
 <ul>
 <li>예측 마켓: "예측 참여" / "예측 정답" 중 선택</li>
-<li>서바이벌 트리비아: "트리비아 참여" / "트리비아 N회 정답" 중 선택</li></ul>
+<li>서바이벌 트리비아: "트리비아 참여" / "트리비아 승리" 중 선택</li></ul>
 </li>
-<li>기준 횟수: "트리비아 N회 정답" 선택 시에만 활성 (정수 입력)</li>
-<li>소스 참조값 (선택, 예: "예측 마켓 #34 — 다음 컴백 시점")</li></ul>
+<li>기준 횟수(N): <strong>모든 PM/ST 판정 유형에서 활성</strong> (1 이상 정수). 참여형 = N회 참여, 정답·승리형 = N번 정답·승리</li></ul>
 <blockquote>
 <p>v2.2부터 별도 완료 조건 모달 없이 미션 생성 시 1:1로 완료 판정 필드가 같이 저장된다.</p>
+<p>PM/ST 미션은 <strong>특정 게임에 직접 연결되지 않는다</strong>. 완료 조건 = 회원이 해당 아티스트의 게임에 <strong>N회 참여</strong>(참여형) 또는 <strong>N번 정답·승리</strong>(정답·승리형)하는 것이며, 서버가 판정 유형·기준 횟수에 따라 자동 완료 처리한다. <strong>PM 정답 = 예측 적중</strong>, <strong>ST 승리 = 게임 자체 생존(서바이벌 규칙)</strong>.</p>
 </blockquote>
 <p><strong>보상 섹션</strong> (PM/ST는 <strong>덕력만</strong> — 응모권·BIVE 미지원):</p>
 <ul>
@@ -211,7 +211,7 @@ p {
 <tr><td>기본 정보</td><td>표시 순서·유형</td><td>미션 식별·분기</td></tr>
 <tr><td>팬퀘스트 영역</td><td>팬퀘스트 참조 (유형이 팬퀘스트일 때)</td><td>1:1 매핑. 반복 주기·타이틀·이미지·보상 모두 팬퀘스트 자체 설정 상속</td></tr>
 <tr><td>PM/ST 기본 정보 (v3.2 신규)</td><td>다국어 타이틀 KO/EN/JP (PM/ST일 때만)</td><td>운영자 직접 입력. <strong>KO/EN/JA 3개 언어 모두 필수</strong> ([CEB-BO-011] §5 다국어 필수 정합)</td></tr>
-<tr><td>판정 영역</td><td>판정 유형·기준값·소스 참조값 (예측 마켓·서바이벌 트리비아일 때)</td><td>미션 흡수 필드</td></tr>
+<tr><td>판정 영역</td><td>판정 유형·기준값 (예측 마켓·서바이벌 트리비아일 때)</td><td>미션 흡수 필드</td></tr>
 <tr><td>보상</td><td>덕력 (PM/ST는 덕력만 — 응모권·BIVE 미지원)</td><td>회원 보상 정의</td></tr>
 <tr><td>반복 여부·반복 주기·기간</td><td>부모=반복 + PM/ST일 때만 노출 (메인 진입 시 미노출)</td><td>반복 미션 운영 정의</td></tr>
 </table>
@@ -264,6 +264,7 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v3.5</strong></td><td><strong>2026-06-16</strong></td><td><strong>@Nill Yoo</strong></td><td>PM/ST 미션 게임 직접연결 잔존 정리 + 완료 모델 정합(개발팀 검수) — ① §2-7 "소스 참조값" 입력 항목 삭제, 특정 게임 연결 없이 판정 유형으로 완료·서버 자동 처리 명시 ② 판정 유형 "트리비아 N회 정답"→"트리비아 승리", <strong>기준 횟수(N)를 모든 PM/ST 판정 유형에서 활성</strong>으로 정합(참여 N회 / 정답·승리 N번). PM 정답=예측 적중, ST 승리=게임 자체 생존(서바이벌 규칙). [CEB-BO-SQ-204]·[204-EDIT]·[SQ-FLOW]·[CEB-BO-011]·[CEB-FQ-101] 정합</td></tr>
 <tr><td><strong>v3.4</strong></td><td><strong>2026-06-09</strong></td><td><strong>@Nill Yoo</strong></td><td>PM/ST 미션 보상 덕력만으로 축소 (개발자 요청). §2-7 보상 섹션에서 응모권 입력·BIVE 보상 토글·민팅 캠페인 드롭다운 삭제(덕력 1종만). §2-4 정책 안내·§3 노출 정보·§5 검증 규칙에서 응모권·BIVE 항목 제거(BIVE ON 민팅 검증 행 삭제). 팬퀘스트 미션·메인 에피소드 완료 보상은 불변. [CEB-BO-011]·[CEB-BO-SQ-204]·[CEB-BO-SQ-204-EDIT]·[CEB-BO-SQ-FLOW]·프로토타입 정합</td></tr>
 <tr><td><strong>v3.3</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>PM/ST 다국어 타이틀 검증 정정 — KO·EN·JA 3종 모두 필수 (사용자 정정 반영)</strong> — v3.2에서 "KO 필수 + EN/JA 선택"으로 디폴트 설정했으나 사용자 정정: [CEB-BO-011] §5 다국어 필수 표준("타이틀·설명·가이드는 한국어/영어/일본어 3개 언어 모두 입력 필수")에 정합하여 PM/ST 미션 다국어 타이틀도 <strong>3개 언어 모두 필수</strong>로 통일. §2-7 표 "필수" 컬럼·§3 노출 정보·§5 검증 규칙 동시 정정. 프로토타입 <code>isAllLangsFilled(title)</code> 사용. [CEB-BO-011] v3.5·[CEB-BO-SQ-FLOW] v3.5 동시 정합</td></tr>
 <tr><td>v3.2</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>PM/ST 미션 다국어 타이틀 입력 필드 신설 (사용자 피드백 반영)</strong> — §2-7 PM/ST 섹션 가장 위에 "기본 정보 (PM/ST 직접 입력)" 그룹 신설. 타이틀(KO/EN/JP) 다국어 탭 입력 필드 추가 — 각 50자, KO 필수 + EN/JA 선택 (게시 시점에 부모 에피소드 다국어 검증으로 일괄 처리). 팬퀘스트 유형은 본 입력 미노출(팬퀘스트 자체 타이틀 상속). §3 노출 정보 표 행 추가, §5 검증 규칙 "PM/ST + 타이틀 KO 미입력 → [미션 추가] 비활성" 추가. [CEB-BO-011] v3.4 정책 상수 정합</td></tr>

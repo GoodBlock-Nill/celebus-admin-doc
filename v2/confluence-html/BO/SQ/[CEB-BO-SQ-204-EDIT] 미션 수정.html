@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.2</td></tr>
-<tr><td>최근 업데이트</td><td>2026.06.09</td></tr>
+<tr><td>버전</td><td>v1.3</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-16</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -156,7 +156,6 @@ p {
 <tr><td>다국어 타이틀 (KO/EN/JA)</td><td>✏️</td><td><strong>✏️ (유일 수정 가능)</strong></td><td>🔒</td></tr>
 <tr><td>판정 유형</td><td>✏️</td><td><strong>🔒 (정정)</strong></td><td>🔒</td></tr>
 <tr><td>기준 횟수</td><td>✏️</td><td><strong>🔒 (정정)</strong></td><td>🔒</td></tr>
-<tr><td>소스 참조값</td><td>✏️</td><td><strong>🔒 (정정)</strong></td><td>🔒</td></tr>
 <tr><td>덕력 (PM/ST 보상은 덕력만 — 응모권·BIVE 미지원)</td><td>✏️</td><td>🔒</td><td>🔒</td></tr>
 <tr><td>반복 여부 토글</td><td>✏️</td><td><strong>🔒 (정정)</strong></td><td>🔒</td></tr>
 <tr><td>반복 주기</td><td>✏️</td><td><strong>🔒 (정정)</strong></td><td>🔒</td></tr>
@@ -181,7 +180,7 @@ p {
 <tr><td>기본 정보</td><td>표시 순서·유형 (모두 read-only)</td><td>미션 식별</td></tr>
 <tr><td>팬퀘스트 영역</td><td>팬퀘스트 참조 (read-only, 유형이 팬퀘스트일 때)</td><td>1:1 매핑 표시</td></tr>
 <tr><td>PM/ST 다국어 타이틀</td><td>KO/EN/JA 3행 입력 (PM/ST일 때만)</td><td>운영자 직접 입력·정정</td></tr>
-<tr><td>판정 영역</td><td>판정 유형·기준값·소스 참조값 (PM/ST일 때)</td><td>미션 흡수 필드</td></tr>
+<tr><td>판정 영역</td><td>판정 유형·기준값 (PM/ST일 때)</td><td>미션 흡수 필드</td></tr>
 <tr><td>보상</td><td>덕력 (PM/ST는 덕력만 — 응모권·BIVE 미지원, 진행중·종료 시 read-only)</td><td>회원 기대권 보호</td></tr>
 <tr><td>반복 여부·주기·기간</td><td>부모=반복 + PM/ST일 때만 노출</td><td>반복 미션 운영 정의</td></tr>
 </table>
@@ -235,6 +234,7 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.3</strong></td><td><strong>2026-06-16</strong></td><td><strong>@Nill Yoo</strong></td><td>PM/ST 미션 게임 직접연결 잔존 정리 + 완료 모델 정합(개발팀 검수) — §2-6 잠금 매트릭스 "소스 참조값" 행 삭제, 판정 영역 소스 참조값 제거. 기준 횟수는 모든 PM/ST 판정 유형 공통(참여 N회 / 정답·승리 N번), ST "트리비아 승리"=게임 생존. 특정 게임 연결 없이 판정 유형으로 완료</td></tr>
 <tr><td><strong>v1.2</strong></td><td><strong>2026-06-09</strong></td><td><strong>@Nill Yoo</strong></td><td>PM/ST 미션 보상 덕력만으로 축소 (개발자 요청). §2-6 PM/ST 필드 잠금 매트릭스에서 응모권·BIVE 토글·민팅 캠페인 행 삭제(덕력만 유지). §3 노출 정보·§5 검증(BIVE ON 민팅 검증 행 삭제) 정합. 진행중·종료 잠금 정책과 팬퀘스트 미션(미션 고유 BIVE 메타)은 불변. [CEB-BO-SQ-204-CREATE]·[CEB-BO-011]·프로토타입 정합</td></tr>
 <tr><td><strong>v1.1</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>진행중·종료 상태 수정 정책 강화 (사용자 정정 반영)</strong> ① v1.0의 "진행중 = 보상만 read-only" → <strong>진행중 + 팬퀘스트는 [수정하기] 버튼 자체 비활성 (EDIT 진입 차단)</strong> + <strong>진행중 + PM/ST는 다국어 타이틀만 수정 가능</strong> (판정·보상·반복 모두 read-only) 정정 ② v1.0의 "종료 = 진입 후 전체 read-only" → <strong>종료 상태 [수정하기] 버튼 자체 비활성 (EDIT 진입 차단)</strong> + 직접 URL 진입 시 회색 차단 배너 + 전체 read-only 방어 ③ §2-2 상태 배너 표 4행 분기 재작성 (DRAFT 전 유형 미노출 / ACTIVE+PM/ST 노랑 / ACTIVE+팬퀘스트 회색 차단 / CLOSED 회색 차단) ④ §2-6 PM/ST 필드별 잠금 매트릭스 재작성 (3컬럼 DRAFT/ACTIVE/CLOSED — ACTIVE에서 다국어만 ✏️, 그 외 모두 🔒) ⑤ §4 상태별 동작 분기 + §5 검증 규칙 정합 정정 ⑥ [CEB-BO-SQ-204] v3.4·[CEB-BO-011] v3.7·[CEB-BO-SQ-FLOW] v3.7 동시 정합</td></tr>
 <tr><td>v1.0</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>신규 — 미션 수정 화면</strong> ① [CEB-BO-SQ-204] 미션 상세 §4의 [수정하기] 후속 정의를 본 화면으로 확정 ② [CEB-BO-SQ-204-CREATE] v3.3 구조를 base로 prefill + 상태별 잠금 + 팬퀘스트 메타 제한 추가 ③ §2-2 상태 배너 (임시저장 미노출 / 진행중 노랑 / 종료 회색) ④ §2-3 팬퀘스트 메타 안내 박스 (FAN_QUEST 한정 — 타이틀·이미지·보상 read-only, 메타만 수정 가능) ⑤ §2-4 유형 read-only (변경 필요 시 삭제 후 재생성) ⑥ §2-6 PM/ST 다국어 타이틀 KO·EN·JA 3종 모두 필수 검증 ([CEB-BO-011] §5 정합) ⑦ §4 상태별 동작 분기 5행 추가 (DRAFT/ACTIVE/CLOSED + 팬퀘스트 유형) ⑧ §5 검증 규칙 10행 — 진행중 보상 잠금, 종료 전체 잠금, 다국어 3종 필수, 팬퀘스트 메타 제한 ⑨ [CEB-BO-011] v3.6·[CEB-BO-SQ-FLOW] v3.6 동시 정합</td></tr>

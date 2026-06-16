@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>SQ — 스토리 퀘스트(에피소드)</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v3.5</td></tr>
-<tr><td>최근 업데이트</td><td>2026.06.09</td></tr>
+<tr><td>버전</td><td>v3.6</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-16</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -101,7 +101,7 @@ p {
 <h2>1. 화면 개요</h2>
 <p>특정 에피소드 내 미션의 정보·완료 판정·통계를 조회·관리하는 화면. 미션 유형별로 표시되는 정보가 분기된다. <strong>v2.2부터 미션 수정 진입점이 본 화면으로 통합</strong> — 기존 별도 모달은 폐기.</p>
 <blockquote>
-<p>🚫 <strong>v2.2 변경</strong>: 완료 조건 별도 계층은 폐기. <strong>미션 1개 = 완료 판정 1개</strong>로 단순화. 완료 판정 필드(판정 유형·기준값·소스 참조값·반복 주기·시작·종료일)는 미션에 직접 흡수된다.</p>
+<p>🚫 <strong>v2.2 변경</strong>: 완료 조건 별도 계층은 폐기. <strong>미션 1개 = 완료 판정 1개</strong>로 단순화. 완료 판정 필드(판정 유형·기준값·반복 주기·시작·종료일)는 미션에 직접 흡수된다. (PM/ST 미션은 특정 게임에 연결되지 않으며, 아티스트 게임 참여/정답을 판정 유형에 따라 자동 완료 처리)</p>
 </blockquote>
 <table>
 <tr><th>항목</th><th>값</th></tr>
@@ -156,8 +156,8 @@ p {
 <table>
 <tr><th>좌측</th><th>값</th></tr>
 <tr><td>판정 유형</td><td>미션 유형별 분기 매트릭스 (라벨 · 색상)</td></tr>
-<tr><td>기준 수치</td><td>"트리비아 N회 정답" 선택 시에만 노출 — "{기준값}회"</td></tr>
-<tr><td>조건 내용</td><td>예측 마켓·서바이벌 트리비아 — 소스 참조값 / 팬퀘스트 — 매핑된 팬퀘스트 식별값</td></tr>
+<tr><td>기준 수치</td><td>모든 PM/ST 판정 유형에 노출 — "{기준 횟수 N}회" (참여 N회 / 정답·승리 N번)</td></tr>
+<tr><td>조건 내용</td><td>팬퀘스트 — 매핑된 팬퀘스트 식별값 / 예측 마켓·서바이벌 트리비아 — 별도 조건 내용 없음(판정 유형으로 완료, 특정 게임 연결 없음)</td></tr>
 </table>
 <table>
 <tr><th>우측</th><th>값</th></tr>
@@ -172,8 +172,8 @@ p {
 <table>
 <tr><th>미션 유형</th><th>가능한 판정 유형</th><th>기준값 사용</th></tr>
 <tr><td>팬퀘스트</td><td>"관리자 승인" 고정</td><td>없음</td></tr>
-<tr><td>예측 마켓</td><td>"예측 참여" / "예측 정답" 중 선택</td><td>없음</td></tr>
-<tr><td>서바이벌 트리비아</td><td>"트리비아 참여" / "트리비아 N회 정답" 중 선택</td><td>"N회 정답" 선택 시 횟수 입력</td></tr>
+<tr><td>예측 마켓</td><td>"예측 참여" / "예측 정답" 중 선택</td><td>기준 횟수 N 입력 (참여·정답 모두)</td></tr>
+<tr><td>서바이벌 트리비아</td><td>"트리비아 참여" / "트리비아 승리" 중 선택</td><td>기준 횟수 N 입력 (참여·승리 모두)</td></tr>
 </table>
 <h3>2-6. 진행 통계 카드 (가로 3개, 파스텔 톤)</h3>
 <p>v2.2부터 "완료 조건 수" 카드는 폐기 (완료 조건 계층 폐기 정합).</p>
@@ -213,7 +213,7 @@ p {
 <tr><th>규칙</th><th>내용</th></tr>
 <tr><td>팬퀘스트 유형 미션의 보상·이미지·타이틀 수정</td><td>본 화면에서 수정 불가 → 팬퀘스트 영역에서만 가능. 본 화면에서는 매핑(팬퀘스트 식별값)만 관리</td></tr>
 <tr><td>완료 판정 유형</td><td>미션 유형별 매트릭스에 따라 분기 (§2-5 매트릭스 참조)</td></tr>
-<tr><td>기준값 입력</td><td>"트리비아 N회 정답" 선택 시에만 활성</td></tr>
+<tr><td>기준값 입력</td><td>모든 PM/ST 판정 유형에서 활성 (기준 횟수 N — 참여 N회 / 정답·승리 N번)</td></tr>
 <tr><td>시작·종료일</td><td>비우면 부모 그룹 기간 상속. 입력 시 부모 그룹 기간 안에 포함 권장</td></tr>
 </table>
 <blockquote>
@@ -231,6 +231,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v3.6</strong></td><td><strong>2026-06-16</strong></td><td><strong>@Nill Yoo</strong></td><td>PM/ST 미션 게임 직접연결 잔존 정리 + 완료 모델 정합(개발팀 검수) — ① "소스 참조값" 제거, 특정 게임 연결 없이 판정 유형으로 완료 명시 ② 완료 판정 매트릭스·기준 수치를 정합 — 기준 횟수 N을 <strong>모든 PM/ST 판정 유형</strong>에 적용(참여 N회/정답·승리 N번), ST "트리비아 N회 정답"→"트리비아 승리"(게임 생존). PM 정답=예측 적중</td></tr>
 <tr><td><strong>v3.5</strong></td><td><strong>2026-06-09</strong></td><td><strong>@Nill Yoo</strong></td><td>PM/ST 미션 보상 덕력만으로 축소 정합 (개발자 요청). §2-2 기본 정보 카드 응모권 보상 행을 팬퀘스트 유형 한정으로(PM/ST 미노출), §2-4 BIVE 보상 카드를 팬퀘스트 한정으로(PM/ST 미노출). §3 노출 정보 정합. 덕력 보상은 전 유형 공통 유지. [CEB-BO-SQ-204-CREATE]·[CEB-BO-SQ-204-EDIT]·[CEB-BO-011]·프로토타입 정합</td></tr>
 <tr><td><strong>v3.4</strong></td><td><strong>2026-05-21</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>[수정하기] 버튼 조건부 비활성 (사용자 정정 반영)</strong> ① §4 "[수정하기] 클릭" 행 분기 명시 — DRAFT(전 유형) / ACTIVE+PM/ST에서만 활성, ACTIVE+팬퀘스트 / CLOSED(전 유형)에서는 비활성 + 툴팁 사유 안내 ② 진행중+PM/ST는 EDIT 진입 후 다국어 타이틀만 수정 가능 ([CEB-BO-SQ-204-EDIT] v1.1 정합) ③ 프로토타입 <code>quests/[qid]/page.tsx</code> <code>editDisabled</code>·<code>editDisabledReason</code> 변수 + disabled 스타일 적용 ④ [CEB-BO-SQ-204-EDIT] v1.1·[CEB-BO-011] v3.7·[CEB-BO-SQ-FLOW] v3.7 동시 정합</td></tr>
 <tr><td>v3.3</td><td>2026-05-21</td><td>@Nill Yoo</td><td><strong>[수정하기] 후속 정의 확정 — [CEB-BO-SQ-204-EDIT] 미션 수정 화면 분리</strong> ① §4 "[수정하기] 클릭" 행: "본 화면을 수정 모드로 전환 (또는 별도 페이지 — 후속 정의)" → "[CEB-BO-SQ-204-EDIT] 미션 수정 화면(<code>/sq/{id}/quests/{qid}/edit</code>)으로 이동" 정정 ② 부모 에피소드 상태에 따른 일부 필드 read-only 잠금 정책 안내 추가 (진행중=보상 잠금 / 종료=전체 잠금) ③ §6 연관 화면 "[수정하기]" 행 "후속 정의 페이지" → "[CEB-BO-SQ-204-EDIT] 미션 수정" 정정 ④ [CEB-BO-SQ-204-EDIT] v1.0·[CEB-BO-011] v3.6·[CEB-BO-SQ-FLOW] v3.6 동시 정합</td></tr>
