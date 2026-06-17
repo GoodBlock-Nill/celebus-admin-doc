@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 플로우·로직 통합 문서</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.3</td></tr>
+<tr><td>버전</td><td>v1.4</td></tr>
 <tr><td>최근 업데이트</td><td>2026-06-12</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -130,7 +130,7 @@ p {
 <tr><td>등급 6종</td><td>Event / Normal / Special / Wicked / Next / Final (고정)</td></tr>
 <tr><td>등급번호</td><td>최대 5자리 숫자 (예: 001, 12345)</td></tr>
 <tr><td>고유성</td><td>동일 에디션 내 (아티스트, 등급, 등급번호) 조합 유니크</td></tr>
-<tr><td>미디어</td><td>타입별 메인 파일(이미지 PNG·JPG·GIF·WebP 20MB / 영상 MP4 50MB / 음성 MP3 10MB) + 이미지 타입 서브 이미지(선택) + <strong>저용량 썸네일(★, 전 타입 필수)</strong> PNG·JPG·GIF·WebP 최대 2MB(권장 640px). 메인·썸네일 미등록 시 활성화 불가. 리스트·도감·앱 미리보기는 썸네일, 상세는 원본 ([CEB-BO-004] "BIVE 썸네일 규격")</td></tr>
+<tr><td>미디어</td><td>타입별 메인 파일(이미지 PNG·JPG·GIF·WebP 20MB / 영상 MP4 50MB / 음성 MP3 10MB) + 이미지 타입 서브 이미지(선택) + <strong>저용량 썸네일(★, 전 타입 필수)</strong> PNG·JPG·WebP(GIF 제외) 최대 2MB(권장 640px). 메인·썸네일 미등록 시 활성화 불가. 리스트·도감·앱 미리보기는 썸네일, 상세는 원본 ([CEB-BO-004] "BIVE 썸네일 규격")</td></tr>
 <tr><td>기능 토글 3종</td><td>보내기(Send) / Mix / Pick — 기본 ON, 개별 ON/OFF</td></tr>
 <tr><td>상태 3종</td><td>Draft / Active / Inactive</td></tr>
 </table>
@@ -236,7 +236,7 @@ p {
 <h3>5-2. 자동 민팅 트리거 메커니즘</h3>
 <table>
 <tr><th>트리거</th><th>발생 시점</th><th>동작</th></tr>
-<tr><td>SQ 에피소드 완료</td><td>회원이 미션 완료 시 (biveRewardYn ON일 때)</td><td>SQ-202 지정 캠페인의 BIVE 보상에서 가중치 기반 추첨 → 1개 BIVE 발행</td></tr>
+<tr><td>SQ 에피소드 완료</td><td>회원이 미션 완료 시 (에피소드 완료 보상의 BIVE 보상 토글 ON일 때)</td><td>SQ-202 지정 캠페인의 BIVE 보상에서 가중치 기반 추첨 → 1개 BIVE 발행</td></tr>
 <tr><td>RFL 당첨 확정</td><td>추첨 완료 후 즉시</td><td>RFL-201 지정 캠페인의 BIVE 보상에서 가중치 기반 추첨 → 당첨자에게만 발행</td></tr>
 <tr><td>FQ Quest 승인</td><td>운영자 승인 시</td><td>(정책 미정 — 후속 정의)</td></tr>
 <tr><td>Event 캠페인 연결 기능</td><td>회원의 등록된 연결 기능 발생 (예: 회원가입)</td><td>즉시 자동 민팅</td></tr>
@@ -378,6 +378,7 @@ p {
 <h2>7. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.4</strong></td><td><strong>2026-06-17</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>저용량 썸네일 허용 확장자에서 GIF 제외</strong> — §3-2 BIVE 미디어 활성화 조건의 저용량 썸네일 허용 확장자를 PNG·JPG·GIF·WebP → <strong>PNG·JPG·WebP</strong>로 정정(GIF 제외). 타입별 메인 파일(이미지 20MB)은 GIF 허용 유지. ([CEB-BO-004] v1.15 정합)</td></tr>
 <tr><td><strong>v1.3</strong></td><td><strong>2026-06-16</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>저용량 썸네일(★, 전 타입 필수)</strong> 을 BIVE 미디어 필드에 반영 — §3-2 BIVE 미디어 항목을 타입별 메인 파일 + 이미지 서브 이미지(선택) + <strong>저용량 썸네일(★, 이미지·영상·음성 전 타입 필수, 최대 2MB·권장 640px·WebP 우선)</strong> 구조로 개정. 메인·썸네일 미등록 시 활성화 불가. 리스트·도감·앱 미리보기는 썸네일, 상세는 원본. ([CEB-BO-004] v1.14 "BIVE 썸네일 규격" 정합)</td></tr>
 <tr><td><strong>v1.2</strong></td><td><strong>2026-06-12</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>BIVE 획득 시 등급별 덕력 자동 적립 명세</strong> — §5-3 발행 로직(WEIGHTED·FIXED)에 덕력 적립 단계 추가, §5-3-1 신설(발행 BIVE 등급 조회 → 굿즈 아티스트 그룹 정책의 등급별 덕력 사용 ON 시 적립, 귀속=굿즈의 아티스트). 권장값·설정은 [CEB-BO-ART-401-POLICY]·[CEB-000] §5.2.4</td></tr>
 <tr><td><strong>v1.1</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§5-3 자동 민팅 발행 로직 보상 방식별 분기</strong> — WEIGHTED(가중치 추첨 → 1개 발행) / FIXED(등록 BIVE 동시 발행 → N개) 두 흐름 명세. FIXED는 컬렉션·세트 보상 시나리오용. 가중치·비중은 FIXED에서 무관</td></tr>
