@@ -143,7 +143,7 @@ export interface DukPolicyActivity {
 // 정책 매트릭스 대상 자동 적립 활동 9종 (권장값)
 export const DUK_POLICY_ACTIVITIES: DukPolicyActivity[] = [
   { key: 'attendance', label: '출석 체크', tier: 'T1', recommended: 5 },
-  { key: 'ticket_use', label: '응모권 사용', tier: 'T1', recommended: 5 },
+  { key: 'ticket_use', label: '응모권 사용 (1장당)', tier: 'T1', recommended: 5 },
   { key: 'daily_mission', label: '일일 미션 모두 완료', tier: 'T2', recommended: 25 },
   { key: 'sns_share', label: 'SNS 공유 (기억 공유)', tier: 'T2', recommended: 25 },
   { key: 'memory_upload', label: '기억저장소 업로드', tier: 'T3', recommended: 75 },

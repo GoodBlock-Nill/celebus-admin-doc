@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[변경 요약] 래플 응모 덕력 — 응모권 1장당 지급으로 단위 정정</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[변경 요약] 래플 응모 덕력 — 응모권 1장당 지급으로 단위 정정</h1>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>일자</td><td>2026-06-17</td></tr>
+<tr><td>정리</td><td>@Nill Yoo</td></tr>
+<tr><td>대상</td><td>개발팀 · 기획팀 · 디자인팀</td></tr>
+<tr><td>계기</td><td>응모 방식(분할/일괄)에 따라 같은 응모권 수에도 적립 덕력이 달라지는 허점 발견</td></tr>
+<tr><td>관련 문서</td><td>[CEB-000] §5.2 v6.12 · [CEB-BO-ART-401-POLICY] v1.5 · [CEB-EVT-102] v1.3</td></tr>
+</table>
+<hr>
+<h2>1. 한 줄 요약</h2>
+<blockquote>
+<p>래플 응모 덕력의 지급 단위가 비어 있어, 같은 응모권 수라도 <strong>한 장씩 나눠 응모하면 5×N</strong>, <strong>여러 장 한 번에 응모하면 5</strong>만 적립되던 허점이 있었습니다. 지급 단위를 <strong>응모권 1장 기준</strong>으로 정정해, 분할·일괄 응모와 무관하게 <strong>사용 응모권 수에 비례</strong>(설정값 × 사용 응모권 수)하도록 통일했습니다.</p>
+</blockquote>
+<p>근본 원인은 최상위 공통 정책([CEB-000] §5.2)이 적립 단위를 "응모당(응모 행위 자체)"로 정의한 것이었고, 이를 "응모권 1장당"으로 정정했습니다. 공통 정책 · BO 정책 · 앱 응모 화면 · 프로토타입 전 계층에 정합했습니다.</p>
+<hr>
+<h2>2. 무엇이 바뀌었나 (Before → After)</h2>
+<table>
+<tr><th>#</th><th>구분</th><th>Before</th><th>After</th></tr>
+<tr><td>①</td><td>지급 단위</td><td>미정의(응모 행위당으로 동작)</td><td><strong>응모권 1장당</strong> (지급 = 설정값 × 사용 응모권 수)</td></tr>
+<tr><td>②</td><td>분할 응모(1장×N회)</td><td>5 × N</td><td>5 × N (변화 없음)</td></tr>
+<tr><td>③</td><td>일괄 응모(N장×1회)</td><td>5 (고정)</td><td><strong>5 × N</strong> (정정)</td></tr>
+<tr><td>④</td><td>정책 매트릭스 라벨</td><td>"응모권 사용"</td><td>"응모권 사용 <strong>(1장당)</strong>"</td></tr>
+</table>
+<blockquote>
+<p>지급량(기본 5)·사용 여부 토글·귀속(래플의 아티스트)은 불변. 단위 기준만 명확화했습니다.</p>
+</blockquote>
+<hr>
+<h2>3. 핵심 개념</h2>
+<h3>같은 응모권 수 = 같은 덕력 (응모 방식 무관)</h3>
+<table>
+<tr><th>시나리오</th><th>사용 응모권</th><th>Before</th><th>After</th></tr>
+<tr><td>1장씩 5번 응모</td><td>5장</td><td>25 DUK</td><td><strong>25 DUK</strong></td></tr>
+<tr><td>5장 한 번에 응모</td><td>5장</td><td>5 DUK</td><td><strong>25 DUK</strong></td></tr>
+<tr><td>3장 + 2장 (2번)</td><td>5장</td><td>10 DUK</td><td><strong>25 DUK</strong></td></tr>
+</table>
+<ul>
+<li><strong>지급 공식</strong>: <code>덕력 = 그룹 정책 설정값(기본 5) × 사용 응모권 수</code></li>
+<li><strong>귀속</strong>: 래플의 아티스트 그룹 정책을 따른다</li>
+<li><strong>효과</strong>: 1장씩 쪼개 응모하는 어뷰징 유인 제거 + 공정성 확보</li></ul>
+<hr>
+<h2>4. 디자이너가 알아야 할 것</h2>
+<ul>
+<li><strong>덕력 지급 정책 화면([CEB-BO-ART-401-POLICY])</strong>: 자동 적립 매트릭스의 "응모권 사용" 행 라벨을 <strong>"응모권 사용 (1장당)"</strong> 으로 표기. 지급량 입력·사용 토글 UI는 동일.</li>
+<li><strong>앱 래플 상세([CEB-EVT-102])</strong>: 응모 수량 입력·[응모하기] 화면 구성 변화 없음. 적립 규칙만 명확화되어 디자인 영향 없음.</li></ul>
+<h2>5. 개발자가 알아야 할 것</h2>
+<ul>
+<li>래플 응모 완료 시 덕력 적립은 <strong>사용 응모권 수만큼 곱해서</strong> 적립한다(응모 행위 1건 고정 5가 아님).</li>
+<li>응모 1건에 N장을 일괄 사용한 경우에도 <code>설정값 × N</code>을 적립한다. (응모 트랜잭션의 사용 응모권 수량을 적립 계산에 반영)</li>
+<li>지급량·사용 여부는 <strong>아티스트 그룹별 덕력 지급 정책</strong>([CEB-BO-ART-401-POLICY])의 설정값을 사용한다. 미사용(토글 OFF) 그룹은 미지급.</li>
+<li>본 변경은 <strong>명세 기준 정의</strong>다. 기존 적립 트리거가 응모 행위 단위로 구현돼 있다면 응모권 수 비례 적립으로 코드 수정이 필요하다(소급 없음, 적용 시점 이후 적립부터).</li></ul>
+<hr>
+<h2>6. 변경 파일</h2>
+<table>
+<tr><th>계층</th><th>문서/파일</th><th>버전</th></tr>
+<tr><td>공통 정책(최상위 SSOT)</td><td>[CEB-000] 공통 정책 §5.2 — "응모당/응모 행위 자체" → "응모권 1장당" 정정 (근본 원인)</td><td>v6.11 → v6.12</td></tr>
+<tr><td>BO 정책</td><td>[CEB-BO-ART-401-POLICY] 덕력 지급 정책</td><td>v1.4 → v1.5</td></tr>
+<tr><td>앱 명세</td><td>[CEB-EVT-102] Raffle 상세 (진행중)</td><td>v1.2 → v1.3</td></tr>
+<tr><td>프로토타입</td><td>덕력 지급 정책 매트릭스 라벨 "응모권 사용 (1장당)"</td><td>—</td></tr>
+</table>
+
+</body>
+</html>
