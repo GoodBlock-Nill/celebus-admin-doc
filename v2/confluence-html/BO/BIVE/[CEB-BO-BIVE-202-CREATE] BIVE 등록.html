@@ -86,7 +86,7 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — 에디션·BIVE</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.7</td></tr>
+<tr><td>버전</td><td>v1.8</td></tr>
 <tr><td>최근 업데이트</td><td>2026.05.22</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
@@ -153,7 +153,7 @@ p {
 <p><strong>타입별 업로드 필드 매트릭스</strong> (좌·우 grid-cols-2, 각 박스 점선 테두리):</p>
 <table>
 <tr><th>타입</th><th>좌측 박스 (메인)</th><th>우측 박스 (보조)</th><th>썸네일 (저용량)</th></tr>
-<tr><td>이미지</td><td>"메인 이미지 ★" · PNG/JPG/GIF/WebP · 최대 20MB</td><td>"서브 이미지 (선택)" · PNG/JPG/GIF/WebP · 최대 20MB</td><td>"썸네일 ★" · PNG/JPG/WebP · 최대 2MB(권장 640px)</td></tr>
+<tr><td>이미지</td><td>"메인 이미지 ★" · PNG/JPG/WebP · 최대 20MB</td><td>"서브 이미지 (선택)" · PNG/JPG/WebP · 최대 20MB</td><td>"썸네일 ★" · PNG/JPG/WebP · 최대 2MB(권장 640px, 개발 예정 — 현재 BO 20MB)</td></tr>
 <tr><td>영상</td><td>"영상 ★" · <strong>MP4 만</strong> · 최대 50MB</td><td>"썸네일 ★" · PNG/JPG/WebP · 최대 2MB(권장 640px)</td><td>(보조 칸이 썸네일)</td></tr>
 <tr><td>음성</td><td>"음성 ★" · <strong>MP3 만</strong> · 최대 10MB</td><td>"썸네일 ★" · PNG/JPG/WebP · 최대 2MB(권장 640px)</td><td>(보조 칸이 썸네일)</td></tr>
 </table>
@@ -203,7 +203,7 @@ p {
 <tr><th>검증</th><th>내용</th></tr>
 <tr><td>필수 입력 (기본정보)</td><td>아티스트 그룹·아티스트·등급·등급번호·<strong>앞면 미디어</strong> 모두 필수. 뒷면 미디어는 선택</td></tr>
 <tr><td>등급번호 검증</td><td>숫자만, 최대 5자리 (1~99999)</td></tr>
-<tr><td>미디어 검증</td><td>앞면·뒷면 각각 — 확장자 PNG·JPG·GIF·WebP·MP4 + 크기 ≤ 20MB</td></tr>
+<tr><td>미디어 검증</td><td>확장자 PNG·JPG·WebP(이미지)·MP4(영상)·MP3(음성) + 크기 ≤ 20MB. GIF 미지원. PNG·JPG는 크롭 후 WebP 자동 저장</td></tr>
 <tr><td>중복 방지</td><td>동일 (에디션, 아티스트, 아티스트, 등급, 등급번호) 조합 중복 등록 불가. 서버 검증</td></tr>
 <tr><td>기능설정</td><td>토글 3종은 기본 ON. 등록 검증과 무관 (기본정보만 검증)</td></tr>
 <tr><td>권한</td><td>[관리자 &gt; 권한관리] BIVE 쓰기 권한 보유자만 진입</td></tr>
@@ -226,6 +226,7 @@ p {
 <h2>8. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.8</strong></td><td><strong>2026-06-18</strong></td><td><strong>@Nill Yoo</strong></td><td>테스트 BO 실측 정합 ([CEB-BO-QA-GAP-BIVE]) — ① §2-2 매트릭스 <strong>메인·서브 이미지도 GIF 제외</strong>(PNG/JPG/WebP) — BO 미지원 ② §6 미디어 검증 확장자 GIF 제거(PNG·JPG 크롭 후 WebP 자동 저장으로 정정) ③ 썸네일 2MB·640px는 개발 예정(현재 BO 20MB)으로 정정</td></tr>
 <tr><td><strong>v1.7</strong></td><td><strong>2026-06-17</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>저용량 썸네일 허용 확장자에서 GIF 제외</strong> — §2-2 업로드 매트릭스·박스 안내의 썸네일(전 타입) 허용 확장자를 PNG/JPG/GIF/WebP → <strong>PNG/JPG/WebP</strong>로 정정(GIF 제외). 메인 이미지·서브 이미지(최대 20MB)는 GIF 허용 유지. ([CEB-BO-004] v1.15 정합)</td></tr>
 <tr><td><strong>v1.6</strong></td><td><strong>2026-06-16</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>이미지 타입 썸네일 필수 추가 + 전 타입 썸네일 2MB 통일</strong> — ① §2-2 업로드 매트릭스에 <strong>이미지 타입 썸네일(★, 필수)</strong> 칸 신설(메인 이미지·서브 이미지·썸네일 3종, 썸네일은 메인·서브 grid 아래 별도 행). 도감·컬렉션 리스트 원본 직접 로딩 성능 문제 해소 ② 영상·음성 썸네일 규격 "최대 20MB" → "최대 2MB(권장 가로 640px, WebP 우선)"로 하향 통일 ③ 필수성 분기 개정 — 전 타입 썸네일 필수, 미등록 시 [등록] 비활성화. 이미지 서브 이미지만 선택 ④ 썸네일 용도 명시(리스트·도감·카드·앱 미리보기=썸네일, 상세=원본). ([CEB-BO-004] v1.14 §5 정합)</td></tr>
 <tr><td><strong>v1.5</strong></td><td><strong>2026-05-22</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>§2-2 미디어 타입 분기 (이미지/영상/음성)</strong> — 운영자가 등록 시 3가지 미디어 타입을 라디오 카드로 선택. 타입별 메인·보조 필드 2종 + 정책 매트릭스: <strong>이미지</strong> = 메인 이미지★ + 서브 이미지(선택), PNG/JPG/GIF/WebP 20MB / <strong>영상</strong> = 영상★ MP4만 50MB + 썸네일★ / <strong>음성</strong> = 음성★ MP3만 10MB + 썸네일★. 영상·음성 타입은 썸네일 필수 (리스트·앱 미리보기). 타입 변경 시 기존 파일 초기화. v1.3 "앞면·뒷면 분리" + v1.4 "PNG/JPG/GIF/WebP/MP4 20MB" 단일 정책은 본 타입 분기로 대체. NFT 카드 양면 패턴은 이미지 타입 내부 메인=앞면 / 서브=뒷면으로 유지. ([CEB-BO-004] v1.12 §5 정합)</td></tr>

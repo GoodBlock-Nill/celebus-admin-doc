@@ -86,8 +86,8 @@ p {
 <tr><td>개발담당자</td><td></td></tr>
 <tr><td>기능영역(Epic)</td><td>BIVE — NFT 발행·민팅·혜택</td></tr>
 <tr><td>상태</td><td>Draft</td></tr>
-<tr><td>버전</td><td>v1.15</td></tr>
-<tr><td>최근 업데이트</td><td>2026-06-17</td></tr>
+<tr><td>버전</td><td>v1.16</td></tr>
+<tr><td>최근 업데이트</td><td>2026-06-18</td></tr>
 <tr><td>API</td><td></td></tr>
 <tr><td>피그마 링크</td><td></td></tr>
 <tr><td>프로토타입 링크</td><td></td></tr>
@@ -196,7 +196,7 @@ p {
 <tr><td><strong>획득 시 덕력 적립 (등급별)</strong></td><td>BIVE 민팅(획득) 시 발행 BIVE의 등급별 덕력을 자동 적립. 등급별 지급량·사용 여부는 [CEB-BO-ART-401-POLICY] 덕력 지급 정책(그룹별)에서 설정, 귀속=굿즈의 아티스트. 로직 [CEB-BO-BIVE-FLOW] §5-3-1 · 정책 [CEB-000] §5.2.4</td></tr>
 <tr><td><strong>BIVE 상태</strong></td><td><strong>3상태</strong>: Draft(초안) / Active(활성) / Inactive(비활성). Active 후 정보 수정 불가</td></tr>
 <tr><td><strong>BIVE 미디어 타입</strong> (v1.14)</td><td>운영자가 BIVE 등록 시 <strong>3가지 미디어 타입</strong> 중 하나를 라디오로 선택한다 — <strong>이미지 / 영상 / 음성</strong>. 타입을 선택하면 타입별 업로드 필드가 노출된다 — 이미지 타입은 메인 이미지·서브 이미지·썸네일 3종, 영상·음성 타입은 메인·썸네일 2종. 모든 타입은 저용량 썸네일(★) 필수. 타입 변경 시 기존 업로드 파일 초기화 (확장자 호환 불가). v1.10의 "앞면·뒷면 2장 분리" 정책은 v1.12에서 본 타입 분기 정책으로 대체</td></tr>
-<tr><td><strong>BIVE 미디어 — 이미지 타입</strong> (v1.15)</td><td>메인 이미지(★) + 서브 이미지(선택) + <strong>썸네일(★)</strong>. 메인·서브는 PNG·JPG·GIF·WebP, 최대 20MB. 썸네일은 저용량 — PNG·JPG·WebP, 최대 2MB(권장 가로 640px, WebP 우선), 리스트·도감·앱 미리보기 표시용</td></tr>
+<tr><td><strong>BIVE 미디어 — 이미지 타입</strong> (v1.16)</td><td>메인 이미지(★) + 서브 이미지(선택) + <strong>썸네일(★)</strong>. 메인·서브는 PNG·JPG·WebP, 최대 20MB(PNG·JPG는 크롭 후 WebP 자동 저장). 썸네일은 저용량 — PNG·JPG·WebP, 최대 2MB(권장 가로 640px, WebP 우선), 리스트·도감·앱 미리보기 표시용. ⚠️ <strong>GIF 미지원</strong>(메인·서브·썸네일 전부). ⚠️ <strong>저용량 썸네일 2MB·640px는 개발 예정</strong> — 현재 BO는 썸네일도 20MB(메인과 동일)</td></tr>
 <tr><td><strong>BIVE 미디어 — 영상 타입</strong> (v1.15)</td><td>영상(★) + 썸네일(★). 영상은 MP4만, 최대 50MB. 썸네일은 PNG·JPG·WebP, 최대 2MB(권장 가로 640px, WebP 우선), 리스트·도감·앱 미리보기 표시용</td></tr>
 <tr><td><strong>BIVE 미디어 — 음성 타입</strong> (v1.15)</td><td>음성(★) + 썸네일(★). 음성은 MP3만, 최대 10MB. 썸네일은 PNG·JPG·WebP, 최대 2MB(권장 가로 640px, WebP 우선), 리스트·도감·앱 미리보기 표시용</td></tr>
 <tr><td><strong>BIVE 썸네일 규격</strong> (v1.15)</td><td>모든 미디어 타입(이미지·영상·음성)은 <strong>저용량 썸네일(★, 필수)</strong> 을 보유한다. 단일 규격으로 통일 — PNG·JPG·WebP, 최대 2MB(권장 가로 640px, WebP 우선). 타입별 썸네일 규격 차등 없음. GIF는 썸네일 비허용(메인 이미지에서만 사용). <strong>상세 화면은 원본</strong>, 리스트·도감·카드·앱 미리보기는 <strong>썸네일</strong> 사용 (원본 직접 로딩 금지 — 로딩 성능)</td></tr>
@@ -288,6 +288,7 @@ p {
 <h2>9. 변경 이력</h2>
 <table>
 <tr><th>버전</th><th>일자</th><th>작성자</th><th>변경</th></tr>
+<tr><td><strong>v1.16</strong></td><td><strong>2026-06-18</strong></td><td><strong>@Nill Yoo</strong></td><td>테스트 BO 실측 정합 ([CEB-BO-QA-GAP-BIVE]) — ① <strong>메인·서브 이미지도 GIF 제외</strong>(PNG·JPG·WebP) — BO는 GIF를 메인·서브·썸네일 어디에도 미지원 ② PNG·JPG <strong>크롭 후 WebP 자동 저장</strong> 명시 ③ <strong>저용량 썸네일 2MB·640px는 개발 예정</strong> 명시 — 현재 BO 썸네일도 20MB(메인과 동일, 저용량 미구현). §5 이미지 타입 행 반영</td></tr>
 <tr><td><strong>v1.15</strong></td><td><strong>2026-06-17</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>저용량 썸네일 허용 확장자에서 GIF 제외</strong> — 전 미디어 타입(이미지·영상·음성) 저용량 썸네일 허용 확장자를 PNG·JPG·GIF·WebP → <strong>PNG·JPG·WebP</strong>로 정정(GIF 제외). 메인 이미지(최대 20MB)는 GIF 허용 유지. §5 "BIVE 미디어 — 이미지/영상/음성 타입" 썸네일 규격 + "BIVE 썸네일 규격" 정책 행 반영. 영향 명세: [202-CREATE] v1.6→v1.7 / [BIVE-FLOW] v1.3→v1.4</td></tr>
 <tr><td><strong>v1.14</strong></td><td><strong>2026-06-16</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>이미지 타입 BIVE 저용량 썸네일 필수화 + 전 타입 썸네일 규격 통일</strong> — ① §5 "BIVE 미디어 — 이미지 타입"에 <strong>썸네일(★, 필수)</strong> 추가(메인 이미지·서브 이미지·썸네일 3종). 도감·컬렉션 리스트가 원본(최대 20MB)을 직접 로딩하던 성능 문제 해소 ② <strong>전 미디어 타입(이미지·영상·음성) 썸네일 규격을 단일 저용량 규격으로 통일</strong> — PNG·JPG·GIF·WebP, 최대 2MB(권장 가로 640px, WebP 우선). 영상·음성 기존 썸네일 "최대 20MB" → "최대 2MB"로 하향 ③ "BIVE 썸네일 규격" 정책 행 신설 — 상세는 원본, 리스트·도감·카드·앱 미리보기는 썸네일 사용. 영향 명세: [202-CREATE] v1.5→v1.6 / [202] v1.8→v1.9 / [BIVE-FLOW] v1.2→v1.3</td></tr>
 <tr><td><strong>v1.13</strong></td><td><strong>2026-06-12</strong></td><td><strong>@Nill Yoo</strong></td><td><strong>BIVE 획득 시 등급별 덕력 자동 적립 명시</strong> — §5 정책 상수에 "획득 시 덕력 적립(등급별)" 행 추가. 민팅 시 발행 BIVE 등급별 덕력을 그룹 정책([CEB-BO-ART-401-POLICY])에 따라 자동 적립, 귀속=굿즈의 아티스트. 로직 [CEB-BO-BIVE-FLOW] §5-3-1·정책 [CEB-000] §5.2.4</td></tr>
