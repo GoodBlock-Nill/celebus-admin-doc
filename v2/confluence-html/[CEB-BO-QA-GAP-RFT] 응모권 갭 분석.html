@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-QA-GAP-RFT] 응모권(RFT) QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-QA-GAP-RFT] 응모권(RFT) QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</h1>
+<blockquote>
+<p>읽기 전용 분석 산출물. 운영 영향도 순 5번째(래플 하위 자산). QA 시트 3종: 응모권 현황(rft-current)·변동내역(rft-history)·관리(rft-policy). 읽기 위주 화면.</p>
+</blockquote>
+<h2>실측 환경</h2>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>비교 기준</td><td>P [CEB-BO-010/RFT-101/201/302] / 테스트 BO(B) / QA(Q)</td></tr>
+<tr><td>테스트 BO</td><td>celebus-backoffice.vercel.app (Super Admin)</td></tr>
+<tr><td>실측 일자</td><td>2026-06-18</td></tr>
+</table>
+<h2>1. 응모권 현황 (rft-current)</h2>
+<table>
+<tr><th>요소</th><th>BO 실측</th><th>판정</th></tr>
+<tr><td>타이틀</td><td>"응모권 현황"</td><td>✅</td></tr>
+<tr><td>기간 필터</td><td>오늘·이번 주·이번 달·올해·전체</td><td>✅ TC_RFC_0002</td></tr>
+<tr><td>통계</td><td>총 발급·총 보유·총 사용</td><td>✅ TC_RFC_0003</td></tr>
+<tr><td>분포</td><td>발급 유형별·사용 유형별(출처명·장수·%·진행바)</td><td>✅ TC_RFC_0004</td></tr>
+<tr><td>최근 변동</td><td>최근 발급·최근 사용</td><td>✅ TC_RFC_0006</td></tr>
+</table>
+<ul>
+<li>✅ 전반 정합. 출처 라벨 실데이터: "GP로 응모권 구매·퀘스트 보상·Survival Trivia 보상·래플 응모 사용" (QA "GP 교환·게임 보상" 등과 표기 차이 ⚪ minor).</li></ul>
+<h2>2. 응모권 변동 내역 (rft-history)</h2>
+<table>
+<tr><th>요소</th><th>BO 실측</th><th>판정</th></tr>
+<tr><td>타이틀</td><td>"변동 내역"</td><td>✅ (TC_0001 "응모권 변동내역"→정정)</td></tr>
+<tr><td>컬럼</td><td>일시·회원·상태·변동·잔액·출처·아티스트·참조</td><td>✅ TC_RFH_0004</td></tr>
+<tr><td>필터</td><td>발급/사용·출처 전체·아티스트 전체·초기화</td><td>✅ TC_RFH_0002</td></tr>
+<tr><td>페이지당</td><td><strong>20건</strong>(261페이지)</td><td>✅ TC_RFH_0007</td></tr>
+</table>
+<ul>
+<li>✅ 정합. (래플 리스트는 10건이나 변동내역은 20건 — 화면별 상이)</li></ul>
+<h2>3. 응모권 관리(정책) (rft-policy)</h2>
+<table>
+<tr><th>요소</th><th>BO 실측</th><th>판정</th></tr>
+<tr><td>타이틀</td><td><strong>"응모권 발급 정책"</strong></td><td>⚪ (QA "응모권 관리"→정정)</td></tr>
+<tr><td>KST 자정 안내</td><td>"1일 기준: KST 자정… 매일 자정 한도 자동 리셋"</td><td>✅ TC_RFP_0001</td></tr>
+<tr><td>환율</td><td>GP → 응모권 1장 + 1회 구매 최소(1~100)/최대(1~1,000) 수량</td><td>✅ TC_RFP_0002</td></tr>
+<tr><td>1일 교환 한도</td><td>한도 적용/무제한(최대 1,000)</td><td>✅ TC_RFP_0003</td></tr>
+<tr><td>앱내 구매</td><td>"앱내 응모권 구매 (Buy-RF-Ticket-001)" 토글</td><td>✅(🟠 영문 코드 라벨)</td></tr>
+<tr><td>PM·ST 지급</td><td>"PM·ST 게임별 응모권 지급 기본 정책"</td><td>✅ TC_RFP_0005</td></tr>
+</table>
+<ul>
+<li>⚪ 타이틀 "응모권 발급 정책"(QA "응모권 관리") → 정정</li>
+<li>🟠 BO 헤딩에 영문 코드 "Buy-RF-Ticket-001" 노출(BO 라벨 — 문서 정정 후보)</li></ul>
+<blockquote>
+<p>RFT 3시트 = 읽기 위주 BO 정합 양호. 교정 2건(타이틀). 저장 동작·앱 반영(0008~0010)은 앱 QA 범위.</p>
+</blockquote>
+
+</body>
+</html>
