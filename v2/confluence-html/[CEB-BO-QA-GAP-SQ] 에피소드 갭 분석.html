@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-QA-GAP-SQ] 에피소드(SQ) QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-QA-GAP-SQ] 에피소드(SQ) QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</h1>
+<blockquote>
+<p>읽기 전용 분석 산출물. 단일메뉴 — 에피소드(스토리 퀘스트). QA 시트 episode(99 TC). 경로 /sq/groups/list. 화면 단위 진행.</p>
+</blockquote>
+<h2>실측 환경</h2>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>비교 기준</td><td>P [CEB-BO-SQ-* 계열] / 테스트 BO(B) / QA(Q)</td></tr>
+<tr><td>테스트 BO</td><td>celebus-backoffice.vercel.app (Super Admin)</td></tr>
+<tr><td>실측 일자</td><td>2026-06-18</td></tr>
+</table>
+<h2>1. 에피소드 그룹 리스트 (/sq/groups/list)</h2>
+<ul>
+<li><strong>QA 정합</strong>: h1 "그룹 리스트"·카드(전체 4·임시저장 0·진행중 3·종료 1)·[새 그룹 생성]·필터(상태·아티스트) — TC_0002~0004 정합</li>
+<li>⚪ <strong>TC_0006</strong>: BO 컬럼 = 상태·아티스트·타이틀·시작일·종료일·최근 수정자·관리. QA "에피소드 수" 컬럼이 BO 리스트에 미표시(아티스트 그룹 리스트의 팔로워 수와 유사 패턴). 마지막 관리 컬럼 존재.</li>
+<li>⏳ 페이지당 20건(TC_0008, 그룹 4건이라 미검증)·빈 메시지: 후속</li></ul>
+<h2>2. 에피소드 그룹 상세 (/sq/groups/{gid})</h2>
+<ul>
+<li><strong>QA 정합</strong>: 섹션(그룹 정보·관리 정보·메인 에피소드·반복 에피소드)·진행중=[수정하기][종료하기] — TC_0019~0023 정합 / ⚪ 액션 라벨 "수정하기·종료하기"(QA "[그룹 수정]·[종료 전환]")</li>
+<li>⚠ <strong>에피소드 목록 레이아웃</strong>: BO는 <strong>테이블</strong>(순서·상태·이미지·에피소드·미션·참여 현황·관리) — QA TC_0024/0025는 "카드"(메인 이미지 3:4·타이틀·미션 수 N/10·진행/완료·검수 대기)로 묘사. 데이터 항목은 유사하나 표현이 카드↔테이블 상이 — 재확인 대상</li>
+<li>⏳ 에피소드 상세·생성·수정·미션 추가/상세/수정: 후속</li></ul>
+<h2>진행 현황</h2>
+<table>
+<tr><th>화면</th><th>실측</th><th>비고</th></tr>
+<tr><td>에피소드 그룹 리스트</td><td>✅</td><td>에피소드 수 컬럼 ⚪</td></tr>
+<tr><td>에피소드 그룹 상세</td><td>✅</td><td>에피소드 목록 카드↔테이블 ⚠</td></tr>
+<tr><td>에피소드 상세·생성·수정·미션</td><td>⏳</td><td></td></tr>
+</table>
+
+</body>
+</html>
