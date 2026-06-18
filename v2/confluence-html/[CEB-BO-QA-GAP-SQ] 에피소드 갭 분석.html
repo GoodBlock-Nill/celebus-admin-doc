@@ -109,6 +109,12 @@ p {
 <li><strong>QA 정합</strong>: 섹션(대표 이미지 3:4·기본 정보·관리 정보·에피소드 완료 보상·다국어 타이틀·에피소드 설명·미션 N/10)·진행중=[수정][종료]·보상(응모권·덕력·BIVE·민팅)·미션 테이블(순서·유형·미션·완료 조건·기준값·보상·관리) — TC_0047~0053 정합</li>
 <li>⚪ <strong>TC_0027</strong>: 에피소드 상세 URL = /sq/groups/{gid}/episodes/{id} (QA "/sq/{id}" 정정)</li>
 <li>⏳ 미션 추가(/quests/create 판정 유형·기준 횟수)·미션 상세/수정·에피소드 생성/수정·그룹 생성/수정: 후속</li></ul>
+<h2>4. 미션 추가 폼 (/sq/groups/{gid}/episodes/{eid}/missions/create)</h2>
+<ul>
+<li><strong>QA 정합</strong>: h1 "새 미션 추가 (N/10)"·유형 3종(팬퀘스트·예측 마켓·서바이벌 트리비아)·정책 안내(메인=단일 미션만·팬퀘스트는 Quest 참조·보상 상속·PM/ST는 콘텐츠 참조 없이 판정 유형·보상 직접 설정)·[미션 추가] 초기 비활성 — TC_0061~0064 정합</li>
+<li><strong>예측 마켓 선택</strong>: 판정 유형(예측 참여/예측 정답)·기준 횟수* 입력·보상 = 덕력만(응모권·BIVE 미지원) — TC_0066/0068 정합 ✅</li>
+<li>⚪ <strong>TC_0061</strong>: URL /sq/groups/{gid}/episodes/{eid}/missions/create (QA "/quests/create" 정정)</li>
+<li>⏳ 서바이벌 트리비아 판정 유형(트리비아 참여/승리)·팬퀘스트 Quest 매핑·다국어 타이틀·저장: 후속(구조 정합 확인)</li></ul>
 
 </body>
 </html>
