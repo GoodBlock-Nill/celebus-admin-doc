@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-QA-GAP-USR] 회원(USR) QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-QA-GAP-USR] 회원(USR) QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</h1>
+<blockquote>
+<p>읽기 전용 분석 산출물. 본 리포트는 명세·QA 수정 자체가 아니라 갭 식별·분류 기록이다. (파일럿 메뉴 — 방법론 검증용)</p>
+</blockquote>
+<h2>실측 환경</h2>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>대상 메뉴</td><td>회원(USR) — QA 시트 "회원" = <code>v2/qa/usr-members.tsv</code> (TC_USR_0001~0047, 47건)</td></tr>
+<tr><td>비교 기준</td><td>기획문서(P) [CEB-BO-USR-101]·[201]·[501] / 테스트 BO 실측(B) / QA(Q)</td></tr>
+<tr><td>테스트 BO</td><td>celebus-backoffice.vercel.app (Super Admin 계정)</td></tr>
+<tr><td>실측 일자</td><td>2026-06-17</td></tr>
+<tr><td>실측 도구</td><td>chrome-devtools MCP (a11y 스냅샷). 증빙 스냅샷: <code>.qa-measure/*.txt</code></td></tr>
+<tr><td>실측 데이터</td><td>전체 회원 1,060명(정상 1,058/정지 1/탈퇴대기 0/탈퇴완료 1), 샘플 회원 <code>jinjin</code>(id 11001)</td></tr>
+</table>
+<h2>요약 (Executive Summary)</h2>
+<p>회원 메뉴 3개 화면을 실측한 결과, <strong>QA뿐 아니라 기획문서(P)도 BO와 불일치하는 항목이 다수</strong> 확인됨. 즉 "문서=정답"이 아닌 케이스가 많아, 다수 갭은 <strong>문서·QA를 모두 BO 실측에 맞춰 정정</strong>해야 한다.</p>
+<table>
+<tr><th>분류</th><th>건수</th><th>의미</th></tr>
+<tr><td>✅ 정합</td><td>다수</td><td>문서=BO=QA</td></tr>
+<tr><td>🔴 QA 임의작성/오류 (BO에 없는 것 검증)</td><td>4</td><td>존재하지 않는 컨트롤·컬럼 검증</td></tr>
+<tr><td>⚪ QA 오류 (값/구성 틀림)</td><td>2</td><td>컬럼 구성·안내 불일치</td></tr>
+<tr><td>🟠 QA·문서 공통 누락 (BO에 있으나 미기재)</td><td>4</td><td>복사 버튼·검색대상·정지사유 검색 등</td></tr>
+<tr><td>🟡 문서 자체 오류 (BO와 불일치, QA는 BO 정합)</td><td>5</td><td>정렬 드롭다운·30자·501 컬럼·탭 URL·탭 기능여부</td></tr>
+</table>
+<blockquote>
+<p>⚠️ <strong>핵심 발견</strong>: 승인 계획은 "문서(SSOT) 기준"을 전제했으나, 회원 영역에서는 <strong>문서가 틀린 케이스가 5건</strong> 발견됨(🟡). 이 경우 QA를 문서에 맞추면 오히려 BO와 어긋난다. → 교정 전략 재확정 필요(아래 §5).</p>
+</blockquote>
+<hr>
+<h2>1. 화면별 A~I 실측 로그 (완전 실측)</h2>
+<table>
+<tr><th>영역</th><th>USR-101 리스트</th><th>USR-201 상세(9탭)</th><th>USR-501 정지사유</th></tr>
+<tr><td>A 화면기본</td><td>✅</td><td>✅</td><td>✅</td></tr>
+<tr><td>B 필터·검색</td><td>✅ 계정상태+검색대상(유저명/전화번호/지갑주소)</td><td>—</td><td>✅ 상태+검색(운영자 노출명)</td></tr>
+<tr><td>C 테이블</td><td>✅ 컬럼5+복사버튼</td><td>✅ 탭별 전수</td><td>✅ 컬럼6(코드 없음)</td></tr>
+<tr><td>D 페이지네이션</td><td>✅ 20건/53p</td><td>—</td><td>✅ 1행(소량)</td></tr>
+<tr><td>E 빈상태</td><td>✅ "조회된 회원이 없습니다."</td><td>✅ 탭별 Empty 전수</td><td>⚠️ 필터0건 미강제(1행)</td></tr>
+<tr><td>F 액션버튼</td><td>✅ 카드클릭→status필터·초기화·정지사유</td><td>✅ 유저명수정 (메모/제재/자산회수 부재)</td><td>✅ 새 사유 추가</td></tr>
+<tr><td>G 모달</td><td>—</td><td>⚠️ BIVE상세(보유0이라 내부 미검증)·계정정지토글(변경위험 미실행)</td><td>✅ 추가+수정 모달</td></tr>
+<tr><td>H 탭</td><td>—</td><td>✅ 9탭 전수(실구현4/준비중5)</td><td>—</td></tr>
+<tr><td>I 예외·에러</td><td>✅ 잘못된 검색 0건</td><td>✅ 없는 ID→"존재하지 않는 회원입니다."</td><td>—</td></tr>
+</table>
+<blockquote>
+<p>권한 분기(SUPER/OPERATOR/POLICY/EXTERNAL)는 Super Admin 단일 계정이라 미검증. BIVE 상세모달 내부(2탭)·계정정지 토글 모달 여부는 데이터 부재/변경위험으로 미실행 — 각 TC에 "실측필요" 표기.</p>
+</blockquote>
+<h2>1-A. 심층 실측 추가 발견 (1차 이후)</h2>
+<table>
+<tr><th>#</th><th>화면</th><th>발견</th><th>판정</th></tr>
+<tr><td>a</td><td>USR-101</td><td>빈상태 메시지 BO="조회된 회원이 없습니다." (문서·QA: "검색 결과가 없습니다."/"등록된 회원이 없습니다.")</td><td>🔴 문서·QA 공통 오류</td></tr>
+<tr><td>b</td><td>USR-101</td><td>검색대상 기본값=유저명(URL <code>field=username</code>), 카드클릭→<code>?status=</code> 필터</td><td>🟠 문서·QA 미기재</td></tr>
+<tr><td>c</td><td>USR-101</td><td>정지 배지=흰글자/빨강(rgb 220,38,38)</td><td>✅</td></tr>
+<tr><td>d</td><td>USR-201 게임존</td><td>참여내역 컬럼=게임타이틀·참여일시·선택·참여GP·부스팅GP·게임결과·보상GP·환급GP·게임상태 (아티스트·응모권·덕력 없음)</td><td>⚪ TC_0027 오류 확정</td></tr>
+<tr><td>e</td><td>USR-201 게임존</td><td>GP변동 컬럼=변동일시·유형·GP 변동량·변동후잔액·비고</td><td>✅ TC_0028 정합</td></tr>
+<tr><td>f</td><td>USR-201 참여내역</td><td>빈 메시지 BO="참여 내역이 없습니다." (문서 §4.3="해당 회원은 아직 Quest 참여 이력이 없어요.")</td><td>🟡 문서 오류·QA 정합</td></tr>
+<tr><td>g</td><td>USR-201 참여내역</td><td>4서브탭 컬럼 전수 확인(투표·Quest·Raffle·부스팅)</td><td>✅ TC_0022 정합</td></tr>
+<tr><td>h</td><td>USR-201 BIVE</td><td>등급필터=등급(전체)·Event·Normal·Special·Wicked·Next·Final</td><td>🔴 TC_0030 오류(전체/Event/Ticket/Mix/Pick)</td></tr>
+<tr><td>i</td><td>USR-501</td><td>추가·수정 모달에 코드(SUS_)·적용 가능 단계 필드 <strong>부재</strong>, 노출명 20자, 수정모달 코드 read-only 대상 자체 없음</td><td>🔴 TC_0040·0046 오류</td></tr>
+</table>
+<hr>
+<h2>2. USR-101 회원 리스트 — 3중 대조</h2>
+<table>
+<tr><th>요소</th><th>문서(P)</th><th>BO 실측(B)</th><th>QA(Q)</th><th>판정</th></tr>
+<tr><td>타이틀</td><td>회원 관리</td><td>"회원 관리"</td><td>회원 관리</td><td>✅</td></tr>
+<tr><td>5카드</td><td>전체/정상/정지/탈퇴대기/탈퇴완료</td><td>동일(전체 1,060…)</td><td>동일</td><td>✅</td></tr>
+<tr><td>계정상태 필터</td><td>전체/정상/정지/탈퇴대기/탈퇴완료</td><td>상태(전체)/정상/정지/탈퇴대기/탈퇴완료</td><td>동일</td><td>✅</td></tr>
+<tr><td><strong>2번째 드롭다운</strong></td><td><strong>정렬</strong>(가입일 최신순/오래된순)</td><td><strong>검색 대상</strong>(유저명/전화번호/지갑주소)</td><td><strong>정렬</strong>(최신순/오래된순/유저명)</td><td>🟡문서오류+🔴QA</td></tr>
+<tr><td>검색 입력</td><td>유저명(부분일치)</td><td>"유저명 입력" textbox</td><td>유저명 검색</td><td>✅ (단 검색대상 선택 누락)</td></tr>
+<tr><td>컬럼</td><td>계정상태/유저명/전화번호/지갑주소/가입일시</td><td>동일</td><td>동일</td><td>✅</td></tr>
+<tr><td><strong>행 복사버튼</strong></td><td>(없음)</td><td><strong>유저명 복사·지갑주소 복사</strong> 버튼</td><td>(없음)</td><td>🟠공통누락</td></tr>
+<tr><td>페이지당 건수</td><td>(미명시, "29p")</td><td><strong>20건/페이지(53p)</strong></td><td>20건</td><td>✅(QA정합)·문서보강</td></tr>
+<tr><td>지갑 미연동</td><td>"—"</td><td>"-"</td><td>"—"</td><td>✅</td></tr>
+</table>
+<p><strong>핵심</strong>:</p>
+<ul>
+<li>🔴 <strong>TC_USR_0004</strong>: "정렬 드롭다운(가입일 최신순/오래된순/<strong>유저명</strong>)" — BO에 <strong>정렬 드롭다운 자체가 없음</strong>. 2번째 드롭다운은 "검색 대상(유저명/전화번호/지갑주소)". QA가 존재하지 않는 컨트롤을 검증.</li>
+<li>🟡 <strong>문서 §2.3</strong>: "정렬 Dropdown" 기재 = BO와 불일치. 실제는 "검색 대상" 드롭다운. 문서 정정 필요.</li>
+<li>🟠 <strong>복사 버튼</strong>(유저명·지갑주소): BO에 존재하나 문서·QA 모두 미기재.</li>
+<li>✅ 페이지당 20건: QA 정합(BO 확인), 문서는 미명시 → 보강.</li></ul>
+<hr>
+<h2>3. USR-201 회원 상세 — 3중 대조</h2>
+<p><strong>탭 구성(BO 실측)</strong>: 9탭 전부 존재. <strong>실구현 4탭 + 준비중 5탭</strong>.</p>
+<table>
+<tr><th>탭</th><th>BO URL</th><th>BO 상태</th><th>문서(P)</th><th>QA(Q)</th><th>판정</th></tr>
+<tr><td>기본정보</td><td>?tab=basic</td><td>실구현</td><td>실구현</td><td>실구현</td><td>✅</td></tr>
+<tr><td>참여내역</td><td><strong>?tab=activity</strong></td><td>실구현(투표/Quest/Raffle/부스팅)</td><td>?tab=participation</td><td>실구현</td><td>✅구현·🟡URL</td></tr>
+<tr><td>게임존</td><td>?tab=gamezone</td><td>실구현</td><td>기능</td><td>실구현</td><td>✅</td></tr>
+<tr><td>BIVE</td><td>?tab=bive</td><td>실구현</td><td>기능</td><td>실구현</td><td>✅</td></tr>
+<tr><td>프로젝트</td><td>?tab=project</td><td><strong>준비중</strong></td><td>placeholder</td><td>준비중</td><td>✅</td></tr>
+<tr><td>Fans</td><td>?tab=fans</td><td><strong>준비중</strong></td><td>placeholder</td><td>준비중</td><td>✅</td></tr>
+<tr><td>티켓</td><td>?tab=ticket</td><td><strong>준비중</strong></td><td><strong>기능(데이터소스)</strong></td><td>준비중</td><td>🟡문서오류</td></tr>
+<tr><td>지갑</td><td>?tab=wallet</td><td><strong>준비중</strong></td><td><strong>기능(데이터소스)</strong></td><td>준비중</td><td>🟡문서오류</td></tr>
+<tr><td>활동내역</td><td><strong>?tab=log</strong></td><td><strong>준비중</strong></td><td><strong>기능 / ?tab=activity</strong></td><td>준비중 / ?tab=log</td><td>🟡문서오류·QA정합</td></tr>
+</table>
+<blockquote>
+<p>준비중 안내문(BO): "준비 중인 기능입니다 / {탭명} 탭은 현재 개발 중에 있습니다." — QA TC_USR_0037과 정확히 일치.</p>
+</blockquote>
+<p><strong>기본정보 탭 (BO)</strong>: 유저명+[유저명 수정]·이메일·전화·국가·로그인방식·가입일시·최근로그인 / 계정상태·계정정지(스위치)·DID발급·Set Approval / 지갑주소·소개 — QA TC_USR_0016~0019와 정합 ✅.</p>
+<table>
+<tr><th>요소</th><th>문서(P)</th><th>BO(B)</th><th>QA(Q)</th><th>판정</th></tr>
+<tr><td>[메모 추가/수정]·[제재 처리]·[자산 회수] 버튼</td><td>있음(Phase6 후속)</td><td><strong>없음</strong></td><td>(미검증)</td><td>🟡문서(미구현)</td></tr>
+<tr><td>운영자 메모 필드</td><td>추가정보에 있음</td><td><strong>없음</strong></td><td>(미검증)</td><td>🟡문서(미구현)</td></tr>
+<tr><td>게임존 휴면 안내</td><td>빈데이터 시 "운영 중단"</td><td><strong>실데이터(PM #97 진행중)</strong></td><td>"운영 중단 안내"(TC_0029)</td><td>🟡/⚪ BO 비휴면</td></tr>
+<tr><td>게임존 참여내역 컬럼</td><td>—</td><td>게임타이틀·참여일시·선택·참여GP·부스팅GP·게임결과·보상GP·<strong>환급GP</strong>·게임상태</td><td>타이틀·<strong>아티스트</strong>·참여·선택·참여GP·부스팅GP·결과·보상GP·<strong>응모권·덕력</strong>·상태</td><td>⚪QA오류</td></tr>
+</table>
+<p><strong>핵심</strong>:</p>
+<ul>
+<li>✅ <strong>탭 실구현/준비중 = QA(TC_0014/0037)와 정확히 정합</strong>. QA는 BO 실측 기반(임의작성 아님).</li>
+<li>🟡 <strong>문서 USR-201 정정 필요</strong>: ① 티켓·지갑·활동내역을 "기능"으로 기재 → 실제 준비중 ② 탭 URL 오류(참여내역 participation→activity, 활동내역 activity→log) ③ 메모/제재/자산회수 버튼·운영자 메모 필드 미구현 ④ 게임존 휴면 가정(실제 진행중 게임 존재).</li>
+<li>⚪ <strong>TC_USR_0027</strong>: 게임존 참여내역 컬럼에 BO에 없는 "아티스트·응모권·덕력" 포함, BO의 "환급GP·참여일시" 누락.</li></ul>
+<hr>
+<h2>4. USR-501 정지사유 설정 — 3중 대조</h2>
+<table>
+<tr><th>요소</th><th>문서(P)</th><th>BO 실측(B)</th><th>QA(Q)</th><th>판정</th></tr>
+<tr><td>상태 필터</td><td>전체/사용/미사용</td><td>Dropdown(상태)</td><td>전체/사용/미사용</td><td>✅</td></tr>
+<tr><td><strong>검색창</strong></td><td>(없음)</td><td><strong>"운영자 노출명 입력" + [초기화]</strong></td><td>(없음)</td><td>🟠공통누락</td></tr>
+<tr><td>[새 사유 추가]</td><td>있음</td><td>"새 사유 추가"</td><td>있음</td><td>✅</td></tr>
+<tr><td><strong>리스트 컬럼</strong></td><td>상태·<strong>코드·운영자 노출명·적용 가능 단계·사용 횟수·최근 사용일시·등록일시</strong></td><td><strong>상태·운영자 노출명·유저 노출 메시지(KO/EN/JP)·수정하기</strong></td><td>상태·<strong>코드·운영자 노출명·적용 가능 단계·사용 횟수·최근 사용일시·등록일시</strong></td><td>🔴문서·QA 공통 오류</td></tr>
+<tr><td>운영자 노출명 글자수</td><td><strong>30자</strong></td><td><strong>20자</strong></td><td>20자</td><td>⚪문서오류·QA정합</td></tr>
+<tr><td>유저 노출 메시지</td><td>KO/EN/JP 200자</td><td>라디오 KO/EN/JA·200자</td><td>KO/EN/JA·200자</td><td>✅</td></tr>
+<tr><td>적용 가능 단계</td><td>다중 체크박스</td><td><strong>모달에 없음</strong></td><td>(TC_0040에 컬럼)</td><td>🔴문서·QA(BO 미존재)</td></tr>
+<tr><td>코드 SUS_{n}</td><td>자동 채번·컬럼 노출</td><td><strong>리스트·모달에 미노출</strong></td><td>코드 컬럼(TC_0040)·채번(TC_0045)</td><td>🔴문서·QA(BO 미확인)</td></tr>
+<tr><td>[추가하기] 비활성</td><td>—</td><td>빈값 시 disabled</td><td>TC_0044 비활성</td><td>✅</td></tr>
+</table>
+<p><strong>핵심</strong>:</p>
+<ul>
+<li>🔴 <strong>리스트 컬럼 대형 불일치</strong>: BO 실제 컬럼 = 상태·운영자 노출명·유저 노출 메시지(KO/EN/JP)·수정하기. 문서·QA가 공통으로 기재한 <strong>코드·적용 가능 단계·사용 횟수·최근 사용일시·등록일시 컬럼은 BO에 없음</strong>. BO의 다국어 메시지 컬럼은 양쪽 다 누락.</li>
+<li>⚪ 운영자 노출명 <strong>20자</strong>(BO) — QA 정합, 문서(30자) 오류.</li>
+<li>🔴 적용 가능 단계·코드 SUS_ — BO 추가 모달·리스트에서 미확인. 문서·QA의 해당 검증은 근거 불명.</li>
+<li>✅ 추가 모달(운영자 노출명 20자 + 유저 노출 메시지 다국어 200자 + 추가하기 비활성)은 QA TC_0042~0044와 정합.</li></ul>
+<hr>
+<h2>5. 교정 전략 — 사용자 결정 필요 (핵심)</h2>
+<p>승인 계획의 전제("문서=SSOT, BO 차이는 갭만 기록")가 회원 영역에서 <strong>부분적으로 성립하지 않음</strong>. 문서 자체가 BO와 다른 🟡 5건 + 🔴 일부는 문서·QA 공통 오류다. 따라서 다음 결정이 필요:</p>
+<ol>
+<li><strong>🟡 문서 자체 오류</strong>(정렬 드롭다운·30자·501 컬럼·탭 URL·티켓/지갑/활동내역 기능여부·메모/제재/자산회수 버튼): QA를 문서에 맞추면 BO와 어긋남. → QA를 <strong>BO 실측 기준</strong>으로 정정하고, <strong>문서도 별도 정정</strong>할지?</li>
+<li><strong>🔴 QA 임의작성</strong>(정렬 유저명·501 컬럼·게임존 아티스트/응모권/덕력): BO 기준으로 정정/삭제.</li>
+<li><strong>🟠 공통 누락</strong>(복사버튼·검색대상·정지사유 검색): QA에 보강.</li></ol>
+<hr>
+<h2>6. TC별 처분 초안 (USR-101/201/501)</h2>
+<table>
+<tr><th>TC</th><th>현재</th><th>판정</th><th>처분안</th></tr>
+<tr><td>TC_USR_0004</td><td>정렬 드롭다운(…유저명)</td><td>🔴</td><td>"검색 대상 드롭다운(유저명/전화번호/지갑주소)"로 재작성</td></tr>
+<tr><td>TC_USR_0007</td><td>컬럼 5종</td><td>✅+🟠</td><td>행 복사버튼(유저명·지갑주소) 검증 추가</td></tr>
+<tr><td>TC_USR_0010</td><td>페이지당 20건</td><td>✅</td><td>유지</td></tr>
+<tr><td>TC_USR_0014/0037</td><td>실구현4+준비중5</td><td>✅</td><td>유지 (URL: 참여내역=activity·활동내역=log 반영)</td></tr>
+<tr><td>TC_USR_0027</td><td>게임존 참여내역 컬럼</td><td>⚪</td><td>아티스트·응모권·덕력 삭제, 환급GP·참여일시 반영</td></tr>
+<tr><td>TC_USR_0029</td><td>게임존 휴면 안내</td><td>🟡</td><td>BO 실데이터 반영(휴면 가정 정정)</td></tr>
+<tr><td>TC_USR_0040</td><td>정지사유 컬럼(코드·적용단계·사용횟수·최근사용·등록일시)</td><td>🔴</td><td>BO 컬럼(상태·운영자 노출명·다국어 메시지·수정하기)로 재작성</td></tr>
+<tr><td>TC_USR_0042</td><td>노출명 20자</td><td>✅</td><td>유지 (문서 30자가 오류)</td></tr>
+<tr><td>TC_USR_0045/0046</td><td>코드 자동채번·read-only</td><td>🔴?</td><td>BO 미확인 — 코드 노출 자체 재확인 필요</td></tr>
+<tr><td>(신규)</td><td>정지사유 검색창</td><td>🟠</td><td>검색(운영자 노출명)+초기화 TC 추가</td></tr>
+</table>
+<blockquote>
+<p>본 §6는 §5 전략 확정 후 <code>usr-members.tsv</code>에 반영.</p>
+</blockquote>
+<hr>
+<h2>7. TC 전수 검증 대장 (50건) — 정직 기록</h2>
+<blockquote>
+<p>1차 보고 시 "요소 단위 실측 → 불일치 TC만 교정"이라 <strong>전 TC 개별 대조를 누락</strong>했음. 본 §7에서 50건 1:1 매핑. 상태: ✅검증완료 / ⚠️부분 / ❌미검증.</p>
+</blockquote>
+<table>
+<tr><th>TC</th><th>항목</th><th>상태</th><th>근거/사유</th></tr>
+<tr><td>0001</td><td>진입·타이틀·브레드크럼</td><td>✅</td><td>/members 진입, "회원 관리" 확인</td></tr>
+<tr><td>0002</td><td>5카드</td><td>✅</td><td>전체1060/정상1058/정지1/탈퇴대기0/탈퇴완료1</td></tr>
+<tr><td>0003</td><td>계정상태 필터</td><td>✅</td><td>드롭다운 펼침 확인</td></tr>
+<tr><td>0004</td><td>검색대상 드롭다운</td><td>✅</td><td>유저명/전화번호/지갑주소 확인</td></tr>
+<tr><td>0005</td><td>유저명 검색+초기화</td><td>⚠️</td><td>검색 0건 동작 확인, 초기화 리셋 미확인</td></tr>
+<tr><td>0006</td><td>정지사유 설정 이동</td><td>✅</td><td>링크·진입 확인</td></tr>
+<tr><td>0007</td><td>컬럼+복사버튼</td><td>✅</td><td>5컬럼+복사버튼 확인</td></tr>
+<tr><td>0008</td><td>배지색·미연동</td><td>⚠️</td><td>정상·정지(빨강) 확인, 탈퇴대기/완료 색 미확인</td></tr>
+<tr><td>0009</td><td>행 클릭→상세</td><td>✅</td><td>/members/11001 이동</td></tr>
+<tr><td>0010</td><td>페이지당 20건·리셋</td><td>⚠️</td><td>20건/53p 확인, 필터변경 1p리셋 미확인</td></tr>
+<tr><td>0011</td><td>결과 0건 메시지</td><td>✅</td><td>"조회된 회원이 없습니다."</td></tr>
+<tr><td>0012</td><td>목록 조회 실패</td><td>❌</td><td>서버 에러 강제 불가</td></tr>
+<tr><td>0013</td><td>상세 진입 헤더</td><td>✅</td><td>브레드크럼·기본정보 활성</td></tr>
+<tr><td>0014</td><td>탭 9종·URL·실구현/준비중</td><td>✅</td><td>9탭 전수 클릭</td></tr>
+<tr><td>0015</td><td>없는 ID 메시지</td><td>✅</td><td>"존재하지 않는 회원입니다." (리다이렉트 ⚠️)</td></tr>
+<tr><td>0016</td><td>기본정보 섹션</td><td>✅</td><td>7필드 확인</td></tr>
+<tr><td>0017</td><td>상태정보 섹션</td><td>✅</td><td>계정상태·토글·DID·Set Approval</td></tr>
+<tr><td>0018</td><td>계정정지 토글 동작</td><td>❌</td><td>데이터 변경 위험 미실행</td></tr>
+<tr><td>0019</td><td>추가정보</td><td>✅</td><td>지갑주소·소개</td></tr>
+<tr><td>0020</td><td>검토 필요 배지</td><td>❌</td><td>트리거 데이터 주입 불가</td></tr>
+<tr><td>0021</td><td>참여내역 4서브탭</td><td>✅</td><td>투표/Quest/Raffle/부스팅</td></tr>
+<tr><td>0022</td><td>서브탭 컬럼</td><td>✅</td><td>4서브탭 컬럼 전수</td></tr>
+<tr><td>0023</td><td>참여내역 검색+초기화</td><td>⚠️</td><td>검색창 존재, 동작 미검증(데이터 0)</td></tr>
+<tr><td>0024</td><td>참여 0건 Empty</td><td>✅</td><td>"참여 내역이 없습니다."</td></tr>
+<tr><td>0025</td><td>GP 통계 4카드</td><td>✅</td><td>확인</td></tr>
+<tr><td>0026</td><td>게임 성과 요약</td><td>✅</td><td>PM/ST 4지표</td></tr>
+<tr><td>0027</td><td>게임 참여 내역 컬럼</td><td>✅</td><td>9컬럼 확인</td></tr>
+<tr><td>0028</td><td>GP 변동 내역 컬럼</td><td>✅</td><td>5컬럼 확인</td></tr>
+<tr><td>0029</td><td>게임 0건/데이터</td><td>✅</td><td>PM 진행중 실데이터 확인</td></tr>
+<tr><td>0030</td><td>BIVE 수량·등급필터·검색</td><td>✅</td><td>등급 6종+검색 확인</td></tr>
+<tr><td>0031</td><td>BIVE 컬럼</td><td>✅</td><td>8컬럼 확인</td></tr>
+<tr><td>0032</td><td>보유 0건 Empty</td><td>✅</td><td>"보유한 BIVE가 없습니다."</td></tr>
+<tr><td>0033</td><td>BIVE 상세모달 진입</td><td>❌</td><td>보유 회원 미확보</td></tr>
+<tr><td>0034</td><td>토큰 상세 탭</td><td>❌</td><td>모달 미오픈</td></tr>
+<tr><td>0035</td><td>토큰 히스토리 탭</td><td>❌</td><td>모달 미오픈</td></tr>
+<tr><td>0036</td><td>모달 닫힘</td><td>❌</td><td>모달 미오픈</td></tr>
+<tr><td>0037</td><td>준비중 5탭 안내</td><td>✅</td><td>5탭 전수 안내 확인</td></tr>
+<tr><td>0038</td><td>정지사유 진입</td><td>✅</td><td>브레드크럼·타이틀</td></tr>
+<tr><td>0039</td><td>상태필터·새 사유 추가</td><td>✅</td><td>확인</td></tr>
+<tr><td>0040</td><td>정지사유 컬럼</td><td>✅</td><td>BO 6컬럼 확인</td></tr>
+<tr><td>0041</td><td>정렬/0건</td><td>❌</td><td>데이터 1건, 정렬·empty 미확인</td></tr>
+<tr><td>0042</td><td>추가 모달</td><td>✅</td><td>20자·다국어 200자</td></tr>
+<tr><td>0043</td><td>다국어 입력 배지</td><td>⚠️</td><td>라디오·200자 확인, 배지색 미확인</td></tr>
+<tr><td>0044</td><td>추가하기 비활성</td><td>✅</td><td>disabled 확인</td></tr>
+<tr><td>0045</td><td>입력 후 추가 등록</td><td>❌</td><td>데이터 생성 회피 미실행</td></tr>
+<tr><td>0046</td><td>수정 모달</td><td>✅</td><td>prefill·상태·코드없음</td></tr>
+<tr><td>0047</td><td>미사용 전환 저장</td><td>❌</td><td>데이터 저장 회피 미실행</td></tr>
+<tr><td>0048</td><td>검색대상 전환 검색</td><td>⚠️</td><td>옵션·field= 확인, 대상별 검색 미실행</td></tr>
+<tr><td>0049</td><td>카드 클릭 필터</td><td>✅</td><td>?status= 필터·배지색</td></tr>
+<tr><td>0050</td><td>정지사유 검색+초기화</td><td>⚠️</td><td>검색창 존재, 동작 미검증</td></tr>
+</table>
+<p><strong>집계(최종 4차 — 데이터 변경 검증 포함)</strong>: ✅ 45 / ⚠️ 3 / ❌ 2 (= 50). <strong>검증 가능한 전 항목 완료.</strong></p>
+<blockquote>
+<p>4차(테스트 BO 실제 변경 검증): <strong>0045 ✅</strong> 정지사유 등록(자동 '사용'·리스트 최상단=등록 최신순·코드 미표기) / <strong>0047 ✅</strong> 미사용 전환→회색 배지(사용=초록) / <strong>0018 ⚠️</strong> 계정정지 스위치 존재·클릭 가능하나 토글 시 상태 전환·확인 모달 동작 미재현(개발팀 확인 필요).</p>
+<p>🔴 <strong>4차 추가 발견 — TC_0044</strong>: [추가하기] 활성 조건은 "운영자 노출명+한국어"가 아니라 <strong>운영자 노출명 + 유저 노출 메시지 KO·EN·JA 3개 언어 모두 입력</strong>(한국어만으론 비활성). 정렬도 등록 최신순으로 확정(0041).</p>
+<p>남은 ❌ 2(환경 제약 — 사용자 결정에 따라 "실측필요" 명시): 0012(서버 에러 강제 불가)·0020(검토배지 트리거 데이터 주입 불가).</p>
+</blockquote>
+<p><strong>집계(3차 실측 후 — 회원 11 BIVE 9개 보유 계정)</strong>: ✅ 43 / ⚠️ 2 / ❌ 5.</p>
+<blockquote>
+<p>🔴 <strong>3차 추가 발견 — TC_0035</strong>: BIVE 토큰 히스토리 탭은 "추후 제공됩니다." 안내가 <strong>아니라 실제 구현</strong>됨 — 트랜잭션 이력 테이블(트랜잭션 타입·TXID·보낸 유저·받은 유저·일시 / 받기·보내기·상품 구매). QA 정정 완료. (TC_0033 2탭·0034 상세필드·0036 닫힘 모두 ✅ 확인)</p>
+<p>&gt;</p>
+<p>남은 ❌ 5: 0012(조회실패 강제불가)·0020(검토배지 트리거 데이터)·0018·0045·0047(테스트 BO 영구 변경 — 컨펌 후).</p>
+</blockquote>
+<p><strong>집계(2차 실측 후)</strong>: ✅ 39 / ⚠️ 2 / ❌ 9 (= 50).</p>
+<p>2차 추가 실측 완료(✅ 승격): 0005(검색+초기화)·0008(탈퇴완료 회색 배지)·0010(필터변경 1p리셋)·0041(정지사유 빈메시지 "검색 조건에 맞는 정지사유가 없습니다.")·0043(다국어 배지 회색)·0048(검색대상 field= 동작).</p>
+<p>남은 ⚠️ 2: 0023(참여내역 검색 — 데이터0 동작 미확정)·0050(정지사유 검색 — Enter 미반응, 동작 미확정).</p>
+<p>남은 ❌ 9 (3 그룹):</p>
+<ul>
+<li><strong>강제 불가(2)</strong>: 0012(목록 조회 실패 — 서버에러 강제 불가)·0020(검토 필요 배지 — 트리거 데이터 주입 불가)</li>
+<li><strong>데이터 필요(4)</strong>: 0033~0036(BIVE 상세모달 — BIVE 보유 테스트 회원 미확보)</li>
+<li><strong>데이터 변경(3)</strong>: 0018(계정정지 토글)·0045(정지사유 등록)·0047(상태 미사용 저장) — 테스트 BO 변경 허용이나 영구 잔존(정지사유 삭제 기능 없음)이라 사용자 컨펌 후 실행</li></ul>
+<blockquote>
+<p>추가 발견: 0041 정지사유 빈 메시지 BO="검색 조건에 맞는 정지사유가 없습니다." — 문서·QA 모두 다른 문구였음(문서 §5·QA TC_0041 정정 완료).</p>
+</blockquote>
+
+</body>
+</html>
