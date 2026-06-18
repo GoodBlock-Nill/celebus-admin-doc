@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-QA-GAP-ART] 아티스트(ART) QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-QA-GAP-ART] 아티스트(ART) QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</h1>
+<blockquote>
+<p>읽기 전용 분석 산출물. 운영 영향도 순 6번째(대형 — 6시트). QA 시트: 그룹(groups 114)·멤버(members 79)·덕력(duk 95)·팬덤(fandom 96)·서포트(support 87)·소식(feed 82). 화면 단위 진행.</p>
+</blockquote>
+<h2>실측 환경</h2>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>비교 기준</td><td>P [CEB-BO-003/ART-201~401 계열] / 테스트 BO(B) / QA(Q)</td></tr>
+<tr><td>테스트 BO</td><td>celebus-backoffice.vercel.app (Super Admin)</td></tr>
+<tr><td>실측 일자</td><td>2026-06-18</td></tr>
+</table>
+<h2>진행 현황</h2>
+<table>
+<tr><th>화면</th><th>실측</th><th>비고</th></tr>
+<tr><td>그룹 리스트</td><td>✅</td><td>갭 다수</td></tr>
+<tr><td>그룹 생성·상세·수정·멤버 관리·포지션 설정</td><td>⏳</td><td></td></tr>
+<tr><td>멤버·덕력·팬덤·서포트·소식 시트</td><td>⏳</td><td></td></tr>
+</table>
+<hr>
+<h2>1. 그룹 리스트 (groups.tsv TC_GRP_0001~0023)</h2>
+<table>
+<tr><th>요소</th><th>문서/QA</th><th>BO 실측</th><th>판정</th></tr>
+<tr><td>타이틀</td><td>그룹 리스트</td><td>"그룹 리스트"</td><td>✅</td></tr>
+<tr><td>통계 카드</td><td>전체/Active/Inactive</td><td>전체 18·Active 13·Inactive 5</td><td>✅ TC_0005</td></tr>
+<tr><td>액션</td><td>[포지션 설정]·[그룹 생성]</td><td>동일</td><td>✅ TC_0004</td></tr>
+<tr><td>검색</td><td>그룹명/멤버명 · 통합 다국어</td><td>"그룹명 입력"</td><td>✅(검색 대상 dropdown 재확인)</td></tr>
+<tr><td><strong>테이블 컬럼</strong></td><td>상태/그룹명/멤버 수/<strong>팔로워 수</strong>/<strong>탐색 노출</strong>/업데이트 일시</td><td>상태/그룹명/멤버 수/<strong>설명</strong>/업데이트 일시</td><td>🔴</td></tr>
+<tr><td><strong>행 탐색 노출 토글</strong></td><td>행별 켬/끔 토글 스위치(TC_0015/0016)</td><td><strong>토글 없음</strong>(상태=배지)</td><td>🔴</td></tr>
+<tr><td>페이지당</td><td><strong>10건</strong></td><td><strong>15건</strong>(18건=15+3)</td><td>⚪</td></tr>
+<tr><td>빈 메시지</td><td>"등록된 그룹이 없습니다."/"검색 결과가 없습니다."</td><td><strong>"검색 결과가 없습니다." 단일</strong></td><td>⚪</td></tr>
+</table>
+<h3>갭 요약 (그룹 리스트)</h3>
+<ul>
+<li>🔴 <strong>TC_0013/0014</strong>: BO 컬럼 = 상태·그룹명·멤버 수·<strong>설명</strong>·업데이트 일시. QA의 <strong>팔로워 수·탐색 노출 컬럼은 BO에 없고</strong>, <strong>설명 컬럼이 누락</strong>됨.</li>
+<li>🔴 <strong>TC_0015/0016</strong>: 리스트 행에 <strong>켬/끔 토글 스위치 없음</strong>(상태는 배지). 탐색 노출 토글 동작 BO 미반영 — 그룹 상세 여부 재확인.</li>
+<li>⚪ <strong>TC_0018</strong>: 페이지당 <strong>15건</strong>(QA 10건).</li>
+<li>⚪ <strong>TC_0021</strong>: 빈 메시지 "검색 결과가 없습니다." 단일(QA 2종).</li>
+<li>✅ 통계 카드·액션 버튼·타이틀 정합.</li></ul>
+<blockquote>
+<p>그룹 리스트는 <strong>임의작성 추정 컬럼(팔로워 수·탐색 노출)·행 토글</strong> 등 BO 미존재 항목 다수 — 사용자 지적 패턴 재확인. 잔여: 그룹 생성(26)·상세(18)·수정(9)·멤버 관리(11)·포지션 설정(24) + 멤버·덕력·팬덤·서포트·소식 시트.</p>
+</blockquote>
+
+</body>
+</html>
