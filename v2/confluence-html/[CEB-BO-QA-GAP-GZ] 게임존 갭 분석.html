@@ -104,6 +104,22 @@ p {
 <tr><td>게임 관리 ST·상세·생성</td><td>⏳</td><td>게임 데이터 의존</td></tr>
 <tr><td>랭킹·GP 교환소·GP 변동 내역</td><td>⏳</td><td>크래시 이슈 실측 대상</td></tr>
 </table>
+<h2>3. 랭킹 (gz-ranking)</h2>
+<ul>
+<li><strong>QA 정합</strong>: h1 "랭킹"·"PM·ST 누적 GP 통합 산출" 안내·TOP 10·랭킹 설정·컬럼(순위·닉네임·누적 GP·참여 횟수·승률·최근 참여일) — TC_0002~0004 정확 일치. <strong>크래시 없이 동작</strong>(데이터 정상).</li>
+<li>⚠ <strong>BO 버그</strong>: 누적 GP 부동소수 미반올림 표시(예 "48,752.79999999 GP"). QA는 정확 — BO 표시 로직 버그(반올림/절삭 필요). 개발팀 보고 대상.</li></ul>
+<h2>4. GP 교환소 (gz-exchange)</h2>
+<ul>
+<li><strong>QA 정합</strong>: h1 "GP 교환소"·내역 컬럼(일시·닉네임·Txid·교환 방향·GP 수량·CELB 수량·비율·상태) — TC_0006 정확 일치. <strong>크래시 없이 동작</strong>.</li></ul>
+<h2>5. GP 변동 내역 (gz-gphistory)</h2>
+<ul>
+<li><strong>QA 정합</strong>: h1 "GP 변동 내역"·컬럼(일시·닉네임·유형·게임유형·GP 변동·변동 후 잔액·비고)·필터(조회기간·변동 유형) — TC_0003 정확 일치. <strong>크래시 없이 동작</strong>.</li></ul>
+<hr>
+<h2>🔑 핵심 발견 — 운영 차단 이슈 테스트 BO 미재현</h2>
+<p>CLAUDE.md/메모리에 기록된 운영 차단 이슈(<strong>GP 교환소 페이지 크래시 <code>null.toLowerCase()</code>·랭킹 API 500</strong>)가 <strong>테스트 BO에서는 재현되지 않음</strong> — 게임존 홈·게임 관리·랭킹·GP 교환소·GP 변동 내역 5개 화면 모두 정상 로드·동작. 해당 차단 이슈는 운영 BO(gb.celebus.xyz) 전용이거나 테스트 BO에서 이미 수정됨. Phase 3(운영 차단 이슈 정정) 재논의 시 참고.</p>
+<blockquote>
+<p>게임존 5시트 종합: 조회 화면(홈·랭킹·교환소·변동 내역) QA 정확 일치 — 교정 불필요(게임 관리 PM 리스트 아티스트 컬럼 ⚪ 1건만). 휴면이나 테스트 BO엔 누적 데이터 존재. 잔여: 게임 관리 ST·상세·생성·랭킹 설정·교환 설정·지갑 관리·상세 모달.</p>
+</blockquote>
 
 </body>
 </html>
