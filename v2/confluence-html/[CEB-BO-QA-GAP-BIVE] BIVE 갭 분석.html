@@ -151,6 +151,48 @@ p {
 <li><strong>저용량 썸네일 2MB·640px = 개발 예정</strong> → 문서 스펙 유지, BO 미구현(20MB)은 🟡 갭으로 기록. QA TC_0019~0021에 "개발 예정 / 현재 BO 20MB" 명시.</li>
 <li><strong>GIF 메인 이미지에서도 제외</strong> → [CEB-BO-004] v1.16·[202-CREATE] v1.8·[BIVE-FLOW] v1.5에서 메인·서브 이미지 GIF 제거(PNG·JPG·WebP) + PNG·JPG WebP 자동 변환 명시. QA TC_0018 반영.</li>
 <li>잔여: BIVE 상세(헤더 상태별 액션·기능설정·민팅관리·민팅이력·활성/비활성/삭제)·민팅 관리·혜택 관리 — 후속 실측.</li></ul>
+<h3>BIVE 상세 (TC_0026~0036) — B 실측 (BIVE 200, Active)</h3>
+<table>
+<tr><th>요소</th><th>BO 실측</th><th>판정</th></tr>
+<tr><td>4탭</td><td>기본정보·기능설정·민팅관리·민팅이력</td><td>✅</td></tr>
+<tr><td>헤더(Active)</td><td>[비활성화]</td><td>✅ TC_0026</td></tr>
+<tr><td>기본정보</td><td>미디어·기본 정보(등급·에디션·굿즈 유형·아티스트·설명(영문))·사용 기능·관리 정보</td><td>✅ TC_0027</td></tr>
+<tr><td>사용 기능</td><td>Send 전송 허용·Mix 믹스 허용·Pick 픽 허용 (ON)</td><td>✅ TC_0023</td></tr>
+<tr><td>기능설정 탭(Active)</td><td>토글 3종 disabled(read-only)</td><td>✅ TC_0030</td></tr>
+<tr><td>민팅관리</td><td>상태·민팅타입·캠페인명·민팅횟수·캠페인연결일시</td><td>✅ TC_0031</td></tr>
+<tr><td>민팅이력</td><td>TOKEN ID·닉네임·지갑주소·민팅일시 + 총 발행 수량</td><td>✅ TC_0032</td></tr>
+</table>
+<ul>
+<li>⏳ TC_0033 활성화·TC_0035 삭제: <strong>Draft BIVE 필요</strong>(BIVE 생성은 이미지 파일 업로드 필수라 자동 생성 어려움) — 실측필요(데이터/파일)</li>
+<li>⏳ TC_0034 비활성화: 연결 캠페인 보유 Active라 차단 동작 — 캠페인 종료 데이터 필요</li>
+<li>⏳ TC_0036 앱 연동(회원·지갑 링크 BSCScan): BO 범위 일부 외(앱 QA)</li>
+<li>✅ TC_0026~0032 BO 정합. 에디션 시트(bive-editions) 데스크 검증 사실상 완료(잔여=Draft 파일 데이터).</li></ul>
+<hr>
+<h2>3. 민팅 관리 리스트 (bive-minting, B 실측)</h2>
+<table>
+<tr><th>요소</th><th>BO 실측</th><th>판정</th></tr>
+<tr><td>타이틀·탭</td><td>"민팅 관리" / Event·Ticket·Mix·Pick</td><td>✅ TC_BVM_0002</td></tr>
+<tr><td>컬럼</td><td><strong>ID</strong>·상태·캠페인 명·연결 기능·<strong>보상 선택</strong>·등록된 BIVE 수·발행 수·생성일</td><td>⚪</td></tr>
+<tr><td>필터</td><td>상태(전체)·연결(전체)·초기화·캠페인 생성</td><td>✅(연결 필터 추가)</td></tr>
+<tr><td>보상방식 값</td><td>"고정"(firstRow)</td><td>⚪ QA "가중치/지정" → BO "가중치/고정" 가능</td></tr>
+</table>
+<ul>
+<li>⚪ TC_BVM_0004: BO에 <strong>ID 컬럼</strong> 존재(QA 미기재), 보상방식 라벨 "고정"(QA "지정") — 전수 확인 후 정정</li>
+<li>⏳ 민팅 상세·생성·BIVE 보상 추가 모달(TC_BVM_0006~): 후속</li></ul>
+<h2>4. 혜택 관리 리스트 (bive-benefits, B 실측)</h2>
+<table>
+<tr><th>요소</th><th>BO 실측</th><th>판정</th></tr>
+<tr><td>타이틀·탭</td><td>"혜택" / Boost Point·Raffle Ticket</td><td>✅ TC_BVB_0002</td></tr>
+<tr><td>컬럼</td><td>상태·혜택 명칭·등록된 BIVE·BP수량·지급 주기·지급 요일·시작일·종료일</td><td>✅ TC_BVB_0004</td></tr>
+<tr><td>필터</td><td>상태(전체)·지급주기(전체)·초기화·혜택 생성</td><td>✅ TC_BVB_0003</td></tr>
+<tr><td>빈 메시지</td><td><strong>"검색 결과가 없습니다."</strong></td><td>⚪ TC_BVB_0006(QA "등록된 혜택이 없습니다.")</td></tr>
+</table>
+<ul>
+<li>⚪ TC_BVB_0006 빈 메시지 정정 필요(회원·팬퀘스트와 동일 패턴)</li>
+<li>⏳ 혜택 상세·생성·BIVE 추가 모달(TC_BVB_0007~): 후속</li></ul>
+<blockquote>
+<p>BIVE 진행: 에디션·미디어 규격(커밋 2d974e9) + BIVE 상세 + 민팅/혜택 리스트 완료. 민팅·혜택 상세/생성 후속.</p>
+</blockquote>
 
 </body>
 </html>
