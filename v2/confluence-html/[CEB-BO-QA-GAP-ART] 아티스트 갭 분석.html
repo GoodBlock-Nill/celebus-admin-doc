@@ -162,6 +162,30 @@ p {
 <li><strong>소속사 설정 = QA 정합</strong>: 컬럼 상태·운영자 노출명·한국어/영어/일본어(유저 노출명)·[새 소속사 추가]·추가 모달 4필드 50자 — TC_0017~0021 정합("(유저 노출명)" 접미만)</li>
 <li>⏳ 멤버 수정(8): 그룹 수정과 동일 패턴 추정(이미지 [제거]·gif/svg) — 후속 확인</li>
 <li>✅ <strong>멤버 시트 QA는 그룹보다 정확</strong> — 생성 이미지 형식만 ⚪, 리스트·상세·소속사·포지션은 BO 정합.</li></ul>
+<hr>
+<h2>9. 🔴 덕력 지급 정책 매트릭스 (duk.tsv ?tab=policy) — 중대 발견</h2>
+<p>BO 실측 매트릭스(활동·등급·지급주기·권장값·지급덕력·사용여부):</p>
+<table>
+<tr><th>BO 활동</th><th>등급</th><th>지급주기</th><th>권장</th></tr>
+<tr><td>출석체크</td><td>T1</td><td>일 1회</td><td>5</td></tr>
+<tr><td><strong>래플 응모</strong></td><td>T1</td><td><strong>행동마다</strong></td><td>5</td></tr>
+<tr><td>일일 미션 완료</td><td>T2</td><td>일 1회</td><td>25</td></tr>
+<tr><td><strong>프리딕션 마켓 참여</strong></td><td>T2</td><td>행동마다</td><td>25</td></tr>
+<tr><td><strong>트리비아 참여</strong></td><td>T2</td><td>행동마다</td><td>25</td></tr>
+<tr><td>SNS 공유</td><td>T2</td><td>주 1회</td><td>25</td></tr>
+<tr><td><strong>에피소드 완료</strong></td><td>T3</td><td>주 1회</td><td>75</td></tr>
+<tr><td><strong>팬퀘스트 완료</strong></td><td>T3</td><td>행동마다</td><td>75</td></tr>
+<tr><td>기억저장소 작성</td><td>T3</td><td>행동마다</td><td>75</td></tr>
+<tr><td>디지털 굿즈 획득</td><td>T3</td><td>행동마다</td><td>75(단일)</td></tr>
+<tr><td>스트릭 7/14/21/28</td><td>보너스</td><td>1회</td><td>200/500/750/1,000</td></tr>
+</table>
+<p><strong>문서·QA 충돌 (🔴, 이번 세션 정정분과 직결)</strong>:</p>
+<ol>
+<li><strong>"응모권 사용 (1장당)" → BO "래플 응모 · 행동마다"</strong> — 2026-06-18 정정한 "1장당"이 BO 미반영(BO=행동마다=응모 행위당). 활동명도 "래플 응모".</li>
+<li><strong>디지털 굿즈 6등급 차등(50/75/100/200/350/500) → BO 단일 75</strong> — [CEB-BO-004] v1.4 등급 분리 BO 미반영.</li>
+<li><strong>PM 참여·ST 참여·에피소드 완료·팬퀘스트 완료가 BO 매트릭스 포함</strong> — 문서 "게임 참여·Quest 완료는 콘텐츠별 직접 입력으로 제외"와 모순.</li>
+<li>기억저장소 "작성"(BO) vs "업로드"(문서) / 지급주기 라벨 "행동마다/일 1회/주 1회/1회".</li></ol>
+<p>→ <strong>사용자 결정 필요</strong>: ① 1장당 vs 행동마다(BO) 어느 쪽이 정책 정답인지(개발 반영 예정 vs BO 기준) ② 디지털 굿즈 6등급 vs 단일 ③ PM/ST·에피소드·팬퀘스트 매트릭스 포함 여부. [CEB-000] §5.2·[ART-401-POLICY]·duk.tsv 동시 영향.</p>
 
 </body>
 </html>
