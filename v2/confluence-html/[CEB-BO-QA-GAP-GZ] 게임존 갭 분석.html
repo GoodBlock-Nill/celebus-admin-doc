@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-QA-GAP-GZ] 게임존(GZ) QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-QA-GAP-GZ] 게임존(GZ) QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</h1>
+<blockquote>
+<p>읽기 전용 분석 산출물. 운영 영향도 순 7번째(휴면 — PM/ST 0건 운영). QA 시트 5종: 게임존 홈(gz-home 7)·게임 관리(gz-games 52)·랭킹(gz-ranking 16)·GP 교환소(gz-exchange 23)·GP 변동 내역(gz-gphistory 15). 화면 단위 진행.</p>
+</blockquote>
+<h2>실측 환경</h2>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>비교 기준</td><td>P [CEB-BO-GZ-* 계열] / 테스트 BO(B) / QA(Q)</td></tr>
+<tr><td>테스트 BO</td><td>celebus-backoffice.vercel.app (Super Admin)</td></tr>
+<tr><td>실측 일자</td><td>2026-06-18</td></tr>
+<tr><td>비고</td><td>게임존 PM/ST 휴면. CLAUDE.md 기록 운영 차단 이슈: GP 교환소 페이지 크래시(null.toLowerCase)·랭킹 API 500 — 테스트 BO 동작 여부 실측 확인 대상</td></tr>
+</table>
+<h2>1. 게임존 홈 (gz-home)</h2>
+<ul>
+<li><strong>QA 정합</strong>: h1 "게임존"·섹션(전체 현황·Prediction Market·Survival Trivia·운영 요약·랭킹·GP 교환소·GP 변동 내역)·카드(진행중 게임·결과 입력 필요·오늘 GP 충전/출금·오늘 참여자·게시 대기·TOP 10·TOP 1) — TC_0001~0004 정합. 크래시 없음, 휴면이라 값 0.</li></ul>
+<h2>2. 게임 관리 (gz-games)</h2>
+<ul>
+<li>h1 "게임 관리"·기본 PM(?type=PREDICTION_MARKET 자동)·유형 선택(PM/ST)·상태 필터("상태 전체")·[+ 게임 생성] — TC_0001/0002/0006 정합</li>
+<li><strong>PM 리스트 컬럼</strong>: 타이틀·상태·참여자 수·총 상금 GP·참여기간·생성일·관리자 — ⚪ QA "아티스트" 컬럼이 BO 리스트에 미표시(TC_0003 정정)</li>
+<li>⏳ ST 유형 컬럼(TC_0004)·상태 필터 7종·정렬·페이지당 20·게임 상세/생성: 후속(휴면이라 게임 데이터 의존)</li></ul>
+<h2>진행 현황</h2>
+<table>
+<tr><th>화면</th><th>실측</th><th>비고</th></tr>
+<tr><td>게임존 홈</td><td>✅</td><td>QA 정합</td></tr>
+<tr><td>게임 관리(PM 리스트)</td><td>✅</td><td>아티스트 컬럼 ⚪</td></tr>
+<tr><td>게임 관리 ST·상세·생성</td><td>⏳</td><td>게임 데이터 의존</td></tr>
+<tr><td>랭킹·GP 교환소·GP 변동 내역</td><td>⏳</td><td>크래시 이슈 실측 대상</td></tr>
+</table>
+
+</body>
+</html>
