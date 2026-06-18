@@ -117,6 +117,19 @@ p {
 <blockquote>
 <p>그룹 리스트는 <strong>임의작성 추정 컬럼(팔로워 수·탐색 노출)·행 토글</strong> 등 BO 미존재 항목 다수 — 사용자 지적 패턴 재확인. 잔여: 그룹 생성(26)·상세(18)·수정(9)·멤버 관리(11)·포지션 설정(24) + 멤버·덕력·팬덤·서포트·소식 시트.</p>
 </blockquote>
+<h2>2. 그룹 생성 (TC_GRP_0048~0073)</h2>
+<table>
+<tr><th>요소</th><th>BO 실측</th><th>판정</th></tr>
+<tr><td>타이틀·CTA</td><td>"그룹 생성" / [취소하기]·[생성하기](초기 비활성)</td><td>✅</td></tr>
+<tr><td>입력</td><td>그룹명<em>·그룹소개</em>(다국어 탭)·로고(심볼)<em>·대표이미지(배너)</em>·SNS(Instagram·X·YouTube·TikTok·Homepage)</td><td>✅</td></tr>
+<tr><td>이미지 안내</td><td>로고 512×512(1:1)·배너 1920×1080(16:9)·각 최대 5MB</td><td>✅ TC_0052/0053</td></tr>
+<tr><td><strong>이미지 형식</strong></td><td><strong>jpeg/png/jpg/webp/gif/svg</strong></td><td>🔴 TC_0064(QA "JPG·PNG·WebP만" — BO는 gif·svg도 허용)</td></tr>
+<tr><td>취소 모달</td><td>"그룹 생성 취소 / 작성중인 내용이 사라집니다 / 취소하시겠습니까?" [다시 돌아가기][확인]</td><td>✅ TC_0071/0072</td></tr>
+</table>
+<ul>
+<li>🔴 <strong>TC_0064</strong>: 이미지 허용 형식이 BO는 <strong>gif·svg 포함</strong>(QA는 JPG·PNG·WebP만). BIVE(GIF 제외)와 대조적 — 화면별 상이.</li>
+<li>⏳ 완료 모달 실제 생성(TC_0067~0070)·로그(0073): 그룹 삭제 불가로 실제 생성 미실행 — 모달 텍스트 기준 기록.</li>
+<li>⏳ 잔여: 그룹 상세(18)·수정(9)·멤버 관리(11)·포지션 설정(24) + 멤버·덕력·팬덤·서포트·소식 시트.</li></ul>
 
 </body>
 </html>
