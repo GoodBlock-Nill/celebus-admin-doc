@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[CEB-BO-QA-GAP-ETC] 단일메뉴 QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[CEB-BO-QA-GAP-ETC] 단일메뉴 QA ↔ 기획문서 ↔ 테스트 BO 갭 분석</h1>
+<blockquote>
+<p>읽기 전용 분석 산출물. 독립 단일메뉴 통합 갭 리포트. QA 시트: 일일미션(dly 76)·배너(banners 46)·알림(notifications 44)·감정 이모지 연결(mem-link 24)·라이브러리(mem-library 17)·보상·레벨업 현황(fandom-status 32)·프로젝트·Fans·티켓·재무. 화면 단위 진행.</p>
+</blockquote>
+<h2>실측 환경</h2>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>비교 기준</td><td>P [CEB-BO-* 계열] / 테스트 BO(B) / QA(Q)</td></tr>
+<tr><td>테스트 BO</td><td>celebus-backoffice.vercel.app (Super Admin)</td></tr>
+<tr><td>실측 일자</td><td>2026-06-18</td></tr>
+</table>
+<h2>1. 일일미션 관리 (/daily-missions)</h2>
+<ul>
+<li><strong>QA 정합</strong>: h1 "일일미션 관리"·섹션(미션 풀·일일미션 설정)·미션 풀 컬럼(미션명·이동 대상·사용여부·관리)·[미션 추가]·미션 풀(사용 5종/전체 6종)·KST 자정(00:00~23:59:59) 자동 선택·소급 변경 안 됨 안내 — TC_0001~0016 정합</li>
+<li>덕력 지급량은 본 화면 미설정 → 지급 정책([CEB-BO-ART-401-POLICY]) SSOT 참조(TC_0004) — 덕력 정책 정합 구조 일치</li>
+<li>⚪ <strong>TC_0009~0011</strong>: 저장 버튼 BO 라벨 "일일미션 설정 저장"(QA "[변경사항 저장]") 정정</li>
+<li>⏳ 미션 추가 모달·이동 대상 매핑·스트릭 영역·저장 동작: 후속</li></ul>
+<h2>진행 현황</h2>
+<table>
+<tr><th>화면</th><th>실측</th><th>비고</th></tr>
+<tr><td>일일미션 관리</td><td>✅</td><td>저장 버튼 라벨 ⚪</td></tr>
+<tr><td>배너·알림·MEM·보상레벨업현황·프로젝트·Fans·티켓·재무</td><td>⏳</td><td></td></tr>
+</table>
+
+</body>
+</html>
