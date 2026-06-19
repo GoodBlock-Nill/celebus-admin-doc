@@ -76,7 +76,7 @@ v2/scripts/update-progress.sh --note "발견 내용"
 
 ### 테스트 BO 사용 룰
 
-- 인증: `admin@celebus.io / admin1234` (v2/.env 참조)
+- 인증: `admin@celebus.io` / 비밀번호는 `v2/.env`의 `passward` 값 참조 (평문 비노출. 2026-06-19 기준 실제값은 `admin1234`가 아님 — .env 확인 필수)
 - [생성]·[수정]·[삭제] 클릭 **허용** (운영 BO는 금지)
 - 검증 후 명세에 "**테스트 BO 실측 정합 (vN)**" 노트 명시
 - 운영 BO에 화면이 생기면 운영 BO 정합 우선 (테스트 BO는 보조)
