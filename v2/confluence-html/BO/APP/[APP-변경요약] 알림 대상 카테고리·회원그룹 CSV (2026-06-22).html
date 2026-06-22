@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>[변경 요약] 새 알림 대상 섹션 — 카테고리(공통 필수) 신설 + 특정 회원 그룹 CSV 전용·명단</title>
+  <style>
+    body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 960px;
+  margin: 40px auto;
+  padding: 0 20px;
+  color: #172b4d;
+  line-height: 1.6;
+}
+h1 { font-size: 24px; margin-top: 32px; }
+h2 { font-size: 20px; margin-top: 28px; border-bottom: 1px solid #dfe1e6; padding-bottom: 8px; }
+h3 { font-size: 16px; margin-top: 24px; }
+h4 { font-size: 14px; margin-top: 20px; }
+h5 { font-size: 13px; margin-top: 16px; font-weight: 600; }
+h6 { font-size: 12px; margin-top: 14px; font-weight: 600; }
+blockquote {
+  border-left: 3px solid #dfe1e6;
+  margin: 12px 0;
+  padding: 8px 16px;
+  color: #6b778c;
+  background-color: #f9fafb;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+}
+th, td {
+  border: 1px solid #dfe1e6;
+  padding: 8px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f5f7;
+  font-weight: 600;
+}
+pre {
+  background-color: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre;
+}
+code {
+  background-color: #f4f5f7;
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 0.9em;
+}
+hr {
+  border: none;
+  border-top: 1px solid #dfe1e6;
+  margin: 24px 0;
+}
+ul, ol {
+  padding-left: 24px;
+  margin: 8px 0;
+}
+li {
+  margin: 4px 0;
+}
+p {
+  margin: 8px 0;
+}
+  </style>
+</head>
+<body>
+<h1>[변경 요약] 새 알림 대상 섹션 — 카테고리(공통 필수) 신설 + 특정 회원 그룹 CSV 전용·명단</h1>
+<table>
+<tr><th>Key</th><th>Value</th></tr>
+<tr><td>일자</td><td>2026-06-22</td></tr>
+<tr><td>정리</td><td>@Nill Yoo</td></tr>
+<tr><td>대상</td><td>개발팀 · 기획팀 · 디자인팀</td></tr>
+<tr><td>계기</td><td>새 알림 작성 대상 섹션에 ① 카테고리 선택 누락 ② 특정 회원 그룹 입력 방식·명단 표시 미정의</td></tr>
+<tr><td>관련 문서</td><td>[CEB-BO-APP-302] v1.12 · [CEB-BO-013] v7.11 · [CEB-BO-APP-301] v1.9 · [CEB-NTF-510](기존 정합) · 프로토타입</td></tr>
+</table>
+<hr>
+<h2>1. 한 줄 요약</h2>
+<blockquote>
+<p>새 알림 작성([CEB-BO-APP-302]) 대상 섹션에 <strong>① 카테고리(아티스트·이벤트·게임존·공지) 공통 필수 선택</strong>을 신설하고, <strong>② 특정 회원 그룹 입력을 CSV 파일 첨부 전용으로 변경</strong>해 첨부 후 <strong>업로드 회원 명단(닉네임·이메일·페이지당 20명·총 회원 수)</strong> 을 노출하도록 정의했습니다.</p>
+</blockquote>
+<p>카테고리 4종은 <strong>이미 회원 앱 알림함([CEB-NTF-510])이 보유한 필터 탭(전체/아티스트/이벤트/게임존/공지)</strong> 과 동일하다. 즉 BO에서 카테고리를 지정할 수단이 없던 갭을 메워, <strong>BO 작성 → 앱 알림함 필터</strong>가 end-to-end로 정합되었다.</p>
+<hr>
+<h2>2. 변경 내용</h2>
+<h3>2-1. 카테고리 (대상 섹션 공통·필수)</h3>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>위치</td><td>대상 섹션 상단 — 대상 종류(전역/아티스트 팬덤/특정 회원 그룹)와 <strong>무관하게 공통 노출</strong></td></tr>
+<tr><td>옵션</td><td>아티스트 / 이벤트 / 게임존 / 공지 (단일 선택)</td></tr>
+<tr><td>필수</td><td><strong>필수</strong> — 미선택 시 [발송]·[예약 발송] 차단</td></tr>
+<tr><td>용도</td><td>회원 앱 알림함([CEB-NTF-510]) 카테고리 탭 분류·필터 기준</td></tr>
+<tr><td>별개 체계</td><td>자동 트리거 카테고리(래플/응원·퀘스트/BIVE/회원 활동/시스템 공지)와 <strong>별개</strong></td></tr>
+</table>
+<h3>2-2. 특정 회원 그룹 — CSV 전용 + 업로드 명단</h3>
+<table>
+<tr><th>항목</th><th>내용</th></tr>
+<tr><td>입력 방식</td><td>기존 "회원 검색·선택(다중) 또는 CSV 업로드" → <strong>CSV 파일 첨부만</strong></td></tr>
+<tr><td>회원 매칭</td><td>CSV <strong>이메일 컬럼</strong> 기준. 미존재·중복 이메일 제외, 탈퇴·휴면·차단 자동 제외</td></tr>
+<tr><td>명단 표시</td><td>첨부 후 섹션 하단에 명단 — 컬럼 <strong>번호·닉네임·이메일</strong></td></tr>
+<tr><td>페이지네이션</td><td><strong>페이지당 20명</strong></td></tr>
+<tr><td>총 회원 수</td><td>"총 {N}명" 표시</td></tr>
+</table>
+<hr>
+<h2>3. 정합한 문서·코드 (연관 문서 전체)</h2>
+<table>
+<tr><th>계층</th><th>문서/파일</th><th>변경</th></tr>
+<tr><td>화면 명세</td><td>[CEB-BO-APP-302] v1.12</td><td>§2-2 C 대상 — 카테고리(C-1)·대상(C-2)·업로드 명단(C-3) 재구성. §3·§5(카테고리 필수·CSV 미첨부 차단·CSV 양식)·§6(발송 로그 카테고리 포함)</td></tr>
+<tr><td>영역 SSOT</td><td>[CEB-BO-013] v7.11</td><td>§17-4 수동 알림 카테고리 4종 SSOT 신설. §18 발송 로그 정합</td></tr>
+<tr><td>리스트 명세</td><td>[CEB-BO-APP-301] v1.9</td><td>수동 알림 탭 — 카테고리 필터·테이블 카테고리 Badge 컬럼 추가</td></tr>
+<tr><td>앱 알림함</td><td>[CEB-NTF-510]</td><td><strong>기존 정합</strong> — 카테고리 탭(전체/아티스트/이벤트/게임존/공지) 이미 보유. BO 카테고리가 이 필터의 입력원</td></tr>
+<tr><td>프로토타입</td><td><code>prototype/src/mock/notifications.ts</code></td><td><code>NotiCategory</code> 타입·<code>NOTI_CATEGORY_LABEL</code>·<code>category</code> 필드·명단 데이터(<code>MOCK_UPLOADED_MEMBERS</code> = 실제 <code>members</code> mock 참조, ACTIVE만)</td></tr>
+<tr><td>프로토타입</td><td><code>prototype/.../NotificationForm.tsx</code></td><td>카테고리 칩(공통·필수)·CSV 전용·업로드 명단(DataTable + Pagination 20/page·총 회원 수)</td></tr>
+<tr><td>프로토타입</td><td><code>prototype/.../notifications/page.tsx</code></td><td>리스트 카테고리 필터·컬럼</td></tr>
+<tr><td>QA</td><td><code>qa/notifications.tsv</code></td><td>TC_0004(필터)·0005(컬럼)·0013(대상)·0015(검증) 갱신</td></tr>
+</table>
+<hr>
+<h2>4. 확인·결정 사항</h2>
+<ul>
+<li><strong>카테고리 = 앱 알림함 분류·필터용 · 필수</strong> (사용자 결정). NTF-510의 기존 4종과 일치</li>
+<li><strong>CSV = 이메일 식별 · 명단 컬럼 닉네임·이메일</strong> (사용자 결정). 명단은 임의 생성이 아닌 <strong>실제 회원 리스트 참조</strong></li>
+<li>딥링크 "소스 타입"(자유 텍스트)은 유지 — 카테고리와 공존(대체 아님)</li></ul>
+<hr>
+<h2>5. 검증</h2>
+<ul>
+<li>기획자 언어 위반 0건(신규)·changelog-sync 통과·프로토타입 <code>tsc --noEmit</code> 에러 0</li>
+<li>프로토타입 라이브 확인: 작성 화면 카테고리 4종·CSV 첨부 후 명단(총 23명·닉네임·이메일·20명/페이지·2페이지)·리스트 카테고리 필터/컬럼</li></ul>
+
+</body>
+</html>

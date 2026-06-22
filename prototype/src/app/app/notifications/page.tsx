@@ -18,8 +18,11 @@ import StatCardWithBar from '@/components/clone/StatCardWithBar';
 import {
   ACTIVE_ARTISTS,
   NOTIFICATIONS,
+  NOTI_CATEGORIES,
+  NOTI_CATEGORY_LABEL,
   TRIGGER_CATEGORY_LABEL,
   TRIGGER_POLICIES,
+  getCategoryLabel,
   getChannelLabel,
   getManualStats,
   getSendTimingLabel,
@@ -27,6 +30,7 @@ import {
   getTargetLabel,
   type ManualNotiStatus,
   type Notification,
+  type NotiCategory,
   type NotiChannel,
   type TriggerCategory,
   type TriggerPolicy,
@@ -153,6 +157,7 @@ export default function NotificationsListPage() {
 
 function ManualTab({ list, router }: { list: Notification[]; router: ReturnType<typeof useRouter> }) {
   const stats = getManualStats();
+  const [categoryFilter, setCategoryFilter] = useState<NotiCategory | ''>('');
   const [targetFilter, setTargetFilter] = useState('');
   const [channelFilter, setChannelFilter] = useState<NotiChannel | ''>('');
   const [statusFilter, setStatusFilter] = useState<ManualNotiStatus | ''>('');
@@ -161,6 +166,7 @@ function ManualTab({ list, router }: { list: Notification[]; router: ReturnType<
   const filtered = useMemo(() => {
     const q = keyword.toLowerCase();
     return list.filter((n) => {
+      if (categoryFilter && n.category !== categoryFilter) return false;
       if (statusFilter && n.status !== statusFilter) return false;
       if (channelFilter && n.channel !== channelFilter) return false;
       if (targetFilter) {
@@ -177,9 +183,10 @@ function ManualTab({ list, router }: { list: Notification[]; router: ReturnType<
       }
       return true;
     });
-  }, [list, targetFilter, channelFilter, statusFilter, keyword]);
+  }, [list, categoryFilter, targetFilter, channelFilter, statusFilter, keyword]);
 
   const reset = () => {
+    setCategoryFilter('');
     setTargetFilter('');
     setChannelFilter('');
     setStatusFilter('');
@@ -201,6 +208,15 @@ function ManualTab({ list, router }: { list: Notification[]; router: ReturnType<
       )}
 
       <div className="flex items-center gap-2 mb-4 mt-4 flex-wrap">
+        <FilterSelect
+          value={categoryFilter}
+          onChange={(v) => setCategoryFilter(v as NotiCategory | '')}
+          options={[
+            { value: '', label: '카테고리(전체)' },
+            ...NOTI_CATEGORIES.map((c) => ({ value: c, label: NOTI_CATEGORY_LABEL[c] })),
+          ]}
+          minWidth="150px"
+        />
         <FilterSelect
           value={targetFilter}
           onChange={setTargetFilter}
@@ -259,6 +275,7 @@ function ManualTab({ list, router }: { list: Notification[]; router: ReturnType<
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr className="text-xs font-semibold text-gray-600 whitespace-nowrap">
               <th className="w-24 px-4 py-3 text-left">상태</th>
+              <th className="w-24 px-4 py-3 text-left">카테고리</th>
               <th className="w-28 px-4 py-3 text-left">채널</th>
               <th className="px-4 py-3 text-left">제목 (KO)</th>
               <th className="w-44 px-4 py-3 text-left">대상</th>
@@ -304,6 +321,15 @@ function ManualRow({ n, onClick }: { n: Notification; onClick: () => void }) {
         <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${status.badge}`}>
           {status.label}
         </span>
+      </td>
+      <td className="px-4 py-3 text-xs">
+        {n.category ? (
+          <span className="inline-flex rounded-md px-2 py-0.5 bg-indigo-50 text-indigo-700">
+            {getCategoryLabel(n.category)}
+          </span>
+        ) : (
+          <span className="text-gray-300">-</span>
+        )}
       </td>
       <td className="px-4 py-3 text-xs">
         <span className={`inline-flex rounded-md px-2 py-0.5 ${

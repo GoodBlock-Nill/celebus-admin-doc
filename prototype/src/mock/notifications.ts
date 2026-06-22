@@ -132,6 +132,7 @@ export function getSendTimingLabel(n: Notification): string {
 export const NOTIFICATIONS: Notification[] = [
   {
     id: 'NOTI-001',
+    category: 'ARTIST',
     title: { ko: '[V01D] 컴백 안내', en: '[V01D] Comeback Announcement', jp: '[V01D] カムバック告知' },
     body: {
       ko: 'V01D 신규 미니앨범 발매를 알려드립니다. 응모하기에서 한정판 굿즈를 만나보세요.',
@@ -155,6 +156,7 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 'NOTI-002',
+    category: 'NOTICE',
     title: { ko: '서비스 점검 안내', en: 'Service Maintenance', jp: 'サービスメンテナンスのお知らせ' },
     body: {
       ko: '5월 20일 03:00~05:00 정기 점검이 진행됩니다. 점검 시간 동안 서비스 이용이 제한됩니다.',
@@ -172,6 +174,7 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 'NOTI-004',
+    category: 'EVENT',
     title: { ko: '오늘의 미션', en: "Today's Mission", jp: '本日のミッション' },
     body: {
       ko: '오늘의 할일 3개를 완료하고 응모권을 받아보세요!',
@@ -192,6 +195,7 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 'NOTI-005',
+    category: 'ARTIST',
     title: { ko: '[iKON] 새 소식', en: '[iKON] New Story', jp: '[iKON] 新着ニュース' },
     body: {
       ko: 'iKON의 새 소식이 도착했어요. 정보 피드에서 확인해 주세요.',
@@ -214,6 +218,7 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 'NOTI-006',
+    category: 'ARTIST',
     title: {
       ko: '[BIVE] V01D Genesis 컬렉션 민팅 D-1',
       en: '[BIVE] V01D Genesis Collection Minting D-1',
@@ -241,6 +246,7 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 'NOTI-008',
+    category: 'EVENT',
     title: { ko: '[CELEBUS] 팬미팅 사전 예약 안내', en: '[CELEBUS] Fanmeeting pre-booking', jp: '[CELEBUS] ファンミ事前予約' },
     body: { ko: 'CELEBUS 팬미팅 사전 예약이 곧 시작됩니다.', en: 'Pre-booking starts soon.', jp: '事前予約間もなく開始。' },
     status: 'DRAFT',
@@ -254,6 +260,7 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 'NOTI-009',
+    category: 'NOTICE',
     title: {
       ko: '[응모권 만료 임박] 5월 마지막 주 안내',
       en: '[Tickets Expiring] Last Week of May',
@@ -276,6 +283,7 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 'NOTI-010',
+    category: 'EVENT',
     title: { ko: '[MADEIN] 새 응원하기 이벤트', en: '[MADEIN] New cheer event', jp: '[MADEIN] 新応援イベント' },
     body: { ko: 'MADEIN 응원하기 이벤트가 시작되었습니다.', en: 'A new cheer event has begun.', jp: '新しい応援イベントが始まりました。' },
     status: 'SENT',
@@ -293,6 +301,7 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 'NOTI-011',
+    category: 'NOTICE',
     title: { ko: '약관 개정 사전 안내', en: 'Terms Update Notice', jp: '約款改定のお知らせ' },
     body: { ko: '5월 25일부터 적용되는 약관 개정 사전 안내입니다.', en: 'Terms update effective May 25.', jp: '5月25日施行の約款改定。' },
     status: 'FAILED',
@@ -309,6 +318,7 @@ export const NOTIFICATIONS: Notification[] = [
   },
   {
     id: 'NOTI-012',
+    category: 'ARTIST',
     title: { ko: '[UNDER:LIGHT] 컴백 D-3', en: '[UNDER:LIGHT] Comeback D-3', jp: '[UNDER:LIGHT] カムバックD-3' },
     body: { ko: 'UNDER:LIGHT 컴백 D-3 카운트다운이 시작되었습니다.', en: 'Comeback D-3 countdown begins.', jp: 'カムバックD-3カウントダウン開始。' },
     status: 'SENT',
