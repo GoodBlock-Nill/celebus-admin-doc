@@ -9,12 +9,19 @@ import {
 } from '@heroicons/react/24/outline';
 import {
   ACTIVE_ARTISTS,
+  MOCK_UPLOADED_MEMBERS,
+  NOTI_CATEGORIES,
+  NOTI_CATEGORY_LABEL,
   type Notification,
+  type NotiCategory,
   type NotiChannel,
   type NotiScheduleType,
   type NotiTargetType,
+  type UploadedMember,
 } from '@/mock/notifications';
 import DeeplinkPicker from '@/components/shared/DeeplinkPicker';
+import DataTable from '@/components/ui/DataTable';
+import Pagination from '@/components/ui/Pagination';
 import { emptyDeeplink, type Deeplink } from '@/types/deeplink';
 
 type Lang = 'ko' | 'en' | 'jp';
@@ -30,6 +37,7 @@ export interface NotificationFormState {
   pushShortEn: string;
   pushShortJp: string;
   channel: NotiChannel;
+  category?: NotiCategory; // 필수 선택 (미선택 시 발송·예약 차단)
   targetType: NotiTargetType;
   targetArtist?: string;
   targetMemberCount: number;
@@ -50,6 +58,7 @@ export function emptyFormState(): NotificationFormState {
     pushShortEn: '',
     pushShortJp: '',
     channel: 'BASIC_PUSH',
+    category: undefined, // 필수 — 운영자가 선택
     targetType: 'GLOBAL',
     targetArtist: 'V01D',
     targetMemberCount: 0,
@@ -71,6 +80,7 @@ export function fromNotification(n: Notification): NotificationFormState {
     pushShortEn: n.pushShort?.en ?? '',
     pushShortJp: n.pushShort?.jp ?? '',
     channel: n.channel,
+    category: n.category,
     targetType: n.targetType,
     targetArtist: n.targetArtist ?? 'V01D',
     targetMemberCount: n.targetMemberCount ?? 0,
@@ -94,6 +104,23 @@ export default function NotificationForm({ readOnly = false, initial }: Props) {
     setState((s) => ({ ...s, [k]: v }));
 
   const disabled = readOnly;
+
+  // 특정 회원 그룹 — CSV 업로드 명단 (이메일 매칭). 첨부 시 mock 명단 로드
+  const [members, setMembers] = useState<UploadedMember[]>(
+    initial.targetMemberCount > 0 ? MOCK_UPLOADED_MEMBERS : [],
+  );
+  const [memberPage, setMemberPage] = useState(1);
+  const MEMBER_PER_PAGE = 20;
+  const memberTotalPages = Math.max(1, Math.ceil(members.length / MEMBER_PER_PAGE));
+  const pagedMembers = members.slice(
+    (memberPage - 1) * MEMBER_PER_PAGE,
+    memberPage * MEMBER_PER_PAGE,
+  );
+  const attachCsv = () => {
+    setMembers(MOCK_UPLOADED_MEMBERS);
+    setMemberPage(1);
+    set('targetMemberCount', MOCK_UPLOADED_MEMBERS.length);
+  };
 
   return (
     <div className="space-y-6">
@@ -181,8 +208,35 @@ export default function NotificationForm({ readOnly = false, initial }: Props) {
         </div>
       </Section>
 
-      {/* D. 대상 */}
-      <Section title="C. 대상" subtitle="전역 / 아티스트 팬덤 / 특정 회원 그룹">
+      {/* C. 대상 */}
+      <Section title="C. 대상" subtitle="카테고리(필수) + 전역 / 아티스트 팬덤 / 특정 회원 그룹">
+        {/* C-1. 카테고리 (공통·필수) */}
+        <div className="mb-5">
+          <label className="block text-xs font-medium text-gray-600 mb-1.5">
+            카테고리 <span className="text-rose-500">*</span>
+            <span className="ml-1 text-gray-400 font-normal">회원 앱 알림함 분류·필터 기준</span>
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {NOTI_CATEGORIES.map((c) => (
+              <button
+                key={c}
+                type="button"
+                disabled={disabled}
+                onClick={() => set('category', c)}
+                className={`h-9 px-4 rounded-lg text-sm font-medium border transition ${
+                  state.category === c
+                    ? 'border-indigo-400 bg-indigo-50 text-indigo-700'
+                    : 'border-gray-200 bg-white text-gray-600 hover:border-indigo-300'
+                } ${disabled ? 'opacity-70 cursor-not-allowed' : ''}`}
+              >
+                {NOTI_CATEGORY_LABEL[c]}
+              </button>
+            ))}
+          </div>
+          {!state.category && <p className="mt-1.5 text-xs text-rose-500">카테고리를 선택해주세요. (발송 필수)</p>}
+        </div>
+
+        {/* C-2. 대상 종류 */}
         <div className="grid grid-cols-3 gap-3">
           <TargetCard
             active={state.targetType === 'GLOBAL'}
@@ -206,7 +260,7 @@ export default function NotificationForm({ readOnly = false, initial }: Props) {
             onClick={() => set('targetType', 'MEMBER_GROUP')}
             icon={UserGroupIcon}
             title="특정 회원 그룹"
-            desc="검색·CSV 업로드로 임시 그룹 구성"
+            desc="CSV 업로드로 임시 그룹 구성"
           />
         </div>
 
@@ -232,27 +286,50 @@ export default function NotificationForm({ readOnly = false, initial }: Props) {
         )}
 
         {state.targetType === 'MEMBER_GROUP' && (
-          <div className="mt-4 grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">회원 검색·선택</label>
-              <input
-                disabled={disabled}
-                placeholder="닉네임 또는 이메일 검색"
-                className="h-10 px-3 border border-gray-200 rounded-lg text-sm w-full"
-              />
-              <p className="mt-1 text-xs text-gray-400">
-                선택된 회원 수: <span className="font-semibold text-gray-700">{state.targetMemberCount}명</span>
-              </p>
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1.5">CSV 업로드</label>
+          <div className="mt-4">
+            <label className="block text-xs font-medium text-gray-600 mb-1.5">
+              CSV 파일 첨부 <span className="text-gray-400 font-normal">이메일 기준 회원 매칭</span>
+            </label>
+            <div className="flex items-center gap-3">
               <button
+                type="button"
                 disabled={disabled}
-                className="h-10 px-3 border border-dashed border-gray-300 rounded-lg text-sm w-full text-gray-500 hover:bg-gray-50"
+                onClick={attachCsv}
+                className="h-10 px-4 border border-dashed border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 + CSV 파일 첨부
               </button>
+              {members.length > 0 && <span className="text-xs text-gray-500">members.csv · 매칭 완료</span>}
             </div>
+
+            {members.length > 0 && (
+              <div className="mt-4">
+                <p className="mb-2 text-sm text-gray-700">
+                  총 <span className="font-semibold text-indigo-600">{members.length}</span>명
+                </p>
+                <DataTable<UploadedMember>
+                  columns={[
+                    { key: 'nickname', label: '닉네임' },
+                    { key: 'email', label: '이메일' },
+                  ]}
+                  data={pagedMembers}
+                  rowNumber={{ page: memberPage, perPage: MEMBER_PER_PAGE }}
+                  emptyMessage="매칭된 회원이 없습니다."
+                />
+                {memberTotalPages > 1 && (
+                  <div className="mt-3">
+                    <Pagination
+                      currentPage={memberPage}
+                      totalPages={memberTotalPages}
+                      onPageChange={setMemberPage}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+            <p className="mt-2 text-xs text-gray-400">
+              CSV 이메일 컬럼 기준 매칭. 미존재·중복 이메일은 제외하고, 탈퇴·휴면·차단 회원은 자동 제외됩니다.
+            </p>
           </div>
         )}
       </Section>

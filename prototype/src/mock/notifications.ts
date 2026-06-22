@@ -13,6 +13,8 @@
 //
 // 채널 공통: 기본알림(인앱 알림센터) + 푸시알림(Web Push · PWA · iOS는 홈 화면 추가된 회원만)
 
+import { members } from './members';
+
 // 수동 알림 상태 (6종)
 export type ManualNotiStatus =
   | 'DRAFT'           // 임시저장
@@ -28,6 +30,17 @@ export type NotiStatus = ManualNotiStatus;
 export type NotiTargetType = 'GLOBAL' | 'ARTIST_FANDOM' | 'MEMBER_GROUP';
 export type NotiChannel = 'BASIC_ONLY' | 'BASIC_PUSH';
 export type NotiScheduleType = 'IMMEDIATE' | 'SCHEDULED' | 'DRAFT';
+
+// 수동 알림 카테고리 (필수 단일 선택, 회원 앱 알림함 분류·필터 기준. [CEB-BO-013] §17-4)
+// 자동 트리거 카테고리(TriggerCategory 5종)와는 별개 체계
+export type NotiCategory = 'ARTIST' | 'EVENT' | 'GAMEZONE' | 'NOTICE';
+export const NOTI_CATEGORY_LABEL: Record<NotiCategory, string> = {
+  ARTIST: '아티스트',
+  EVENT: '이벤트',
+  GAMEZONE: '게임존',
+  NOTICE: '공지',
+};
+export const NOTI_CATEGORIES: NotiCategory[] = ['ARTIST', 'EVENT', 'GAMEZONE', 'NOTICE'];
 
 export type ArtistGroup = 'V01D' | 'iKON' | 'CELEBUS' | 'MADEIN' | 'UNDER:LIGHT';
 
@@ -45,6 +58,7 @@ export interface Notification {
   pushShort?: I18nText;
   status: NotiStatus;
   channel: NotiChannel;
+  category?: NotiCategory;          // 수동 알림 카테고리 (필수 — 발송 시 검증. mock 호환 위해 optional)
   targetType: NotiTargetType;
   targetArtist?: ArtistGroup;      // ARTIST_FANDOM일 때
   targetMemberCount?: number;       // MEMBER_GROUP일 때
@@ -90,6 +104,23 @@ export function getTargetLabel(n: Notification): string {
   if (n.targetType === 'ARTIST_FANDOM') return `팬덤 · ${n.targetArtist}`;
   return `회원 그룹 · ${n.targetMemberCount ?? 0}명`;
 }
+
+export function getCategoryLabel(c?: NotiCategory): string {
+  return c ? NOTI_CATEGORY_LABEL[c] : '-';
+}
+
+// 특정 회원 그룹 — CSV 업로드 후 표시되는 매칭 회원 명단 (이메일 기준 매칭, [CEB-BO-APP-302] §2-2 C-3)
+export type UploadedMember = {
+  nickname: string;
+  email: string;
+};
+
+// CSV 업로드 시연용 명단 — 실제 회원 리스트(members) 참조. 정상(ACTIVE) 회원만 매칭(탈퇴·휴면·차단 자동 제외).
+// 23명 슬라이스 → 페이지당 20명 페이지네이션 2페이지 시연
+export const MOCK_UPLOADED_MEMBERS: UploadedMember[] = members
+  .filter((m) => m.accountStatus === 'ACTIVE' && m.nickname && m.email !== '-')
+  .slice(0, 23)
+  .map((m) => ({ nickname: m.nickname, email: m.email }));
 
 export function getSendTimingLabel(n: Notification): string {
   if (n.scheduleType === 'DRAFT') return '—';
