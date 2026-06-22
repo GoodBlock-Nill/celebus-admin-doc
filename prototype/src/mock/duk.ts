@@ -152,7 +152,7 @@ export const DUK_POLICY_ACTIVITIES: DukPolicyActivity[] = [
   { key: 'sns_share', label: 'SNS 공유 (기억 공유)', tier: 'T2', cycle: '1일 1회', recommended: 25 },
   { key: 'episode_complete', label: '에피소드 완료', tier: 'T3', cycle: '에피소드당', recommended: 75 },
   { key: 'quest_complete', label: '팬퀘스트 완료', tier: 'T3', cycle: '미션별', recommended: 75 },
-  { key: 'memory_upload', label: '기억저장소 업로드', tier: 'T3', cycle: '업로드당', recommended: 75 },
+  { key: 'memory_upload', label: '기억저장소 업로드', tier: 'T3', cycle: '1일 1회', recommended: 75 },
   { key: 'goods_acquire_normal', label: '디지털 굿즈 획득 (Normal)', tier: 'T3', cycle: '획득당', recommended: 50 },
   { key: 'goods_acquire_event', label: '디지털 굿즈 획득 (Event)', tier: 'T3', cycle: '획득당', recommended: 75 },
   { key: 'goods_acquire_special', label: '디지털 굿즈 획득 (Special)', tier: 'T3', cycle: '획득당', recommended: 100 },
