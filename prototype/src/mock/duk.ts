@@ -128,7 +128,8 @@ export const dukSourcesSpend = ['서포트 응원', '독점 콘텐츠 해금'] a
 
 // ─────────────────────────────────────────────
 // 덕력 지급 정책 ([CEB-BO-ART-401-POLICY] / [CEB-000] §5.2 아티스트별 활동별 지급 정책)
-// 자동 적립 활동만 정책 매트릭스 대상 (Quest 완료·게임 참여는 콘텐츠별 직접 입력 → 제외)
+// 자동 적립 활동 매트릭스. 게임 참여(프리딕션 마켓·트리비아)·팬퀘스트·에피소드도 매트릭스 포함(v1.6).
+//   매트릭스 값 = 기본값. 입력 필드 있는 콘텐츠는 prefill 후 콘텐츠 입력값 우선, 없으면 정책 값 직접 지급.
 // 신규 아티스트 생성 시 권장값으로 기본 정책 자동 생성 → '미설정' 상태 부재
 // ─────────────────────────────────────────────
 export type DukPolicyTier = 'T1' | 'T2' | 'T3' | '보너스';
@@ -137,26 +138,31 @@ export interface DukPolicyActivity {
   key: string;
   label: string;
   tier: DukPolicyTier;
+  cycle: string; // 지급 주기 ([CEB-000] §5.2 빈도, 읽기 전용)
   recommended: number; // [CEB-000] §5.2 권장값
 }
 
-// 정책 매트릭스 대상 자동 적립 활동 9종 (권장값)
+// 정책 매트릭스 대상 자동 적립 활동 19개 행 (지급 주기·권장값)
 export const DUK_POLICY_ACTIVITIES: DukPolicyActivity[] = [
-  { key: 'attendance', label: '출석 체크', tier: 'T1', recommended: 5 },
-  { key: 'ticket_use', label: '응모권 사용 (1장당)', tier: 'T1', recommended: 5 },
-  { key: 'daily_mission', label: '일일 미션 모두 완료', tier: 'T2', recommended: 25 },
-  { key: 'sns_share', label: 'SNS 공유 (기억 공유)', tier: 'T2', recommended: 25 },
-  { key: 'memory_upload', label: '기억저장소 업로드', tier: 'T3', recommended: 75 },
-  { key: 'goods_acquire_normal', label: '디지털 굿즈 획득 (Normal)', tier: 'T3', recommended: 50 },
-  { key: 'goods_acquire_event', label: '디지털 굿즈 획득 (Event)', tier: 'T3', recommended: 75 },
-  { key: 'goods_acquire_special', label: '디지털 굿즈 획득 (Special)', tier: 'T3', recommended: 100 },
-  { key: 'goods_acquire_wicked', label: '디지털 굿즈 획득 (Wicked)', tier: 'T3', recommended: 200 },
-  { key: 'goods_acquire_next', label: '디지털 굿즈 획득 (Next)', tier: 'T3', recommended: 350 },
-  { key: 'goods_acquire_final', label: '디지털 굿즈 획득 (Final)', tier: 'T3', recommended: 500 },
-  { key: 'streak_7', label: '스트릭 7일', tier: '보너스', recommended: 200 },
-  { key: 'streak_14', label: '스트릭 14일', tier: '보너스', recommended: 500 },
-  { key: 'streak_21', label: '스트릭 21일', tier: '보너스', recommended: 750 },
-  { key: 'streak_28', label: '스트릭 28일', tier: '보너스', recommended: 1000 },
+  { key: 'attendance', label: '출석 체크', tier: 'T1', cycle: '1일 1회', recommended: 5 },
+  { key: 'ticket_use', label: '응모권 사용 (1장당)', tier: 'T1', cycle: '행동마다', recommended: 5 },
+  { key: 'daily_mission', label: '일일 미션 모두 완료', tier: 'T2', cycle: '1일 1회', recommended: 25 },
+  { key: 'prediction_join', label: '프리딕션 마켓 참여', tier: 'T2', cycle: '행동마다', recommended: 25 },
+  { key: 'trivia_join', label: '트리비아 참여', tier: 'T2', cycle: '행동마다', recommended: 25 },
+  { key: 'sns_share', label: 'SNS 공유 (기억 공유)', tier: 'T2', cycle: '1일 1회', recommended: 25 },
+  { key: 'episode_complete', label: '에피소드 완료', tier: 'T3', cycle: '에피소드당', recommended: 75 },
+  { key: 'quest_complete', label: '팬퀘스트 완료', tier: 'T3', cycle: '미션별', recommended: 75 },
+  { key: 'memory_upload', label: '기억저장소 업로드', tier: 'T3', cycle: '업로드당', recommended: 75 },
+  { key: 'goods_acquire_normal', label: '디지털 굿즈 획득 (Normal)', tier: 'T3', cycle: '획득당', recommended: 50 },
+  { key: 'goods_acquire_event', label: '디지털 굿즈 획득 (Event)', tier: 'T3', cycle: '획득당', recommended: 75 },
+  { key: 'goods_acquire_special', label: '디지털 굿즈 획득 (Special)', tier: 'T3', cycle: '획득당', recommended: 100 },
+  { key: 'goods_acquire_wicked', label: '디지털 굿즈 획득 (Wicked)', tier: 'T3', cycle: '획득당', recommended: 200 },
+  { key: 'goods_acquire_next', label: '디지털 굿즈 획득 (Next)', tier: 'T3', cycle: '획득당', recommended: 350 },
+  { key: 'goods_acquire_final', label: '디지털 굿즈 획득 (Final)', tier: 'T3', cycle: '획득당', recommended: 500 },
+  { key: 'streak_7', label: '스트릭 7일', tier: '보너스', cycle: '주기당', recommended: 200 },
+  { key: 'streak_14', label: '스트릭 14일', tier: '보너스', cycle: '주기당', recommended: 500 },
+  { key: 'streak_21', label: '스트릭 21일', tier: '보너스', cycle: '주기당', recommended: 750 },
+  { key: 'streak_28', label: '스트릭 28일', tier: '보너스', cycle: '주기당', recommended: 1000 },
 ];
 
 export interface DukPolicyRow {

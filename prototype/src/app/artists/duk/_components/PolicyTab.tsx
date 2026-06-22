@@ -12,7 +12,8 @@ import {
 } from '@/mock/duk';
 
 // [CEB-BO-ART-401-POLICY] 덕력 지급 정책 — 아티스트 그룹별 자동 적립 활동 덕력 지급량·사용 여부
-// Quest·게임 참여는 콘텐츠별 직접 입력 → 매트릭스 제외. 신규 아티스트는 권장값 기본 정책 자동 생성(미설정 부재)
+// 게임 참여(프리딕션 마켓·트리비아)·팬퀘스트·에피소드도 매트릭스 포함(v1.6). 매트릭스 값=기본값(입력 필드 있는 콘텐츠는 prefill·콘텐츠값 우선).
+// 컬럼: 활동·티어·지급 주기([CEB-000] §5.2 빈도)·권장값·지급 덕력·사용. 신규 아티스트는 권장값 기본 정책 자동 생성(미설정 부재)
 
 const tierBadge: Record<string, string> = {
   T1: 'bg-sky-50 text-sky-700',
@@ -66,7 +67,7 @@ export default function PolicyTab() {
   return (
     <div>
       <p className="text-sm text-gray-500 mb-4">
-        아티스트 그룹별 자동 적립 활동의 덕력 지급량을 설정합니다. Quest·게임 참여는 각 콘텐츠 생성 시 직접 입력합니다.
+        표의 값은 활동별 덕력 기본값입니다. 생성 화면에서 지급 덕력을 따로 입력하는 서비스는 입력한 값이 우선 지급됩니다. 별도 입력 폼이 없는 활동은 이 정책 값이 지급되며, 사용 안함 상태에서는 미지급됩니다.
       </p>
 
       {/* 그룹 선택 + 액션 */}
@@ -100,6 +101,7 @@ export default function PolicyTab() {
             <tr>
               <th className="px-4 py-3 text-left font-medium">활동</th>
               <th className="px-4 py-3 text-left font-medium w-[90px]">티어</th>
+              <th className="px-4 py-3 text-left font-medium w-[100px]">지급 주기</th>
               <th className="px-4 py-3 text-right font-medium w-[90px]">권장값</th>
               <th className="px-4 py-3 text-right font-medium w-[140px]">지급 덕력</th>
               <th className="px-4 py-3 text-center font-medium w-[100px]">사용</th>
@@ -115,6 +117,7 @@ export default function PolicyTab() {
                   <td className="px-4 py-3">
                     <span className={`inline-flex rounded px-2 py-0.5 text-[11px] font-medium ${tierBadge[a.tier]}`}>{a.tier}</span>
                   </td>
+                  <td className="px-4 py-3 text-left text-gray-400">{a.cycle}</td>
                   <td className="px-4 py-3 text-right text-gray-400">{a.recommended.toLocaleString()}</td>
                   <td className="px-4 py-3 text-right">
                     <input
