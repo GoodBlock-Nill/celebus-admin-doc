@@ -31,8 +31,8 @@ export type NotiTargetType = 'GLOBAL' | 'ARTIST_FANDOM' | 'MEMBER_GROUP';
 export type NotiChannel = 'BASIC_ONLY' | 'BASIC_PUSH';
 export type NotiScheduleType = 'IMMEDIATE' | 'SCHEDULED' | 'DRAFT';
 
-// 수동 알림 카테고리 (필수 단일 선택, 회원 앱 알림함 분류·필터 기준. [CEB-BO-013] §17-4)
-// 자동 트리거 카테고리(TriggerCategory 5종)와는 별개 체계
+// 알림 카테고리 (필수 단일 선택, 회원 앱 알림함 분류·필터 기준. [CEB-BO-013] §17-4)
+// 수동 알림·자동 트리거 공통 4종 (TriggerCategory도 동일)
 export type NotiCategory = 'ARTIST' | 'EVENT' | 'GAMEZONE' | 'NOTICE';
 export const NOTI_CATEGORY_LABEL: Record<NotiCategory, string> = {
   ARTIST: '아티스트',
@@ -356,20 +356,10 @@ export function getManualStats() {
 // 운영자는 신규 등록·메시지 수정·활성 변경 모두 불가. 변경은 개발팀 요청 채널.
 // 백오피스에서 노출되는 상태는 "사용중 / 미사용" 2종만 (active boolean).
 
-export type TriggerCategory =
-  | 'RAFFLE'
-  | 'SQ_QUEST'
-  | 'BIVE'
-  | 'MEMBER_ACTIVITY'
-  | 'SYSTEM_NOTICE';
+// 자동 트리거 카테고리 = 수동 알림 카테고리와 동일 4종 (아티스트/이벤트/게임존/공지). [CEB-BO-013] §17-4
+export type TriggerCategory = NotiCategory;
 
-export const TRIGGER_CATEGORY_LABEL: Record<TriggerCategory, string> = {
-  RAFFLE: '래플',
-  SQ_QUEST: '응원하기 · 퀘스트',
-  BIVE: 'BIVE',
-  MEMBER_ACTIVITY: '회원 활동',
-  SYSTEM_NOTICE: '시스템 공지',
-};
+export const TRIGGER_CATEGORY_LABEL: Record<TriggerCategory, string> = NOTI_CATEGORY_LABEL;
 
 export interface TriggerPolicy {
   id: string;
@@ -389,7 +379,7 @@ export const TRIGGER_POLICIES: TriggerPolicy[] = [
   {
     id: 'TRG-001',
     name: '래플 · 당첨자 결정',
-    category: 'RAFFLE',
+    category: 'EVENT',
     triggerCondition: '회원이 응모한 래플의 당첨자가 결정될 때 당첨자 본인에게 즉시 발송',
     active: true,
     channel: 'BASIC_PUSH',
@@ -406,7 +396,7 @@ export const TRIGGER_POLICIES: TriggerPolicy[] = [
   {
     id: 'TRG-002',
     name: '래플 · 추첨 종료 미당첨자',
-    category: 'RAFFLE',
+    category: 'EVENT',
     triggerCondition: '래플 추첨이 종료되어 미당첨자가 확정될 때 응모자 본인에게 발송',
     active: true,
     channel: 'BASIC_ONLY',
@@ -422,7 +412,7 @@ export const TRIGGER_POLICIES: TriggerPolicy[] = [
   {
     id: 'TRG-003',
     name: '퀘스트 · 제출 승인',
-    category: 'SQ_QUEST',
+    category: 'EVENT',
     triggerCondition: '운영자가 회원의 퀘스트 제출을 승인할 때 제출자 본인에게 즉시 발송',
     active: true,
     channel: 'BASIC_PUSH',
@@ -438,7 +428,7 @@ export const TRIGGER_POLICIES: TriggerPolicy[] = [
   {
     id: 'TRG-004',
     name: '퀘스트 · 제출 반려',
-    category: 'SQ_QUEST',
+    category: 'EVENT',
     triggerCondition: '운영자가 회원의 퀘스트 제출을 반려할 때 제출자 본인에게 즉시 발송. 반려 사유 포함',
     active: true,
     channel: 'BASIC_PUSH',
@@ -454,7 +444,7 @@ export const TRIGGER_POLICIES: TriggerPolicy[] = [
   {
     id: 'TRG-005',
     name: 'BIVE · 구매 완료',
-    category: 'BIVE',
+    category: 'ARTIST',
     triggerCondition: '회원의 BIVE 구매 트랜잭션이 완료될 때 구매자 본인에게 즉시 발송',
     active: true,
     channel: 'BASIC_PUSH',
@@ -471,7 +461,7 @@ export const TRIGGER_POLICIES: TriggerPolicy[] = [
   {
     id: 'TRG-006',
     name: 'BIVE · 민팅 시작',
-    category: 'BIVE',
+    category: 'ARTIST',
     triggerCondition: 'BIVE 컬렉션 민팅이 실제로 시작될 때 해당 컬렉션 구매 자격이 있는 회원에게 발송',
     active: true,
     channel: 'BASIC_PUSH',
@@ -488,7 +478,7 @@ export const TRIGGER_POLICIES: TriggerPolicy[] = [
   {
     id: 'TRG-007',
     name: '회원 · 가입 환영',
-    category: 'MEMBER_ACTIVITY',
+    category: 'NOTICE',
     triggerCondition: '회원 가입이 완료될 때 신규 회원에게 즉시 발송',
     active: true,
     channel: 'BASIC_PUSH',
@@ -505,7 +495,7 @@ export const TRIGGER_POLICIES: TriggerPolicy[] = [
   {
     id: 'TRG-008',
     name: '시스템 · 점검 사전 공지',
-    category: 'SYSTEM_NOTICE',
+    category: 'NOTICE',
     triggerCondition: '예정된 시스템 점검 24시간 전에 전체 회원에게 자동 공지',
     active: false,
     channel: 'BASIC_PUSH',
