@@ -183,6 +183,25 @@ export const fandomLevels: FandomLevel[] = [
     biveGrants: [],
   },
   {
+    id: 8, status: '진행중', levelStatus: '최고레벨', groupName: 'CELEBUS', season: 'CELEBUS 팬덤 2기 (2026)', seasonPeriod: '2026.01.01 ~ 2026.12.31',
+    levels: curve(5), currentLevel: 5, accumulatedDuk: 350000, participants: 6800, updatedAt: '2026.06.23 10:00',
+    rewards: [
+      { level: 3, kind: '디지털 굿즈', biveCampaignId: 'BIVE-CMP-04', titleKo: 'CELEBUS 기념 BIVE', titleEn: 'CELEBUS Anniversary BIVE', titleJp: 'CELEBUS 記念 BIVE', sortOrder: 1 },
+      { level: 5, kind: '서포트 예고', announceKo: 'Lv.5 달성 시 팬미팅 서포트 이벤트 예정', announceEn: 'Fanmeeting support event upon reaching Lv.5', announceJp: 'Lv.5達成時 ファンミーティング サポートイベント予定', sortOrder: 1 },
+    ],
+    levelUpHistory: [
+      { level: 1, achievedAt: '2026.02.05 10:00', targetMemberCount: 2100, rewardSummary: '보상 없음' },
+      { level: 2, achievedAt: '2026.03.10 11:30', targetMemberCount: 3400, rewardSummary: '보상 없음' },
+      { level: 3, achievedAt: '2026.04.12 14:00', targetMemberCount: 4600, rewardSummary: '디지털 굿즈 · CELEBUS 기념 BIVE 캠페인' },
+      { level: 4, achievedAt: '2026.05.15 09:20', targetMemberCount: 5700, rewardSummary: '보상 없음' },
+      { level: 5, achievedAt: '2026.06.20 16:40', targetMemberCount: 6800, rewardSummary: '서포트 예고 · Lv.5 달성 시 팬미팅 서포트 이벤트 예정' },
+    ],
+    biveGrants: [
+      { id: 1, member: 'celebus_one', level: 3, campaignName: 'CELEBUS 기념 BIVE 캠페인', mintStatus: '완료', date: '2026.04.12 14:01' },
+      { id: 2, member: 'luna_fan', level: 3, campaignName: 'CELEBUS 기념 BIVE 캠페인', mintStatus: '완료', date: '2026.04.12 14:03' },
+    ],
+  },
+  {
     id: 1, status: '진행중', levelStatus: '최고레벨', groupName: '언더라이트 (UNDER:LIGHT)', season: '언더라이트 팬덤 2기 (2026)', seasonPeriod: '2026.01.01 ~ 2026.12.31',
     levels: curve(10), currentLevel: 10, accumulatedDuk: 6400000, participants: 41000, updatedAt: '2026.05.28 08:00',
     rewards: [
