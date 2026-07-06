@@ -1,0 +1,31 @@
+{
+  "name": "celebus-feedback",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3200 --webpack",
+    "build": "next build --webpack",
+    "start": "next start -p 3200"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.104.0",
+    "date-fns": "^4.1.0",
+    "html-to-image": "^1.11.13",
+    "lucide-react": "^1.8.0",
+    "next": "16.1.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "sonner": "^2.0.7",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@serwist/next": "^9.5.7",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "serwist": "^9.5.7",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

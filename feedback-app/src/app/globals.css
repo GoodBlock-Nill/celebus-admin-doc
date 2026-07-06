@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #121212;
+  --color-card: #1c1c28;
+  --color-card-2: #23232f;
+  --color-border: #2a2a33;
+  --color-fg: #fafafa;
+  --color-muted: #a1a1aa;
+  --color-primary: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-primary-400: #a78bfa;
+  --color-accent: #ec4899;
+  --color-danger: #eb5757;
+
+  --font-sans: var(--font-noto), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  background: var(--color-bg);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+/* CELEBUS 그라데이션 텍스트 */
+.grad {
+  background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 얇은 스크롤바 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3a3a44 transparent;
+}
