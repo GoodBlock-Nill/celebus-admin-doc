@@ -10,9 +10,13 @@ const noto = Noto_Sans_KR({
   display: "swap",
 });
 
+const SITE_URL = "https://celebus-fanvoice.vercel.app";
+const SITE_DESC = "CELEBUS FanVoice — 당신의 목소리가 콘텐츠가 됩니다";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "CELEBUS FanVoice",
-  description: "V01D 팬보이스 — 여러분의 목소리가 다음을 만듭니다",
+  description: SITE_DESC,
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -20,6 +24,19 @@ export const metadata: Metadata = {
     title: "CELEBUS FanVoice",
   },
   icons: { icon: "/symbol.svg", shortcut: "/symbol.svg", apple: "/icons/icon-192.png" },
+  openGraph: {
+    type: "website",
+    siteName: "CELEBUS FanVoice",
+    title: "CELEBUS FanVoice",
+    description: SITE_DESC,
+    url: "/",
+    locale: "ko_KR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CELEBUS FanVoice",
+    description: SITE_DESC,
+  },
 };
 
 export const viewport: Viewport = {

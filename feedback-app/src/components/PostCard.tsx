@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Heart, MoreHorizontal, Pencil, Trash2, ImageDown, Siren } from "lucide-react";
+import { Heart, MoreHorizontal, Pencil, Trash2, ImageDown, Siren, Share2, MessageSquare } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import type { PostPublic } from "@/lib/types";
 import { getDateLocale } from "@/lib/i18n";
@@ -19,6 +19,7 @@ export default function PostCard({
   onEdit,
   onDelete,
   onSaveImage,
+  onShare,
 }: {
   post: PostPublic;
   rank?: number;
@@ -28,6 +29,7 @@ export default function PostCard({
   onEdit: (p: PostPublic) => void;
   onDelete: (p: PostPublic) => void;
   onSaveImage: (p: PostPublic) => void;
+  onShare: (p: PostPublic) => void;
 }) {
   const { t, lang } = useLang();
   const [menu, setMenu] = useState(false);
@@ -72,6 +74,9 @@ export default function PostCard({
           <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} />
           {post.like_count}
         </button>
+        <Link href={`/post/${post.id}`} className="flex items-center gap-1.5 rounded-full bg-card-2 px-3 py-1 text-sm font-semibold text-muted hover:text-fg">
+          <MessageSquare className="h-4 w-4" /> {post.comment_count}
+        </Link>
         <button
           onClick={() => onReport(post)}
           className="ml-auto flex items-center gap-1 text-[12px] text-muted hover:text-danger"
@@ -87,6 +92,7 @@ export default function PostCard({
             {[
               { icon: Pencil, label: t("edit"), fn: () => onEdit(post) },
               { icon: Trash2, label: t("del"), fn: () => onDelete(post) },
+              { icon: Share2, label: t("share"), fn: () => onShare(post) },
               { icon: ImageDown, label: t("saveImage"), fn: () => onSaveImage(post) },
             ].map(({ icon: Icon, label, fn }) => (
               <button

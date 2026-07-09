@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FileText, Sparkles, Siren, Star, Gift, Truck, ArrowRight } from "lucide-react";
+import { FileText, Sparkles, Siren, Star, Gift, Truck, ArrowRight, MessageSquare } from "lucide-react";
 import type { AdminStats } from "@/lib/admin-types";
 import type { AdminTab } from "./tabs";
 
@@ -20,6 +20,7 @@ export default function Overview({ headers, onNavigate }: { headers: () => Recor
     { icon: Sparkles, label: "오늘 신규", value: s?.today, tone: "text-primary-400" },
     { icon: Siren, label: "신고 대기", value: s?.reported, tone: (s?.reported ?? 0) > 0 ? "text-danger" : "text-muted" },
     { icon: Star, label: "채택", value: s?.curated, tone: "text-amber-300" },
+    { icon: MessageSquare, label: "댓글 신고", value: s?.commentsReported, tone: (s?.commentsReported ?? 0) > 0 ? "text-danger" : "text-muted" },
     { icon: Gift, label: "발표 총", value: s?.prizeTotal, tone: "text-fg" },
     { icon: Truck, label: "배송 대기", value: s?.shippingPending, tone: (s?.shippingPending ?? 0) > 0 ? "text-emerald-400" : "text-muted" },
   ];

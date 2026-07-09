@@ -2,6 +2,7 @@
 
 const DEVICE_KEY = "cfb_device";
 const LIKED_KEY = "cfb_liked";
+const COMMENT_LIKED_KEY = "cfb_comment_liked";
 
 export function getDeviceId(): string {
   if (typeof window === "undefined") return "";
@@ -35,6 +36,25 @@ export function addLiked(id: string): void {
     const s = getLiked();
     s.add(id);
     localStorage.setItem(LIKED_KEY, JSON.stringify([...s]));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function getCommentLiked(): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    return new Set(JSON.parse(localStorage.getItem(COMMENT_LIKED_KEY) ?? "[]") as string[]);
+  } catch {
+    return new Set();
+  }
+}
+
+export function addCommentLiked(id: string): void {
+  try {
+    const s = getCommentLiked();
+    s.add(id);
+    localStorage.setItem(COMMENT_LIKED_KEY, JSON.stringify([...s]));
   } catch {
     /* ignore */
   }

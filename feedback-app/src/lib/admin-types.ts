@@ -54,6 +54,20 @@ export interface AdminStats {
   curated: number;
   prizeTotal: number;
   shippingPending: number;
+  commentsReported: number;
+}
+
+export interface AdminComment {
+  id: string;
+  post_id: string;
+  nickname: string;
+  body: string;
+  like_count: number;
+  report_count: number;
+  hidden: boolean;
+  is_op: boolean;
+  pinned: boolean;
+  created_at: string;
 }
 
 export type PostStatusFilter = "all" | "reported" | "hidden" | "curated" | "pinned" | "candidates";

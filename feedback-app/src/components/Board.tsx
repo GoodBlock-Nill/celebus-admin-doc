@@ -10,11 +10,12 @@ import { useLang } from "./LangProvider";
 import PostCard from "./PostCard";
 import PostEditor from "./PostEditor";
 import RewardsSection from "./RewardsSection";
+import ShareModal from "./ShareModal";
 import { VerifyModal, DeleteModal, CardModal } from "./Modals";
 
 const PAGE = 10;
 type Modal =
-  | { type: "verify" | "delete" | "card"; post: PostPublic }
+  | { type: "verify" | "delete" | "card" | "share"; post: PostPublic }
   | { type: "edit"; post: PostPublic; password: string }
   | null;
 
@@ -146,6 +147,7 @@ export default function Board() {
     onEdit: (post: PostPublic) => setModal({ type: "verify", post }),
     onDelete: (post: PostPublic) => setModal({ type: "delete", post }),
     onSaveImage: (post: PostPublic) => setModal({ type: "card", post }),
+    onShare: (post: PostPublic) => setModal({ type: "share", post }),
   });
 
   const totalPages = Math.max(1, Math.ceil(latestCount / PAGE));
@@ -329,6 +331,7 @@ export default function Board() {
         />
       )}
       {modal?.type === "card" && <CardModal post={modal.post} onClose={() => setModal(null)} />}
+      {modal?.type === "share" && <ShareModal post={modal.post} onClose={() => setModal(null)} />}
     </>
   );
 }

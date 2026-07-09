@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ChevronLeft, Heart, Siren, Pencil, Trash2, ImageDown } from "lucide-react";
+import { ChevronLeft, Heart, Siren, Pencil, Trash2, ImageDown, Share2 } from "lucide-react";
 import { format } from "date-fns";
 import { sb } from "@/lib/supabase-browser";
 import { getDeviceId, getLiked, addLiked } from "@/lib/client-util";
@@ -12,10 +12,12 @@ import { useLang } from "./LangProvider";
 import TargetBadge from "./TargetBadge";
 import { PostBadges, OfficialReply } from "./Badges";
 import PostEditor from "./PostEditor";
+import ShareModal from "./ShareModal";
+import CommentSection from "./comments/CommentSection";
 import { VerifyModal, DeleteModal, CardModal } from "./Modals";
 
 type Modal =
-  | { type: "verify" | "delete" | "card" }
+  | { type: "verify" | "delete" | "card" | "share" }
   | { type: "edit"; password: string }
   | null;
 
@@ -116,6 +118,9 @@ export default function PostDetail({ id }: { id: string }) {
             <Siren className="h-4 w-4" /> {t("report")}
           </button>
           <div className="ml-auto flex items-center gap-2">
+            <button onClick={() => setModal({ type: "share" })} className="flex items-center gap-1 rounded-full bg-card px-3 py-2 text-sm text-muted hover:text-fg">
+              <Share2 className="h-4 w-4" /> {t("share")}
+            </button>
             <button onClick={() => setModal({ type: "verify" })} className="flex items-center gap-1 rounded-full bg-card px-3 py-2 text-sm text-muted hover:text-fg">
               <Pencil className="h-4 w-4" /> {t("edit")}
             </button>
@@ -127,6 +132,9 @@ export default function PostDetail({ id }: { id: string }) {
             </button>
           </div>
         </div>
+
+        {/* 댓글 */}
+        <CommentSection postId={post.id} />
       </main>
 
       {modal?.type === "verify" && (
@@ -155,6 +163,7 @@ export default function PostDetail({ id }: { id: string }) {
         />
       )}
       {modal?.type === "card" && <CardModal post={post} onClose={() => setModal(null)} />}
+      {modal?.type === "share" && <ShareModal post={post} onClose={() => setModal(null)} />}
     </>
   );
 }

@@ -83,6 +83,7 @@ export default function PostEditor({
           pinned: false,
           impl_status: "none",
           official_reply: null,
+          comment_count: 0,
         });
       }
       onClose();

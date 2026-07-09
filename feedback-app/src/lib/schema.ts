@@ -28,6 +28,19 @@ export const likeSchema = z.object({
   voter: z.string().min(8).max(64),
 });
 
+// 댓글 (평면 · 닉네임+비밀번호 · 선택적 OP 인증)
+export const createCommentSchema = z.object({
+  post_id: z.string().uuid(),
+  nickname: z.string().trim().min(1, "닉네임을 입력해주세요.").max(20, "닉네임은 20자 이하로 입력해주세요."),
+  password: z.string().min(4, "비밀번호는 4자 이상이어야 해요.").max(64),
+  body: z.string().trim().min(2, "댓글을 2자 이상 입력해주세요.").max(500, "댓글은 500자 이하로 입력해주세요."),
+  op_password: z.string().max(64).optional(),
+});
+
+export const deleteCommentSchema = z.object({
+  password: z.string().min(1).max(64),
+});
+
 // 관리자: 채택/고정/실현상태/공식답글 (부분 갱신 — 온 필드만 반영)
 export const adminPatchSchema = z.object({
   hidden: z.boolean().optional(),

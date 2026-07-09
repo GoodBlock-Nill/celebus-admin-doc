@@ -15,7 +15,7 @@ export async function GET(req: Request) {
   const db = admin();
   const head = { count: "exact" as const, head: true };
 
-  const [total, today, reported, hidden, curated, prizeTotal, shippingPending] = await Promise.all([
+  const [total, today, reported, hidden, curated, prizeTotal, shippingPending, commentsReported] = await Promise.all([
     db.from("posts").select("id", head),
     db.from("posts").select("id", head).gte("created_at", kstTodayStartIso()),
     db.from("posts").select("id", head).gt("report_count", 0),
@@ -23,6 +23,7 @@ export async function GET(req: Request) {
     db.from("posts").select("id", head).eq("curated", true),
     db.from("prizes").select("id", head),
     db.from("prizes").select("id", head).eq("claim_status", "claimed"),
+    db.from("comments").select("id", head).gt("report_count", 0),
   ]);
 
   return NextResponse.json({
@@ -33,5 +34,6 @@ export async function GET(req: Request) {
     curated: curated.count ?? 0,
     prizeTotal: prizeTotal.count ?? 0,
     shippingPending: shippingPending.count ?? 0,
+    commentsReported: commentsReported.count ?? 0,
   });
 }

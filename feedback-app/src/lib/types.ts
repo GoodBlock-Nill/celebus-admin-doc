@@ -18,6 +18,20 @@ export interface PostPublic {
   pinned: boolean;
   impl_status: ImplStatus;
   official_reply: string | null;
+  comment_count: number;
+}
+
+export interface CommentPublic {
+  id: string;
+  post_id: string;
+  nickname: string;
+  body: string;
+  like_count: number;
+  is_op: boolean;
+  pinned: boolean;
+  created_at: string;
+  updated_at: string;
+  edited: boolean;
 }
 
 export const PRIZE_TYPES = ["curated", "raffle"] as const;

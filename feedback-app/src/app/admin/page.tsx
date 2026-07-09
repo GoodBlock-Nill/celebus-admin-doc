@@ -2,14 +2,15 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ShieldCheck, LogOut, LayoutDashboard, FileText, Siren, Gift, ScrollText } from "lucide-react";
+import { ShieldCheck, LogOut, LayoutDashboard, FileText, Siren, Gift, ScrollText, MessageSquare } from "lucide-react";
 import { TABS, type AdminTab } from "@/components/admin/tabs";
 import Overview from "@/components/admin/Overview";
 import PostsPanel from "@/components/admin/PostsPanel";
+import CommentsPanel from "@/components/admin/CommentsPanel";
 import RewardsPanel from "@/components/admin/RewardsPanel";
 import LogsPanel from "@/components/admin/LogsPanel";
 
-const ICONS: Record<string, typeof FileText> = { LayoutDashboard, FileText, Siren, Gift, ScrollText };
+const ICONS: Record<string, typeof FileText> = { LayoutDashboard, FileText, MessageSquare, Siren, Gift, ScrollText };
 const STORE_KEY = "fv_admin_pw";
 
 export default function AdminPage() {
@@ -100,6 +101,7 @@ export default function AdminPage() {
 
       {tab === "overview" && <Overview headers={headers} onNavigate={setTab} />}
       {tab === "posts" && <PostsPanel headers={headers} heading="글 관리" />}
+      {tab === "comments" && <CommentsPanel headers={headers} />}
       {tab === "moderation" && <PostsPanel headers={headers} fixedStatus="reported" heading="신고함" emptyText="신고된 글이 없어요. 👍" />}
       {tab === "rewards" && <RewardsPanel headers={headers} />}
       {tab === "logs" && <LogsPanel headers={headers} />}
