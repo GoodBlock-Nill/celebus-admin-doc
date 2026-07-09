@@ -15,28 +15,30 @@ export default function CommentComposer({ postId, onAdded }: { postId: string; o
 
   async function submit() {
     if (body.trim().length < 2) return toast.error(t("err_body"));
-    if (nickname.trim().length < 1) return toast.error(t("err_nickname"));
-    if (password.length < 4) return toast.error(t("err_password"));
+    if (isOp) {
+      if (opPw.length < 1) return toast.error(t("err_need_pw"));
+    } else {
+      if (nickname.trim().length < 1) return toast.error(t("err_nickname"));
+      if (password.length < 4) return toast.error(t("err_password"));
+    }
     setBusy(true);
     try {
+      // 작성자 모드: 글 비밀번호만 / 일반 모드: 닉네임+비밀번호
+      const payload = isOp
+        ? { post_id: postId, body: body.trim(), op_password: opPw }
+        : { post_id: postId, body: body.trim(), nickname: nickname.trim(), password };
       const res = await fetch("/api/comments", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          post_id: postId,
-          nickname: nickname.trim(),
-          password,
-          body: body.trim(),
-          op_password: isOp && opPw ? opPw : undefined,
-        }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? t("err_comment"));
       toast.success(t("toast_comment"));
       setBody("");
       setPassword("");
+      setNickname("");
       setOpPw("");
-      setIsOp(false);
       onAdded();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : t("err_comment"));
@@ -51,12 +53,17 @@ export default function CommentComposer({ postId, onAdded }: { postId: string; o
     <div className="rounded-2xl border border-border bg-card/50 p-3">
       <textarea value={body} onChange={(e) => setBody(e.target.value.slice(0, 500))} placeholder={t("comment_ph")} rows={2} className={`w-full resize-none ${inp}`} />
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <input value={nickname} onChange={(e) => setNickname(e.target.value.slice(0, 20))} placeholder={t("ph_nickname")} className={`${inp} w-32`} />
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value.slice(0, 64))} placeholder={t("ph_password_only")} className={`${inp} w-32`} />
+        {isOp ? (
+          <input type="password" value={opPw} onChange={(e) => setOpPw(e.target.value.slice(0, 64))} placeholder={t("comment_op_ph")} className={`${inp} w-40`} autoFocus />
+        ) : (
+          <>
+            <input value={nickname} onChange={(e) => setNickname(e.target.value.slice(0, 20))} placeholder={t("ph_nickname")} className={`${inp} w-32`} />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value.slice(0, 64))} placeholder={t("ph_password_only")} className={`${inp} w-32`} />
+          </>
+        )}
         <label className="flex items-center gap-1 text-[12px] text-muted">
           <input type="checkbox" checked={isOp} onChange={(e) => setIsOp(e.target.checked)} className="accent-primary" /> {t("comment_op_toggle")}
         </label>
-        {isOp && <input type="password" value={opPw} onChange={(e) => setOpPw(e.target.value.slice(0, 64))} placeholder={t("comment_op_ph")} className={`${inp} w-32`} />}
         <button onClick={submit} disabled={busy} className="ml-auto rounded-full bg-primary px-4 py-1.5 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-40">
           {t("comment_submit")}
         </button>

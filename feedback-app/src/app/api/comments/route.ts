@@ -13,8 +13,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "입력값을 확인해주세요." }, { status: 400 });
   }
   const { post_id, nickname, password, body, op_password } = parsed.data;
+  const authorMode = !!(op_password && op_password.length);
 
-  if (containsProfanity(nickname, body)) {
+  if (containsProfanity(body, nickname ?? "")) {
     return NextResponse.json({ error: "부적절한 표현이 포함되어 있어요." }, { status: 400 });
   }
 
@@ -33,12 +34,17 @@ export async function POST(req: Request) {
 
   const { data: id, error } = await db.rpc("create_comment", {
     p_post_id: post_id,
-    p_nickname: nickname,
     p_body: body,
-    p_password: password,
     p_author_hash: authorHash,
+    p_nickname: nickname ?? null,
+    p_password: password ?? null,
     p_op_password: op_password ?? null,
   });
-  if (error || !id) return NextResponse.json({ error: "저장 중 오류가 발생했어요." }, { status: 500 });
+  if (error) return NextResponse.json({ error: "저장 중 오류가 발생했어요." }, { status: 500 });
+  if (!id) {
+    return authorMode
+      ? NextResponse.json({ error: "글 비밀번호가 일치하지 않아요." }, { status: 401 })
+      : NextResponse.json({ error: "저장 중 오류가 발생했어요." }, { status: 500 });
+  }
   return NextResponse.json({ id });
 }
