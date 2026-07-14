@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── 뉴트럴 다크 계조 (elevation) ── */
+  --color-surface-0: #0b0b0d; /* 페이지 배경 */
+  --color-surface-1: #141417; /* 카드 */
+  --color-surface-2: #1c1c20; /* hover / 상승 */
+  --color-surface-3: #26262c; /* 시트 / 모달 */
+  --color-hairline: #232327; /* 거의 안 보이는 실선 */
+  --color-line: #35353d; /* 강조 디바이더 */
+
+  /* 기존 이름 유지(값만 재매핑) — 회귀 방지 */
+  --color-bg: #0b0b0d;
+  --color-card: #141417;
+  --color-card-2: #1c1c20;
+  --color-border: #232327;
+  --color-fg: #f4f4f5;
+  --color-muted: #a1a1aa;
+  --color-subtle: #71717a;
+
+  /* ── 보라 포인트 (CTA·하이라이트 전용) ── */
+  --color-primary: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-primary-strong: #7c3aed;
+  --color-primary-400: #a78bfa;
+
+  /* ── 신호색 (최소화) ── */
+  --color-accent: #ec4899; /* 잔재 — P2에서 제거 예정 */
+  --color-live: #f43f5e; /* D-day 펄스 전용 */
+  --color-verified: #34d399;
+  --color-danger: #f87171;
+
+  /* ── 메달 (채도 강화) ── */
+  --color-gold: #f5c451;
+  --color-silver: #c9cdd6;
+  --color-bronze: #cd8b57;
+
+  /* ── 유형 시그니처색 (영상/이미지 분기, CTA 보라와 별개) ── */
+  --color-video: #7c9cff; /* 쿨 인디고 — 시네마틱 */
+  --color-image: #f0a868; /* 웜 앰버 — 갤러리 */
+
+  /* ── radius 스케일 ── */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+
+  --font-sans: var(--font-noto), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  background: var(--color-surface-0);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-surface-0);
+  color: var(--color-fg);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+/* ── eyebrow (kicker) ── */
+.eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-subtle);
+}
+
+/* ── 미디어 스크림 (썸네일 위 하단 그라데이션 — 텍스트 가독) ── */
+.media-scrim {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.35) 42%, transparent 72%);
+}
+
+/* ── 마소니 (이미지 콘테스트 갤러리) ── */
+.masonry {
+  column-count: 2;
+  column-gap: 0.5rem;
+}
+.masonry > * {
+  break-inside: avoid;
+  margin-bottom: 0.5rem;
+}
+
+/* ── 유형별 글로우 ── */
+.glow-video {
+  box-shadow: 0 0 0 1px rgba(124, 156, 255, 0.18), 0 18px 48px -12px rgba(124, 156, 255, 0.28);
+}
+.glow-image {
+  box-shadow: 0 0 0 1px rgba(240, 168, 104, 0.2), 0 18px 48px -12px rgba(240, 168, 104, 0.3);
+}
+
+/* ── D-day 라이브 펄스 ── */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(244, 63, 94, 0); }
+}
+.pulse-chip {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ── 카드 hover 상승 ── */
+.lift {
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+.lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* ── 히어로 배경 글로우 (은은하게) ── */
+.hero-glow {
+  background:
+    radial-gradient(ellipse 620px 340px at 50% -6%, rgba(124, 58, 237, 0.16), transparent 68%),
+    var(--color-surface-0);
+}
+
+/* ── 얇은 스크롤바 ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3a3a44 transparent;
+}
