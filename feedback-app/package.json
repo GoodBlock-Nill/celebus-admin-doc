@@ -8,6 +8,7 @@
     "start": "next start -p 3200"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.111.0",
     "@supabase/supabase-js": "^2.104.0",
     "date-fns": "^4.1.0",
     "html-to-image": "^1.11.13",

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { X } from "lucide-react";
-import { TARGETS, type Target, type PostPublic } from "@/lib/types";
-import { targetLabel } from "@/lib/i18n";
+import { TARGETS, CATEGORIES, type Target, type Category, type PostPublic } from "@/lib/types";
+import { targetLabel, categoryLabel } from "@/lib/i18n";
 import { useLang } from "./LangProvider";
 
 /**
@@ -28,6 +28,7 @@ export default function PostEditor({
   const { t } = useLang();
   const isEdit = mode === "edit";
   const [target, setTarget] = useState<Target>(post?.target ?? "전체");
+  const [category, setCategory] = useState<Category>(post?.category ?? "기타");
   const [title, setTitle] = useState(post?.title ?? "");
   const [nickname, setNickname] = useState(post?.nickname ?? "");
   const [pw, setPw] = useState("");
@@ -45,7 +46,7 @@ export default function PostEditor({
         const res = await fetch(`/api/posts/${post!.id}`, {
           method: "PATCH",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ password, target, title: title.trim(), nickname: nickname.trim(), body: body.trim() }),
+          body: JSON.stringify({ password, target, category, title: title.trim(), nickname: nickname.trim(), body: body.trim() }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error ?? t("err_update"));
@@ -53,6 +54,7 @@ export default function PostEditor({
         onDone({
           ...post!,
           target,
+          category,
           title: title.trim(),
           nickname: nickname.trim(),
           body: body.trim(),
@@ -63,7 +65,7 @@ export default function PostEditor({
         const res = await fetch("/api/posts", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ target, title: title.trim(), nickname: nickname.trim(), password: pw, body: body.trim() }),
+          body: JSON.stringify({ target, category, title: title.trim(), nickname: nickname.trim(), password: pw, body: body.trim() }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error ?? t("err_create"));
@@ -72,6 +74,7 @@ export default function PostEditor({
         onDone({
           id: data.id,
           target,
+          category,
           title: title.trim(),
           nickname: nickname.trim(),
           body: body.trim(),
@@ -84,6 +87,7 @@ export default function PostEditor({
           impl_status: "none",
           official_reply: null,
           comment_count: 0,
+          translations: {},
         });
       }
       onClose();
@@ -107,7 +111,7 @@ export default function PostEditor({
 
       {/* 본문 */}
       <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col overflow-y-auto px-4 py-4">
-        <div className="mb-3 flex flex-wrap gap-1.5">
+        <div className="mb-2 flex flex-wrap gap-1.5">
           {TARGETS.map((tg) => (
             <button
               key={tg}
@@ -120,6 +124,26 @@ export default function PostEditor({
             </button>
           ))}
         </div>
+
+        {/* 아이디어 유형 */}
+        <div className="mb-2 flex flex-wrap gap-1.5">
+          {CATEGORIES.map((c) => (
+            <button
+              key={c}
+              onClick={() => setCategory(c)}
+              className={`rounded-full px-3 py-1.5 text-[13px] font-semibold transition-colors ${
+                category === c ? "bg-accent text-white" : "bg-card text-muted hover:text-fg"
+              }`}
+            >
+              {categoryLabel(c, t)}
+            </button>
+          ))}
+        </div>
+
+        {/* 컨셉 안내 */}
+        <p className="mb-3 rounded-xl border border-border/70 bg-card/50 px-3 py-2 text-[12px] leading-relaxed text-muted">
+          💡 {t("compose_guide")}
+        </p>
 
         <input
           value={title}

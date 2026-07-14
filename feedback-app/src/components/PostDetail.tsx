@@ -3,13 +3,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ChevronLeft, Heart, Siren, Pencil, Trash2, ImageDown, Share2 } from "lucide-react";
+import { ChevronLeft, Heart, Siren, Pencil, Trash2, ImageDown, Share2, Languages } from "lucide-react";
 import { format } from "date-fns";
 import { sb } from "@/lib/supabase-browser";
 import { getDeviceId, getLiked, addLiked } from "@/lib/client-util";
 import type { PostPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
 import TargetBadge from "./TargetBadge";
+import CategoryBadge from "./CategoryBadge";
 import { PostBadges, OfficialReply } from "./Badges";
 import PostEditor from "./PostEditor";
 import ShareModal from "./ShareModal";
@@ -22,12 +23,15 @@ type Modal =
   | null;
 
 export default function PostDetail({ id }: { id: string }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const router = useRouter();
   const [post, setPost] = useState<PostPublic | null>(null);
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
   const [modal, setModal] = useState<Modal>(null);
+  const [translated, setTranslated] = useState<{ title: string; body: string } | null>(null);
+  const [showTranslated, setShowTranslated] = useState(false);
+  const [translating, setTranslating] = useState(false);
 
   const load = useCallback(async () => {
     const { data } = await sb.from("posts_public").select("*").eq("id", id).maybeSingle();
@@ -67,6 +71,33 @@ export default function PostDetail({ id }: { id: string }) {
     }
   }
 
+  async function translate() {
+    if (!post || translating) return;
+    if (translated) {
+      setShowTranslated((v) => !v);
+      return;
+    }
+    setTranslating(true);
+    try {
+      const res = await fetch(`/api/posts/${post.id}/translate`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ lang }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? t("report_fail"));
+        return;
+      }
+      setTranslated({ title: data.title, body: data.body });
+      setShowTranslated(true);
+    } catch {
+      toast.error(t("report_fail"));
+    } finally {
+      setTranslating(false);
+    }
+  }
+
   if (loading) {
     return <main className="mx-auto max-w-2xl px-4 py-10 text-center text-sm text-muted">{t("loading")}</main>;
   }
@@ -89,6 +120,7 @@ export default function PostDetail({ id }: { id: string }) {
         </button>
 
         <div className="mb-2 flex items-center gap-2">
+          <CategoryBadge category={post.category} />
           <TargetBadge target={post.target} />
           <span className="text-sm font-bold">{post.nickname}</span>
           {post.edited && <span className="text-[10px] text-muted">({t("edited")})</span>}
@@ -100,8 +132,18 @@ export default function PostDetail({ id }: { id: string }) {
             <PostBadges post={post} />
           </div>
         )}
-        <h1 className="text-[22px] font-black leading-snug">{post.title || post.body}</h1>
-        <p className="mt-3 whitespace-pre-wrap break-words text-[15px] leading-relaxed text-fg/90">{post.body}</p>
+        {(() => {
+          const view = showTranslated && translated ? translated : { title: post.title, body: post.body };
+          return (
+            <>
+              <h1 className="text-[22px] font-black leading-snug">{view.title || view.body}</h1>
+              <p className="mt-3 whitespace-pre-wrap break-words text-[15px] leading-relaxed text-fg/90">{view.body}</p>
+              {showTranslated && translated && (
+                <p className="mt-1.5 text-[11px] text-muted">🌐 {t("translate")} · Claude</p>
+              )}
+            </>
+          );
+        })()}
 
         <OfficialReply reply={post.official_reply} />
 
@@ -116,6 +158,15 @@ export default function PostDetail({ id }: { id: string }) {
           </button>
           <button onClick={report} className="flex items-center gap-1.5 rounded-full bg-card px-3 py-2 text-sm text-muted hover:text-danger">
             <Siren className="h-4 w-4" /> {t("report")}
+          </button>
+          <button
+            onClick={translate}
+            disabled={translating}
+            className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-sm disabled:opacity-60 ${
+              showTranslated ? "bg-primary/15 text-primary-400" : "bg-card text-muted hover:text-fg"
+            }`}
+          >
+            <Languages className="h-4 w-4" /> {translating ? t("translating") : showTranslated ? t("show_original") : t("translate")}
           </button>
           <div className="ml-auto flex items-center gap-2">
             <button onClick={() => setModal({ type: "share" })} className="flex items-center gap-1 rounded-full bg-card px-3 py-2 text-sm text-muted hover:text-fg">

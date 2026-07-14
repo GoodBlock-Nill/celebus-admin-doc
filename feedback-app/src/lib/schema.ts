@@ -1,7 +1,8 @@
 import { z } from "zod";
 
 export const createSchema = z.object({
-  target: z.enum(["전체", "V01D", "CELEBUS", "ix"]).default("전체"),
+  target: z.enum(["전체", "V01D", "CELEBUS"]).default("전체"),
+  category: z.enum(["이벤트", "굿즈", "행사", "콘텐츠", "기타"]).default("기타"),
   title: z.string().trim().min(1, "제목을 입력해주세요.").max(80, "제목은 80자 이하로 입력해주세요."),
   nickname: z.string().trim().min(1, "닉네임을 입력해주세요.").max(20, "닉네임은 20자 이하로 입력해주세요."),
   password: z.string().min(4, "비밀번호는 4자 이상이어야 해요.").max(64),
@@ -10,7 +11,8 @@ export const createSchema = z.object({
 
 export const updateSchema = z.object({
   password: z.string().min(1).max(64),
-  target: z.enum(["전체", "V01D", "CELEBUS", "ix"]),
+  target: z.enum(["전체", "V01D", "CELEBUS"]),
+  category: z.enum(["이벤트", "굿즈", "행사", "콘텐츠", "기타"]),
   title: z.string().trim().min(1).max(80),
   nickname: z.string().trim().min(1).max(20),
   body: z.string().trim().min(2).max(500),
@@ -26,6 +28,11 @@ export const verifySchema = z.object({
 
 export const likeSchema = z.object({
   voter: z.string().min(8).max(64),
+});
+
+// 게시글 번역 요청 — 목표 언어(현재 UI 언어)
+export const translateSchema = z.object({
+  lang: z.enum(["ko", "en", "ja"]),
 });
 
 // 댓글 (평면). 두 모드:

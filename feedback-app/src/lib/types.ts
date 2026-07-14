@@ -1,5 +1,8 @@
-export const TARGETS = ["전체", "V01D", "CELEBUS", "ix"] as const;
+export const TARGETS = ["전체", "V01D", "CELEBUS"] as const;
 export type Target = (typeof TARGETS)[number];
+
+export const CATEGORIES = ["이벤트", "굿즈", "행사", "콘텐츠", "기타"] as const;
+export type Category = (typeof CATEGORIES)[number];
 
 export const IMPL_STATUSES = ["none", "reviewing", "planned", "realized"] as const;
 export type ImplStatus = (typeof IMPL_STATUSES)[number];
@@ -7,6 +10,7 @@ export type ImplStatus = (typeof IMPL_STATUSES)[number];
 export interface PostPublic {
   id: string;
   target: Target;
+  category: Category;
   title: string;
   nickname: string;
   body: string;
@@ -19,6 +23,7 @@ export interface PostPublic {
   impl_status: ImplStatus;
   official_reply: string | null;
   comment_count: number;
+  translations: Record<string, { title: string; body: string }>;
 }
 
 export interface CommentPublic {
