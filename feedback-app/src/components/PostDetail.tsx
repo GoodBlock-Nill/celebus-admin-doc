@@ -156,30 +156,30 @@ export default function PostDetail({ id }: { id: string }) {
           >
             <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} /> {post.like_count}
           </button>
-          <button onClick={report} className="flex items-center gap-1.5 rounded-full bg-card px-3 py-2 text-sm text-muted hover:text-danger">
-            <Siren className="h-4 w-4" /> {t("report")}
-          </button>
           <button
             onClick={translate}
             disabled={translating}
-            className={`flex items-center gap-1.5 rounded-full px-3 py-2 text-sm disabled:opacity-60 ${
+            className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold disabled:opacity-60 ${
               showTranslated ? "bg-primary/15 text-primary-400" : "bg-card text-muted hover:text-fg"
             }`}
           >
             <Languages className="h-4 w-4" /> {translating ? t("translating") : showTranslated ? t("show_original") : t("translate")}
           </button>
-          <div className="ml-auto flex items-center gap-2">
-            <button onClick={() => setModal({ type: "share" })} className="flex items-center gap-1 rounded-full bg-card px-3 py-2 text-sm text-muted hover:text-fg">
-              <Share2 className="h-4 w-4" /> {t("share")}
+          <div className="ml-auto flex items-center gap-1">
+            <button onClick={() => setModal({ type: "share" })} aria-label={t("share")} title={t("share")} className="rounded-full bg-card p-2 text-muted hover:text-fg">
+              <Share2 className="h-4 w-4" />
             </button>
-            <button onClick={() => setModal({ type: "verify" })} className="flex items-center gap-1 rounded-full bg-card px-3 py-2 text-sm text-muted hover:text-fg">
-              <Pencil className="h-4 w-4" /> {t("edit")}
+            <button onClick={report} aria-label={t("report")} title={t("report")} className="rounded-full bg-card p-2 text-muted hover:text-danger">
+              <Siren className="h-4 w-4" />
             </button>
-            <button onClick={() => setModal({ type: "delete" })} className="flex items-center gap-1 rounded-full bg-card px-3 py-2 text-sm text-muted hover:text-danger">
-              <Trash2 className="h-4 w-4" /> {t("del")}
+            <button onClick={() => setModal({ type: "verify" })} aria-label={t("edit")} title={t("edit")} className="rounded-full bg-card p-2 text-muted hover:text-fg">
+              <Pencil className="h-4 w-4" />
             </button>
-            <button onClick={() => setModal({ type: "card" })} className="flex items-center gap-1 rounded-full bg-card px-3 py-2 text-sm text-muted hover:text-fg">
-              <ImageDown className="h-4 w-4" /> {t("saveImage")}
+            <button onClick={() => setModal({ type: "delete" })} aria-label={t("del")} title={t("del")} className="rounded-full bg-card p-2 text-muted hover:text-danger">
+              <Trash2 className="h-4 w-4" />
+            </button>
+            <button onClick={() => setModal({ type: "card" })} aria-label={t("saveImage")} title={t("saveImage")} className="rounded-full bg-card p-2 text-muted hover:text-fg">
+              <ImageDown className="h-4 w-4" />
             </button>
           </div>
         </div>
