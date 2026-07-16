@@ -85,6 +85,7 @@ export const messages: Record<Lang, Dict> = {
     entry_unit: "작품",
     lb_trending: "지금 뜨는 출품작 🔥",
     lb_empty: "아직 출품작이 없어요 — 첫 번째 주인공이 되어보세요!",
+    rank_empty: "아직 좋아요를 받은 출품작이 없어요 — 마음에 드는 작품에 첫 좋아요를 보내주세요!",
     awards_empty: "수상 발표를 기다리고 있어요",
     awards_pending: "심사가 진행 중이에요. 발표를 기다려주세요!",
 
@@ -231,6 +232,7 @@ export const messages: Record<Lang, Dict> = {
     entry_unit: "entries",
     lb_trending: "Trending now 🔥",
     lb_empty: "No entries yet — be the first on stage!",
+    rank_empty: "No entries have a like yet — be the first to cheer for your favorite!",
     awards_empty: "Winners will be announced here",
     awards_pending: "Judging in progress. Stay tuned!",
 
@@ -372,6 +374,7 @@ export const messages: Record<Lang, Dict> = {
     entry_unit: "作品",
     lb_trending: "今アツい作品 🔥",
     lb_empty: "まだ応募がありません — 最初の主役になりましょう!",
+    rank_empty: "まだ「いいね」を受けた作品がありません — お気に入りに最初の応援を！",
     awards_empty: "受賞発表をお待ちください",
     awards_pending: "審査中です。発表をお待ちください!",
 

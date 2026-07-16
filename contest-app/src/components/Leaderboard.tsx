@@ -45,7 +45,7 @@ export default function Leaderboard({
   if (!entries.length) {
     return (
       <p className="rounded-[16px] border border-dashed border-line py-10 text-center text-sm text-muted">
-        {t("lb_empty")}
+        {t("rank_empty")}
       </p>
     );
   }
