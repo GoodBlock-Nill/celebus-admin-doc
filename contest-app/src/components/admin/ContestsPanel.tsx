@@ -42,14 +42,23 @@ const LANGS = [
 type LangKey = (typeof LANGS)[number]["key"];
 type LField = "title" | "description" | "rules" | "prize_summary";
 
-function toLocal(iso: string | null): string {
-  if (!iso) return "";
-  const d = new Date(iso);
+function fmtLocal(d: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
+function toLocal(iso: string | null): string {
+  return iso ? fmtLocal(new Date(iso)) : "";
+}
 function toIso(local: string): string | null {
   return local ? new Date(local).toISOString() : null;
+}
+function nowLocal(): string {
+  return fmtLocal(new Date());
+}
+function addDaysLocal(local: string, days: number): string {
+  const base = local ? new Date(local) : new Date();
+  base.setDate(base.getDate() + days);
+  return fmtLocal(base);
 }
 
 function ContestForm({
@@ -126,14 +135,29 @@ function ContestForm({
     }
   }
 
-  const addPrize = () =>
-    setF((s) => ({
-      ...s,
-      prizes: [...s.prizes, { rank_label: "", name: "", award_type: "popular", count: 1, image_url: "" } as PrizeItem],
-    }));
+  // 빠른 추가: 등수 라벨 자동 채움 (인기상 N위 / 심사상)
+  const addPopular = () =>
+    setF((s) => {
+      const n = s.prizes.filter((p) => p.award_type === "popular").length + 1;
+      return { ...s, prizes: [...s.prizes, { rank_label: `인기상 ${n}위`, name: "", award_type: "popular", count: 1, image_url: "" } as PrizeItem] };
+    });
+  const addJudge = () =>
+    setF((s) => ({ ...s, prizes: [...s.prizes, { rank_label: "심사상", name: "", award_type: "judge", count: 1, image_url: "" } as PrizeItem] }));
   const updPrize = (i: number, patch: Partial<PrizeItem>) =>
     setF((s) => ({ ...s, prizes: s.prizes.map((p, j) => (j === i ? { ...p, ...patch } : p)) }));
   const rmPrize = (i: number) => setF((s) => ({ ...s, prizes: s.prizes.filter((_, j) => j !== i) }));
+
+  // 빠른 일정: N일간 접수 → 투표 +1일 → 발표 +1일 자동 계산
+  const quickSchedule = (days: number) => {
+    const start = f.submit_start_at || nowLocal();
+    const submitEnd = addDaysLocal(start, days);
+    const voteEnd = addDaysLocal(submitEnd, 1);
+    const announce = addDaysLocal(voteEnd, 1);
+    setF((s) => ({ ...s, submit_start_at: start, submit_end_at: submitEnd, vote_end_at: voteEnd, announce_at: announce }));
+  };
+  // 순서 검증 (입력된 값만 비교)
+  const dateSeq = [f.submit_start_at, f.submit_end_at, f.vote_end_at, f.announce_at].filter(Boolean);
+  const dateOrderOk = dateSeq.every((d, i) => i === 0 || new Date(dateSeq[i - 1]) <= new Date(d));
 
   async function save() {
     if (busy) return;
@@ -291,17 +315,26 @@ function ContestForm({
       <div>
         <div className="mb-1.5 flex items-center justify-between">
           <label className={lbl + " mb-0"}>보상 목록</label>
-          <button
-            type="button"
-            onClick={addPrize}
-            className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 text-[11px] font-bold text-primary-400 hover:bg-primary/25"
-          >
-            <Plus className="h-3 w-3" /> 보상 추가
-          </button>
+          <div className="flex gap-1">
+            <button
+              type="button"
+              onClick={addPopular}
+              className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 text-[11px] font-bold text-primary-400 hover:bg-primary/25"
+            >
+              <Plus className="h-3 w-3" /> 인기상
+            </button>
+            <button
+              type="button"
+              onClick={addJudge}
+              className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 text-[11px] font-bold text-primary-400 hover:bg-primary/25"
+            >
+              <Plus className="h-3 w-3" /> 심사상
+            </button>
+          </div>
         </div>
         {f.prizes.length === 0 ? (
           <p className="rounded-lg border border-dashed border-line px-3 py-4 text-center text-[12px] text-muted">
-            아직 보상이 없어요. [보상 추가]로 등수별 상품을 등록하세요.
+            아직 보상이 없어요. [인기상]·[심사상]으로 상품을 추가하세요. 등수는 자동으로 채워져요.
           </p>
         ) : (
           <div className="space-y-2">
@@ -365,20 +398,52 @@ function ContestForm({
       </div>
 
       {/* 일정 */}
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {(
-          [
-            ["submit_start_at", "접수 시작"],
-            ["submit_end_at", "접수 마감"],
-            ["vote_end_at", "투표 마감"],
-            ["announce_at", "발표 예정"],
-          ] as const
-        ).map(([k, label]) => (
-          <div key={k}>
-            <label className={lbl}>{label}</label>
-            <input type="datetime-local" value={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.value })} className={input} />
+      <div>
+        <div className="mb-1.5 flex flex-wrap items-center gap-2">
+          <label className={lbl + " mb-0"}>
+            일정 <span className="font-normal text-subtle">(KST 기준)</span>
+          </label>
+          <div className="ml-auto flex items-center gap-1">
+            <span className="text-[10px] text-muted">빠른 설정</span>
+            <button type="button" onClick={() => setF({ ...f, submit_start_at: nowLocal() })} className="rounded-full bg-bg px-2 py-0.5 text-[11px] font-bold text-muted hover:text-fg">
+              지금 시작
+            </button>
+            {[3, 7, 14].map((d) => (
+              <button
+                key={d}
+                type="button"
+                onClick={() => quickSchedule(d)}
+                className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-bold text-primary-400 hover:bg-primary/25"
+              >
+                {d}일 진행
+              </button>
+            ))}
           </div>
-        ))}
+        </div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {(
+            [
+              ["submit_start_at", "접수 시작"],
+              ["submit_end_at", "접수 마감"],
+              ["vote_end_at", "투표 마감"],
+              ["announce_at", "발표 예정"],
+            ] as const
+          ).map(([k, label], i) => (
+            <div key={k}>
+              <label className={lbl}>
+                <span className="mr-1 text-subtle">{i + 1}</span>
+                {label}
+              </label>
+              <input type="datetime-local" value={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.value })} className={input} />
+            </div>
+          ))}
+        </div>
+        {!dateOrderOk && (
+          <p className="mt-1.5 text-[11px] font-semibold text-amber-400">
+            ⚠ 일정 순서를 확인해주세요 — 접수 시작 → 접수 마감 → 투표 마감 → 발표 순이어야 해요.
+          </p>
+        )}
+        <p className="mt-1 text-[10px] text-muted">💡 [N일 진행]을 누르면 접수·투표·발표 일정이 한 번에 채워져요 (수정 가능).</p>
       </div>
 
       {/* 메인 배너 */}
