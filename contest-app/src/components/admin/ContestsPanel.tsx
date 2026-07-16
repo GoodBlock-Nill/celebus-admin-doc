@@ -7,7 +7,12 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { ContestRow } from "@/lib/admin-types";
 import { adminFetch } from "@/lib/admin-types";
 import { STATUS_LABELS } from "@/lib/contest-status";
-import type { ContestStatus } from "@/lib/types";
+import type { AwardType, ContestStatus, PrizeItem } from "@/lib/types";
+
+const AWARD_LABELS: Record<AwardType, string> = {
+  popular: "인기상 (투표 순위)",
+  judge: "심사상 (관리자 선정)",
+};
 
 const NEXT_ACTIONS: Record<ContestStatus, { to: ContestStatus; label: string }[]> = {
   draft: [{ to: "open", label: "게시 (접수 시작)" }],
@@ -52,7 +57,7 @@ function ContestForm({
     description: initial?.description ?? "",
     rules: initial?.rules ?? "",
     prize_summary: initial?.prize_summary ?? "",
-    prizes: JSON.stringify(initial?.prizes ?? [], null, 2),
+    prizes: (initial?.prizes ?? []) as PrizeItem[],
     cover_image_url: initial?.cover_image_url ?? "",
     submit_start_at: toLocal(initial?.submit_start_at ?? null),
     submit_end_at: toLocal(initial?.submit_end_at ?? null),
@@ -61,13 +66,19 @@ function ContestForm({
   });
   const [busy, setBusy] = useState(false);
 
+  const addPrize = () =>
+    setF((s) => ({
+      ...s,
+      prizes: [...s.prizes, { rank_label: "", name: "", award_type: "popular", count: 1, image_url: "" } as PrizeItem],
+    }));
+  const updPrize = (i: number, patch: Partial<PrizeItem>) =>
+    setF((s) => ({ ...s, prizes: s.prizes.map((p, j) => (j === i ? { ...p, ...patch } : p)) }));
+  const rmPrize = (i: number) => setF((s) => ({ ...s, prizes: s.prizes.filter((_, j) => j !== i) }));
+
   async function save() {
     if (busy) return;
-    let prizes: unknown;
-    try {
-      prizes = JSON.parse(f.prizes || "[]");
-    } catch {
-      return toast.error("보상 JSON 형식이 올바르지 않아요.");
+    if (f.prizes.some((p) => !p.rank_label.trim() || !p.name.trim())) {
+      return toast.error("보상의 등수 라벨과 상품명을 모두 입력해주세요.");
     }
     setBusy(true);
     try {
@@ -79,7 +90,7 @@ function ContestForm({
         description: f.description,
         rules: f.rules,
         prize_summary: f.prize_summary,
-        prizes,
+        prizes: f.prizes.map((p) => ({ ...p, count: Number(p.count) || 1, image_url: p.image_url || null })),
         cover_image_url: f.cover_image_url || null,
         submit_start_at: toIso(f.submit_start_at),
         submit_end_at: toIso(f.submit_end_at),
@@ -146,15 +157,76 @@ function ContestForm({
         <input value={f.prize_summary} onChange={(e) => setF({ ...f, prize_summary: e.target.value })} className={input} placeholder="1위 V01D 전원 싸인 앨범" />
       </div>
       <div>
-        <label className={lbl}>
-          보상 목록 JSON — [{"{"}rank_label, name, image_url?, award_type: popular|judge, count{"}"}]
-        </label>
-        <textarea
-          value={f.prizes}
-          onChange={(e) => setF({ ...f, prizes: e.target.value })}
-          rows={5}
-          className={`${input} font-mono text-[12px]`}
-        />
+        <div className="mb-1.5 flex items-center justify-between">
+          <label className={lbl + " mb-0"}>보상 목록</label>
+          <button
+            type="button"
+            onClick={addPrize}
+            className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 text-[11px] font-bold text-primary-400 hover:bg-primary/25"
+          >
+            <Plus className="h-3 w-3" /> 보상 추가
+          </button>
+        </div>
+
+        {f.prizes.length === 0 ? (
+          <p className="rounded-lg border border-dashed border-line px-3 py-4 text-center text-[12px] text-muted">
+            아직 보상이 없어요. [보상 추가]로 등수별 상품을 등록하세요.
+          </p>
+        ) : (
+          <div className="space-y-2">
+            {f.prizes.map((p, i) => (
+              <div key={i} className="rounded-xl border border-border bg-bg p-2.5">
+                <div className="mb-2 flex items-center gap-2">
+                  <select
+                    value={p.award_type}
+                    onChange={(e) => updPrize(i, { award_type: e.target.value as AwardType })}
+                    className={`${input} flex-1`}
+                  >
+                    <option value="popular">{AWARD_LABELS.popular}</option>
+                    <option value="judge">{AWARD_LABELS.judge}</option>
+                  </select>
+                  <div className="flex shrink-0 items-center gap-1">
+                    <input
+                      type="number"
+                      min={1}
+                      value={p.count}
+                      onChange={(e) => updPrize(i, { count: Number(e.target.value) })}
+                      className={`${input} w-16 text-center`}
+                      aria-label="수량"
+                    />
+                    <span className="text-[12px] text-muted">명</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => rmPrize(i)}
+                    aria-label="보상 삭제"
+                    className="shrink-0 rounded-lg p-2 text-muted hover:text-danger"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <input
+                  value={p.rank_label}
+                  onChange={(e) => updPrize(i, { rank_label: e.target.value })}
+                  className={`${input} mb-1.5`}
+                  placeholder="등수 라벨 (예: 인기상 1위)"
+                />
+                <input
+                  value={p.name}
+                  onChange={(e) => updPrize(i, { name: e.target.value })}
+                  className={`${input} mb-1.5`}
+                  placeholder="상품명 (예: V01D 전원 싸인 앨범)"
+                />
+                <input
+                  value={p.image_url ?? ""}
+                  onChange={(e) => updPrize(i, { image_url: e.target.value })}
+                  className={input}
+                  placeholder="상품 이미지 URL (선택)"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {(
