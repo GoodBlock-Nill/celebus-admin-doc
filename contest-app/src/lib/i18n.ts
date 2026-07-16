@@ -59,9 +59,9 @@ export const messages: Record<Lang, Dict> = {
 
     // 홈
     home_hero_kicker: "V01D 팬 콘테스트",
-    intro_title: "최애를 향한 내 마음, 무대에서 빛나요",
-    intro_sub: "V01D를 향한 팬심을 영상·이미지로 담아보세요. SNS 링크만 있으면 누구나! 팬들의 투표로 주목받고, 특별한 선물도 받아가요.",
-    intro_step1_t: "출품",
+    intro_title: "V01D를 향한 내 마음, 지금 바로 보여주세요",
+    intro_sub: "V01D를 향한 팬심을 영상·이미지로 담아보세요. SNS 링크만 있으면 누구나! 팬들의 투표로 주목받고, 특별한 선물도 받아가요. V01D 멤버들도 여러분의 마음이 담긴 영상과 이미지를 보고 싶어해요.",
+    intro_step1_t: "업로드",
     intro_step1_d: "SNS 링크로 제출",
     intro_step2_t: "투표",
     intro_step2_d: "좋아하는 작품에 투표",
@@ -206,9 +206,9 @@ export const messages: Record<Lang, Dict> = {
     dday_min: "m",
 
     home_hero_kicker: "V01D Fan Contest",
-    intro_title: "Let your love for V01D shine on stage",
-    intro_sub: "Pour your heart for V01D into a video or image. All you need is a social link! Get noticed through fan votes and receive a special gift.",
-    intro_step1_t: "Submit",
+    intro_title: "Show your heart for V01D — right now",
+    intro_sub: "Pour your heart for V01D into a video or image. All you need is a social link! Get noticed through fan votes and receive a special gift. The V01D members can\u2019t wait to see the videos and images you make with all your heart.",
+    intro_step1_t: "Upload",
     intro_step1_d: "Share a social link",
     intro_step2_t: "Vote",
     intro_step2_d: "Vote for favorites",
@@ -347,9 +347,9 @@ export const messages: Record<Lang, Dict> = {
     dday_min: "分",
 
     home_hero_kicker: "V01D ファンコンテスト",
-    intro_title: "推しへの想い、ステージで輝かせよう",
-    intro_sub: "V01Dへの想いを動画・画像に込めてみて。SNSリンクがあれば誰でも！ファン投票で注目を集めて、特別なギフトも受け取ろう。",
-    intro_step1_t: "応募",
+    intro_title: "V01Dへの想い、今すぐ届けよう",
+    intro_sub: "V01Dへの想いを動画・画像に込めてみて。SNSリンクがあれば誰でも！ファン投票で注目を集めて、特別なギフトも受け取ろう。V01Dメンバーも、あなたの想いがこもった動画や画像を見たがっています。",
+    intro_step1_t: "アップロード",
     intro_step1_d: "SNSリンクで提出",
     intro_step2_t: "投票",
     intro_step2_d: "好きな作品に投票",
