@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { Flame, Clock, PenLine, ArrowUpRight, Search, ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import { getDeviceId, getLiked, addLiked } from "@/lib/client-util";
-import type { PostPublic } from "@/lib/types";
+import { CATEGORIES, type PostPublic, type Category } from "@/lib/types";
+import { categoryLabel } from "@/lib/i18n";
 import { useLang } from "./LangProvider";
 import PostCard from "./PostCard";
 import PostEditor from "./PostEditor";
@@ -13,58 +14,116 @@ import RewardsSection from "./RewardsSection";
 import ShareModal from "./ShareModal";
 import { VerifyModal, DeleteModal, CardModal } from "./Modals";
 
-const PAGE = 10;
+const PAGE = 10; // 최신 피드
+const PAGE_TOP = 5; // 인기·채택 셸프
+
 type Modal =
   | { type: "verify" | "delete" | "card" | "share"; post: PostPublic }
   | { type: "edit"; post: PostPublic; password: string }
   | null;
+
+// 페이지네이션 — 인기·채택 셸프와 최신 피드가 공용
+function Pager({
+  page,
+  totalPages,
+  onPage,
+  t,
+}: {
+  page: number;
+  totalPages: number;
+  onPage: (p: number) => void;
+  t: (k: string) => string;
+}) {
+  if (totalPages <= 1) return null;
+  const win = Array.from({ length: totalPages }, (_, i) => i).filter((i) => Math.abs(i - page) <= 2);
+  return (
+    <div className="mt-5 flex items-center justify-center gap-1.5">
+      <button
+        onClick={() => onPage(Math.max(0, page - 1))}
+        disabled={page === 0}
+        className="grid h-8 w-8 place-items-center rounded-lg border border-border bg-card text-muted disabled:opacity-30"
+        aria-label={t("page_prev")}
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+      {win[0] > 0 && <span className="px-1 text-xs text-muted">…</span>}
+      {win.map((i) => (
+        <button
+          key={i}
+          onClick={() => onPage(i)}
+          className={`h-8 min-w-8 rounded-lg px-2 text-sm font-semibold ${
+            i === page ? "bg-primary text-white" : "border border-border bg-card text-muted hover:text-fg"
+          }`}
+        >
+          {i + 1}
+        </button>
+      ))}
+      {win[win.length - 1] < totalPages - 1 && <span className="px-1 text-xs text-muted">…</span>}
+      <button
+        onClick={() => onPage(Math.min(totalPages - 1, page + 1))}
+        disabled={page >= totalPages - 1}
+        className="grid h-8 w-8 place-items-center rounded-lg border border-border bg-card text-muted disabled:opacity-30"
+        aria-label={t("page_next")}
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
+    </div>
+  );
+}
 
 export default function Board() {
   const { t } = useLang();
   const [top, setTop] = useState<PostPublic[]>([]);
   const [curated, setCurated] = useState<PostPublic[]>([]);
   const [midTab, setMidTab] = useState<"popular" | "curated">("popular");
+  const [midPage, setMidPage] = useState(0);
+  const [topCount, setTopCount] = useState(0);
+  const [curatedCount, setCuratedCount] = useState(0);
   const [latest, setLatest] = useState<PostPublic[]>([]);
   const [latestCount, setLatestCount] = useState(0);
   const [page, setPage] = useState(0);
   const [q, setQ] = useState("");
   const [debouncedQ, setDebouncedQ] = useState("");
+  const [cat, setCat] = useState<"all" | Category>("all");
   const [liked, setLiked] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState<Modal>(null);
   const [composeOpen, setComposeOpen] = useState(false);
 
-  // 인기: 좋아요 2개 이상만
-  const fetchTop = useCallback(async () => {
-    const { data } = await sb
+  // 인기: 좋아요 2개 이상, 5개씩 페이지네이션
+  const fetchTop = useCallback(async (p: number) => {
+    const { data, count } = await sb
       .from("posts_public")
-      .select("*")
+      .select("*", { count: "exact" })
       .gte("like_count", 2)
       .order("pinned", { ascending: false })
       .order("like_count", { ascending: false })
       .order("created_at", { ascending: false })
-      .limit(10);
+      .range(p * PAGE_TOP, p * PAGE_TOP + PAGE_TOP - 1);
     setTop((data as PostPublic[]) ?? []);
+    setTopCount(count ?? 0);
   }, []);
 
-  // 채택된 글 모아보기
-  const fetchCurated = useCallback(async () => {
-    const { data } = await sb
+  // 채택된 글, 5개씩 페이지네이션
+  const fetchCurated = useCallback(async (p: number) => {
+    const { data, count } = await sb
       .from("posts_public")
-      .select("*")
+      .select("*", { count: "exact" })
       .eq("curated", true)
       .order("pinned", { ascending: false })
       .order("created_at", { ascending: false })
-      .limit(20);
+      .range(p * PAGE_TOP, p * PAGE_TOP + PAGE_TOP - 1);
     setCurated((data as PostPublic[]) ?? []);
+    setCuratedCount(count ?? 0);
   }, []);
 
-  const fetchLatest = useCallback(async (p: number, query: string) => {
+  const fetchLatest = useCallback(async (p: number, query: string, category: "all" | Category) => {
     let req = sb
       .from("posts_public")
       .select("*", { count: "exact" })
       .order("pinned", { ascending: false })
       .order("created_at", { ascending: false });
+    if (category !== "all") req = req.eq("category", category);
     const safe = query.trim().replace(/[%,()\\]/g, "").slice(0, 50);
     if (safe) req = req.or(`title.ilike.%${safe}%,body.ilike.%${safe}%`);
     const { data, count } = await req.range(p * PAGE, p * PAGE + PAGE - 1);
@@ -74,10 +133,13 @@ export default function Board() {
 
   useEffect(() => {
     setLiked(getLiked());
-    void fetchTop();
-    void fetchCurated();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // 인기·채택 셸프: 활성 탭·페이지 변화 시 조회 (탭 전환은 onClick에서 midPage=0 동시 리셋)
+  useEffect(() => {
+    if (midTab === "popular") void fetchTop(midPage);
+    else void fetchCurated(midPage);
+  }, [midTab, midPage, fetchTop, fetchCurated]);
 
   // 검색어 디바운스 → 1페이지로
   useEffect(() => {
@@ -86,14 +148,17 @@ export default function Board() {
   }, [q]);
   useEffect(() => {
     setPage(0);
-  }, [debouncedQ]);
+  }, [debouncedQ, cat]);
   useEffect(() => {
-    void fetchLatest(page, debouncedQ).finally(() => setLoading(false));
-  }, [page, debouncedQ, fetchLatest]);
+    void fetchLatest(page, debouncedQ, cat).finally(() => setLoading(false));
+  }, [page, debouncedQ, cat, fetchLatest]);
 
   const refresh = useCallback(async () => {
-    await Promise.all([fetchTop(), fetchCurated(), fetchLatest(page, debouncedQ)]);
-  }, [fetchTop, fetchCurated, fetchLatest, page, debouncedQ]);
+    await Promise.all([
+      midTab === "popular" ? fetchTop(midPage) : fetchCurated(midPage),
+      fetchLatest(page, debouncedQ, cat),
+    ]);
+  }, [midTab, midPage, fetchTop, fetchCurated, fetchLatest, page, debouncedQ, cat]);
 
   const afterSave = useCallback(
     (post: PostPublic) => {
@@ -150,8 +215,9 @@ export default function Board() {
     onShare: (post: PostPublic) => setModal({ type: "share", post }),
   });
 
-  const totalPages = Math.max(1, Math.ceil(latestCount / PAGE));
-  const pageWindow = Array.from({ length: totalPages }, (_, i) => i).filter((i) => Math.abs(i - page) <= 2);
+  const midCount = midTab === "popular" ? topCount : curatedCount;
+  const midTotalPages = Math.max(1, Math.ceil(midCount / PAGE_TOP));
+  const latestTotalPages = Math.max(1, Math.ceil(latestCount / PAGE));
 
   return (
     <>
@@ -166,16 +232,23 @@ export default function Board() {
           >
             <PenLine className="h-4 w-4" /> {t("compose_cta")}
           </button>
+          <p className="mt-3 text-[12px] leading-relaxed text-muted">✨ {t("board_notice")}</p>
         </section>
 
         {/* 🏆 보상 발표 */}
         <RewardsSection />
 
-        {/* 인기 / 채택 탭 */}
-        <section className="mt-8">
+        {/* ── 주목받는 아이디어 셸프 (인기 / 채택) — 틴트 패널로 최신 피드와 구분 ── */}
+        <section className="mt-8 rounded-3xl border border-primary/20 bg-primary/[0.05] p-3 sm:p-4">
+          <p className="mb-2.5 px-1 text-[11px] font-bold uppercase tracking-wider text-primary-400">
+            {t("sec_spotlight")}
+          </p>
           <div className="mb-3 flex gap-1 rounded-full border border-border bg-card p-1">
             <button
-              onClick={() => setMidTab("popular")}
+              onClick={() => {
+                setMidTab("popular");
+                setMidPage(0);
+              }}
               className={`flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2 text-[13px] font-bold transition-colors ${
                 midTab === "popular" ? "bg-primary text-white" : "text-muted hover:text-fg"
               }`}
@@ -183,7 +256,10 @@ export default function Board() {
               <Flame className="h-4 w-4" /> {t("sec_popular")}
             </button>
             <button
-              onClick={() => setMidTab("curated")}
+              onClick={() => {
+                setMidTab("curated");
+                setMidPage(0);
+              }}
               className={`flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2 text-[13px] font-bold transition-colors ${
                 midTab === "curated" ? "bg-primary text-white" : "text-muted hover:text-fg"
               }`}
@@ -200,7 +276,7 @@ export default function Board() {
             ) : (
               <div className="grid gap-3">
                 {top.map((p, i) => (
-                  <PostCard key={p.id} {...cardProps(p, i)} />
+                  <PostCard key={p.id} {...cardProps(p, midPage * PAGE_TOP + i)} />
                 ))}
               </div>
             )
@@ -215,13 +291,16 @@ export default function Board() {
               ))}
             </div>
           )}
+
+          <Pager page={midPage} totalPages={midTotalPages} onPage={setMidPage} t={t} />
         </section>
 
-        {/* 최신 + 검색 + 페이지네이션 */}
-        <section className="mt-8">
+        {/* ── 최신 피드 — 페이지 배경 위 평면 피드로 셸프와 대비 ── */}
+        <section className="mt-10 border-t border-border/60 pt-8">
           <div className="mb-3 flex items-center justify-between gap-3">
-            <h2 className="flex shrink-0 items-center gap-1.5 text-[15px] font-bold">
-              <Clock className="h-4 w-4 text-primary-400" /> {t("sec_recent")}
+            <h2 className="flex shrink-0 items-baseline gap-1.5 text-[15px] font-bold">
+              <Clock className="h-4 w-4 translate-y-0.5 text-primary-400" /> {t("sec_recent")}
+              <span className="text-[12px] font-normal text-muted">{latestCount.toLocaleString()}</span>
             </h2>
             <div className="flex min-w-0 flex-1 items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5">
               <Search className="h-3.5 w-3.5 shrink-0 text-muted" />
@@ -232,6 +311,29 @@ export default function Board() {
                 className="w-full bg-transparent text-[13px] outline-none placeholder:text-muted"
               />
             </div>
+          </div>
+
+          {/* 카테고리 필터 */}
+          <div className="mb-3 flex flex-wrap gap-1.5">
+            <button
+              onClick={() => setCat("all")}
+              className={`rounded-full px-3 py-1 text-[12px] font-semibold transition-colors ${
+                cat === "all" ? "bg-fg text-bg" : "bg-card text-muted hover:text-fg"
+              }`}
+            >
+              {t("cat_all")}
+            </button>
+            {CATEGORIES.map((c) => (
+              <button
+                key={c}
+                onClick={() => setCat(c)}
+                className={`rounded-full px-3 py-1 text-[12px] font-semibold transition-colors ${
+                  cat === c ? "bg-fg text-bg" : "bg-card text-muted hover:text-fg"
+                }`}
+              >
+                {categoryLabel(c, t)}
+              </button>
+            ))}
           </div>
 
           {latest.length === 0 ? (
@@ -246,39 +348,7 @@ export default function Board() {
             </div>
           )}
 
-          {totalPages > 1 && (
-            <div className="mt-5 flex items-center justify-center gap-1.5">
-              <button
-                onClick={() => setPage((p) => Math.max(0, p - 1))}
-                disabled={page === 0}
-                className="grid h-8 w-8 place-items-center rounded-lg border border-border bg-card text-muted disabled:opacity-30"
-                aria-label={t("page_prev")}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              {pageWindow[0] > 0 && <span className="px-1 text-xs text-muted">…</span>}
-              {pageWindow.map((i) => (
-                <button
-                  key={i}
-                  onClick={() => setPage(i)}
-                  className={`h-8 min-w-8 rounded-lg px-2 text-sm font-semibold ${
-                    i === page ? "bg-primary text-white" : "border border-border bg-card text-muted hover:text-fg"
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              {pageWindow[pageWindow.length - 1] < totalPages - 1 && <span className="px-1 text-xs text-muted">…</span>}
-              <button
-                onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-                disabled={page >= totalPages - 1}
-                className="grid h-8 w-8 place-items-center rounded-lg border border-border bg-card text-muted disabled:opacity-30"
-                aria-label={t("page_next")}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          )}
+          <Pager page={page} totalPages={latestTotalPages} onPage={setPage} t={t} />
         </section>
 
         {/* 푸터 */}
