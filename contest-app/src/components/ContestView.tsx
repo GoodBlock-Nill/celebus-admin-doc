@@ -25,7 +25,7 @@ function ContestBody({ slug }: { slug: string }) {
   const [latest, setLatest] = useState<EntryPublic[]>([]);
   const [awards, setAwards] = useState<AwardPublic[]>([]);
   const [trendingIds, setTrendingIds] = useState<string[]>([]);
-  const [tab, setTab] = useState<Tab>("leaderboard");
+  const [tab, setTab] = useState<Tab>("latest");
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
@@ -99,8 +99,8 @@ function ContestBody({ slug }: { slug: string }) {
   const showAwardsTab = contest.status === "announced" || contest.status === "closed" || contest.status === "judging";
 
   const tabs: { key: Tab; label: string }[] = [
-    { key: "leaderboard", label: t("tab_leaderboard") },
     { key: "latest", label: t("tab_latest") },
+    { key: "leaderboard", label: t("tab_leaderboard") },
     ...(showAwardsTab ? [{ key: "awards" as Tab, label: t("tab_awards") }] : []),
   ];
 
@@ -163,7 +163,9 @@ function ContestBody({ slug }: { slug: string }) {
           ))}
         </div>
 
-        {tab === "leaderboard" && <Leaderboard contest={contest} entries={entries} />}
+        {tab === "leaderboard" && (
+          <Leaderboard contest={contest} entries={entries.filter((e) => e.vote_count >= 1)} />
+        )}
         {tab === "latest" && <Gallery list={latest} />}
 
         {tab === "awards" &&
