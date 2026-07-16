@@ -7,6 +7,7 @@ import Shell from "./Shell";
 import CoverHero from "./CoverHero";
 import HeroCarousel from "./HeroCarousel";
 import ContestGridCard from "./ContestGridCard";
+import HomeIntro from "./HomeIntro";
 import { useLang } from "./LangProvider";
 
 interface ContestWithStats extends ContestPublic {
@@ -67,7 +68,7 @@ function HomeBody() {
 
   return (
     <div className="space-y-8">
-      <p className="eyebrow text-center">{t("home_hero_kicker")}</p>
+      <HomeIntro />
 
       {heroMode ? (
         <HeroCarousel slides={featured} />
