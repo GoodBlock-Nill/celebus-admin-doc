@@ -77,7 +77,9 @@ const prizeItemSchema = z.object({
   name: z.string().trim().min(1).max(80),
   image_url: z.string().trim().url().max(500).nullable().optional(),
   award_type: z.enum(["popular", "judge"]),
-  count: z.number().int().min(1).max(100),
+  count: z.number().int().min(1).max(999),
+  rank_from: z.number().int().min(1).max(999).optional(),
+  rank_to: z.number().int().min(1).max(999).optional(),
 });
 
 // 다국어 로케일(en·ja) — 부분 입력 허용

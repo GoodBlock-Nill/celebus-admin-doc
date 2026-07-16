@@ -135,17 +135,42 @@ function ContestForm({
     }
   }
 
-  // 빠른 추가: 등수 라벨 자동 채움 (인기상 N위 / 심사상)
+  // 인기상 순위 구간 → 라벨·인원수 자동 계산
+  const popularLabel = (from: number, to: number) => (from === to ? `인기상 ${from}위` : `인기상 ${from}~${to}위`);
+
+  // 빠른 추가: 인기상은 다음 순위 구간(직전 인기상 끝+1)부터, 심사상은 "심사상"
   const addPopular = () =>
     setF((s) => {
-      const n = s.prizes.filter((p) => p.award_type === "popular").length + 1;
-      return { ...s, prizes: [...s.prizes, { rank_label: `인기상 ${n}위`, name: "", award_type: "popular", count: 1, image_url: "" } as PrizeItem] };
+      const maxTo = s.prizes.filter((p) => p.award_type === "popular").reduce((m, p) => Math.max(m, p.rank_to ?? 0), 0);
+      const from = maxTo + 1;
+      return {
+        ...s,
+        prizes: [...s.prizes, { rank_label: popularLabel(from, from), name: "", award_type: "popular", count: 1, image_url: "", rank_from: from, rank_to: from } as PrizeItem],
+      };
     });
   const addJudge = () =>
     setF((s) => ({ ...s, prizes: [...s.prizes, { rank_label: "심사상", name: "", award_type: "judge", count: 1, image_url: "" } as PrizeItem] }));
   const updPrize = (i: number, patch: Partial<PrizeItem>) =>
     setF((s) => ({ ...s, prizes: s.prizes.map((p, j) => (j === i ? { ...p, ...patch } : p)) }));
   const rmPrize = (i: number) => setF((s) => ({ ...s, prizes: s.prizes.filter((_, j) => j !== i) }));
+
+  // 인기상 순위 구간 입력 → rank_from/to + 라벨 + 인원수 동시 갱신
+  const setRange = (i: number, fromRaw: number | null, toRaw: number | null) => {
+    const from = Math.max(1, fromRaw ?? 1);
+    const to = Math.max(from, toRaw ?? from);
+    updPrize(i, { rank_from: from, rank_to: to, rank_label: popularLabel(from, to), count: to - from + 1 });
+  };
+  // 유형 전환 시 기본값 세팅
+  const changeAwardType = (i: number, type: AwardType) => {
+    if (type === "popular") {
+      const p = f.prizes[i];
+      const from = p.rank_from ?? 1;
+      const to = p.rank_to ?? from;
+      updPrize(i, { award_type: "popular", rank_from: from, rank_to: to, rank_label: popularLabel(from, to), count: to - from + 1 });
+    } else {
+      updPrize(i, { award_type: "judge", rank_label: "심사상", rank_from: undefined, rank_to: undefined, count: 1 });
+    }
+  };
 
   // 빠른 일정: N일간 접수 → 투표 +1일 → 발표 +1일 자동 계산
   const quickSchedule = (days: number) => {
@@ -161,8 +186,11 @@ function ContestForm({
 
   async function save() {
     if (busy) return;
-    if (f.prizes.some((p) => !p.rank_label.trim() || !p.name.trim())) {
-      return toast.error("보상의 등수 라벨과 상품명을 모두 입력해주세요.");
+    if (f.prizes.some((p) => !p.name.trim())) {
+      return toast.error("보상 상품명을 모두 입력해주세요.");
+    }
+    if (f.prizes.some((p) => p.award_type === "judge" && !p.rank_label.trim())) {
+      return toast.error("심사상 라벨을 입력해주세요.");
     }
     // 빈 로케일 제거
     const cleanI18n: ContestI18n = {};
@@ -180,7 +208,14 @@ function ContestForm({
         description: f.description,
         rules: f.rules,
         prize_summary: f.prize_summary,
-        prizes: f.prizes.map((p) => ({ ...p, count: Number(p.count) || 1, image_url: p.image_url || null })),
+        prizes: f.prizes.map((p) => {
+          if (p.award_type === "popular") {
+            const from = Math.max(1, Number(p.rank_from) || 1);
+            const to = Math.max(from, Number(p.rank_to) || from);
+            return { ...p, rank_from: from, rank_to: to, rank_label: popularLabel(from, to), count: to - from + 1, image_url: p.image_url || null };
+          }
+          return { ...p, count: Number(p.count) || 1, image_url: p.image_url || null };
+        }),
         cover_image_url: f.cover_image_url || null,
         is_featured: f.is_featured,
         banner_order: f.banner_order === null || Number.isNaN(f.banner_order) ? null : Number(f.banner_order),
@@ -343,23 +378,46 @@ function ContestForm({
                 <div className="mb-2 flex items-center gap-2">
                   <select
                     value={p.award_type}
-                    onChange={(e) => updPrize(i, { award_type: e.target.value as AwardType })}
+                    onChange={(e) => changeAwardType(i, e.target.value as AwardType)}
                     className={`${input} flex-1`}
                   >
                     <option value="popular">{AWARD_LABELS.popular}</option>
                     <option value="judge">{AWARD_LABELS.judge}</option>
                   </select>
-                  <div className="flex shrink-0 items-center gap-1">
-                    <input
-                      type="number"
-                      min={1}
-                      value={p.count}
-                      onChange={(e) => updPrize(i, { count: Number(e.target.value) })}
-                      className={`${input} w-16 text-center`}
-                      aria-label="수량"
-                    />
-                    <span className="text-[12px] text-muted">명</span>
-                  </div>
+                  {p.award_type === "popular" ? (
+                    <div className="flex shrink-0 items-center gap-1" aria-label="순위 구간">
+                      <input
+                        type="number"
+                        min={1}
+                        value={p.rank_from ?? ""}
+                        onChange={(e) => setRange(i, e.target.value === "" ? null : Number(e.target.value), p.rank_to ?? null)}
+                        className={`${input} w-14 text-center`}
+                        aria-label="시작 순위"
+                      />
+                      <span className="text-[12px] text-muted">~</span>
+                      <input
+                        type="number"
+                        min={1}
+                        value={p.rank_to ?? ""}
+                        onChange={(e) => setRange(i, p.rank_from ?? null, e.target.value === "" ? null : Number(e.target.value))}
+                        className={`${input} w-14 text-center`}
+                        aria-label="끝 순위"
+                      />
+                      <span className="text-[12px] text-muted">위</span>
+                    </div>
+                  ) : (
+                    <div className="flex shrink-0 items-center gap-1">
+                      <input
+                        type="number"
+                        min={1}
+                        value={p.count}
+                        onChange={(e) => updPrize(i, { count: Number(e.target.value) })}
+                        className={`${input} w-16 text-center`}
+                        aria-label="수량"
+                      />
+                      <span className="text-[12px] text-muted">명</span>
+                    </div>
+                  )}
                   <button
                     type="button"
                     onClick={() => rmPrize(i)}
@@ -369,12 +427,19 @@ function ContestForm({
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-                <input
-                  value={p.rank_label}
-                  onChange={(e) => updPrize(i, { rank_label: e.target.value })}
-                  className={`${input} mb-1.5`}
-                  placeholder="등수 라벨 (예: 인기상 1위)"
-                />
+                {p.award_type === "popular" ? (
+                  <p className="mb-1.5 text-[11px] font-bold text-primary-400">
+                    = {p.rank_label}
+                    {(p.count ?? 1) > 1 ? ` · ${p.count}명` : ""}
+                  </p>
+                ) : (
+                  <input
+                    value={p.rank_label}
+                    onChange={(e) => updPrize(i, { rank_label: e.target.value })}
+                    className={`${input} mb-1.5`}
+                    placeholder="상 이름 (예: 심사상)"
+                  />
+                )}
                 <input
                   value={p.name}
                   onChange={(e) => updPrize(i, { name: e.target.value })}

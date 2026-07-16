@@ -14,11 +14,13 @@ export const CLAIM_STATUSES = ["none", "claimed", "shipped"] as const;
 export type ClaimStatus = (typeof CLAIM_STATUSES)[number];
 
 export interface PrizeItem {
-  rank_label: string;   // "인기상 1위"
+  rank_label: string;   // "인기상 1위" / "인기상 1~3위" (자동 생성)
   name: string;         // "V01D 싸인 앨범"
   image_url?: string | null;
   award_type: AwardType;
-  count: number;
+  count: number;        // 인원수 (인기상은 순위 구간에서 자동 계산)
+  rank_from?: number;   // 인기상 순위 구간 시작
+  rank_to?: number;     // 인기상 순위 구간 끝
 }
 
 // 콘테스트 다국어 — ko는 base 컬럼, en·ja만 i18n에 저장
