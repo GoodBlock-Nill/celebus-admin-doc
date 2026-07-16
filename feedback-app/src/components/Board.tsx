@@ -274,9 +274,9 @@ export default function Board() {
                 {loading ? t("loading") : t("empty_popular")}
               </p>
             ) : (
-              <div className="grid gap-3">
+              <div className="grid gap-2.5">
                 {top.map((p, i) => (
-                  <PostCard key={p.id} {...cardProps(p, midPage * PAGE_TOP + i)} />
+                  <PostCard key={p.id} {...cardProps(p, midPage * PAGE_TOP + i)} compact />
                 ))}
               </div>
             )
@@ -285,9 +285,9 @@ export default function Board() {
               {loading ? t("loading") : t("empty_curated")}
             </p>
           ) : (
-            <div className="grid gap-3">
+            <div className="grid gap-2.5">
               {curated.map((p) => (
-                <PostCard key={p.id} {...cardProps(p)} />
+                <PostCard key={p.id} {...cardProps(p)} compact />
               ))}
             </div>
           )}

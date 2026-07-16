@@ -8,11 +8,13 @@ import type { PostPublic } from "@/lib/types";
 import { getDateLocale } from "@/lib/i18n";
 import { useLang } from "./LangProvider";
 import TargetBadge from "./TargetBadge";
+import CategoryBadge from "./CategoryBadge";
 import { PostBadges, OfficialReply } from "./Badges";
 
 export default function PostCard({
   post,
   rank,
+  compact = false,
   liked,
   onLike,
   onReport,
@@ -23,6 +25,7 @@ export default function PostCard({
 }: {
   post: PostPublic;
   rank?: number;
+  compact?: boolean;
   liked: boolean;
   onLike: (p: PostPublic) => void;
   onReport: (p: PostPublic) => void;
@@ -36,11 +39,21 @@ export default function PostCard({
   const rel = formatDistanceToNow(new Date(post.created_at), { addSuffix: true, locale: getDateLocale(lang) });
 
   return (
-    <div className="relative rounded-2xl border border-border bg-card p-4">
+    <div className={`relative rounded-2xl border border-border bg-card ${compact ? "p-3.5" : "p-4"}`}>
       <div className="mb-2 flex items-center gap-2">
-        {typeof rank === "number" && (
-          <span className={`text-sm font-black ${rank < 3 ? "grad" : "text-muted"}`}>{rank + 1}</span>
-        )}
+        {typeof rank === "number" &&
+          (compact ? (
+            <span
+              className={`grid h-6 w-6 shrink-0 place-items-center rounded-full text-[12px] font-black ${
+                rank === 0 ? "bg-primary text-white" : rank < 3 ? "bg-primary/20 text-primary-400" : "bg-card-2 text-muted"
+              }`}
+            >
+              {rank + 1}
+            </span>
+          ) : (
+            <span className={`text-sm font-black ${rank < 3 ? "grad" : "text-muted"}`}>{rank + 1}</span>
+          ))}
+        <CategoryBadge category={post.category} />
         <TargetBadge target={post.target} />
         <span className="truncate text-sm font-bold">{post.nickname}</span>
         {post.edited && <span className="text-[10px] text-muted">({t("edited")})</span>}
@@ -58,12 +71,14 @@ export default function PostCard({
 
       <Link href={`/post/${post.id}`} className="block">
         <h3 className="line-clamp-1 text-[16px] font-bold text-fg hover:text-primary-400">{post.title || post.body}</h3>
-        {post.title && <p className="mt-1 line-clamp-2 break-words text-[14px] leading-relaxed text-muted">{post.body}</p>}
+        {post.title && !compact && (
+          <p className="mt-1 line-clamp-2 break-words text-[14px] leading-relaxed text-muted">{post.body}</p>
+        )}
       </Link>
 
       <OfficialReply reply={post.official_reply} />
 
-      <div className="mt-3 flex items-center gap-3">
+      <div className={`flex items-center gap-3 ${compact ? "mt-2.5" : "mt-3"}`}>
         <button
           onClick={() => onLike(post)}
           disabled={liked}
