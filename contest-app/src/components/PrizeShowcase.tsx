@@ -11,7 +11,7 @@ export default function PrizeShowcase({ contest }: { contest: ContestPublic }) {
   return (
     <section>
       <h2 className="mb-3 text-[15px] font-black">🏆 {t("prizes_title")}</h2>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-2">
         {contest.prizes.map((p, i) => {
           const isPopular = p.award_type === "popular";
           return (
