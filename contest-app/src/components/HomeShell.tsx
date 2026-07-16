@@ -5,6 +5,7 @@ import { sb } from "@/lib/supabase-browser";
 import type { ContestPublic } from "@/lib/types";
 import Shell from "./Shell";
 import CoverHero from "./CoverHero";
+import HeroCarousel from "./HeroCarousel";
 import ContestGridCard from "./ContestGridCard";
 import { useLang } from "./LangProvider";
 
@@ -54,13 +55,23 @@ function HomeBody() {
     );
   }
 
-  const [main, ...others] = live;
+  // 메인 배너: is_featured 지정분을 banner_order 순으로 캐러셀. 없으면 최신 1개 단일 히어로.
+  const featured = live
+    .filter((c) => c.is_featured)
+    .sort((a, b) => (a.banner_order ?? 999) - (b.banner_order ?? 999))
+    .slice(0, 6);
+  const featuredIds = new Set(featured.map((c) => c.id));
+  const heroMode = featured.length > 0;
+  const main = heroMode ? null : live[0];
+  const others = heroMode ? live.filter((c) => !featuredIds.has(c.id)) : live.slice(1);
 
   return (
     <div className="space-y-8">
       <p className="eyebrow text-center">{t("home_hero_kicker")}</p>
 
-      {main ? (
+      {heroMode ? (
+        <HeroCarousel slides={featured} />
+      ) : main ? (
         <CoverHero
           contest={main}
           entryCount={main.entryCount}

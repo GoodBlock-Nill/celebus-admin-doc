@@ -7,6 +7,7 @@ import { sb } from "@/lib/supabase-browser";
 import type { AwardPublic, ContestPublic, EntryPublic } from "@/lib/types";
 import { canVote, canSubmit } from "@/lib/contest-status";
 import { contestVisual } from "@/lib/contest-visual";
+import { localizeContest } from "@/lib/localize";
 import Shell from "./Shell";
 import CoverHero from "./CoverHero";
 import PrizeShowcase from "./PrizeShowcase";
@@ -18,7 +19,7 @@ import { useLang } from "./LangProvider";
 type Tab = "leaderboard" | "latest" | "awards";
 
 function ContestBody({ slug }: { slug: string }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [contest, setContest] = useState<ContestPublic | null>(null);
   const [entries, setEntries] = useState<EntryPublic[]>([]);
   const [latest, setLatest] = useState<EntryPublic[]>([]);
@@ -90,6 +91,7 @@ function ContestBody({ slug }: { slug: string }) {
   const voteSum = entries.reduce((s, e) => s + e.vote_count, 0);
   const votable = canVote(contest);
   const v = contestVisual(contest.contest_type);
+  const loc = localizeContest(contest, lang);
   const trendingEntries = trendingIds
     .map((id) => entries.find((e) => e.id === id))
     .filter((e): e is EntryPublic => !!e)
@@ -119,6 +121,14 @@ function ContestBody({ slug }: { slug: string }) {
   return (
     <div className="space-y-6">
       <CoverHero contest={contest} entryCount={entries.length} voteCount={voteSum} />
+
+      {/* 소개 */}
+      {loc.description && (
+        <p className="whitespace-pre-wrap rounded-[16px] bg-surface-1 p-4 text-[13.5px] leading-relaxed text-fg/90 ring-1 ring-hairline">
+          {loc.description}
+        </p>
+      )}
+
       <PrizeShowcase contest={contest} />
 
       {/* 지금 뜨는 — 가로 미디어 캐러셀 */}
@@ -200,13 +210,13 @@ function ContestBody({ slug }: { slug: string }) {
       </div>
 
       {/* 규정 — 접이식 */}
-      {contest.rules && (
+      {loc.rules && (
         <details className="group rounded-[16px] bg-surface-1 ring-1 ring-hairline">
           <summary className="flex cursor-pointer list-none items-center justify-between p-4 text-[14px] font-black">
             📋 {t("rules_title")}
             <span className="text-muted transition-transform group-open:rotate-90">›</span>
           </summary>
-          <p className="whitespace-pre-wrap px-4 pb-4 text-[13px] leading-relaxed text-muted">{contest.rules}</p>
+          <p className="whitespace-pre-wrap px-4 pb-4 text-[13px] leading-relaxed text-muted">{loc.rules}</p>
         </details>
       )}
 

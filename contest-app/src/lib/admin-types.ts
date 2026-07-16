@@ -1,5 +1,5 @@
 // 관리자 화면용 raw 테이블 타입 (공개 뷰가 아닌 서비스롤 조회 결과)
-import type { AwardType, ClaimStatus, ContestStatus, ContestType, Platform, PrizeItem } from "./types";
+import type { AwardType, ClaimStatus, ContestI18n, ContestStatus, ContestType, Platform, PrizeItem } from "./types";
 
 export interface ContestRow {
   id: string;
@@ -13,6 +13,9 @@ export interface ContestRow {
   prizes: PrizeItem[];
   cover_image_url: string | null;
   status: ContestStatus;
+  is_featured: boolean;
+  banner_order: number | null;
+  i18n: ContestI18n;
   submit_start_at: string | null;
   submit_end_at: string | null;
   vote_end_at: string | null;

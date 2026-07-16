@@ -6,10 +6,11 @@ import { Film, ImageIcon } from "lucide-react";
 import type { ContestPublic } from "@/lib/types";
 import { contestVisual } from "@/lib/contest-visual";
 import { ddayTarget, remaining } from "@/lib/contest-status";
+import { localizeContest } from "@/lib/localize";
 import { useLang } from "./LangProvider";
 
 export default function ContestGridCard({ contest, dimmed = false }: { contest: ContestPublic; dimmed?: boolean }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const v = contestVisual(contest.contest_type);
   const target = ddayTarget(contest);
   const r = target ? remaining(target.at) : null;
@@ -59,7 +60,7 @@ export default function ContestGridCard({ contest, dimmed = false }: { contest: 
 
         {/* 하단 제목 */}
         <div className="absolute inset-x-0 bottom-0 p-2.5">
-          <p className="line-clamp-2 text-[13px] font-black leading-snug text-white drop-shadow">{contest.title}</p>
+          <p className="line-clamp-2 text-[13px] font-black leading-snug text-white drop-shadow">{localizeContest(contest, lang).title}</p>
         </div>
       </div>
     </Link>

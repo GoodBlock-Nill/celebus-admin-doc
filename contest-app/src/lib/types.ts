@@ -21,6 +21,15 @@ export interface PrizeItem {
   count: number;
 }
 
+// 콘테스트 다국어 — ko는 base 컬럼, en·ja만 i18n에 저장
+export interface ContestLocale {
+  title?: string;
+  description?: string;
+  rules?: string;
+  prize_summary?: string;
+}
+export type ContestI18n = Record<string, ContestLocale>;
+
 export interface ContestPublic {
   id: string;
   slug: string;
@@ -33,6 +42,9 @@ export interface ContestPublic {
   prizes: PrizeItem[];
   cover_image_url: string | null;
   status: Exclude<ContestStatus, "draft">;
+  is_featured: boolean;
+  banner_order: number | null;
+  i18n: ContestI18n;
   submit_start_at: string | null;
   submit_end_at: string | null;
   vote_end_at: string | null;

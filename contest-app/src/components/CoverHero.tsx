@@ -7,6 +7,7 @@ import { Trophy, Users, Heart, Film, ImageIcon } from "lucide-react";
 import type { ContestPublic } from "@/lib/types";
 import { contestVisual } from "@/lib/contest-visual";
 import { ddayTarget, remaining, canSubmit, STATUS_LABELS } from "@/lib/contest-status";
+import { localizeContest } from "@/lib/localize";
 import { useLang } from "./LangProvider";
 
 function Dday({ contest }: { contest: ContestPublic }) {
@@ -34,9 +35,10 @@ export default function CoverHero({
   voteCount: number;
   href?: string; // 홈에서 카드로 쓸 때 링크
 }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const v = contestVisual(contest.contest_type);
   const isLive = contest.status !== "closed";
+  const loc = localizeContest(contest, lang);
 
   const inner = (
     <div className={`relative overflow-hidden rounded-[22px] ring-1 ring-hairline ${isLive ? v.glowClass : ""}`}>
@@ -80,10 +82,10 @@ export default function CoverHero({
               {t("status_closed") ?? STATUS_LABELS[contest.status]}
             </span>
           )}
-          <h1 className="text-[22px] font-black leading-tight text-white drop-shadow sm:text-[26px]">{contest.title}</h1>
-          {contest.prize_summary && (
+          <h1 className="text-[22px] font-black leading-tight text-white drop-shadow sm:text-[26px]">{loc.title}</h1>
+          {loc.prize_summary && (
             <p className="mt-1.5 inline-flex items-center gap-1.5 text-[13px] font-bold text-gold drop-shadow">
-              <Trophy className="h-4 w-4" /> {contest.prize_summary}
+              <Trophy className="h-4 w-4" /> {loc.prize_summary}
             </p>
           )}
         </div>

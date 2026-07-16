@@ -3,11 +3,15 @@
 // 콘테스트 CRUD + 상태 전환 (관리자 UI는 운영자 전용 — 한국어 고정)
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Languages, Eye, Loader2 } from "lucide-react";
 import type { ContestRow } from "@/lib/admin-types";
 import { adminFetch } from "@/lib/admin-types";
 import { STATUS_LABELS } from "@/lib/contest-status";
-import type { AwardType, ContestStatus, PrizeItem } from "@/lib/types";
+import type { AwardType, ContestI18n, ContestPublic, ContestStatus, PrizeItem } from "@/lib/types";
+import { localizeContest } from "@/lib/localize";
+import { LangProvider } from "../LangProvider";
+import CoverHero from "../CoverHero";
+import ImageUploader from "./ImageUploader";
 
 const AWARD_LABELS: Record<AwardType, string> = {
   popular: "인기상 (투표 순위)",
@@ -29,6 +33,14 @@ const NEXT_ACTIONS: Record<ContestStatus, { to: ContestStatus; label: string }[]
 
 const input = "w-full rounded-lg border border-border bg-bg px-2.5 py-2 text-[13px] outline-none focus:border-primary/60";
 const lbl = "mb-1 block text-[11px] font-bold text-muted";
+
+const LANGS = [
+  { key: "ko", label: "한국어" },
+  { key: "en", label: "English" },
+  { key: "ja", label: "日本語" },
+] as const;
+type LangKey = (typeof LANGS)[number]["key"];
+type LField = "title" | "description" | "rules" | "prize_summary";
 
 function toLocal(iso: string | null): string {
   if (!iso) return "";
@@ -59,12 +71,60 @@ function ContestForm({
     prize_summary: initial?.prize_summary ?? "",
     prizes: (initial?.prizes ?? []) as PrizeItem[],
     cover_image_url: initial?.cover_image_url ?? "",
+    is_featured: initial?.is_featured ?? false,
+    banner_order: (initial?.banner_order ?? null) as number | null,
+    i18n: (initial?.i18n ?? {}) as ContestI18n,
     submit_start_at: toLocal(initial?.submit_start_at ?? null),
     submit_end_at: toLocal(initial?.submit_end_at ?? null),
     vote_end_at: toLocal(initial?.vote_end_at ?? null),
     announce_at: toLocal(initial?.announce_at ?? null),
   });
   const [busy, setBusy] = useState(false);
+  const [contentLang, setContentLang] = useState<LangKey>("ko");
+  const [translating, setTranslating] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewLang, setPreviewLang] = useState<LangKey>("ko");
+
+  // 다국어 필드 접근: ko는 base 컬럼, en·ja는 i18n
+  const cv = (field: LField): string =>
+    contentLang === "ko" ? (f[field] as string) : (f.i18n[contentLang]?.[field] ?? "");
+  const setCv = (field: LField, value: string) => {
+    if (contentLang === "ko") setF((s) => ({ ...s, [field]: value }));
+    else
+      setF((s) => ({
+        ...s,
+        i18n: { ...s.i18n, [contentLang]: { ...(s.i18n[contentLang] ?? {}), [field]: value } },
+      }));
+  };
+
+  async function autoTranslate() {
+    if (translating) return;
+    if (!f.title.trim()) return toast.error("한국어 제목을 먼저 입력해주세요.");
+    setTranslating(true);
+    try {
+      const res = await adminFetch("/api/admin/contests/translate", {
+        method: "POST",
+        body: JSON.stringify({
+          title: f.title,
+          description: f.description,
+          rules: f.rules,
+          prize_summary: f.prize_summary,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "자동 번역 실패");
+        return;
+      }
+      setF((s) => ({ ...s, i18n: { en: data.en, ja: data.ja } }));
+      setContentLang("en");
+      toast.success("자동 번역 완료 — EN·JA 탭에서 확인·수정하세요");
+    } catch {
+      toast.error("자동 번역 실패");
+    } finally {
+      setTranslating(false);
+    }
+  }
 
   const addPrize = () =>
     setF((s) => ({
@@ -80,10 +140,16 @@ function ContestForm({
     if (f.prizes.some((p) => !p.rank_label.trim() || !p.name.trim())) {
       return toast.error("보상의 등수 라벨과 상품명을 모두 입력해주세요.");
     }
+    // 빈 로케일 제거
+    const cleanI18n: ContestI18n = {};
+    for (const L of ["en", "ja"] as const) {
+      const loc = f.i18n[L];
+      if (loc && (loc.title || loc.description || loc.rules || loc.prize_summary)) cleanI18n[L] = loc;
+    }
     setBusy(true);
     try {
       const body = JSON.stringify({
-        slug: f.slug,
+        slug: f.slug.trim() || undefined, // 비우면 서버가 자동 생성
         artist: f.artist,
         contest_type: f.contest_type,
         title: f.title,
@@ -92,6 +158,9 @@ function ContestForm({
         prize_summary: f.prize_summary,
         prizes: f.prizes.map((p) => ({ ...p, count: Number(p.count) || 1, image_url: p.image_url || null })),
         cover_image_url: f.cover_image_url || null,
+        is_featured: f.is_featured,
+        banner_order: f.banner_order === null || Number.isNaN(f.banner_order) ? null : Number(f.banner_order),
+        i18n: cleanI18n,
         submit_start_at: toIso(f.submit_start_at),
         submit_end_at: toIso(f.submit_end_at),
         vote_end_at: toIso(f.vote_end_at),
@@ -111,19 +180,39 @@ function ContestForm({
     }
   }
 
+  // 미리보기용 합성 콘테스트 (previewLang로 로컬라이즈 → base에 반영, i18n 비움)
+  const previewBase: ContestPublic = {
+    id: "preview",
+    slug: f.slug || "preview",
+    artist: f.artist,
+    contest_type: f.contest_type,
+    title: f.title,
+    description: f.description,
+    rules: f.rules,
+    prize_summary: f.prize_summary,
+    prizes: f.prizes,
+    cover_image_url: f.cover_image_url || null,
+    status: "open",
+    is_featured: f.is_featured,
+    banner_order: f.banner_order,
+    i18n: f.i18n,
+    submit_start_at: toIso(f.submit_start_at),
+    submit_end_at: toIso(f.submit_end_at),
+    vote_end_at: toIso(f.vote_end_at),
+    announce_at: toIso(f.announce_at),
+    created_at: new Date().toISOString(),
+  };
+  const previewContest: ContestPublic = { ...previewBase, ...localizeContest(previewBase, previewLang), i18n: {} };
+
+  const koHint = (field: LField) => (contentLang !== "ko" && f[field] ? `한국어: ${f[field] as string}` : undefined);
+
   return (
     <div className="space-y-3 rounded-2xl border border-primary/40 bg-card p-4">
       <div className="grid grid-cols-2 gap-2">
         <div>
-          <label className={lbl}>slug (URL)</label>
-          <input value={f.slug} onChange={(e) => setF({ ...f, slug: e.target.value })} className={input} placeholder="v01d-cover-2026" />
-        </div>
-        <div>
           <label className={lbl}>아티스트</label>
           <input value={f.artist} onChange={(e) => setF({ ...f, artist: e.target.value })} className={input} />
         </div>
-      </div>
-      <div className="grid grid-cols-2 gap-2">
         <div>
           <label className={lbl}>유형</label>
           <select
@@ -135,27 +224,70 @@ function ContestForm({
             <option value="image">이미지 (X·Instagram·Threads)</option>
           </select>
         </div>
-        <div>
-          <label className={lbl}>커버 이미지 URL (선택)</label>
-          <input value={f.cover_image_url} onChange={(e) => setF({ ...f, cover_image_url: e.target.value })} className={input} />
+      </div>
+
+      {/* 커버 이미지 업로드 */}
+      <div>
+        <label className={lbl}>커버 이미지</label>
+        <ImageUploader
+          value={f.cover_image_url}
+          onChange={(url) => setF((s) => ({ ...s, cover_image_url: url }))}
+          folder="cover"
+          label="커버 업로드"
+          className="h-28 w-full max-w-xs"
+        />
+        <p className="mt-1 text-[10px] text-muted">JPEG·PNG·GIF·WebP · 5MB 이하</p>
+      </div>
+
+      {/* 다국어 콘텐츠 (언어 탭 + 자동 번역) */}
+      <div className="rounded-xl border border-hairline bg-bg/40 p-2.5">
+        <div className="mb-2.5 flex items-center gap-1">
+          <div className="flex gap-0.5 rounded-full bg-bg p-0.5">
+            {LANGS.map((l) => (
+              <button
+                key={l.key}
+                type="button"
+                onClick={() => setContentLang(l.key)}
+                className={`rounded-full px-2.5 py-1 text-[11px] font-bold transition-colors ${
+                  contentLang === l.key ? "bg-primary text-white" : "text-muted hover:text-fg"
+                }`}
+              >
+                {l.label}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={autoTranslate}
+            disabled={translating}
+            className="ml-auto inline-flex items-center gap-1 rounded-full bg-primary/15 px-2.5 py-1 text-[11px] font-bold text-primary-400 hover:bg-primary/25 disabled:opacity-50"
+          >
+            {translating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Languages className="h-3 w-3" />}
+            자동 번역 (EN·JA)
+          </button>
+        </div>
+
+        <div className="space-y-2">
+          <div>
+            <label className={lbl}>제목{contentLang === "ko" ? "" : ` (${contentLang.toUpperCase()})`}</label>
+            <input value={cv("title")} onChange={(e) => setCv("title", e.target.value)} className={input} placeholder={koHint("title")} />
+          </div>
+          <div>
+            <label className={lbl}>소개</label>
+            <textarea value={cv("description")} onChange={(e) => setCv("description", e.target.value)} rows={2} className={input} placeholder={koHint("description")} />
+          </div>
+          <div>
+            <label className={lbl}>참가 규정</label>
+            <textarea value={cv("rules")} onChange={(e) => setCv("rules", e.target.value)} rows={3} className={input} placeholder={koHint("rules")} />
+          </div>
+          <div>
+            <label className={lbl}>보상 요약 (히어로 한 줄)</label>
+            <input value={cv("prize_summary")} onChange={(e) => setCv("prize_summary", e.target.value)} className={input} placeholder={koHint("prize_summary") ?? "1위 V01D 전원 싸인 앨범"} />
+          </div>
         </div>
       </div>
-      <div>
-        <label className={lbl}>제목</label>
-        <input value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} className={input} />
-      </div>
-      <div>
-        <label className={lbl}>소개</label>
-        <textarea value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} rows={3} className={input} />
-      </div>
-      <div>
-        <label className={lbl}>참가 규정</label>
-        <textarea value={f.rules} onChange={(e) => setF({ ...f, rules: e.target.value })} rows={3} className={input} />
-      </div>
-      <div>
-        <label className={lbl}>보상 요약 (히어로 한 줄)</label>
-        <input value={f.prize_summary} onChange={(e) => setF({ ...f, prize_summary: e.target.value })} className={input} placeholder="1위 V01D 전원 싸인 앨범" />
-      </div>
+
+      {/* 보상 목록 */}
       <div>
         <div className="mb-1.5 flex items-center justify-between">
           <label className={lbl + " mb-0"}>보상 목록</label>
@@ -167,7 +299,6 @@ function ContestForm({
             <Plus className="h-3 w-3" /> 보상 추가
           </button>
         </div>
-
         {f.prizes.length === 0 ? (
           <p className="rounded-lg border border-dashed border-line px-3 py-4 text-center text-[12px] text-muted">
             아직 보상이 없어요. [보상 추가]로 등수별 상품을 등록하세요.
@@ -217,17 +348,23 @@ function ContestForm({
                   className={`${input} mb-1.5`}
                   placeholder="상품명 (예: V01D 전원 싸인 앨범)"
                 />
-                <input
-                  value={p.image_url ?? ""}
-                  onChange={(e) => updPrize(i, { image_url: e.target.value })}
-                  className={input}
-                  placeholder="상품 이미지 URL (선택)"
-                />
+                <div className="flex items-center gap-2">
+                  <ImageUploader
+                    value={p.image_url ?? ""}
+                    onChange={(url) => updPrize(i, { image_url: url })}
+                    folder="prize"
+                    label="상품 이미지"
+                    className="h-16 w-24"
+                  />
+                  <span className="text-[10px] text-muted">상품 이미지 (선택)</span>
+                </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* 일정 */}
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {(
           [
@@ -239,20 +376,98 @@ function ContestForm({
         ).map(([k, label]) => (
           <div key={k}>
             <label className={lbl}>{label}</label>
-            <input
-              type="datetime-local"
-              value={f[k]}
-              onChange={(e) => setF({ ...f, [k]: e.target.value })}
-              className={input}
-            />
+            <input type="datetime-local" value={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.value })} className={input} />
           </div>
         ))}
       </div>
+
+      {/* 메인 배너 */}
+      <div className="grid grid-cols-2 items-end gap-2">
+        <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-bg px-3 py-2 text-[13px] font-bold">
+          <input
+            type="checkbox"
+            checked={f.is_featured}
+            onChange={(e) => setF({ ...f, is_featured: e.target.checked })}
+            className="h-4 w-4 accent-[color:var(--color-primary)]"
+          />
+          메인 배너에 노출
+        </label>
+        <div>
+          <label className={lbl}>배너 순서 (작을수록 앞)</label>
+          <input
+            type="number"
+            min={0}
+            value={f.banner_order ?? ""}
+            onChange={(e) => setF({ ...f, banner_order: e.target.value === "" ? null : Number(e.target.value) })}
+            className={input}
+            placeholder="예: 1"
+            disabled={!f.is_featured}
+          />
+        </div>
+      </div>
+
+      {/* 고급 설정: slug·URL 직접 입력 */}
+      <details className="rounded-lg border border-hairline">
+        <summary className="cursor-pointer px-3 py-2 text-[12px] font-bold text-muted">고급 설정 (URL slug 직접 지정)</summary>
+        <div className="space-y-2 p-3 pt-0">
+          <div>
+            <label className={lbl}>slug (공개 URL 경로 — 비우면 자동 생성됨)</label>
+            <input value={f.slug} onChange={(e) => setF({ ...f, slug: e.target.value })} className={input} placeholder="자동 생성 (예: v01d-video-a1b2c3)" />
+            <p className="mt-1 text-[10px] text-muted">공개 주소 /contest/&lt;slug&gt; 에 쓰여요. 보통 비워두면 됩니다.</p>
+          </div>
+          <div>
+            <label className={lbl}>커버 이미지 URL 직접 입력 (업로드 대신)</label>
+            <input value={f.cover_image_url} onChange={(e) => setF({ ...f, cover_image_url: e.target.value })} className={input} placeholder="https://…" />
+          </div>
+        </div>
+      </details>
+
+      {/* 미리보기 */}
+      <div>
+        <button
+          type="button"
+          onClick={() => setShowPreview((v) => !v)}
+          className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-[12px] font-bold text-muted hover:text-fg"
+        >
+          <Eye className="h-3.5 w-3.5" /> {showPreview ? "미리보기 닫기" : "공개 화면 미리보기"}
+        </button>
+        {showPreview && (
+          <div className="mt-2 rounded-xl border border-hairline bg-surface-1 p-3">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="text-[11px] font-bold text-muted">미리보기</span>
+              <div className="ml-auto flex gap-0.5 rounded-full bg-bg p-0.5">
+                {LANGS.map((l) => (
+                  <button
+                    key={l.key}
+                    type="button"
+                    onClick={() => setPreviewLang(l.key)}
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                      previewLang === l.key ? "bg-primary text-white" : "text-muted"
+                    }`}
+                  >
+                    {l.key.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="mx-auto max-w-md">
+              <LangProvider>
+                <CoverHero contest={previewContest} entryCount={0} voteCount={0} />
+              </LangProvider>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="flex gap-2 pt-1">
         <button onClick={onCancel} className="rounded-full border border-border px-4 py-2 text-[13px] font-bold text-muted">
           취소
         </button>
-        <button onClick={save} disabled={busy || !f.slug || !f.title} className="flex-1 rounded-full bg-primary py-2 text-[13px] font-black text-white disabled:opacity-40">
+        <button
+          onClick={save}
+          disabled={busy || !f.title.trim()}
+          className="flex-1 rounded-full bg-primary py-2 text-[13px] font-black text-white disabled:opacity-40"
+        >
           {initial ? "수정 저장" : "생성 (draft)"}
         </button>
       </div>
@@ -332,6 +547,9 @@ export default function ContestsPanel() {
             <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-bold text-primary-400">
               {c.contest_type === "video" ? "영상" : "이미지"}
             </span>
+            {c.is_featured && (
+              <span className="rounded-full bg-gold/15 px-2 py-0.5 text-[11px] font-bold text-gold">배너{c.banner_order != null ? ` ${c.banner_order}` : ""}</span>
+            )}
             <span className="truncate text-[14px] font-bold">{c.title}</span>
             <span className="ml-auto flex shrink-0 gap-1">
               <button onClick={() => setEditing(c)} aria-label="수정" className="rounded p-1.5 text-muted hover:text-fg">
