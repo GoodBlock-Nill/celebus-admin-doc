@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Flame, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { AwardPublic, ContestPublic, EntryPublic } from "@/lib/types";
 import { canVote, canSubmit } from "@/lib/contest-status";
@@ -25,7 +25,6 @@ function ContestBody({ slug }: { slug: string }) {
   const [latest, setLatest] = useState<EntryPublic[]>([]);
   const [awards, setAwards] = useState<AwardPublic[]>([]);
   const [stats, setStats] = useState({ entryCount: 0, voteSum: 0 });
-  const [trendingIds, setTrendingIds] = useState<string[]>([]);
   const [tab, setTab] = useState<Tab>("latest");
   const [loading, setLoading] = useState(true);
 
@@ -66,14 +65,6 @@ function ContestBody({ slug }: { slug: string }) {
     setAwards((aw as AwardPublic[]) ?? []);
     const voteSumAll = ((countRows as { vote_count: number }[]) ?? []).reduce((s, r) => s + (r.vote_count ?? 0), 0);
     setStats({ entryCount: entryCount ?? 0, voteSum: voteSumAll });
-
-    try {
-      const res = await fetch(`/api/contests/${contest.id}/trending`);
-      const data = await res.json();
-      setTrendingIds(((data.trending ?? []) as { entry_id: string }[]).map((x) => x.entry_id));
-    } catch {
-      /* 트렌딩은 부가 정보 — 실패 무시 */
-    }
     setLoading(false);
   }, [slug]);
 
@@ -96,10 +87,6 @@ function ContestBody({ slug }: { slug: string }) {
   const votable = canVote(contest);
   const v = contestVisual(contest.contest_type);
   const loc = localizeContest(contest, lang);
-  const trendingEntries = trendingIds
-    .map((id) => entries.find((e) => e.id === id))
-    .filter((e): e is EntryPublic => !!e)
-    .slice(0, 3);
   const showAwardsTab = contest.status === "announced" || contest.status === "closed" || contest.status === "judging";
 
   const tabs: { key: Tab; label: string }[] = [
@@ -134,22 +121,6 @@ function ContestBody({ slug }: { slug: string }) {
       )}
 
       <PrizeShowcase contest={contest} />
-
-      {/* 지금 뜨는 — 가로 미디어 캐러셀 */}
-      {trendingEntries.length > 0 && tab === "leaderboard" && (
-        <section>
-          <h2 className="mb-2 inline-flex items-center gap-1.5 text-[15px] font-black">
-            <Flame className="h-4 w-4 text-live" /> {t("lb_trending")}
-          </h2>
-          <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
-            {trendingEntries.map((e) => (
-              <div key={e.id} className="w-40 shrink-0 snap-start">
-                <MediaTile entry={e} contestType={contest.contest_type} canVote={votable} />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* 탭 */}
       <div>

@@ -35,6 +35,63 @@ function pick(data: Record<string, unknown> | null): OembedMeta | null {
   return Object.keys(meta).length ? meta : null;
 }
 
+// ── X(트윗) 이미지: 무인증 syndication API (react-tweet 방식) ──
+// 토큰은 트윗 ID로부터 결정론적으로 계산 — 약한 검증용
+function tweetToken(id: string): string {
+  return ((Number(id) / 1e15) * Math.PI).toString(6 ** 2).replace(/(0+|\.)/g, "");
+}
+
+async function fetchTweetThumb(id: string): Promise<string | undefined> {
+  if (!/^\d+$/.test(id)) return undefined;
+  const data = await fetchJson(`https://cdn.syndication.twimg.com/tweet-result?id=${id}&token=${tweetToken(id)}&lang=en`);
+  if (!data) return undefined;
+  // 사진: photos[].url / 영상·GIF 포함 미디어: mediaDetails[].media_url_https
+  const photos = data.photos as Array<{ url?: string }> | undefined;
+  if (Array.isArray(photos) && typeof photos[0]?.url === "string") return photos[0].url;
+  const md = data.mediaDetails as Array<{ media_url_https?: string }> | undefined;
+  if (Array.isArray(md) && typeof md[0]?.media_url_https === "string") return md[0].media_url_https;
+  return undefined;
+}
+
+// 최소 HTML 엔티티 디코드 (og:image URL의 &amp; 등)
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x2F;/gi, "/")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+// ── og:image 서버 추출 (Meta 권고 방식 — IG oEmbed 썸네일 폐지 대응) ──
+// 공개 게시물 HTML의 og:image / twitter:image / og:title 파싱. 데이터센터 IP 차단 시 소프트 실패.
+async function fetchOgImage(url: string): Promise<OembedMeta | null> {
+  try {
+    const res = await fetch(url, {
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+      headers: {
+        "user-agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
+        "accept-language": "en-US,en;q=0.9",
+      },
+    });
+    if (!res.ok) return null;
+    const html = (await res.text()).slice(0, 500_000);
+    const meta: OembedMeta = {};
+    const img =
+      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ??
+      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i) ??
+      html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
+    if (img) meta.thumbnail_url = decodeEntities(img[1]);
+    const title = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i);
+    if (title) meta.title = decodeEntities(title[1]).slice(0, 200);
+    return meta.thumbnail_url ? meta : null;
+  } catch {
+    return null;
+  }
+}
+
 // 반환: { exists, meta } — exists=false는 "확실히 없음"(404 등이 아니라 fetch 실패일 수도 있어 소프트 처리)
 export async function fetchOembed(parsed: ParsedUrl): Promise<OembedMeta | null> {
   const enc = encodeURIComponent(parsed.canonicalUrl);
@@ -48,11 +105,20 @@ export async function fetchOembed(parsed: ParsedUrl): Promise<OembedMeta | null>
       }
       return meta;
     }
-    case "x":
-      return pick(await fetchJson(`https://publish.twitter.com/oembed?url=${enc}&omit_script=true`));
+    case "x": {
+      // 제목·작성자는 공개 oEmbed, 썸네일은 syndication(무인증) → og:image 순으로 확보
+      const meta: OembedMeta = pick(await fetchJson(`https://publish.twitter.com/oembed?url=${enc}&omit_script=true`)) ?? {};
+      if (!meta.thumbnail_url) meta.thumbnail_url = await fetchTweetThumb(parsed.externalId);
+      if (!meta.thumbnail_url) {
+        const og = await fetchOgImage(parsed.canonicalUrl);
+        if (og?.thumbnail_url) meta.thumbnail_url = og.thumbnail_url;
+      }
+      return Object.keys(meta).length ? meta : null;
+    }
     case "tiktok":
       return pick(await fetchJson(`https://www.tiktok.com/oembed?url=${enc}`));
-    // Instagram/Threads oEmbed는 Meta 앱 토큰 필요 — 파일럿에서는 메타 없이 통과
+    // Instagram/Threads: oEmbed 썸네일 폐지(2025.11) + 서버 요청엔 og:image 미제공(JS 앱 셸, 실측 확인)
+    // → 썸네일 확보 불가, 리스트는 플랫폼 아이콘 폴백. (상세는 embed.js로 렌더)
     case "instagram":
     case "threads":
       return null;
