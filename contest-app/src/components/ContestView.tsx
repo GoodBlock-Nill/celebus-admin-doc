@@ -208,7 +208,7 @@ function ContestBody({ slug }: { slug: string }) {
               href={`/contest/${contest.slug}/submit`}
               className="flex items-center justify-center gap-2 rounded-full bg-primary py-3 text-center text-[15px] font-black text-white transition-colors hover:bg-primary-strong"
             >
-              <Upload className="h-4 w-4" /> {t(contest.contest_type === "video" ? "upload_video" : "upload_photo")}
+              <Upload className="h-4 w-4" /> {t("join_contest")}
             </Link>
           </div>
         </div>
