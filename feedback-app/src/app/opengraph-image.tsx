@@ -23,7 +23,7 @@ export default function OpengraphImage() {
           <span style={{ color: "#fafafa" }}>CELEBUS&nbsp;</span>
           <span style={{ color: "#a78bfa" }}>FanVoice</span>
         </div>
-        <div style={{ marginTop: 28, fontSize: 36, color: "#a1a1aa" }}>Share your voice with V01D</div>
+        <div style={{ marginTop: 28, fontSize: 36, color: "#a1a1aa" }}>Propose ideas for V01D</div>
         <div
           style={{
             marginTop: 56,

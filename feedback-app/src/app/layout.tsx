@@ -11,7 +11,7 @@ const noto = Noto_Sans_KR({
 });
 
 const SITE_URL = "https://celebus-fanvoice.vercel.app";
-const SITE_DESC = "CELEBUS FanVoice — 당신의 목소리가 콘텐츠가 됩니다";
+const SITE_DESC = "CELEBUS FanVoice — 팬 아이디어가 굿즈·이벤트로 실현되는 제안 보드";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

@@ -1,7 +1,7 @@
 {
   "name": "CELEBUS FanVoice",
   "short_name": "FanVoice",
-  "description": "V01D 팬보이스 — 여러분의 목소리가 다음을 만듭니다",
+  "description": "V01D 팬 아이디어 제안 보드 — 제안이 굿즈·이벤트로 실현돼요",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#121212",
