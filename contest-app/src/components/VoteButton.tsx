@@ -84,7 +84,7 @@ export default function VoteButton({
       className={`inline-flex items-center font-bold transition-all active:scale-90 ${base} ${
         voted
           ? "bg-primary/20 text-primary-400 ring-1 ring-primary/40"
-          : "bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary-strong"
+          : "bg-primary text-white hover:bg-primary-strong"
       } ${burst ? "scale-110" : ""}`}
     >
       <Heart

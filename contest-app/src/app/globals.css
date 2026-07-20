@@ -46,6 +46,8 @@
   --radius-lg: 22px;
 
   --font-sans: var(--font-noto), ui-sans-serif, system-ui, sans-serif;
+  /* 헤드라인 디스플레이 서체 (포스터) — font-display 유틸 생성 */
+  --font-display: var(--font-black-han), var(--font-noto), ui-sans-serif, sans-serif;
 }
 
 html {
@@ -84,12 +86,12 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* ── 유형별 글로우 ── */
+/* ── 유형별 링 (미니멀 — 소프트 글로우 제거, 얇은 색 링만) ── */
 .glow-video {
-  box-shadow: 0 0 0 1px rgba(124, 156, 255, 0.18), 0 18px 48px -12px rgba(124, 156, 255, 0.28);
+  box-shadow: 0 0 0 1px rgba(124, 156, 255, 0.22);
 }
 .glow-image {
-  box-shadow: 0 0 0 1px rgba(240, 168, 104, 0.2), 0 18px 48px -12px rgba(240, 168, 104, 0.3);
+  box-shadow: 0 0 0 1px rgba(240, 168, 104, 0.24);
 }
 
 /* ── D-day 라이브 펄스 ── */
@@ -110,11 +112,9 @@ body {
   box-shadow: 0 14px 36px -8px rgba(0, 0, 0, 0.5);
 }
 
-/* ── 히어로 배경 글로우 (은은하게) ── */
+/* ── 히어로 배경 (미니멀 — 보라 라디얼 글로우 제거, 플랫) ── */
 .hero-glow {
-  background:
-    radial-gradient(ellipse 620px 340px at 50% -6%, rgba(124, 58, 237, 0.16), transparent 68%),
-    var(--color-surface-0);
+  background: var(--color-surface-0);
 }
 
 /* ── 얇은 스크롤바 ── */

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_KR } from "next/font/google";
+import { Noto_Sans_KR, Gothic_A1 } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -7,6 +7,14 @@ const noto = Noto_Sans_KR({
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],
   variable: "--font-noto",
+  display: "swap",
+});
+
+// 헤드라인용 디스플레이 서체 (헤비 고딕 — 대담하되 정갈, V01D 가독성)
+const display = Gothic_A1({
+  subsets: ["latin"],
+  weight: ["800", "900"],
+  variable: "--font-black-han",
   display: "swap",
 });
 
@@ -48,7 +56,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={noto.variable}>
+    <html lang="ko" className={`${noto.variable} ${display.variable}`}>
       <body className="font-sans">
         {children}
         <Toaster position="top-center" theme="dark" richColors />
