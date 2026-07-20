@@ -1,16 +1,17 @@
 "use client";
 
-// 커버 이미지 풀블리드 히어로 — 커버가 주인공(opacity 배경화 폐지).
-// 제목·D-day·CTA를 커버 위 스크림에 올린다. 칩은 아티스트+유형 2개로 제한.
+// 커버 이미지 풀블리드 히어로 — 이미지가 주인공(선명 유지, 전면 어둠 제거).
+// 메타(아티스트·유형·마감 D-day·통계)는 이미지 아래 하단 바에 정리. 제목만 하단 약스크림 위.
 import Link from "next/link";
 import { Trophy, Users, Heart, Film, ImageIcon } from "lucide-react";
 import type { ContestPublic } from "@/lib/types";
 import { contestVisual } from "@/lib/contest-visual";
-import { ddayTarget, remaining, canSubmit, STATUS_LABELS } from "@/lib/contest-status";
+import { ddayTarget, remaining, STATUS_LABELS } from "@/lib/contest-status";
 import { localizeContest } from "@/lib/localize";
 import { useLang } from "./LangProvider";
 
-function Dday({ contest }: { contest: ContestPublic }) {
+// 하단 바용 마감 D-day 뱃지 (라이브 펄스 유지)
+function DdayBadge({ contest }: { contest: ContestPublic }) {
   const { t } = useLang();
   const target = ddayTarget(contest);
   if (!target) return null;
@@ -18,7 +19,7 @@ function Dday({ contest }: { contest: ContestPublic }) {
   if (r.over) return null;
   const label = r.days > 0 ? `D-${r.days}` : `${r.hours}${t("dday_hour")} ${r.mins}${t("dday_min")}`;
   return (
-    <span className="pulse-chip inline-flex items-center gap-1 rounded-full bg-live px-2.5 py-1 text-[12px] font-black text-white">
+    <span className="pulse-chip inline-flex items-center gap-1 rounded-full bg-live px-2.5 py-1 text-[11px] font-black text-white">
       {t(target.labelKey)} {label}
     </span>
   );
@@ -42,7 +43,7 @@ export default function CoverHero({
 
   const inner = (
     <div className={`relative overflow-hidden rounded-[22px] ring-1 ring-hairline ${isLive ? v.glowClass : ""}`}>
-      {/* 커버 */}
+      {/* 커버 — 이미지 선명 유지, 제목만 하단 약스크림 위 */}
       <div className="relative aspect-[16/10] w-full bg-surface-2">
         {contest.cover_image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -53,27 +54,14 @@ export default function CoverHero({
             style={{ background: `radial-gradient(120% 100% at 50% 0%, ${v.accentHex}22, transparent 60%), #141417` }}
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/35 to-black/10" />
-
-        {/* 상단 칩 2개 + D-day */}
-        <div className="absolute inset-x-0 top-0 flex items-center gap-1.5 p-3">
-          <span
-            className="rounded-full px-2.5 py-1 text-[11px] font-black text-white backdrop-blur-sm"
-            style={{ background: "rgba(0,0,0,0.5)" }}
-          >
-            {contest.artist}
-          </span>
-          <span
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-black backdrop-blur-sm"
-            style={{ background: "rgba(0,0,0,0.5)", color: v.accentHex }}
-          >
-            {contest.contest_type === "video" ? <Film className="h-3 w-3" /> : <ImageIcon className="h-3 w-3" />}
-            {t(`type_${contest.contest_type}`)}
-          </span>
-          <span className="ml-auto">
-            <Dday contest={contest} />
-          </span>
-        </div>
+        {/* 하단 한정 약스크림 — 상단 절반 이상은 원본 선명, 제목 가독만 확보 */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.30) 30%, rgba(0,0,0,0) 55%)",
+          }}
+        />
 
         {/* 하단 제목 + 상금 */}
         <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
@@ -91,23 +79,26 @@ export default function CoverHero({
         </div>
       </div>
 
-      {/* 커버 하단 바: 통계 + CTA */}
-      <div className="flex items-center gap-4 bg-surface-1 px-4 py-3">
-        <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-muted">
-          <Users className="h-3.5 w-3.5" /> {entryCount.toLocaleString()}
+      {/* 커버 하단 바: 아티스트·유형·마감 뱃지 + 통계 (버튼 자리 대체) */}
+      <div className="flex flex-wrap items-center gap-2 bg-surface-1 px-4 py-3">
+        <span className="rounded-full bg-surface-2 px-2.5 py-1 text-[11px] font-black text-fg">{contest.artist}</span>
+        <span
+          className="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2.5 py-1 text-[11px] font-black"
+          style={{ color: v.accentHex }}
+        >
+          {contest.contest_type === "video" ? <Film className="h-3 w-3" /> : <ImageIcon className="h-3 w-3" />}
+          {t(`type_${contest.contest_type}`)}
         </span>
-        <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-muted">
-          <Heart className="h-3.5 w-3.5" /> {voteCount.toLocaleString()}
-        </span>
-        {canSubmit(contest) && !href && (
-          <Link
-            href={`/contest/${contest.slug}/submit`}
-            className="ml-auto rounded-full bg-primary px-5 py-2 text-[13px] font-black text-white transition-colors hover:bg-primary-strong"
-          >
-            {t(contest.contest_type === "video" ? "upload_video" : "upload_photo")}
-          </Link>
-        )}
-        {href && <span className="ml-auto text-[12px] font-bold text-primary-400">{t("view_contest")} →</span>}
+        <DdayBadge contest={contest} />
+        <div className="ml-auto flex items-center gap-3">
+          <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-muted">
+            <Users className="h-3.5 w-3.5" /> {entryCount.toLocaleString()}
+          </span>
+          <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-muted">
+            <Heart className="h-3.5 w-3.5" /> {voteCount.toLocaleString()}
+          </span>
+          {href && <span className="text-[12px] font-bold text-primary-400">{t("view_contest")} →</span>}
+        </div>
       </div>
     </div>
   );
