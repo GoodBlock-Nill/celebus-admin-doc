@@ -19,7 +19,7 @@ const display = Gothic_A1({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://celebus-fanstage.vercel.app";
-const SITE_DESC = "V01D 팬 콘테스트 — 내 영상·사진을 올리고 팬들과 좋아요로 함께 즐겨요";
+const SITE_DESC = "CELEBUS Fan Stage — 내 최애의 영상·사진을 올리고 보상을 받아보세요";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
