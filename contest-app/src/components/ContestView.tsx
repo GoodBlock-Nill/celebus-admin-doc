@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Upload } from "lucide-react";
+import { Upload, Share2, ArrowLeft } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { AwardPublic, ContestPublic, EntryPublic } from "@/lib/types";
 import { canVote, canSubmit } from "@/lib/contest-status";
@@ -13,6 +13,7 @@ import CoverHero from "./CoverHero";
 import PrizeShowcase from "./PrizeShowcase";
 import Leaderboard from "./Leaderboard";
 import MediaTile from "./MediaTile";
+import ShareModal from "./ShareModal";
 import ErrorState from "./ErrorState";
 import { useLang } from "./LangProvider";
 
@@ -27,6 +28,7 @@ function ContestBody({ slug }: { slug: string }) {
   const [stats, setStats] = useState({ entryCount: 0, voteSum: 0 });
   const [tab, setTab] = useState<Tab>("latest");
   const [loading, setLoading] = useState(true);
+  const [share, setShare] = useState(false);
 
   const load = useCallback(async () => {
     const { data: c } = await sb.from("contests_public").select("*").eq("slug", slug).maybeSingle();
@@ -111,7 +113,24 @@ function ContestBody({ slug }: { slug: string }) {
 
   return (
     <div className="space-y-6">
-      <CoverHero contest={contest} entryCount={stats.entryCount} voteCount={stats.voteSum} />
+      {/* 커버 + 뒤로가기(좌상단)·공유(우상단) 오버레이 */}
+      <div className="relative">
+        <CoverHero contest={contest} entryCount={stats.entryCount} voteCount={stats.voteSum} />
+        <Link
+          href="/"
+          aria-label={t("nav_home_aria")}
+          className="absolute left-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm transition-transform active:scale-90"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Link>
+        <button
+          onClick={() => setShare(true)}
+          aria-label={t("share_contest_title")}
+          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm transition-transform active:scale-90"
+        >
+          <Share2 className="h-4 w-4" />
+        </button>
+      </div>
 
       {/* 소개 */}
       {loc.description && (
@@ -212,6 +231,16 @@ function ContestBody({ slug }: { slug: string }) {
             </Link>
           </div>
         </div>
+      )}
+
+      {share && (
+        <ShareModal
+          path={`/contest/${contest.slug}`}
+          label={loc.title}
+          title={t("share_contest_title")}
+          shareText={t("share_contest_text")}
+          onClose={() => setShare(false)}
+        />
       )}
     </div>
   );

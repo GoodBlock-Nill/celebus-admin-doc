@@ -9,17 +9,21 @@ import { XLogo, ThreadsLogo } from "./PlatformBadge";
 export default function ShareModal({
   path,
   label,
+  title,
+  shareText,
   onClose,
 }: {
   path: string; // 예: /entry/{id}
   label: string;
+  title?: string; // 시트 제목 (기본: 출품작 응원)
+  shareText?: string; // 공유 문구 (기본: 출품작 투표)
   onClose: () => void;
 }) {
   const { t } = useLang();
   const [canNative, setCanNative] = useState(false);
 
   const url = typeof window !== "undefined" ? `${window.location.origin}${path}` : "";
-  const text = `${label} — ${t("share_text")} | CELEBUS FanStage`;
+  const text = `${label} — ${shareText ?? t("share_text")} | CELEBUS FanStage`;
 
   useEffect(() => {
     setCanNative(typeof navigator !== "undefined" && !!navigator.share);
@@ -71,12 +75,12 @@ export default function ShareModal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={t("share_title")}
+        aria-label={title ?? t("share_title")}
         className="anim-sheet-up w-full max-w-md rounded-t-3xl border border-border bg-card p-5 sm:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-1 flex items-center justify-between">
-          <h3 className="text-base font-bold">{t("share_title")}</h3>
+          <h3 className="text-base font-bold">{title ?? t("share_title")}</h3>
           <button onClick={onClose} aria-label={t("close")} className="-m-2 rounded-full p-2 text-muted hover:text-fg">
             <X className="h-5 w-5" />
           </button>

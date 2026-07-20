@@ -175,6 +175,8 @@ export const messages: Record<Lang, Dict> = {
     share_copy: "링크 복사",
     copied: "링크를 복사했어요",
     share_text: "제 작품에 투표해주세요! 💜",
+    share_contest_title: "콘테스트 공유하기",
+    share_contest_text: "V01D 팬 콘테스트, 지금 참여해요! 💜",
 
     // 수상/클레임
     award_popular: "인기상",
@@ -339,6 +341,8 @@ export const messages: Record<Lang, Dict> = {
     share_copy: "Copy link",
     copied: "Link copied",
     share_text: "Please vote for my entry! 💜",
+    share_contest_title: "Share the contest",
+    share_contest_text: "V01D fan contest — join now! 💜",
 
     award_popular: "Popular Choice",
     award_judge: "Judges' Pick",
@@ -501,6 +505,8 @@ export const messages: Record<Lang, Dict> = {
     share_copy: "リンクをコピー",
     copied: "リンクをコピーしました",
     share_text: "私の作品に投票してください! 💜",
+    share_contest_title: "コンテストをシェア",
+    share_contest_text: "V01Dファンコンテスト、今すぐ参加！💜",
 
     award_popular: "人気賞",
     award_judge: "審査員賞",
