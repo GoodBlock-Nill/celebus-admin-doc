@@ -90,7 +90,7 @@ export default function VoteButton({
       <Heart
         className={`${size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4"} ${voted ? "fill-primary-400" : "fill-white"}`}
       />
-      {voteCount.toLocaleString()}
+      <span className={`inline-block tabular-nums ${burst ? "anim-count-pop" : ""}`}>{voteCount.toLocaleString()}</span>
     </button>
   );
 }

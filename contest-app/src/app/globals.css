@@ -103,6 +103,88 @@ body {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+/* ── 은은한 마이크로 인터랙션 (2026: 목적 있는 모션) ── */
+/* 공통 이징 */
+:root {
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 마운트 등장 — 콘텐츠 스와프·섹션·탭 */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anim-fade-up {
+  animation: fade-up 0.32s var(--ease-out-soft) both;
+}
+
+/* 바텀시트 슬라이드업 + 배경 페이드 */
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.anim-sheet-up {
+  animation: sheet-up 0.28s var(--ease-out-soft) both;
+}
+.anim-backdrop-in {
+  animation: backdrop-in 0.2s ease-out both;
+}
+
+/* 투표 숫자 팝 */
+@keyframes count-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.28); }
+  100% { transform: scale(1); }
+}
+.anim-count-pop {
+  animation: count-pop 0.4s var(--ease-out-soft);
+}
+
+/* 출품 완료 축하 — 체크 스케일인 + 컨페티 낙하 */
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.5); }
+  60% { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.anim-pop-in {
+  animation: pop-in 0.5s var(--ease-out-soft) both;
+}
+@keyframes confetti-fall {
+  0% { opacity: 0; transform: translateY(-14px) rotate(0deg); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(120px) rotate(320deg); }
+}
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation: confetti-fall 1.1s var(--ease-out-soft) forwards;
+}
+
+/* 접근성 — 키보드 포커스 링 */
+:focus-visible {
+  outline: 2px solid var(--color-primary-400);
+  outline-offset: 2px;
+}
+
+/* 모션 민감 사용자 존중 — 모든 애니메이션·트랜지션 무력화 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ── 카드 hover 상승 ── */
 .lift {
   transition: transform 0.16s ease, box-shadow 0.16s ease;

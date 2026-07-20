@@ -25,6 +25,13 @@ export default function ShareModal({
     setCanNative(typeof navigator !== "undefined" && !!navigator.share);
   }, []);
 
+  // Escape 닫기
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   const openWin = (u: string) => window.open(u, "_blank", "noopener,noreferrer");
   const shareX = () =>
     openWin(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
@@ -58,11 +65,14 @@ export default function ShareModal({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4"
+      className="anim-backdrop-in fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-t-3xl border border-border bg-card p-5 sm:rounded-3xl"
+        role="dialog"
+        aria-modal="true"
+        aria-label={t("share_title")}
+        className="anim-sheet-up w-full max-w-md rounded-t-3xl border border-border bg-card p-5 sm:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-1 flex items-center justify-between">

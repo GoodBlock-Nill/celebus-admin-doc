@@ -150,11 +150,28 @@ function SubmitBody({ slug }: { slug: string }) {
     }
   }
 
-  // 완료 화면
+  // 완료 화면 — 축하 모먼트 (아이콘 팝인 + 컨페티 낙하)
   if (doneId) {
+    const confetti = [
+      { left: "12%", color: "#8b5cf6", delay: "0ms" },
+      { left: "24%", color: "#f5c451", delay: "90ms" },
+      { left: "38%", color: "#7c9cff", delay: "40ms" },
+      { left: "50%", color: "#a78bfa", delay: "150ms" },
+      { left: "62%", color: "#f0a868", delay: "70ms" },
+      { left: "76%", color: "#f5c451", delay: "120ms" },
+      { left: "88%", color: "#8b5cf6", delay: "30ms" },
+    ];
     return (
-      <div className="py-14 text-center">
-        <PartyPopper className="mx-auto mb-4 h-12 w-12 text-primary-400" />
+      <div className="relative overflow-hidden py-14 text-center">
+        {/* 컨페티 */}
+        <div className="pointer-events-none absolute inset-x-0 top-8 mx-auto max-w-xs" aria-hidden>
+          {confetti.map((c, i) => (
+            <span key={i} className="confetti-piece" style={{ left: c.left, background: c.color, animationDelay: c.delay }} />
+          ))}
+        </div>
+        <div className="anim-pop-in mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/15">
+          <PartyPopper className="h-8 w-8 text-primary-400" />
+        </div>
         <h1 className="mb-1 text-xl font-black">{t("sw_done_title")}</h1>
         <p className="mb-8 text-[13px] text-muted">{t("sw_done_sub")}</p>
         <div className="mx-auto flex max-w-xs flex-col gap-2">

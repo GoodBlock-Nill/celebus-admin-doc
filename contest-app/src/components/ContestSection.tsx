@@ -3,7 +3,7 @@
 // 콘테스트 1개 = 자기완결 섹션. 커버(훅 정보)+유형맞춤 업로드 CTA+자기 출품작 스트립.
 // 다중 콘테스트 홈에서 동등하게 스택된다. 대표/전역 CTA 개념 없음.
 import Link from "next/link";
-import { Upload } from "lucide-react";
+import { Upload, ArrowRight } from "lucide-react";
 import type { ContestPublic, EntryPublic } from "@/lib/types";
 import { canSubmit, canVote } from "@/lib/contest-status";
 import CoverHero from "./CoverHero";
@@ -15,13 +15,28 @@ interface ContestWithStats extends ContestPublic {
   voteCount: number;
 }
 
-export default function ContestSection({ contest, entries }: { contest: ContestWithStats; entries: EntryPublic[] }) {
+// 스트립에 최대 7개까지만 노출, 마지막은 전체 보기 타일
+const STRIP_MAX = 7;
+
+export default function ContestSection({
+  contest,
+  entries,
+  index = 0,
+}: {
+  contest: ContestWithStats;
+  entries: EntryPublic[];
+  index?: number;
+}) {
   const { t } = useLang();
   const uploadKey = contest.contest_type === "video" ? "upload_video" : "upload_photo";
   const open = canSubmit(contest);
+  const shown = entries.slice(0, STRIP_MAX);
 
   return (
-    <section className="space-y-3">
+    <section
+      className="anim-fade-up space-y-4"
+      style={{ animationDelay: `${Math.min(index, 6) * 70}ms` }}
+    >
       {/* 커버 — 상세로 링크. D-day·보상·통계는 커버 위에 집약 */}
       <CoverHero
         contest={contest}
@@ -44,23 +59,26 @@ export default function ContestSection({ contest, entries }: { contest: ContestW
         </p>
       )}
 
-      {/* 최근 출품작 스트립 (미디어 우선) */}
+      {/* 최신 업로드 스트립 (미디어 우선) — 최대 7개 + 마지막 전체 보기 타일 */}
       <div>
-        <div className="mb-2.5 flex items-center justify-between">
-          <h3 className="text-[13px] font-black text-muted">{t("home_entries")}</h3>
-          {entries.length > 0 && (
-            <Link href={`/contest/${contest.slug}`} className="text-[12px] font-bold text-primary-400">
-              {t("home_see_all")} →
-            </Link>
-          )}
-        </div>
-        {entries.length > 0 ? (
+        <h3 className="mb-2.5 text-[13px] font-black text-muted">{t("home_entries")}</h3>
+        {shown.length > 0 ? (
           <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
-            {entries.map((e) => (
+            {shown.map((e) => (
               <div key={e.id} className="w-44 shrink-0 snap-start">
                 <MediaTile entry={e} contestType={contest.contest_type} canVote={canVote(contest)} />
               </div>
             ))}
+            {/* 전체 보기 타일 (스트립 마지막, 항상 노출) */}
+            <Link
+              href={`/contest/${contest.slug}`}
+              className="flex w-44 shrink-0 snap-start flex-col items-center justify-center gap-2 rounded-[16px] bg-surface-1 text-muted ring-1 ring-hairline transition-colors hover:text-fg"
+            >
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-2">
+                <ArrowRight className="h-5 w-5" />
+              </span>
+              <span className="text-[13px] font-black">{t("home_see_all")}</span>
+            </Link>
           </div>
         ) : (
           <Link

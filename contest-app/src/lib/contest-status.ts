@@ -18,12 +18,15 @@ export const STATUS_COLORS: Record<ContestStatus, string> = {
   closed: "bg-white/10 text-muted",
 };
 
-// 현재 상태에서 카운트다운 대상 — 히어로 D-day 칩·카피 자동 전환용
-export function ddayTarget(c: ContestPublic): { labelKey: string; at: string } | null {
-  if (c.status === "open" && c.submit_end_at) return { labelKey: "dday_submit", at: c.submit_end_at };
-  if ((c.status === "open" || c.status === "voting") && c.vote_end_at)
+// 현재 상태에서 카운트다운 대상 — 히어로 D-day 칩·카피 자동 전환용.
+// 현재 유효한(미래) 창만 반환: 접수 진행 중이면 접수 마감, 접수 마감 후 투표 진행 중이면 투표 마감.
+export function ddayTarget(c: ContestPublic, now = new Date()): { labelKey: string; at: string } | null {
+  if (c.status === "open" && c.submit_end_at && now < new Date(c.submit_end_at))
+    return { labelKey: "dday_submit", at: c.submit_end_at };
+  if ((c.status === "open" || c.status === "voting") && c.vote_end_at && now < new Date(c.vote_end_at))
     return { labelKey: "dday_vote", at: c.vote_end_at };
-  if (c.status === "judging" && c.announce_at) return { labelKey: "dday_announce", at: c.announce_at };
+  if (c.status === "judging" && c.announce_at && now < new Date(c.announce_at))
+    return { labelKey: "dday_announce", at: c.announce_at };
   return null;
 }
 

@@ -62,7 +62,7 @@ function HomeBody() {
             .select("*")
             .eq("contest_id", c.id)
             .order("created_at", { ascending: false })
-            .limit(6);
+            .limit(7);
           return [c.id, (ent as EntryPublic[]) ?? []] as const;
         }),
       );
@@ -85,10 +85,10 @@ function HomeBody() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* open 콘테스트 — 동등 섹션 스택 */}
+    <div className="space-y-12">
+      {/* open 콘테스트 — 동등 섹션 스택 (마운트 시 스태거 등장) */}
       {open.length > 0
-        ? open.map((c) => <ContestSection key={c.id} contest={c} entries={entriesById[c.id] ?? []} />)
+        ? open.map((c, i) => <ContestSection key={c.id} contest={c} entries={entriesById[c.id] ?? []} index={i} />)
         : past.length === 0 && (
             <p className="rounded-[22px] border border-dashed border-line py-16 text-center text-sm text-muted">
               {t("home_empty")}

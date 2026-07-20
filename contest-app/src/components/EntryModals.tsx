@@ -1,7 +1,7 @@
 "use client";
 
 // 엔트리 수정/삭제/클레임 모달 — FanVoice 바텀시트 패턴
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { X } from "lucide-react";
 import type { AwardPublic, EntryPublic } from "@/lib/types";
@@ -9,10 +9,19 @@ import { useLang } from "./LangProvider";
 
 function Sheet({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   const { t } = useLang();
+  // Escape 닫기
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4" onClick={onClose}>
+    <div className="anim-backdrop-in fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4" onClick={onClose}>
       <div
-        className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-t-3xl border border-border bg-card px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:rounded-3xl"
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        className="anim-sheet-up max-h-[85vh] w-full max-w-md overflow-y-auto rounded-t-3xl border border-border bg-card px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 z-10 -mx-5 mb-4 flex items-center justify-between border-b border-border/40 bg-card px-5 pb-3 pt-5">

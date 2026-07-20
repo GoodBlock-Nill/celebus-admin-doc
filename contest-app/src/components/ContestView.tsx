@@ -24,6 +24,7 @@ function ContestBody({ slug }: { slug: string }) {
   const [entries, setEntries] = useState<EntryPublic[]>([]);
   const [latest, setLatest] = useState<EntryPublic[]>([]);
   const [awards, setAwards] = useState<AwardPublic[]>([]);
+  const [stats, setStats] = useState({ entryCount: 0, voteSum: 0 });
   const [trendingIds, setTrendingIds] = useState<string[]>([]);
   const [tab, setTab] = useState<Tab>("latest");
   const [loading, setLoading] = useState(true);
@@ -37,7 +38,7 @@ function ContestBody({ slug }: { slug: string }) {
     const contest = c as ContestPublic;
     setContest(contest);
 
-    const [{ data: lb }, { data: recent }, { data: aw }] = await Promise.all([
+    const [{ data: lb }, { data: recent }, { data: aw }, { data: countRows, count: entryCount }] = await Promise.all([
       sb
         .from("contest_entries_public")
         .select("*")
@@ -57,10 +58,14 @@ function ContestBody({ slug }: { slug: string }) {
         .eq("contest_id", contest.id)
         .order("award_type", { ascending: true })
         .order("rank", { ascending: true }),
+      // 히어로 통계 — 100건 슬라이스와 무관하게 전체 참여수·투표수 집계
+      sb.from("contest_entries_public").select("vote_count", { count: "exact" }).eq("contest_id", contest.id),
     ]);
     setEntries((lb as EntryPublic[]) ?? []);
     setLatest((recent as EntryPublic[]) ?? []);
     setAwards((aw as AwardPublic[]) ?? []);
+    const voteSumAll = ((countRows as { vote_count: number }[]) ?? []).reduce((s, r) => s + (r.vote_count ?? 0), 0);
+    setStats({ entryCount: entryCount ?? 0, voteSum: voteSumAll });
 
     try {
       const res = await fetch(`/api/contests/${contest.id}/trending`);
@@ -88,7 +93,6 @@ function ContestBody({ slug }: { slug: string }) {
     return <ErrorState onRetry={() => void load()} />;
   }
 
-  const voteSum = entries.reduce((s, e) => s + e.vote_count, 0);
   const votable = canVote(contest);
   const v = contestVisual(contest.contest_type);
   const loc = localizeContest(contest, lang);
@@ -120,7 +124,7 @@ function ContestBody({ slug }: { slug: string }) {
 
   return (
     <div className="space-y-6">
-      <CoverHero contest={contest} entryCount={entries.length} voteCount={voteSum} />
+      <CoverHero contest={contest} entryCount={stats.entryCount} voteCount={stats.voteSum} />
 
       {/* 소개 */}
       {loc.description && (
@@ -163,8 +167,10 @@ function ContestBody({ slug }: { slug: string }) {
           ))}
         </div>
 
+        {/* 탭 콘텐츠 — key로 전환 시 짧은 크로스페이드 */}
+        <div key={tab} className="anim-fade-up">
         {tab === "leaderboard" && (
-          <Leaderboard contest={contest} entries={entries.filter((e) => e.vote_count >= 1)} />
+          <Leaderboard contest={contest} entries={entries.filter((e) => e.vote_count >= 1 && !e.disqualified)} />
         )}
         {tab === "latest" && <Gallery list={latest} />}
 
@@ -209,6 +215,7 @@ function ContestBody({ slug }: { slug: string }) {
               {contest.status === "judging" ? t("awards_pending") : t("awards_empty")}
             </p>
           ))}
+        </div>
       </div>
 
       {/* 규정 — 접이식 */}
