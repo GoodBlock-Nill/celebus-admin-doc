@@ -97,7 +97,6 @@ export default function CoverHero({
           <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-muted">
             <Heart className="h-3.5 w-3.5" /> {voteCount.toLocaleString()}
           </span>
-          {href && <span className="text-[12px] font-bold text-primary-400">{t("view_contest")} →</span>}
         </div>
       </div>
     </div>

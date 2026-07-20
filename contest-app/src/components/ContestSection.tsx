@@ -3,7 +3,7 @@
 // 콘테스트 1개 = 자기완결 섹션. 커버(훅 정보)+유형맞춤 업로드 CTA+자기 출품작 스트립.
 // 다중 콘테스트 홈에서 동등하게 스택된다. 대표/전역 CTA 개념 없음.
 import Link from "next/link";
-import { Upload, ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import type { ContestPublic, EntryPublic } from "@/lib/types";
 import { canSubmit, canVote } from "@/lib/contest-status";
 import CoverHero from "./CoverHero";
@@ -28,7 +28,6 @@ export default function ContestSection({
   index?: number;
 }) {
   const { t } = useLang();
-  const uploadKey = contest.contest_type === "video" ? "upload_video" : "upload_photo";
   const open = canSubmit(contest);
   const shown = entries.slice(0, STRIP_MAX);
 
@@ -45,19 +44,17 @@ export default function ContestSection({
         href={`/contest/${contest.slug}`}
       />
 
-      {/* 유형맞춤 업로드 CTA (풀폭) — 이 콘테스트로만 정확히 이동 */}
-      {open ? (
-        <Link
-          href={`/contest/${contest.slug}/submit`}
-          className="flex items-center justify-center gap-2 rounded-[14px] bg-primary py-3.5 text-[15px] font-black text-white transition-transform active:scale-[0.99]"
-        >
-          <Upload className="h-4 w-4" /> {t(uploadKey)}
-        </Link>
-      ) : (
-        <p className="rounded-[14px] bg-surface-1 py-3 text-center text-[13px] font-bold text-muted ring-1 ring-hairline">
-          {t("submit_closed")}
-        </p>
-      )}
+      {/* CTA (풀폭) — 토널 미니멀. 콘테스트 상세로 이동 (업로드는 상세의 상시 CTA에서) */}
+      <Link
+        href={`/contest/${contest.slug}`}
+        className="group flex items-center justify-center gap-1.5 rounded-full bg-primary/12 py-3 text-[14px] font-black text-primary-400 ring-1 ring-primary/20 transition-colors hover:bg-primary/20 active:scale-[0.99]"
+      >
+        {t("view_contest")}
+        <ChevronRight
+          className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+          strokeWidth={2}
+        />
+      </Link>
 
       {/* 최신 업로드 스트립 (미디어 우선) — 최대 7개 + 마지막 전체 보기 타일 */}
       <div>

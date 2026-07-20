@@ -19,7 +19,7 @@ export default function Footer() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/wordmark.svg" alt="CELEBUS" className="h-[13px] w-auto opacity-70" />
-        {t("nav_open_app")}
+        {t("footer_open_app")}
         <ArrowUpRight className="h-3.5 w-3.5" />
       </a>
     </footer>

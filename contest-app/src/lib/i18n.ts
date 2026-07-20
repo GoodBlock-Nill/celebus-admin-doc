@@ -30,6 +30,7 @@ export const messages: Record<Lang, Dict> = {
     app_name: "FanStage",
     nav_home_aria: "CELEBUS FanStage 홈",
     nav_open_app: "CELEBUS 앱 열기",
+    footer_open_app: "앱으로 돌아가기",
     lang_select_aria: "언어 선택",
     banner_aria: "배너",
     loading: "불러오는 중...",
@@ -89,7 +90,7 @@ export const messages: Record<Lang, Dict> = {
     hiw_win_sub: "인기·심사로 보상",
     stat_entries: "출품작",
     stat_votes: "총 투표",
-    view_contest: "자세히 보기",
+    view_contest: "콘테스트 보러가기",
 
     // 콘테스트 상세
     tab_leaderboard: "리더보드",
@@ -199,6 +200,7 @@ export const messages: Record<Lang, Dict> = {
     app_name: "FanStage",
     nav_home_aria: "CELEBUS FanStage Home",
     nav_open_app: "Open CELEBUS app",
+    footer_open_app: "Back to the app",
     lang_select_aria: "Select language",
     banner_aria: "Banner",
     loading: "Loading...",
@@ -255,7 +257,7 @@ export const messages: Record<Lang, Dict> = {
     hiw_win_sub: "Popular & jury prizes",
     stat_entries: "Entries",
     stat_votes: "Total votes",
-    view_contest: "View contest",
+    view_contest: "See the contest",
 
     tab_leaderboard: "Leaderboard",
     tab_latest: "Latest",
@@ -359,6 +361,7 @@ export const messages: Record<Lang, Dict> = {
     app_name: "FanStage",
     nav_home_aria: "CELEBUS FanStage ホーム",
     nav_open_app: "CELEBUSアプリを開く",
+    footer_open_app: "アプリに戻る",
     lang_select_aria: "言語を選択",
     banner_aria: "バナー",
     loading: "読み込み中...",
@@ -415,7 +418,7 @@ export const messages: Record<Lang, Dict> = {
     hiw_win_sub: "人気・審査で報酬",
     stat_entries: "応募作品",
     stat_votes: "総投票数",
-    view_contest: "詳しく見る",
+    view_contest: "コンテストを見る",
 
     tab_leaderboard: "リーダーボード",
     tab_latest: "新着アップ",
