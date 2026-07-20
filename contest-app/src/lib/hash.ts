@@ -19,8 +19,8 @@ export function getClientIp(req: Request): string {
   return "0.0.0.0";
 }
 
-// 투표자 식별 해시 — 클라이언트 디바이스ID 단독은 초기화·위조가 쉬우므로 서버 IP와 결합.
-// 같은 IP+디바이스 조합만 중복으로 판정(같은 와이파이의 다른 팬은 디바이스ID가 달라 정상 투표 가능).
-export function voterHash(deviceId: string, ip: string): string {
-  return hashWithSalt(`vote:${ip}:${deviceId}`);
+// 투표자 식별 해시 — 서버 서명 익명 쿠키 anonId 기준(위조 불가). 클라이언트 localStorage 비의존.
+// (localStorage 초기화로 우회 불가. 어뷰징 상한은 claim_anon_id의 IP당 발급 캡이 담당)
+export function voterHash(anonId: string): string {
+  return hashWithSalt(`vote:${anonId}`);
 }
