@@ -13,7 +13,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "입력값을 확인해주세요." }, { status: 400 });
   }
-  const { password, target, title, nickname, body } = parsed.data;
+  const { password, target, category, title, nickname, body } = parsed.data;
   if (containsProfanity(title, nickname, body)) {
     return NextResponse.json({ error: "부적절한 표현이 포함되어 있어요." }, { status: 400 });
   }
@@ -22,6 +22,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
     p_id: id,
     p_password: password,
     p_target: target,
+    p_category: category,
     p_title: title,
     p_nickname: nickname,
     p_body: body,

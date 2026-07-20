@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "입력값을 확인해주세요." }, { status: 400 });
   }
-  const { target, title, nickname, password, body } = parsed.data;
+  const { target, category, title, nickname, password, body } = parsed.data;
 
   if (containsProfanity(title, nickname, body)) {
     return NextResponse.json({ error: "부적절한 표현이 포함되어 있어요." }, { status: 400 });
@@ -34,6 +34,7 @@ export async function POST(req: Request) {
 
   const { data: id, error } = await db.rpc("create_post", {
     p_target: target,
+    p_category: category,
     p_title: title,
     p_nickname: nickname,
     p_body: body,

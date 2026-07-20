@@ -55,6 +55,7 @@ export default function PostAdminCard({
       <div className="mb-1 flex flex-wrap items-center gap-2 text-[12px] text-muted">
         <span className="font-bold text-fg">{post.nickname}</span>
         <span>· {post.target}</span>
+        <span className="rounded bg-accent/15 px-1.5 text-accent">{post.category}</span>
         <span>· ♥ {post.like_count}</span>
         {post.report_count > 0 && <span className="text-danger">· 신고 {post.report_count}</span>}
         {post.hidden && <span className="rounded bg-danger/20 px-1.5 text-danger">숨김</span>}

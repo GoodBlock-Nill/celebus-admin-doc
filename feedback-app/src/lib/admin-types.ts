@@ -1,8 +1,9 @@
-import type { Target, ImplStatus, PrizeType, ClaimStatus } from "./types";
+import type { Target, Category, ImplStatus, PrizeType, ClaimStatus } from "./types";
 
 export interface AdminPost {
   id: string;
   target: Target;
+  category: Category;
   title: string;
   nickname: string;
   body: string;

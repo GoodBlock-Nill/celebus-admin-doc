@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Search, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
+import { CATEGORIES } from "@/lib/types";
 import type { AdminPost, PostStatusFilter, PostSort } from "@/lib/admin-types";
 import PostAdminCard from "./PostAdminCard";
 
@@ -13,7 +14,8 @@ const STATUS_OPTS: { value: PostStatusFilter; label: string }[] = [
   { value: "pinned", label: "고정됨" },
   { value: "candidates", label: "채택 후보(좋아요순)" },
 ];
-const TARGET_OPTS = ["all", "전체", "V01D", "CELEBUS", "ix"];
+const TARGET_OPTS = ["all", "전체", "V01D", "CELEBUS"];
+const CATEGORY_OPTS = ["all", ...CATEGORIES];
 const SORT_OPTS: { value: PostSort; label: string }[] = [
   { value: "recent", label: "최신순" },
   { value: "reported", label: "신고순" },
@@ -39,12 +41,13 @@ export default function PostsPanel({
   const [debouncedQ, setDebouncedQ] = useState("");
   const [status, setStatus] = useState<PostStatusFilter>(fixedStatus ?? "all");
   const [target, setTarget] = useState("all");
+  const [category, setCategory] = useState("all");
   const [sort, setSort] = useState<PostSort>("recent");
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
     setLoading(true);
-    const params = new URLSearchParams({ status: fixedStatus ?? status, target, sort, page: String(page) });
+    const params = new URLSearchParams({ status: fixedStatus ?? status, target, category, sort, page: String(page) });
     if (debouncedQ) params.set("q", debouncedQ);
     const res = await fetch(`/api/admin/posts?${params}`, { headers: headers() });
     if (res.ok) {
@@ -54,7 +57,7 @@ export default function PostsPanel({
       setSize(data.size ?? 20);
     }
     setLoading(false);
-  }, [headers, fixedStatus, status, target, sort, page, debouncedQ]);
+  }, [headers, fixedStatus, status, target, category, sort, page, debouncedQ]);
 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQ(q), 300);
@@ -62,7 +65,7 @@ export default function PostsPanel({
   }, [q]);
   useEffect(() => {
     setPage(0);
-  }, [debouncedQ, status, target, sort]);
+  }, [debouncedQ, status, target, category, sort]);
   useEffect(() => {
     void load();
   }, [load]);
@@ -91,6 +94,9 @@ export default function PostsPanel({
         )}
         <select value={target} onChange={(e) => setTarget(e.target.value)} className={selCls}>
           {TARGET_OPTS.map((v) => <option key={v} value={v}>{v === "all" ? "전체 대상" : v}</option>)}
+        </select>
+        <select value={category} onChange={(e) => setCategory(e.target.value)} className={selCls}>
+          {CATEGORY_OPTS.map((v) => <option key={v} value={v}>{v === "all" ? "전체 유형" : v}</option>)}
         </select>
         <select value={sort} onChange={(e) => setSort(e.target.value as PostSort)} className={selCls}>
           {SORT_OPTS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}

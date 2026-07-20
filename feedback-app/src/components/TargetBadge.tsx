@@ -8,7 +8,6 @@ const STYLE: Record<Target, string> = {
   "전체": "bg-white/10 text-muted",
   V01D: "bg-primary/20 text-primary-400",
   CELEBUS: "bg-accent/20 text-accent",
-  ix: "bg-amber-500/15 text-amber-400",
 };
 
 export default function TargetBadge({ target }: { target: Target }) {
