@@ -10,9 +10,10 @@ import { readVoterId, signAnonId, VID_COOKIE, VID_COOKIE_OPTS } from "@/lib/anon
 
 type Ctx = { params: Promise<{ id: string }> };
 
-// IP당 신규 익명 식별자 발급 캡 (쿠키 삭제 반복 어뷰징 억제)
-const ISSUE_CAP = 5;
-const ISSUE_WINDOW_SECS = 60 * 60 * 24; // 24h
+// IP당 신규 익명 식별자 발급 캡 (쿠키 삭제 반복 어뷰징 억제).
+// 공유 IP(팬 이벤트 등) 오탐 시 재배포 없이 env로 조정 가능. 기본 5개/24h.
+const ISSUE_CAP = Number(process.env.VOTE_ISSUE_CAP) || 5;
+const ISSUE_WINDOW_SECS = Number(process.env.VOTE_ISSUE_WINDOW_SECS) || 60 * 60 * 24;
 
 export async function POST(req: Request, { params }: Ctx) {
   if (!assertSameOrigin(req)) return NextResponse.json({ error: "허용되지 않은 요청이에요." }, { status: 403 });
