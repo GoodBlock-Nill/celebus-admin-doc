@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Flame } from "lucide-react";
+import { Flame, Upload } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { AwardPublic, ContestPublic, EntryPublic } from "@/lib/types";
 import { canVote, canSubmit } from "@/lib/contest-status";
@@ -222,15 +222,17 @@ function ContestBody({ slug }: { slug: string }) {
         </details>
       )}
 
-      {/* 모바일 하단 고정 CTA */}
+      {/* 하단 고정 CTA — 전 화면 항상 표시(참여 유도) */}
       {canSubmit(contest) && (
-        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-hairline bg-surface-0/90 px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl sm:hidden">
-          <Link
-            href={`/contest/${contest.slug}/submit`}
-            className="block rounded-full bg-primary py-3 text-center text-[15px] font-black text-white"
-          >
-            {t(contest.contest_type === "video" ? "upload_video" : "upload_photo")}
-          </Link>
+        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-hairline bg-surface-0/90 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl">
+          <div className="mx-auto max-w-2xl px-3">
+            <Link
+              href={`/contest/${contest.slug}/submit`}
+              className="flex items-center justify-center gap-2 rounded-full bg-primary py-3 text-center text-[15px] font-black text-white transition-colors hover:bg-primary-strong"
+            >
+              <Upload className="h-4 w-4" /> {t(contest.contest_type === "video" ? "upload_video" : "upload_photo")}
+            </Link>
+          </div>
         </div>
       )}
     </div>
