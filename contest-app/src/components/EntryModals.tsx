@@ -8,6 +8,7 @@ import type { AwardPublic, EntryPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
 
 function Sheet({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+  const { t } = useLang();
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4" onClick={onClose}>
       <div
@@ -16,7 +17,7 @@ function Sheet({ title, onClose, children }: { title: string; onClose: () => voi
       >
         <div className="sticky top-0 z-10 -mx-5 mb-4 flex items-center justify-between border-b border-border/40 bg-card px-5 pb-3 pt-5">
           <h3 className="text-base font-bold">{title}</h3>
-          <button onClick={onClose} aria-label="닫기" className="-m-2 rounded-full p-2 text-muted hover:text-fg">
+          <button onClick={onClose} aria-label={t("close")} className="-m-2 rounded-full p-2 text-muted hover:text-fg">
             <X className="h-5 w-5" />
           </button>
         </div>

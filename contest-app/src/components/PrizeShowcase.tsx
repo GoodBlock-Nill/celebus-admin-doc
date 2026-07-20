@@ -2,17 +2,19 @@
 
 import { Trophy, Award } from "lucide-react";
 import type { ContestPublic } from "@/lib/types";
+import { localizeContest } from "@/lib/localize";
 import { useLang } from "./LangProvider";
 
 export default function PrizeShowcase({ contest }: { contest: ContestPublic }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   if (!contest.prizes?.length) return null;
+  const prizes = localizeContest(contest, lang).prizes;
 
   return (
     <section>
       <h2 className="mb-3 text-[15px] font-black">🏆 {t("prizes_title")}</h2>
       <div className="grid grid-cols-1 gap-2">
-        {contest.prizes.map((p, i) => {
+        {prizes.map((p, i) => {
           const isPopular = p.award_type === "popular";
           return (
             <div key={i} className="flex items-center gap-3 rounded-[16px] bg-surface-1 p-3 ring-1 ring-hairline">
@@ -39,7 +41,7 @@ export default function PrizeShowcase({ contest }: { contest: ContestPublic }) {
               <div className="min-w-0">
                 <p className={`text-[11px] font-black ${isPopular ? "text-gold" : "text-primary-400"}`}>
                   {p.rank_label}
-                  {p.count > 1 ? ` · ${p.count}명` : ""}
+                  {p.count > 1 ? ` · ${p.count}${t("winners_unit")}` : ""}
                 </p>
                 <p className="truncate text-[14px] font-bold">{p.name}</p>
               </div>

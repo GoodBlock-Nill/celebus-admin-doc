@@ -229,7 +229,7 @@ function ContestBody({ slug }: { slug: string }) {
             href={`/contest/${contest.slug}/submit`}
             className="block rounded-full bg-primary py-3 text-center text-[15px] font-black text-white"
           >
-            {t("submit_cta")}
+            {t(contest.contest_type === "video" ? "upload_video" : "upload_photo")}
           </Link>
         </div>
       )}

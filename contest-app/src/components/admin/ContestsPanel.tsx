@@ -118,6 +118,7 @@ function ContestForm({
           description: f.description,
           rules: f.rules,
           prize_summary: f.prize_summary,
+          prizes: f.prizes.map((p) => ({ name: p.name, rank_label: p.rank_label })),
         }),
       });
       const data = await res.json();
@@ -196,7 +197,8 @@ function ContestForm({
     const cleanI18n: ContestI18n = {};
     for (const L of ["en", "ja"] as const) {
       const loc = f.i18n[L];
-      if (loc && (loc.title || loc.description || loc.rules || loc.prize_summary)) cleanI18n[L] = loc;
+      const hasPrizeLoc = loc?.prizes?.some((p) => p?.name?.trim() || p?.rank_label?.trim());
+      if (loc && (loc.title || loc.description || loc.rules || loc.prize_summary || hasPrizeLoc)) cleanI18n[L] = loc;
     }
     setBusy(true);
     try {

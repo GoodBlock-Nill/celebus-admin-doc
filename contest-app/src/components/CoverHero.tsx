@@ -104,7 +104,7 @@ export default function CoverHero({
             href={`/contest/${contest.slug}/submit`}
             className="ml-auto rounded-full bg-primary px-5 py-2 text-[13px] font-black text-white transition-colors hover:bg-primary-strong"
           >
-            {t("submit_cta")}
+            {t(contest.contest_type === "video" ? "upload_video" : "upload_photo")}
           </Link>
         )}
         {href && <span className="ml-auto text-[12px] font-bold text-primary-400">{t("view_contest")} →</span>}

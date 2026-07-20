@@ -4,6 +4,7 @@
 import { useEffect, useRef, useState } from "react";
 import CoverHero from "./CoverHero";
 import type { ContestPublic } from "@/lib/types";
+import { useLang } from "./LangProvider";
 
 interface Slide extends ContestPublic {
   entryCount: number;
@@ -13,6 +14,7 @@ interface Slide extends ContestPublic {
 const AUTOPLAY_MS = 5000;
 
 export default function HeroCarousel({ slides }: { slides: Slide[] }) {
+  const { t } = useLang();
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
   const touchX = useRef<number | null>(null);
@@ -70,7 +72,7 @@ export default function HeroCarousel({ slides }: { slides: Slide[] }) {
           <button
             key={s.id}
             onClick={() => setIdx(i)}
-            aria-label={`배너 ${i + 1}`}
+            aria-label={`${t("banner_aria")} ${i + 1}`}
             className={`h-1.5 rounded-full transition-all ${i === idx ? "w-5 bg-primary" : "w-1.5 bg-line"}`}
           />
         ))}

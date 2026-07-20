@@ -82,12 +82,19 @@ const prizeItemSchema = z.object({
   rank_to: z.number().int().min(1).max(999).optional(),
 });
 
+// 보상 항목 번역(en·ja) — base prizes와 같은 순서
+const prizeLocaleSchema = z.object({
+  name: z.string().trim().max(80).optional(),
+  rank_label: z.string().trim().max(40).optional(),
+});
+
 // 다국어 로케일(en·ja) — 부분 입력 허용
 const contestLocaleSchema = z.object({
   title: z.string().trim().max(80).optional(),
   description: z.string().trim().max(2000).optional(),
   rules: z.string().trim().max(4000).optional(),
   prize_summary: z.string().trim().max(200).optional(),
+  prizes: z.array(prizeLocaleSchema).max(20).optional(),
 });
 
 export const contestCreateSchema = z.object({
@@ -122,6 +129,11 @@ export const contestTranslateSchema = z.object({
   description: z.string().trim().max(2000).default(""),
   rules: z.string().trim().max(4000).default(""),
   prize_summary: z.string().trim().max(200).default(""),
+  // 보상 이름·순위 라벨 (순서 유지)
+  prizes: z
+    .array(z.object({ name: z.string().trim().max(80).default(""), rank_label: z.string().trim().max(40).default("") }))
+    .max(20)
+    .default([]),
 });
 
 export const contestPatchSchema = contestCreateSchema.partial().extend({
