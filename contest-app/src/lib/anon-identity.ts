@@ -40,13 +40,16 @@ function verify(value: string): string | null {
   return id;
 }
 
-// 요청 쿠키에서 서명 검증된 anonId 추출. 없거나 위조면 새 id 발급 후보(isNew=true) 반환.
-export function readVoterId(req: Request): { id: string; isNew: boolean } {
+// 쿠키에서 서명 검증된 anonId만 반환(없거나 위조면 null). 신규 발급 안 함 — 상태 조회용.
+export function peekVoterId(req: Request): string | null {
   const raw = req.headers.get("cookie") ?? "";
   const m = raw.match(new RegExp(`(?:^|;\\s*)${VID_COOKIE}=([^;]+)`));
-  if (m) {
-    const id = verify(decodeURIComponent(m[1]));
-    if (id) return { id, isNew: false };
-  }
+  return m ? verify(decodeURIComponent(m[1])) : null;
+}
+
+// 요청 쿠키에서 서명 검증된 anonId 추출. 없거나 위조면 새 id 발급 후보(isNew=true) 반환.
+export function readVoterId(req: Request): { id: string; isNew: boolean } {
+  const id = peekVoterId(req);
+  if (id) return { id, isNew: false };
   return { id: randomBytes(16).toString("hex"), isNew: true };
 }

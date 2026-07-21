@@ -15,6 +15,7 @@ import Leaderboard from "./Leaderboard";
 import MediaTile from "./MediaTile";
 import ShareModal from "./ShareModal";
 import ErrorState from "./ErrorState";
+import { syncVotedStatus } from "@/lib/voted-store";
 import { useLang } from "./LangProvider";
 
 type Tab = "leaderboard" | "latest" | "awards";
@@ -67,6 +68,8 @@ function ContestBody({ slug }: { slug: string }) {
     setAwards((aw as AwardPublic[]) ?? []);
     const voteSumAll = ((countRows as { vote_count: number }[]) ?? []).reduce((s, r) => s + (r.vote_count ?? 0), 0);
     setStats({ entryCount: entryCount ?? 0, voteSum: voteSumAll });
+    // 하트 버튼 상태를 서버(쿠키 신원) 기준으로 동기화
+    void syncVotedStatus([...((lb as EntryPublic[]) ?? []), ...((recent as EntryPublic[]) ?? [])].map((e) => e.id));
     setLoading(false);
   }, [slug]);
 

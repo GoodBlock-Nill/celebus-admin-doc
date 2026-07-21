@@ -24,7 +24,29 @@ export default function CommentSection({ postId }: { postId: string }) {
       .eq("post_id", postId)
       .order("pinned", { ascending: false })
       .order("created_at", { ascending: true });
-    setComments((data as CommentPublic[]) ?? []);
+    const list = (data as CommentPublic[]) ?? [];
+    setComments(list);
+    // 서버(쿠키 신원) 기준 좋아요 상태 동기화 — localStorage 불일치 방지
+    const ids = list.map((c) => c.id);
+    if (ids.length) {
+      try {
+        const res = await fetch("/api/comments/liked-status", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ ids }),
+        });
+        const d = await res.json();
+        if (Array.isArray(d.liked) && d.liked.length) {
+          setLiked((prev) => {
+            const s = new Set(prev);
+            for (const id of d.liked) s.add(id);
+            return s;
+          });
+        }
+      } catch {
+        /* 실패 시 localStorage 기준 유지 */
+      }
+    }
   }, [postId]);
 
   useEffect(() => {

@@ -42,6 +42,20 @@ export default function PostDetail({ id }: { id: string }) {
   useEffect(() => {
     setLiked(getLiked().has(id));
     void load();
+    // 서버(쿠키 신원) 기준 좋아요 여부 동기화 — localStorage 불일치로 인한 오작동 방지
+    (async () => {
+      try {
+        const res = await fetch("/api/posts/liked-status", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ ids: [id] }),
+        });
+        const data = await res.json();
+        if (Array.isArray(data.liked) && data.liked.includes(id)) setLiked(true);
+      } catch {
+        /* 실패 시 localStorage 기준 유지 */
+      }
+    })();
   }, [id, load]);
 
   async function like() {

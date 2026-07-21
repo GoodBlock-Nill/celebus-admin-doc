@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { sb } from "@/lib/supabase-browser";
 import type { AwardPublic, ContestPublic, EntryPublic } from "@/lib/types";
 import { canVote, canEditEntry } from "@/lib/contest-status";
+import { syncVotedStatus } from "@/lib/voted-store";
 import { getDateLocale } from "@/lib/i18n";
 import Shell from "./Shell";
 import EntryEmbed from "./EntryEmbed";
@@ -39,6 +40,7 @@ function EntryBody({ id }: { id: string }) {
       }
       const en = e as EntryPublic;
       setEntry(en);
+      void syncVotedStatus([en.id]);
       const [{ data: c }, { data: aw }] = await Promise.all([
         sb.from("contests_public").select("*").eq("id", en.contest_id).maybeSingle(),
         sb.from("contest_awards_public").select("*").eq("entry_id", en.id).order("rank", { ascending: true }).limit(1),

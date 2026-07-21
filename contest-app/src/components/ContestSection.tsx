@@ -2,10 +2,12 @@
 
 // 콘테스트 1개 = 자기완결 섹션. 커버(훅 정보)+유형맞춤 업로드 CTA+자기 출품작 스트립.
 // 다중 콘테스트 홈에서 동등하게 스택된다. 대표/전역 CTA 개념 없음.
+import { useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import type { ContestPublic, EntryPublic } from "@/lib/types";
 import { canSubmit, canVote } from "@/lib/contest-status";
+import { syncVotedStatus } from "@/lib/voted-store";
 import CoverHero from "./CoverHero";
 import MediaTile from "./MediaTile";
 import { useLang } from "./LangProvider";
@@ -30,6 +32,12 @@ export default function ContestSection({
   const { t } = useLang();
   const open = canSubmit(contest);
   const shown = entries.slice(0, STRIP_MAX);
+
+  // 하트 버튼 상태를 서버(쿠키 신원) 기준으로 동기화
+  useEffect(() => {
+    void syncVotedStatus(shown.map((e) => e.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contest.id, entries]);
 
   return (
     <section

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Heart } from "lucide-react";
-import { getDeviceId, getVoted, addVoted } from "@/lib/client-util";
+import { getDeviceId, addVoted } from "@/lib/client-util";
+import { isVoted, subscribeVoted, markVoted } from "@/lib/voted-store";
 import { useLang } from "./LangProvider";
 
 export default function VoteButton({
@@ -21,9 +22,12 @@ export default function VoteButton({
 }) {
   const { t } = useLang();
   const [voteCount, setVoteCount] = useState(count);
-  const [voted, setVoted] = useState(() => getVoted().has(entryId));
+  const [voted, setVoted] = useState(() => isVoted(entryId));
   const [busy, setBusy] = useState(false);
   const [burst, setBurst] = useState(false);
+
+  // 서버 투표 상태 동기화 반영 (localStorage 불일치로 인한 오작동 방지)
+  useEffect(() => subscribeVoted(() => setVoted(isVoted(entryId))), [entryId]);
 
   async function vote(e: React.MouseEvent) {
     e.preventDefault();
@@ -48,6 +52,7 @@ export default function VoteButton({
       const data = await res.json();
       if (data.status === "ok") {
         addVoted(entryId);
+        markVoted(entryId);
         if (typeof data.vote_count === "number") {
           setVoteCount(data.vote_count);
           onVoted?.(data.vote_count);
@@ -59,6 +64,7 @@ export default function VoteButton({
       setVoteCount((v) => v - 1);
       if (data.status === "dup") {
         addVoted(entryId);
+        markVoted(entryId);
         toast.info(t("vote_dup"));
       } else if (data.status === "limit") toast.error(t("vote_limit"));
       else if (data.status === "closed") toast.error(t("vote_closed"));

@@ -135,6 +135,36 @@ export default function Board() {
     setLiked(getLiked());
   }, []);
 
+  // 서버(쿠키 신원) 기준 좋아요 상태 동기화 — localStorage와 합집합.
+  // 클라 localStorage와 서버 dedup 신원이 어긋나 "눌렀는데 카운트 안 오름"을 방지.
+  useEffect(() => {
+    const ids = [...new Set([...top, ...curated, ...latest].map((p) => p.id))];
+    if (ids.length === 0) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/posts/liked-status", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ ids }),
+        });
+        const data = await res.json();
+        if (!cancelled && Array.isArray(data.liked) && data.liked.length) {
+          setLiked((prev) => {
+            const s = new Set(prev);
+            for (const id of data.liked) s.add(id);
+            return s;
+          });
+        }
+      } catch {
+        /* 조회 실패 시 localStorage 기준 유지 */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [top, curated, latest]);
+
   // 인기·채택 셸프: 활성 탭·페이지 변화 시 조회 (탭 전환은 onClick에서 midPage=0 동시 리셋)
   useEffect(() => {
     if (midTab === "popular") void fetchTop(midPage);
