@@ -1,0 +1,19 @@
+/node_modules
+/.next
+/out
+/build
+next-env.d.ts
+*.tsbuildinfo
+
+# env
+.env
+.env*.local
+
+# serwist generated
+/public/sw.js
+/public/sw.js.map
+/public/swe-worker*.js
+
+.DS_Store
+.vercel
+.env*

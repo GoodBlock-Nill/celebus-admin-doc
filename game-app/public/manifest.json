@@ -1,0 +1,14 @@
+{
+  "name": "CELEBUS FanStage",
+  "short_name": "FanStage",
+  "description": "V01D 팬 콘테스트 — 내 작품을 무대에 올리고 투표로 겨뤄요",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#7C3AED",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
