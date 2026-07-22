@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { CalendarDays, Play, Trophy, Store, Swords, MoreHorizontal, Gift } from "lucide-react";
 import { GAME_CONFIG } from "@/lib/game-config";
-import { getNick, setNick, getAvatar, setAvatar, fetchAccount, getDailyStatus } from "@/lib/game-api";
+import { getNick, getAvatar, fetchAccount, getDailyStatus } from "@/lib/game-api";
 import { unlockAudio } from "@/lib/sfx";
 import Avatar from "./Avatar";
 import CoinBalance from "./CoinBalance";
 import DailyReward from "./DailyReward";
+import ProfileSetup from "./ProfileSetup";
 import LangSwitcher from "./LangSwitcher";
 import { useLang } from "./LangProvider";
 
@@ -28,18 +29,16 @@ export default function Home({
   const [point, setPoint] = useState<number | null>(null);
   const [dailyClaimable, setDailyClaimable] = useState(false);
   const [showDaily, setShowDaily] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
-    setNickState(getNick());
+    const n = getNick();
+    setNickState(n);
     setAvatarState(getAvatar());
+    if (!n) setShowProfile(true); // 최초 진입(닉네임 미설정) 시 프로필 설정 모달 자동 노출
     fetchAccount().then((a) => setPoint(a.celeb_point));
     getDailyStatus().then((s) => setDailyClaimable(s.claimable));
   }, []);
-
-  const pickAvatar = (id: string) => {
-    setAvatarState(id);
-    setAvatar(id);
-  };
 
   return (
     <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5 pb-8 pt-4">
@@ -70,40 +69,16 @@ export default function Home({
         <p className="mt-3 text-[14px] text-muted break-keep">{t("tagline")}</p>
       </div>
 
-      {/* 내 프로필 (아바타 + 닉네임) */}
-      <div className="mt-8">
-        <div className="flex items-center justify-center">
-          <Avatar value={avatar} size="lg" />
-        </div>
-
-        <label className="mb-1.5 mt-5 block text-[11px] font-bold text-subtle">{t("nickname")}</label>
-        <input
-          value={nick}
-          onChange={(e) => setNickState(e.target.value.slice(0, 16))}
-          onBlur={() => setNick(nick)}
-          maxLength={16}
-          placeholder={t("nickname_ph")}
-          className="w-full rounded-[14px] bg-surface-1 px-4 py-3 text-[14px] font-bold text-fg ring-1 ring-hairline placeholder:font-normal placeholder:text-subtle focus:ring-primary/40"
-        />
-
-        <div className="mb-2 mt-4 text-[11px] font-bold text-subtle">{t("avatar")}</div>
-        <div className="grid grid-cols-6 gap-2">
-          {GAME_CONFIG.avatars.map((a) => (
-            <button
-              key={a.id}
-              onClick={() => pickAvatar(a.id)}
-              aria-label={a.id}
-              aria-pressed={avatar === a.id}
-              className={`flex aspect-square items-center justify-center rounded-full text-[20px] ring-2 transition-transform active:scale-90 ${
-                avatar === a.id ? "ring-primary" : "ring-transparent"
-              }`}
-              style={{ background: a.bg }}
-            >
-              {a.glyph}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* 내 프로필 (탭하여 편집 → 설정 모달) */}
+      <button
+        onClick={() => setShowProfile(true)}
+        className="mx-auto mt-8 flex flex-col items-center gap-2 rounded-[20px] px-6 py-3 transition-transform active:scale-95"
+        aria-label={t("profile_edit")}
+      >
+        <Avatar value={avatar} size="lg" />
+        <span className="max-w-[220px] truncate text-[15px] font-black text-fg">{nick || t("nickname_ph")}</span>
+        <span className="text-[11px] font-bold text-subtle">{t("profile_edit")}</span>
+      </button>
 
       {/* 플레이 버튼 */}
       <div className="mt-auto flex flex-col gap-3 pt-8">
@@ -165,6 +140,16 @@ export default function Home({
           onClaimed={(cp) => {
             setPoint(cp);
             setDailyClaimable(false);
+          }}
+        />
+      )}
+
+      {showProfile && (
+        <ProfileSetup
+          onClose={() => setShowProfile(false)}
+          onSaved={(n, a) => {
+            setNickState(n);
+            setAvatarState(a);
           }}
         />
       )}
