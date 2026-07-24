@@ -1,10 +1,10 @@
 {
-  "name": "CELEBUS FanStage",
-  "short_name": "FanStage",
-  "description": "V01D 팬 콘테스트 — 내 작품을 무대에 올리고 투표로 겨뤄요",
+  "name": "CELEB MATCH",
+  "short_name": "CELEB MATCH",
+  "description": "최애와 함께하는 매치3 퍼즐! 타일을 맞춰 콤보를 터뜨리고 주간 랭킹에 도전하세요",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#121212",
+  "background_color": "#0b0b0d",
   "theme_color": "#7C3AED",
   "orientation": "portrait",
   "icons": [

@@ -1,9 +1,10 @@
 "use client";
 
-// V01D POP — 매치3 게임 (드래그 스왑 + 낙하/클리어 애니메이션 + 온보딩/카운트다운).
+// V01D POP — 매치3 게임 (드래그/탭-탭 스왑 + 낙하/클리어 애니메이션 + 온보딩/카운트다운).
 // 타일 id 기반 렌더: 같은 id가 새 셀로 이동 → CSS 트랜지션으로 부드러운 낙하·스왑.
+// 타이머는 벽시계 앵커(백그라운드 스로틀·기권 confirm 중에도 실제 경과 기준 — 랭킹 공정성).
 import { useCallback, useEffect, useRef, useState } from "react";
-import { RotateCcw, Home, Trophy } from "lucide-react";
+import { X, VolumeX } from "lucide-react";
 import { toast } from "sonner";
 import {
   SIZE,
@@ -13,8 +14,10 @@ import {
   mulberry32,
   makeBoard,
   findMatches,
+  findMove,
   hasMove,
   reshuffle,
+  areAdjacent,
   bombCells,
   lineCells,
   areaCells,
@@ -33,38 +36,57 @@ import {
   fetchAccount,
   consumeItems,
   vibrate,
-  topPercent,
   type RankInfo,
   type Inventory,
 } from "@/lib/game-api";
-import Avatar from "./Avatar";
-import { unlockAudio, sfxMatch, sfxItem, sfxInvalid, sfxCountdown, sfxGo, sfxGameOver, sfxNewBest, sfxPower, sfxSpecial, sfxLevelUp } from "@/lib/sfx";
+import {
+  unlockAudio,
+  sfxMatch,
+  sfxItem,
+  sfxInvalid,
+  sfxCountdown,
+  sfxGo,
+  sfxGameOver,
+  sfxNewBest,
+  sfxPower,
+  sfxSpecial,
+  sfxLevelUp,
+  sfxTick,
+  sfxFever,
+} from "@/lib/sfx";
+import { startBgm, stopBgm, setBgmFever, getBgmTrack, bgmEnabled, unlockBgm } from "@/lib/bgm";
+import { track } from "@/lib/track";
 import { useCountUp } from "@/lib/use-count-up";
-import { useFocusTrap } from "@/lib/use-focus-trap";
 import { useLang } from "./LangProvider";
+import IntroModal from "./IntroModal";
+import ResultModal from "./ResultModal";
+import QuitConfirm from "./QuitConfirm";
+import ContinueModal from "./ContinueModal";
 
 // 콤보 단계별 응원 문구 (2연쇄부터)
 const COMBO_WORDS = ["", "", "NICE!", "GREAT!", "COMBO!", "AMAZING!", "INCREDIBLE!", "UNREAL!"];
 
-// new-best 컨페티 (결정적 배치 — 랜덤 미사용)
-const CONFETTI_COLORS = ["#f5c451", "#8b5cf6", "#ec4899", "#60a5fa", "#34d399"];
-const CONFETTI = Array.from({ length: 16 }, (_, i) => ({
-  left: (i * 61) % 100,
-  color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-  delay: (i % 5) * 0.12,
-}));
-
 const DRAG_THRESHOLD = 12;
+// 아이템 바 아이콘 = 상점과 동일한 일러스트(스테이지 톤 융화)
+const ITEM_ART: Record<ItemType, string> = {
+  bomb: "/items/item-bomb.png",
+  line: "/items/item-line.png",
+  shuffle: "/items/item-shuffle.png",
+  time: "/items/item-time.png",
+};
 // ⚠️ config 값은 모듈 상수로 굳히지 말고 사용 시점에 GAME_CONFIG에서 읽기(부트 오버라이드 반영).
 const targetOf = (level: number) => GAME_CONFIG.levels.baseTarget + (level - 1) * GAME_CONFIG.levels.targetStep; // 레벨 추가 목표
-// 아이템 기본 지급 개수(config start). 두 모드 공통 기본 + 아이템 대전은 보유분 가산.
+// 아이템 기본 지급 개수(config start). 두 모드 공통 기본 + 아이템 매치은 보유분 가산.
 const baseOf = (t: ItemType): number => GAME_CONFIG.items.find((i) => i.type === t)?.start ?? 0;
 const initialItems = (): Record<ItemType, number> =>
   Object.fromEntries(GAME_CONFIG.items.map((i) => [i.type, i.start])) as Record<ItemType, number>;
 
 type Tile = { id: number; color: number; kind?: SpecialKind };
-type Floater = { id: number; left: number; top: number; text: string };
-type Phase = "intro" | "countdown" | "playing" | "over";
+type Floater = { id: number; left: number; top: number; text: string; cls: string };
+type Phase = "intro" | "countdown" | "playing" | "continue" | "over"; // continue = 시간 종료 후 하트 이어하기 선택(일반 매치)
+// 스페셜/아이템 발동 이펙트 (라인=빔 십자 / 광역·폭탄=링 / 컬러밤=플래시)
+type FxKind = SpecialKind | "item-bomb" | "item-line";
+type Fx = { id: number; type: "beamH" | "beamV" | "ring" | "flash"; row: number; col: number; span: number };
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const colorsOf = (ts: (Tile | null)[]) => ts.map((t) => (t ? t.color : -1));
@@ -92,19 +114,34 @@ export default function Match3Game({
   // 자유모드 보유 인벤토리 스냅샷 — 플레이 시작 시 1회만 아이템 개수에 반영(비동기 setItems 레이스 방지).
   const invRef = useRef<Inventory>({});
   const timeLeftRef = useRef(GAME_CONFIG.game.seconds); // 비동기 resolve에서 최신 시간 참조(후반 배율)
+  const endAtRef = useRef(0); // 벽시계 앵커 — 이 시각이 되면 시간 종료
 
   const [tiles, setTiles] = useState<(Tile | null)[]>([]);
+  // 최신 보드 참조 — 버퍼된 스왑(flushBuffered)이 stale 클로저의 이전 보드로 실행되는 것을 방지
+  const tilesRef = useRef<(Tile | null)[]>([]);
   const [clearing, setClearing] = useState<Set<number>>(new Set());
   const [spawnedIds, setSpawnedIds] = useState<Set<number>>(new Set());
   const [floaters, setFloaters] = useState<Floater[]>([]);
+  const [fx, setFx] = useState<Fx[]>([]);
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
+  const [maxCombo, setMaxCombo] = useState(0); // 이번 판 최대 연쇄(HUD 유휴 표시·결과 통계)
+  // 이어하기 하트 (일반 매치 전용) — 판당 기본 start개 + 상점 구매 보유분(카운트다운 종료 시 1회 확정)
+  const [hearts, setHearts] = useState(GAME_CONFIG.hearts.start);
+  const heartsUsedRef = useRef(0); // 이번 판 사용 하트(기본 초과분만 서버 차감)
+  const [prevBest, setPrevBest] = useState(0); // 게임오버 시점의 이전 최고 점수(결과 모달 대비 표기)
   const [timeLeft, setTimeLeft] = useState(GAME_CONFIG.game.seconds);
   const [phase, setPhase] = useState<Phase>("countdown");
   const [countdown, setCountdown] = useState(3);
   const [busy, setBusy] = useState(false);
+  const busyRef = useRef(false); // 핸들러·비동기 완료 시점의 최신 busy 참조(입력 버퍼링용)
+  const bufferedRef = useRef<{ a: number; b: number } | null>(null); // 캐스케이드 중 예약된 드래그 스왑(마지막 1건)
   const [items, setItems] = useState<Record<ItemType, number>>(initialItems);
   const [pending, setPending] = useState<ItemType | null>(null);
+  const [aim, setAim] = useState<number | null>(null); // 아이템 조준 셀(1차 탭 = 범위 프리뷰)
+  const [selected, setSelected] = useState<number | null>(null); // 탭-탭 스왑 선택 셀
+  const [hint, setHint] = useState<[number, number] | null>(null); // 유휴 힌트 스왑 쌍
+  const [quitOpen, setQuitOpen] = useState(false);
   const bestKey = `cfg_best_${mode}`;
   const [best, setBest] = useState(0);
   const [isNewBest, setIsNewBest] = useState(false);
@@ -121,11 +158,20 @@ export default function Match3Game({
   const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [comboFlash, setComboFlash] = useState<{ n: number; key: number } | null>(null); // 콤보 응원 배너
   const comboTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [feverBanner, setFeverBanner] = useState<{ mul: number; key: number } | null>(null); // 피버 진입 배너
+  const feverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevMulRef = useRef(1); // 피버 단계 진입 감지
+  const [timeBonus, setTimeBonus] = useState<{ n: number; key: number } | null>(null); // +초 플라이업
+  const timeBonusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const shownScore = useCountUp(score); // HUD 점수 오도미터
-  const introRef = useRef<HTMLDivElement>(null);
-  const resultRef = useRef<HTMLDivElement>(null);
-  useFocusTrap(introRef, phase === "intro");
-  useFocusTrap(resultRef, phase === "over");
+
+  // 후반 점수 배율(막판 폭발 훅)
+  const scoreMul = (tl: number) => {
+    const p = GAME_CONFIG.pacing;
+    if (tl <= p.rushSec) return p.rushMul;
+    if (tl <= p.frenzySec) return p.frenzyMul;
+    return 1;
+  };
 
   const triggerShake = useCallback(() => {
     setShake(false);
@@ -137,22 +183,60 @@ export default function Match3Game({
     });
   }, []);
 
+  // 보너스 시간 — 벽시계 앵커 연장(상한 maxSeconds) + 타이머 카드 "+N s" 플라이업
+  const addTime = useCallback((sec: number) => {
+    const now = Date.now();
+    endAtRef.current = Math.min(now + GAME_CONFIG.game.maxSeconds * 1000, endAtRef.current + sec * 1000);
+    setTimeLeft(Math.max(0, Math.ceil((endAtRef.current - now) / 1000)));
+    const key = floaterId.current++;
+    setTimeBonus({ n: sec, key });
+    if (timeBonusTimer.current) clearTimeout(timeBonusTimer.current);
+    timeBonusTimer.current = setTimeout(() => setTimeBonus(null), 900);
+  }, []);
+
   const makeTilesFromColors = useCallback((colors: number[]): Tile[] => colors.map((c) => ({ id: nextId.current++, color: c })), []);
+
+  // busy는 렌더용 state + 핸들러용 ref 동기 유지 (비동기 완료 직후 stale closure 방지)
+  const setBusyState = useCallback((v: boolean) => {
+    busyRef.current = v;
+    setBusy(v);
+  }, []);
+
+  // 보드 갱신은 반드시 이 함수로 — state(렌더)와 ref(로직)를 동시 커밋
+  const commitTiles = useCallback((ts: (Tile | null)[]) => {
+    tilesRef.current = ts;
+    setTiles(ts);
+  }, []);
 
   const init = useCallback(() => {
     rngRef.current = mulberry32(seed);
     let colors = makeBoard(rngRef.current);
     if (!hasMove(colors)) colors = reshuffle(rngRef.current);
-    setTiles(makeTilesFromColors(colors));
+    commitTiles(makeTilesFromColors(colors));
     setScore(0);
     setCombo(0);
+    setMaxCombo(0);
+    setPrevBest(0);
+    setHearts(GAME_CONFIG.hearts.start);
+    heartsUsedRef.current = 0;
     setTimeLeft(GAME_CONFIG.game.seconds);
+    timeLeftRef.current = GAME_CONFIG.game.seconds;
     setPending(null);
+    setAim(null);
+    setSelected(null);
+    setHint(null);
+    setQuitOpen(false);
+    setBusyState(false);
+    bufferedRef.current = null;
     setFloaters([]);
+    setFx([]);
     setClearing(new Set());
     setIsNewBest(false);
     setRank(null);
     setSubmitting(false);
+    setFeverBanner(null);
+    setTimeBonus(null);
+    prevMulRef.current = 1;
     levelRef.current = 1;
     levelStartRef.current = 0;
     setLevel(1);
@@ -160,16 +244,15 @@ export default function Match3Game({
     setLevelBanner(null);
     usedRef.current = { bomb: 0, line: 0, shuffle: 0, time: 0 };
     // 아이템 소싱 — 두 모드 모두 기본(config start)씩 지급.
-    //  · 랭킹도전(daily): 고정(공정, 인벤토리 미참조)
-    //  · 아이템 대전(free): 기본 + 서버 보유분. 보유분은 invRef에 담아두고 '플레이 시작' 시 1회 반영
+    //  · 일반 매치(daily): 고정(공정, 인벤토리 미참조)
+    //  · 아이템 매치(free): 기본 + 서버 보유분. 보유분은 invRef에 담아두고 '플레이 시작' 시 1회 반영
     //    (여기서 setItems로 덮으면 인게임 사용분을 롤백하는 레이스 발생 → 금지)
     setItems(initialItems()); // 기본 개수 즉시 표시(카운트다운 동안 프리뷰)
     invRef.current = {};
-    if (mode === "free") {
-      fetchAccount().then((a) => {
-        invRef.current = a.inventory;
-      });
-    }
+    // 두 모드 모두 보유분 조회 — free: 아이템 가산 / daily: 하트 가산 (카운트다운 종료 시 1회 확정)
+    fetchAccount().then((a) => {
+      invRef.current = a.inventory;
+    });
     try {
       setBest(Number(localStorage.getItem(bestKey) || 0));
     } catch {
@@ -177,7 +260,7 @@ export default function Match3Game({
     }
     // 온보딩: 최초 1회 자동 표시 + 설정으로 강제 표시 시. 이후엔 바로 카운트다운.
     setPhase(getOnboarding() || !getSeenIntro() ? "intro" : "countdown");
-  }, [seed, mode, bestKey, makeTilesFromColors]);
+  }, [seed, mode, bestKey, makeTilesFromColors, setBusyState, commitTiles]);
 
   useEffect(() => {
     init();
@@ -193,7 +276,7 @@ export default function Match3Game({
       n -= 1;
       if (n < 0) {
         clearInterval(id);
-        // 아이템 대전: 플레이 시작 시점에 기본 + 보유분을 1회 확정(이후 비동기 덮어쓰기 없음)
+        // 아이템 매치: 플레이 시작 시점에 기본 + 보유분을 1회 확정(이후 비동기 덮어쓰기 없음)
         if (mode === "free") {
           const inv = invRef.current;
           setItems({
@@ -202,8 +285,12 @@ export default function Match3Game({
             shuffle: baseOf("shuffle") + (inv.shuffle ?? 0),
             time: baseOf("time") + (inv.time ?? 0),
           });
+        } else {
+          // 일반 매치: 하트 = 기본 지급 + 상점 구매 보유분
+          setHearts(GAME_CONFIG.hearts.start + (invRef.current.heart ?? 0));
         }
         setPhase("playing");
+        track("first_game"); // 퍼널: 첫 판 시작 (기기당 1회 dedup)
       } else {
         setCountdown(n); // 2, 1, 0(GO)
         if (n === 0) sfxGo();
@@ -228,7 +315,7 @@ export default function Match3Game({
     }
     if (leveled) {
       setLevel(levelRef.current);
-      setTimeLeft((tl) => Math.min(GAME_CONFIG.game.maxSeconds, tl + GAME_CONFIG.levels.bonusSec));
+      addTime(GAME_CONFIG.levels.bonusSec);
       sfxLevelUp();
       vibrate(80);
       triggerShake();
@@ -238,19 +325,99 @@ export default function Match3Game({
       levelBannerTimer.current = setTimeout(() => setLevelBanner(null), 1100);
     }
     setLevelProgress(Math.min(1, (score - levelStartRef.current) / targetOf(levelRef.current)));
-  }, [score, phase]);
+  }, [score, phase, addTime, triggerShake]);
 
-  // 타이머
+  // 타이머 — 벽시계 앵커: setInterval 지연·백그라운드 스로틀과 무관하게 실제 경과 시간으로 감산
   useEffect(() => {
     if (phase !== "playing") return;
-    const id = setInterval(() => setTimeLeft((s) => Math.max(0, s - 1)), 1000);
+    endAtRef.current = Date.now() + timeLeftRef.current * 1000;
+    const id = setInterval(() => {
+      const remain = Math.max(0, Math.ceil((endAtRef.current - Date.now()) / 1000));
+      setTimeLeft((prev) => (prev === remain ? prev : remain));
+    }, 250);
     return () => clearInterval(id);
   }, [phase]);
+
+  // 막판 10초 카운트다운 틱(긴장 훅)
+  useEffect(() => {
+    if (phase === "playing" && timeLeft <= 10 && timeLeft > 0) sfxTick();
+  }, [timeLeft, phase]);
+
+  // 피버 단계 진입 감지 — 배너 + 스팅어 (프레임 골드 전환은 렌더에서 처리)
+  useEffect(() => {
+    if (phase !== "playing") {
+      prevMulRef.current = 1;
+      return;
+    }
+    const m = scoreMul(timeLeft);
+    if (m > prevMulRef.current) {
+      sfxFever();
+      vibrate(50);
+      const key = floaterId.current++;
+      setFeverBanner({ mul: m, key });
+      if (feverTimer.current) clearTimeout(feverTimer.current);
+      feverTimer.current = setTimeout(() => setFeverBanner(null), 950);
+    }
+    prevMulRef.current = m;
+  }, [timeLeft, phase]);
+
+  // BGM — 플레이 중 V01D 실곡 랜덤 재생, 종료/이탈 시 정지. 현재 곡명은 헤더 표시.
+  const [bgmTrack, setBgmTrack] = useState<{ title: string; artist: string }>({ title: "", artist: "" });
+  useEffect(() => {
+    const onTrack = (e: Event) => {
+      const d = (e as CustomEvent<{ title?: string; artist?: string }>).detail;
+      setBgmTrack({ title: d?.title ?? "", artist: d?.artist ?? "" });
+    };
+    document.addEventListener("gamebgm", onTrack);
+    setBgmTrack(getBgmTrack());
+    return () => document.removeEventListener("gamebgm", onTrack);
+  }, []);
+  useEffect(() => {
+    if (phase === "playing") startBgm();
+    else stopBgm();
+    return () => stopBgm();
+  }, [phase]);
+  useEffect(() => {
+    setBgmFever(phase === "playing" && scoreMul(timeLeft) > 1); // 피버 시 템포 +20%
+  }, [timeLeft, phase]);
+  useEffect(() => {
+    const onVis = () => {
+      if (document.hidden) stopBgm();
+      else if (phase === "playing") startBgm();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [phase]);
+
+  // 유휴 힌트 — 일정 시간 입력·보드 변화 없으면 유효 스왑 한 쌍 반짝
+  useEffect(() => {
+    setHint(null);
+    if (phase !== "playing" || busy || pending) return;
+    const sec = GAME_CONFIG.game.hintSec;
+    if (!sec) return;
+    const id = setTimeout(() => {
+      const mv = findMove(colorsOf(tiles));
+      if (mv) setHint(mv);
+    }, sec * 1000);
+    return () => clearTimeout(id);
+  }, [tiles, phase, busy, pending]);
 
   useEffect(() => {
     // 시간이 다 됐어도 진행 중인 캐스케이드(busy)가 끝난 뒤에 종료·제출 → 표시 점수 = 제출 점수
     if (timeLeft === 0 && phase === "playing" && !busy) {
+      // 일반 매치 + 하트 보유 + 판당 상한 미달 → 이어하기 선택지 먼저 (제출은 최종 종료 시에만)
+      if (mode === "daily" && hearts > 0 && heartsUsedRef.current < GAME_CONFIG.hearts.maxPerRun) {
+        setQuitOpen(false);
+        setPending(null);
+        setAim(null);
+        setSelected(null);
+        sfxCountdown();
+        vibrate(40);
+        setPhase("continue");
+        return;
+      }
       setPhase("over");
+      setPrevBest(best); // 갱신 전 최고 점수 보존(결과 모달 "+N" 대비 표기)
       const newBest = score > best;
       if (newBest) {
         try {
@@ -271,25 +438,67 @@ export default function Match3Game({
         submitScore({ mode, seed, score, level: levelRef.current, nickname: getNick(), avatar: getAvatar() })
           .then((r) => {
             setRank(r);
-            if (!r) toast.error(t("submit_failed")); // 실패를 사용자에게 통지(무음 삼킴 방지)
+            if (!r) {
+              toast.error(t("submit_failed")); // 실패를 사용자에게 통지(무음 삼킴 방지)
+              return;
+            }
+            // 서버 최고점(타 기기 포함)이 더 높으면 로컬 표시 기준 동기화 — 기기 이동 시 신기록 판정 정합
+            const serverBest = r.best_score ?? 0;
+            if (serverBest > Math.max(best, score)) {
+              try {
+                localStorage.setItem(bestKey, String(serverBest));
+              } catch {
+                /* ignore */
+              }
+              setBest(serverBest);
+            }
           })
           .finally(() => setSubmitting(false));
       }
-      // 아이템 대전(free)은 기본 지급 초과 사용분만 서버 인벤토리에서 차감.
-      if (mode === "free") {
-        const u = usedRef.current;
-        const toConsume: Inventory = {
-          bomb: Math.max(0, u.bomb - baseOf("bomb")),
-          line: Math.max(0, u.line - baseOf("line")),
-          shuffle: Math.max(0, u.shuffle - baseOf("shuffle")),
-          time: Math.max(0, u.time - baseOf("time")),
-        };
-        if (toConsume.bomb || toConsume.line || toConsume.shuffle || toConsume.time) void consumeItems(toConsume);
-      }
+      consumeUsed(); // 기본 지급 초과 사용분 서버 차감 (free=아이템 / daily=하트)
     }
-  }, [timeLeft, phase, busy, score, best, bestKey, onGameOver, mode, seed, t]);
+  }, [timeLeft, phase, busy, score, best, bestKey, onGameOver, mode, seed, t, hearts]);
 
-  function spawnFloater(cells: Set<number>, text: string) {
+  // 기본 지급 초과 사용분 서버 인벤토리 차감 — 종료·기권 공통 (기권 시 공짜 사용 악용 방지)
+  function consumeUsed() {
+    if (mode === "free") {
+      const u = usedRef.current;
+      const toConsume: Inventory = {
+        bomb: Math.max(0, u.bomb - baseOf("bomb")),
+        line: Math.max(0, u.line - baseOf("line")),
+        shuffle: Math.max(0, u.shuffle - baseOf("shuffle")),
+        time: Math.max(0, u.time - baseOf("time")),
+      };
+      if (toConsume.bomb || toConsume.line || toConsume.shuffle || toConsume.time) void consumeItems(toConsume);
+    } else {
+      const overHearts = heartsUsedRef.current - GAME_CONFIG.hearts.start;
+      if (overHearts > 0) void consumeItems({ heart: overHearts });
+    }
+    usedRef.current = { bomb: 0, line: 0, shuffle: 0, time: 0 }; // 중복 차감 방지
+    heartsUsedRef.current = 0;
+  }
+
+  // 하트 이어하기 — 1개 소모 후 continueSec으로 재시작(점수·레벨 유지)
+  function continueWithHeart() {
+    const sec = GAME_CONFIG.hearts.continueSec;
+    heartsUsedRef.current += 1;
+    setHearts((h) => Math.max(0, h - 1));
+    endAtRef.current = Date.now() + sec * 1000;
+    timeLeftRef.current = sec;
+    setTimeLeft(sec);
+    prevMulRef.current = scoreMul(sec); // 재시작 순간 배율 기준 재설정(피버 배너 오발 방지)
+    setPhase("playing");
+    sfxLevelUp();
+    vibrate(60);
+  }
+
+  // 이어하기 포기 — 하트를 0으로 만들어 종료 경로(제출 포함)로 합류
+  function giveUpContinue() {
+    setHearts(0);
+    setPhase("playing"); // timeLeft=0 + hearts=0 → 위 효과가 즉시 최종 종료 처리
+  }
+
+  function spawnFloater(cells: Set<number>, gained: number) {
     const arr = [...cells];
     let sr = 0;
     let sc = 0;
@@ -301,8 +510,38 @@ export default function Match3Game({
     const left = ((sc / arr.length + 0.5) / SIZE) * 100;
     const top = ((sr / arr.length + 0.5) / SIZE) * 100;
     const id = floaterId.current++;
-    setFloaters((f) => [...f, { id, left, top, text }]);
+    // 획득량·피버에 따라 크기/색 차등 — 큰 보상일수록 크게, 피버 중엔 골드
+    const fever = scoreMul(timeLeftRef.current) > 1;
+    const cls =
+      gained >= 800
+        ? "text-[26px] text-gold"
+        : gained >= 300
+          ? "text-[20px] text-primary-400"
+          : fever
+            ? "text-[15px] text-gold"
+            : "text-[15px] text-white";
+    setFloaters((f) => [...f, { id, left, top, text: `+${gained}`, cls }]);
     setTimeout(() => setFloaters((f) => f.filter((x) => x.id !== id)), 760);
+  }
+
+  // 스페셜/아이템 발동 이펙트 스폰 — 라인=십자 빔, 광역/폭탄=확산 링, 컬러밤=보드 플래시
+  function spawnFx(list: { cell: number; kind: FxKind }[]) {
+    if (!list.length) return;
+    const add: Fx[] = [];
+    for (const { cell, kind } of list) {
+      const [r, c] = rc(cell);
+      if (kind === "line" || kind === "item-line") {
+        add.push({ id: floaterId.current++, type: "beamH", row: r, col: c, span: 0 });
+        add.push({ id: floaterId.current++, type: "beamV", row: r, col: c, span: 0 });
+      } else if (kind === "area" || kind === "item-bomb") {
+        add.push({ id: floaterId.current++, type: "ring", row: r, col: c, span: kind === "area" ? 5 : 3 });
+      } else {
+        add.push({ id: floaterId.current++, type: "flash", row: r, col: c, span: 0 });
+      }
+    }
+    setFx((f) => [...f, ...add]);
+    const ids = new Set(add.map((a) => a.id));
+    setTimeout(() => setFx((f) => f.filter((x) => !ids.has(x.id))), 460);
   }
 
   function collapseTiles(ts: (Tile | null)[], cleared: Set<number>, rng: () => number) {
@@ -328,27 +567,25 @@ export default function Match3Game({
     return { next: n, spawned };
   }
 
-  // 스페셜 연쇄 발동 — 시드 셀에 포함된 스페셜을 효과 셀로 확장(연쇄까지). 순수 계산.
-  function detonate(seed: Set<number>, ts: (Tile | null)[]): Set<number> {
-    const out = new Set(seed);
-    const stack = [...seed];
+  // 스페셜 연쇄 발동 — 시드 셀에 포함된 스페셜을 효과 셀로 확장(연쇄까지) + 발동 목록 수집. 순수 계산.
+  function detonate(seedCells: Set<number>, ts: (Tile | null)[]): { cells: Set<number>; activated: { cell: number; kind: SpecialKind }[] } {
+    const out = new Set(seedCells);
+    const activated: { cell: number; kind: SpecialKind }[] = [];
+    const stack = [...seedCells];
     while (stack.length) {
       const i = stack.pop() as number;
-      const t = ts[i];
-      if (!t || !t.kind) continue;
-      const cells = t.kind === "line" ? lineCells(i) : t.kind === "area" ? areaCells(i, 2) : colorCells(colorsOf(ts), t.color);
-      for (const c of cells) if (!out.has(c)) { out.add(c); stack.push(c); }
+      const tl = ts[i];
+      if (!tl || !tl.kind) continue;
+      activated.push({ cell: i, kind: tl.kind });
+      const cells = tl.kind === "line" ? lineCells(i) : tl.kind === "area" ? areaCells(i, 2) : colorCells(colorsOf(ts), tl.color);
+      for (const c of cells)
+        if (!out.has(c)) {
+          out.add(c);
+          stack.push(c);
+        }
     }
-    return out;
+    return { cells: out, activated };
   }
-
-  // 후반 점수 배율(막판 폭발 훅)
-  const scoreMul = (tl: number) => {
-    const p = GAME_CONFIG.pacing;
-    if (tl <= p.rushSec) return p.rushMul;
-    if (tl <= p.frenzySec) return p.frenzyMul;
-    return 1;
-  };
 
   // 지운 셀 집합에 점수·연출 적용 + 스페셜 생성 반영 후 붕괴. 다음 보드 반환.
   async function applyClear(
@@ -358,10 +595,17 @@ export default function Match3Game({
     creations: { cell: number; kind: SpecialKind }[],
   ): Promise<(Tile | null)[]> {
     setCombo(chain);
+    setMaxCombo((m) => Math.max(m, chain));
     setClearing(toClear);
-    const gained = Math.round(toClear.size * 10 * Math.max(chain, 1) * scoreMul(timeLeftRef.current));
+    // 큰 매치 즉시 보너스(4→라인, 5→컬러밤, 교차→광역) — 기본 점수와 달리 체인 배수 미적용, 피버 배수만 적용
+    const sc = GAME_CONFIG.scoring;
+    const bonus = creations.reduce(
+      (s, c) => s + (c.kind === "line" ? sc.bonus4 : c.kind === "color" ? sc.bonus5 : sc.bonusCross),
+      0,
+    );
+    const gained = Math.round((toClear.size * 10 * Math.max(chain, 1) + bonus) * scoreMul(timeLeftRef.current));
     setScore((s) => s + gained);
-    spawnFloater(toClear, `+${gained}`);
+    spawnFloater(toClear, gained);
     sfxMatch(chain);
     if (creations.length) sfxPower(); // 스페셜 생성 시 파워업 사운드
     vibrate(Math.min(8 + chain * 6, 40));
@@ -374,17 +618,20 @@ export default function Match3Game({
     }
     // 생성될 스페셜을 타일에 표시(붕괴 시 유지) — 지워지지 않고 살아남음
     const marked = creations.length
-      ? ts.map((t, i) => {
+      ? ts.map((tl, i) => {
           const cr = creations.find((x) => x.cell === i);
-          return cr && t ? { ...t, kind: cr.kind } : t;
+          return cr && tl ? { ...tl, kind: cr.kind } : tl;
         })
       : ts;
-    await sleep(200);
+    // 연쇄 가속 — 체인이 깊어질수록 템포 업(캐스케이드 흥분감)
+    const p = GAME_CONFIG.pacing;
+    const tempo = Math.pow(p.cascadeAccel, Math.max(0, chain - 1));
+    await sleep(Math.max(p.cascadeMinMs, Math.round(200 * tempo)));
     const { next, spawned } = collapseTiles(marked, toClear, rngRef.current);
     setClearing(new Set());
     setSpawnedIds(spawned);
-    setTiles(next);
-    await sleep(230);
+    commitTiles(next);
+    await sleep(Math.max(p.cascadeMinMs, Math.round(230 * tempo)));
     return next;
   }
 
@@ -400,8 +647,10 @@ export default function Match3Game({
       const creationCells = new Set(creations.map((c) => c.cell));
       // 생성 스페셜은 이번엔 살아남음 → clear에서 제외. 기존 스페셜은 연쇄 발동.
       const base = new Set([...cleared].filter((c) => !creationCells.has(c)));
-      let toClear = detonate(base, ts);
-      if (toClear.size > base.size) {
+      const det = detonate(base, ts);
+      const toClear = det.cells;
+      if (det.activated.length) {
+        spawnFx(det.activated);
         sfxSpecial();
         triggerShake();
       }
@@ -413,51 +662,65 @@ export default function Match3Game({
       const colors = reshuffle(rngRef.current);
       const fresh = makeTilesFromColors(colors);
       setSpawnedIds(new Set(fresh.map((x) => x.id)));
-      setTiles(fresh);
+      commitTiles(fresh);
     }
   }
 
-  async function clearWithItem(cells: Set<number>, base: (Tile | null)[]) {
-    setBusy(true);
+  // 캐스케이드 종료 후 예약 스왑 1건 실행 — 게임오버 드레인(잔여 0초)과는 충돌하지 않게 차단
+  function flushBuffered() {
+    const b = bufferedRef.current;
+    bufferedRef.current = null;
+    if (!b || timeLeftRef.current <= 0) return;
+    void attemptSwap(b.a, b.b);
+  }
+
+  async function clearWithItem(type: "bomb" | "line", center: number, base: (Tile | null)[]) {
+    setBusyState(true);
     triggerShake(); // 아이템 폭발 임팩트
     vibrate(35);
-    const toClear = detonate(cells, base); // 아이템 범위에 걸린 보드 스페셜도 연쇄 발동
+    const seedCells = type === "bomb" ? bombCells(center) : lineCells(center);
+    const det = detonate(seedCells, base); // 아이템 범위에 걸린 보드 스페셜도 연쇄 발동
+    spawnFx([{ cell: center, kind: type === "bomb" ? "item-bomb" : "item-line" }, ...det.activated]);
+    const toClear = det.cells;
     setClearing(toClear);
     const gained = Math.round(toClear.size * 10 * scoreMul(timeLeftRef.current));
     setScore((s) => s + gained);
-    spawnFloater(toClear, `+${gained}`);
+    spawnFloater(toClear, gained);
     await sleep(200);
     const { next, spawned } = collapseTiles(base, toClear, rngRef.current);
     setClearing(new Set());
     setSpawnedIds(spawned);
-    setTiles(next);
+    commitTiles(next);
     await sleep(230);
     await resolve(next);
-    setBusy(false);
+    setBusyState(false);
+    flushBuffered();
   }
 
   async function attemptSwap(a: number, b: number) {
-    if (busy || phase !== "playing") return;
-    const swapped = [...tiles];
+    if (busyRef.current || phase !== "playing") return;
+    const before = tilesRef.current; // 버퍼 실행 시 stale 클로저 방지 — 항상 최신 보드에서 시작
+    const swapped = [...before];
     [swapped[a], swapped[b]] = [swapped[b], swapped[a]];
     const specialInvolved = !!(swapped[a]?.kind || swapped[b]?.kind);
     const hasMatch = findMatches(colorsOf(swapped)).size > 0;
 
     if (!hasMatch && !specialInvolved) {
       // 무효 스왑 — 흔들림 + 사운드 + 햅틱 피드백 후 되돌림
-      setBusy(true);
+      setBusyState(true);
       triggerShake();
       sfxInvalid();
       vibrate(30);
-      setTiles(swapped);
+      commitTiles(swapped);
       await sleep(170);
-      setTiles(tiles);
-      setBusy(false);
+      commitTiles(before);
+      setBusyState(false);
+      flushBuffered();
       return;
     }
 
-    setBusy(true);
-    setTiles(swapped);
+    setBusyState(true);
+    commitTiles(swapped);
     await sleep(120);
 
     if (specialInvolved) {
@@ -465,25 +728,28 @@ export default function Match3Game({
       triggerShake();
       sfxSpecial();
       vibrate(45);
-      const seed = new Set<number>();
-      if (swapped[a]?.kind) seed.add(a);
-      if (swapped[b]?.kind) seed.add(b);
-      const toClear = detonate(seed, swapped);
+      const seedCells = new Set<number>();
+      if (swapped[a]?.kind) seedCells.add(a);
+      if (swapped[b]?.kind) seedCells.add(b);
+      const det = detonate(seedCells, swapped);
+      spawnFx(det.activated);
+      const toClear = det.cells;
       setClearing(toClear);
       const gained = Math.round(toClear.size * 10 * scoreMul(timeLeftRef.current));
       setScore((s) => s + gained);
-      spawnFloater(toClear, `+${gained}`);
+      spawnFloater(toClear, gained);
       await sleep(200);
       const { next, spawned } = collapseTiles(swapped, toClear, rngRef.current);
       setClearing(new Set());
       setSpawnedIds(spawned);
-      setTiles(next);
+      commitTiles(next);
       await sleep(230);
       await resolve(next);
     } else {
       await resolve(swapped, [a, b]); // 스왑 위치에 스페셜 우선 생성
     }
-    setBusy(false);
+    setBusyState(false);
+    flushBuffered();
   }
 
   // 아이템 1개 소비 — 개수 차감 + 사용량 누적(자유 플레이 인벤토리 차감용)
@@ -494,14 +760,22 @@ export default function Match3Game({
     vibrate(20);
   }
 
-  // ── 입력: 드래그 스왑 (아이템 타게팅은 탭) ──
+  // ── 입력: 드래그 스왑 + 탭-탭 스왑 병행 (아이템 타게팅은 2단계 탭) ──
+  // 캐스케이드(busy) 중에도 드래그는 받아 마지막 1건을 예약(템포 유지). 아이템·탭탭은 busy 중 차단.
   function onDown(e: React.PointerEvent, cell: number) {
-    if (phase !== "playing" || busy) return;
+    if (phase !== "playing") return;
+    if (hint) setHint(null);
     if (pending === "bomb" || pending === "line") {
-      const type = pending;
+      if (busyRef.current) return;
+      if (aim !== cell) {
+        setAim(cell); // 1차 탭: 범위 프리뷰
+        return;
+      }
+      const type = pending; // 같은 칸 재탭: 사용 확정
       setPending(null);
+      setAim(null);
       spendItem(type);
-      void clearWithItem(type === "bomb" ? bombCells(cell) : lineCells(cell), tiles);
+      void clearWithItem(type, cell, tilesRef.current);
       return;
     }
     dragRef.current = { cell, x: e.clientX, y: e.clientY };
@@ -513,7 +787,7 @@ export default function Match3Game({
   }
   function onMove(e: React.PointerEvent) {
     const d = dragRef.current;
-    if (!d || busy) return;
+    if (!d) return;
     const dx = e.clientX - d.x;
     const dy = e.clientY - d.y;
     if (Math.max(Math.abs(dx), Math.abs(dy)) < DRAG_THRESHOLD) return;
@@ -524,17 +798,42 @@ export default function Match3Game({
     else tr += dy > 0 ? 1 : -1;
     dragRef.current = null;
     if (tr < 0 || tr >= SIZE || tc < 0 || tc >= SIZE) return;
+    if (busyRef.current) {
+      bufferedRef.current = { a: d.cell, b: idx(tr, tc) }; // 연쇄 중 예약(마지막 1건)
+      return;
+    }
+    setSelected(null);
     void attemptSwap(d.cell, idx(tr, tc));
   }
-  const onUp = () => {
+  // 손을 뗄 때까지 threshold 미만 이동 = 탭 → 탭-탭 스왑(선택 → 인접 탭 스왑)
+  function onUp(cell: number) {
+    const d = dragRef.current;
     dragRef.current = null;
-  };
+    if (!d || d.cell !== cell) return;
+    if (phase !== "playing" || busyRef.current || pending) return;
+    if (selected === null) setSelected(cell);
+    else if (selected === cell) setSelected(null);
+    else if (areAdjacent(selected, cell)) {
+      const a = selected;
+      setSelected(null);
+      void attemptSwap(a, cell);
+    } else setSelected(cell);
+  }
+
+  // 아이템 조준 중 보드·아이템 바 밖 탭 = 조준 취소
+  function onRootDown(e: React.PointerEvent) {
+    if (!pending) return;
+    const target = e.target as HTMLElement;
+    if (target.closest?.(".board-inner") || target.closest?.(".item-bar")) return;
+    setPending(null);
+    setAim(null);
+  }
 
   function useItem(type: ItemType) {
-    if (phase !== "playing" || busy || items[type] <= 0) return;
+    if (phase !== "playing" || busyRef.current || items[type] <= 0) return;
     if (type === "time") {
       spendItem("time");
-      setTimeLeft((s) => Math.min(GAME_CONFIG.game.maxSeconds, s + 10)); // 상한 — score-attack 정합
+      addTime(GAME_CONFIG.game.timeItemSec); // 상한(maxSeconds)은 addTime에서 보장 — score-attack 정합
       return;
     }
     if (type === "shuffle") {
@@ -542,64 +841,141 @@ export default function Match3Game({
       const colors = reshuffle(rngRef.current);
       const fresh = makeTilesFromColors(colors);
       setSpawnedIds(new Set(fresh.map((x) => x.id)));
-      setTiles(fresh);
+      commitTiles(fresh);
       return;
     }
+    setAim(null);
+    setSelected(null);
     setPending((p) => (p === type ? null : type));
   }
 
   const startTutorial = () => {
     unlockAudio();
+    unlockBgm(); // iOS: 온보딩 시작 제스처에서 BGM 요소 승인
     setSeenIntro(); // 최초 1회 이후 자동 표시 중단
     setPhase("countdown");
   };
 
   const cell = 100 / SIZE;
+  const match = GAME_CONFIG.match;
+  const feverOn = phase === "playing" && scoreMul(timeLeft) > 1; // 프레임 골드 전환
+  const rushOn = phase === "playing" && timeLeft > 0 && timeLeft <= GAME_CONFIG.pacing.rushSec; // 비네트 펄스
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col gap-3 px-3 pb-4 pt-3">
-      {/* HUD */}
-      <div className="grid grid-cols-3 gap-2 text-center">
-        <div className="rounded-[14px] bg-surface-1 py-2 ring-1 ring-hairline">
-          <div className="text-[10px] font-bold uppercase tracking-wide text-subtle">{t("score")}</div>
-          <div className="text-[20px] font-black tabular-nums">{shownScore.toLocaleString()}</div>
+    <div
+      className="relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col justify-center gap-3 overflow-hidden px-3 pb-safe pt-safe-game"
+      onPointerDown={onRootDown}
+    >
+      {/* 스테이지 배경 + 스크림 */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        {match.background ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={match.background} alt="" className="h-full w-full object-cover" />
+        ) : (
+          <div className="stage-bg h-full w-full" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+      </div>
+
+      {/* BGM 꺼짐 안내 (설정에서 끈 상태) — 재생 pill 자리에 음소거 표시 */}
+      {!bgmTrack.title && phase !== "intro" && !bgmEnabled() && (
+        <div className="pointer-events-none absolute left-1/2 top-[max(0.25rem,env(safe-area-inset-top))] z-20 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-black/40 px-2.5 py-1 ring-1 ring-white/10">
+          <VolumeX className="h-3 w-3 text-white/35" />
+          <span className="text-[9.5px] font-bold text-white/35">{t("bgm_off")}</span>
         </div>
-        <div className={`relative rounded-[14px] py-2 ring-1 ${timeLeft <= 10 ? "bg-live/15 ring-live/40" : "bg-surface-1 ring-hairline"}`}>
+      )}
+
+      {/* 재생 중 곡 pill (헤더 상단 중앙 — 레이아웃 불변 absolute): 회전 레코드 + 이퀄라이저 + 곡명·가수 */}
+      {bgmTrack.title && (
+        <div
+          key={bgmTrack.title}
+          className="anim-fade-up pointer-events-none absolute left-1/2 top-[max(0.25rem,env(safe-area-inset-top))] z-20 flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full bg-black/55 py-1 pl-1 pr-3 ring-1 ring-white/15 backdrop-blur"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/items/item-shuffle.png" alt="" className="anim-spin-slow h-5 w-5 rounded-full object-cover" />
+          <span className="eq-bars" aria-hidden>
+            <i />
+            <i />
+            <i />
+          </span>
+          <span className="text-[10.5px] font-black text-white/90">{bgmTrack.title}</span>
+          {bgmTrack.artist && <span className="text-[9.5px] font-bold text-white/45">{bgmTrack.artist}</span>}
+        </div>
+      )}
+
+      {/* 러시(×2) 비네트 펄스 — 막판 폭발 상태 전달 */}
+      {rushOn && <div className="fx-vignette" />}
+
+      {/* HUD (+기권 버튼) — score-attack 위계: 점수 카드를 가장 크게 */}
+      <div className="grid gap-2 text-center" style={{ gridTemplateColumns: onExit ? "auto 1.4fr 1fr 1fr" : "1.4fr 1fr 1fr" }}>
+        {onExit && (
+          <button
+            onClick={() => setQuitOpen(true)}
+            aria-label={t("quit_aria")}
+            className="flex min-h-11 w-11 items-center justify-center self-stretch rounded-[14px] bg-black/40 text-subtle ring-1 ring-white/15 backdrop-blur active:scale-95"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
+        <div className="rounded-[14px] bg-black/40 py-2 ring-1 ring-white/15 backdrop-blur">
+          <div className="text-[10px] font-bold uppercase tracking-wide text-subtle">{t("score")}</div>
+          <div className="text-[24px] font-black leading-7 tabular-nums text-primary-400">{shownScore.toLocaleString()}</div>
+        </div>
+        <div className={`relative rounded-[14px] py-2 ring-1 backdrop-blur ${timeLeft <= 10 ? "bg-live/15 ring-live/40" : "bg-black/40 ring-white/15"}`}>
           <div className="text-[10px] font-bold uppercase tracking-wide text-subtle">{t("time")}</div>
-          <div className={`text-[20px] font-black tabular-nums ${timeLeft <= 10 ? "text-live" : ""}`}>{timeLeft}</div>
+          <div
+            key={phase === "playing" && timeLeft <= 10 ? timeLeft : undefined}
+            className={`text-[20px] font-black tabular-nums ${timeLeft <= 10 ? "anim-count-pop text-live" : ""}`}
+          >
+            {timeLeft}
+          </div>
+          {/* 보너스 시간 획득 플라이업 */}
+          {timeBonus && (
+            <span key={timeBonus.key} className="anim-float-up absolute left-1/2 top-0 z-10 text-[13px] font-black text-gold">
+              +{timeBonus.n}s
+            </span>
+          )}
           {phase === "playing" && scoreMul(timeLeft) > 1 && (
             <span className="anim-count-pop absolute -right-1 -top-2 rounded-full bg-gold px-1.5 py-0.5 text-[10px] font-black text-black">
               ×{scoreMul(timeLeft)}
             </span>
           )}
         </div>
-        <div className="rounded-[14px] bg-surface-1 py-2 ring-1 ring-hairline">
+        <div className="rounded-[14px] bg-black/40 py-2 ring-1 ring-white/15 backdrop-blur">
           <div className="text-[10px] font-bold uppercase tracking-wide text-subtle">{t("combo")}</div>
+          {/* 연쇄 중엔 현재 콤보, 유휴 시엔 이번 판 최대 콤보(죽은 공간 해소) */}
           <div key={combo} className={`text-[20px] font-black tabular-nums ${combo > 1 ? "anim-count-pop text-primary-400" : ""}`}>
-            {combo > 0 ? `${combo}x` : "-"}
+            {combo > 0 ? `${combo}x` : maxCombo > 1 ? <span className="text-muted">{maxCombo}x</span> : "-"}
           </div>
         </div>
       </div>
 
-      {/* 레벨 + 진행 바 */}
+      {/* 레벨 + 진행 바 + 목표 수치 */}
       <div className="flex items-center gap-2">
         <span className="shrink-0 rounded-full bg-primary/15 px-2.5 py-1 text-[12px] font-black text-primary-400">
           {t("lv_prefix")}
           {level}
         </span>
-        <div className="relative h-2.5 flex-1 overflow-hidden rounded-full bg-surface-2 ring-1 ring-hairline">
+        <div className="relative h-2.5 flex-1 overflow-hidden rounded-full bg-black/40 ring-1 ring-white/15 backdrop-blur">
           <div
             className="h-full rounded-full bg-primary transition-[width] duration-300"
             style={{ width: `${Math.round(levelProgress * 100)}%` }}
           />
         </div>
+        <span className="shrink-0 text-[11px] font-bold tabular-nums text-subtle">
+          {Math.max(0, Math.min(score - levelStartRef.current, targetOf(level))).toLocaleString()}/{targetOf(level).toLocaleString()}
+        </span>
       </div>
 
       {/* 보드 */}
       <div
-        className={`relative aspect-square w-full overflow-hidden rounded-[18px] bg-surface-1 p-1 ring-1 ring-hairline ${shake ? "anim-shake" : ""}`}
+        className={`board-frame relative aspect-square w-full ${shake ? "anim-shake" : ""} ${feverOn ? "board-frame-fever" : ""}`}
         style={{ touchAction: "none" }}
       >
+        {/* 네온 프레임 안쪽 다크 보드 */}
+        <div className="board-inner relative h-full w-full overflow-hidden">
+        {/* 타일 플레이영역 — 프레임과 여백 확보(답답함 해소) */}
+        <div className="absolute inset-[4.5%]">
         {tiles.map((tile, i) =>
           tile ? (
             <div
@@ -614,37 +990,106 @@ export default function Match3Game({
               }}
               onPointerDown={(e) => onDown(e, i)}
               onPointerMove={onMove}
-              onPointerUp={onUp}
+              onPointerUp={() => onUp(i)}
             >
               <div
                 className={`relative flex h-full w-full items-center justify-center rounded-[10px] text-[min(5.5vw,24px)] leading-none ${
                   clearing.has(i) ? "anim-tile-clear" : spawnedIds.has(tile.id) ? "anim-tile-spawn" : ""
-                } ${pending ? "cursor-crosshair" : ""} ${tile.kind ? "special-tile ring-2 ring-white/90" : ""}`}
+                } ${pending ? "cursor-crosshair" : ""} ${tile.kind ? "special-tile ring-2 ring-white/90" : ""} ${
+                  selected === i ? "sel-tile" : hint && (hint[0] === i || hint[1] === i) ? "hint-tile" : ""
+                }`}
                 style={{ background: GAME_CONFIG.tiles[tile.color].bg }}
               >
-                <span className="pointer-events-none drop-shadow-sm">{GAME_CONFIG.tiles[tile.color].glyph}</span>
-                {tile.kind && (
-                  <span className="pointer-events-none absolute -right-0.5 -top-0.5 flex h-[42%] w-[42%] items-center justify-center rounded-full bg-black/75 text-[min(2.6vw,11px)]">
-                    {tile.kind === "line" ? "✚" : tile.kind === "area" ? "💥" : "🌈"}
-                  </span>
+                {/* 스페셜 아트가 있으면 완성형 블록으로 교체 — 악기 아이콘은 숨김(코너 배경색으로 색 식별 유지) */}
+                {tile.kind && GAME_CONFIG.specials[tile.kind] ? null : GAME_CONFIG.tiles[tile.color].img ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={GAME_CONFIG.tiles[tile.color].img}
+                    alt=""
+                    draggable={false}
+                    className={`pointer-events-none h-full w-full rounded-[10px] ${
+                      GAME_CONFIG.tiles[tile.color].cover
+                        ? "object-cover"
+                        : "object-contain p-[13%] drop-shadow-[0_2px_4px_rgba(0,0,0,0.65)]"
+                    }`}
+                  />
+                ) : (
+                  <span className="pointer-events-none drop-shadow-sm">{GAME_CONFIG.tiles[tile.color].glyph}</span>
                 )}
+                {/* 스페셜 표시 — 관리자 이미지 슬롯 우선, 없으면 CSS 오버레이(십자 광선/폭발 코어/무지개 링) */}
+                {tile.kind &&
+                  (GAME_CONFIG.specials[tile.kind] ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={GAME_CONFIG.specials[tile.kind]}
+                      alt=""
+                      draggable={false}
+                      className="pointer-events-none absolute inset-0 h-full w-full rounded-[10px] object-contain"
+                    />
+                  ) : (
+                    <span className={tile.kind === "line" ? "sp-line" : tile.kind === "area" ? "sp-area" : "sp-color"} />
+                  ))}
               </div>
             </div>
           ) : null,
         )}
 
-        {/* 플로팅 +점수 */}
+        {/* 아이템 조준 프리뷰 — 확정 탭 전에 폭발 범위 표시 */}
+        {pending && aim != null &&
+          [...(pending === "bomb" ? bombCells(aim) : lineCells(aim))].map((ci) => {
+            const [ar, ac] = rc(ci);
+            return (
+              <div
+                key={`aim-${ci}`}
+                className="aim-cell"
+                style={{ left: `${ac * cell}%`, top: `${ar * cell}%`, width: `${cell}%`, height: `${cell}%` }}
+              />
+            );
+          })}
+
+        {/* 스페셜/아이템 발동 이펙트 */}
+        {fx.map((f) =>
+          f.type === "flash" ? (
+            <div key={f.id} className="fx-flash" />
+          ) : f.type === "ring" ? (
+            <div
+              key={f.id}
+              className="fx-ring"
+              style={{
+                left: `${(f.col + 0.5) * cell}%`,
+                top: `${(f.row + 0.5) * cell}%`,
+                width: `${f.span * cell}%`,
+                height: `${f.span * cell}%`,
+              }}
+            />
+          ) : f.type === "beamH" ? (
+            <div
+              key={f.id}
+              className="fx-beam-h"
+              style={{ left: 0, width: "100%", top: `${(f.row + 0.25) * cell}%`, height: `${cell * 0.5}%` }}
+            />
+          ) : (
+            <div
+              key={f.id}
+              className="fx-beam-v"
+              style={{ top: 0, height: "100%", left: `${(f.col + 0.25) * cell}%`, width: `${cell * 0.5}%` }}
+            />
+          ),
+        )}
+
+        {/* 플로팅 +점수 (획득량·피버별 차등) */}
         {floaters.map((f) => (
           <span
             key={f.id}
-            className="anim-float-up pointer-events-none absolute z-20 text-[15px] font-black text-white drop-shadow"
+            className={`anim-float-up pointer-events-none absolute z-20 font-black drop-shadow ${f.cls}`}
             style={{ left: `${f.left}%`, top: `${f.top}%` }}
           >
             {f.text}
           </span>
         ))}
+        </div>
 
-        {/* 레벨업 배너 */}
+        {/* 레벨업 배너 (+보너스 시간 표기) */}
         {levelBanner && (
           <div
             key={`lv-${levelBanner.key}`}
@@ -656,7 +1101,22 @@ export default function Match3Game({
                 {t("lv_prefix")}
                 {levelBanner.n}
               </div>
-              <div className="text-[12px] font-black text-white/90">{t("level_up")}</div>
+              <div className="text-[12px] font-black text-white/90">
+                {t("level_up")} · +{GAME_CONFIG.levels.bonusSec}s
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 피버 진입 배너 (배율 단계 상승 시 1회) */}
+        {feverBanner && (
+          <div
+            key={`fv-${feverBanner.key}`}
+            className="anim-combo-flash pointer-events-none absolute left-1/2 top-[28%] z-30"
+            style={{ transform: "translate(-50%, -50%)" }}
+          >
+            <div className="rounded-2xl bg-gold px-5 py-2 text-center shadow-lg">
+              <div className="font-display text-[24px] font-black leading-none text-black">FEVER ×{feverBanner.mul}</div>
             </div>
           </div>
         )}
@@ -677,11 +1137,11 @@ export default function Match3Game({
           </div>
         )}
 
-        {/* 아이템 타게팅 안내 */}
+        {/* 아이템 타게팅 안내 (조준 전/후 문구 구분) */}
         {pending && (
           <div className="pointer-events-none absolute inset-x-0 top-2 z-20 flex justify-center">
             <span className="rounded-full bg-black/70 px-3 py-1 text-[12px] font-bold text-white">
-              {t(pending === "bomb" ? "item_bomb" : "item_line")} · 위치를 탭하세요
+              {t(pending === "bomb" ? "item_bomb" : "item_line")} · {t(aim == null ? "item_target_hint" : "item_target_confirm")}
             </span>
           </div>
         )}
@@ -694,162 +1154,92 @@ export default function Match3Game({
             </div>
           </div>
         )}
+        </div>
       </div>
 
-      {/* 아이템 바 */}
-      <div className="grid grid-cols-4 gap-2">
-        {GAME_CONFIG.items.map(({ type, icon: Icon, labelKey }) => (
+      {/* 하단 섹션 — 일반 매치: 이어하기 하트칸 / 아이템 매치: 아이템 바 */}
+      {mode === "daily" ? (
+        <div className="flex flex-col gap-1.5 rounded-[14px] bg-black/40 px-4 py-2.5 ring-1 ring-white/15 backdrop-blur">
+          {/* 1줄: 하트 슬롯 + 수량 */}
+          <div className="flex items-center justify-center gap-2">
+            {Array.from({ length: GAME_CONFIG.hearts.slots }).map((_, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={i}
+                src="/items/heart.png"
+                alt=""
+                className={`h-10 w-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.45)] transition-opacity ${
+                  i < hearts ? "" : "opacity-25 grayscale"
+                }`}
+              />
+            ))}
+            <span className="ml-1 shrink-0 text-[13px] font-black tabular-nums text-primary-400">×{hearts}</span>
+          </div>
+          {/* 2줄: 설명 */}
+          <div className="text-center text-[10.5px] leading-tight text-subtle break-keep">
+            <span className="font-black text-fg">{t("hearts_label")}</span> · {t("hearts_hint")}
+          </div>
+        </div>
+      ) : (
+      <div className="item-bar grid grid-cols-4 gap-2">
+        {GAME_CONFIG.items.map(({ type, labelKey }) => (
           <button
             key={type}
             onClick={() => useItem(type)}
             disabled={items[type] <= 0 || phase !== "playing"}
-            className={`flex flex-col items-center gap-0.5 rounded-[14px] py-2 text-[11px] font-bold ring-1 transition-colors ${
+            className={`flex flex-col items-center gap-1 rounded-[14px] py-2 text-[11px] font-bold ring-1 backdrop-blur transition-colors ${
               pending === type
-                ? "bg-primary/20 text-primary-400 ring-primary/40"
+                ? "bg-primary/25 text-primary-400 ring-primary/50"
                 : items[type] > 0
-                  ? "bg-surface-1 text-fg ring-hairline active:scale-95"
-                  : "bg-surface-1 text-subtle ring-hairline opacity-40"
+                  ? "bg-black/40 text-fg ring-white/15 active:scale-95"
+                  : "bg-black/40 text-subtle ring-white/10 opacity-40"
             }`}
           >
-            <Icon className="h-4 w-4" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={ITEM_ART[type]} alt="" className="h-[34px] w-[34px] rounded-[10px] object-cover" />
             {t(labelKey)}
-            <span className="text-[10px] text-muted">×{items[type]}</span>
+            {/* 시간+ 효과량 명시(+Ns) */}
+            <span className="text-[10px] text-muted">
+              {type === "time" ? `+${GAME_CONFIG.game.timeItemSec}s · ` : ""}×{items[type]}
+            </span>
           </button>
         ))}
       </div>
+      )}
 
       {/* 온보딩 (최초 1회) */}
-      {phase === "intro" && (
-        <div className="anim-backdrop-in fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-6">
-          <div
-            ref={introRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label={t("tutorial_title")}
-            tabIndex={-1}
-            className="anim-pop-in w-full max-w-xs rounded-[22px] bg-surface-2 p-6 text-center outline-none ring-1 ring-hairline"
-          >
-            <div className="text-[16px] font-black">{t("tutorial_title")}</div>
-            {/* 데모: 첫 블록을 옆 칸으로 끌어와 같은 색 3개를 맞춤 */}
-            <div className="relative mx-auto my-6 h-12" style={{ width: 200 }}>
-              {/* 3매치 하이라이트(스왑 완료 순간) */}
-              <div
-                className="absolute rounded-[14px] ring-[3px] ring-white/85"
-                style={{ left: -2, top: -2, width: 152, height: 52, animation: "demo-glow 2.8s ease-in-out infinite" }}
-              />
-              {/* 고정 타일 (슬롯 0·1) */}
-              {[0, 52].map((x) => (
-                <div
-                  key={x}
-                  className="absolute flex h-11 w-11 items-center justify-center rounded-[12px] text-[22px]"
-                  style={{ left: x, top: 0, background: GAME_CONFIG.tiles[0].bg }}
-                >
-                  💜
-                </div>
-              ))}
-              {/* 첫 블록 ⭐ — 오른쪽으로 이동 */}
-              <div
-                className="absolute flex h-11 w-11 items-center justify-center rounded-[12px] text-[22px]"
-                style={{ left: 104, top: 0, background: GAME_CONFIG.tiles[3].bg, animation: "demo-move-r 2.8s ease-in-out infinite" }}
-              >
-                ⭐
-              </div>
-              {/* 옆 블록 💜 — 왼쪽으로 밀려나 자리 교환 */}
-              <div
-                className="absolute flex h-11 w-11 items-center justify-center rounded-[12px] text-[22px]"
-                style={{ left: 156, top: 0, background: GAME_CONFIG.tiles[0].bg, animation: "demo-move-l 2.8s ease-in-out infinite" }}
-              >
-                💜
-              </div>
-              {/* 손가락 */}
-              <span
-                className="absolute text-[24px]"
-                style={{ left: 112, top: 30, animation: "demo-finger 2.8s ease-in-out infinite" }}
-              >
-                👆
-              </span>
-            </div>
-            <p className="mb-5 text-[13px] leading-relaxed text-muted break-keep">{t("tutorial_body")}</p>
-            <button
-              onClick={startTutorial}
-              className="w-full rounded-full bg-primary py-3 text-[15px] font-black text-white active:scale-[0.99]"
-            >
-              {t("tutorial_start")}
-            </button>
-          </div>
-        </div>
+      {phase === "intro" && <IntroModal onStart={startTutorial} />}
+
+      {/* 이어하기 (일반 매치 — 시간 종료 & 하트 보유) */}
+      {phase === "continue" && <ContinueModal hearts={hearts} onContinue={continueWithHeart} onGiveUp={giveUpContinue} />}
+
+      {/* 기권 confirm — 타이머는 계속 흐름(공정성). 시간이 다 되면 결과 모달이 대체 */}
+      {quitOpen && phase !== "over" && (
+        <QuitConfirm
+          onResume={() => setQuitOpen(false)}
+          onQuit={() => {
+            setQuitOpen(false);
+            consumeUsed(); // 기권해도 사용분은 차감
+            onExit?.();
+          }}
+        />
       )}
 
       {/* 결과 */}
       {phase === "over" && (
-        <div className="anim-backdrop-in fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black/75 p-6">
-          {/* 최고 점수 갱신 컨페티 */}
-          {isNewBest &&
-            CONFETTI.map((p, i) => (
-              <span
-                key={i}
-                className="confetti-piece"
-                style={{ left: `${p.left}%`, background: p.color, animationDelay: `${p.delay}s` }}
-              />
-            ))}
-          <div
-            ref={resultRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label={t("result_title")}
-            tabIndex={-1}
-            className="anim-pop-in w-full max-w-xs rounded-[22px] bg-surface-2 p-6 text-center outline-none ring-1 ring-hairline"
-          >
-            <div className="mb-3 flex items-center justify-center gap-2">
-              <Avatar value={getAvatar()} size="sm" />
-              <span className="max-w-[60%] truncate text-[13px] font-bold text-fg">{getNick() || t("nickname")}</span>
-            </div>
-            {/* 도달 레벨 뱃지 */}
-            <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-primary/15 px-3 py-1 text-[13px] font-black text-primary-400">
-              {t("result_level")} {t("lv_prefix")}
-              {levelRef.current}
-            </div>
-            <div className="text-[15px] font-black text-muted">{t("result_title")}</div>
-            <div className="my-2 text-[44px] font-black tabular-nums text-primary-400">{shownScore.toLocaleString()}</div>
-            {isNewBest && <div className="mb-2 text-[13px] font-bold text-gold">{t("result_new_best")}</div>}
-
-            {/* 모드 랭크 (서버 응답) */}
-            {(submitting || (rank && rank.rank != null && (rank.total || 0) > 0)) && (
-              <div className="mb-4 rounded-[14px] bg-surface-1 px-4 py-3 ring-1 ring-hairline">
-                <div className="text-[10px] font-bold text-subtle">{t(mode === "free" ? "lb_item" : "lb_normal")}</div>
-                {submitting || !rank || rank.rank == null ? (
-                  <div className="mx-auto mt-1 h-5 w-24 animate-pulse rounded bg-surface-2" />
-                ) : (
-                  <div className="flex items-baseline justify-center gap-2">
-                    <span className="text-[22px] font-black tabular-nums text-primary-400">
-                      {rank.rank.toLocaleString()}
-                      <span className="text-[12px] font-bold text-muted">{t("rank_unit")}</span>
-                    </span>
-                    <span className="text-[11px] font-bold text-gold">
-                      {t("top_percent").replace("{p}", String(topPercent(rank.rank, rank.total || 0)))}
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            <div className="flex flex-col gap-2">
-              <button onClick={init} className="flex items-center justify-center gap-2 rounded-full bg-primary py-3 text-[15px] font-black text-white active:scale-[0.99]">
-                <RotateCcw className="h-4 w-4" /> {t("retry")}
-              </button>
-              {onViewRanking && (
-                <button onClick={onViewRanking} className="flex items-center justify-center gap-2 rounded-full bg-surface-1 py-3 text-[14px] font-bold text-fg ring-1 ring-hairline active:scale-[0.99]">
-                  <Trophy className="h-4 w-4 text-gold" /> {t("view_ranking")}
-                </button>
-              )}
-              {onExit && (
-                <button onClick={onExit} className="flex items-center justify-center gap-2 rounded-full bg-surface-1 py-3 text-[14px] font-bold text-muted ring-1 ring-hairline">
-                  <Home className="h-4 w-4" /> {t("home")}
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+        <ResultModal
+          score={score}
+          maxCombo={maxCombo}
+          prevBest={prevBest}
+          level={levelRef.current}
+          isNewBest={isNewBest}
+          rank={rank}
+          submitting={submitting}
+          mode={mode}
+          onRetry={init}
+          onViewRanking={onViewRanking}
+          onExit={onExit}
+        />
       )}
     </div>
   );

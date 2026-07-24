@@ -27,6 +27,19 @@ export default function Avatar({ value, size = "sm" }: { value: string | null | 
     );
   }
 
+  if (r.kind === "icon") {
+    return (
+      <span
+        aria-hidden
+        className="flex shrink-0 items-center justify-center rounded-full ring-1 ring-black/10"
+        style={{ width: box, height: box, background: r.bg }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={r.src} alt="" className="pointer-events-none h-full w-full rounded-full object-contain p-[14%]" />
+      </span>
+    );
+  }
+
   return (
     <span
       aria-hidden

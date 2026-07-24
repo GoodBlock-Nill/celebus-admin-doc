@@ -17,7 +17,12 @@ export async function GET(req: Request) {
   const anonId = peekVoterId(req);
   if (!anonId) return NextResponse.json(EMPTY_RANK);
 
-  const { data, error } = await admin().rpc("game_player_rank", { p_player_hash: playerHash(anonId) });
+  // period: week/month = 기간 랭킹(KST), 그 외 = 전체(기존)
+  const period = new URL(req.url).searchParams.get("period");
+  const { data, error } =
+    period === "week" || period === "month"
+      ? await admin().rpc("game_player_rank_period", { p_player_hash: playerHash(anonId), p_period: period })
+      : await admin().rpc("game_player_rank", { p_player_hash: playerHash(anonId) });
   if (error) return NextResponse.json({ error: "처리 중 오류가 발생했어요." }, { status: 500 });
   return NextResponse.json(data ?? EMPTY_RANK);
 }

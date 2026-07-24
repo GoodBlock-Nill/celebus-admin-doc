@@ -1,22 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { GAME_CONFIG } from "@/lib/game-config";
-import { fetchAccount, chargePoint, buyItem, fetchCatalog, type Account } from "@/lib/game-api";
-import type { ItemType } from "@/lib/game-config";
+import { fetchAccount, buyItem, fetchCatalog, type Account } from "@/lib/game-api";
+import type { ItemType, ShopItemType } from "@/lib/game-config";
 import { unlockAudio, sfxCoin } from "@/lib/sfx";
 import ScreenHeader from "./ScreenHeader";
 import CoinBalance from "./CoinBalance";
 import { useLang } from "./LangProvider";
 
-const CHARGE_PRESETS = [100, 500, 1000];
+// 아이템별 카드 아트(일러스트) + 효과 설명 키 (효과는 게임 로직 기준)
+const ITEM_META: Record<ItemType, { art: string; descKey: string }> = {
+  bomb: { art: "/items/item-bomb.png", descKey: "item_bomb_desc" },
+  line: { art: "/items/item-line.png", descKey: "item_line_desc" },
+  shuffle: { art: "/items/item-shuffle.png", descKey: "item_shuffle_desc" },
+  time: { art: "/items/item-time.png", descKey: "item_time_desc" },
+};
 
 export default function Shop({ onBack }: { onBack: () => void }) {
   const { t } = useLang();
   const [account, setAccount] = useState<Account>({ celeb_point: 0, inventory: {} });
-  const [catalog, setCatalog] = useState<Partial<Record<ItemType, number>>>({});
+  const [catalog, setCatalog] = useState<Partial<Record<ShopItemType, number>>>({});
   const [busy, setBusy] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -28,18 +33,7 @@ export default function Shop({ onBack }: { onBack: () => void }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const doCharge = async (amount: number) => {
-    if (busy) return;
-    setBusy(true);
-    const bal = await chargePoint(amount);
-    setBusy(false);
-    if (bal == null) return toast.error(t("insufficient"));
-    setAccount((a) => ({ ...a, celeb_point: bal }));
-    sfxCoin();
-    toast.success(t("charged"));
-  };
-
-  const doBuy = async (type: (typeof GAME_CONFIG.items)[number]["type"]) => {
+  const doBuy = async (type: ShopItemType) => {
     if (busy) return;
     setBusy(true);
     const res = await buyItem(type, 1);
@@ -51,56 +45,72 @@ export default function Shop({ onBack }: { onBack: () => void }) {
   };
 
   return (
-    <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5 pb-8 pt-4">
+    <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-safe pb-safe pt-safe">
       <ScreenHeader title={t("shop_title")} onBack={onBack} right={<CoinBalance amount={account.celeb_point} />} />
 
-      {/* 테스트 충전 */}
-      <div className="mt-5 rounded-[16px] bg-surface-1 p-4 ring-1 ring-hairline">
-        <div className="mb-2 text-[12px] font-bold text-subtle">{t("charge_test")}</div>
-        <div className="grid grid-cols-3 gap-2">
-          {CHARGE_PRESETS.map((amt) => (
-            <button
-              key={amt}
-              onClick={() => doCharge(amt)}
-              disabled={busy}
-              className="flex items-center justify-center gap-1 rounded-[12px] bg-surface-2 py-2.5 text-[13px] font-black text-fg ring-1 ring-hairline transition-transform active:scale-95 disabled:opacity-50"
-            >
-              <Plus className="h-3.5 w-3.5" /> {amt.toLocaleString()}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* 아이템 목록 */}
-      <div className="mt-4 flex flex-col gap-2">
-        {loading
-          ? Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-[68px] animate-pulse rounded-[16px] bg-surface-1" />)
-          : GAME_CONFIG.items.map(({ type, icon: Icon, labelKey, price: fallbackPrice }) => {
-              const price = catalog[type] ?? fallbackPrice; // 카탈로그 우선, 없으면 config 폴백
-              return (
-          <div key={type} className="flex items-center gap-3 rounded-[16px] bg-surface-1 px-4 py-3 ring-1 ring-hairline">
-            <span className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-primary/15 text-primary-400">
-              <Icon className="h-5 w-5" />
-            </span>
-            <div className="flex-1">
-              <div className="text-[14px] font-bold text-fg">{t(labelKey)}</div>
-              <div className="text-[11px] text-muted">
-                {t("owned")} {account.inventory[type] ?? 0}
-              </div>
+      {/* 하트 (일반 매치 이어하기) — 강조 상품 */}
+      {!loading && (
+        <div className="mt-5 flex items-center gap-3 rounded-[16px] bg-gradient-to-r from-primary/20 to-surface-1 p-2.5 ring-1 ring-primary/30">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/items/heart.png" alt="" className="h-[72px] w-[72px] shrink-0 rounded-[14px] object-contain" />
+          <div className="min-w-0 flex-1">
+            <div className="text-[15px] font-black text-fg">{t("item_heart")}</div>
+            <div className="mt-0.5 text-[11px] leading-tight text-muted break-keep">{t("item_heart_desc")}</div>
+            <div className="mt-1 text-[10px] font-bold text-subtle">
+              {t("owned")} {account.inventory.heart ?? 0}
             </div>
-            <button
-              onClick={() => doBuy(type)}
-              disabled={busy}
-              className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-[13px] font-black text-white transition-transform active:scale-95 disabled:opacity-50"
-            >
-              {t("buy")} · {price.toLocaleString()}
-            </button>
           </div>
+          <button
+            onClick={() => doBuy("heart")}
+            disabled={busy}
+            className="flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2.5 text-[14px] font-black text-white ring-1 ring-white/15 transition-transform active:scale-95 disabled:opacity-50"
+            style={{ background: "linear-gradient(180deg, #ec5c9a 0%, #c03c78 100%)" }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/currency.png" alt="" className="h-4 w-4" />
+            <span className="tabular-nums">{(catalog.heart ?? GAME_CONFIG.hearts.price).toLocaleString()}</span>
+          </button>
+        </div>
+      )}
+
+      {/* 아이템 목록 (1열 리스트 — 정사각 썸네일 + 정보 + 구매) */}
+      <div className="mt-2.5 flex flex-col gap-2.5">
+        {loading
+          ? Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-[92px] animate-pulse rounded-[16px] bg-surface-1" />)
+          : GAME_CONFIG.items.map(({ type, labelKey, price: fallbackPrice }) => {
+              const price = catalog[type] ?? fallbackPrice; // 카탈로그 우선, 없으면 config 폴백
+              const meta = ITEM_META[type];
+              const owned = account.inventory[type] ?? 0;
+              return (
+                <div key={type} className="flex items-center gap-3 rounded-[16px] bg-surface-1 p-2.5 ring-1 ring-hairline">
+                  {/* 썸네일 (정사각 원본 → object-cover 잘림 없음) */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={meta.art} alt="" className="h-[72px] w-[72px] shrink-0 rounded-[14px] object-cover" />
+                  {/* 정보 */}
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[15px] font-black text-fg">{t(labelKey)}</div>
+                    <div className="mt-0.5 text-[11px] leading-tight text-muted break-keep">{t(meta.descKey)}</div>
+                    <div className="mt-1 text-[10px] font-bold text-subtle">
+                      {t("owned")} {owned}
+                    </div>
+                  </div>
+                  {/* 구매 */}
+                  <button
+                    onClick={() => doBuy(type)}
+                    disabled={busy}
+                    className="flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2.5 text-[14px] font-black text-white ring-1 ring-white/15 transition-transform active:scale-95 disabled:opacity-50"
+                    style={{ background: "linear-gradient(180deg, #7c5cf0 0%, #5a3cc0 100%)" }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/currency.png" alt="" className="h-4 w-4" />
+                    <span className="tabular-nums">{price.toLocaleString()}</span>
+                  </button>
+                </div>
               );
             })}
       </div>
 
-      <p className="mt-4 text-center text-[11px] text-subtle break-keep">{t("shop_hint")}</p>
+      <p className="mt-5 text-center text-[11px] text-subtle break-keep">{t("shop_hint")}</p>
     </div>
   );
 }

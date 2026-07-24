@@ -11,7 +11,14 @@ import MyItems from "./MyItems";
 import GameSettings from "./GameSettings";
 import ThemeSettings from "./ThemeSettings";
 import ConfigTheme from "./ConfigTheme";
+import AuthGate from "./AuthGate";
 import { dailySeed } from "@/lib/match3";
+import { playMusic, stopMusic } from "@/lib/music";
+import { fetchProfile, hasLocalSession, markLocalSession } from "@/lib/auth-api";
+import { track } from "@/lib/track";
+import { setNick, setAvatar } from "@/lib/game-api";
+import { GAME_CONFIG } from "@/lib/game-config";
+import { useLang } from "./LangProvider";
 
 type Screen =
   | { name: "home" }
@@ -25,7 +32,27 @@ type Screen =
   | { name: "theme" };
 
 export default function AppShell() {
+  const { t } = useLang();
   const [screen, setScreen] = useState<Screen>({ name: "home" });
+  // 가입 게이트 — 첫 진입 필수. 서버 프로필 존재 여부로 판정(로컬 저장 미신뢰).
+  // 단, 네트워크/서버 실패(offline)로 판정 불가할 땐 로컬 세션 힌트로 통과(기가입자 오프라인 실행 보장).
+  const [auth, setAuth] = useState<"checking" | "need" | "ok">("checking");
+  useEffect(() => {
+    track("visit"); // 퍼널: 방문 (기기당 일 1회)
+    fetchProfile().then((p) => {
+      if (p.signed_up && p.nickname) {
+        setNick(p.nickname); // 서버 프로필을 로컬 표시값과 동기화
+        if (p.avatar) setAvatar(p.avatar);
+        markLocalSession(true);
+        setAuth("ok");
+      } else if (p.offline && hasLocalSession()) {
+        setAuth("ok");
+      } else {
+        track("gate_view"); // 퍼널: 가입 게이트 노출
+        setAuth("need");
+      }
+    });
+  }, []);
   const go = (s: Screen) => setScreen(s);
   const home = () => setScreen({ name: "home" });
   const more = () => setScreen({ name: "more" });
@@ -45,6 +72,49 @@ export default function AppShell() {
     }
     prevName.current = screen.name;
   }, [screen.name]);
+
+  // 로비 음악 — 게임 화면을 제외한 전 메뉴에서 유지(홈↔상점 등 이동 시 끊김 없음).
+  // 인게임은 절차적 BGM(bgm.ts)이 담당 → 진입 시 페이드 아웃으로 자연 전환.
+  useEffect(() => {
+    if (screen.name === "game") stopMusic();
+    else playMusic();
+  }, [screen.name]);
+  // 탭 숨김 시 정지, 복귀 시 재개(게임 화면 제외)
+  useEffect(() => {
+    const onVis = () => {
+      if (document.hidden) stopMusic();
+      else if (prevName.current !== "game") playMusic();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, []);
+
+  // 게이트 미통과 — 스플래시 → 가입/로그인 화면
+  if (auth !== "ok") {
+    return (
+      <>
+        <ConfigTheme />
+        {auth === "checking" ? (
+          <div className="relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col items-center justify-center">
+            <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+              <div className="stage-bg h-full w-full" />
+            </div>
+            {GAME_CONFIG.home.logo ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={GAME_CONFIG.home.logo} alt="CELEB MATCH" className="anim-logo-float w-[210px]" />
+            ) : (
+              <div className="logo-puffy font-display text-[36px] font-black">CELEB MATCH</div>
+            )}
+            <p className="mt-6 text-[12px] font-bold text-white/45">{t("auth_checking")}</p>
+          </div>
+        ) : (
+          <div className="anim-fade-up">
+            <AuthGate onDone={() => setAuth("ok")} />
+          </div>
+        )}
+      </>
+    );
+  }
 
   let body: React.ReactNode;
   switch (screen.name) {

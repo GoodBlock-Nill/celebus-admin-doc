@@ -10,7 +10,7 @@ const ISSUE_CAP = Number(process.env.VOTE_ISSUE_CAP) || 5;
 const ISSUE_WINDOW_SECS = Number(process.env.VOTE_ISSUE_WINDOW_SECS) || 60 * 60 * 24;
 
 const buySchema = z.object({
-  item_type: z.enum(["bomb", "line", "shuffle", "time"]),
+  item_type: z.enum(["bomb", "line", "shuffle", "time", "heart"]), // heart = 일반 매치 이어하기
   qty: z.number().int().min(1).max(99).default(1),
 });
 

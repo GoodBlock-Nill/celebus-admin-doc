@@ -12,7 +12,9 @@ const ISSUE_WINDOW_SECS = Number(process.env.VOTE_ISSUE_WINDOW_SECS) || 60 * 60 
 
 const scoreSchema = z.object({
   mode: z.enum(["daily", "free"]),
-  seed: z.number().int().nonnegative().max(99999999),
+  // 시드 상한 = 클라이언트 생성 범위와 일치 (일반=YYYYMMDD, 아이템=random 0~2^31).
+  // ⚠️ 과거 1e8 상한이 아이템 매치 시드의 ~95%를 거절해 랭킹 미등록 버그 유발(2026-07-24 정정).
+  seed: z.number().int().nonnegative().max(2147483647),
   score: z.number().int().min(0).max(1000000),
   level: z.number().int().min(1).max(999),
   nickname: z.string().trim().max(16).optional(),

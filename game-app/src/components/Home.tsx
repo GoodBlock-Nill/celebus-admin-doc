@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarDays, Play, Trophy, Store, Swords, MoreHorizontal, Gift } from "lucide-react";
+import { LayoutGrid } from "lucide-react";
 import { GAME_CONFIG } from "@/lib/game-config";
-import { getNick, getAvatar, fetchAccount, getDailyStatus } from "@/lib/game-api";
+import { getNick, getAvatar, fetchAccount, getDailyStatus, claimWeeklyReward, type WeeklyReward } from "@/lib/game-api";
+import { kstWeekStart } from "@/lib/week";
 import { unlockAudio } from "@/lib/sfx";
+import { unlockBgm } from "@/lib/bgm";
 import Avatar from "./Avatar";
-import CoinBalance from "./CoinBalance";
 import DailyReward from "./DailyReward";
+import WeeklyResultModal from "./WeeklyResultModal";
+import DailyMissions from "./DailyMissions";
 import ProfileSetup from "./ProfileSetup";
 import LangSwitcher from "./LangSwitcher";
 import { useLang } from "./LangProvider";
@@ -29,6 +32,7 @@ export default function Home({
   const [point, setPoint] = useState<number | null>(null);
   const [dailyClaimable, setDailyClaimable] = useState(false);
   const [showDaily, setShowDaily] = useState(false);
+  const [weekly, setWeekly] = useState<WeeklyReward | null>(null);
   const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
@@ -38,101 +42,167 @@ export default function Home({
     if (!n) setShowProfile(true); // 최초 진입(닉네임 미설정) 시 프로필 설정 모달 자동 노출
     fetchAccount().then((a) => setPoint(a.celeb_point));
     getDailyStatus().then((s) => setDailyClaimable(s.claimable));
+    // 지난주 랭킹 결과 — 새 주(KST 월요일) 첫 진입 시 1회: 순위 표시 + 보상 자동 지급
+    const wk = kstWeekStart();
+    let seen = false;
+    try {
+      seen = !!localStorage.getItem(`wk_seen_${wk}`);
+    } catch {
+      /* ignore */
+    }
+    if (!seen) {
+      claimWeeklyReward().then((r) => {
+        if (!r) return; // 네트워크/서버 실패 — 기록하지 않고 다음 진입에 재시도
+        try {
+          localStorage.setItem(`wk_seen_${wk}`, "1");
+        } catch {
+          /* ignore */
+        }
+        if (r.has_result) {
+          setWeekly(r);
+          if ((r.total_cp ?? 0) > 0 && r.celeb_point != null) setPoint(r.celeb_point);
+        }
+      });
+    }
   }, []);
 
+  const home = GAME_CONFIG.home;
+
   return (
-    <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5 pb-8 pt-4">
-      <header className="flex items-center justify-between gap-2">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/wordmark.svg" alt="CELEBUS" className="h-[14px] w-auto opacity-80" />
-        <div className="flex items-center gap-2">
-          {point != null && <CoinBalance amount={point} />}
-          {/* 출석 보상 — 오늘 미수령 시 강조 + 점 표시 */}
-          <button
-            onClick={() => setShowDaily(true)}
-            aria-label={t("daily_reward")}
-            className={`relative flex h-11 w-11 items-center justify-center rounded-full ring-1 transition-transform active:scale-90 ${
-              dailyClaimable ? "bg-primary/20 text-primary-400 ring-primary/40" : "bg-surface-1 text-subtle ring-hairline"
-            }`}
-          >
-            <Gift className="h-4 w-4" />
-            {dailyClaimable && <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-live ring-2 ring-surface-0" />}
-          </button>
+    <div className="relative mx-auto flex min-h-[100dvh] w-full max-w-md flex-col overflow-hidden">
+      {/* 배경 (실이미지 슬롯 or 스테이지 그라데이션 폴백) + 스크림 */}
+      <div className="stage-bg pointer-events-none absolute inset-0 -z-10">
+        {home.background && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={home.background} alt="" className="h-full w-full object-cover" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/75" />
+      </div>
+
+      {/* 상단 바 */}
+      <header className="flex items-center justify-between gap-2 px-4 pt-safe">
+        <button
+          onClick={() => setShowProfile(true)}
+          aria-label={t("profile_edit")}
+          className="flex items-center gap-1.5 rounded-full bg-black/45 py-1 pl-1 pr-3 ring-1 ring-white/15 backdrop-blur active:scale-95"
+        >
+          <Avatar value={avatar} size="sm" />
+          <span className="max-w-[84px] truncate text-[12px] font-black text-white">{nick || t("nickname_ph")}</span>
+        </button>
+
+        <div className="flex items-center gap-1.5">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-black/45 py-1 pl-1 pr-3 ring-1 ring-white/15 backdrop-blur">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/currency.png" alt="CELEB Point" className="h-6 w-6 drop-shadow-[0_1px_3px_rgba(0,0,0,0.45)]" />
+            <span className="text-[13px] font-black tabular-nums text-white">{(point ?? 0).toLocaleString()}</span>
+          </span>
           <LangSwitcher />
         </div>
       </header>
 
-      {/* 타이틀 */}
-      <div className="mt-10 text-center">
-        <div className="text-[13px] font-black uppercase tracking-[0.2em] text-primary-400">CELEBUS · V01D</div>
-        <h1 className="font-display text-[52px] font-black leading-none tracking-tight">V01D POP</h1>
-        <p className="mt-3 text-[14px] text-muted break-keep">{t("tagline")}</p>
+      {/* 로고 + 서브카피 */}
+      <div className="mt-6 flex flex-col items-center px-5 text-center">
+        {home.logo ? (
+          // 로고 이미지에 서브타이틀이 포함된 경우가 있어 별도 리본은 폴백(텍스트) 모드에서만 노출
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={home.logo} alt="CELEB MATCH" className="anim-logo-float max-h-[150px] w-auto drop-shadow-[0_6px_16px_rgba(0,0,0,0.5)]" />
+        ) : (
+          <>
+            <div className="font-display font-black leading-[0.9]">
+              <div className="logo-puffy text-[56px]" style={{ color: "#f26a56" }}>
+                CELEB
+              </div>
+              <div className="logo-puffy -mt-1 text-[56px]" style={{ color: "#3ac9bf" }}>
+                MATCH
+              </div>
+            </div>
+            <span className="mt-2 rounded-full bg-black/35 px-3 py-1 text-[12px] font-black text-white/90 ring-1 ring-white/15">
+              {t("game_subcopy")}
+            </span>
+          </>
+        )}
       </div>
 
-      {/* 내 프로필 (탭하여 편집 → 설정 모달) */}
-      <button
-        onClick={() => setShowProfile(true)}
-        className="mx-auto mt-8 flex flex-col items-center gap-2 rounded-[20px] px-6 py-3 transition-transform active:scale-95"
-        aria-label={t("profile_edit")}
-      >
-        <Avatar value={avatar} size="lg" />
-        <span className="max-w-[220px] truncate text-[15px] font-black text-fg">{nick || t("nickname_ph")}</span>
-        <span className="text-[11px] font-bold text-subtle">{t("profile_edit")}</span>
-      </button>
+      {/* 히어로 아트 슬롯 — hero URL 있으면 이미지, 없고 배경도 없으면 마스코트 플레이스홀더,
+          배경 이미지가 히어로 아트를 겸하면 빈 스페이서(배경이 그대로 비치도록) */}
+      <div className="flex min-h-0 flex-1 items-center justify-center px-6 py-3">
+        {home.hero ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={home.hero} alt="" className="max-h-full w-auto object-contain" />
+        ) : home.background ? null : (
+          <div className="flex h-full max-h-[240px] w-full items-center justify-center rounded-[28px] bg-white/5 ring-1 ring-white/10">
+            <span className="text-[96px] drop-shadow-lg">{GAME_CONFIG.mascot}</span>
+          </div>
+        )}
+      </div>
 
-      {/* 플레이 버튼 */}
-      <div className="mt-auto flex flex-col gap-3 pt-8">
+      {/* 오늘의 미션 (달성 → 받기, KST 일 리셋) + 데일리 체크인 스티커(카드 우상단 밖) */}
+      <div className="relative mb-3">
+        <button
+          onClick={() => setShowDaily(true)}
+          aria-label={t("daily_checkin")}
+          className="absolute -top-[86px] right-5 z-30 w-[82px] active:scale-95"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/daily-checkin.png"
+            alt=""
+            className={`w-full drop-shadow-[0_5px_12px_rgba(0,0,0,0.45)] ${dailyClaimable ? "anim-gift-bob" : ""}`}
+          />
+        </button>
+        <DailyMissions onReward={(cp) => setPoint(cp)} />
+      </div>
+
+      {/* 대형 CTA 2개 */}
+      <div className="grid grid-cols-2 gap-3 px-5">
         <button
           onClick={() => {
             unlockAudio();
+            unlockBgm(); // iOS: 진입 제스처에서 BGM 요소 승인
             onPlay("daily");
           }}
-          className="flex items-center justify-center gap-2 rounded-[16px] bg-primary py-4 text-[16px] font-black text-white transition-transform active:scale-[0.99]"
+          className="btn-ornate w-full rounded-[18px] py-4 text-[18px] font-black text-white"
+          style={{ background: "linear-gradient(180deg, #7c5cf0 0%, #5a3cc0 100%)" }}
         >
-          <CalendarDays className="h-5 w-5" /> {t("home_daily")}
+          {t("home_daily")}
         </button>
-        <button
-          onClick={() => {
-            unlockAudio();
-            onPlay("free");
-          }}
-          className="flex items-center justify-center gap-2 rounded-[16px] bg-surface-1 py-4 text-[15px] font-black text-fg ring-1 ring-hairline transition-transform active:scale-[0.99]"
-        >
-          <Play className="h-5 w-5" /> {t("home_free")}
-        </button>
-
-        {/* 랭킹 · 상점 · 멤버 도전(곧) · 더보기 */}
-        <div className="mt-2 grid grid-cols-4 gap-2">
+        {/* 아이템 매치 버튼 + 우상단 데일리 체크인 스티커(버튼 위로 띄움) */}
+        <div className="relative">
           <button
-            onClick={onOpenLeaderboard}
-            className="flex flex-col items-center gap-1 rounded-[14px] bg-surface-1 py-3 text-center ring-1 ring-hairline transition-transform active:scale-95"
+            onClick={() => {
+              unlockAudio();
+              unlockBgm(); // iOS: 진입 제스처에서 BGM 요소 승인
+              onPlay("free");
+            }}
+            className="btn-ornate w-full rounded-[18px] py-4 text-[18px] font-black text-white"
+            style={{ background: "linear-gradient(180deg, #e2604f 0%, #b23d34 100%)" }}
           >
-            <Trophy className="h-5 w-5 text-gold" />
-            <span className="text-[11px] font-bold text-fg">{t("home_leaderboard")}</span>
-          </button>
-          <button
-            onClick={onOpenShop}
-            className="flex flex-col items-center gap-1 rounded-[14px] bg-surface-1 py-3 text-center ring-1 ring-hairline transition-transform active:scale-95"
-          >
-            <Store className="h-5 w-5 text-primary-400" />
-            <span className="text-[11px] font-bold text-fg">{t("home_shop")}</span>
-          </button>
-          <div className="flex flex-col items-center gap-1 rounded-[14px] bg-surface-1/60 py-3 text-center ring-1 ring-hairline">
-            <Swords className="h-5 w-5 text-subtle" />
-            <span className="text-[11px] font-bold text-muted">{t("home_member")}</span>
-            <span className="text-[9px] font-bold text-subtle">{t("coming_soon")}</span>
-          </div>
-          <button
-            onClick={onOpenMore}
-            className="flex flex-col items-center gap-1 rounded-[14px] bg-surface-1 py-3 text-center ring-1 ring-hairline transition-transform active:scale-95"
-          >
-            <MoreHorizontal className="h-5 w-5 text-fg" />
-            <span className="text-[11px] font-bold text-fg">{t("home_more")}</span>
+            {t("home_free")}
           </button>
         </div>
-
-        <p className="mt-2 text-center text-[11px] text-subtle break-keep">{t("how_to")}</p>
       </div>
+
+      {/* 하단 내비 (랭킹 · 아이템상점 · 더보기) — 3D 일러스트 아이콘 */}
+      <div className="mx-5 mb-safe mt-3 grid grid-cols-3 rounded-[22px] bg-black/45 px-2 py-2.5 ring-1 ring-white/15 backdrop-blur">
+        <button onClick={onOpenLeaderboard} className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/nav-ranking.png" alt="" className="h-9 w-9 object-contain drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)]" />
+          <span className="text-[11px] font-bold text-white">{t("home_leaderboard")}</span>
+        </button>
+        <button onClick={onOpenShop} className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/nav-shop.png" alt="" className="h-9 w-9 object-contain drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)]" />
+          <span className="text-[11px] font-bold text-white">{t("home_shop")}</span>
+        </button>
+        <button onClick={onOpenMore} className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90">
+          <span className="flex h-9 w-9 items-center justify-center">
+            <LayoutGrid className="h-7 w-7 text-gold drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)]" strokeWidth={2.5} />
+          </span>
+          <span className="text-[11px] font-bold text-white">{t("home_more")}</span>
+        </button>
+      </div>
+
+      {weekly && <WeeklyResultModal data={weekly} onClose={() => setWeekly(null)} />}
 
       {showDaily && (
         <DailyReward

@@ -1,20 +1,47 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_KR, Gothic_A1 } from "next/font/google";
+import { Noto_Sans_KR } from "next/font/google";
+import localFont from "next/font/local";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const noto = Noto_Sans_KR({ subsets: ["latin"], weight: ["400", "500", "700", "900"], variable: "--font-noto", display: "swap" });
-const display = Gothic_A1({ subsets: ["latin"], weight: ["800", "900"], variable: "--font-black-han", display: "swap" });
+// 도트(픽셀) 폰트 — Galmuri11: 한글 전체·가나·라틴·한자 지원 → ko/en/ja 동일 감성 (사용자 결정 2026-07-24)
+const galmuri = localFont({
+  src: [
+    { path: "../fonts/Galmuri11.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Galmuri11-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-galmuri",
+  display: "swap",
+});
+// 폴백(미지원 글리프·이모지 옆 텍스트) — Noto Sans KR
+const noto = Noto_Sans_KR({ subsets: ["latin"], weight: ["400", "700", "900"], variable: "--font-noto", display: "swap" });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://celebus-game.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://game-app-rho-pearl.vercel.app";
+const TITLE = "CELEB MATCH";
+const DESCRIPTION = "최애와 함께하는 매치3 퍼즐! 타일을 맞춰 콤보를 터뜨리고 주간 랭킹에 도전하세요 💜";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "V01D POP",
-  description: "V01D 팬 미니게임 — 타일을 맞춰 최고 점수에 도전하세요",
+  title: TITLE,
+  description: DESCRIPTION,
   manifest: "/manifest.json",
-  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "V01D POP" },
-  icons: { icon: "/symbol.svg", shortcut: "/symbol.svg", apple: "/icons/icon-192.png" },
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: TITLE },
+  icons: { icon: "/icons/icon-192.png", shortcut: "/icons/icon-192.png", apple: "/icons/icon-192.png" },
+  openGraph: {
+    type: "website",
+    siteName: TITLE,
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    locale: "ko_KR",
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "CELEB MATCH — Match your favorite stars!" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og.jpg"],
+  },
 };
 
 export const viewport: Viewport = {
@@ -29,7 +56,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${noto.variable} ${display.variable}`}>
+    <html lang="ko" className={`${galmuri.variable} ${noto.variable}`}>
       <body className="font-sans overscroll-none">
         {children}
         <Toaster position="top-center" theme="dark" richColors />

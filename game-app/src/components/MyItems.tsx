@@ -22,7 +22,7 @@ export default function MyItems({ onBack, onOpenShop }: { onBack: () => void; on
   const total = Object.values(account.inventory).reduce((s, n) => s + (n ?? 0), 0);
 
   return (
-    <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5 pb-8 pt-4">
+    <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-safe pb-safe pt-safe">
       <ScreenHeader title={t("items_title")} onBack={onBack} right={<CoinBalance amount={account.celeb_point} />} />
 
       {loading ? (
@@ -39,6 +39,17 @@ export default function MyItems({ onBack, onOpenShop }: { onBack: () => void; on
       ) : (
         <>
           <div className="mt-5 grid grid-cols-2 gap-2">
+            {/* 하트 (일반 매치 이어하기) */}
+            <div className="flex items-center gap-3 rounded-[16px] bg-surface-1 px-4 py-3 ring-1 ring-hairline">
+              <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-primary/15">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/items/heart.png" alt="" className="h-7 w-7 object-contain" />
+              </span>
+              <div className="flex-1">
+                <div className="text-[13px] font-bold text-fg">{t("item_heart")}</div>
+                <div className="text-[15px] font-black tabular-nums text-primary-400">×{account.inventory.heart ?? 0}</div>
+              </div>
+            </div>
             {GAME_CONFIG.items.map(({ type, icon: Icon, labelKey }) => (
               <div key={type} className="flex items-center gap-3 rounded-[16px] bg-surface-1 px-4 py-3 ring-1 ring-hairline">
                 <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-primary/15 text-primary-400">

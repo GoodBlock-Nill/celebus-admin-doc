@@ -193,17 +193,22 @@ export function collapse(b: Board, cleared: Set<number>, rng: () => number): Boa
   return n;
 }
 
-// 유효한 이동(스왑 시 매치 발생)이 존재하는가
-export function hasMove(b: Board): boolean {
+// 유효한 이동 하나 반환(유휴 힌트용) — 없으면 null
+export function findMove(b: Board): [number, number] | null {
   for (let i = 0; i < b.length; i++) {
     const [r, c] = rc(i);
     const cands = [c < SIZE - 1 ? idx(r, c + 1) : -1, r < SIZE - 1 ? idx(r + 1, c) : -1];
     for (const j of cands) {
       if (j < 0) continue;
-      if (findMatches(swap(b, i, j)).size > 0) return true;
+      if (findMatches(swap(b, i, j)).size > 0) return [i, j];
     }
   }
-  return false;
+  return null;
+}
+
+// 유효한 이동(스왑 시 매치 발생)이 존재하는가
+export function hasMove(b: Board): boolean {
+  return findMove(b) !== null;
 }
 
 // 이동 가능한 새 보드

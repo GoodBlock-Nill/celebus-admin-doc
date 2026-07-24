@@ -25,7 +25,8 @@ export function setSoundEnabled(on: boolean): void {
   if (on) unlockAudio();
 }
 
-function audioCtx(): AudioContext | null {
+// 공용 AudioContext — SFX·BGM·로비 음악이 공유(iOS 컨텍스트 수 제한 대응)
+export function getAudioCtx(): AudioContext | null {
   if (typeof window === "undefined") return null;
   if (!ctx) {
     const AC = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
@@ -39,6 +40,7 @@ function audioCtx(): AudioContext | null {
   if (ctx.state === "suspended") ctx.resume().catch(() => {});
   return ctx;
 }
+const audioCtx = getAudioCtx;
 
 // 브라우저 오디오 정책상 첫 사용자 제스처에서 호출해 언락(재생 버튼·첫 탭 등)
 export function unlockAudio(): void {
@@ -95,6 +97,15 @@ export const sfxPower = () =>
   play([{ freq: 660, dur: 0.08, type: "triangle" }, { freq: 990, dur: 0.08, type: "triangle" }, { freq: 1320, dur: 0.16, type: "triangle" }]);
 // 스페셜 발동(폭발) — 굵은 하강 스윕
 export const sfxSpecial = () => play([{ freq: 700, slideTo: 140, dur: 0.32, type: "sawtooth", gain: 0.85 }]);
+// 막판 카운트다운 틱(잔여 10초) — 낮은 볼륨, 초당 1회
+export const sfxTick = () => play([{ freq: 1150, dur: 0.045, type: "square", gain: 0.22 }]);
+// 피버 진입 스팅어 — 짧은 상승 3연타
+export const sfxFever = () =>
+  play([
+    { freq: 587, dur: 0.07, type: "sawtooth", gain: 0.5 },
+    { freq: 880, dur: 0.07, type: "sawtooth", gain: 0.5 },
+    { freq: 1174, dur: 0.18, type: "sawtooth", gain: 0.55 },
+  ]);
 // 레벨 업 — 상승 팡파레(4음)
 export const sfxLevelUp = () =>
   play([

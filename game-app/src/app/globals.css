@@ -34,9 +34,9 @@
   --color-silver: #c9cdd6;
   --color-bronze: #cd8b57;
 
-  --font-sans: var(--font-noto), ui-sans-serif, system-ui, sans-serif;
-  /* 헤드라인 디스플레이 서체 (포스터) — font-display 유틸 생성 */
-  --font-display: var(--font-black-han), var(--font-noto), ui-sans-serif, sans-serif;
+  /* 도트(픽셀) 폰트 통일 — Galmuri11 (ko/en/ja), 미지원 글리프는 Noto 폴백 */
+  --font-sans: var(--font-galmuri), var(--font-noto), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-galmuri), var(--font-noto), ui-sans-serif, sans-serif;
 }
 
 html {
@@ -49,6 +49,28 @@ body {
   color: var(--color-fg);
   -webkit-font-smoothing: antialiased;
   overscroll-behavior-y: none;
+  font-synthesis: none; /* 도트 폰트 가짜 볼드/이탤릭 합성 방지(뭉개짐) — 900 요청은 700로 클램프 */
+}
+
+/* ── 모바일 안전영역(노치·다이나믹 아일랜드·홈 인디케이터) 대응 ──
+   viewport-fit=cover 상태에서 콘텐츠가 시스템 UI에 가려지지 않도록 인셋 반영.
+   데스크톱/인셋 없는 기기에서는 env()가 0 → 기본값으로 폴백(회귀 없음). */
+.pt-safe {
+  padding-top: max(1rem, calc(env(safe-area-inset-top) + 0.5rem));
+}
+/* 게임 화면 전용 — 상단 now-playing pill 자리(≈2rem)를 노치 인셋 아래에 확보 */
+.pt-safe-game {
+  padding-top: max(2.4rem, calc(env(safe-area-inset-top) + 2.4rem));
+}
+.pb-safe {
+  padding-bottom: max(2rem, calc(env(safe-area-inset-bottom) + 1rem));
+}
+.px-safe {
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  padding-right: max(1.25rem, env(safe-area-inset-right));
+}
+.mb-safe {
+  margin-bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 0.5rem));
 }
 
 /* ── 은은한 마이크로 인터랙션 (2026: 목적 있는 모션) ── */
@@ -126,6 +148,85 @@ body {
   }
 }
 
+/* ── 홈: 스테이지 배경 폴백 (실배경 이미지 없을 때 CSS 근사) ── */
+.stage-bg {
+  background:
+    radial-gradient(60% 40% at 25% 6%, rgba(139, 92, 246, 0.3), transparent 60%),
+    radial-gradient(55% 34% at 82% 12%, rgba(96, 165, 250, 0.24), transparent 60%),
+    radial-gradient(72% 46% at 50% 102%, rgba(236, 72, 153, 0.2), transparent 66%),
+    linear-gradient(180deg, #14101c 0%, #0b0b0d 62%);
+}
+
+/* ── 장식형 게임 버튼 (골드 프레임 + 베벨) — 배경색은 인라인 지정 ── */
+.btn-ornate {
+  border: 2px solid rgba(245, 196, 81, 0.6);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -4px 8px rgba(0, 0, 0, 0.38),
+    0 6px 0 rgba(0, 0, 0, 0.32),
+    0 12px 22px -8px rgba(0, 0, 0, 0.55);
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.45);
+}
+.btn-ornate:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.38),
+    0 3px 0 rgba(0, 0, 0, 0.32),
+    0 6px 14px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* ── 말랑 로고 텍스트 폴백 (실로고 이미지 없을 때) ── */
+.logo-puffy {
+  -webkit-text-stroke: 2px rgba(0, 0, 0, 0.55);
+  paint-order: stroke fill;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.35), 0 6px 14px rgba(0, 0, 0, 0.45);
+  letter-spacing: 0.01em;
+}
+
+/* ── 홈 타이틀 아이들 플로트 (캐주얼 게임 스플래시 감성) ──
+   부양(translateY) + 미세 스웨이(rotate) + 숨쉬는 스케일을 한 루프에 결합.
+   center bottom 기준 → 스프링에 매달린 듯한 유기적 움직임. 과하지 않게 8px·±0.7deg·2%. */
+@keyframes logo-float {
+  0%   { transform: translateY(0)     rotate(-0.7deg) scale(1);    }
+  50%  { transform: translateY(-8px)  rotate(0.7deg)  scale(1.02); }
+  100% { transform: translateY(0)     rotate(-0.7deg) scale(1);    }
+}
+.anim-logo-float {
+  animation: logo-float 3.2s ease-in-out infinite;
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+/* ── 데일리 체크인 선물 살랑 (수령 가능할 때만 주의 환기) ── */
+@keyframes gift-bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  30%      { transform: translateY(-3px) rotate(-3deg); }
+  60%      { transform: translateY(-3px) rotate(3deg); }
+}
+.anim-gift-bob {
+  animation: gift-bob 2s ease-in-out infinite;
+  transform-origin: center bottom;
+  will-change: transform;
+}
+
+/* ── 게임 보드 네온 프레임 (이미지 대신 CSS — 타일 영역 최대화) ── */
+.board-frame {
+  border-radius: 22px;
+  padding: 3px; /* 네온 테두리 두께 */
+  background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 42%, #a855f7 100%);
+  box-shadow:
+    0 0 22px -4px rgba(129, 92, 246, 0.55),
+    0 0 8px -2px rgba(56, 189, 248, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+.board-inner {
+  border-radius: 19px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, #1a1730 0%, #0c0b14 72%);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.55);
+}
+
 /* ── 얇은 스크롤바 ── */
 * {
   scrollbar-width: thin;
@@ -188,6 +289,183 @@ body {
   100% { transform: scale(0.9); opacity: 0; }
 }
 .anim-count-punch { animation: count-punch 0.9s ease-out both; }
+
+/* ── 스페셜 발동 전용 연출 (라인=빔 / 광역·폭탄=링 / 컬러밤=플래시) ── */
+@keyframes fx-beam-h {
+  0% { opacity: 0; transform: scaleX(0.1); }
+  30% { opacity: 1; transform: scaleX(1); }
+  100% { opacity: 0; transform: scaleX(1); }
+}
+@keyframes fx-beam-v {
+  0% { opacity: 0; transform: scaleY(0.1); }
+  30% { opacity: 1; transform: scaleY(1); }
+  100% { opacity: 0; transform: scaleY(1); }
+}
+.fx-beam-h,
+.fx-beam-v {
+  position: absolute;
+  pointer-events: none;
+  z-index: 15;
+  border-radius: 999px;
+}
+.fx-beam-h {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.92) 28%, rgba(255, 255, 255, 0.92) 72%, transparent);
+  box-shadow: 0 0 14px rgba(167, 139, 250, 0.8);
+  animation: fx-beam-h 0.34s ease-out both;
+}
+.fx-beam-v {
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.92) 28%, rgba(255, 255, 255, 0.92) 72%, transparent);
+  box-shadow: 0 0 14px rgba(167, 139, 250, 0.8);
+  animation: fx-beam-v 0.34s ease-out both;
+}
+@keyframes fx-ring {
+  0% { opacity: 0.95; transform: translate(-50%, -50%) scale(0.18); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+.fx-ring {
+  position: absolute;
+  pointer-events: none;
+  z-index: 15;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  border-radius: 9999px;
+  box-shadow: 0 0 18px rgba(245, 196, 81, 0.8), inset 0 0 12px rgba(245, 196, 81, 0.5);
+  animation: fx-ring 0.4s ease-out both;
+}
+@keyframes fx-flash {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.fx-flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 14;
+  border-radius: 12px;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.55), rgba(167, 139, 250, 0.28) 60%, transparent);
+  animation: fx-flash 0.42s ease-out both;
+}
+
+/* ── 피버 상태 (후반 점수 배율 구간) — 프레임 골드 전환 + 러시 비네트 펄스 ── */
+.board-frame {
+  transition: box-shadow 0.4s ease;
+}
+.board-frame-fever {
+  background: linear-gradient(135deg, #f5c451 0%, #fb923c 45%, #ef4444 100%);
+  box-shadow:
+    0 0 26px -4px rgba(245, 196, 81, 0.65),
+    0 0 10px -2px rgba(249, 115, 22, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22);
+}
+@keyframes fever-vignette {
+  0%, 100% { opacity: 0.22; }
+  50% { opacity: 0.55; }
+}
+.fx-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  box-shadow: inset 0 0 90px 18px rgba(239, 68, 68, 0.5);
+  animation: fever-vignette 0.9s ease-in-out infinite;
+}
+
+/* ── 스페셜 타일 표시 (이미지 슬롯 없을 때 CSS 오버레이 폴백) ── */
+/* 라인(십자 폭발): 가로+세로 십자 광선 */
+.sp-line {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  pointer-events: none;
+  background:
+    linear-gradient(0deg, transparent 42%, rgba(255, 255, 255, 0.88) 47%, rgba(255, 255, 255, 0.88) 53%, transparent 58%),
+    linear-gradient(90deg, transparent 42%, rgba(255, 255, 255, 0.88) 47%, rgba(255, 255, 255, 0.88) 53%, transparent 58%);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+/* 광역(폭발 코어): 중앙 골드 코어 펄스 */
+@keyframes sp-core-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.9); }
+  50% { opacity: 0.95; transform: scale(1.08); }
+}
+.sp-area {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 222, 120, 0.95) 0%, rgba(255, 160, 60, 0.5) 34%, transparent 60%);
+  animation: sp-core-pulse 1.1s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+/* 컬러밤: 회전하는 무지개 링 */
+@keyframes sp-spin {
+  to { transform: rotate(360deg); }
+}
+.sp-color {
+  position: absolute;
+  inset: 6%;
+  border-radius: 9999px;
+  pointer-events: none;
+  background: conic-gradient(#f43f5e, #f59e0b, #facc15, #34d399, #3b82f6, #a855f7, #f43f5e);
+  -webkit-mask: radial-gradient(closest-side, transparent 56%, #000 64%);
+  mask: radial-gradient(closest-side, transparent 56%, #000 64%);
+  animation: sp-spin 2.4s linear infinite;
+}
+
+/* ── 재생 중 곡 표시 pill — 회전 레코드 + 이퀄라이저 ── */
+.anim-spin-slow {
+  animation: sp-spin 3s linear infinite;
+}
+@keyframes eq-bounce {
+  0%, 100% { height: 4px; }
+  50% { height: 12px; }
+}
+.eq-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 12px;
+}
+.eq-bars i {
+  width: 2.5px;
+  border-radius: 2px;
+  background: #a78bfa;
+  animation: eq-bounce 0.9s ease-in-out infinite;
+}
+.eq-bars i:nth-child(2) { animation-delay: 0.22s; background: #ec4899; }
+.eq-bars i:nth-child(3) { animation-delay: 0.44s; background: #f5c451; }
+
+/* ── 유휴 힌트 — 유효 스왑 한 쌍 펄스 ── */
+@keyframes hint-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); transform: scale(1); }
+  50% { box-shadow: 0 0 14px 3px rgba(167, 139, 250, 0.85); transform: scale(1.06); }
+}
+.hint-tile {
+  animation: hint-pulse 1s ease-in-out infinite;
+  border-radius: 10px;
+}
+
+/* ── 탭 선택 타일 (탭-탭 스왑) ── */
+.sel-tile {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 0 16px rgba(167, 139, 250, 0.8);
+  transform: scale(1.08);
+  border-radius: 10px;
+}
+
+/* ── 아이템 조준 프리뷰 (범위 셀 하이라이트) ── */
+@keyframes aim-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.75; }
+}
+.aim-cell {
+  position: absolute;
+  pointer-events: none;
+  z-index: 12;
+  border-radius: 10px;
+  background: rgba(245, 196, 81, 0.32);
+  box-shadow: inset 0 0 0 2px rgba(245, 196, 81, 0.9);
+  animation: aim-pulse 0.8s ease-in-out infinite;
+}
 
 /* ── 온보딩 스왑 데모 (한 칸 = 52px) ── */
 /* 첫 블록이 오른쪽 옆 칸으로 이동 */

@@ -17,7 +17,7 @@ const ITEMS: { dest: MoreDest; icon: typeof User; labelKey: string }[] = [
 export default function MoreMenu({ onBack, onNavigate }: { onBack: () => void; onNavigate: (d: MoreDest) => void }) {
   const { t } = useLang();
   return (
-    <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-5 pb-8 pt-4">
+    <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-safe pb-safe pt-safe">
       <ScreenHeader title={t("more_title")} onBack={onBack} />
       <div className="mt-5 flex flex-col gap-2">
         {ITEMS.map(({ dest, icon: Icon, labelKey }) => (
