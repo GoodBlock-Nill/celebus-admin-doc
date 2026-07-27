@@ -26,6 +26,7 @@ export default function ResultModal({
   maxCombo,
   prevBest,
   level,
+  breakdown,
   isNewBest,
   rank,
   submitting,
@@ -38,6 +39,7 @@ export default function ResultModal({
   maxCombo: number;
   prevBest: number;
   level: number;
+  breakdown?: { match: number; chain: number; special: number; fever: number };
   isNewBest: boolean;
   rank: RankInfo | null;
   submitting: boolean;
@@ -107,6 +109,28 @@ export default function ResultModal({
             <div className="text-[15px] font-black tabular-nums text-fg">{Math.max(prevBest, score).toLocaleString()}</div>
           </div>
         </div>
+
+        {/* 점수 분해 — 출처별(매치/연쇄/스페셜·콤보/피버). 0인 항목은 숨김. 합 = 최종 점수 */}
+        {breakdown && breakdown.match + breakdown.chain + breakdown.special + breakdown.fever > 0 && (
+          <div className="mb-4 rounded-[14px] bg-surface-1 px-4 py-2.5 ring-1 ring-hairline">
+            <div className="mb-1 text-left text-[10px] font-bold text-subtle">{t("result_bd_title")}</div>
+            {(
+              [
+                ["result_bd_match", breakdown.match, "text-fg"],
+                ["result_bd_chain", breakdown.chain, "text-primary-400"],
+                ["result_bd_special", breakdown.special, "text-primary-400"],
+                ["result_bd_fever", breakdown.fever, "text-gold"],
+              ] as const
+            )
+              .filter(([, v]) => v > 0)
+              .map(([k, v, cls]) => (
+                <div key={k} className="flex items-center justify-between py-0.5 text-[12px]">
+                  <span className="font-bold text-muted">{t(k)}</span>
+                  <span className={`font-black tabular-nums ${cls}`}>+{v.toLocaleString()}</span>
+                </div>
+              ))}
+          </div>
+        )}
 
         {/* 모드 랭크 (서버 응답) — 상위 50% 이내만 상위% 노출, 그 외 전체 인원 표기 */}
         {(submitting || (rank && rank.rank != null && (rank.total || 0) > 0)) && (

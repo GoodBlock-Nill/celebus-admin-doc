@@ -168,7 +168,7 @@ export default function Match3Game({
   const levelBannerTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [shake, setShake] = useState(false); // 무효 스왑·임팩트 화면 흔들림
   const shakeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [comboFlash, setComboFlash] = useState<{ n: number; key: number } | null>(null); // 콤보 응원 배너
+  const [comboFlash, setComboFlash] = useState<{ n: number; key: number; label?: string } | null>(null); // 콤보 응원 배너(label=메가콤보 전용 문구)
   const comboTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [feverBanner, setFeverBanner] = useState<{ mul: number; key: number } | null>(null); // 피버 진입 배너
   const feverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -181,6 +181,8 @@ export default function Match3Game({
   const punchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [bornIds, setBornIds] = useState<Set<number>>(new Set()); // 방금 생성된 스페셜 타일 id(수렴 연출)
   const reduceMotionRef = useRef(false);
+  // 점수 출처별 집계(결과 화면 분해) — 매치/연쇄/스페셜·콤보/피버. 합 = 최종 점수.
+  const breakdownRef = useRef({ match: 0, chain: 0, special: 0, fever: 0 });
   const shownScore = useCountUp(score); // HUD 점수 오도미터
 
   // 모션 최소화 선호 감지 — 파티클·펀치 등 W2 연출 스킵(접근성)
@@ -237,6 +239,7 @@ export default function Match3Game({
     if (!hasMove(colors)) colors = reshuffle(rngRef.current);
     commitTiles(makeTilesFromColors(colors));
     setScore(0);
+    breakdownRef.current = { match: 0, chain: 0, special: 0, fever: 0 }; // 점수 출처별 집계 리셋
     setCombo(0);
     setMaxCombo(0);
     setPrevBest(0);
@@ -602,6 +605,66 @@ export default function Match3Game({
     setTimeout(() => setFx((f) => f.filter((x) => !ids.has(x.id))), 460);
   }
 
+  // 메가콤보 조합별 전용 시각 연출 — 조합 종류를 한눈에 알아보게 빔/링/플래시 패턴 차등. 배너 문구 반환.
+  function spawnComboFx(a: number, b: number, ts: (Tile | null)[]): string {
+    const ka = ts[a]?.kind;
+    const kb = ts[b]?.kind;
+    if (!ka || !kb) return "MEGA COMBO!";
+    const has = (k: SpecialKind) => ka === k || kb === k;
+    const add: Fx[] = [];
+    const beam = (r: number, c: number) => {
+      add.push({ id: floaterId.current++, type: "beamH", row: r, col: c, span: 0 });
+      add.push({ id: floaterId.current++, type: "beamV", row: r, col: c, span: 0 });
+    };
+    const ring = (r: number, c: number, span: number) => add.push({ id: floaterId.current++, type: "ring", row: r, col: c, span });
+    const flash = () => add.push({ id: floaterId.current++, type: "flash", row: 0, col: 0, span: 0 });
+    const cellsOfColor = (color: number, cap: number) =>
+      ts.map((t, i) => (t && t.color === color ? i : -1)).filter((i) => i >= 0).slice(0, cap);
+    const [ra, ca] = rc(a);
+    const [rb, cb] = rc(b);
+    let label: string;
+    if (ka === "color" && kb === "color") {
+      flash();
+      flash(); // 이중 풀보드 플래시 = 최대 연출
+      label = "RAINBOW!!";
+    } else if (has("color") && has("line")) {
+      // 대상 색 셀마다 빔 십자 = "전부 라인화"
+      flash();
+      for (const i of cellsOfColor(ts[ka === "line" ? a : b]!.color, 8)) beam(rc(i)[0], rc(i)[1]);
+      label = "COLOR LINE!";
+    } else if (has("color") && has("area")) {
+      // 대상 색 셀마다 확산 링 = "전부 폭탄화"
+      flash();
+      for (const i of cellsOfColor(ts[ka === "area" ? a : b]!.color, 8)) ring(rc(i)[0], rc(i)[1], 5);
+      label = "COLOR BLAST!";
+    } else if (ka === "line" && kb === "line") {
+      beam(ra, ca);
+      beam(rb, cb); // 양쪽 십자 = 거대 십자
+      label = "MEGA CROSS!";
+    } else if (has("line") && has("area")) {
+      // 광역 중심 ±1 행/열 굵은 빔 + 라인 십자
+      const areaC = ka === "area" ? a : b;
+      const lineC = ka === "line" ? a : b;
+      const [rA, cA] = rc(areaC);
+      for (let d = -1; d <= 1; d++) {
+        if (rA + d >= 0 && rA + d < SIZE) add.push({ id: floaterId.current++, type: "beamH", row: rA + d, col: cA, span: 0 });
+        if (cA + d >= 0 && cA + d < SIZE) add.push({ id: floaterId.current++, type: "beamV", row: rA, col: cA + d, span: 0 });
+      }
+      beam(rc(lineC)[0], rc(lineC)[1]);
+      ring(rA, cA, 5);
+      label = "FAT CROSS!";
+    } else {
+      ring(ra, ca, 7);
+      ring(rb, cb, 7);
+      flash(); // 광역+광역 = 초대형 이중 링
+      label = "DOUBLE BLAST!";
+    }
+    setFx((f) => [...f, ...add]);
+    const ids = new Set(add.map((x) => x.id));
+    setTimeout(() => setFx((f) => f.filter((x) => !ids.has(x.id))), 480);
+    return label;
+  }
+
   function collapseTiles(ts: (Tile | null)[], cleared: Set<number>, rng: () => number) {
     const n = ts.map((t, i) => (cleared.has(i) ? null : t));
     const spawned = new Set<number>();
@@ -661,7 +724,15 @@ export default function Match3Game({
     const bonus =
       creations.reduce((s, c) => s + (c.kind === "line" ? sc.bonus4 : c.kind === "color" ? sc.bonus5 : sc.bonusCross), 0) +
       squares * sc.bonusSquare;
-    const gained = Math.round((toClear.size * 10 * Math.max(chain, 1) + bonus) * scoreMul(timeLeftRef.current));
+    const rawBase = toClear.size * 10;
+    const chainExtra = rawBase * (Math.max(chain, 1) - 1);
+    const gained = Math.round((rawBase + chainExtra + bonus) * scoreMul(timeLeftRef.current));
+    // 출처별 집계 — 매치(기본)/연쇄(체인 배수분)/스페셜(생성·정사각 보너스)/피버(배수 추가분)
+    const bd = breakdownRef.current;
+    bd.match += rawBase;
+    bd.chain += chainExtra;
+    bd.special += bonus;
+    bd.fever += gained - (rawBase + chainExtra + bonus);
     setScore((s) => s + gained);
     spawnFloater(toClear, gained);
     spawnParticles(toClear, ts); // W2 파편 파티클(셀 색)
@@ -753,6 +824,8 @@ export default function Match3Game({
     const toClear = det.cells;
     setClearing(toClear);
     const gained = Math.round(toClear.size * 10 * scoreMul(timeLeftRef.current));
+    breakdownRef.current.special += toClear.size * 10; // 아이템 발동 = 스페셜 버킷
+    breakdownRef.current.fever += gained - toClear.size * 10;
     setScore((s) => s + gained);
     spawnFloater(toClear, gained);
     spawnParticles(toClear, base); // W2 파편 파티클
@@ -799,23 +872,26 @@ export default function Match3Game({
       // 스페셜을 스왑으로 발동(3매치 불필요). 두 칸 모두 스페셜이면 메가콤보(comboCells).
       const isCombo = !!(swapped[a]?.kind && swapped[b]?.kind);
       triggerShake();
-      sfxSpecial();
       vibrate(isCombo ? 70 : 45);
       const det = detonate(comboCells(a, b, swapped), swapped);
-      spawnFx(det.activated);
       const toClear = det.cells;
       if (isCombo) {
-        // 메가콤보 전용 연출 — 보드 플래시 + 펀치 + 조합 전용음 + 콤보 배너
-        setFx((f) => [...f, { id: floaterId.current++, type: "flash", row: 0, col: 0, span: 0 }]);
+        // 메가콤보 — 조합별 전용 시각 연출 + 펀치 + 조합 전용음 + 조합명 배너
+        const label = spawnComboFx(a, b, swapped);
         triggerPunch();
         sfxCombo();
         const key = floaterId.current++;
-        setComboFlash({ n: Math.max(4, Math.round(toClear.size / 4)), key });
+        setComboFlash({ n: Math.max(4, Math.round(toClear.size / 4)), key, label });
         if (comboTimer.current) clearTimeout(comboTimer.current);
-        comboTimer.current = setTimeout(() => setComboFlash(null), 800);
+        comboTimer.current = setTimeout(() => setComboFlash(null), 900);
+      } else {
+        sfxSpecial();
+        spawnFx(det.activated);
       }
       setClearing(toClear);
       const gained = Math.round(toClear.size * 10 * scoreMul(timeLeftRef.current));
+      breakdownRef.current.special += toClear.size * 10; // 스페셜·메가콤보 발동 = 스페셜 버킷
+      breakdownRef.current.fever += gained - toClear.size * 10;
       setScore((s) => s + gained);
       spawnFloater(toClear, gained);
       spawnParticles(toClear, swapped); // W2 파편(스페셜/콤보 클리어에도)
@@ -1221,19 +1297,27 @@ export default function Match3Game({
           </div>
         )}
 
-        {/* 콤보 응원 배너 (2연쇄부터, 체인 상승 시 강조) */}
+        {/* 콤보 응원 배너 (2연쇄부터). label 있으면 메가콤보 조합명(골드) 강조 */}
         {comboFlash && (
           <div
             key={comboFlash.key}
             className="anim-combo-flash pointer-events-none absolute left-1/2 top-[42%] z-20"
             style={{ transform: "translate(-50%, -50%)" }}
           >
-            <div className="font-display font-black text-primary-400 drop-shadow-lg" style={{ fontSize: `${Math.min(28 + comboFlash.n * 5, 60)}px` }}>
-              {comboFlash.n}x
-            </div>
-            <div className="text-center text-[13px] font-black text-white drop-shadow">
-              {COMBO_WORDS[Math.min(comboFlash.n, COMBO_WORDS.length - 1)] || "COMBO!"}
-            </div>
+            {comboFlash.label ? (
+              <div className="font-display font-black text-gold drop-shadow-[0_2px_10px_rgba(245,196,81,0.7)]" style={{ fontSize: "34px" }}>
+                {comboFlash.label}
+              </div>
+            ) : (
+              <>
+                <div className="font-display font-black text-primary-400 drop-shadow-lg" style={{ fontSize: `${Math.min(28 + comboFlash.n * 5, 60)}px` }}>
+                  {comboFlash.n}x
+                </div>
+                <div className="text-center text-[13px] font-black text-white drop-shadow">
+                  {COMBO_WORDS[Math.min(comboFlash.n, COMBO_WORDS.length - 1)] || "COMBO!"}
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -1332,6 +1416,7 @@ export default function Match3Game({
           maxCombo={maxCombo}
           prevBest={prevBest}
           level={levelRef.current}
+          breakdown={breakdownRef.current}
           isNewBest={isNewBest}
           rank={rank}
           submitting={submitting}
