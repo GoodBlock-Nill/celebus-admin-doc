@@ -236,11 +236,12 @@ body {
 /* ── V01D POP 게임 연출 ── */
 /* 리필 타일 드롭인 */
 @keyframes tile-spawn {
-  0% { transform: translateY(-70%) scale(0.7); opacity: 0.2; }
-  70% { transform: translateY(6%) scale(1.04); opacity: 1; }
+  0% { transform: translateY(-75%) scale(0.7); opacity: 0.2; }
+  58% { transform: translateY(8%) scaleX(1.09) scaleY(0.9); opacity: 1; }   /* 착지 스쿼시(눌림) */
+  78% { transform: translateY(0) scaleX(0.95) scaleY(1.07); }               /* 반동 스트레치(늘어남) */
   100% { transform: translateY(0) scale(1); opacity: 1; }
 }
-.anim-tile-spawn { animation: tile-spawn 0.24s var(--ease-out-soft, cubic-bezier(0.22,1,0.36,1)) both; }
+.anim-tile-spawn { animation: tile-spawn 0.28s var(--ease-out-soft, cubic-bezier(0.22,1,0.36,1)) both; }
 
 /* 매치 클리어 팝(스파클) */
 @keyframes tile-clear {
@@ -289,6 +290,39 @@ body {
   100% { transform: scale(0.9); opacity: 0; }
 }
 .anim-count-punch { animation: count-punch 0.9s ease-out both; }
+
+/* ── W2 타격감 레이어: 파편 파티클 / 보드 펀치(히트스톱) / 스페셜 생성 수렴 ── */
+/* 매치 파편 — 셀 색으로 사방 튀며 소멸(--dx/--dy = 이동 px) */
+@keyframes particle-fly {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px))) scale(0.25); }
+}
+.fx-particle {
+  position: absolute;
+  z-index: 16;
+  width: 7%;
+  height: 7%;
+  border-radius: 9999px;
+  pointer-events: none;
+  box-shadow: 0 0 6px 1px rgba(255, 255, 255, 0.35);
+  animation: particle-fly 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* 큰 매치·스페셜 임팩트 — 보드 순간 펀치(히트스톱 체감) */
+@keyframes board-punch {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.035); }
+  100% { transform: scale(1); }
+}
+.anim-board-punch { animation: board-punch 0.18s ease-out; }
+
+/* 스페셜 생성 순간 — 수렴 차징 팝(밝기 급상승 후 정착) */
+@keyframes special-born {
+  0%   { transform: scale(0.55); filter: brightness(2.4); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.9); }
+  45%  { transform: scale(1.3);  filter: brightness(1.8); box-shadow: 0 0 18px 5px rgba(255, 255, 255, 0.85); }
+  100% { transform: scale(1);    filter: brightness(1);   box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.4); }
+}
+.anim-special-born { animation: special-born 0.42s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
 /* ── 스페셜 발동 전용 연출 (라인=빔 / 광역·폭탄=링 / 컬러밤=플래시) ── */
 @keyframes fx-beam-h {

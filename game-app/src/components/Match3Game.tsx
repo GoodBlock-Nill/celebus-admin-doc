@@ -3,7 +3,7 @@
 // V01D POP — 매치3 게임 (드래그/탭-탭 스왑 + 낙하/클리어 애니메이션 + 온보딩/카운트다운).
 // 타일 id 기반 렌더: 같은 id가 새 셀로 이동 → CSS 트랜지션으로 부드러운 낙하·스왑.
 // 타이머는 벽시계 앵커(백그라운드 스로틀·기권 confirm 중에도 실제 경과 기준 — 랭킹 공정성).
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { X, VolumeX } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -22,6 +22,7 @@ import {
   lineCells,
   areaCells,
   colorCells,
+  comboCells,
   analyzeMatches,
   type SpecialKind,
 } from "@/lib/match3";
@@ -53,6 +54,7 @@ import {
   sfxLevelUp,
   sfxTick,
   sfxFever,
+  sfxCombo,
 } from "@/lib/sfx";
 import { startBgm, stopBgm, setBgmFever, getBgmTrack, bgmEnabled, unlockBgm } from "@/lib/bgm";
 import { track } from "@/lib/track";
@@ -83,6 +85,8 @@ const initialItems = (): Record<ItemType, number> =>
 
 type Tile = { id: number; color: number; kind?: SpecialKind };
 type Floater = { id: number; left: number; top: number; text: string; cls: string };
+// W2 파편 파티클 — 셀 색으로 사방 튀는 조각(--dx/--dy px)
+type Particle = { id: number; left: number; top: number; dx: number; dy: number; color: string };
 type Phase = "intro" | "countdown" | "playing" | "continue" | "over"; // continue = 시간 종료 후 하트 이어하기 선택(일반 매치)
 // 스페셜/아이템 발동 이펙트 (라인=빔 십자 / 광역·폭탄=링 / 컬러밤=플래시)
 type FxKind = SpecialKind | "item-bomb" | "item-line";
@@ -171,7 +175,18 @@ export default function Match3Game({
   const prevMulRef = useRef(1); // 피버 단계 진입 감지
   const [timeBonus, setTimeBonus] = useState<{ n: number; key: number } | null>(null); // +초 플라이업
   const timeBonusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // W2 타격감 — 파편 파티클 / 보드 펀치(히트스톱) / 스페셜 생성 수렴
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const [punch, setPunch] = useState(false);
+  const punchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [bornIds, setBornIds] = useState<Set<number>>(new Set()); // 방금 생성된 스페셜 타일 id(수렴 연출)
+  const reduceMotionRef = useRef(false);
   const shownScore = useCountUp(score); // HUD 점수 오도미터
+
+  // 모션 최소화 선호 감지 — 파티클·펀치 등 W2 연출 스킵(접근성)
+  useEffect(() => {
+    reduceMotionRef.current = typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  }, []);
 
   // 후반 점수 배율(막판 폭발 훅)
   const scoreMul = (tl: number) => {
@@ -388,7 +403,7 @@ export default function Match3Game({
     return () => stopBgm();
   }, [phase]);
   useEffect(() => {
-    setBgmFever(phase === "playing" && scoreMul(timeLeft) > 1); // 피버 시 템포 +20%
+    setBgmFever(phase === "playing" ? scoreMul(timeLeft) : 1); // 피버 시 곡 템포 상승(피치 보존)
   }, [timeLeft, phase]);
   useEffect(() => {
     const onVis = () => {
@@ -535,6 +550,38 @@ export default function Match3Game({
     setTimeout(() => setFloaters((f) => f.filter((x) => x.id !== id)), 760);
   }
 
+  // 보드 순간 펀치 — 큰 매치·스페셜에서 "쿵" 하는 임팩트(히트스톱 체감). rAF 재시작으로 연속 발동.
+  function triggerPunch() {
+    if (reduceMotionRef.current) return;
+    setPunch(false);
+    requestAnimationFrame(() => setPunch(true));
+    if (punchTimer.current) clearTimeout(punchTimer.current);
+    punchTimer.current = setTimeout(() => setPunch(false), 200);
+  }
+
+  // 매치 파편 파티클 — 지워진 셀에서 그 셀 색으로 사방 튀며 소멸. 성능 위해 셀 수 상한.
+  function spawnParticles(cells: Set<number>, ts: (Tile | null)[]) {
+    if (reduceMotionRef.current) return;
+    const arr = [...cells];
+    const capped = arr.length > 18 ? arr.filter((_, k) => k % Math.ceil(arr.length / 18) === 0) : arr;
+    const add: Particle[] = [];
+    for (const i of capped) {
+      const [r, c] = rc(i);
+      const tl = ts[i];
+      const color = tl ? GAME_CONFIG.tiles[tl.color].bg : "#ffffff";
+      const left = (c + 0.5) * cell;
+      const top = (r + 0.5) * cell;
+      for (let p = 0; p < 2; p++) {
+        const ang = Math.random() * Math.PI * 2;
+        const dist = 16 + Math.random() * 26;
+        add.push({ id: floaterId.current++, left, top, dx: Math.cos(ang) * dist, dy: Math.sin(ang) * dist - 6, color });
+      }
+    }
+    setParticles((ps) => [...ps, ...add]);
+    const ids = new Set(add.map((a) => a.id));
+    setTimeout(() => setParticles((ps) => ps.filter((x) => !ids.has(x.id))), 520);
+  }
+
   // 스페셜/아이템 발동 이펙트 스폰 — 라인=십자 빔, 광역/폭탄=확산 링, 컬러밤=보드 플래시
   function spawnFx(list: { cell: number; kind: FxKind }[]) {
     if (!list.length) return;
@@ -617,10 +664,12 @@ export default function Match3Game({
     const gained = Math.round((toClear.size * 10 * Math.max(chain, 1) + bonus) * scoreMul(timeLeftRef.current));
     setScore((s) => s + gained);
     spawnFloater(toClear, gained);
-    sfxMatch(chain);
+    spawnParticles(toClear, ts); // W2 파편 파티클(셀 색)
+    sfxMatch(chain, toClear.size); // 체인 음정 + 큰 매치 저음 임팩트
     if (creations.length) sfxPower(); // 스페셜 생성 시 파워업 사운드
     vibrate(Math.min(8 + chain * 6, 40));
     if (chain >= 3 || toClear.size >= 8) triggerShake();
+    if (chain >= 3 || toClear.size >= 8 || creations.length) triggerPunch(); // W2 보드 펀치(임팩트)
     if (chain >= 2) {
       const key = floaterId.current++;
       setComboFlash({ n: chain, key });
@@ -634,10 +683,18 @@ export default function Match3Game({
           return cr && tl ? { ...tl, kind: cr.kind } : tl;
         })
       : ts;
+    // W2 스페셜 생성 수렴 연출 — 방금 특수타일이 된 타일 id에 born 애니 부여(짧게)
+    if (creations.length) {
+      const bt = new Set(creations.map((c) => marked[c.cell]?.id).filter((x): x is number => x != null));
+      setBornIds(bt);
+      setTimeout(() => setBornIds(new Set()), 440);
+    }
     // 연쇄 가속 — 체인이 깊어질수록 템포 업(캐스케이드 흥분감)
     const p = GAME_CONFIG.pacing;
     const tempo = Math.pow(p.cascadeAccel, Math.max(0, chain - 1));
-    await sleep(Math.max(p.cascadeMinMs, Math.round(200 * tempo)));
+    // 큰 매치는 클리어 순간을 살짝 더 붙잡아 무게감 부여(히트스톱)
+    const hold = toClear.size >= 10 ? 55 : 0;
+    await sleep(Math.max(p.cascadeMinMs, Math.round(200 * tempo)) + hold);
     const { next, spawned } = collapseTiles(marked, toClear, rngRef.current);
     setClearing(new Set());
     setSpawnedIds(spawned);
@@ -698,6 +755,8 @@ export default function Match3Game({
     const gained = Math.round(toClear.size * 10 * scoreMul(timeLeftRef.current));
     setScore((s) => s + gained);
     spawnFloater(toClear, gained);
+    spawnParticles(toClear, base); // W2 파편 파티클
+    triggerPunch(); // W2 아이템 폭발 임팩트
     await sleep(200);
     const { next, spawned } = collapseTiles(base, toClear, rngRef.current);
     setClearing(new Set());
@@ -737,20 +796,29 @@ export default function Match3Game({
     await sleep(120);
 
     if (specialInvolved) {
-      // 스페셜을 스왑으로 발동(3매치 불필요) — 스왑 두 칸의 스페셜을 연쇄 발동
+      // 스페셜을 스왑으로 발동(3매치 불필요). 두 칸 모두 스페셜이면 메가콤보(comboCells).
+      const isCombo = !!(swapped[a]?.kind && swapped[b]?.kind);
       triggerShake();
       sfxSpecial();
-      vibrate(45);
-      const seedCells = new Set<number>();
-      if (swapped[a]?.kind) seedCells.add(a);
-      if (swapped[b]?.kind) seedCells.add(b);
-      const det = detonate(seedCells, swapped);
+      vibrate(isCombo ? 70 : 45);
+      const det = detonate(comboCells(a, b, swapped), swapped);
       spawnFx(det.activated);
       const toClear = det.cells;
+      if (isCombo) {
+        // 메가콤보 전용 연출 — 보드 플래시 + 펀치 + 조합 전용음 + 콤보 배너
+        setFx((f) => [...f, { id: floaterId.current++, type: "flash", row: 0, col: 0, span: 0 }]);
+        triggerPunch();
+        sfxCombo();
+        const key = floaterId.current++;
+        setComboFlash({ n: Math.max(4, Math.round(toClear.size / 4)), key });
+        if (comboTimer.current) clearTimeout(comboTimer.current);
+        comboTimer.current = setTimeout(() => setComboFlash(null), 800);
+      }
       setClearing(toClear);
       const gained = Math.round(toClear.size * 10 * scoreMul(timeLeftRef.current));
       setScore((s) => s + gained);
       spawnFloater(toClear, gained);
+      spawnParticles(toClear, swapped); // W2 파편(스페셜/콤보 클리어에도)
       await sleep(200);
       const { next, spawned } = collapseTiles(swapped, toClear, rngRef.current);
       setClearing(new Set());
@@ -988,7 +1056,7 @@ export default function Match3Game({
         style={{ touchAction: "none" }}
       >
         {/* 네온 프레임 안쪽 다크 보드 */}
-        <div className="board-inner relative h-full w-full overflow-hidden">
+        <div className={`board-inner relative h-full w-full overflow-hidden ${punch ? "anim-board-punch" : ""}`}>
         {/* 타일 플레이영역 — 프레임과 여백 확보(답답함 해소) */}
         <div className="absolute inset-[4.5%]">
         {tiles.map((tile, i) =>
@@ -1009,7 +1077,7 @@ export default function Match3Game({
             >
               <div
                 className={`relative flex h-full w-full items-center justify-center rounded-[10px] text-[min(5.5vw,24px)] leading-none ${
-                  clearing.has(i) ? "anim-tile-clear" : spawnedIds.has(tile.id) ? "anim-tile-spawn" : ""
+                  clearing.has(i) ? "anim-tile-clear" : bornIds.has(tile.id) ? "anim-special-born" : spawnedIds.has(tile.id) ? "anim-tile-spawn" : ""
                 } ${pending ? "cursor-crosshair" : ""} ${tile.kind ? "special-tile ring-2 ring-white/90" : ""} ${
                   selected === i ? "sel-tile" : hint && (hint[0] === i || hint[1] === i) ? "hint-tile" : ""
                 }`}
@@ -1091,6 +1159,23 @@ export default function Match3Game({
             />
           ),
         )}
+
+        {/* W2 매치 파편 파티클 (셀 색으로 사방 튐) */}
+        {particles.map((p) => (
+          <span
+            key={p.id}
+            className="fx-particle"
+            style={
+              {
+                left: `${p.left}%`,
+                top: `${p.top}%`,
+                background: p.color,
+                "--dx": `${p.dx}px`,
+                "--dy": `${p.dy}px`,
+              } as CSSProperties
+            }
+          />
+        ))}
 
         {/* 플로팅 +점수 (획득량·피버별 차등) */}
         {floaters.map((f) => (

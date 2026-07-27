@@ -187,6 +187,67 @@ export function colorCells(b: Board, color: number): Set<number> {
   return s;
 }
 
+// 3줄 두께 십자 (중심 행±1 전체 + 중심 열±1 전체)
+export function fatCrossCells(center: number): Set<number> {
+  const [r0, c0] = rc(center);
+  const s = new Set<number>();
+  for (let dr = -1; dr <= 1; dr++) {
+    const r = r0 + dr;
+    if (r >= 0 && r < SIZE) for (let c = 0; c < SIZE; c++) s.add(idx(r, c));
+  }
+  for (let dc = -1; dc <= 1; dc++) {
+    const c = c0 + dc;
+    if (c >= 0 && c < SIZE) for (let r = 0; r < SIZE; r++) s.add(idx(r, c));
+  }
+  return s;
+}
+
+// 스페셜+스페셜 스왑 = 메가콤보 효과 셀. 두 칸이 모두 스페셜일 때만 강화, 아니면 스페셜 1개의 시드.
+//   ⚠️ 클라(Match3Game)와 서버 리플레이(match-sim)가 반드시 동일 호출 → toClear 동일 → RNG 동기(결정론) 유지.
+export function comboCells(a: number, b: number, cells: readonly ({ color: number; kind?: SpecialKind } | null)[]): Set<number> {
+  const ta = cells[a];
+  const tb = cells[b];
+  const ka = ta?.kind;
+  const kb = tb?.kind;
+  // 두 칸 모두 스페셜 → 조합별 강화 효과
+  if (ka && kb) {
+    const has = (k: SpecialKind) => ka === k || kb === k;
+    const colorsArr = cells.map((c) => (c ? c.color : -1));
+    const base = new Set<number>([a, b]);
+    if (ka === "color" && kb === "color") {
+      for (let i = 0; i < cells.length; i++) base.add(i); // 컬러밤+컬러밤: 보드 전체
+    } else if (has("color") && has("line")) {
+      // 컬러밤+라인: 라인 타일 색의 모든 셀을 라인화(행+열) 발동
+      const lineCell = ka === "line" ? a : b;
+      const target = cells[lineCell]!.color;
+      for (let i = 0; i < cells.length; i++) if (colorsArr[i] === target) for (const cc of lineCells(i)) base.add(cc);
+    } else if (has("color") && has("area")) {
+      // 컬러밤+광역: 광역 타일 색의 모든 셀을 광역(5×5) 폭발
+      const areaCell = ka === "area" ? a : b;
+      const target = cells[areaCell]!.color;
+      for (let i = 0; i < cells.length; i++) if (colorsArr[i] === target) for (const cc of areaCells(i, 2)) base.add(cc);
+    } else if (ka === "line" && kb === "line") {
+      for (const cc of lineCells(a)) base.add(cc); // 라인+라인: 큰 십자(양쪽 행+열)
+      for (const cc of lineCells(b)) base.add(cc);
+    } else if (has("line") && has("area")) {
+      // 라인+광역: 3줄 두께 십자(광역 중심) + 라인 십자
+      const areaCell = ka === "area" ? a : b;
+      const lineCell = ka === "line" ? a : b;
+      for (const cc of fatCrossCells(areaCell)) base.add(cc);
+      for (const cc of lineCells(lineCell)) base.add(cc);
+    } else {
+      for (const cc of areaCells(a, 3)) base.add(cc); // 광역+광역: 더 큰 반경(7×7)
+      for (const cc of areaCells(b, 3)) base.add(cc);
+    }
+    return base;
+  }
+  // 스페셜 1개 → 기존 동작(그 칸만 시드로)
+  const seed = new Set<number>();
+  if (ka) seed.add(a);
+  if (kb) seed.add(b);
+  return seed;
+}
+
 export const areAdjacent = (a: number, b: number): boolean => {
   const [r1, c1] = rc(a);
   const [r2, c2] = rc(b);

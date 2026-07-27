@@ -72,11 +72,47 @@ function play(tones: Tone[]): void {
   }
 }
 
+// 단일 보이스 — 즉시(또는 delay 후) 시작. 여러 번 호출하면 겹쳐서 "레이어드" 사운드 구성.
+function voice(freq: number, dur: number, opts: { type?: OscillatorType; gain?: number; slideTo?: number; delay?: number } = {}): void {
+  if (!soundEnabled()) return;
+  const c = audioCtx();
+  if (!c) return;
+  const master = GAME_CONFIG.audio.volume;
+  const t = c.currentTime + (opts.delay ?? 0);
+  const osc = c.createOscillator();
+  const g = c.createGain();
+  osc.type = opts.type ?? "sine";
+  osc.frequency.setValueAtTime(freq, t);
+  if (opts.slideTo) osc.frequency.exponentialRampToValueAtTime(Math.max(1, opts.slideTo), t + dur);
+  const peak = Math.max(0.0001, (opts.gain ?? 1) * master);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(peak, t + 0.008);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  osc.connect(g).connect(c.destination);
+  osc.start(t);
+  osc.stop(t + dur + 0.02);
+}
+
 // C 계열 상승 사다리 — 콤보가 오를수록 높은 음
 const LADDER = [523.25, 587.33, 659.25, 783.99, 880.0, 1046.5, 1174.7, 1318.5];
 
-export const sfxMatch = (chain: number) =>
+// 매치음 — 체인으로 음정 상승 + 큰 매치일수록 묵직한 저음 임팩트 레이어(size=지운 셀 수)
+export const sfxMatch = (chain: number, size = 0) => {
   play([{ freq: LADDER[Math.min(Math.max(chain, 1) - 1, LADDER.length - 1)], dur: 0.12, type: "triangle", gain: 0.9 }]);
+  if (size >= 5) {
+    const depth = Math.min(size, 18);
+    voice(150 - depth * 4, 0.14, { type: "sine", gain: 0.32 + Math.min(depth, 12) * 0.02 }); // 클수록 더 깊고 크게
+  }
+  if (chain >= 4) voice(LADDER[LADDER.length - 1] * 2, 0.09, { type: "triangle", gain: 0.25, delay: 0.02 }); // 고콤보 스파클
+};
+
+// 스페셜+스페셜 메가콤보 — 저음 스윕 + 상승 리저 + 서브베이스 쿵 + 스파클(웅장한 레이어드)
+export const sfxCombo = () => {
+  voice(220, 0.5, { type: "sawtooth", gain: 0.55, slideTo: 70 });
+  voice(520, 0.45, { type: "triangle", gain: 0.5, slideTo: 1500 });
+  voice(95, 0.2, { type: "sine", gain: 0.6 });
+  voice(1320, 0.26, { type: "square", gain: 0.28, delay: 0.12 });
+};
 export const sfxItem = () => play([{ freq: 320, slideTo: 900, dur: 0.18, type: "sawtooth", gain: 0.7 }]);
 export const sfxInvalid = () => play([{ freq: 190, slideTo: 120, dur: 0.15, type: "square", gain: 0.5 }]);
 export const sfxCountdown = () => play([{ freq: 440, dur: 0.09, type: "sine", gain: 0.6 }]);

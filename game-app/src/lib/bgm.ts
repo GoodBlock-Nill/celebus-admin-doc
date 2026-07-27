@@ -120,6 +120,7 @@ async function playNext(): Promise<void> {
     el.volume = vol;
   }
   el.src = t.url;
+  el.playbackRate = 1; // 새 곡은 항상 정상 배속에서 시작(피버 배속 잔존 방지)
   try {
     await el.play();
   } catch {
@@ -159,7 +160,18 @@ export function stopBgm(): void {
   }
 }
 
-// 실곡에는 템포 변형 미적용(피치 왜곡) — 피버는 시각·SFX 연출이 담당. 호출부 호환용 no-op.
-export function setBgmFever(_on: boolean): void {
-  void _on;
+// 피버 시 곡 템포 상승 — 피치 보존(preservesPitch)으로 배속만 올려 왜곡 없이 긴장감 부여.
+//   mul = 점수 배율(1=평소 / 1.5=피버 / 2=러시). 러시일수록 더 빠르게.
+type RateAudio = HTMLAudioElement & { preservesPitch?: boolean; webkitPreservesPitch?: boolean };
+export function setBgmFever(mul: number): void {
+  if (!el) return;
+  const rate = mul >= 2 ? 1.14 : mul > 1 ? 1.08 : 1.0;
+  try {
+    const a = el as RateAudio;
+    a.preservesPitch = true;
+    a.webkitPreservesPitch = true;
+    if (Math.abs(el.playbackRate - rate) > 0.001) el.playbackRate = rate;
+  } catch {
+    /* ignore */
+  }
 }

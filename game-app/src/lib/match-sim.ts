@@ -16,6 +16,7 @@ import {
   lineCells,
   areaCells,
   colorCells,
+  comboCells,
   type SpecialKind,
 } from "./match3";
 
@@ -126,10 +127,8 @@ export function simulate(seed: number, moves: Move[], cfg: SimConfig = DEFAULT_C
         continue;
       }
       if (specialInvolved) {
-        const seedCells = new Set<number>();
-        if (swapped[a]?.kind) seedCells.add(a);
-        if (swapped[b]?.kind) seedCells.add(b);
-        const toClear = detonate(seedCells, swapped);
+        // 스페셜 1개=시드 발동 / 스페셜 2개=메가콤보 (클라와 동일 comboCells → 결정론 유지)
+        const toClear = detonate(comboCells(a, b, swapped), swapped);
         addScore(sim, toClear.size * 10, cfg.rushMul);
         cells = resolve(collapse(swapped, toClear, rng), rng, sim, cfg);
       } else {
