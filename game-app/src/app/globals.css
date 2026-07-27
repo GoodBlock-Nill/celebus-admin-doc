@@ -405,17 +405,25 @@ body {
 }
 
 /* ── 스페셜 타일 표시 (이미지 슬롯 없을 때 CSS 오버레이 폴백) ── */
-/* 라인(십자 폭발): 가로+세로 십자 광선 */
-.sp-line {
+/* 가로 스트라이프(lineH, 행 제거): 가로 광선 바 */
+.sp-lineH {
   position: absolute;
   inset: 0;
   border-radius: 10px;
   pointer-events: none;
-  background:
-    linear-gradient(0deg, transparent 42%, rgba(255, 255, 255, 0.88) 47%, rgba(255, 255, 255, 0.88) 53%, transparent 58%),
-    linear-gradient(90deg, transparent 42%, rgba(255, 255, 255, 0.88) 47%, rgba(255, 255, 255, 0.88) 53%, transparent 58%);
+  background: linear-gradient(0deg, transparent 38%, rgba(255, 255, 255, 0.9) 45%, rgba(255, 255, 255, 0.9) 55%, transparent 62%);
   mix-blend-mode: screen;
-  opacity: 0.9;
+  opacity: 0.92;
+}
+/* 세로 스트라이프(lineV, 열 제거): 세로 광선 바 */
+.sp-lineV {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent 38%, rgba(255, 255, 255, 0.9) 45%, rgba(255, 255, 255, 0.9) 55%, transparent 62%);
+  mix-blend-mode: screen;
+  opacity: 0.92;
 }
 /* 광역(폭발 코어): 중앙 골드 코어 펄스 */
 @keyframes sp-core-pulse {

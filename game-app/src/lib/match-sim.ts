@@ -14,16 +14,19 @@ import {
   analyzeMatches,
   bombCells,
   lineCells,
+  rowCells,
+  colCells,
   areaCells,
   colorCells,
   comboCells,
+  isLineKind,
   type SpecialKind,
 } from "./match3";
 
 // 점수 상수 — GAME_CONFIG 기본값과 동일(엔진을 config/아이콘 그래프와 분리해 서버·테스트에서 가볍게 사용).
 // 관리자가 remote config로 바꾸면 라우트가 override를 넘겨 반영.
 export type SimConfig = { bonus4: number; bonus5: number; bonusCross: number; bonusSquare: number; rushMul: number };
-const DEFAULT_CFG: SimConfig = { bonus4: 20, bonus5: 50, bonusCross: 30, bonusSquare: 15, rushMul: 2 };
+const DEFAULT_CFG: SimConfig = { bonus4: 40, bonus5: 50, bonusCross: 30, bonusSquare: 15, rushMul: 2 };
 
 type Cell = { color: number; kind?: SpecialKind } | null;
 type Move = { t: number; k: string; a?: number; b?: number; c?: number };
@@ -57,7 +60,8 @@ function detonate(seedCells: Set<number>, cells: Cell[]): Set<number> {
     const i = stack.pop() as number;
     const tl = cells[i];
     if (!tl || !tl.kind) continue;
-    const eff = tl.kind === "line" ? lineCells(i) : tl.kind === "area" ? areaCells(i, 2) : colorCells(colorsOf(cells), tl.color);
+    const eff =
+      tl.kind === "lineH" ? rowCells(i) : tl.kind === "lineV" ? colCells(i) : tl.kind === "area" ? areaCells(i, 2) : colorCells(colorsOf(cells), tl.color);
     for (const cc of eff)
       if (!out.has(cc)) {
         out.add(cc);
@@ -90,7 +94,7 @@ function resolve(cells: Cell[], rng: () => number, sim: Sim, cfg: SimConfig, pre
     const toClear = detonate(base, ts);
     for (const c of creationCells) toClear.delete(c);
     const bonus =
-      creations.reduce((s, c) => s + (c.kind === "line" ? cfg.bonus4 : c.kind === "color" ? cfg.bonus5 : cfg.bonusCross), 0) +
+      creations.reduce((s, c) => s + (isLineKind(c.kind) ? cfg.bonus4 : c.kind === "color" ? cfg.bonus5 : cfg.bonusCross), 0) +
       squares * cfg.bonusSquare;
     addScore(sim, toClear.size * 10 * Math.max(chain, 1) + bonus, cfg.rushMul);
     // 생성 스페셜 kind 표시(붕괴 시 유지)

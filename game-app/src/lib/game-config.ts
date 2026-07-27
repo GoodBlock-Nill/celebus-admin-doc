@@ -33,7 +33,8 @@ export interface GameConfig {
   // 사운드 기본 on/off·마스터 볼륨(0~1) / BGM 기본 on/off·볼륨 / 홈(로비) 음악 볼륨 — 관리자 튜닝
   audio: { enabled: boolean; volume: number; bgm: boolean; bgmVolume: number; homeVolume: number };
   // 스페셜 타일 표시 이미지 슬롯(URL) — 없으면 CSS 오버레이 폴백. 관리자 교체.
-  specials: { line?: string; area?: string; color?: string };
+  //   lineH=가로 스트라이프 / lineV=세로 스트라이프(기본은 CSS 오버레이) / area / color
+  specials: { lineH?: string; lineV?: string; area?: string; color?: string };
   // 후반 점수 배율 곡선(스코어어택 '막판 폭발' 훅) + 연쇄 가속(체인당 딜레이 배수·하한 ms) — 관리자 튜닝
   pacing: { frenzySec: number; frenzyMul: number; rushSec: number; rushMul: number; cascadeAccel: number; cascadeMinMs: number };
   // 레벨 진행 — 레벨 L 클리어 목표 = baseTarget + (L-1)*targetStep, 달성 시 +bonusSec — 관리자 튜닝
@@ -117,10 +118,11 @@ export const GAME_CONFIG: GameConfig = {
     { id: "orange", label: "오렌지", primary: "#f97316" },
   ],
   game: { seconds: 60, maxSeconds: 90, hintSec: 5, timeItemSec: 10 },
-  // bonusSquare: 2×2 정사각 매치 즉시 보너스 — 가장 쉬운 4매치라 라인4(bonus4)보다 낮게
-  scoring: { bonus4: 20, bonus5: 50, bonusCross: 30, bonusSquare: 15 },
+  // bonus4: 4매치(스트라이프) 생성 보너스 — 스트라이프는 십자보다 위력이 약해 생성 보상을 상향(난이도 정합)
+  // bonusSquare: 2×2 정사각 매치 즉시 보너스 — 가장 쉬운 4매치라 bonus4보다 낮게
+  scoring: { bonus4: 40, bonus5: 50, bonusCross: 30, bonusSquare: 15 },
   audio: { enabled: true, volume: 0.22, bgm: true, bgmVolume: 0.1, homeVolume: 0.1 },
-  specials: { line: "/tiles/sp-line.png", area: "/tiles/sp-area.png", color: "/tiles/sp-color.png" },
+  specials: { area: "/tiles/sp-area.png", color: "/tiles/sp-color.png" }, // 스트라이프(lineH/lineV)는 CSS 오버레이(방향 표시)
   pacing: { frenzySec: 15, frenzyMul: 1.5, rushSec: 5, rushMul: 2, cascadeAccel: 0.88, cascadeMinMs: 130 },
   levels: { baseTarget: 800, targetStep: 500, bonusSec: 12 },
   daily: { base: 50, streakStep: 10, maxStreakDays: 7 },

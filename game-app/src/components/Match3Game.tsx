@@ -20,9 +20,12 @@ import {
   areAdjacent,
   bombCells,
   lineCells,
+  rowCells,
+  colCells,
   areaCells,
   colorCells,
   comboCells,
+  isLineKind,
   analyzeMatches,
   type SpecialKind,
 } from "@/lib/match3";
@@ -591,8 +594,12 @@ export default function Match3Game({
     const add: Fx[] = [];
     for (const { cell, kind } of list) {
       const [r, c] = rc(cell);
-      if (kind === "line" || kind === "item-line") {
+      if (kind === "lineH") {
         add.push({ id: floaterId.current++, type: "beamH", row: r, col: c, span: 0 });
+      } else if (kind === "lineV") {
+        add.push({ id: floaterId.current++, type: "beamV", row: r, col: c, span: 0 });
+      } else if (kind === "item-line") {
+        add.push({ id: floaterId.current++, type: "beamH", row: r, col: c, span: 0 }); // 아이템 라인 = 십자
         add.push({ id: floaterId.current++, type: "beamV", row: r, col: c, span: 0 });
       } else if (kind === "area" || kind === "item-bomb") {
         add.push({ id: floaterId.current++, type: "ring", row: r, col: c, span: kind === "area" ? 5 : 3 });
@@ -611,6 +618,7 @@ export default function Match3Game({
     const kb = ts[b]?.kind;
     if (!ka || !kb) return "MEGA COMBO!";
     const has = (k: SpecialKind) => ka === k || kb === k;
+    const hasLine = isLineKind(ka) || isLineKind(kb);
     const add: Fx[] = [];
     const beam = (r: number, c: number) => {
       add.push({ id: floaterId.current++, type: "beamH", row: r, col: c, span: 0 });
@@ -627,24 +635,24 @@ export default function Match3Game({
       flash();
       flash(); // 이중 풀보드 플래시 = 최대 연출
       label = "RAINBOW!!";
-    } else if (has("color") && has("line")) {
+    } else if (has("color") && hasLine) {
       // 대상 색 셀마다 빔 십자 = "전부 라인화"
       flash();
-      for (const i of cellsOfColor(ts[ka === "line" ? a : b]!.color, 8)) beam(rc(i)[0], rc(i)[1]);
+      for (const i of cellsOfColor(ts[isLineKind(ka) ? a : b]!.color, 8)) beam(rc(i)[0], rc(i)[1]);
       label = "COLOR LINE!";
     } else if (has("color") && has("area")) {
       // 대상 색 셀마다 확산 링 = "전부 폭탄화"
       flash();
       for (const i of cellsOfColor(ts[ka === "area" ? a : b]!.color, 8)) ring(rc(i)[0], rc(i)[1], 5);
       label = "COLOR BLAST!";
-    } else if (ka === "line" && kb === "line") {
+    } else if (isLineKind(ka) && isLineKind(kb)) {
       beam(ra, ca);
       beam(rb, cb); // 양쪽 십자 = 거대 십자
       label = "MEGA CROSS!";
-    } else if (has("line") && has("area")) {
+    } else if (hasLine && has("area")) {
       // 광역 중심 ±1 행/열 굵은 빔 + 라인 십자
       const areaC = ka === "area" ? a : b;
-      const lineC = ka === "line" ? a : b;
+      const lineC = isLineKind(ka) ? a : b;
       const [rA, cA] = rc(areaC);
       for (let d = -1; d <= 1; d++) {
         if (rA + d >= 0 && rA + d < SIZE) add.push({ id: floaterId.current++, type: "beamH", row: rA + d, col: cA, span: 0 });
@@ -698,7 +706,8 @@ export default function Match3Game({
       const tl = ts[i];
       if (!tl || !tl.kind) continue;
       activated.push({ cell: i, kind: tl.kind });
-      const cells = tl.kind === "line" ? lineCells(i) : tl.kind === "area" ? areaCells(i, 2) : colorCells(colorsOf(ts), tl.color);
+      const cells =
+        tl.kind === "lineH" ? rowCells(i) : tl.kind === "lineV" ? colCells(i) : tl.kind === "area" ? areaCells(i, 2) : colorCells(colorsOf(ts), tl.color);
       for (const c of cells)
         if (!out.has(c)) {
           out.add(c);
@@ -722,7 +731,7 @@ export default function Match3Game({
     // 큰 매치 즉시 보너스(4→라인, 5→컬러밤, 교차→광역, 2×2 정사각) — 기본 점수와 달리 체인 배수 미적용, 피버 배수만 적용
     const sc = GAME_CONFIG.scoring;
     const bonus =
-      creations.reduce((s, c) => s + (c.kind === "line" ? sc.bonus4 : c.kind === "color" ? sc.bonus5 : sc.bonusCross), 0) +
+      creations.reduce((s, c) => s + (isLineKind(c.kind) ? sc.bonus4 : c.kind === "color" ? sc.bonus5 : sc.bonusCross), 0) +
       squares * sc.bonusSquare;
     const rawBase = toClear.size * 10;
     const chainExtra = rawBase * (Math.max(chain, 1) - 1);
@@ -1186,7 +1195,7 @@ export default function Match3Game({
                       className="pointer-events-none absolute inset-0 h-full w-full rounded-[10px] object-contain"
                     />
                   ) : (
-                    <span className={tile.kind === "line" ? "sp-line" : tile.kind === "area" ? "sp-area" : "sp-color"} />
+                    <span className={`sp-${tile.kind}`} />
                   ))}
               </div>
             </div>

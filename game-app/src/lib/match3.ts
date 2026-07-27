@@ -82,7 +82,9 @@ export function findMatches(b: Board): Set<number> {
 }
 
 // ── 스페셜 타일 ──
-export type SpecialKind = "line" | "area" | "color"; // 라인클리어 / 광역(5x5) / 컬러밤
+// lineH=가로 스트라이프(행 제거) / lineV=세로 스트라이프(열 제거) / area=광역(5x5) / color=컬러밤
+export type SpecialKind = "lineH" | "lineV" | "area" | "color";
+export const isLineKind = (k?: SpecialKind): boolean => k === "lineH" || k === "lineV";
 
 type Run = { cells: number[]; len: number; orient: "h" | "v" };
 
@@ -163,8 +165,9 @@ export function analyzeMatches(
       creations.push({ cell: p, kind: "color" });
       used.add(p);
     } else if (rn.len === 4) {
+      // 가로 4 → 가로 스트라이프(행), 세로 4 → 세로 스트라이프(열)
       const p = pickPivot(rn.cells);
-      creations.push({ cell: p, kind: "line" });
+      creations.push({ cell: p, kind: rn.orient === "h" ? "lineH" : "lineV" });
       used.add(p);
     }
   }
@@ -212,13 +215,14 @@ export function comboCells(a: number, b: number, cells: readonly ({ color: numbe
   // 두 칸 모두 스페셜 → 조합별 강화 효과
   if (ka && kb) {
     const has = (k: SpecialKind) => ka === k || kb === k;
+    const hasLine = isLineKind(ka) || isLineKind(kb);
     const colorsArr = cells.map((c) => (c ? c.color : -1));
     const base = new Set<number>([a, b]);
     if (ka === "color" && kb === "color") {
       for (let i = 0; i < cells.length; i++) base.add(i); // 컬러밤+컬러밤: 보드 전체
-    } else if (has("color") && has("line")) {
-      // 컬러밤+라인: 라인 타일 색의 모든 셀을 라인화(행+열) 발동
-      const lineCell = ka === "line" ? a : b;
+    } else if (has("color") && hasLine) {
+      // 컬러밤+스트라이프: 스트라이프 타일 색의 모든 셀을 라인화(행+열) 발동
+      const lineCell = isLineKind(ka) ? a : b;
       const target = cells[lineCell]!.color;
       for (let i = 0; i < cells.length; i++) if (colorsArr[i] === target) for (const cc of lineCells(i)) base.add(cc);
     } else if (has("color") && has("area")) {
@@ -226,13 +230,13 @@ export function comboCells(a: number, b: number, cells: readonly ({ color: numbe
       const areaCell = ka === "area" ? a : b;
       const target = cells[areaCell]!.color;
       for (let i = 0; i < cells.length; i++) if (colorsArr[i] === target) for (const cc of areaCells(i, 2)) base.add(cc);
-    } else if (ka === "line" && kb === "line") {
-      for (const cc of lineCells(a)) base.add(cc); // 라인+라인: 큰 십자(양쪽 행+열)
+    } else if (isLineKind(ka) && isLineKind(kb)) {
+      for (const cc of lineCells(a)) base.add(cc); // 스트라이프+스트라이프: 큰 십자(양쪽 행+열)
       for (const cc of lineCells(b)) base.add(cc);
-    } else if (has("line") && has("area")) {
-      // 라인+광역: 3줄 두께 십자(광역 중심) + 라인 십자
+    } else if (hasLine && has("area")) {
+      // 스트라이프+광역: 3줄 두께 십자(광역 중심) + 스트라이프 십자
       const areaCell = ka === "area" ? a : b;
-      const lineCell = ka === "line" ? a : b;
+      const lineCell = isLineKind(ka) ? a : b;
       for (const cc of fatCrossCells(areaCell)) base.add(cc);
       for (const cc of lineCells(lineCell)) base.add(cc);
     } else {
@@ -314,11 +318,27 @@ export function bombCells(center: number): Set<number> {
   return s;
 }
 
-// 라인: 해당 행 + 열 전체
+// 라인(십자): 해당 행 + 열 전체 — 아이템 '라인'용(스페셜보다 강함)
 export function lineCells(center: number): Set<number> {
   const [r0, c0] = rc(center);
   const s = new Set<number>();
   for (let c = 0; c < SIZE; c++) s.add(idx(r0, c));
+  for (let r = 0; r < SIZE; r++) s.add(idx(r, c0));
+  return s;
+}
+
+// 가로 스트라이프(lineH): 해당 행 전체
+export function rowCells(center: number): Set<number> {
+  const [r0] = rc(center);
+  const s = new Set<number>();
+  for (let c = 0; c < SIZE; c++) s.add(idx(r0, c));
+  return s;
+}
+
+// 세로 스트라이프(lineV): 해당 열 전체
+export function colCells(center: number): Set<number> {
+  const [, c0] = rc(center);
+  const s = new Set<number>();
   for (let r = 0; r < SIZE; r++) s.add(idx(r, c0));
   return s;
 }
