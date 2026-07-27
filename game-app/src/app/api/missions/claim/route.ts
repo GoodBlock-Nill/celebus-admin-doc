@@ -5,7 +5,7 @@ import { playerHash } from "@/lib/hash";
 import { assertSameOrigin } from "@/lib/origin";
 import { peekVoterId } from "@/lib/anon-identity";
 
-const schema = z.object({ mission: z.enum(["plays", "score", "level"]) });
+const schema = z.object({ mission: z.enum(["plays", "score", "level", "high", "item", "normal"]) });
 
 // 미션 보상 수령 — 서버가 달성 재검증, 중복은 DB PK 차단
 export async function POST(req: Request) {

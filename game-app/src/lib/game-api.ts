@@ -145,20 +145,41 @@ export type LeaderMode = "normal" | "item";
 export type LeaderPeriod = "week" | "month" | "all"; // KST 기준 — 주간=월요일, 월간=1일 초기화
 const modeKey = (m: LeaderMode) => (m === "normal" ? "daily" : "free");
 
-// 점수+레벨 제출 → 서버 검증 후 해당 모드 순위 반환. 실패 시 null.
+// 게임 시작 — 서버가 matchId+seed 발급(점수 위조 방어). 실패 시 null(→ 로컬 시드로 언랭크 플레이).
+export async function startMatch(mode: "daily" | "free"): Promise<{ matchId: string; seed: number } | null> {
+  try {
+    const res = await fetch("/api/scores/start", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data?.match_id) return null;
+    return { matchId: String(data.match_id), seed: Number(data.seed) };
+  } catch {
+    return null;
+  }
+}
+
+// 점수+레벨 제출 → 서버 검증 후 해당 모드 순위 반환. matchId 없으면 랭킹 미등록(null).
 export async function submitScore(input: {
   mode: "daily" | "free";
   seed: number;
   score: number;
   level: number;
+  matchId: string | null;
+  moves?: unknown[]; // 입력 로그(서버 리플레이 검증용, Step 2a 수집)
   nickname: string;
   avatar: string;
 }): Promise<RankInfo | null> {
+  if (!input.matchId) return null; // 서버 발급 matchId 없이는 랭킹 제출 불가
   try {
+    const { matchId, ...rest } = input;
     const res = await fetch("/api/scores", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(input),
+      body: JSON.stringify({ ...rest, match_id: matchId }),
     });
     const data = await res.json();
     if (data?.status !== "ok") return null;

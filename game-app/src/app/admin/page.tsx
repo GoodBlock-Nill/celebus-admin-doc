@@ -1,9 +1,19 @@
 "use client";
 
-// CELEB MATCH 관리 — 내부 운영 도구(한국어 전용). ADMIN_KEY 로그인 → 탭별 운영 기능.
-// 대시보드 / 회원(제재·CP) / 리더보드(기록 삭제) / 금칙어 / 경제(가격) / 설정(game_config) / 감사 로그
+// CELEB MATCH 관리 — 내부 운영 도구(한국어 전용, 데스크톱 웹 우선). ADMIN_KEY 로그인.
+// 데스크톱: 좌측 사이드바 내비 / 모바일: 상단 가로 탭. 콘텐츠는 넓은 폭(테이블 밀도) 기준.
 import { useEffect, useState } from "react";
-import { ShieldCheck } from "lucide-react";
+import {
+  ShieldCheck,
+  LayoutDashboard,
+  Users,
+  Trophy,
+  Ban,
+  Coins,
+  Settings2,
+  ScrollText,
+  ExternalLink,
+} from "lucide-react";
 import { aget } from "@/lib/admin-api";
 import { BTN, INPUT } from "@/components/admin/ui";
 import AdminDashboard from "@/components/admin/AdminDashboard";
@@ -15,13 +25,13 @@ import AdminConfig from "@/components/admin/AdminConfig";
 import AdminLogs from "@/components/admin/AdminLogs";
 
 const TABS = [
-  { key: "dash", label: "대시보드" },
-  { key: "members", label: "회원" },
-  { key: "board", label: "리더보드" },
-  { key: "banned", label: "금칙어" },
-  { key: "economy", label: "경제" },
-  { key: "config", label: "설정" },
-  { key: "logs", label: "로그" },
+  { key: "dash", label: "대시보드", icon: LayoutDashboard, desc: "오늘 지표·활성화·리텐션" },
+  { key: "members", label: "회원", icon: Users, desc: "검색·상세·제재·CP·V01D 멤버 지정" },
+  { key: "board", label: "리더보드", icon: Trophy, desc: "기간별 기록·보상 정산 CSV·기록 삭제" },
+  { key: "banned", label: "금칙어", icon: Ban, desc: "닉네임 금칙어 관리" },
+  { key: "economy", label: "경제", icon: Coins, desc: "CP 발행·소진·유통 + 아이템 가격" },
+  { key: "config", label: "설정", icon: Settings2, desc: "게임 밸런스·연출·테마 원격 설정" },
+  { key: "logs", label: "로그", icon: ScrollText, desc: "관리자 행동·시스템 이벤트 활동 로그" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -57,61 +67,115 @@ export default function AdminPage() {
 
   if (authed !== "yes") {
     return (
-      <main className="mx-auto flex min-h-[100dvh] w-full max-w-sm flex-col items-center justify-center px-6">
-        <ShieldCheck className="h-10 w-10 text-primary-400" />
-        <h1 className="mt-3 text-[18px] font-black">CELEB MATCH 관리</h1>
-        {authed === "checking" ? (
-          <p className="mt-4 text-[12px] text-subtle">세션 확인 중…</p>
-        ) : (
-          <form onSubmit={login} className="mt-5 flex w-full flex-col gap-2">
-            <input
-              value={key}
-              onChange={(e) => setKey(e.target.value)}
-              type="password"
-              autoComplete="current-password"
-              placeholder="관리자 키"
-              className={INPUT}
-            />
-            {err && <p className="text-[12px] font-bold text-danger">{err}</p>}
-            <button type="submit" className={BTN}>
-              로그인
-            </button>
-          </form>
-        )}
+      <main className="admin-shell flex min-h-[100dvh] items-center justify-center px-6">
+        <div className="w-full max-w-sm rounded-[18px] bg-surface-1 p-8 ring-1 ring-hairline">
+          <div className="flex flex-col items-center">
+            <ShieldCheck className="h-10 w-10 text-primary-400" />
+            <h1 className="mt-3 text-[18px] font-black">CELEB MATCH 관리</h1>
+            <p className="mt-1 text-[12.5px] text-muted">내부 운영 전용</p>
+          </div>
+          {authed === "checking" ? (
+            <p className="mt-6 text-center text-[12px] text-subtle">세션 확인 중…</p>
+          ) : (
+            <form onSubmit={login} className="mt-6 flex flex-col gap-2">
+              <input
+                value={key}
+                onChange={(e) => setKey(e.target.value)}
+                type="password"
+                autoComplete="current-password"
+                placeholder="관리자 키"
+                className={INPUT}
+              />
+              {err && <p className="text-[12px] font-bold text-danger">{err}</p>}
+              <button type="submit" className={BTN}>
+                로그인
+              </button>
+            </form>
+          )}
+        </div>
       </main>
     );
   }
 
+  const active = TABS.find((t) => t.key === tab)!;
+
   return (
-    <main className="mx-auto flex min-h-[100dvh] w-full max-w-2xl flex-col gap-4 px-4 pb-16 pt-6">
-      <header className="flex items-center justify-between">
-        <h1 className="flex items-center gap-2 text-[18px] font-black">
-          <ShieldCheck className="h-5 w-5 text-primary-400" /> CELEB MATCH 관리
-        </h1>
-        <span className="text-[11px] text-subtle">internal only</span>
-      </header>
-
-      <nav className="flex flex-wrap gap-1.5">
-        {TABS.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`rounded-full px-3.5 py-1.5 text-[12.5px] font-bold ring-1 transition-colors ${
-              tab === t.key ? "bg-primary text-white ring-primary" : "bg-surface-1 text-muted ring-hairline"
-            }`}
+    <div className="admin-shell flex min-h-[100dvh]">
+      {/* ── 사이드바 (데스크톱) ── */}
+      <aside className="sticky top-0 hidden h-[100dvh] w-[220px] shrink-0 flex-col border-r border-hairline bg-surface-1/60 px-3 py-5 lg:flex">
+        <div className="flex items-center gap-2 px-2">
+          <ShieldCheck className="h-5 w-5 text-primary-400" />
+          <div>
+            <div className="text-[14px] font-black leading-tight">CELEB MATCH</div>
+            <div className="text-[10px] font-bold text-subtle">관리 콘솔</div>
+          </div>
+        </div>
+        <nav className="mt-6 flex flex-col gap-0.5">
+          {TABS.map(({ key: k, label, icon: Icon }) => (
+            <button
+              key={k}
+              onClick={() => setTab(k)}
+              className={`flex items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-left text-[14.5px] font-bold transition-colors ${
+                tab === k ? "bg-primary text-white" : "text-muted hover:bg-surface-2 hover:text-fg"
+              }`}
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              {label}
+            </button>
+          ))}
+        </nav>
+        <div className="mt-auto flex flex-col gap-2 px-2">
+          <a
+            href="/"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-1.5 text-[11.5px] font-bold text-subtle transition-colors hover:text-fg"
           >
-            {t.label}
-          </button>
-        ))}
-      </nav>
+            <ExternalLink className="h-3.5 w-3.5" /> 게임 열기
+          </a>
+          <span className="text-[11px] text-subtle">내부 운영 전용</span>
+        </div>
+      </aside>
 
-      {tab === "dash" && <AdminDashboard />}
-      {tab === "members" && <AdminMembers />}
-      {tab === "board" && <AdminBoard />}
-      {tab === "banned" && <AdminBanned />}
-      {tab === "economy" && <AdminEconomy />}
-      {tab === "config" && <AdminConfig />}
-      {tab === "logs" && <AdminLogs />}
-    </main>
+      {/* ── 콘텐츠 ── */}
+      <main className="min-w-0 flex-1">
+        {/* 모바일 헤더 + 가로 탭 */}
+        <div className="border-b border-hairline px-4 pb-3 pt-4 lg:hidden">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-primary-400" />
+            <span className="text-[15px] font-black">CELEB MATCH 관리</span>
+          </div>
+          <nav className="scrollbar-none mt-3 flex gap-1.5 overflow-x-auto">
+            {TABS.map((t) => (
+              <button
+                key={t.key}
+                onClick={() => setTab(t.key)}
+                className={`shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-bold ring-1 transition-colors ${
+                  tab === t.key ? "bg-primary text-white ring-primary" : "bg-surface-1 text-muted ring-hairline"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <div className="mx-auto w-full max-w-[1100px] px-4 pb-16 pt-5 lg:px-8 lg:pt-8">
+          {/* 섹션 헤더 (데스크톱) */}
+          <header className="mb-5 hidden lg:block">
+            <h1 className="text-[22px] font-black">{active.label}</h1>
+            <p className="mt-1 text-[13.5px] text-muted">{active.desc}</p>
+          </header>
+
+          {tab === "dash" && <AdminDashboard />}
+          {tab === "members" && <AdminMembers />}
+          {tab === "board" && <AdminBoard />}
+          {tab === "banned" && <AdminBanned />}
+          {tab === "economy" && <AdminEconomy />}
+          {tab === "config" && <AdminConfig />}
+          {tab === "logs" && <AdminLogs />}
+        </div>
+      </main>
+    </div>
   );
 }

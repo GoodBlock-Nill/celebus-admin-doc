@@ -7,8 +7,17 @@ import { getThemePrimary, setThemePrimary } from "@/lib/game-api";
 import ScreenHeader from "./ScreenHeader";
 import { useLang } from "./LangProvider";
 
-// 게임 테마 카드 미리보기 — 스테이지 배경 + 보드 네온 프레임 축소 렌더
+// 게임 테마 카드 미리보기 — 홈 배경 아트(멤버+무대) 사용, 없으면 CSS 무대 렌더 폴백
 function ThemePreviewCard() {
+  const bg = GAME_CONFIG.home.background;
+  if (bg) {
+    return (
+      <div className="relative h-[230px] overflow-hidden rounded-[14px]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={bg} alt="" className="h-full w-full object-cover" style={{ objectPosition: "center 40%" }} />
+      </div>
+    );
+  }
   return (
     <div className="stage-bg relative flex h-[112px] items-center justify-center overflow-hidden rounded-[14px]">
       <div className="board-frame h-[64px] w-[64px]">

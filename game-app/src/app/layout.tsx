@@ -16,8 +16,8 @@ const galmuri = localFont({
 // 폴백(미지원 글리프·이모지 옆 텍스트) — Noto Sans KR
 const noto = Noto_Sans_KR({ subsets: ["latin"], weight: ["400", "700", "900"], variable: "--font-noto", display: "swap" });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://game-app-rho-pearl.vercel.app";
-const TITLE = "CELEB MATCH";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://match.celebus.xyz";
+const TITLE = "CELEB MATCH (Beta)"; // 정식 전환 시 "(Beta)" 제거
 const DESCRIPTION = "최애와 함께하는 매치3 퍼즐! 타일을 맞춰 콤보를 터뜨리고 주간 랭킹에 도전하세요 💜";
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   manifest: "/manifest.json",
-  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: TITLE },
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "CELEB MATCH" }, // 아이콘 라벨은 짧게 유지
   icons: { icon: "/icons/icon-192.png", shortcut: "/icons/icon-192.png", apple: "/icons/icon-192.png" },
   openGraph: {
     type: "website",

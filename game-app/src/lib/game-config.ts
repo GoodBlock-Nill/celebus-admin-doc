@@ -10,6 +10,8 @@ export type TileSkin = { glyph: string; bg: string; img?: string; cover?: boolea
 export type ItemType = "bomb" | "line" | "shuffle" | "time";
 // 상점 판매 품목 = 게임 아이템 + 하트(일반 매치 이어하기)
 export type ShopItemType = ItemType | "heart";
+// 데일리 미션 종류 — 모두 game_scores 당일 집계로 검증 가능한 지표
+export type MissionId = "plays" | "score" | "level" | "high" | "item" | "normal";
 // price = 상점 표시용(CELEB Point). 실제 과금은 서버 game_item_catalog가 권위 — 값 동기 유지 필요.
 export type ItemDef = { type: ItemType; icon: LucideIcon; labelKey: string; start: number; price: number };
 export type ThemePreset = { id: string; label: string; primary: string };
@@ -27,7 +29,7 @@ export interface GameConfig {
   // 라운드 길이 / 시간+ 상한 / 유휴 힌트 대기 초(0=끔) / 시간+ 아이템 추가 초 — 관리자 튜닝
   game: { seconds: number; maxSeconds: number; hintSec: number; timeItemSec: number };
   // 4매치(라인)·5매치(컬러밤)·교차 매치(광역) 즉시 보너스 점수 — 관리자 튜닝
-  scoring: { bonus4: number; bonus5: number; bonusCross: number };
+  scoring: { bonus4: number; bonus5: number; bonusCross: number; bonusSquare: number };
   // 사운드 기본 on/off·마스터 볼륨(0~1) / BGM 기본 on/off·볼륨 / 홈(로비) 음악 볼륨 — 관리자 튜닝
   audio: { enabled: boolean; volume: number; bgm: boolean; bgmVolume: number; homeVolume: number };
   // 스페셜 타일 표시 이미지 슬롯(URL) — 없으면 CSS 오버레이 폴백. 관리자 교체.
@@ -41,15 +43,28 @@ export interface GameConfig {
   // 게임 플레이 BGM 트랙 목록 — 랜덤 재생, 곡명은 헤더 표시. 관리자 교체(배열 = 통째 교체)
   bgmTracks: { url: string; title: string; artist?: string }[];
   // 데일리 미션 목표·보상 (KST 일 리셋) — 관리자 튜닝
-  missions: { plays: number; playsCp: number; totalScore: number; scoreCp: number; bestLevel: number; levelCp: number };
+  // 데일리 미션 — 풀에서 매일 count개 로테이션(KST 날짜 결정론). id별 목표·보상 CP. 관리자 튜닝.
+  missions: { count: number; pool: { id: MissionId; goal: number; cp: number }[] };
   // 주간 랭킹 보상표 — 인덱스 = 순위-1 (CP). 두 모드 각각 지급 — 관리자 튜닝(고급 JSON)
   rewards: { weeklyTop: number[] };
   // 이어하기 하트 (일반 매치 전용) — 판당 기본 start개 + 상점 구매 보유분. slots=표시 슬롯 수, maxPerRun=판당 사용 상한(랭킹 공정성), price=상점 폴백 표시가(권위는 카탈로그) — 관리자 튜닝
   hearts: { start: number; slots: number; maxPerRun: number; continueSec: number; price: number };
   // 홈 아트 에셋 슬롯(URL) — 없으면 CSS/텍스트 폴백. music = 로비 배경음악(게임 화면 제외 전 메뉴 재생). 관리자가 교체.
-  home: { background?: string; logo?: string; hero?: string; music?: string };
+  home: { background?: string; logo?: string; hero?: string; music?: string; beta?: boolean; parentAppUrl?: string };
   // 게임 플레이 화면 아트 슬롯(URL) — 스테이지 배경. 없으면 CSS 폴백. 관리자 교체.
   match: { background?: string };
+  // 점수 위조 방어 튜너블 — 레벨당 최소 시간(초)·초당 점수율 상한(초과=거부)·의심 임계(초과=플래그).
+  //   서버 리플레이: replayEnforceModes=거부 활성 모드(자동 관리), replayAutoEnable=자동 승격 on/off,
+  //   replayMinGamesPerMode=승격 최소 관찰 게임 수, replayMaxMismatchPct=승격 허용 명백조작률(%). 관리자 조정.
+  integrity: {
+    minSecPerLevel: number;
+    maxScorePerSec: number;
+    suspectScorePerSec: number;
+    replayEnforceModes: string[];
+    replayAutoEnable: boolean;
+    replayMinGamesPerMode: number;
+    replayMaxMismatchPct: number;
+  };
 }
 
 export const GAME_CONFIG: GameConfig = {
@@ -102,7 +117,8 @@ export const GAME_CONFIG: GameConfig = {
     { id: "orange", label: "오렌지", primary: "#f97316" },
   ],
   game: { seconds: 60, maxSeconds: 90, hintSec: 5, timeItemSec: 10 },
-  scoring: { bonus4: 20, bonus5: 50, bonusCross: 30 },
+  // bonusSquare: 2×2 정사각 매치 즉시 보너스 — 가장 쉬운 4매치라 라인4(bonus4)보다 낮게
+  scoring: { bonus4: 20, bonus5: 50, bonusCross: 30, bonusSquare: 15 },
   audio: { enabled: true, volume: 0.22, bgm: true, bgmVolume: 0.1, homeVolume: 0.1 },
   specials: { line: "/tiles/sp-line.png", area: "/tiles/sp-area.png", color: "/tiles/sp-color.png" },
   pacing: { frenzySec: 15, frenzyMul: 1.5, rushSec: 5, rushMul: 2, cascadeAccel: 0.88, cascadeMinMs: 130 },
@@ -114,11 +130,32 @@ export const GAME_CONFIG: GameConfig = {
     { url: "/bgm/game/the-one.m4a", title: "The One", artist: "V01D" },
     { url: "/bgm/game/tug-of-war.m4a", title: "Tug of War", artist: "V01D" },
   ],
-  missions: { plays: 3, playsCp: 20, totalScore: 2000, scoreCp: 20, bestLevel: 3, levelCp: 30 },
+  missions: {
+    count: 3,
+    pool: [
+      { id: "plays", goal: 3, cp: 20 }, // 오늘 N판
+      { id: "score", goal: 2000, cp: 20 }, // 오늘 누적 점수
+      { id: "level", goal: 3, cp: 30 }, // 최고 레벨 도달
+      { id: "high", goal: 1500, cp: 20 }, // 한 판 최고 점수
+      { id: "item", goal: 2, cp: 20 }, // 아이템 매치 N판
+      { id: "normal", goal: 2, cp: 20 }, // 일반 매치 N판
+    ],
+  },
   rewards: { weeklyTop: [100, 70, 50, 30, 30, 20, 20, 20, 20, 20] },
   hearts: { start: 1, slots: 6, maxPerRun: 3, continueSec: 30, price: 5 },
-  home: { background: "/home-bg.png", logo: "/celeb-title.png", music: "/bgm/rockrock-v2.mp3" },
+  // beta: 베타 뱃지 노출 — 정식 전환 시 관리자 설정(home.beta=false)으로 배포 없이 제거
+  // parentAppUrl: 홈의 'CELEBUS로' 버튼 목적지 — 관리자 교체 가능
+  home: { background: "/home-bg.png", logo: "/celeb-title.png", music: "/bgm/rockrock-v2.mp3", beta: true, parentAppUrl: "https://app.celebus.xyz" },
   match: { background: "/match-bg.png" },
+  integrity: {
+    minSecPerLevel: 5,
+    maxScorePerSec: 800,
+    suspectScorePerSec: 500,
+    replayEnforceModes: [], // 자동 관리 — 비어있으면 전체 섀도우(거부 없음)
+    replayAutoEnable: true,
+    replayMinGamesPerMode: 200,
+    replayMaxMismatchPct: 1,
+  },
 };
 
 // 기본 아바타 (미선택·미해석 폴백) — 함수로 노출해 부트 오버라이드 반영(모듈 상수 고착 방지)
@@ -137,7 +174,7 @@ export function signupAvatars(): AvatarDef[] {
 type ConfigOverride = Partial<Omit<GameConfig, "items">>;
 export function mergeRemoteConfig(override: ConfigOverride | null | undefined): void {
   if (!override || typeof override !== "object") return;
-  const obj = ["theme", "game", "audio", "pacing", "levels", "daily", "home", "match", "specials", "scoring", "hearts", "rewards", "missions"] as const;
+  const obj = ["theme", "game", "audio", "pacing", "levels", "daily", "home", "match", "specials", "scoring", "hearts", "rewards", "missions", "integrity"] as const;
   for (const k of obj) {
     const v = override[k];
     if (v && typeof v === "object" && !Array.isArray(v)) Object.assign(GAME_CONFIG[k], v);

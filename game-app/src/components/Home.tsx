@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LayoutGrid } from "lucide-react";
+import { LayoutGrid, ChevronLeft } from "lucide-react";
 import { GAME_CONFIG } from "@/lib/game-config";
 import { getNick, getAvatar, fetchAccount, getDailyStatus, claimWeeklyReward, type WeeklyReward } from "@/lib/game-api";
 import { kstWeekStart } from "@/lib/week";
 import { unlockAudio } from "@/lib/sfx";
 import { unlockBgm } from "@/lib/bgm";
 import Avatar from "./Avatar";
+import BetaBadge from "./BetaBadge";
 import DailyReward from "./DailyReward";
 import WeeklyResultModal from "./WeeklyResultModal";
 import DailyMissions from "./DailyMissions";
@@ -80,23 +81,42 @@ export default function Home({
       </div>
 
       {/* 상단 바 */}
-      <header className="flex items-center justify-between gap-2 px-4 pt-safe">
-        <button
-          onClick={() => setShowProfile(true)}
-          aria-label={t("profile_edit")}
-          className="flex items-center gap-1.5 rounded-full bg-black/45 py-1 pl-1 pr-3 ring-1 ring-white/15 backdrop-blur active:scale-95"
-        >
-          <Avatar value={avatar} size="sm" />
-          <span className="max-w-[84px] truncate text-[12px] font-black text-white">{nick || t("nickname_ph")}</span>
-        </button>
+      <header className="flex flex-col gap-2 px-4 pt-safe">
+        {/* 상단 슬림 바 — 상위 앱 복귀 + 언어 (내비 크롬, 가벼운 톤) */}
+        <div className="flex items-center justify-between">
+          {home.parentAppUrl ? (
+            <button
+              onClick={() => {
+                window.location.href = home.parentAppUrl!;
+              }}
+              aria-label={t("home_back_celebus_aria")}
+              className="group flex items-center gap-0.5 rounded-full py-1 pl-1.5 pr-2.5 text-white/80 transition-colors active:scale-95 hover:text-white"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="text-[11.5px] font-bold tracking-wide">{t("home_back_celebus")}</span>
+            </button>
+          ) : (
+            <span />
+          )}
+          <LangSwitcher />
+        </div>
 
-        <div className="flex items-center gap-1.5">
+        {/* 프로필 + 포인트 (여유 있게) */}
+        <div className="flex items-center justify-between gap-2">
+          <button
+            onClick={() => setShowProfile(true)}
+            aria-label={t("profile_edit")}
+            className="flex items-center gap-1.5 rounded-full bg-black/45 py-1 pl-1 pr-3.5 ring-1 ring-white/15 backdrop-blur active:scale-95"
+          >
+            <Avatar value={avatar} size="sm" />
+            <span className="max-w-[140px] truncate text-[12.5px] font-black text-white">{nick || t("nickname_ph")}</span>
+          </button>
+
           <span className="inline-flex items-center gap-1.5 rounded-full bg-black/45 py-1 pl-1 pr-3 ring-1 ring-white/15 backdrop-blur">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/currency.png" alt="CELEB Point" className="h-6 w-6 drop-shadow-[0_1px_3px_rgba(0,0,0,0.45)]" />
             <span className="text-[13px] font-black tabular-nums text-white">{(point ?? 0).toLocaleString()}</span>
           </span>
-          <LangSwitcher />
         </div>
       </header>
 
@@ -104,8 +124,11 @@ export default function Home({
       <div className="mt-6 flex flex-col items-center px-5 text-center">
         {home.logo ? (
           // 로고 이미지에 서브타이틀이 포함된 경우가 있어 별도 리본은 폴백(텍스트) 모드에서만 노출
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={home.logo} alt="CELEB MATCH" className="anim-logo-float max-h-[150px] w-auto drop-shadow-[0_6px_16px_rgba(0,0,0,0.5)]" />
+          <div className="relative">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={home.logo} alt="CELEB MATCH" className="anim-logo-float max-h-[150px] w-auto drop-shadow-[0_6px_16px_rgba(0,0,0,0.5)]" />
+            <BetaBadge className="absolute -right-3 top-2" />
+          </div>
         ) : (
           <>
             <div className="font-display font-black leading-[0.9]">

@@ -94,7 +94,7 @@ export async function buildResultCard(input: {
   // 하단 URL
   g.fillStyle = "rgba(255,255,255,0.4)";
   g.font = `700 30px ${fam}`;
-  g.fillText("game-app-rho-pearl.vercel.app", W / 2, 1010);
+  g.fillText("match.celebus.xyz", W / 2, 1010);
 
   return new Promise((resolve) => canvas.toBlob((b) => resolve(b), "image/png"));
 }

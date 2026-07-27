@@ -94,12 +94,14 @@ const colorsOf = (ts: (Tile | null)[]) => ts.map((t) => (t ? t.color : -1));
 export default function Match3Game({
   seed,
   mode = "free",
+  matchId = null,
   onExit,
   onGameOver,
   onViewRanking,
 }: {
   seed: number;
   mode?: "free" | "daily";
+  matchId?: string | null; // 서버 발급 matchId — 점수 제출 시 필수(위조 방어)
   onExit?: () => void;
   onGameOver?: (score: number) => void;
   onViewRanking?: () => void;
@@ -136,6 +138,12 @@ export default function Match3Game({
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false); // 핸들러·비동기 완료 시점의 최신 busy 참조(입력 버퍼링용)
   const bufferedRef = useRef<{ a: number; b: number } | null>(null); // 캐스케이드 중 예약된 드래그 스왑(마지막 1건)
+  // 입력 로그(서버 리플레이 검증용, Step 2a 수집) — 스왑·아이템·이어하기 + 상대 타이밍(ms)
+  const movesRef = useRef<{ t: number; k: string; a?: number; b?: number; c?: number }[]>([]);
+  const matchStartRef = useRef(0);
+  const logMove = (m: { k: string; a?: number; b?: number; c?: number }) => {
+    if (movesRef.current.length < 3000) movesRef.current.push({ t: Date.now() - matchStartRef.current, ...m });
+  };
   const [items, setItems] = useState<Record<ItemType, number>>(initialItems);
   const [pending, setPending] = useState<ItemType | null>(null);
   const [aim, setAim] = useState<number | null>(null); // 아이템 조준 셀(1차 탭 = 범위 프리뷰)
@@ -258,6 +266,7 @@ export default function Match3Game({
     } catch {
       /* ignore */
     }
+    movesRef.current = []; // 새 판 입력 로그 초기화
     // 온보딩: 최초 1회 자동 표시 + 설정으로 강제 표시 시. 이후엔 바로 카운트다운.
     setPhase(getOnboarding() || !getSeenIntro() ? "intro" : "countdown");
   }, [seed, mode, bestKey, makeTilesFromColors, setBusyState, commitTiles]);
@@ -289,6 +298,7 @@ export default function Match3Game({
           // 일반 매치: 하트 = 기본 지급 + 상점 구매 보유분
           setHearts(GAME_CONFIG.hearts.start + (invRef.current.heart ?? 0));
         }
+        matchStartRef.current = Date.now(); // 입력 로그 타임라인 기준(플레이 시작)
         setPhase("playing");
         track("first_game"); // 퍼널: 첫 판 시작 (기기당 1회 dedup)
       } else {
@@ -435,7 +445,7 @@ export default function Match3Game({
       // 두 모드 모두 랭킹 제출(모드별 별도 보드) — 랭크는 (최고 레벨, 누적 점수). 0점 제외.
       if (score > 0) {
         setSubmitting(true);
-        submitScore({ mode, seed, score, level: levelRef.current, nickname: getNick(), avatar: getAvatar() })
+        submitScore({ mode, seed, score, level: levelRef.current, matchId, moves: movesRef.current, nickname: getNick(), avatar: getAvatar() })
           .then((r) => {
             setRank(r);
             if (!r) {
@@ -457,7 +467,7 @@ export default function Match3Game({
       }
       consumeUsed(); // 기본 지급 초과 사용분 서버 차감 (free=아이템 / daily=하트)
     }
-  }, [timeLeft, phase, busy, score, best, bestKey, onGameOver, mode, seed, t, hearts]);
+  }, [timeLeft, phase, busy, score, best, bestKey, onGameOver, mode, seed, matchId, t, hearts]);
 
   // 기본 지급 초과 사용분 서버 인벤토리 차감 — 종료·기권 공통 (기권 시 공짜 사용 악용 방지)
   function consumeUsed() {
@@ -481,6 +491,7 @@ export default function Match3Game({
   // 하트 이어하기 — 1개 소모 후 continueSec으로 재시작(점수·레벨 유지)
   function continueWithHeart() {
     const sec = GAME_CONFIG.hearts.continueSec;
+    logMove({ k: "c" }); // 이어하기(+시간 — 리플레이 로그)
     heartsUsedRef.current += 1;
     setHearts((h) => Math.max(0, h - 1));
     endAtRef.current = Date.now() + sec * 1000;
@@ -593,16 +604,16 @@ export default function Match3Game({
     toClear: Set<number>,
     chain: number,
     creations: { cell: number; kind: SpecialKind }[],
+    squares = 0,
   ): Promise<(Tile | null)[]> {
     setCombo(chain);
     setMaxCombo((m) => Math.max(m, chain));
     setClearing(toClear);
-    // 큰 매치 즉시 보너스(4→라인, 5→컬러밤, 교차→광역) — 기본 점수와 달리 체인 배수 미적용, 피버 배수만 적용
+    // 큰 매치 즉시 보너스(4→라인, 5→컬러밤, 교차→광역, 2×2 정사각) — 기본 점수와 달리 체인 배수 미적용, 피버 배수만 적용
     const sc = GAME_CONFIG.scoring;
-    const bonus = creations.reduce(
-      (s, c) => s + (c.kind === "line" ? sc.bonus4 : c.kind === "color" ? sc.bonus5 : sc.bonusCross),
-      0,
-    );
+    const bonus =
+      creations.reduce((s, c) => s + (c.kind === "line" ? sc.bonus4 : c.kind === "color" ? sc.bonus5 : sc.bonusCross), 0) +
+      squares * sc.bonusSquare;
     const gained = Math.round((toClear.size * 10 * Math.max(chain, 1) + bonus) * scoreMul(timeLeftRef.current));
     setScore((s) => s + gained);
     spawnFloater(toClear, gained);
@@ -640,7 +651,7 @@ export default function Match3Game({
     let chain = 0;
     let pref = prefer;
     for (;;) {
-      const { cleared, creations } = analyzeMatches(colorsOf(ts), pref);
+      const { cleared, creations, squares } = analyzeMatches(colorsOf(ts), pref);
       pref = [];
       if (cleared.size === 0) break;
       chain++;
@@ -655,7 +666,7 @@ export default function Match3Game({
         triggerShake();
       }
       for (const c of creationCells) toClear.delete(c);
-      ts = await applyClear(ts, toClear, chain, creations);
+      ts = await applyClear(ts, toClear, chain, creations, squares);
     }
     setCombo(0);
     if (!hasMove(colorsOf(ts))) {
@@ -676,6 +687,7 @@ export default function Match3Game({
 
   async function clearWithItem(type: "bomb" | "line", center: number, base: (Tile | null)[]) {
     setBusyState(true);
+    logMove({ k: type === "bomb" ? "b" : "l", c: center }); // 아이템 사용(리플레이 로그)
     triggerShake(); // 아이템 폭발 임팩트
     vibrate(35);
     const seedCells = type === "bomb" ? bombCells(center) : lineCells(center);
@@ -720,6 +732,7 @@ export default function Match3Game({
     }
 
     setBusyState(true);
+    logMove({ k: "s", a, b }); // 유효 스왑 커밋(리플레이 로그)
     commitTiles(swapped);
     await sleep(120);
 
@@ -832,11 +845,13 @@ export default function Match3Game({
   function useItem(type: ItemType) {
     if (phase !== "playing" || busyRef.current || items[type] <= 0) return;
     if (type === "time") {
+      logMove({ k: "x" }); // 시간+ 아이템(리플레이 로그)
       spendItem("time");
       addTime(GAME_CONFIG.game.timeItemSec); // 상한(maxSeconds)은 addTime에서 보장 — score-attack 정합
       return;
     }
     if (type === "shuffle") {
+      logMove({ k: "h" }); // 셔플(RNG 소비 — 리플레이 로그)
       spendItem("shuffle");
       const colors = reshuffle(rngRef.current);
       const fresh = makeTilesFromColors(colors);

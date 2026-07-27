@@ -11,18 +11,18 @@ import MyItems from "./MyItems";
 import GameSettings from "./GameSettings";
 import ThemeSettings from "./ThemeSettings";
 import ConfigTheme from "./ConfigTheme";
-import AuthGate from "./AuthGate";
+import SsoGate from "./SsoGate";
 import { dailySeed } from "@/lib/match3";
 import { playMusic, stopMusic } from "@/lib/music";
-import { fetchProfile, hasLocalSession, markLocalSession } from "@/lib/auth-api";
+import { ssoLogin, hasLocalSession, markLocalSession } from "@/lib/auth-api";
 import { track } from "@/lib/track";
-import { setNick, setAvatar } from "@/lib/game-api";
+import { setNick, setAvatar, startMatch } from "@/lib/game-api";
 import { GAME_CONFIG } from "@/lib/game-config";
 import { useLang } from "./LangProvider";
 
 type Screen =
   | { name: "home" }
-  | { name: "game"; mode: "free" | "daily"; seed: number }
+  | { name: "game"; mode: "free" | "daily"; seed: number; matchId: string | null }
   | { name: "leaderboard" }
   | { name: "shop" }
   | { name: "more" }
@@ -34,21 +34,21 @@ type Screen =
 export default function AppShell() {
   const { t } = useLang();
   const [screen, setScreen] = useState<Screen>({ name: "home" });
-  // 가입 게이트 — 첫 진입 필수. 서버 프로필 존재 여부로 판정(로컬 저장 미신뢰).
-  // 단, 네트워크/서버 실패(offline)로 판정 불가할 땐 로컬 세션 힌트로 통과(기가입자 오프라인 실행 보장).
+  // SSO 게이트 — CELEBUS 본앱 세션을 서버가 검증해 자동로그인. 자체 가입/로그인 없음.
+  // 네트워크/서버 실패(offline)로 판정 불가할 땐 로컬 세션 힌트로 통과(기존 유저 오프라인 실행 보장).
   const [auth, setAuth] = useState<"checking" | "need" | "ok">("checking");
   useEffect(() => {
     track("visit"); // 퍼널: 방문 (기기당 일 1회)
-    fetchProfile().then((p) => {
+    ssoLogin().then((p) => {
       if (p.signed_up && p.nickname) {
-        setNick(p.nickname); // 서버 프로필을 로컬 표시값과 동기화
+        setNick(p.nickname); // CELEBUS 프로필을 로컬 표시값과 동기화
         if (p.avatar) setAvatar(p.avatar);
         markLocalSession(true);
         setAuth("ok");
       } else if (p.offline && hasLocalSession()) {
         setAuth("ok");
       } else {
-        track("gate_view"); // 퍼널: 가입 게이트 노출
+        track("gate_view"); // 퍼널: 본앱 로그인 게이트 노출
         setAuth("need");
       }
     });
@@ -56,6 +56,21 @@ export default function AppShell() {
   const go = (s: Screen) => setScreen(s);
   const home = () => setScreen({ name: "home" });
   const more = () => setScreen({ name: "more" });
+
+  // 게임 시작 — 서버에 matchId+seed 발급 요청(점수 위조 방어). 발급 실패 시 로컬 시드로 언랭크 플레이.
+  const startingRef = useRef(false);
+  const startGame = async (mode: "free" | "daily") => {
+    if (startingRef.current) return; // 더블탭 중복 발급 방지
+    startingRef.current = true;
+    const m = await startMatch(mode);
+    startingRef.current = false;
+    go({
+      name: "game",
+      mode,
+      seed: m ? m.seed : mode === "daily" ? dailySeed() : Math.floor(Math.random() * 2 ** 31),
+      matchId: m ? m.matchId : null,
+    });
+  };
 
   const navigateMore = (d: MoreDest) => setScreen({ name: d } as Screen);
 
@@ -109,7 +124,7 @@ export default function AppShell() {
           </div>
         ) : (
           <div className="anim-fade-up">
-            <AuthGate onDone={() => setAuth("ok")} />
+            <SsoGate onDone={() => setAuth("ok")} />
           </div>
         )}
       </>
@@ -123,6 +138,7 @@ export default function AppShell() {
         <Match3Game
           seed={screen.seed}
           mode={screen.mode}
+          matchId={screen.matchId}
           onExit={home}
           onViewRanking={() => go({ name: "leaderboard" })}
         />
@@ -152,13 +168,7 @@ export default function AppShell() {
     default:
       body = (
         <Home
-          onPlay={(mode) =>
-            go({
-              name: "game",
-              mode,
-              seed: mode === "daily" ? dailySeed() : Math.floor(Math.random() * 2 ** 31),
-            })
-          }
+          onPlay={(mode) => void startGame(mode)}
           onOpenLeaderboard={() => go({ name: "leaderboard" })}
           onOpenShop={() => go({ name: "shop" })}
           onOpenMore={more}

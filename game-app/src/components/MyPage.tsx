@@ -1,12 +1,11 @@
 "use client";
 
-// 마이페이지 — 서버 프로필(닉네임 고정·전화 마스킹) + 통계 + 계정(로그아웃).
-// 아바타 편집은 ProfileSetup(기본 6종/업로드) 단일 경로로 통일 — 로컬 전용 편집 제거.
-import { useEffect, useRef, useState } from "react";
-import { LogOut, Pencil } from "lucide-react";
-import { toast } from "sonner";
+// 마이페이지 — CELEBUS 계정 프로필(닉네임 본앱 연동·변경 불가) + 게임 통계.
+// 로그아웃·전화번호 표시는 SSO 전환으로 제거 — 세션 수명은 본앱이 관리.
+import { useEffect, useState } from "react";
+import { Pencil } from "lucide-react";
 import { getNick, getAvatar, fetchMyRank, fetchAccount, topPercent, type MyRank } from "@/lib/game-api";
-import { fetchProfile, logout } from "@/lib/auth-api";
+import { fetchProfile } from "@/lib/auth-api";
 import Avatar from "./Avatar";
 import ProfileSetup from "./ProfileSetup";
 import ScreenHeader from "./ScreenHeader";
@@ -16,13 +15,10 @@ export default function MyPage({ onBack }: { onBack: () => void }) {
   const { t } = useLang();
   const [nick, setNickState] = useState("");
   const [avatar, setAvatarState] = useState("");
-  const [phoneMasked, setPhoneMasked] = useState("");
   const [rank, setRank] = useState<MyRank | null>(null);
   const [point, setPoint] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showEdit, setShowEdit] = useState(false);
-  const [logoutArmed, setLogoutArmed] = useState(false);
-  const armTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setNickState(getNick());
@@ -34,33 +30,12 @@ export default function MyPage({ onBack }: { onBack: () => void }) {
         if (p.signed_up) {
           if (p.nickname) setNickState(p.nickname);
           if (p.avatar) setAvatarState(p.avatar);
-          if (p.phone_cc && p.phone_last4) setPhoneMasked(`${p.phone_cc} ····${p.phone_last4}`);
         }
       }),
     ]).finally(() => setLoading(false));
-    return () => {
-      if (armTimer.current) clearTimeout(armTimer.current);
-    };
   }, []);
 
-  // 로그아웃 — 오탭 방지 2단계 탭(3초 내 재탭 시 실행)
-  async function onLogout() {
-    if (!logoutArmed) {
-      setLogoutArmed(true);
-      if (armTimer.current) clearTimeout(armTimer.current);
-      armTimer.current = setTimeout(() => setLogoutArmed(false), 3000);
-      return;
-    }
-    const ok = await logout();
-    if (!ok) {
-      toast.error(t("auth_err_generic"));
-      setLogoutArmed(false);
-      return;
-    }
-    location.reload(); // 게이트로 복귀
-  }
-
-  // "Lv.N · 순위위 · 상위%" (미기록 시 -)
+  // "Lv.N · 순위 · 상위%" (미기록 시 -)
   const rankText = (lvl: number | null | undefined, r: number | null | undefined, tot: number | null | undefined) =>
     r && tot && lvl
       ? `${t("lv_prefix")}${lvl} · ${r.toLocaleString()}${t("rank_unit")} · ${t("top_percent").replace("{p}", String(topPercent(r, tot)))}`
@@ -76,12 +51,12 @@ export default function MyPage({ onBack }: { onBack: () => void }) {
     <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-safe pb-safe pt-safe">
       <ScreenHeader title={t("mypage_title")} onBack={onBack} />
 
-      {/* 프로필 — 닉네임은 계정 식별자(변경 불가), 아바타 편집은 ProfileSetup */}
+      {/* 프로필 — 닉네임은 CELEBUS 계정 연동(변경 불가), 아바타 편집은 ProfileSetup */}
       <div className="mt-5 flex items-center gap-3 rounded-[16px] bg-surface-1 px-4 py-3.5 ring-1 ring-hairline">
         <Avatar value={avatar} size="lg" />
         <div className="min-w-0 flex-1">
           <div className="truncate text-[16px] font-black text-fg">{nick}</div>
-          {phoneMasked && <div className="mt-0.5 text-[12px] tabular-nums text-subtle">{phoneMasked}</div>}
+          <div className="mt-0.5 text-[11px] text-subtle">{t("mypage_sso_note")}</div>
         </div>
         <button
           onClick={() => setShowEdit(true)}
@@ -105,18 +80,6 @@ export default function MyPage({ onBack }: { onBack: () => void }) {
           </div>
         ))}
       </div>
-
-      {/* 계정 */}
-      <div className="mb-2 mt-6 text-[11px] font-bold text-subtle">{t("mypage_account")}</div>
-      <button
-        onClick={onLogout}
-        className={`flex items-center justify-center gap-2 rounded-[14px] px-4 py-3 text-[13px] font-bold ring-1 transition-colors active:scale-[0.99] ${
-          logoutArmed ? "bg-danger/15 text-danger ring-danger/40" : "bg-surface-1 text-muted ring-hairline"
-        }`}
-      >
-        <LogOut className="h-4 w-4" />
-        {logoutArmed ? t("mypage_logout_confirm") : t("mypage_logout")}
-      </button>
 
       {showEdit && (
         <ProfileSetup

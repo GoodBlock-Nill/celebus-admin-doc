@@ -116,6 +116,7 @@ export default function IntroModal({ onStart }: { onStart: () => void }) {
           <>
             <div className="mb-4 text-[16px] font-black">{t("tutorial2_title")}</div>
             <div className="flex flex-col gap-2">
+              {/* 2×2 정사각 매치는 온보딩 미안내 — 플레이 중 자연 발견(learn by doing)으로 남김 */}
               <InfoRow tile={miniTile(0, "line")} text={t("tut_sp_line")} />
               <InfoRow tile={miniTile(3, "color")} text={t("tut_sp_color")} />
               <InfoRow tile={miniTile(1, "area")} text={t("tut_sp_area")} />

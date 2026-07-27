@@ -28,7 +28,9 @@ export function makeBoard(rng: () => number): Board {
         color = Math.floor(rng() * COLORS);
       } while (
         (c >= 2 && b[idx(r, c - 1)] === color && b[idx(r, c - 2)] === color) ||
-        (r >= 2 && b[idx(r - 1, c)] === color && b[idx(r - 2, c)] === color)
+        (r >= 2 && b[idx(r - 1, c)] === color && b[idx(r - 2, c)] === color) ||
+        // 2×2 정사각 매치도 초기 보드에서 배제 (즉시 자동 소거 방지)
+        (r >= 1 && c >= 1 && b[idx(r, c - 1)] === color && b[idx(r - 1, c)] === color && b[idx(r - 1, c - 1)] === color)
       );
       b[idx(r, c)] = color;
     }
@@ -36,9 +38,24 @@ export function makeBoard(rng: () => number): Board {
   return b;
 }
 
-// 3개 이상 연속(가로·세로) 매치 셀 집합
+// 2×2 정사각 동일 색 매치 — 좌상단 기준 4셀 묶음 목록 (유저 피드백 2026-07-24)
+export function findSquares(b: Board): number[][] {
+  const out: number[][] = [];
+  for (let r = 0; r < SIZE - 1; r++) {
+    for (let c = 0; c < SIZE - 1; c++) {
+      const v = b[idx(r, c)];
+      if (v !== -1 && b[idx(r, c + 1)] === v && b[idx(r + 1, c)] === v && b[idx(r + 1, c + 1)] === v) {
+        out.push([idx(r, c), idx(r, c + 1), idx(r + 1, c), idx(r + 1, c + 1)]);
+      }
+    }
+  }
+  return out;
+}
+
+// 3개 이상 연속(가로·세로) + 2×2 정사각 매치 셀 집합 (스왑 유효성·힌트·리셔플 판정 공용)
 export function findMatches(b: Board): Set<number> {
   const m = new Set<number>();
+  for (const sq of findSquares(b)) for (const cell of sq) m.add(cell);
   for (let r = 0; r < SIZE; r++) {
     let run = 1;
     for (let c = 1; c <= SIZE; c++) {
@@ -106,14 +123,22 @@ function collectRuns(b: Board): Run[] {
 
 // 매치 분석 — 지울 셀 집합 + 스페셜 생성 지점.
 //  · 가로·세로 3+ 교차(L/T) → area, 5+ 직선 → color, 4 직선 → line.
+//  · 2×2 정사각 → 4칸 소거(스페셜 미생성 — 가장 쉬운 4매치라 라인4와 보상 차등).
 //  · prefer(스왑 셀)에 스페셜을 우선 배치해 플레이어가 만든 위치에 생성.
 export function analyzeMatches(
   b: Board,
   prefer: number[] = [],
-): { cleared: Set<number>; creations: { cell: number; kind: SpecialKind }[] } {
+): { cleared: Set<number>; creations: { cell: number; kind: SpecialKind }[]; squares: number } {
   const runs = collectRuns(b);
   const cleared = new Set<number>();
   for (const rn of runs) for (const cell of rn.cells) cleared.add(cell);
+
+  // 2×2 정사각 — 직선 런과 겹치지 않는 "순수 스퀘어"만 보너스 카운트(셀은 모두 소거)
+  let squares = 0;
+  for (const sq of findSquares(b)) {
+    if (!sq.some((cell) => cleared.has(cell))) squares++;
+    for (const cell of sq) cleared.add(cell);
+  }
 
   const hCells = new Set<number>();
   const vCells = new Set<number>();
@@ -143,7 +168,7 @@ export function analyzeMatches(
       used.add(p);
     }
   }
-  return { cleared, creations };
+  return { cleared, creations, squares };
 }
 
 // 광역: 중심 반경 radius 정사각형

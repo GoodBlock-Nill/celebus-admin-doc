@@ -494,3 +494,25 @@ body {
   40%, 66% { opacity: 1; transform: scale(1); }
   76%, 100% { opacity: 0; transform: scale(0.9); }
 }
+
+/* ── 관리자(웹 운영 도구) — 도트 폰트 제외, 데이터 가독성 우선 ── */
+/* 게임용 어두운 저대비 팔레트를 관리자 스코프에서 밝게 재정의(모든 bg-surface·text-muted 등 유틸에 전파) */
+.admin-shell {
+  font-family: var(--font-noto), "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  --color-surface-0: #0f0f14; /* 페이지 배경 */
+  --color-surface-1: #1b1b22; /* 카드 — 배경과 분리 강화 */
+  --color-surface-2: #262630; /* hover / 입력 */
+  --color-surface-3: #30303c;
+  --color-hairline: #3a3a45; /* 경계선 — 실제로 보이게 */
+  --color-muted: #c7c7d0; /* 보조 텍스트 — 대비 상향 */
+  --color-subtle: #9a9aa6; /* 흐린 텍스트 — 대비 상향 */
+  background: var(--color-surface-0);
+  color: var(--color-fg);
+}
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
