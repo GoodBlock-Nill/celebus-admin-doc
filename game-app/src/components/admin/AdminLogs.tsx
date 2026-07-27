@@ -25,6 +25,10 @@ const ACTION_LABEL: Record<string, string> = {
   config_update: "설정 변경",
   catalog_update: "가격 변경",
   set_member: "V01D 멤버",
+  set_member_names: "V01D 이름",
+  set_member_profile: "V01D 이름",
+  set_member_avatar: "V01D 아바타",
+  clear_member_avatar: "V01D 아바타",
   suspect_score: "의심 점수",
   replay_mismatch: "리플레이 불일치",
   replay_rejected: "리플레이 거부",
@@ -90,6 +94,18 @@ function describe(l: Log): string {
       return `${ITEM_LABEL[String(l.target)] ?? l.target} 가격 → ${num(d.price)} CP`;
     case "set_member":
       return d.is_member ? "V01D 멤버로 지정" : "V01D 멤버 해제";
+    case "set_member_names": {
+      const names = [d.ko, d.en, d.ja].map((x) => String(x ?? "").trim()).filter(Boolean);
+      return names.length ? `V01D 표시 이름 설정 — ${names.join(" / ")}` : "V01D 표시 이름 삭제";
+    }
+    case "set_member_profile": {
+      const nm = String(d.name ?? "").trim(); // 레거시 항목
+      return nm ? `V01D 표시 이름 설정 — ${nm}` : "V01D 표시 이름 삭제";
+    }
+    case "set_member_avatar":
+      return "V01D 아바타 이미지 등록";
+    case "clear_member_avatar":
+      return "V01D 아바타 이미지 제거";
     case "suspect_score": {
       const gap = d.gap_sec != null ? `제출 간격 ${num(d.gap_sec)}초` : d.elapsed_sec != null ? `경과 ${num(d.elapsed_sec)}초` : "";
       return `의심 점수 감지 — ${MODE_LABEL[String(d.mode)] ?? ""} · 레벨 ${num(d.level)} · ${num(d.score)}점${gap ? ` (${gap})` : ""}`;

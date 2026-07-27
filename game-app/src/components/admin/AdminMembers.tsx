@@ -21,7 +21,9 @@ type Row = {
 };
 type Page = { rows: Row[]; total: number; page: number };
 type Detail = {
-  profile: (Row & { is_member: boolean }) | null;
+  profile:
+    | (Row & { is_member: boolean; member_name: string | null; member_name_en: string | null; member_name_ja: string | null; member_avatar: string | null })
+    | null;
   celeb_point: number | null;
   best_normal: { level: number; score: number } | null;
   best_item: { level: number; score: number } | null;
@@ -55,6 +57,42 @@ export default function AdminMembers() {
   const [cpReason, setCpReason] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [armed, setArmed] = useState<string | null>(null);
+  const [mKo, setMKo] = useState("");
+  const [mEn, setMEn] = useState("");
+  const [mJa, setMJa] = useState("");
+  const [uploading, setUploading] = useState(false);
+
+  // 상세 로드 시 표시 이름 입력값 동기화
+  useEffect(() => {
+    setMKo(detail?.profile?.member_name ?? "");
+    setMEn(detail?.profile?.member_name_en ?? "");
+    setMJa(detail?.profile?.member_name_ja ?? "");
+  }, [detail?.profile?.player_hash, detail?.profile?.member_name, detail?.profile?.member_name_en, detail?.profile?.member_name_ja]);
+
+  // 아바타 이미지 파일 업로드 (즉시 저장 후 상세 갱신)
+  const uploadAvatar = async (file: File) => {
+    if (!sel) return;
+    setUploading(true);
+    setMsg(null);
+    try {
+      const fd = new FormData();
+      fd.append("player_hash", sel);
+      fd.append("file", file);
+      const res = await fetch("/api/admin/member-avatar", { method: "POST", body: fd });
+      const j = (await res.json()) as { status?: string; error?: string };
+      if (!res.ok || j.error) throw new Error(j.error ?? "upload");
+      setMsg("아바타 이미지를 등록했어요.");
+      setDetail(await aget<Detail>(`/api/admin/profile?h=${sel}`));
+      await reload();
+    } catch {
+      setMsg("이미지 업로드에 실패했어요. (png·jpg·webp, 3MB 이하)");
+    }
+    setUploading(false);
+  };
+  const clearAvatar = () => {
+    if (!sel) return;
+    void act(() => asend(`/api/admin/member-avatar?h=${sel}`, "DELETE"), "등록 아바타를 제거했어요.");
+  };
 
   const reload = async () => {
     const p = await aget<Page>(`/api/admin/profiles?q=${encodeURIComponent(q)}&filter=${filter}`);
@@ -222,6 +260,94 @@ export default function AdminMembers() {
                 >
                   {detail.profile.is_member ? "V01D 멤버 해제" : "V01D 멤버 지정"}
                 </button>
+
+                {/* V01D 표시 설정 — 멤버만. 닉네임은 유지, 이름은 다국어 병기 + 아바타 파일 업로드 */}
+                {detail.profile.is_member &&
+                  (() => {
+                    const celebusPhoto = !!detail.profile.avatar && detail.profile.avatar.startsWith("http");
+                    const uploaded = detail.profile.member_avatar;
+                    const shownAvatar = celebusPhoto ? detail.profile.avatar : uploaded || detail.profile.avatar;
+                    return (
+                      <div className="mt-4 rounded-[12px] bg-primary/8 p-3.5 ring-1 ring-primary/25">
+                        <div className="mb-2.5 flex items-center gap-1.5 text-[12px] font-bold text-primary-400">
+                          <V01D /> 랭킹 표시 설정
+                        </div>
+
+                        {/* 미리보기 — 랭킹에 보일 모습 (닉네임 + 이름 병기) */}
+                        <div className="flex items-center gap-3">
+                          <Avatar value={shownAvatar} size="lg" />
+                          <div className="min-w-0 flex-1 text-[12px] leading-relaxed text-muted">
+                            <div className="flex flex-wrap items-baseline gap-1.5">
+                              <span className="text-[14px] font-black text-fg">{detail.profile.nickname}</span>
+                              {mKo.trim() && <span className="text-[12.5px] font-bold text-primary-400">{mKo.trim()}</span>}
+                              <V01D />
+                            </div>
+                            <div className="text-subtle">랭킹에 이렇게 표시돼요 (닉네임은 유지)</div>
+                            <div className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[11px] font-bold ${celebusPhoto ? "bg-verified/15 text-verified" : uploaded ? "bg-primary/15 text-primary-400" : "bg-surface-2 text-muted"}`}>
+                              {celebusPhoto ? "CELEBUS 프로필 이미지 사용 중" : uploaded ? "업로드 이미지 사용 중" : "기본 아바타 사용 중"}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 표시 이름 — 다국어 */}
+                        <form
+                          className="mt-3 flex flex-col gap-2"
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            void act(() => asend("/api/admin/member-profile", "POST", { player_hash: sel, name_ko: mKo.trim(), name_en: mEn.trim(), name_ja: mJa.trim() }), "표시 이름을 저장했어요.");
+                          }}
+                        >
+                          <div className="text-[12px] font-bold text-subtle">표시 이름 — 닉네임 옆에 언어별로 표시돼요 (비우면 표시 안 함)</div>
+                          <div className="grid grid-cols-3 gap-2">
+                            <label className="text-[11px] font-bold text-subtle">
+                              한국어
+                              <input value={mKo} onChange={(e) => setMKo(e.target.value)} maxLength={40} placeholder="예: 조주연" className={`${INPUT} mt-1 w-full`} />
+                            </label>
+                            <label className="text-[11px] font-bold text-subtle">
+                              English
+                              <input value={mEn} onChange={(e) => setMEn(e.target.value)} maxLength={40} placeholder="e.g. Joju" className={`${INPUT} mt-1 w-full`} />
+                            </label>
+                            <label className="text-[11px] font-bold text-subtle">
+                              日本語
+                              <input value={mJa} onChange={(e) => setMJa(e.target.value)} maxLength={40} placeholder="例: ジュヨン" className={`${INPUT} mt-1 w-full`} />
+                            </label>
+                          </div>
+                          <button type="submit" disabled={busy} className={`${BTN} self-start`}>
+                            표시 이름 저장
+                          </button>
+                        </form>
+
+                        {/* 아바타 이미지 — 파일 업로드 */}
+                        <div className="mt-3 border-t border-hairline pt-3">
+                          <div className="text-[12px] font-bold text-subtle">아바타 이미지 (png·jpg·webp, 3MB 이하)</div>
+                          <div className="mt-1.5 flex flex-wrap items-center gap-2">
+                            <label className={`${BTN_GHOST} cursor-pointer ${uploading ? "opacity-60" : ""}`}>
+                              {uploading ? "업로드 중…" : uploaded ? "이미지 교체" : "이미지 업로드"}
+                              <input
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp"
+                                className="hidden"
+                                disabled={uploading}
+                                onChange={(e) => {
+                                  const f = e.target.files?.[0];
+                                  if (f) void uploadAvatar(f);
+                                  e.target.value = "";
+                                }}
+                              />
+                            </label>
+                            {uploaded && (
+                              <button type="button" disabled={busy} onClick={clearAvatar} className={BTN_GHOST}>
+                                이미지 제거
+                              </button>
+                            )}
+                          </div>
+                          <p className="mt-2 text-[11.5px] leading-relaxed text-subtle break-keep">
+                            멤버가 CELEBUS에 프로필 이미지를 등록해 두면 그 이미지가 <b className="text-muted">항상 우선</b> 표시되고, 업로드한 이미지는 프로필 이미지가 없을 때만 쓰여요.
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                 <div className="mt-4 mb-1.5 text-[12px] font-bold text-subtle">CP 지급 · 회수</div>
                 <form

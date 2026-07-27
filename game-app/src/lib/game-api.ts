@@ -208,11 +208,13 @@ export async function fetchMyRank(period: LeaderPeriod = "all"): Promise<MyRank 
   }
 }
 
-export type LeaderRow = { rank: number; nickname: string; score: number; level: number; avatar: string | null; member?: boolean };
+// 멤버 표시 이름(다국어) — 닉네임 옆에 병기. 미설정 시 null.
+export type MemberName = { ko: string; en: string; ja: string } | null;
+export type LeaderRow = { rank: number; nickname: string; score: number; level: number; avatar: string | null; member?: boolean; member_name?: MemberName };
 
 // V01D 멤버 보드 — 멤버별 주간·월간 성적(전체 보드 내 순위)
 export type MemberStat = { rank: number; level: number; score: number } | null;
-export type MemberRow = { nickname: string; avatar: string | null; week: MemberStat; month: MemberStat };
+export type MemberRow = { nickname: string; avatar: string | null; member_name?: MemberName; week: MemberStat; month: MemberStat };
 
 export async function fetchMemberBoard(mode: LeaderMode): Promise<MemberRow[]> {
   const { data, error } = await sb.rpc("game_member_board", { p_mode: modeKey(mode) });

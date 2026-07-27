@@ -3,7 +3,7 @@
 // 랭킹 — 모드(일반/아이템) × 기간(주간/월간/V01D). V01D 탭 = 멤버별 주간·월간 성적.
 // 일반 리스트에서 V01D 멤버 행은 뱃지+퍼플 글로우로 특별 표시(팬이 이길 대상 인지).
 import { useEffect, useState } from "react";
-import { ChevronLeft, Trophy } from "lucide-react";
+import { ChevronLeft, Star, Trophy } from "lucide-react";
 import {
   fetchLeaderboard,
   fetchMemberBoard,
@@ -12,6 +12,7 @@ import {
   topPercent,
   type LeaderRow,
   type LeaderMode,
+  type MemberName,
   type MemberRow,
   type MyRank,
 } from "@/lib/game-api";
@@ -21,17 +22,35 @@ import { useLang } from "./LangProvider";
 const MEDAL = ["🥇", "🥈", "🥉"];
 type Tab = "week" | "month" | "v01d";
 
-// V01D 멤버 뱃지 — 리스트·멤버 탭 공용
+// V01D 멤버 뱃지 — 별 + V01D (리스트·멤버 탭 공용)
 function MemberBadge() {
   return (
-    <span className="shrink-0 rounded-[4px] bg-primary px-1 py-0.5 text-[8px] font-black leading-none text-white shadow-[0_0_8px_rgba(139,92,246,0.7)]">
+    <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-primary px-1.5 py-0.5 text-[8.5px] font-black leading-none text-white shadow-[0_0_8px_rgba(139,92,246,0.7)]">
+      <Star className="h-2 w-2 fill-current" />
       V01D
     </span>
   );
 }
 
+// V01D 멤버 아바타 헤일로 — 보라 그라데이션 링(멤버만). "특별한 사람" 신호.
+function HaloAvatar({ value, member, size }: { value: string | null; member: boolean; size: "sm" | "md" | "lg" }) {
+  if (!member) return <Avatar value={value} size={size} />;
+  return (
+    <span className="inline-block rounded-full bg-gradient-to-br from-primary via-[#b57bff] to-[#ec5c9a] p-[2px] shadow-[0_0_10px_rgba(139,92,246,0.5)]">
+      <span className="block rounded-full bg-surface-1 p-[1.5px]">
+        <Avatar value={value} size={size} />
+      </span>
+    </span>
+  );
+}
+
+// 멤버 표시 이름 — 현재 언어로 선택(없으면 null)
+function memberNameOf(mn: MemberName | undefined, lang: "ko" | "en" | "ja"): string | null {
+  return mn ? mn[lang] || mn.ko || null : null;
+}
+
 export default function Leaderboard({ onBack }: { onBack: () => void }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [mode, setMode] = useState<LeaderMode>("normal");
   const [tab, setTab] = useState<Tab>("week"); // 기본 주간 — 보상 이벤트 지향
   const [rows, setRows] = useState<LeaderRow[]>([]);
@@ -147,10 +166,13 @@ export default function Leaderboard({ onBack }: { onBack: () => void }) {
                 key={m.nickname}
                 className="flex items-center gap-3 rounded-[14px] bg-gradient-to-r from-primary/20 to-surface-1 px-4 py-3 ring-1 ring-primary/35"
               >
-                <Avatar value={m.avatar} size="md" />
+                <HaloAvatar value={m.avatar} member size="md" />
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5">
-                    <span className="truncate text-[14px] font-black">{m.nickname}</span>
+                  <div className="flex min-w-0 items-center gap-1.5">
+                    <span className="truncate text-[14px] font-black text-primary-400">{m.nickname}</span>
+                    {memberNameOf(m.member_name, lang) && (
+                      <span className="shrink-0 text-[12px] font-bold text-primary-300/90">{memberNameOf(m.member_name, lang)}</span>
+                    )}
                     <MemberBadge />
                   </div>
                   <div className="mt-1 grid grid-cols-2 gap-2">
@@ -209,9 +231,12 @@ export default function Leaderboard({ onBack }: { onBack: () => void }) {
                     <span className="w-6 text-center text-[15px] font-black tabular-nums">
                       {row.rank <= 3 ? MEDAL[row.rank - 1] : row.rank}
                     </span>
-                    <Avatar value={row.avatar} size="sm" />
+                    <HaloAvatar value={row.avatar} member={!!row.member} size="sm" />
                     <span className="flex min-w-0 flex-1 items-center gap-1.5">
-                      <span className="truncate text-[14px] font-bold">{row.nickname}</span>
+                      <span className={`truncate text-[14px] font-bold ${row.member ? "text-primary-400" : ""}`}>{row.nickname}</span>
+                      {row.member && memberNameOf(row.member_name, lang) && (
+                        <span className="shrink-0 text-[11.5px] font-bold text-primary-300/90">{memberNameOf(row.member_name, lang)}</span>
+                      )}
                       {row.member && <MemberBadge />}
                     </span>
                     <span className="flex flex-col items-end leading-tight">
