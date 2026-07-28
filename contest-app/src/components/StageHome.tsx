@@ -1,10 +1,10 @@
 "use client";
 
-// 개편 홈 (W1) — 스테이지(상시 피드)가 기본, 이벤트(기존 콘테스트)는 탭. §4 화면 구조.
+// 개편 홈 — 스테이지(공연 목록)가 기본, 이벤트 탭 = 월드컵 이벤트(W3). 레거시 콘테스트 UI는 W4 초기화 시 제거 예정.
 import { useState } from "react";
 import Shell from "./Shell";
 import StageList from "./StageList";
-import { HomeBody } from "./HomeShell";
+import EventList from "./EventList";
 import { useLang } from "./LangProvider";
 
 type Tab = "stage" | "event";
@@ -31,7 +31,7 @@ export default function StageHome() {
   return (
     <Shell>
       <Tabs tab={tab} onTab={setTab} />
-      {tab === "stage" ? <StageList /> : <HomeBody />}
+      {tab === "stage" ? <StageList /> : <EventList />}
     </Shell>
   );
 }

@@ -164,6 +164,36 @@ export interface StageCommentPublic {
   fan_label: string;
 }
 
+
+// 월드컵 이벤트 (W3) — stage_events_public 뷰
+export interface StageEventPublic {
+  id: string;
+  stage_id: string;
+  stage_title: string;
+  title: string;
+  description: string;
+  status: "open" | "announced";
+  ends_at: string | null;
+  awards: {
+    fan: { post_id: string; title: string; handle: string } | null;
+    artist: { post_id: string; title: string; handle: string; picks: number } | null;
+    uploader: { handle: string; days: number } | null;
+  } | null;
+  created_at: string;
+}
+
+// 월드컵 집계 — worldcup_stats_public 뷰
+export interface WorldcupStatPublic {
+  event_id: string;
+  post_id: string;
+  runs_appeared: number;
+  final_wins: number;
+  match_wins: number;
+  match_losses: number;
+  win_rate: number;
+  match_rate: number;
+}
+
 export interface AwardPublic {
   id: string;
   contest_id: string;

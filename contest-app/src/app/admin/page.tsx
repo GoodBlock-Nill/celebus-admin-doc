@@ -9,14 +9,16 @@ import { adminFetch, getAdminPw, setAdminPw } from "@/lib/admin-types";
 import ContestsPanel from "@/components/admin/ContestsPanel";
 import StagesPanel from "@/components/admin/StagesPanel";
 import MembersPanel from "@/components/admin/MembersPanel";
+import EventsPanel from "@/components/admin/EventsPanel";
 import EntriesPanel from "@/components/admin/EntriesPanel";
 import AwardsPanel from "@/components/admin/AwardsPanel";
 
-type Tab = "overview" | "stages" | "members" | "contests" | "entries" | "awards" | "logs";
+type Tab = "overview" | "stages" | "events" | "members" | "contests" | "entries" | "awards" | "logs";
 
 const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
   { key: "overview", label: "개요", icon: <BarChart3 className="h-4 w-4" /> },
   { key: "stages", label: "스테이지", icon: <Clapperboard className="h-4 w-4" /> },
+  { key: "events", label: "이벤트", icon: <Trophy className="h-4 w-4" /> },
   { key: "members", label: "멤버", icon: <UserRound className="h-4 w-4" /> },
   { key: "contests", label: "콘테스트", icon: <FileText className="h-4 w-4" /> },
   { key: "entries", label: "출품작", icon: <ImageIcon className="h-4 w-4" /> },
@@ -213,6 +215,7 @@ export default function AdminPage() {
           </div>
           {tab === "overview" && <Overview stats={stats} />}
           {tab === "stages" && <StagesPanel />}
+          {tab === "events" && <EventsPanel />}
           {tab === "members" && <MembersPanel />}
           {tab === "contests" && <ContestsPanel />}
           {tab === "entries" && <EntriesPanel contests={stats?.contests ?? []} />}

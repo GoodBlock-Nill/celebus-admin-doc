@@ -1,0 +1,231 @@
+"use client";
+
+// 월드컵 이벤트 — 이상형월드컵 형식: 무작위 개인 대진 → 1:1 대결 → 나의 우승작 → 집계 반영.
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+import Link from "next/link";
+import { ChevronLeft, Trophy, Play } from "lucide-react";
+import { sb } from "@/lib/supabase-browser";
+import type { StageEventPublic, StagePostPublic } from "@/lib/types";
+import WorldcupStandings from "./WorldcupStandings";
+import { useLang } from "./LangProvider";
+
+type Pick = { w: string; l: string };
+type Phase = "intro" | "playing" | "done";
+
+function bracketSize(n: number): number {
+  if (n >= 16) return 16;
+  if (n >= 8) return 8;
+  if (n >= 4) return 4;
+  return n >= 2 ? 2 : 0;
+}
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// 대결 카드 한 쪽
+function MatchTile({ post, onPick }: { post: StagePostPublic; onPick: () => void }) {
+  return (
+    <button onClick={onPick} className="w-full overflow-hidden rounded-2xl bg-white/[0.04] ring-1 ring-white/10 transition-transform active:scale-[0.98]">
+      {post.thumbnail_url ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={post.thumbnail_url} alt="" className="aspect-video w-full object-cover" />
+      ) : (
+        <div className="flex aspect-video w-full items-center justify-center bg-white/5 text-fg/30">🎬</div>
+      )}
+      <div className="px-3 py-2 text-left">
+        <div className="truncate text-[13px] font-bold text-fg">{post.title}</div>
+        <div className="truncate text-[11px] text-fg/45">@{post.handle}</div>
+      </div>
+    </button>
+  );
+}
+
+export default function EventPlay({ eventId }: { eventId: string }) {
+  const { t } = useLang();
+  const [event, setEvent] = useState<StageEventPublic | null>(null);
+  const [pool, setPool] = useState<StagePostPublic[]>([]);
+  const [phase, setPhase] = useState<Phase>("intro");
+  const [showStandings, setShowStandings] = useState(false);
+  // 대진 상태
+  const [current, setCurrent] = useState<StagePostPublic[]>([]); // 현재 라운드 참가자
+  const [next, setNext] = useState<StagePostPublic[]>([]);       // 다음 라운드 진출자
+  const [matchIdx, setMatchIdx] = useState(0);
+  const [picks, setPicks] = useState<Pick[]>([]);
+  const [winner, setWinner] = useState<StagePostPublic | null>(null);
+  const [counted, setCounted] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const { data: ev } = await sb.from("stage_events_public").select("*").eq("id", eventId).maybeSingle();
+      if (!ev) return;
+      const e = ev as StageEventPublic;
+      setEvent(e);
+      const { data: ps } = await sb.from("stage_posts_public").select("*").eq("stage_id", e.stage_id).limit(200);
+      setPool((ps ?? []) as StagePostPublic[]);
+      if (e.status === "announced") setShowStandings(true);
+    })();
+  }, [eventId]);
+
+  const size = useMemo(() => bracketSize(pool.length), [pool.length]);
+
+  function start() {
+    if (size < 2) return;
+    const entrants = shuffle(pool).slice(0, size);
+    setCurrent(entrants);
+    setNext([]);
+    setMatchIdx(0);
+    setPicks([]);
+    setWinner(null);
+    setCounted(null);
+    setPhase("playing");
+  }
+
+  async function pick(winnerPost: StagePostPublic, loserPost: StagePostPublic) {
+    const newPicks = [...picks, { w: winnerPost.id, l: loserPost.id }];
+    const newNext = [...next, winnerPost];
+    const nextMatch = matchIdx + 1;
+    const matchesInRound = Math.floor(current.length / 2);
+
+    if (nextMatch < matchesInRound) {
+      setPicks(newPicks);
+      setNext(newNext);
+      setMatchIdx(nextMatch);
+      return;
+    }
+    // 라운드 종료
+    if (newNext.length === 1) {
+      setPicks(newPicks);
+      setWinner(winnerPost);
+      setPhase("done");
+      try {
+        const res = await fetch(`/api/stage/events/${eventId}/run`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ picks: newPicks, winner: winnerPost.id }),
+        });
+        const j = await res.json().catch(() => ({}));
+        if (res.ok) setCounted(!!j.counted);
+        else toast(t("err_server"));
+      } catch {
+        toast(t("err_server"));
+      }
+      return;
+    }
+    setPicks(newPicks);
+    setCurrent(newNext);
+    setNext([]);
+    setMatchIdx(0);
+  }
+
+  if (!event) return <div className="h-40 animate-pulse rounded-2xl bg-white/5" />;
+
+  const a = current[matchIdx * 2];
+  const b = current[matchIdx * 2 + 1];
+  const roundSize = current.length;
+
+  return (
+    <div>
+      <Link href="/" className="mb-2 inline-flex min-h-11 items-center gap-1 text-[13px] font-bold text-fg/60">
+        <ChevronLeft className="h-4 w-4" /> {t("event_tab")}
+      </Link>
+      <div className="mb-4">
+        <div className="flex items-center gap-2">
+          <Trophy className="h-5 w-5 shrink-0 text-primary-400" />
+          <h1 className="min-w-0 flex-1 text-[19px] font-bold text-fg">{event.title}</h1>
+        </div>
+        <p className="mt-0.5 text-[12px] text-fg/50">{event.stage_title}</p>
+      </div>
+
+      {/* 결과 발표 배너 */}
+      {event.status === "announced" && event.awards && (
+        <div className="mb-4 space-y-2 rounded-2xl bg-gradient-to-br from-[#f5c451]/15 to-primary/10 p-4 ring-1 ring-[#f5c451]/30">
+          <div className="text-[14px] font-bold text-[#f5c451]">{t("ev_results")} 🏆</div>
+          {event.awards.fan && (
+            <div className="text-[13px] text-fg/85">
+              <b className="text-primary-400">{t("ev_award_fan")}</b> — {event.awards.fan.title} <span className="text-fg/50">@{event.awards.fan.handle}</span>
+            </div>
+          )}
+          {event.awards.artist && (
+            <div className="text-[13px] text-fg/85">
+              <b className="text-primary-400">{t("ev_award_artist")}</b> — {event.awards.artist.title} <span className="text-fg/50">@{event.awards.artist.handle}</span>
+            </div>
+          )}
+          {event.awards.uploader && (
+            <div className="text-[13px] text-fg/85">
+              <b className="text-primary-400">{t("ev_award_uploader")}</b> — @{event.awards.uploader.handle}{" "}
+              <span className="text-fg/50">({t("ev_award_uploader_days").replace("{n}", String(event.awards.uploader.days))})</span>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 인트로 */}
+      {phase === "intro" && (
+        <div className="space-y-3">
+          {event.description && <p className="text-[13.5px] leading-relaxed text-fg/70">{event.description}</p>}
+          {event.status === "open" &&
+            (size >= 2 ? (
+              <button onClick={start} className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3.5 text-[15px] font-bold text-white active:scale-[0.99]">
+                <Play className="h-4 w-4" /> {t("ev_play")} ({t("ev_round_of").replace("{n}", String(size))})
+              </button>
+            ) : (
+              <p className="rounded-xl bg-white/5 px-3 py-3 text-center text-[13px] text-fg/50">{t("ev_not_enough")}</p>
+            ))}
+          <button onClick={() => setShowStandings((s) => !s)} className="w-full rounded-full bg-white/8 py-3 text-[13.5px] font-bold text-fg/80">
+            {t("ev_standings")}
+          </button>
+          {showStandings && <WorldcupStandings eventId={eventId} eventStatus={event.status} pool={pool} />}
+        </div>
+      )}
+
+      {/* 대결 */}
+      {phase === "playing" && a && b && (
+        <div>
+          <div className="mb-3 flex items-center justify-between text-[12.5px] font-bold">
+            <span className="rounded-full bg-primary/15 px-3 py-1 text-primary-400">{t("ev_round_of").replace("{n}", String(roundSize))}</span>
+            <span className="text-fg/50">{matchIdx + 1} / {Math.floor(roundSize / 2)}</span>
+          </div>
+          <p className="mb-3 text-center text-[14px] font-bold text-fg">{t("ev_pick_one")}</p>
+          <div className="space-y-3">
+            <MatchTile post={a} onPick={() => void pick(a, b)} />
+            <div className="text-center text-[13px] font-black text-fg/40">VS</div>
+            <MatchTile post={b} onPick={() => void pick(b, a)} />
+          </div>
+        </div>
+      )}
+
+      {/* 결과 */}
+      {phase === "done" && winner && (
+        <div className="space-y-3">
+          <div className="rounded-2xl bg-gradient-to-br from-primary/25 to-transparent p-4 text-center ring-2 ring-primary/50">
+            <div className="text-[14px] font-bold text-primary-400">{t("ev_my_winner")}</div>
+            {winner.thumbnail_url && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={winner.thumbnail_url} alt="" className="mt-2 aspect-video w-full rounded-xl object-cover" />
+            )}
+            <div className="mt-2 text-[15px] font-bold text-fg">{winner.title}</div>
+            <div className="text-[12px] text-fg/50">@{winner.handle}</div>
+            {counted != null && (
+              <p className={`mt-2 text-[12px] font-bold ${counted ? "text-primary-400" : "text-fg/50"}`}>
+                {t(counted ? "ev_counted" : "ev_not_counted")}
+              </p>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <button onClick={start} className="flex-1 rounded-full bg-primary py-3 text-[14px] font-bold text-white">{t("ev_play_again")}</button>
+            <button onClick={() => { setPhase("intro"); setShowStandings(true); }} className="flex-1 rounded-full bg-white/8 py-3 text-[14px] font-bold text-fg/80">
+              {t("ev_standings")}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
