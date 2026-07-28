@@ -64,7 +64,7 @@ export default function BragButton({ post, hearts }: { post: StagePostPublic; he
           <div className="mt-2.5 truncate text-[15px] font-bold text-white">{post.title}</div>
           <div className="text-[12px] text-white/50">@{post.handle}</div>
           <div className="mt-3 flex items-center justify-between">
-            <span className="text-[12px] font-black tracking-tight text-white/80">CELEBUS FanStage</span>
+            <span className="text-[12px] font-black tracking-tight text-white/80">CELEBUS MOMENT</span>
             <span className="text-[11px] text-white/40">💜</span>
           </div>
         </div>

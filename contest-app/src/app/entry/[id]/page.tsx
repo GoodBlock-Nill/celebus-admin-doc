@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       .eq("id", id)
       .maybeSingle();
     if (!data) return {};
-    const title = `${data.title} — @${data.handle} | CELEBUS FanStage`;
+    const title = `${data.title} — @${data.handle} | CELEBUS MOMENT`;
     const description = `투표하러 가기 💜 현재 ${data.vote_count.toLocaleString()}표`;
     return {
       title,

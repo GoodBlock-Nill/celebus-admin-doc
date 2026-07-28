@@ -19,30 +19,30 @@ const display = Gothic_A1({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://celebus-fanstage.vercel.app";
-const SITE_DESC = "CELEBUS Fan Stage — 내 최애의 영상·사진을 올리고 보상을 받아보세요";
+const SITE_DESC = "CELEBUS MOMENT — 내가 찍은 순간을 올리면 멤버가 봐줘요. Your moment. Their response.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "CELEBUS FanStage",
+  title: "CELEBUS MOMENT",
   description: SITE_DESC,
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "CELEBUS FanStage",
+    title: "CELEBUS MOMENT",
   },
   icons: { icon: "/symbol.svg", shortcut: "/symbol.svg", apple: "/icons/icon-192.png" },
   openGraph: {
     type: "website",
-    siteName: "CELEBUS FanStage",
-    title: "CELEBUS FanStage",
+    siteName: "CELEBUS MOMENT",
+    title: "CELEBUS MOMENT",
     description: SITE_DESC,
     url: "/",
     locale: "ko_KR",
   },
   twitter: {
     card: "summary_large_image",
-    title: "CELEBUS FanStage",
+    title: "CELEBUS MOMENT",
     description: SITE_DESC,
   },
 };

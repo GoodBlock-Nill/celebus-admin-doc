@@ -23,7 +23,7 @@ export default function ShareModal({
   const [canNative, setCanNative] = useState(false);
 
   const url = typeof window !== "undefined" ? `${window.location.origin}${path}` : "";
-  const text = `${label} — ${shareText ?? t("share_text")} | CELEBUS FanStage`;
+  const text = `${label} — ${shareText ?? t("share_text")} | CELEBUS MOMENT`;
 
   useEffect(() => {
     setCanNative(typeof navigator !== "undefined" && !!navigator.share);
@@ -52,7 +52,7 @@ export default function ShareModal({
   }
   async function nativeShare() {
     try {
-      await navigator.share({ title: "CELEBUS FanStage", text, url });
+      await navigator.share({ title: "CELEBUS MOMENT", text, url });
     } catch {
       /* 사용자가 취소 */
     }

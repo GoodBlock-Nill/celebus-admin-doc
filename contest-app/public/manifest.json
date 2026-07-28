@@ -1,7 +1,7 @@
 {
-  "name": "CELEBUS FanStage",
-  "short_name": "FanStage",
-  "description": "V01D 팬 콘테스트 — 내 작품을 무대에 올리고 투표로 겨뤄요",
+  "name": "CELEBUS MOMENT",
+  "short_name": "MOMENT",
+  "description": "CELEBUS MOMENT — 내가 찍은 순간을 올리면 멤버가 봐줘요. Your moment. Their response.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#121212",

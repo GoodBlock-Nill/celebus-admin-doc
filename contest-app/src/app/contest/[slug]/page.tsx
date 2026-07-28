@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       .eq("slug", slug)
       .maybeSingle();
     if (!data) return {};
-    const title = `${data.title} | CELEBUS FanStage`;
+    const title = `${data.title} | CELEBUS MOMENT`;
     const description = data.prize_summary
       ? `🏆 ${data.prize_summary} · 지금 참여하고 좋아요를 받아보세요`
       : "V01D 팬 콘테스트 · 지금 참여하고 좋아요를 받아보세요";

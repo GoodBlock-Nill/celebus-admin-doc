@@ -51,7 +51,7 @@ function Login({ onOk }: { onOk: () => void }) {
   return (
     <div className="flex min-h-dvh items-center justify-center p-4">
       <div className="w-full max-w-xs rounded-3xl border border-border bg-card p-6 text-center">
-        <h1 className="mb-1 text-lg font-black">FanStage 관리자</h1>
+        <h1 className="mb-1 text-lg font-black">CELEBUS MOMENT 관리자</h1>
         <p className="mb-4 text-[12px] text-muted">관리자 비밀번호를 입력하세요</p>
         <input
           type="password"
@@ -190,7 +190,7 @@ export default function AdminPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/symbol.svg" alt="" className="h-6 w-6" />
           <h1 className="text-[15px] font-black">
-            FanStage <span className="text-muted">관리자</span>
+            MOMENT <span className="text-muted">관리자</span>
           </h1>
         </div>
         {nav}
@@ -201,7 +201,7 @@ export default function AdminPage() {
         <div className="flex items-center gap-2 px-4 py-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/symbol.svg" alt="" className="h-5 w-5" />
-          <h1 className="text-[14px] font-black">FanStage 관리자</h1>
+          <h1 className="text-[14px] font-black">CELEBUS MOMENT 관리자</h1>
         </div>
         <div className="flex gap-1.5 overflow-x-auto px-4 pb-2.5">{nav}</div>
       </div>
