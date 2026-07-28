@@ -35,16 +35,16 @@ type Tab = "videos" | "seen" | "comments";
 
 const TABS: { key: Tab; label: string }[] = [
   { key: "videos", label: "내 영상" },
-  { key: "seen", label: "봐준 영상" },
+  { key: "seen", label: "하트 받은 영상" },
   { key: "comments", label: "내 댓글" },
 ];
 
 function heartLine(hearts: MemberHeartPublic[], membersTotal: number): { text: string; active: boolean } {
   if (hearts.length === 0) return { text: "아직 멤버 반응 없음", active: false };
-  if (membersTotal > 0 && hearts.length >= membersTotal) return { text: "● 멤버 전원이 봤어요", active: true };
+  if (membersTotal > 0 && hearts.length >= membersTotal) return { text: "● 멤버 전원 하트", active: true };
   const sorted = [...hearts].sort((a, b) => a.sort_order - b.sort_order);
   const first = sorted[0].display_name;
-  const text = sorted.length === 1 ? `● ${first} 님이 봤어요` : `● ${first} 님 외 ${sorted.length - 1}명이 봤어요`;
+  const text = sorted.length === 1 ? `● ${first} 님이 하트를 보냈어요` : `● ${first} 님 외 ${sorted.length - 1}명이 하트를 보냈어요`;
   return { text, active: true };
 }
 
@@ -253,7 +253,7 @@ export default function MyPage() {
       {/* 통계 */}
       <div className="mt-3 flex gap-[9px]">
         <StatCard n={stats.videoCount} label="내 영상" />
-        <StatCard n={stats.totalHearts} label="멤버가 봤어요" accent />
+        <StatCard n={stats.totalHearts} label="멤버 하트" accent />
         <StatCard n={stats.grandSlamCount} label="멤버 전원" />
       </div>
 

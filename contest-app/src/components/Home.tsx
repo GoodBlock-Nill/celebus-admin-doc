@@ -120,7 +120,7 @@ export default function Home() {
         </div>
       ) : isFullyEmpty ? (
         <div className="rounded-2xl border border-border bg-card px-4 py-16 text-center text-[13.5px] leading-relaxed text-muted">
-          아직 무대가 열리지 않았어요.
+          아직 열린 공연이 없어요.
           <br />곧 만나요!
         </div>
       ) : (
@@ -139,7 +139,7 @@ export default function Home() {
                 {heroHearts.length > 0 && (
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/90 py-1 pl-1 pr-2.5 text-[11px] font-extrabold text-white backdrop-blur-sm">
                     <AvatarStack hearts={heroHearts} size={18} ring="ring-white/60" />
-                    {heroGrandSlam ? "멤버 전원이 봤어요" : "멤버가 봤어요"}
+                    {heroGrandSlam ? "멤버 전원 하트" : "멤버 하트"}
                   </span>
                 )}
                 <h1 className="mt-2.5 line-clamp-2 text-[20px] font-extrabold leading-tight tracking-tight text-white drop-shadow-md">
@@ -155,7 +155,7 @@ export default function Home() {
 
           {reactionItems.length > 0 && (
             <div>
-              <SectionHeader title="멤버가 봤어요" sub="최근 내 영상에 남은 반응" />
+              <SectionHeader title="멤버 반응" sub="최근 내 영상에 남은 반응" />
               <div className="space-y-2.5">
                 {reactionItems.map(({ post, heart }) => (
                   <Link
@@ -168,7 +168,7 @@ export default function Home() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <strong className="line-clamp-2 block text-[13px] font-bold leading-snug text-fg">
-                        {heart.display_name} 님이 회원님의 영상을 봤어요
+                        {heart.display_name} 님이 하트를 보냈어요
                       </strong>
                       <p className="mt-0.5 truncate text-[11px] text-subtle">
                         {post.title} · {timeAgo(heart.created_at)}
@@ -185,7 +185,7 @@ export default function Home() {
 
           {stages.length > 0 && (
             <div>
-              <SectionHeader title="진행 중인 스테이지" moreHref="/stages" />
+              <SectionHeader title="진행 중인 공연" moreHref="/stages" />
               <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
                 {stages.map((s) => (
                   <Link key={s.id} href={`/stage/${s.id}`} className="w-[156px] shrink-0 active:scale-[0.98]">

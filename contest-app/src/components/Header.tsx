@@ -43,7 +43,7 @@ export default function Header() {
             <img src="/symbol.svg" alt="" className="h-7 w-7 shrink-0" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/wordmark.svg" alt="CELEBUS" className="h-[17px] w-auto shrink-0" />
-            <span className="brand-gradient-text font-display text-[18px] font-black tracking-tight">MOMENT</span>
+            <span className="font-display text-[18px] font-black tracking-tight text-fg">MOMENT</span>
           </Link>
           <NotificationBell />
         </div>
