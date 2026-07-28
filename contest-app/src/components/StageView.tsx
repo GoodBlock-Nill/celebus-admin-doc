@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Plus, ChevronLeft, CalendarDays } from "lucide-react";
 import Link from "next/link";
 import { sb } from "@/lib/supabase-browser";
-import type { StageCategory, StagePostPublic, StagePublic } from "@/lib/types";
+import type { MemberHeartPublic, StageCategory, StagePostPublic, StagePublic } from "@/lib/types";
 import { STAGE_CATEGORY_KEYS } from "@/lib/types";
 import StageCard from "./StageCard";
 import StageDetailModal from "./StageDetailModal";
@@ -25,6 +25,8 @@ export default function StageView({ stageId }: { stageId: string }) {
   const [loading, setLoading] = useState(true);
   const [openPost, setOpenPost] = useState<StagePostPublic | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
+  const [isMemberMe, setIsMemberMe] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -32,7 +34,22 @@ export default function StageView({ stageId }: { stageId: string }) {
       if (!data) setNotFound(true);
       else setStage(data as StagePublic);
     })();
+    // 내가 멤버인지 (멤버 하트 버튼 노출)
+    fetch("/api/stage/me")
+      .then((r) => r.json())
+      .then((j) => setIsMemberMe(!!j.member))
+      .catch(() => {});
   }, [stageId]);
+
+  const loadHearts = useCallback(async (ids: string[]) => {
+    if (!ids.length) return;
+    const { data } = await sb.from("member_hearts_public").select("*").in("post_id", ids);
+    const map = new Map<string, MemberHeartPublic[]>();
+    for (const h of (data ?? []) as MemberHeartPublic[]) {
+      map.set(h.post_id, [...(map.get(h.post_id) ?? []), h]);
+    }
+    setHearts(map);
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -43,6 +60,7 @@ export default function StageView({ stageId }: { stageId: string }) {
     setPosts(rows);
     setLoading(false);
     if (rows.length) {
+      void loadHearts(rows.map((r) => r.id));
       try {
         const res = await fetch(`/api/stage/mine?liked_for=${rows.map((r) => r.id).join(",")}`);
         const j = await res.json();
@@ -51,11 +69,24 @@ export default function StageView({ stageId }: { stageId: string }) {
         /* 하트 상태는 보조 정보 — 실패 무시 */
       }
     }
-  }, [stageId, filter]);
+  }, [stageId, filter, loadHearts]);
 
   useEffect(() => {
     void load();
   }, [load]);
+
+  async function toggleMemberHeart(post: StagePostPublic) {
+    try {
+      const res = await fetch(`/api/stage/posts/${post.id}/member-heart`, { method: "POST" });
+      if (!res.ok) {
+        toast(t("err_server"));
+        return;
+      }
+      void loadHearts(posts.map((p) => p.id)); // 하트 표시 갱신
+    } catch {
+      toast(t("err_server"));
+    }
+  }
 
   async function toggleLike(post: StagePostPublic) {
     try {
@@ -150,13 +181,28 @@ export default function StageView({ stageId }: { stageId: string }) {
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {posts.map((p) => (
-            <StageCard key={p.id} post={p} liked={liked.has(p.id)} onOpen={() => setOpenPost(p)} onToggleLike={() => void toggleLike(p)} />
+            <StageCard
+              key={p.id}
+              post={p}
+              liked={liked.has(p.id)}
+              hearts={hearts.get(p.id) ?? []}
+              onOpen={() => setOpenPost(p)}
+              onToggleLike={() => void toggleLike(p)}
+            />
           ))}
         </div>
       )}
 
       {openPost && (
-        <StageDetailModal post={openPost} liked={liked.has(openPost.id)} onClose={() => setOpenPost(null)} onToggleLike={() => void toggleLike(openPost)} />
+        <StageDetailModal
+          post={openPost}
+          liked={liked.has(openPost.id)}
+          hearts={hearts.get(openPost.id) ?? []}
+          isMemberMe={isMemberMe}
+          onClose={() => setOpenPost(null)}
+          onToggleLike={() => void toggleLike(openPost)}
+          onToggleMemberHeart={() => void toggleMemberHeart(openPost)}
+        />
       )}
       {uploading && <StageUploadModal stageId={stageId} onClose={() => setUploading(false)} onPosted={() => void load()} />}
     </div>

@@ -140,6 +140,30 @@ export function stagePostAsEntry(p: StagePostPublic): EntryPublic {
   };
 }
 
+
+// 멤버 하트 (W2) — member_hearts_public 뷰
+export interface MemberHeartPublic {
+  post_id: string;
+  member_id: string;
+  display_name: string;
+  avatar_url: string | null;
+  sort_order: number;
+  created_at: string;
+}
+
+// 댓글 (W2) — stage_comments_public 뷰
+export interface StageCommentPublic {
+  id: string;
+  post_id: string;
+  parent_id: string | null;
+  body: string;
+  created_at: string;
+  is_member: boolean;
+  member_name: string | null;
+  member_avatar: string | null;
+  fan_label: string;
+}
+
 export interface AwardPublic {
   id: string;
   contest_id: string;

@@ -2,18 +2,21 @@
 
 // 스테이지 피드 카드 — 썸네일 + 플랫폼 + 카테고리 + 팬 하트. 탭하면 상세(임베드) 열림.
 import { Heart, ImageOff } from "lucide-react";
-import type { StagePostPublic } from "@/lib/types";
+import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import PlatformBadge from "./PlatformBadge";
+import { MemberHeartStack } from "./MemberHearts";
 import { useLang } from "./LangProvider";
 
 export default function StageCard({
   post,
   liked,
+  hearts = [],
   onOpen,
   onToggleLike,
 }: {
   post: StagePostPublic;
   liked: boolean;
+  hearts?: MemberHeartPublic[];
   onOpen: () => void;
   onToggleLike: () => void;
 }) {
@@ -35,6 +38,12 @@ export default function StageCard({
         <span className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[11px] font-bold text-white">
           {t(`cat_${post.category}`)}
         </span>
+        {/* 멤버 하트 스택 — 이 카드의 훈장 (W2) */}
+        {hearts.length > 0 && (
+          <span className="absolute bottom-2 left-2">
+            <MemberHeartStack hearts={hearts} />
+          </span>
+        )}
       </button>
       <div className="flex items-center gap-2 px-3 py-2.5">
         <button onClick={onOpen} className="min-w-0 flex-1 text-left">

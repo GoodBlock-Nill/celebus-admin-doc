@@ -1,25 +1,33 @@
 "use client";
 
-// 스테이지 상세 — 실제 임베드 재생 + 하트 + 신고 + 원본 링크. (멤버 하트 표시는 W2에서 이 화면에 추가)
+// 스테이지 상세 — 임베드 재생 + 멤버 하트 라인(W2) + 팬 하트 + 댓글(W2) + 신고 + 원본.
 import { useState } from "react";
 import { toast } from "sonner";
 import { X, Heart, Flag, ExternalLink } from "lucide-react";
-import type { StagePostPublic } from "@/lib/types";
+import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import { stagePostAsEntry } from "@/lib/types";
 import EntryEmbed from "./EntryEmbed";
 import PlatformBadge from "./PlatformBadge";
+import CommentSection from "./CommentSection";
+import { MemberHeartsLine } from "./MemberHearts";
 import { useLang } from "./LangProvider";
 
 export default function StageDetailModal({
   post,
   liked,
+  hearts,
+  isMemberMe,
   onClose,
   onToggleLike,
+  onToggleMemberHeart,
 }: {
   post: StagePostPublic;
   liked: boolean;
+  hearts: MemberHeartPublic[];
+  isMemberMe: boolean;
   onClose: () => void;
   onToggleLike: () => void;
+  onToggleMemberHeart: () => void;
 }) {
   const { t } = useLang();
   const [reporting, setReporting] = useState(false);
@@ -55,6 +63,13 @@ export default function StageDetailModal({
 
         <EntryEmbed entry={stagePostAsEntry(post)} />
 
+        {/* 멤버 하트 라인 — 이 영상의 훈장 */}
+        {hearts.length > 0 && (
+          <div className="mt-3">
+            <MemberHeartsLine hearts={hearts} />
+          </div>
+        )}
+
         <div className="mt-3">
           <div className="text-[15px] font-bold text-fg">{post.title}</div>
           <div className="text-[12.5px] text-fg/50">@{post.handle}</div>
@@ -71,6 +86,14 @@ export default function StageDetailModal({
             <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} />
             <span className="tabular-nums">{post.like_count}</span>
           </button>
+          {isMemberMe && (
+            <button
+              onClick={onToggleMemberHeart}
+              className="flex min-h-11 items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-[#ec5c9a] px-4 py-2.5 text-[13px] font-bold text-white"
+            >
+              <Heart className="h-4 w-4 fill-current" /> {t("mh_button")}
+            </button>
+          )}
           <a
             href={post.source_url}
             target="_blank"
@@ -88,6 +111,9 @@ export default function StageDetailModal({
             <Flag className="h-4 w-4" />
           </button>
         </div>
+
+        {/* 댓글 */}
+        <CommentSection postId={post.id} />
       </div>
     </div>
   );
