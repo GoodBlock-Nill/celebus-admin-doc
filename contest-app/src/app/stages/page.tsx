@@ -1,12 +1,12 @@
 import Shell from "@/components/Shell";
-import Home from "@/components/Home";
+import StageList from "@/components/StageList";
 
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
+export default function StagesPage() {
   return (
     <Shell>
-      <Home />
+      <StageList />
     </Shell>
   );
 }

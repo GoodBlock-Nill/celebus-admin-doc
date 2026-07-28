@@ -1,12 +1,12 @@
 import Shell from "@/components/Shell";
-import Home from "@/components/Home";
+import EventList from "@/components/EventList";
 
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
+export default function EventsPage() {
   return (
     <Shell>
-      <Home />
+      <EventList />
     </Shell>
   );
 }

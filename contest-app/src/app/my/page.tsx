@@ -1,12 +1,12 @@
 import Shell from "@/components/Shell";
-import Home from "@/components/Home";
+import MyPage from "@/components/MyPage";
 
 export const dynamic = "force-dynamic";
 
-export default function HomePage() {
+export default function MyRoutePage() {
   return (
     <Shell>
-      <Home />
+      <MyPage />
     </Shell>
   );
 }

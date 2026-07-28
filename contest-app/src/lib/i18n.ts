@@ -90,6 +90,9 @@ export const messages: Record<Lang, Dict> = {
     err_stage_not_found: "스테이지를 찾을 수 없어요.",
     // ── 스테이지 (W1) ──
     stage_tab: "스테이지",
+    nav_home_tab: "홈",
+    nav_my_tab: "마이",
+    nav_upload_tab: "올리기",
     event_tab: "이벤트",
     stage_heading: "멤버에게 자랑하는 무대",
     stage_sub: "직캠·커버·편집 영상을 자유롭게 올려요. 멤버들이 보러 와요 💜",
@@ -358,6 +361,9 @@ export const messages: Record<Lang, Dict> = {
     err_stage_not_found: "Stage not found.",
     // ── Stage (W1) ──
     stage_tab: "Stage",
+    nav_home_tab: "Home",
+    nav_my_tab: "My",
+    nav_upload_tab: "Upload",
     event_tab: "Events",
     stage_heading: "Your stage for the members",
     stage_sub: "Post fancams, covers, and edits anytime. The members drop by 💜",
@@ -616,6 +622,9 @@ export const messages: Record<Lang, Dict> = {
     err_stage_not_found: "ステージが見つかりません。",
     // ── ステージ (W1) ──
     stage_tab: "ステージ",
+    nav_home_tab: "ホーム",
+    nav_my_tab: "マイ",
+    nav_upload_tab: "投稿",
     event_tab: "イベント",
     stage_heading: "メンバーに自慢するステージ",
     stage_sub: "ファンカム・カバー・編集動画を自由に投稿。メンバーが見に来ます 💜",
