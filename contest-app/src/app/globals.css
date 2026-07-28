@@ -1,34 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── 뉴트럴 다크 계조 (elevation) ── */
-  --color-surface-0: #0b0b0d; /* 페이지 배경 */
-  --color-surface-1: #141417; /* 카드 */
-  --color-surface-2: #1c1c20; /* hover / 상승 */
-  --color-surface-3: #26262c; /* 시트 / 모달 */
-  --color-hairline: #232327; /* 거의 안 보이는 실선 */
-  --color-line: #35353d; /* 강조 디바이더 */
+  /* ── 라이트 뉴트럴 계조 (CELEBUS MOMENT 디자인 시스템) ── */
+  --color-surface-0: #f7f7fa; /* 페이지 배경 */
+  --color-surface-1: #ffffff; /* 카드 */
+  --color-surface-2: #f8f8fc; /* hover / 상승 */
+  --color-surface-3: #ffffff; /* 시트 / 모달 */
+  --color-hairline: #eeeef3; /* 거의 안 보이는 실선 */
+  --color-line: #e6e6ed; /* 강조 디바이더 */
 
   /* 기존 이름 유지(값만 재매핑) — 회귀 방지 */
-  --color-bg: #0b0b0d;
-  --color-card: #141417;
-  --color-card-2: #1c1c20;
-  --color-border: #232327;
-  --color-fg: #f4f4f5;
-  --color-muted: #a1a1aa;
-  --color-subtle: #71717a;
+  --color-bg: #f7f7fa;
+  --color-card: #ffffff;
+  --color-card-2: #f8f8fc;
+  --color-border: #e6e6ed;
+  --color-fg: #17171c;
+  --color-muted: #686a76;
+  --color-subtle: #a6a7b2;
 
-  /* ── 보라 포인트 (CTA·하이라이트 전용) ── */
-  --color-primary: #8b5cf6;
-  --color-primary-600: #7c3aed;
-  --color-primary-strong: #7c3aed;
-  --color-primary-400: #a78bfa;
+  /* ── 인디고 포인트 (CTA·활성·멤버 반응 전용) ── */
+  --color-primary: #5556d9;
+  --color-primary-600: #4a4bc9;
+  --color-primary-strong: #3f40a8;
+  --color-primary-400: #7c7de6;
+  --color-primary-soft: #eef0ff; /* 멤버 반응 배지·선택 칩 */
 
   /* ── 신호색 (최소화) ── */
-  --color-accent: #ec4899; /* 잔재 — P2에서 제거 예정 */
-  --color-live: #f43f5e; /* D-day 펄스 전용 */
-  --color-verified: #34d399;
-  --color-danger: #f87171;
+  --color-accent: #5556d9; /* 브랜드로 통일(멤버 반응) */
+  --color-live: #c94355; /* 라이브·신고 펄스 */
+  --color-verified: #5556d9;
+  --color-danger: #c94355;
 
   /* ── 메달 (채도 강화) ── */
   --color-gold: #f5c451;
@@ -52,7 +53,7 @@
 
 html {
   background: var(--color-surface-0);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -202,5 +203,5 @@ body {
 /* ── 얇은 스크롤바 ── */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #3a3a44 transparent;
+  scrollbar-color: #d3d3dd transparent;
 }
