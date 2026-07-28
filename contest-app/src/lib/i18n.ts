@@ -107,7 +107,7 @@ export const messages: Record<Lang, Dict> = {
     stage_url_ph: "YouTube · TikTok · X · Instagram · Threads 링크",
     stage_preview: "미리보기",
     stage_title_label: "제목",
-    stage_title_ph: "어떤 무대인가요?",
+    stage_title_ph: "영상 제목을 입력해주세요",
     stage_desc_label: "소개 (선택)",
     stage_handle_label: "SNS 핸들",
     stage_handle_ph: "@ 없이 입력",

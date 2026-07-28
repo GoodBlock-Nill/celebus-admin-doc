@@ -80,27 +80,27 @@ export default function HallOfFame() {
 
   return (
     <div>
-      <Link href="/" className="mb-2 inline-flex min-h-11 items-center gap-1 text-[13px] font-bold text-fg/60">
+      <Link href="/" className="mb-2 inline-flex min-h-11 items-center gap-1 text-[13px] font-bold text-muted">
         <ChevronLeft className="h-4 w-4" /> {t("stage_tab")}
       </Link>
       <div className="mb-4 flex items-center gap-2">
-        <Trophy className="h-5 w-5 text-primary-400" />
+        <Trophy className="h-5 w-5 text-primary" />
         <div>
           <h1 className="text-[19px] font-bold text-fg">{t("hall_title")}</h1>
-          <p className="text-[12.5px] text-fg/50">{t("hall_sub")}</p>
+          <p className="text-[12.5px] text-muted">{t("hall_sub")}</p>
         </div>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-2 gap-2.5">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="aspect-[16/12] animate-pulse rounded-2xl bg-white/5" />
+            <div key={i} className="aspect-[4/5] animate-pulse rounded-2xl border border-border bg-card-2" />
           ))}
         </div>
       ) : posts.length === 0 ? (
-        <div className="rounded-2xl bg-white/[0.04] px-4 py-14 text-center text-[13.5px] text-fg/50 ring-1 ring-white/10">{t("hall_empty")}</div>
+        <div className="rounded-2xl border border-border bg-card px-4 py-14 text-center text-[13.5px] text-muted">{t("hall_empty")}</div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-2 gap-2.5">
           {posts.map((p) => (
             <StageCard
               key={p.id}
