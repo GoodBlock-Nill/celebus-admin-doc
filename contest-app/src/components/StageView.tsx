@@ -113,26 +113,27 @@ export default function StageView({ stageId }: { stageId: string }) {
 
   if (notFound) {
     return (
-      <div className="rounded-2xl bg-white/[0.04] px-4 py-14 text-center text-[13.5px] text-fg/50 ring-1 ring-white/10">
+      <div className="rounded-2xl border border-border bg-card px-4 py-14 text-center text-[13.5px] text-muted">
         {t("stage_not_found")}
       </div>
     );
   }
 
   const FILTERS: Filter[] = ["all", ...STAGE_CATEGORY_KEYS];
+  const scopeLabel = t(filter === "all" ? "cat_all" : `cat_${filter}`);
 
   return (
     <div>
       {/* 스테이지 헤더 */}
-      <div className="mb-4">
-        <Link href="/" className="mb-2 inline-flex min-h-11 items-center gap-1 text-[13px] font-bold text-fg/60">
+      <div className="mb-1">
+        <Link href="/" className="mb-2 inline-flex min-h-11 items-center gap-1 text-[13px] font-bold text-muted">
           <ChevronLeft className="h-4 w-4" /> {t("stage_tab")}
         </Link>
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <h1 className="text-[19px] font-bold text-fg">{stage?.title ?? "…"}</h1>
-            {stage?.description && <p className="mt-0.5 text-[12.5px] leading-relaxed text-fg/55">{stage.description}</p>}
-            <div className="mt-1.5 flex items-center gap-3 text-[11.5px] text-fg/45">
+            <h1 className="text-[19px] font-bold leading-tight tracking-tight text-fg">{stage?.title ?? "…"}</h1>
+            {stage?.description && <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted">{stage.description}</p>}
+            <div className="mt-1.5 flex items-center gap-3 text-[11.5px] text-subtle">
               {stage?.event_date && (
                 <span className="flex items-center gap-1">
                   <CalendarDays className="h-3.5 w-3.5" /> {stage.event_date}
@@ -144,43 +145,55 @@ export default function StageView({ stageId }: { stageId: string }) {
           {stage?.status === "open" && (
             <button
               onClick={() => requireLogin() && setUploading(true)}
-              className="flex shrink-0 items-center gap-1 rounded-full bg-primary px-4 py-2.5 text-[13px] font-bold text-white active:scale-95"
+              className="flex shrink-0 items-center gap-1 rounded-full bg-primary px-3.5 py-2 text-[12px] font-extrabold text-white shadow-sm active:scale-95"
             >
-              <Plus className="h-4 w-4" /> {t("stage_upload_cta")}
+              <Plus className="h-3.5 w-3.5" /> {t("stage_upload_cta")}
             </button>
           )}
         </div>
         {stage?.status === "archived" && (
-          <p className="mt-2 rounded-xl bg-white/5 px-3 py-2 text-[12px] text-fg/50 ring-1 ring-white/10">{t("stage_archived_note")}</p>
+          <p className="mt-2 rounded-xl border border-border bg-card-2 px-3 py-2 text-[12px] text-muted">{t("stage_archived_note")}</p>
         )}
       </div>
 
       {/* 카테고리 필터 */}
-      <div className="mb-3 flex gap-1.5 overflow-x-auto pb-1">
+      <div className="mb-1 flex gap-1.5 overflow-x-auto pb-1 pt-3">
         {FILTERS.map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`shrink-0 rounded-full px-3.5 py-2 text-[12.5px] font-bold ${filter === f ? "bg-primary text-white" : "bg-white/8 text-fg/60"}`}
+            className={`shrink-0 rounded-full border px-3.5 py-2 text-[12.5px] font-bold ${
+              filter === f ? "border-fg bg-fg text-white" : "border-border bg-card text-muted"
+            }`}
           >
             {t(f === "all" ? "cat_all" : `cat_${f}`)}
           </button>
         ))}
       </div>
 
+      {/* 현재 범위 · 정렬 기준 (최신순 고정) */}
+      {stage && (
+        <div className="mb-3 flex items-center px-0.5 py-1">
+          <span className="min-w-0 truncate text-[11.5px] font-semibold text-subtle">
+            {stage.title} · {scopeLabel}
+          </span>
+          <span className="ml-auto shrink-0 text-[11.5px] font-bold text-muted">{t("tab_latest")}</span>
+        </div>
+      )}
+
       {/* 피드 */}
       {loading ? (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-2 gap-2.5">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="aspect-[16/12] animate-pulse rounded-2xl bg-white/5" />
+            <div key={i} className="aspect-[4/5] animate-pulse rounded-2xl border border-border bg-card-2" />
           ))}
         </div>
       ) : posts.length === 0 ? (
-        <div className="rounded-2xl bg-white/[0.04] px-4 py-14 text-center text-[13.5px] text-fg/50 ring-1 ring-white/10">
+        <div className="rounded-2xl border border-border bg-card px-4 py-14 text-center text-[13.5px] text-muted">
           {t("stage_empty")}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-2 gap-2.5">
           {posts.map((p) => (
             <StageCard
               key={p.id}

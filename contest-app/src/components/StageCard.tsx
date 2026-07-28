@@ -1,11 +1,45 @@
 "use client";
 
 // 스테이지 피드 카드 — 썸네일 + 플랫폼 + 카테고리 + 팬 하트. 탭하면 상세(임베드) 열림.
-import { Heart, ImageOff } from "lucide-react";
+import { Heart, ImageOff, Play } from "lucide-react";
 import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
-import PlatformBadge from "./PlatformBadge";
-import { MemberHeartStack } from "./MemberHearts";
 import { useLang } from "./LangProvider";
+
+// 카드 전용 컴팩트 멤버 반응 라인 — 작은 아바타 + 인디고 텍스트 (은은하게, 광택/컨페티 없음)
+function CardMemberSeenLine({ hearts }: { hearts: MemberHeartPublic[] }) {
+  const { t } = useLang();
+  if (hearts.length === 0) return null;
+  const sorted = [...hearts].sort((a, b) => a.sort_order - b.sort_order);
+  const text =
+    sorted.length === 1
+      ? t("mh_likes_one").replace("{name}", sorted[0].display_name)
+      : t("mh_likes_many").replace("{name}", sorted[0].display_name).replace("{n}", String(sorted.length - 1));
+  return (
+    <div className="mt-1.5 flex items-center gap-1.5">
+      <span className="flex shrink-0 -space-x-1">
+        {sorted.slice(0, 5).map((h) =>
+          h.avatar_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={h.member_id}
+              src={h.avatar_url}
+              alt={h.display_name}
+              className="h-4 w-4 rounded-full object-cover ring-2 ring-card"
+            />
+          ) : (
+            <span
+              key={h.member_id}
+              className="flex h-4 w-4 items-center justify-center rounded-full bg-primary-soft text-[7px] font-bold text-primary-strong ring-2 ring-card"
+            >
+              {h.display_name.slice(0, 1)}
+            </span>
+          ),
+        )}
+      </span>
+      <span className="min-w-0 truncate text-[10.5px] font-bold text-primary-strong">{text}</span>
+    </div>
+  );
+}
 
 export default function StageCard({
   post,
@@ -25,47 +59,46 @@ export default function StageCard({
   const { t } = useLang();
   return (
     <div
-      className={`overflow-hidden rounded-2xl bg-white/[0.04] ${
-        grandSlam ? "ring-2 ring-[#f5c451]/70 shadow-[0_0_18px_-4px_rgba(245,196,81,0.5)]" : "ring-1 ring-white/10"
+      className={`overflow-hidden rounded-2xl bg-card shadow-sm ${
+        grandSlam ? "border-2 border-gold" : "border border-border"
       }`}
     >
       <button onClick={onOpen} className="relative block w-full text-left" aria-label={post.title}>
         {post.thumbnail_url ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={post.thumbnail_url} alt="" loading="lazy" className="aspect-video w-full object-cover" />
+          <img src={post.thumbnail_url} alt="" loading="lazy" className="aspect-[4/5] w-full object-cover" />
         ) : (
-          <div className="flex aspect-video w-full items-center justify-center bg-white/5 text-fg/30">
+          <div className="flex aspect-[4/5] w-full items-center justify-center bg-card-2 text-subtle">
             <ImageOff className="h-8 w-8" />
           </div>
         )}
-        <span className="absolute left-2 top-2">
-          <PlatformBadge platform={post.platform} />
-        </span>
-        <span className="absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[11px] font-bold text-white">
+        {/* 하단 비네트 — 배지·재생 아이콘 가독성 보조 */}
+        <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/45" />
+        <span className="absolute left-2 top-2 rounded-lg bg-black/45 px-2 py-1 text-[9.5px] font-extrabold text-white backdrop-blur-sm">
           {t(`cat_${post.category}`)}
         </span>
-        {/* 멤버 하트 스택 — 이 카드의 훈장 (W2) */}
-        {hearts.length > 0 && (
-          <span className="absolute bottom-2 left-2">
-            <MemberHeartStack hearts={hearts} />
-          </span>
-        )}
+        <span className="absolute bottom-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-white/95 text-primary shadow-sm">
+          <Play className="h-3 w-3 fill-current" />
+        </span>
       </button>
-      <div className="flex items-center gap-2 px-3 py-2.5">
-        <button onClick={onOpen} className="min-w-0 flex-1 text-left">
-          <div className="truncate text-[13.5px] font-bold text-fg">{post.title}</div>
-          <div className="truncate text-[11.5px] text-fg/50">@{post.handle}</div>
+      <div className="px-2.5 pb-2.5 pt-2">
+        <button onClick={onOpen} className="block w-full text-left">
+          <div className="line-clamp-2 text-[12.5px] font-bold leading-snug text-fg">{post.title}</div>
         </button>
-        <button
-          onClick={onToggleLike}
-          aria-label={t("stage_upload_cta")}
-          className={`flex min-h-11 shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-[12.5px] font-bold transition-colors ${
-            liked ? "bg-primary/20 text-primary-400" : "bg-white/8 text-fg/70"
-          }`}
-        >
-          <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} />
-          <span className="tabular-nums">{post.like_count}</span>
-        </button>
+        <div className="mt-1 flex items-center gap-2">
+          <span className="min-w-0 flex-1 truncate text-[11px] text-subtle">@{post.handle}</span>
+          <button
+            onClick={onToggleLike}
+            aria-label={t("stage_upload_cta")}
+            className={`-my-1.5 flex min-h-9 shrink-0 items-center gap-1 rounded-full px-2 text-[11px] font-bold transition-colors ${
+              liked ? "text-primary" : "text-muted"
+            }`}
+          >
+            <Heart className={`h-3.5 w-3.5 ${liked ? "fill-current" : ""}`} />
+            <span className="tabular-nums">{post.like_count}</span>
+          </button>
+        </div>
+        <CardMemberSeenLine hearts={hearts} />
       </div>
     </div>
   );
