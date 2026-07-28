@@ -88,29 +88,33 @@ export default function StageUploadModal({ stageId, onClose, onPosted }: { stage
         role="dialog"
         aria-modal="true"
         aria-label={t("stage_upload_cta")}
-        className="max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-[#141217] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:rounded-2xl"
+        className="max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-card p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-lg sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-[16px] font-bold text-fg">{t("stage_upload_cta")}</h2>
-          <button onClick={onClose} aria-label="닫기" className="flex h-11 w-11 items-center justify-center rounded-full text-fg/60 hover:text-fg">
+          <button onClick={onClose} aria-label="닫기" className="flex h-11 w-11 items-center justify-center rounded-full text-muted hover:text-fg">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         {/* 1스텝: 링크 */}
         <div className="flex gap-2">
-          <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl bg-white/6 px-3 ring-1 ring-white/10 focus-within:ring-primary/60">
-            <Link2 className="h-4 w-4 shrink-0 text-fg/40" />
+          <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-border bg-bg px-3 focus-within:ring-2 focus-within:ring-primary">
+            <Link2 className="h-4 w-4 shrink-0 text-subtle" />
             <input
               value={url}
               onChange={(e) => { setUrl(e.target.value); setResolved(null); }}
               onKeyDown={(e) => e.key === "Enter" && preview()}
               placeholder={t("stage_url_ph")}
-              className="min-w-0 flex-1 bg-transparent py-3 text-[13.5px] text-fg outline-none placeholder:text-fg/30"
+              className="min-w-0 flex-1 bg-transparent py-3 text-[13.5px] text-fg outline-none placeholder:text-subtle"
             />
           </div>
-          <button onClick={preview} disabled={busy} className="shrink-0 rounded-xl bg-white/10 px-4 text-[13px] font-bold text-fg disabled:opacity-50">
+          <button
+            onClick={preview}
+            disabled={busy}
+            className="shrink-0 rounded-xl border border-border bg-card-2 px-4 text-[13px] font-bold text-fg disabled:opacity-50"
+          >
             {t("stage_preview")}
           </button>
         </div>
@@ -118,43 +122,45 @@ export default function StageUploadModal({ stageId, onClose, onPosted }: { stage
         {/* 2스텝: 미리보기 + 상세 */}
         {resolved && (
           <div className="mt-4 space-y-3">
-            <div className="flex items-center gap-3 rounded-xl bg-white/5 p-2.5 ring-1 ring-white/10">
-              {resolved.oembed?.thumbnail_url && (
+            <div className="flex items-center gap-3 rounded-xl border border-border bg-card-2 p-2.5">
+              {resolved.oembed?.thumbnail_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={resolved.oembed.thumbnail_url} alt="" className="h-14 w-24 shrink-0 rounded-lg object-cover" />
+              ) : (
+                <div className="h-14 w-24 shrink-0 rounded-lg bg-gradient-to-br from-primary-soft to-card-2" />
               )}
               <div className="min-w-0 flex-1">
                 <PlatformBadge platform={resolved.platform} />
-                <div className="mt-1 truncate text-[12px] text-fg/60">{resolved.oembed?.title ?? resolved.canonicalUrl}</div>
+                <div className="mt-1 truncate text-[12px] text-muted">{resolved.oembed?.title ?? resolved.canonicalUrl}</div>
               </div>
             </div>
 
-            <label className="block text-[12px] font-bold text-fg/60">
+            <label className="block text-[12px] font-bold text-muted">
               {t("stage_title_label")}
               <input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={80} placeholder={t("stage_title_ph")}
-                className="mt-1 w-full rounded-xl bg-white/6 px-3 py-3 text-[13.5px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/30" />
+                className="mt-1 w-full rounded-xl border border-border bg-bg px-3 py-3 text-[13.5px] text-fg outline-none focus:ring-2 focus:ring-primary placeholder:text-subtle" />
             </label>
 
-            <label className="block text-[12px] font-bold text-fg/60">
+            <label className="block text-[12px] font-bold text-muted">
               {t("stage_desc_label")}
               <textarea value={description} onChange={(e) => setDescription(e.target.value)} maxLength={300} rows={2}
-                className="mt-1 w-full resize-none rounded-xl bg-white/6 px-3 py-3 text-[13.5px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60" />
+                className="mt-1 w-full resize-none rounded-xl border border-border bg-bg px-3 py-3 text-[13.5px] text-fg outline-none focus:ring-2 focus:ring-primary" />
             </label>
 
             {needHandle && (
-              <label className="block text-[12px] font-bold text-fg/60">
+              <label className="block text-[12px] font-bold text-muted">
                 {t("stage_handle_label")}
                 <input value={handle} onChange={(e) => setHandle(e.target.value)} maxLength={40} placeholder={t("stage_handle_ph")}
-                  className="mt-1 w-full rounded-xl bg-white/6 px-3 py-3 text-[13.5px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/30" />
+                  className="mt-1 w-full rounded-xl border border-border bg-bg px-3 py-3 text-[13.5px] text-fg outline-none focus:ring-2 focus:ring-primary placeholder:text-subtle" />
               </label>
             )}
 
             <div>
-              <div className="mb-1 text-[12px] font-bold text-fg/60">{t("stage_category_label")}</div>
+              <div className="mb-1 text-[12px] font-bold text-muted">{t("stage_category_label")}</div>
               <div className="flex flex-wrap gap-1.5">
                 {STAGE_CATEGORY_KEYS.map((c) => (
                   <button key={c} onClick={() => setCategory(c)}
-                    className={`rounded-full px-3.5 py-2 text-[12.5px] font-bold ${category === c ? "bg-primary text-white" : "bg-white/8 text-fg/60"}`}>
+                    className={`rounded-full px-3.5 py-2 text-[12.5px] font-bold ${category === c ? "bg-primary text-white" : "border border-border bg-bg text-muted"}`}>
                     {t(`cat_${c}`)}
                   </button>
                 ))}

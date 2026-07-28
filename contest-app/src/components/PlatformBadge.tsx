@@ -61,7 +61,7 @@ export function PlatformIcon({ platform, className }: { platform: Platform; clas
 
 export default function PlatformBadge({ platform }: { platform: Platform }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-bold text-fg/80">
+    <span className="inline-flex items-center gap-1 rounded-full bg-card-2 px-2 py-0.5 text-[11px] font-bold text-muted ring-1 ring-inset ring-border">
       <PlatformIcon platform={platform} className="h-3 w-3" />
       {PLATFORM_LABELS[platform]}
     </span>

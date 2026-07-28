@@ -26,30 +26,35 @@ function CommentRow({
 }) {
   const { t } = useLang();
   return (
-    <div className={`${isReply ? "ml-7" : ""} ${c.is_member ? "rounded-xl bg-primary/10 px-3 py-2.5 ring-1 ring-primary/25" : "px-1 py-2"}`}>
+    <div className={`${isReply ? "ml-7" : ""} ${c.is_member ? "rounded-xl bg-primary-soft px-3 py-2.5" : "px-1 py-2"}`}>
       <div className="flex items-center gap-2">
-        {isReply && <CornerDownRight className="h-3.5 w-3.5 shrink-0 text-fg/30" />}
+        {isReply && <CornerDownRight className="h-3.5 w-3.5 shrink-0 text-subtle" />}
         {c.is_member && c.member_avatar ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={c.member_avatar} alt="" className="h-5 w-5 rounded-full object-cover" />
+          <img src={c.member_avatar} alt="" className="h-5 w-5 rounded-full object-cover ring-2 ring-card" />
         ) : null}
-        <span className={`text-[12px] font-bold ${c.is_member ? "text-primary-400" : "text-fg/60"}`}>
+        <span className={`text-[12px] font-bold ${c.is_member ? "text-primary-strong" : "text-muted"}`}>
           {c.is_member ? c.member_name : c.fan_label}
         </span>
+        {c.is_member && (
+          <span className="rounded-full bg-primary px-1.5 py-0.5 text-[9.5px] font-extrabold text-white">
+            {t("comment_member_badge")}
+          </span>
+        )}
         <span className="flex-1" />
         {mine ? (
-          <button onClick={onDelete} aria-label={t("comment_delete")} className="flex h-8 w-8 items-center justify-center rounded-full text-fg/35 hover:text-fg/70">
+          <button onClick={onDelete} aria-label={t("comment_delete")} className="flex h-8 w-8 items-center justify-center rounded-full text-subtle hover:text-muted">
             <Trash2 className="h-3.5 w-3.5" />
           </button>
         ) : (
-          <button onClick={onReport} aria-label={t("comment_report")} className="flex h-8 w-8 items-center justify-center rounded-full text-fg/35 hover:text-fg/70">
+          <button onClick={onReport} aria-label={t("comment_report")} className="flex h-8 w-8 items-center justify-center rounded-full text-subtle hover:text-muted">
             <Flag className="h-3.5 w-3.5" />
           </button>
         )}
       </div>
       <p className="mt-0.5 whitespace-pre-wrap break-words text-[13px] leading-relaxed text-fg/85">{c.body}</p>
       {!isReply && onReply && (
-        <button onClick={onReply} className="mt-0.5 text-[11.5px] font-bold text-fg/40">
+        <button onClick={onReply} className="mt-0.5 text-[11.5px] font-bold text-subtle">
           {t("comment_reply")}
         </button>
       )}
@@ -65,14 +70,17 @@ export default function CommentSection({ postId }: { postId: string }) {
   const [body, setBody] = useState("");
   const [replyTo, setReplyTo] = useState<StageCommentPublic | null>(null);
   const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
+    setLoading(true);
     const [{ data }, mineRes] = await Promise.all([
       sb.from("stage_comments_public").select("*").eq("post_id", postId).order("created_at"),
       fetch(`/api/stage/posts/${postId}/comments`).then((r) => r.json()).catch(() => ({ mine: [] })),
     ]);
     setComments((data ?? []) as StageCommentPublic[]);
     setMine(new Set<string>(mineRes.mine ?? []));
+    setLoading(false);
   }, [postId]);
 
   useEffect(() => {
@@ -125,13 +133,19 @@ export default function CommentSection({ postId }: { postId: string }) {
   const repliesOf = (id: string) => comments.filter((c) => c.parent_id === id);
 
   return (
-    <div className="mt-4 border-t border-white/10 pt-3">
-      <h3 className="mb-1 text-[13px] font-bold text-fg/70">
-        {t("comments_title")} {comments.length > 0 && <span className="text-fg/40">({comments.length})</span>}
+    <div className="mt-4 border-t border-border pt-3">
+      <h3 className="mb-1 text-[13px] font-bold text-muted">
+        {t("comments_title")} {comments.length > 0 && <span className="text-subtle">({comments.length})</span>}
       </h3>
 
-      {ordered.length === 0 ? (
-        <p className="py-3 text-center text-[12.5px] text-fg/40">{t("comment_empty")}</p>
+      {loading ? (
+        <div className="space-y-2 py-2">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="h-9 animate-pulse rounded-xl bg-black/[0.05]" />
+          ))}
+        </div>
+      ) : ordered.length === 0 ? (
+        <p className="py-3 text-center text-[12.5px] text-subtle">{t("comment_empty")}</p>
       ) : (
         <div className="max-h-64 space-y-0.5 overflow-y-auto">
           {ordered.map((c) => (
@@ -146,10 +160,10 @@ export default function CommentSection({ postId }: { postId: string }) {
       )}
 
       {replyTo && (
-        <div className="mt-2 flex items-center gap-1.5 text-[11.5px] text-fg/50">
+        <div className="mt-2 flex items-center gap-1.5 text-[11.5px] text-muted">
           <CornerDownRight className="h-3 w-3" />
           {t("comment_reply")}: {replyTo.is_member ? replyTo.member_name : replyTo.fan_label}
-          <button onClick={() => setReplyTo(null)} className="ml-1 font-bold text-fg/70">×</button>
+          <button onClick={() => setReplyTo(null)} className="ml-1 font-bold text-fg">×</button>
         </div>
       )}
       <div className="mt-2 flex gap-2">
@@ -159,7 +173,7 @@ export default function CommentSection({ postId }: { postId: string }) {
           onKeyDown={(e) => e.key === "Enter" && !e.nativeEvent.isComposing && submit()}
           maxLength={200}
           placeholder={t("comment_ph")}
-          className="min-w-0 flex-1 rounded-xl bg-white/6 px-3 py-2.5 text-[13px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/30"
+          className="min-w-0 flex-1 rounded-xl border border-border bg-bg px-3 py-2.5 text-[13px] text-fg outline-none focus:border-primary focus:ring-2 focus:ring-primary/25 placeholder:text-subtle"
         />
         <button onClick={submit} disabled={busy || !body.trim()} className="shrink-0 rounded-xl bg-primary px-4 text-[13px] font-bold text-white disabled:opacity-40">
           {t("comment_send")}

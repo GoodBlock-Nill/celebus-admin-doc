@@ -33,23 +33,23 @@ export default function LoginPrompt({ onClose, onDone }: { onClose: () => void; 
         role="dialog"
         aria-modal="true"
         aria-label={t("sso_gate_title")}
-        className="w-full max-w-sm rounded-t-2xl bg-[#141217] p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-center sm:rounded-2xl"
+        className="w-full max-w-sm rounded-t-2xl bg-card ring-1 ring-border p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-center sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/symbol.svg" alt="" className="h-6 w-6" />
-            <span className="font-display text-[17px] font-black tracking-tight text-white">CELEBUS MOMENT</span>
+            <span className="font-display text-[17px] font-black tracking-tight text-fg">CELEBUS MOMENT</span>
           </div>
-          <button onClick={onClose} aria-label="닫기" className="flex h-9 w-9 items-center justify-center rounded-full text-fg/50 hover:text-fg">
+          <button onClick={onClose} aria-label="닫기" className="flex h-9 w-9 items-center justify-center rounded-full text-subtle hover:text-fg">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         <div className="text-[16px] font-bold text-fg break-keep">{t("sso_gate_title")}</div>
-        <p className="mt-2 text-[12.5px] leading-relaxed text-fg/60 break-keep">{t("sso_gate_body")}</p>
-        {failed && <p className="mt-2 text-[12px] font-bold text-red-400 break-keep">{t("sso_gate_failed")}</p>}
+        <p className="mt-2 text-[12.5px] leading-relaxed text-muted break-keep">{t("sso_gate_body")}</p>
+        {failed && <p className="mt-2 text-[12px] font-bold text-danger break-keep">{t("sso_gate_failed")}</p>}
 
         <a
           href={CELEBUS_APP_URL}
@@ -62,7 +62,7 @@ export default function LoginPrompt({ onClose, onDone }: { onClose: () => void; 
         <button
           onClick={retry}
           disabled={busy}
-          className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-full bg-white/8 py-3 text-[13.5px] font-bold text-fg/80 disabled:opacity-50"
+          className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-full bg-surface-2 py-3 text-[13.5px] font-bold text-fg disabled:opacity-50"
         >
           <RefreshCw className={`h-4 w-4 ${busy ? "animate-spin" : ""}`} /> {t("sso_gate_retry")}
         </button>

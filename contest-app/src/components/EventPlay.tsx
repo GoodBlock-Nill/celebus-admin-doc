@@ -33,16 +33,21 @@ function shuffle<T>(arr: T[]): T[] {
 // 대결 카드 한 쪽
 function MatchTile({ post, onPick }: { post: StagePostPublic; onPick: () => void }) {
   return (
-    <button onClick={onPick} className="w-full overflow-hidden rounded-2xl bg-white/[0.04] ring-1 ring-white/10 transition-transform active:scale-[0.98]">
+    <button
+      onClick={onPick}
+      className="w-full overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-transform active:scale-[0.98]"
+    >
       {post.thumbnail_url ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={post.thumbnail_url} alt="" className="aspect-video w-full object-cover" />
       ) : (
-        <div className="flex aspect-video w-full items-center justify-center bg-white/5 text-fg/30">🎬</div>
+        <div className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-primary-soft to-card-2 text-subtle">
+          🎬
+        </div>
       )}
       <div className="px-3 py-2 text-left">
         <div className="truncate text-[13px] font-bold text-fg">{post.title}</div>
-        <div className="truncate text-[11px] text-fg/45">@{post.handle}</div>
+        <div className="truncate text-[11px] text-subtle">@{post.handle}</div>
       </div>
     </button>
   );
@@ -128,7 +133,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
     setMatchIdx(0);
   }
 
-  if (!event) return <div className="h-40 animate-pulse rounded-2xl bg-white/5" />;
+  if (!event) return <div className="h-40 animate-pulse rounded-2xl border border-border bg-card-2" />;
 
   const a = current[matchIdx * 2];
   const b = current[matchIdx * 2 + 1];
@@ -136,35 +141,35 @@ export default function EventPlay({ eventId }: { eventId: string }) {
 
   return (
     <div>
-      <Link href="/" className="mb-2 inline-flex min-h-11 items-center gap-1 text-[13px] font-bold text-fg/60">
+      <Link href="/" className="mb-2 inline-flex min-h-11 items-center gap-1 text-[13px] font-bold text-muted">
         <ChevronLeft className="h-4 w-4" /> {t("event_tab")}
       </Link>
       <div className="mb-4">
         <div className="flex items-center gap-2">
-          <Trophy className="h-5 w-5 shrink-0 text-primary-400" />
+          <Trophy className="h-5 w-5 shrink-0 text-primary" />
           <h1 className="min-w-0 flex-1 text-[19px] font-bold text-fg">{event.title}</h1>
         </div>
-        <p className="mt-0.5 text-[12px] text-fg/50">{event.stage_title}</p>
+        <p className="mt-0.5 text-[12px] text-muted">{event.stage_title}</p>
       </div>
 
       {/* 결과 발표 배너 */}
       {event.status === "announced" && event.awards && (
-        <div className="mb-4 space-y-2 rounded-2xl bg-gradient-to-br from-[#f5c451]/15 to-primary/10 p-4 ring-1 ring-[#f5c451]/30">
-          <div className="text-[14px] font-bold text-[#f5c451]">{t("ev_results")} 🏆</div>
+        <div className="mb-4 space-y-2 rounded-2xl border border-border bg-card p-4 shadow-sm">
+          <div className="text-[14px] font-bold text-amber-600">{t("ev_results")} 🏆</div>
           {event.awards.fan && (
-            <div className="text-[13px] text-fg/85">
-              <b className="text-primary-400">{t("ev_award_fan")}</b> — {event.awards.fan.title} <span className="text-fg/50">@{event.awards.fan.handle}</span>
+            <div className="text-[13px] text-fg">
+              <b className="text-primary-strong">{t("ev_award_fan")}</b> — {event.awards.fan.title} <span className="text-subtle">@{event.awards.fan.handle}</span>
             </div>
           )}
           {event.awards.artist && (
-            <div className="text-[13px] text-fg/85">
-              <b className="text-primary-400">{t("ev_award_artist")}</b> — {event.awards.artist.title} <span className="text-fg/50">@{event.awards.artist.handle}</span>
+            <div className="text-[13px] text-fg">
+              <b className="text-primary-strong">{t("ev_award_artist")}</b> — {event.awards.artist.title} <span className="text-subtle">@{event.awards.artist.handle}</span>
             </div>
           )}
           {event.awards.uploader && (
-            <div className="text-[13px] text-fg/85">
-              <b className="text-primary-400">{t("ev_award_uploader")}</b> — @{event.awards.uploader.handle}{" "}
-              <span className="text-fg/50">({t("ev_award_uploader_days").replace("{n}", String(event.awards.uploader.days))})</span>
+            <div className="text-[13px] text-fg">
+              <b className="text-primary-strong">{t("ev_award_uploader")}</b> — @{event.awards.uploader.handle}{" "}
+              <span className="text-subtle">({t("ev_award_uploader_days").replace("{n}", String(event.awards.uploader.days))})</span>
             </div>
           )}
         </div>
@@ -173,16 +178,19 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       {/* 인트로 */}
       {phase === "intro" && (
         <div className="space-y-3">
-          {event.description && <p className="text-[13.5px] leading-relaxed text-fg/70">{event.description}</p>}
+          {event.description && <p className="text-[13.5px] leading-relaxed text-muted">{event.description}</p>}
           {event.status === "open" &&
             (size >= 2 ? (
               <button onClick={start} className="flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3.5 text-[15px] font-bold text-white active:scale-[0.99]">
                 <Play className="h-4 w-4" /> {t("ev_play")} ({t("ev_round_of").replace("{n}", String(size))})
               </button>
             ) : (
-              <p className="rounded-xl bg-white/5 px-3 py-3 text-center text-[13px] text-fg/50">{t("ev_not_enough")}</p>
+              <p className="rounded-xl border border-border bg-card-2 px-3 py-3 text-center text-[13px] text-muted">{t("ev_not_enough")}</p>
             ))}
-          <button onClick={() => setShowStandings((s) => !s)} className="w-full rounded-full bg-white/8 py-3 text-[13.5px] font-bold text-fg/80">
+          <button
+            onClick={() => setShowStandings((s) => !s)}
+            className="w-full rounded-full border border-border bg-card-2 py-3 text-[13.5px] font-bold text-fg"
+          >
             {t("ev_standings")}
           </button>
           {showStandings && <WorldcupStandings eventId={eventId} eventStatus={event.status} pool={pool} />}
@@ -193,13 +201,13 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       {phase === "playing" && a && b && (
         <div>
           <div className="mb-3 flex items-center justify-between text-[12.5px] font-bold">
-            <span className="rounded-full bg-primary/15 px-3 py-1 text-primary-400">{t("ev_round_of").replace("{n}", String(roundSize))}</span>
-            <span className="text-fg/50">{matchIdx + 1} / {Math.floor(roundSize / 2)}</span>
+            <span className="rounded-full bg-primary-soft px-3 py-1 text-primary-strong">{t("ev_round_of").replace("{n}", String(roundSize))}</span>
+            <span className="text-muted">{matchIdx + 1} / {Math.floor(roundSize / 2)}</span>
           </div>
           <p className="mb-3 text-center text-[14px] font-bold text-fg">{t("ev_pick_one")}</p>
           <div className="space-y-3">
             <MatchTile post={a} onPick={() => void pick(a, b)} />
-            <div className="text-center text-[13px] font-black text-fg/40">VS</div>
+            <div className="text-center text-[13px] font-black text-subtle">VS</div>
             <MatchTile post={b} onPick={() => void pick(b, a)} />
           </div>
         </div>
@@ -208,23 +216,26 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       {/* 결과 */}
       {phase === "done" && winner && (
         <div className="space-y-3">
-          <div className="rounded-2xl bg-gradient-to-br from-primary/25 to-transparent p-4 text-center ring-2 ring-primary/50">
-            <div className="text-[14px] font-bold text-primary-400">{t("ev_my_winner")}</div>
+          <div className="rounded-2xl border-2 border-primary bg-primary-soft p-4 text-center shadow-sm">
+            <div className="text-[14px] font-bold text-primary-strong">{t("ev_my_winner")}</div>
             {winner.thumbnail_url && (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={winner.thumbnail_url} alt="" className="mt-2 aspect-video w-full rounded-xl object-cover" />
             )}
             <div className="mt-2 text-[15px] font-bold text-fg">{winner.title}</div>
-            <div className="text-[12px] text-fg/50">@{winner.handle}</div>
+            <div className="text-[12px] text-subtle">@{winner.handle}</div>
             {counted != null && (
-              <p className={`mt-2 text-[12px] font-bold ${counted ? "text-primary-400" : "text-fg/50"}`}>
+              <p className={`mt-2 text-[12px] font-bold ${counted ? "text-primary-strong" : "text-muted"}`}>
                 {t(counted ? "ev_counted" : "ev_not_counted")}
               </p>
             )}
           </div>
           <div className="flex gap-2">
             <button onClick={start} className="flex-1 rounded-full bg-primary py-3 text-[14px] font-bold text-white">{t("ev_play_again")}</button>
-            <button onClick={() => { setPhase("intro"); setShowStandings(true); }} className="flex-1 rounded-full bg-white/8 py-3 text-[14px] font-bold text-fg/80">
+            <button
+              onClick={() => { setPhase("intro"); setShowStandings(true); }}
+              className="flex-1 rounded-full border border-border bg-card-2 py-3 text-[14px] font-bold text-fg"
+            >
               {t("ev_standings")}
             </button>
           </div>

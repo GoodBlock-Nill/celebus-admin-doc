@@ -53,7 +53,7 @@ export default function NotificationBell() {
 
   return (
     <>
-      <button onClick={openSheet} aria-label={t("noti_title")} className="relative flex h-10 w-10 items-center justify-center rounded-full text-fg/70 hover:text-fg">
+      <button onClick={openSheet} aria-label={t("noti_title")} className="relative flex h-10 w-10 items-center justify-center rounded-full text-muted hover:text-fg">
         <Bell className="h-[18px] w-[18px]" />
         {unread > 0 && (
           <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9.5px] font-bold text-white">
@@ -68,27 +68,27 @@ export default function NotificationBell() {
             role="dialog"
             aria-modal="true"
             aria-label={t("noti_title")}
-            className="max-h-[70dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-[#141217] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:rounded-2xl"
+            className="max-h-[70dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-card p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:rounded-2xl sm:ring-1 sm:ring-border"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="mb-2 text-[15px] font-bold text-fg">{t("noti_title")}</h2>
             {items.length === 0 ? (
-              <p className="py-8 text-center text-[13px] text-fg/40">{t("noti_empty")}</p>
+              <p className="py-8 text-center text-[13px] text-subtle">{t("noti_empty")}</p>
             ) : (
               <div className="space-y-1">
                 {items.map((n) => {
                   const isMemberNoti = n.type !== "fan_comment";
                   const inner = (
-                    <div className={`flex items-start gap-2.5 rounded-xl px-3 py-2.5 ${isMemberNoti ? "bg-primary/10 ring-1 ring-primary/25" : "bg-white/[0.04]"} ${n.read ? "opacity-60" : ""}`}>
+                    <div className={`flex items-start gap-2.5 rounded-xl px-3 py-2.5 ${isMemberNoti ? "bg-primary-soft" : "bg-surface-2"} ${n.read ? "opacity-60" : ""}`}>
                       {n.type === "member_heart" ? (
-                        <Heart className="mt-0.5 h-4 w-4 shrink-0 fill-current text-primary-400" />
+                        <Heart className="mt-0.5 h-4 w-4 shrink-0 fill-current text-primary" />
                       ) : (
-                        <MessageCircle className={`mt-0.5 h-4 w-4 shrink-0 ${isMemberNoti ? "text-primary-400" : "text-fg/50"}`} />
+                        <MessageCircle className={`mt-0.5 h-4 w-4 shrink-0 ${isMemberNoti ? "text-primary" : "text-subtle"}`} />
                       )}
                       <div className="min-w-0 flex-1">
-                        <p className={`text-[13px] font-bold leading-snug ${isMemberNoti ? "text-primary-400" : "text-fg/80"}`}>{line(n)}</p>
-                        {n.payload.post_title && <p className="mt-0.5 truncate text-[11.5px] text-fg/45">{n.payload.post_title}</p>}
-                        {n.payload.body && <p className="mt-0.5 truncate text-[11.5px] text-fg/55">&ldquo;{n.payload.body}&rdquo;</p>}
+                        <p className={`text-[13px] font-bold leading-snug ${isMemberNoti ? "text-primary-strong" : "text-fg"}`}>{line(n)}</p>
+                        {n.payload.post_title && <p className="mt-0.5 truncate text-[11.5px] text-subtle">{n.payload.post_title}</p>}
+                        {n.payload.body && <p className="mt-0.5 truncate text-[11.5px] text-muted">&ldquo;{n.payload.body}&rdquo;</p>}
                       </div>
                     </div>
                   );

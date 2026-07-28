@@ -41,7 +41,7 @@ export default function BragButton({ post, hearts }: { post: StagePostPublic; he
       <button
         onClick={share}
         disabled={busy}
-        className="flex w-full items-center justify-center gap-1.5 rounded-full bg-white/8 py-2.5 text-[13px] font-bold text-primary-400 ring-1 ring-primary/30 disabled:opacity-50"
+        className="flex w-full items-center justify-center gap-1.5 rounded-full border border-primary/30 bg-primary-soft py-2.5 text-[13px] font-bold text-primary-strong disabled:opacity-50"
       >
         <Share2 className="h-4 w-4" /> {t("brag_share")}
       </button>

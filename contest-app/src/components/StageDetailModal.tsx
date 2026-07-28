@@ -57,23 +57,24 @@ export default function StageDetailModal({
         role="dialog"
         aria-modal="true"
         aria-label={post.title}
-        className="max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-[#141217] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:rounded-2xl"
+        className="anim-sheet-up max-h-[92dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-card p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:rounded-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-center justify-between gap-2">
           <PlatformBadge platform={post.platform} />
-          <button onClick={onClose} aria-label="닫기" className="flex h-11 w-11 items-center justify-center rounded-full text-fg/60 hover:text-fg">
+          <button onClick={onClose} aria-label="닫기" className="flex h-11 w-11 items-center justify-center rounded-full text-muted hover:text-fg">
             <X className="h-5 w-5" />
           </button>
         </div>
 
+        {/* 미디어 — 영상 자체는 임베드별 자체 배경 유지, 주변 chrome은 라이트 */}
         <EntryEmbed entry={stagePostAsEntry(post)} />
 
-        {/* 멤버 하트 라인 — 이 영상의 훈장 */}
+        {/* 멤버 하트 라인 — 이 영상의 훈장 (은은한 브랜드 칩, 광택/컨페티 없음) */}
         {hearts.length > 0 && (
           <div className="mt-3 space-y-2">
             {grandSlam && (
-              <div className="rounded-xl bg-gradient-to-r from-[#f5c451]/25 to-primary/20 px-3 py-2 text-center text-[13px] font-bold text-[#f5c451] ring-1 ring-[#f5c451]/40">
+              <div className="rounded-xl bg-primary-soft px-3 py-2 text-center text-[13px] font-bold text-primary-strong">
                 {t("grandslam")}
               </div>
             )}
@@ -84,15 +85,15 @@ export default function StageDetailModal({
 
         <div className="mt-3">
           <div className="text-[15px] font-bold text-fg">{post.title}</div>
-          <div className="text-[12.5px] text-fg/50">@{post.handle}</div>
-          {post.description && <p className="mt-1.5 text-[13px] leading-relaxed text-fg/70">{post.description}</p>}
+          <div className="text-[12.5px] text-subtle">@{post.handle}</div>
+          {post.description && <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{post.description}</p>}
         </div>
 
         <div className="mt-4 flex items-center gap-2">
           <button
             onClick={onToggleLike}
             className={`flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 text-[14px] font-bold ${
-              liked ? "bg-primary/20 text-primary-400" : "bg-primary text-white"
+              liked ? "bg-primary-soft text-primary-strong" : "bg-primary text-white"
             }`}
           >
             <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} />
@@ -101,7 +102,7 @@ export default function StageDetailModal({
           {isMemberMe && (
             <button
               onClick={onToggleMemberHeart}
-              className="flex min-h-11 items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-[#ec5c9a] px-4 py-2.5 text-[13px] font-bold text-white"
+              className="brand-gradient flex min-h-11 items-center gap-1.5 rounded-full px-4 py-2.5 text-[13px] font-bold text-white shadow-sm"
             >
               <Heart className="h-4 w-4 fill-current" /> {t("mh_button")}
             </button>
@@ -110,7 +111,7 @@ export default function StageDetailModal({
             href={post.source_url}
             target="_blank"
             rel="noreferrer noopener"
-            className="flex min-h-11 items-center gap-1.5 rounded-full bg-white/8 px-4 py-2.5 text-[13px] font-bold text-fg/80"
+            className="flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-card-2 px-4 py-2.5 text-[13px] font-bold text-muted"
           >
             <ExternalLink className="h-4 w-4" /> {t("stage_open_original")}
           </a>
@@ -118,7 +119,7 @@ export default function StageDetailModal({
             onClick={report}
             disabled={reporting}
             aria-label={t("stage_report")}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/8 text-fg/50"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card-2 text-subtle disabled:opacity-50"
           >
             <Flag className="h-4 w-4" />
           </button>
