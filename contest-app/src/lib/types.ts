@@ -81,6 +81,65 @@ export interface EntryPublic {
   oembed_author: string | null;
 }
 
+// 스테이지 (W1) — 관리자가 생성하는 공연 단위 컨테이너. 유저는 스테이지에 영상 업로드.
+export interface StagePublic {
+  id: string;
+  title: string;
+  description: string;
+  cover_url: string | null;
+  event_date: string | null;
+  status: "open" | "archived";
+  post_count: number;
+  sort_order: number;
+  created_at: string;
+}
+
+// 스테이지 게시물 — stage_posts_public 뷰
+export const STAGE_CATEGORY_KEYS = ["fancam", "cover", "edit", "etc"] as const;
+export type StageCategory = (typeof STAGE_CATEGORY_KEYS)[number];
+
+export interface StagePostPublic {
+  id: string;
+  stage_id: string;
+  platform: Platform;
+  source_url: string;
+  external_id: string;
+  title: string;
+  description: string;
+  handle: string;
+  handle_verified: boolean;
+  category: StageCategory;
+  like_count: number;
+  created_at: string;
+  edited: boolean;
+  thumbnail_url: string | null;
+  oembed_title: string | null;
+  oembed_author: string | null;
+}
+
+// EntryEmbed(임베드 렌더러) 재사용을 위한 어댑터 — 스테이지 게시물을 EntryPublic 형태로
+export function stagePostAsEntry(p: StagePostPublic): EntryPublic {
+  return {
+    id: p.id,
+    contest_id: "",
+    platform: p.platform,
+    source_url: p.source_url,
+    external_id: p.external_id,
+    title: p.title,
+    description: p.description,
+    handle: p.handle,
+    handle_verified: p.handle_verified,
+    vote_count: p.like_count,
+    disqualified: false,
+    created_at: p.created_at,
+    updated_at: p.created_at,
+    edited: p.edited,
+    thumbnail_url: p.thumbnail_url,
+    oembed_title: p.oembed_title,
+    oembed_author: p.oembed_author,
+  };
+}
+
 export interface AwardPublic {
   id: string;
   contest_id: string;

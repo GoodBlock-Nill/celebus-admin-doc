@@ -3,17 +3,19 @@
 // FanStage 관리자 — 로그인 게이트 + 탭 SPA (운영자 전용, 한국어 고정)
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { BarChart3, FileText, Image as ImageIcon, ScrollText, Trophy } from "lucide-react";
+import { Clapperboard, BarChart3, FileText, Image as ImageIcon, ScrollText, Trophy } from "lucide-react";
 import type { ContestRow, LogRow } from "@/lib/admin-types";
 import { adminFetch, getAdminPw, setAdminPw } from "@/lib/admin-types";
 import ContestsPanel from "@/components/admin/ContestsPanel";
+import StagesPanel from "@/components/admin/StagesPanel";
 import EntriesPanel from "@/components/admin/EntriesPanel";
 import AwardsPanel from "@/components/admin/AwardsPanel";
 
-type Tab = "overview" | "contests" | "entries" | "awards" | "logs";
+type Tab = "overview" | "stages" | "contests" | "entries" | "awards" | "logs";
 
 const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
   { key: "overview", label: "개요", icon: <BarChart3 className="h-4 w-4" /> },
+  { key: "stages", label: "스테이지", icon: <Clapperboard className="h-4 w-4" /> },
   { key: "contests", label: "콘테스트", icon: <FileText className="h-4 w-4" /> },
   { key: "entries", label: "출품작", icon: <ImageIcon className="h-4 w-4" /> },
   { key: "awards", label: "수상·배송", icon: <Trophy className="h-4 w-4" /> },
@@ -208,6 +210,7 @@ export default function AdminPage() {
             <h2 className="text-[18px] font-black">{cur?.label}</h2>
           </div>
           {tab === "overview" && <Overview stats={stats} />}
+          {tab === "stages" && <StagesPanel />}
           {tab === "contests" && <ContestsPanel />}
           {tab === "entries" && <EntriesPanel contests={stats?.contests ?? []} />}
           {tab === "awards" && <AwardsPanel contests={stats?.contests ?? []} />}

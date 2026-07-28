@@ -26,7 +26,7 @@ function homeOrder(a: ContestWithStats, b: ContestWithStats): number {
   return ae - be;
 }
 
-function HomeBody() {
+export function HomeBody() {
   const { t } = useLang();
   const [open, setOpen] = useState<ContestWithStats[]>([]);
   const [past, setPast] = useState<ContestPublic[]>([]);

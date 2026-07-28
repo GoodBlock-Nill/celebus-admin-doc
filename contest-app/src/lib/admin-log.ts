@@ -4,7 +4,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 export async function logAdmin(
   db: SupabaseClient,
   action: string,
-  opts: { targetType?: "contest" | "entry" | "award"; targetId?: string | null; detail?: string } = {},
+  opts: { targetType?: "contest" | "entry" | "award" | "stage"; targetId?: string | null; detail?: string } = {},
 ): Promise<void> {
   try {
     await db.from("admin_logs").insert({

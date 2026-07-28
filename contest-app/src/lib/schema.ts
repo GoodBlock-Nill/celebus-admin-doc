@@ -18,6 +18,17 @@ export const resolveUrlSchema = z.object({
   url: z.string().trim().min(8, "링크를 입력해주세요.").max(500, "링크가 너무 길어요."),
 });
 
+// 스테이지 상시 업로드 (W1) — 콘테스트 응모와 달리 비번·전화 없음(신원 = identity 레이어)
+export const STAGE_CATEGORIES = ["fancam", "cover", "edit", "etc"] as const;
+export const createStagePostSchema = z.object({
+  stage_id: z.string().uuid(),
+  url: z.string().trim().min(8, "링크를 입력해주세요.").max(500),
+  title: z.string().trim().min(1, "제목을 입력해주세요.").max(80, "제목은 80자 이하로 입력해주세요."),
+  description: z.string().trim().max(300, "소개는 300자 이하로 입력해주세요.").default(""),
+  handle: handleSchema.optional(),
+  category: z.enum(STAGE_CATEGORIES),
+});
+
 export const createEntrySchema = z.object({
   contest_id: z.string().uuid(),
   url: z.string().trim().min(8, "링크를 입력해주세요.").max(500),

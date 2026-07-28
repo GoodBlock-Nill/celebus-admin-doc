@@ -37,8 +37,21 @@ export async function resolveEntryUrl(raw: string, contestType: ContestType): Pr
   if (!matchesType(parsed, contestType)) {
     return { ok: false, code: contestType === "video" ? "wrong_type_video" : "wrong_type_image" };
   }
-  const oembed = await fetchOembed(parsed);
+  return finalize(parsed);
+}
 
+// 스테이지 업로드용 — 유형 게이트 없음(전 플랫폼·전 형식 허용). 파싱·oEmbed 흐름은 동일.
+export async function resolveStageUrl(raw: string): Promise<ResolveResult> {
+  let parsed = parseEntryUrl(raw);
+  if (!parsed && isTiktokShortLink(raw)) {
+    parsed = await resolveTiktokShortLink(raw);
+  }
+  if (!parsed) return { ok: false, code: "invalid" };
+  return finalize(parsed);
+}
+
+async function finalize(parsed: ParsedUrl): Promise<ResolveResult> {
+  const oembed = await fetchOembed(parsed);
   // 작성자 핸들 확정: URL 내장(x·tiktok·threads) → YouTube는 oEmbed author_url(youtube.com/@handle)에서 추출
   let authorHandle: string | null = parsed.authorHandle ?? null;
   if (!authorHandle && parsed.platform === "youtube" && oembed?.author_url) {
