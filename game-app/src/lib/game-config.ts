@@ -122,7 +122,7 @@ export const GAME_CONFIG: GameConfig = {
   // bonusSquare: 2×2 정사각 매치 즉시 보너스 — 가장 쉬운 4매치라 bonus4보다 낮게
   scoring: { bonus4: 40, bonus5: 50, bonusCross: 30, bonusSquare: 15 },
   audio: { enabled: true, volume: 0.22, bgm: true, bgmVolume: 0.1, homeVolume: 0.1 },
-  specials: { area: "/tiles/sp-area.png", color: "/tiles/sp-color.png" }, // 스트라이프(lineH/lineV)는 CSS 오버레이(방향 표시)
+  specials: { lineH: "/tiles/sp-lineH.png", lineV: "/tiles/sp-lineV.png", area: "/tiles/sp-area.png", color: "/tiles/sp-color.png" },
   pacing: { frenzySec: 15, frenzyMul: 1.5, rushSec: 5, rushMul: 2, cascadeAccel: 0.88, cascadeMinMs: 130 },
   levels: { baseTarget: 800, targetStep: 500, bonusSec: 12 },
   daily: { base: 50, streakStep: 10, maxStreakDays: 7 },
