@@ -3,7 +3,7 @@
 // 홈 스테이지 탭 — 관리자가 연 공연 스테이지 목록. 탭하면 해당 스테이지(공연별 영상 아카이브)로 이동.
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, Clapperboard } from "lucide-react";
+import { CalendarDays, Clapperboard, Trophy } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { StagePublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
@@ -67,10 +67,14 @@ export default function StageList() {
 
   return (
     <div>
-      <div className="mb-4">
+      <div className="mb-3">
         <h1 className="text-[19px] font-bold text-fg">{t("stage_heading")}</h1>
         <p className="mt-0.5 text-[12.5px] text-fg/50">{t("stage_sub")}</p>
       </div>
+      <Link href="/hearts" className="mb-4 flex items-center gap-2 rounded-xl bg-primary/10 px-3.5 py-3 ring-1 ring-primary/25 active:scale-[0.99]">
+        <Trophy className="h-4 w-4 text-primary-400" />
+        <span className="text-[13.5px] font-bold text-primary-400">{t("hall_entry")}</span>
+      </Link>
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 3 }).map((_, i) => (

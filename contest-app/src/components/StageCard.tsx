@@ -11,18 +11,24 @@ export default function StageCard({
   post,
   liked,
   hearts = [],
+  grandSlam = false,
   onOpen,
   onToggleLike,
 }: {
   post: StagePostPublic;
   liked: boolean;
   hearts?: MemberHeartPublic[];
+  grandSlam?: boolean;
   onOpen: () => void;
   onToggleLike: () => void;
 }) {
   const { t } = useLang();
   return (
-    <div className="overflow-hidden rounded-2xl bg-white/[0.04] ring-1 ring-white/10">
+    <div
+      className={`overflow-hidden rounded-2xl bg-white/[0.04] ${
+        grandSlam ? "ring-2 ring-[#f5c451]/70 shadow-[0_0_18px_-4px_rgba(245,196,81,0.5)]" : "ring-1 ring-white/10"
+      }`}
+    >
       <button onClick={onOpen} className="relative block w-full text-left" aria-label={post.title}>
         {post.thumbnail_url ? (
           // eslint-disable-next-line @next/next/no-img-element

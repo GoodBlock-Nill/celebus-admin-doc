@@ -9,6 +9,7 @@ import { stagePostAsEntry } from "@/lib/types";
 import EntryEmbed from "./EntryEmbed";
 import PlatformBadge from "./PlatformBadge";
 import CommentSection from "./CommentSection";
+import BragButton from "./BragButton";
 import { MemberHeartsLine } from "./MemberHearts";
 import { useLang } from "./LangProvider";
 
@@ -16,6 +17,7 @@ export default function StageDetailModal({
   post,
   liked,
   hearts,
+  grandSlam = false,
   isMemberMe,
   onClose,
   onToggleLike,
@@ -24,6 +26,7 @@ export default function StageDetailModal({
   post: StagePostPublic;
   liked: boolean;
   hearts: MemberHeartPublic[];
+  grandSlam?: boolean;
   isMemberMe: boolean;
   onClose: () => void;
   onToggleLike: () => void;
@@ -65,8 +68,14 @@ export default function StageDetailModal({
 
         {/* 멤버 하트 라인 — 이 영상의 훈장 */}
         {hearts.length > 0 && (
-          <div className="mt-3">
+          <div className="mt-3 space-y-2">
+            {grandSlam && (
+              <div className="rounded-xl bg-gradient-to-r from-[#f5c451]/25 to-primary/20 px-3 py-2 text-center text-[13px] font-bold text-[#f5c451] ring-1 ring-[#f5c451]/40">
+                {t("grandslam")}
+              </div>
+            )}
             <MemberHeartsLine hearts={hearts} />
+            <BragButton post={post} hearts={hearts} />
           </div>
         )}
 

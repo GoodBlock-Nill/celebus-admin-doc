@@ -27,6 +27,7 @@ export default function StageView({ stageId }: { stageId: string }) {
   const [uploading, setUploading] = useState(false);
   const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
   const [isMemberMe, setIsMemberMe] = useState(false);
+  const [membersTotal, setMembersTotal] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -34,6 +35,7 @@ export default function StageView({ stageId }: { stageId: string }) {
       if (!data) setNotFound(true);
       else setStage(data as StagePublic);
     })();
+    sb.from("members_public").select("display_name").then(({ data }) => setMembersTotal((data ?? []).length));
     // 내가 멤버인지 (멤버 하트 버튼 노출)
     fetch("/api/stage/me")
       .then((r) => r.json())
@@ -186,6 +188,7 @@ export default function StageView({ stageId }: { stageId: string }) {
               post={p}
               liked={liked.has(p.id)}
               hearts={hearts.get(p.id) ?? []}
+              grandSlam={membersTotal > 0 && (hearts.get(p.id)?.length ?? 0) >= membersTotal}
               onOpen={() => setOpenPost(p)}
               onToggleLike={() => void toggleLike(p)}
             />
@@ -198,6 +201,7 @@ export default function StageView({ stageId }: { stageId: string }) {
           post={openPost}
           liked={liked.has(openPost.id)}
           hearts={hearts.get(openPost.id) ?? []}
+          grandSlam={membersTotal > 0 && (hearts.get(openPost.id)?.length ?? 0) >= membersTotal}
           isMemberMe={isMemberMe}
           onClose={() => setOpenPost(null)}
           onToggleLike={() => void toggleLike(openPost)}

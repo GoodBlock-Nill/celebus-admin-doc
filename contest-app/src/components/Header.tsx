@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import LangSwitcher from "./LangSwitcher";
+import NotificationBell from "./NotificationBell";
 import { useLang } from "./LangProvider";
 
 export default function Header() {
@@ -21,6 +22,7 @@ export default function Header() {
           <span className="font-display text-[16px] font-black tracking-tight text-white">FanStage</span>
         </Link>
         <div className="ml-auto flex items-center gap-1.5">
+          <NotificationBell />
           <LangSwitcher />
         </div>
       </div>
