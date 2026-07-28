@@ -4,11 +4,15 @@ import { createStagePostSchema } from "@/lib/schema";
 import { containsProfanity } from "@/lib/profanity";
 import { assertSameOrigin } from "@/lib/origin";
 import { resolveStageUrl } from "@/lib/embed/resolve";
-import { getUserId, setIdentityCookie } from "@/lib/identity";
+import { requireUserId } from "@/lib/identity";
 
 // 스테이지 상시 업로드 (W1) — 링크 서버 재검증 → RPC 저장. 신원은 identity 레이어(W4에 SSO 전환).
 export async function POST(req: Request) {
   if (!assertSameOrigin(req)) return NextResponse.json({ code: "forbidden", error: "허용되지 않은 요청이에요." }, { status: 403 });
+
+  // 로그인 선검사 — 익명에게 링크 해석 리소스를 쓰지 않는다 (W4 익명 불가 정책)
+  const user = requireUserId(req);
+  if (!user) return NextResponse.json({ code: "login_required", error: "CELEBUS 로그인이 필요해요." }, { status: 401 });
 
   const parsed = createStagePostSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
@@ -31,10 +35,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ code: "handle_required", error: "SNS 핸들을 입력해주세요." }, { status: 400 });
   }
 
-  const user = getUserId(req);
   const { data: result, error } = await admin().rpc("stage_create_post", {
     p_stage: stage_id,
-    p_owner: user.id,
+    p_owner: user,
     p_platform: resolved.parsed.platform,
     p_source_url: resolved.parsed.canonicalUrl,
     p_external_id: resolved.parsed.externalId,
@@ -51,7 +54,5 @@ export async function POST(req: Request) {
   if (result === "duplicate") return NextResponse.json({ code: "duplicate", error: "이미 올라온 영상이에요." }, { status: 409 });
   if (result === "rate_capped") return NextResponse.json({ code: "rate_capped", error: "오늘 업로드 한도에 도달했어요. 내일 다시 올려주세요." }, { status: 429 });
 
-  const res = NextResponse.json({ id: result });
-  if (user.isNew) setIdentityCookie(res.headers, user.id);
-  return res;
+  return NextResponse.json({ id: result });
 }

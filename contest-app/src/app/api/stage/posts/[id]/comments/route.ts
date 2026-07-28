@@ -3,7 +3,7 @@ import { z } from "zod";
 import { admin } from "@/lib/db-admin";
 import { assertSameOrigin } from "@/lib/origin";
 import { containsProfanity } from "@/lib/profanity";
-import { getUserId, setIdentityCookie, peekUserId } from "@/lib/identity";
+import { requireUserId, peekUserId } from "@/lib/identity";
 
 const bodySchema = z.object({
   body: z.string().trim().min(1).max(200),
@@ -20,10 +20,11 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
   if (!parsed.success) return NextResponse.json({ code: "bad_input", error: "입력값을 확인해주세요." }, { status: 400 });
   if (containsProfanity(parsed.data.body)) return NextResponse.json({ code: "profanity", error: "부적절한 표현이 포함되어 있어요." }, { status: 400 });
 
-  const user = getUserId(req);
+  const user = requireUserId(req);
+  if (!user) return NextResponse.json({ code: "login_required", error: "CELEBUS 로그인이 필요해요." }, { status: 401 });
   const { data, error } = await admin().rpc("comment_create", {
     p_post: id,
-    p_owner: user.id,
+    p_owner: user,
     p_body: parsed.data.body,
     p_parent: parsed.data.parent_id ?? null,
   });
@@ -38,9 +39,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
     const [code, status] = map[String(data.error)] ?? ["server", 500];
     return NextResponse.json({ code, error: "댓글을 등록할 수 없어요." }, { status });
   }
-  const res = NextResponse.json({ id: data.id });
-  if (user.isNew) setIdentityCookie(res.headers, user.id);
-  return res;
+  return NextResponse.json({ id: data.id });
 }
 
 // 내 댓글 id 목록 (삭제 버튼 표시용)

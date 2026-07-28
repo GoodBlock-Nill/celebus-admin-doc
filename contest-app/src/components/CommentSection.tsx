@@ -7,6 +7,7 @@ import { Flag, Trash2, CornerDownRight } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { StageCommentPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
+import { useSession } from "./SessionProvider";
 
 function CommentRow({
   c,
@@ -58,6 +59,7 @@ function CommentRow({
 
 export default function CommentSection({ postId }: { postId: string }) {
   const { t } = useLang();
+  const { requireLogin } = useSession();
   const [comments, setComments] = useState<StageCommentPublic[]>([]);
   const [mine, setMine] = useState<Set<string>>(new Set());
   const [body, setBody] = useState("");
@@ -79,6 +81,7 @@ export default function CommentSection({ postId }: { postId: string }) {
 
   async function submit() {
     if (busy || !body.trim()) return;
+    if (!requireLogin()) return;
     setBusy(true);
     try {
       const res = await fetch(`/api/stage/posts/${postId}/comments`, {
@@ -109,6 +112,7 @@ export default function CommentSection({ postId }: { postId: string }) {
   }
 
   async function report(id: string) {
+    if (!requireLogin()) return;
     const res = await fetch(`/api/stage/comments/${id}/report`, { method: "POST" });
     const j = await res.json().catch(() => ({}));
     toast(res.ok || j.code === "already" ? t("comment_reported") : t("err_server"));

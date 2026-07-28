@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { admin } from "@/lib/db-admin";
 import { assertSameOrigin } from "@/lib/origin";
-import { getUserId, setIdentityCookie } from "@/lib/identity";
+import { requireUserId } from "@/lib/identity";
 
 const bodySchema = z.object({
   picks: z.array(z.object({ w: z.string().uuid(), l: z.string().uuid() })).min(1).max(31),
@@ -18,10 +18,11 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ code: "bad_input", error: "입력값을 확인해주세요." }, { status: 400 });
 
-  const user = getUserId(req);
+  const user = requireUserId(req);
+  if (!user) return NextResponse.json({ code: "login_required", error: "CELEBUS 로그인이 필요해요." }, { status: 401 });
   const { data, error } = await admin().rpc("worldcup_submit_run", {
     p_event: id,
-    p_user: user.id,
+    p_user: user,
     p_picks: parsed.data.picks,
     p_winner: parsed.data.winner,
   });
@@ -29,7 +30,5 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
   if (data.error === "closed") return NextResponse.json({ code: "closed", error: "진행 중인 이벤트가 아니에요." }, { status: 400 });
   if (data.error === "bad_bracket") return NextResponse.json({ code: "bad_input", error: "대진 정보가 올바르지 않아요." }, { status: 400 });
 
-  const res = NextResponse.json({ counted: data.counted });
-  if (user.isNew) setIdentityCookie(res.headers, user.id);
-  return res;
+  return NextResponse.json({ counted: data.counted });
 }

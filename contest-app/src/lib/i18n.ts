@@ -26,6 +26,11 @@ type Dict = Record<string, string>;
 
 export const messages: Record<Lang, Dict> = {
   ko: {
+    sso_gate_title: "CELEBUS 로그인이 필요해요",
+    sso_gate_body: "FanStage는 CELEBUS 계정으로 이용해요. 앱에서 로그인한 뒤 다시 확인을 눌러주세요.",
+    sso_gate_go: "CELEBUS에서 로그인",
+    sso_gate_retry: "다시 확인",
+    sso_gate_failed: "아직 로그인이 확인되지 않았어요. CELEBUS에서 로그인 후 다시 시도해주세요.",
     ev_list_title: "월드컵 이벤트",
     ev_list_sub: "올라온 영상들로 겨루는 팬 투표 토너먼트 🏆",
     ev_list_empty: "진행 중인 이벤트가 없어요. 곧 열릴 예정이에요!",
@@ -288,6 +293,11 @@ export const messages: Record<Lang, Dict> = {
     rank_new: "NEW",
   },
   en: {
+    sso_gate_title: "CELEBUS login required",
+    sso_gate_body: "FanStage uses your CELEBUS account. Log in on CELEBUS, then tap Check again.",
+    sso_gate_go: "Log in on CELEBUS",
+    sso_gate_retry: "Check again",
+    sso_gate_failed: "Login not detected yet. Please log in on CELEBUS and try again.",
     ev_list_title: "World Cup Events",
     ev_list_sub: "Fan-vote tournaments with the stage videos 🏆",
     ev_list_empty: "No events running. Coming soon!",
@@ -540,6 +550,11 @@ export const messages: Record<Lang, Dict> = {
     rank_new: "NEW",
   },
   ja: {
+    sso_gate_title: "CELEBUSログインが必要です",
+    sso_gate_body: "FanStageはCELEBUSアカウントで利用します。アプリでログイン後、再確認を押してください。",
+    sso_gate_go: "CELEBUSでログイン",
+    sso_gate_retry: "再確認",
+    sso_gate_failed: "ログインがまだ確認できません。CELEBUSでログイン後、もう一度お試しください。",
     ev_list_title: "ワールドカップイベント",
     ev_list_sub: "ステージ動画で競うファン投票トーナメント 🏆",
     ev_list_empty: "開催中のイベントはありません。お楽しみに！",

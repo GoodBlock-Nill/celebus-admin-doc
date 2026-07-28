@@ -1,13 +1,20 @@
 import { NextResponse } from "next/server";
 import { admin } from "@/lib/db-admin";
-import { getUserId, setIdentityCookie } from "@/lib/identity";
+import { peekUserId } from "@/lib/identity";
 
-// 내 신원 확인 — 멤버 여부(멤버 전용 UI 노출용) + 내 식별자(개발 기간 멤버 등록용).
-// W4 SSO 전환 시 이 라우트가 SSO 프로필(닉네임 등)을 반환하게 확장된다.
+// 내 신원·프로필 — SSO 로그인 상태 확인(게이트 판정) + 멤버 여부 + 닉네임.
 export async function GET(req: Request) {
-  const user = getUserId(req);
-  const { data } = await admin().from("stage_members").select("display_name, avatar_url").eq("user_id", user.id).maybeSingle();
-  const res = NextResponse.json({ id: user.id, member: data ?? null });
-  if (user.isNew) setIdentityCookie(res.headers, user.id);
-  return res;
+  const user = peekUserId(req);
+  if (!user) return NextResponse.json({ signed_in: false, id: null, member: null, nickname: "" });
+  const db = admin();
+  const [{ data: member }, { data: profile }] = await Promise.all([
+    db.from("stage_members").select("display_name, avatar_url").eq("user_id", user).maybeSingle(),
+    db.from("stage_users").select("nickname, avatar_url").eq("user_id", user).maybeSingle(),
+  ]);
+  return NextResponse.json({
+    signed_in: !!profile,
+    id: user,
+    member: member ?? null,
+    nickname: profile?.nickname ?? "",
+  });
 }

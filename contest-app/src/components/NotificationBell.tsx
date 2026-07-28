@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Bell, Heart, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { useLang } from "./LangProvider";
+import { useSession } from "./SessionProvider";
 
 type Noti = {
   id: string;
@@ -17,11 +18,13 @@ type Noti = {
 
 export default function NotificationBell() {
   const { t } = useLang();
+  const { signedIn } = useSession();
   const [unread, setUnread] = useState(0);
   const [items, setItems] = useState<Noti[]>([]);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    if (!signedIn) return; // 알림은 로그인 유저 전용
     fetch("/api/stage/notifications")
       .then((r) => r.json())
       .then((j) => {
@@ -29,7 +32,9 @@ export default function NotificationBell() {
         setItems(j.items ?? []);
       })
       .catch(() => {});
-  }, []);
+  }, [signedIn]);
+
+  if (!signedIn) return null;
 
   function openSheet() {
     setOpen(true);

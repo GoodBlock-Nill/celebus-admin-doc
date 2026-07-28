@@ -9,6 +9,7 @@ import { sb } from "@/lib/supabase-browser";
 import type { StageEventPublic, StagePostPublic } from "@/lib/types";
 import WorldcupStandings from "./WorldcupStandings";
 import { useLang } from "./LangProvider";
+import { useSession } from "./SessionProvider";
 
 type Pick = { w: string; l: string };
 type Phase = "intro" | "playing" | "done";
@@ -49,6 +50,7 @@ function MatchTile({ post, onPick }: { post: StagePostPublic; onPick: () => void
 
 export default function EventPlay({ eventId }: { eventId: string }) {
   const { t } = useLang();
+  const { requireLogin } = useSession();
   const [event, setEvent] = useState<StageEventPublic | null>(null);
   const [pool, setPool] = useState<StagePostPublic[]>([]);
   const [phase, setPhase] = useState<Phase>("intro");
@@ -77,6 +79,8 @@ export default function EventPlay({ eventId }: { eventId: string }) {
 
   function start() {
     if (size < 2) return;
+    if (!requireLogin()) return; // 월드컵 투표는 집계에 영향 → 로그인 필수
+
     const entrants = shuffle(pool).slice(0, size);
     setCurrent(entrants);
     setNext([]);

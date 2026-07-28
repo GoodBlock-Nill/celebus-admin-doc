@@ -12,6 +12,7 @@ import CommentSection from "./CommentSection";
 import BragButton from "./BragButton";
 import { MemberHeartsLine } from "./MemberHearts";
 import { useLang } from "./LangProvider";
+import { useSession } from "./SessionProvider";
 
 export default function StageDetailModal({
   post,
@@ -33,10 +34,12 @@ export default function StageDetailModal({
   onToggleMemberHeart: () => void;
 }) {
   const { t } = useLang();
+  const { requireLogin } = useSession();
   const [reporting, setReporting] = useState(false);
 
   async function report() {
     if (reporting) return;
+    if (!requireLogin()) return;
     setReporting(true);
     try {
       const res = await fetch(`/api/stage/posts/${post.id}/report`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });

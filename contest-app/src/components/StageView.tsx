@@ -12,11 +12,14 @@ import StageCard from "./StageCard";
 import StageDetailModal from "./StageDetailModal";
 import StageUploadModal from "./StageUploadModal";
 import { useLang } from "./LangProvider";
+import { useSession } from "./SessionProvider";
 
 type Filter = "all" | StageCategory;
 
 export default function StageView({ stageId }: { stageId: string }) {
   const { t } = useLang();
+  const { member, requireLogin } = useSession();
+  const isMemberMe = !!member;
   const [stage, setStage] = useState<StagePublic | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [posts, setPosts] = useState<StagePostPublic[]>([]);
@@ -26,7 +29,6 @@ export default function StageView({ stageId }: { stageId: string }) {
   const [openPost, setOpenPost] = useState<StagePostPublic | null>(null);
   const [uploading, setUploading] = useState(false);
   const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
-  const [isMemberMe, setIsMemberMe] = useState(false);
   const [membersTotal, setMembersTotal] = useState(0);
 
   useEffect(() => {
@@ -36,11 +38,6 @@ export default function StageView({ stageId }: { stageId: string }) {
       else setStage(data as StagePublic);
     })();
     sb.from("members_public").select("display_name").then(({ data }) => setMembersTotal((data ?? []).length));
-    // 내가 멤버인지 (멤버 하트 버튼 노출)
-    fetch("/api/stage/me")
-      .then((r) => r.json())
-      .then((j) => setIsMemberMe(!!j.member))
-      .catch(() => {});
   }, [stageId]);
 
   const loadHearts = useCallback(async (ids: string[]) => {
@@ -78,6 +75,7 @@ export default function StageView({ stageId }: { stageId: string }) {
   }, [load]);
 
   async function toggleMemberHeart(post: StagePostPublic) {
+    if (!requireLogin()) return;
     try {
       const res = await fetch(`/api/stage/posts/${post.id}/member-heart`, { method: "POST" });
       if (!res.ok) {
@@ -91,6 +89,7 @@ export default function StageView({ stageId }: { stageId: string }) {
   }
 
   async function toggleLike(post: StagePostPublic) {
+    if (!requireLogin()) return;
     try {
       const res = await fetch(`/api/stage/posts/${post.id}/like`, { method: "POST" });
       const j = await res.json();
@@ -144,7 +143,7 @@ export default function StageView({ stageId }: { stageId: string }) {
           </div>
           {stage?.status === "open" && (
             <button
-              onClick={() => setUploading(true)}
+              onClick={() => requireLogin() && setUploading(true)}
               className="flex shrink-0 items-center gap-1 rounded-full bg-primary px-4 py-2.5 text-[13px] font-bold text-white active:scale-95"
             >
               <Plus className="h-4 w-4" /> {t("stage_upload_cta")}
