@@ -185,16 +185,18 @@ export default function Home() {
 
           {stages.length > 0 && (
             <div>
-              <SectionHeader title="진행 중인 공연" moreHref="/stages" />
+              <SectionHeader title="지금 열린 공연" moreHref="/stages" />
               <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
                 {stages.map((s) => (
                   <Link key={s.id} href={`/stage/${s.id}`} className="w-[156px] shrink-0 active:scale-[0.98]">
                     <div className="relative h-[92px] overflow-hidden rounded-2xl">
                       <Thumb url={s.cover_url} />
                       <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
-                      <span className="absolute left-2 top-2 rounded-md bg-black/45 px-2 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
-                        {s.event_date ?? "진행 중"}
-                      </span>
+                      {s.event_date && (
+                        <span className="absolute left-2 top-2 rounded-md bg-black/45 px-2 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
+                          {s.event_date}
+                        </span>
+                      )}
                     </div>
                     <strong className="mt-2 block truncate text-[12.5px] font-bold text-fg">{s.title}</strong>
                     <small className="mt-0.5 block text-[11px] text-subtle">
