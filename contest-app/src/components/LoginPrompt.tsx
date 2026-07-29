@@ -37,11 +37,8 @@ export default function LoginPrompt({ onClose, onDone }: { onClose: () => void; 
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/symbol.svg" alt="" className="h-6 w-6" />
-            <span className="font-display text-[17px] font-black tracking-tight text-fg">CELEBUS MOMENT</span>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="CELEBUS MOMENT" className="h-[18px] w-auto" />
           <button onClick={onClose} aria-label="닫기" className="flex h-9 w-9 items-center justify-center rounded-full text-subtle hover:text-fg">
             <X className="h-5 w-5" />
           </button>

@@ -37,13 +37,10 @@ export default function Header() {
           <Link
             href="/"
             aria-label={t("nav_home_aria")}
-            className="flex items-center gap-2 transition-opacity hover:opacity-80"
+            className="flex items-center transition-opacity hover:opacity-80"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/symbol.svg" alt="" className="h-7 w-7 shrink-0" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/wordmark.svg" alt="CELEBUS" className="h-[17px] w-auto shrink-0" />
-            <span className="font-display text-[18px] font-black tracking-tight text-fg">MOMENT</span>
+            <img src="/logo.png" alt="CELEBUS MOMENT" className="h-5 w-auto shrink-0" />
           </Link>
           <NotificationBell />
         </div>
