@@ -1,6 +1,6 @@
 "use client";
 
-// 관리자: 스테이지(공연 컨테이너) 관리 — 생성·수정·상태 전환. 유저 업로드는 open 스테이지에만 가능.
+// 관리자: 아카이브(공연 컨테이너) 관리 — 생성·수정·상태 전환. 유저 업로드는 open 아카이브에만 가능.
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Plus, Pencil } from "lucide-react";
@@ -77,9 +77,9 @@ export default function StagesPanel() {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-[12.5px] text-fg/50">유저는 &lsquo;진행중&rsquo; 스테이지에만 영상을 올릴 수 있어요. 보관하면 열람만 가능해요.</p>
+        <p className="text-[12.5px] text-fg/50">유저는 &lsquo;진행중&rsquo; 아카이브에만 영상을 올릴 수 있어요. 보관하면 열람만 가능해요.</p>
         <button onClick={() => openEdit("new")} className="flex shrink-0 items-center gap-1 rounded-full bg-primary px-4 py-2 text-[13px] font-bold text-white">
-          <Plus className="h-4 w-4" /> 스테이지 생성
+          <Plus className="h-4 w-4" /> 아카이브 생성
         </button>
       </div>
 
@@ -119,7 +119,7 @@ export default function StagesPanel() {
           </div>
         </div>
       ))}
-      {stages.length === 0 && <p className="py-8 text-center text-[13px] text-fg/40">스테이지가 없어요. 첫 스테이지를 생성해보세요.</p>}
+      {stages.length === 0 && <p className="py-8 text-center text-[13px] text-fg/40">아카이브가 없어요. 첫 아카이브를 생성해보세요.</p>}
 
       {/* 생성/수정 폼 */}
       {editing && (
@@ -130,7 +130,7 @@ export default function StagesPanel() {
             className="max-h-[92dvh] w-full max-w-lg space-y-3 overflow-y-auto rounded-t-2xl bg-[#141217] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:rounded-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-[15px] font-bold text-fg">{editing === "new" ? "스테이지 생성" : "스테이지 수정"}</h3>
+            <h3 className="text-[15px] font-bold text-fg">{editing === "new" ? "아카이브 생성" : "아카이브 수정"}</h3>
             <label className="block text-[12px] font-bold text-fg/60">
               아카이브명
               <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={80} placeholder="예: 2026 여름 부산 버스킹"
@@ -143,7 +143,7 @@ export default function StagesPanel() {
             </label>
             <div className="grid grid-cols-2 gap-2">
               <label className="block text-[12px] font-bold text-fg/60">
-                공연 일자
+                날짜
                 <input type="date" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })}
                   className="mt-1 w-full rounded-xl bg-white/6 px-3 py-3 text-[13.5px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60" />
               </label>

@@ -21,3 +21,21 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
   await logAdmin(db, parsed.data.featured ? "홈 대표 영상 지정" : "홈 대표 영상 해제", { targetType: "stage", targetId: id });
   return NextResponse.json({ ok: true });
 }
+
+// 게시물 삭제 — 관리자 전용(공식 시드 정리 등). 소속 아카이브 post_count 재계산.
+export async function DELETE(req: Request, ctx: { params: Promise<{ id: string }> }) {
+  if (!isAdmin(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const { id } = await ctx.params;
+  if (!z.string().uuid().safeParse(id).success) return NextResponse.json({ error: "잘못된 요청" }, { status: 400 });
+
+  const db = admin();
+  const { data: post } = await db.from("stage_posts").select("stage_id").eq("id", id).maybeSingle();
+  const { error } = await db.from("stage_posts").delete().eq("id", id);
+  if (error) return NextResponse.json({ error: "삭제 실패" }, { status: 500 });
+  if (post?.stage_id) {
+    const { count } = await db.from("stage_posts").select("*", { count: "exact", head: true }).eq("stage_id", post.stage_id).eq("hidden", false);
+    await db.from("stages").update({ post_count: count ?? 0 }).eq("id", post.stage_id);
+  }
+  await logAdmin(db, "게시물 삭제", { targetType: "stage", targetId: id });
+  return NextResponse.json({ ok: true });
+}

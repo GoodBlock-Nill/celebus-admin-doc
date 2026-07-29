@@ -3,28 +3,28 @@
 // FanStage 관리자 — 로그인 게이트 + 탭 SPA (운영자 전용, 한국어 고정)
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { UserRound, Clapperboard, BarChart3, FileText, Image as ImageIcon, ScrollText, Trophy, Star } from "lucide-react";
+import { UserRound, Clapperboard, BarChart3, ScrollText, Trophy, Star, BadgeCheck } from "lucide-react";
 import type { ContestRow, LogRow } from "@/lib/admin-types";
 import { adminFetch, getAdminPw, setAdminPw } from "@/lib/admin-types";
 import ContestsPanel from "@/components/admin/ContestsPanel";
 import StagesPanel from "@/components/admin/StagesPanel";
 import FeaturedPanel from "@/components/admin/FeaturedPanel";
+import OfficialSeedPanel from "@/components/admin/OfficialSeedPanel";
 import MembersPanel from "@/components/admin/MembersPanel";
 import EventsPanel from "@/components/admin/EventsPanel";
 import EntriesPanel from "@/components/admin/EntriesPanel";
 import AwardsPanel from "@/components/admin/AwardsPanel";
 
-type Tab = "overview" | "stages" | "featured" | "events" | "members" | "contests" | "entries" | "awards" | "logs";
+// contests/entries/awards는 레거시(콘테스트 시절) — 탭 숨김, 코드·라우트는 보존
+type Tab = "overview" | "stages" | "official" | "featured" | "events" | "members" | "contests" | "entries" | "awards" | "logs";
 
 const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
   { key: "overview", label: "개요", icon: <BarChart3 className="h-4 w-4" /> },
-  { key: "stages", label: "스테이지", icon: <Clapperboard className="h-4 w-4" /> },
+  { key: "stages", label: "아카이브", icon: <Clapperboard className="h-4 w-4" /> },
+  { key: "official", label: "공식영상", icon: <BadgeCheck className="h-4 w-4" /> },
   { key: "featured", label: "대표영상", icon: <Star className="h-4 w-4" /> },
-  { key: "events", label: "이벤트", icon: <Trophy className="h-4 w-4" /> },
+  { key: "events", label: "토너먼트", icon: <Trophy className="h-4 w-4" /> },
   { key: "members", label: "멤버", icon: <UserRound className="h-4 w-4" /> },
-  { key: "contests", label: "콘테스트", icon: <FileText className="h-4 w-4" /> },
-  { key: "entries", label: "출품작", icon: <ImageIcon className="h-4 w-4" /> },
-  { key: "awards", label: "수상·배송", icon: <Trophy className="h-4 w-4" /> },
   { key: "logs", label: "로그", icon: <ScrollText className="h-4 w-4" /> },
 ];
 
@@ -72,13 +72,37 @@ function Login({ onOk }: { onOk: () => void }) {
 }
 
 function Overview({ stats }: { stats: Stats | null }) {
-  if (!stats) return <div className="h-40 animate-pulse rounded-2xl bg-card" />;
+  // MOMENT 지표 — 아카이브/영상/멤버/토너먼트 (기존 stats는 로그인 검증용으로만 유지)
+  const [m, setM] = useState<{ archives: number; official: number; videos: number; members: number; tournaments: number } | null>(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        const [stg, mem, ev] = await Promise.all([
+          adminFetch("/api/admin/stages").then((r) => r.json()),
+          adminFetch("/api/admin/members").then((r) => r.json()),
+          adminFetch("/api/admin/events").then((r) => r.json()),
+        ]);
+        const stages = (stg.stages ?? []) as { is_official: boolean; post_count: number }[];
+        setM({
+          archives: stages.length,
+          official: stages.filter((s) => s.is_official).length,
+          videos: stages.reduce((a, s) => a + (s.post_count ?? 0), 0),
+          members: (mem.members ?? []).length,
+          tournaments: (ev.events ?? []).length,
+        });
+      } catch {
+        /* 지표는 보조 */
+      }
+    })();
+  }, []);
+  void stats;
+  if (!m) return <div className="h-40 animate-pulse rounded-2xl bg-card" />;
   const cards = [
-    ["콘테스트", stats.contestCount],
-    ["출품작", stats.entryCount],
-    ["총 투표", stats.voteCount],
-    ["배송 대기", stats.pendingClaims],
-    ["신고 누적 출품작", stats.reportedEntries],
+    ["아카이브", m.archives],
+    ["공식 아카이브", m.official],
+    ["총 영상", m.videos],
+    ["멤버", m.members],
+    ["토너먼트", m.tournaments],
   ] as const;
   return (
     <div className="space-y-5">
@@ -90,27 +114,16 @@ function Overview({ stats }: { stats: Stats | null }) {
           </div>
         ))}
       </div>
-      {stats.contests.length > 0 && (
-        <div>
-          <h3 className="mb-2 text-[13px] font-bold text-muted">콘테스트</h3>
-          <div className="space-y-1.5">
-            {stats.contests.map((c) => (
-              <div key={c.id} className="flex items-center gap-2 rounded-[12px] bg-surface-1 px-3 py-2.5 text-[13px] ring-1 ring-hairline">
-                <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-bold">{c.status}</span>
-                <span className="truncate font-bold">{c.title}</span>
-                <a href={`/contest/${c.slug}`} target="_blank" rel="noopener noreferrer" className="ml-auto shrink-0 text-[11px] font-bold text-primary-400">
-                  공개 화면 ↗
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      {!stats.contests.length && (
-        <p className="rounded-[16px] border border-dashed border-line py-12 text-center text-sm text-muted">
-          아직 콘테스트가 없어요. 왼쪽 [콘테스트]에서 새로 만들어보세요.
-        </p>
-      )}
+      <div className="rounded-[16px] bg-surface-1 p-4 ring-1 ring-hairline">
+        <h3 className="mb-2 text-[13px] font-bold text-fg">배포 전 셋업 가이드</h3>
+        <ol className="space-y-1.5 text-[12.5px] leading-relaxed text-muted">
+          <li><b className="text-fg/80">1. 아카이브</b> — 공연별 팬 아카이브 + <b className="text-primary-400">V01D 공식 아카이브</b>(열람 전용) 생성</li>
+          <li><b className="text-fg/80">2. 공식 영상</b> — 공식 아카이브에 V01D 공식 YouTube/TikTok 영상 등록(오픈 첫날 채우기)</li>
+          <li><b className="text-fg/80">3. 대표영상</b> — 홈 히어로에 고정할 대표 영상 지정(선택)</li>
+          <li><b className="text-fg/80">4. 토너먼트</b> — 팬 영상이 모이면 아카이브 단위 모먼트 토너먼트 개최</li>
+          <li><b className="text-fg/80">5. 멤버</b> — V01D 멤버 계정 등록(하트·멤버 댓글 권한)</li>
+        </ol>
+      </div>
     </div>
   );
 }
@@ -217,6 +230,7 @@ export default function AdminPage() {
           </div>
           {tab === "overview" && <Overview stats={stats} />}
           {tab === "stages" && <StagesPanel />}
+          {tab === "official" && <OfficialSeedPanel />}
           {tab === "featured" && <FeaturedPanel />}
           {tab === "events" && <EventsPanel />}
           {tab === "members" && <MembersPanel />}

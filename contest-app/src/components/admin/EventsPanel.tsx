@@ -1,6 +1,6 @@
 "use client";
 
-// 관리자: 월드컵 이벤트 — 스테이지 단위 개최, 발표 시 3종 수상 자동 계산.
+// 관리자: 모먼트 토너먼트 — 아카이브 단위 개최, 발표 시 3종 수상 자동 계산.
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
@@ -52,7 +52,7 @@ export default function EventsPanel() {
     });
     setBusy(false);
     if (res.ok) {
-      toast("이벤트를 열었어요.");
+      toast("토너먼트를 열었어요.");
       setForm({ stage_id: "", title: "", description: "", ends_at: "" });
       void load();
     } else {
@@ -73,7 +73,7 @@ export default function EventsPanel() {
   return (
     <div className="space-y-3">
       <p className="text-[12.5px] text-fg/50">
-        이벤트는 스테이지(공연) 단위로 열려요. 해당 스테이지의 공개 영상 전체가 자동 출전하고, <b>발표하기</b> 시 팬인기상·아티스트인기상·최다업로드상이 자동 계산돼요.
+        토너먼트는 아카이브 단위로 열려요. 해당 아카이브의 공개 영상 전체가 자동 출전하고, <b>발표하기</b> 시 팬인기상·아티스트인기상·최다업로드상이 자동 계산돼요.
       </p>
 
       {/* 생성 폼 */}
@@ -83,12 +83,12 @@ export default function EventsPanel() {
           onChange={(e) => setForm({ ...form, stage_id: e.target.value })}
           className="w-full rounded-xl bg-white/6 px-3 py-2.5 text-[13px] text-fg outline-none ring-1 ring-white/10"
         >
-          <option value="">스테이지 선택</option>
+          <option value="">아카이브 선택</option>
           {stages.map((s) => (
             <option key={s.id} value={s.id} className="bg-[#141217]">{s.title}</option>
           ))}
         </select>
-        <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={80} placeholder="이벤트명 (예: 부산 버스킹 모먼트 토너먼트)"
+        <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={80} placeholder="토너먼트명 (예: 부산 버스킹 모먼트 토너먼트)"
           className="w-full rounded-xl bg-white/6 px-3 py-2.5 text-[13px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/30" />
         <div className="grid grid-cols-2 gap-2">
           <input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} maxLength={500} placeholder="소개 (선택)"
@@ -98,7 +98,7 @@ export default function EventsPanel() {
         </div>
         <button onClick={create} disabled={busy || !form.stage_id || !form.title.trim()}
           className="flex w-full items-center justify-center gap-1 rounded-full bg-primary py-2.5 text-[13px] font-bold text-white disabled:opacity-40">
-          <Plus className="h-4 w-4" /> 이벤트 열기
+          <Plus className="h-4 w-4" /> 토너먼트 열기
         </button>
       </div>
 
@@ -135,7 +135,7 @@ export default function EventsPanel() {
               </button>
             )}
             {e.status !== "closed" && (
-              <button onClick={() => void setStatus(e.id, "closed", "이벤트를 종료(비노출)할까요?")} className="rounded-full bg-white/8 px-3 py-1.5 text-[12px] font-bold text-fg/70">
+              <button onClick={() => void setStatus(e.id, "closed", "토너먼트를 종료(비노출)할까요?")} className="rounded-full bg-white/8 px-3 py-1.5 text-[12px] font-bold text-fg/70">
                 종료
               </button>
             )}
@@ -147,7 +147,7 @@ export default function EventsPanel() {
           </div>
         </div>
       ))}
-      {events.length === 0 && <p className="py-6 text-center text-[13px] text-fg/40">이벤트가 없어요.</p>}
+      {events.length === 0 && <p className="py-6 text-center text-[13px] text-fg/40">토너먼트가 없어요.</p>}
     </div>
   );
 }
