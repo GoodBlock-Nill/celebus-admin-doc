@@ -68,8 +68,9 @@ export default function StageCard({
           // eslint-disable-next-line @next/next/no-img-element
           <img src={post.thumbnail_url} alt="" loading="lazy" className="aspect-[4/5] w-full object-cover" />
         ) : (
-          <div className="flex aspect-[4/5] w-full items-center justify-center bg-card-2 text-subtle">
+          <div className="flex aspect-[4/5] w-full flex-col items-center justify-center gap-1.5 bg-card-2 text-subtle">
             <ImageOff className="h-8 w-8" />
+            <span className="text-[10px] font-semibold">{t("thumb_no_image")}</span>
           </div>
         )}
         {/* 하단 비네트 — 배지·재생 아이콘 가독성 보조 */}
@@ -86,11 +87,12 @@ export default function StageCard({
           <div className="line-clamp-2 text-[12.5px] font-bold leading-snug text-fg">{post.title}</div>
         </button>
         <div className="mt-1 flex items-center gap-2">
-          <span className="min-w-0 flex-1 truncate text-[11px] text-subtle">@{post.handle}</span>
+          <span className="min-w-0 flex-1 truncate text-[11px] text-muted">@{post.handle}</span>
           <button
             onClick={onToggleLike}
-            aria-label={t("stage_upload_cta")}
-            className={`-my-1.5 flex min-h-9 shrink-0 items-center gap-1 rounded-full px-2 text-[11px] font-bold transition-colors ${
+            aria-label={t("action_like")}
+            aria-pressed={liked}
+            className={`-my-2 flex min-h-11 shrink-0 items-center gap-1 rounded-full px-2 text-[11px] font-bold transition-colors ${
               liked ? "text-primary" : "text-muted"
             }`}
           >

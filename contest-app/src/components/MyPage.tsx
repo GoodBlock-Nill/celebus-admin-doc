@@ -8,7 +8,10 @@ import { ImageOff, LogIn } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, Platform, StageCategory } from "@/lib/types";
 import { useSession } from "./SessionProvider";
+import { useLang } from "./LangProvider";
 import ErrorState from "./ErrorState";
+
+type TFn = (key: string) => string;
 
 // /api/stage/mine 이 실제로 반환하는 형태(stage_my_posts RPC) — StagePostPublic과 다름(핸들 없음, 스테이지명 포함)
 interface MyPost {
@@ -33,18 +36,21 @@ interface MineResponse {
 
 type Tab = "videos" | "seen" | "comments";
 
-const TABS: { key: Tab; label: string }[] = [
-  { key: "videos", label: "내 영상" },
-  { key: "seen", label: "하트 받은 영상" },
-  { key: "comments", label: "내 댓글" },
+const TABS: { key: Tab; labelKey: string }[] = [
+  { key: "videos", labelKey: "my_tab_videos" },
+  { key: "seen", labelKey: "my_tab_seen" },
+  { key: "comments", labelKey: "my_tab_comments" },
 ];
 
-function heartLine(hearts: MemberHeartPublic[], membersTotal: number): { text: string; active: boolean } {
-  if (hearts.length === 0) return { text: "○ 멤버 반응 기다리는 중", active: false };
-  if (membersTotal > 0 && hearts.length >= membersTotal) return { text: "● 멤버 전원 하트", active: true };
+function heartLine(hearts: MemberHeartPublic[], membersTotal: number, t: TFn): { text: string; active: boolean } {
+  if (hearts.length === 0) return { text: `○ ${t("mh_waiting")}`, active: false };
+  if (membersTotal > 0 && hearts.length >= membersTotal) return { text: `● ${t("grandslam")}`, active: true };
   const sorted = [...hearts].sort((a, b) => a.sort_order - b.sort_order);
   const first = sorted[0].display_name;
-  const text = sorted.length === 1 ? `● ${first} 님이 하트를 보냈어요` : `● ${first} 님 외 ${sorted.length - 1}명이 하트를 보냈어요`;
+  const text =
+    sorted.length === 1
+      ? `● ${t("mh_likes_one").replace("{name}", first)}`
+      : `● ${t("mh_likes_many").replace("{name}", first).replace("{n}", String(sorted.length - 1))}`;
   return { text, active: true };
 }
 
@@ -86,16 +92,18 @@ function StatCard({ n, label, accent }: { n: number; label: string; accent?: boo
   );
 }
 
-function EmptyState({ message, cta }: { message: string; cta?: boolean }) {
+function EmptyState({ title, sub, cta }: { title: string; sub?: string; cta?: boolean }) {
+  const { t } = useLang();
   return (
-    <div className="flex flex-col items-center gap-3 px-4 py-14 text-center">
-      <p className="text-[13px] text-muted">{message}</p>
+    <div className="flex flex-col items-center gap-2 px-4 py-14 text-center">
+      <p className="text-[13.5px] font-bold text-fg">{title}</p>
+      {sub && <p className="max-w-[15rem] text-[12.5px] leading-relaxed text-muted">{sub}</p>}
       {cta && (
         <Link
           href="/stages"
-          className="inline-flex min-h-10 items-center justify-center rounded-full bg-primary px-5 text-[13px] font-bold text-white active:scale-[0.98]"
+          className="mt-2 inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-6 text-[13.5px] font-bold text-white active:scale-[0.98]"
         >
-          영상 올리러 가기
+          {t("my_empty_videos_cta")}
         </Link>
       )}
     </div>
@@ -103,15 +111,16 @@ function EmptyState({ message, cta }: { message: string; cta?: boolean }) {
 }
 
 function VideoRow({ post, hearts, membersTotal }: { post: MyPost; hearts: MemberHeartPublic[]; membersTotal: number }) {
-  const line = heartLine(hearts, membersTotal);
+  const { t } = useLang();
+  const line = heartLine(hearts, membersTotal, t);
   return (
     <Link href={`/video/${post.id}`} className="flex gap-[11px] border-b border-border px-1 py-[13px] last:border-b-0">
       <Thumb url={post.thumbnail_url} />
       <div className="min-w-0 flex-1">
         <div className="line-clamp-1 text-[12.5px] font-bold text-fg">{post.title}</div>
-        <p className="mt-[5px] text-[10.5px] leading-relaxed text-subtle">
+        <p className="mt-[5px] text-[10.5px] leading-relaxed text-muted">
           {post.stage_title}
-          {post.hidden && <span className="ml-1.5 font-semibold text-subtle">· 비공개 처리됨</span>}
+          {post.hidden && <span className="ml-1.5 font-semibold text-subtle">· {t("my_private_flag")}</span>}
           <br />
           <span className={line.active ? "font-extrabold text-primary-strong" : "text-subtle"}>{line.text}</span>
         </p>
@@ -133,6 +142,7 @@ function VideoSkeletonRow() {
 }
 
 export default function MyPage() {
+  const { t } = useLang();
   const { signedIn, member, nickname, loading: sessionLoading, requireLogin } = useSession();
   const [posts, setPosts] = useState<MyPost[]>([]);
   const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
@@ -220,16 +230,14 @@ export default function MyPage() {
           <LogIn className="h-6 w-6" />
         </div>
         <div>
-          <p className="text-[15px] font-bold text-fg">로그인하고 내 순간을 확인하세요</p>
-          <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted">
-            내가 올린 영상과 멤버 반응을 한 곳에서 모아볼 수 있어요.
-          </p>
+          <p className="text-[15px] font-bold text-fg">{t("my_login_title")}</p>
+          <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted">{t("my_login_sub")}</p>
         </div>
         <button
           onClick={() => requireLogin()}
           className="mt-1 flex min-h-11 items-center justify-center rounded-full bg-primary px-6 text-[14px] font-bold text-white active:scale-[0.98]"
         >
-          로그인하기
+          {t("my_login_cta")}
         </button>
       </div>
     );
@@ -241,9 +249,9 @@ export default function MyPage() {
       <div className="flex items-center gap-[13px] px-1 pb-1.5 pt-1">
         <Avatar nickname={nickname} avatarUrl={member?.avatar_url} />
         <div className="min-w-0">
-          <div className="truncate text-[18px] font-extrabold tracking-tight text-fg">{nickname || "게스트"}</div>
+          <div className="truncate text-[18px] font-extrabold tracking-tight text-fg">{nickname || t("my_guest")}</div>
           {member ? (
-            <div className="mt-0.5 truncate text-[12px] font-bold text-primary-strong">{member.display_name} · 멤버 계정</div>
+            <div className="mt-0.5 truncate text-[12px] font-bold text-primary-strong">{member.display_name} · {t("my_member_account")}</div>
           ) : (
             <div className="mt-0.5 truncate text-[12px] text-muted">@{nickname || "guest"}</div>
           )}
@@ -252,23 +260,23 @@ export default function MyPage() {
 
       {/* 통계 */}
       <div className="mt-3 flex gap-[9px]">
-        <StatCard n={stats.videoCount} label="내 영상" />
-        <StatCard n={stats.totalHearts} label="멤버 하트" accent />
-        <StatCard n={stats.grandSlamCount} label="멤버 전원" />
+        <StatCard n={stats.videoCount} label={t("my_stat_videos")} />
+        <StatCard n={stats.totalHearts} label={t("member_heart_badge")} accent />
+        <StatCard n={stats.grandSlamCount} label={t("member_all_short")} />
       </div>
 
       {/* 탭 */}
       <div className="mt-2 grid grid-cols-3 border-b border-border">
-        {TABS.map((t) => (
+        {TABS.map((tabItem) => (
           <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            aria-current={tab === t.key ? "page" : undefined}
+            key={tabItem.key}
+            onClick={() => setTab(tabItem.key)}
+            aria-current={tab === tabItem.key ? "page" : undefined}
             className={`min-h-11 border-b-2 py-2.5 text-[12px] font-extrabold transition-colors ${
-              tab === t.key ? "border-primary text-primary" : "border-transparent text-muted"
+              tab === tabItem.key ? "border-primary text-primary" : "border-transparent text-muted"
             }`}
           >
-            {t.label}
+            {t(tabItem.labelKey)}
           </button>
         ))}
       </div>
@@ -280,15 +288,15 @@ export default function MyPage() {
         ) : error ? (
           <ErrorState onRetry={() => void load()} />
         ) : tab === "comments" ? (
-          <EmptyState message="내 댓글 기능은 곧 제공돼요" />
+          <EmptyState title={t("my_empty_comments")} />
         ) : tab === "videos" ? (
           posts.length === 0 ? (
-            <EmptyState message="아직 올린 영상이 없어요" cta />
+            <EmptyState title={t("my_empty_videos_title")} sub={t("my_empty_videos_sub")} cta />
           ) : (
             posts.map((p) => <VideoRow key={p.id} post={p} hearts={hearts.get(p.id) ?? []} membersTotal={membersTotal} />)
           )
         ) : seenPosts.length === 0 ? (
-          <EmptyState message="아직 멤버가 반응한 영상이 없어요" />
+          <EmptyState title={t("my_empty_seen")} />
         ) : (
           seenPosts.map((p) => <VideoRow key={p.id} post={p} hearts={hearts.get(p.id) ?? []} membersTotal={membersTotal} />)
         )}

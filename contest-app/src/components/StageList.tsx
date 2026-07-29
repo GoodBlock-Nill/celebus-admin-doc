@@ -20,18 +20,19 @@ function StageCardItem({ stage }: { stage: StagePublic }) {
           // eslint-disable-next-line @next/next/no-img-element
           <img src={stage.cover_url} alt="" loading="lazy" className="h-full w-full object-cover" />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary-soft via-primary-soft/60 to-transparent">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-gradient-to-br from-primary-soft via-primary-soft/60 to-transparent">
             <Clapperboard className="h-8 w-8 text-primary-400" />
+            <span className="text-[10.5px] font-semibold text-primary-strong/70">{t("thumb_no_image")}</span>
           </div>
         )}
         <div className="media-scrim pointer-events-none absolute inset-0" />
       </div>
       <div className="p-3.5">
-        <h3 className="truncate text-[15px] font-bold text-fg">{stage.title}</h3>
+        <h3 className="line-clamp-2 text-[15px] font-bold leading-snug text-fg">{stage.title}</h3>
         {stage.description && (
           <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-muted">{stage.description}</p>
         )}
-        <div className="mt-1.5 flex items-center gap-1 text-[11.5px] text-subtle">
+        <div className="mt-1.5 flex items-center gap-1 text-[11.5px] text-muted">
           {stage.event_date && (
             <span className="flex items-center gap-1">
               <CalendarDays className="h-3.5 w-3.5" /> {stage.event_date}
@@ -48,7 +49,7 @@ function StageCardItem({ stage }: { stage: StagePublic }) {
           >
             {t(stage.status === "open" ? "stage_open" : "stage_archived")}
           </span>
-          <span className="ml-auto text-[11px] font-bold text-primary-strong">열어보기 ›</span>
+          <span className="ml-auto text-[11px] font-bold text-primary-strong">{t("stage_open_cta")} ›</span>
         </div>
       </div>
     </Link>

@@ -117,7 +117,7 @@ export default function StageView({ stageId }: { stageId: string }) {
           <div className="min-w-0 flex-1">
             <h1 className="text-[19px] font-bold leading-tight tracking-tight text-fg">{stage?.title ?? "…"}</h1>
             {stage?.description && <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted">{stage.description}</p>}
-            <div className="mt-1.5 flex items-center gap-3 text-[11.5px] text-subtle">
+            <div className="mt-1.5 flex items-center gap-3 text-[11.5px] text-muted">
               {stage?.event_date && (
                 <span className="flex items-center gap-1">
                   <CalendarDays className="h-3.5 w-3.5" /> {stage.event_date}
@@ -129,7 +129,7 @@ export default function StageView({ stageId }: { stageId: string }) {
           {stage?.status === "open" && (
             <button
               onClick={() => requireLogin(() => setUploading(true)) && setUploading(true)}
-              className="flex shrink-0 items-center gap-1 rounded-full bg-primary px-3.5 py-2 text-[12px] font-extrabold text-white shadow-sm active:scale-95"
+              className="flex min-h-11 shrink-0 items-center gap-1 rounded-full bg-primary px-3.5 text-[12px] font-extrabold text-white shadow-sm active:scale-95"
             >
               <Plus className="h-3.5 w-3.5" /> {t("stage_upload_cta")}
             </button>
@@ -146,7 +146,7 @@ export default function StageView({ stageId }: { stageId: string }) {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`shrink-0 rounded-full border px-3.5 py-2 text-[12.5px] font-bold ${
+            className={`flex min-h-11 shrink-0 items-center rounded-full border px-3.5 text-[12.5px] font-bold ${
               filter === f ? "border-fg bg-fg text-white" : "border-border bg-card text-muted"
             }`}
           >
