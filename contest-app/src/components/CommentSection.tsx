@@ -43,11 +43,11 @@ function CommentRow({
         )}
         <span className="flex-1" />
         {mine ? (
-          <button onClick={onDelete} aria-label={t("comment_delete")} className="flex h-8 w-8 items-center justify-center rounded-full text-subtle hover:text-muted">
+          <button onClick={onDelete} aria-label={t("comment_delete")} className="-my-1.5 flex h-11 w-11 items-center justify-center rounded-full text-subtle hover:text-muted">
             <Trash2 className="h-3.5 w-3.5" />
           </button>
         ) : (
-          <button onClick={onReport} aria-label={t("comment_report")} className="flex h-8 w-8 items-center justify-center rounded-full text-subtle hover:text-muted">
+          <button onClick={onReport} aria-label={t("comment_report")} className="-my-1.5 flex h-11 w-11 items-center justify-center rounded-full text-subtle hover:text-muted">
             <Flag className="h-3.5 w-3.5" />
           </button>
         )}
