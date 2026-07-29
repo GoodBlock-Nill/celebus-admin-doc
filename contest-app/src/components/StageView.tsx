@@ -13,6 +13,7 @@ import StageCard from "./StageCard";
 import StageUploadModal from "./StageUploadModal";
 import { useLang } from "./LangProvider";
 import { useSession } from "./SessionProvider";
+import { isLaunchPreview } from "@/lib/launchPreview";
 
 type Filter = "all" | StageCategory;
 
@@ -53,6 +54,7 @@ export default function StageView({ stageId }: { stageId: string }) {
     setLoading(true);
     let q = sb.from("stage_posts_public").select("*").eq("stage_id", stageId).order("created_at", { ascending: false }).limit(60);
     if (filter !== "all") q = q.eq("category", filter);
+    if (isLaunchPreview()) q = q.eq("is_official", true); // 배포초기 프리뷰 — 공식만
     const { data } = await q;
     const rows = (data ?? []) as StagePostPublic[];
     setPosts(rows);

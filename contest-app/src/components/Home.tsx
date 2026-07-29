@@ -13,6 +13,7 @@ import { useLang } from "./LangProvider";
 import { useSession } from "./SessionProvider";
 import HowItWorks from "./HowItWorks";
 import GlobalUploadSheet from "./GlobalUploadSheet";
+import { isLaunchPreview } from "@/lib/launchPreview";
 
 interface HeroPost extends StagePostPublic {
   __stageTitle?: string;
@@ -38,12 +39,16 @@ export default function Home() {
     setLoading(true);
     setError(false);
     try {
+      // 배포초기 프리뷰: 팬 콘텐츠 숨김(공식만) + 이벤트 미노출(오픈 첫날엔 이벤트 없음)
+      const preview = isLaunchPreview();
+      let postsQuery = sb.from("stage_posts_public").select("*").order("created_at", { ascending: false }).limit(40);
+      if (preview) postsQuery = postsQuery.eq("is_official", true);
       const [stagesRes, postsRes, heartsRes, membersRes, eventRes] = await Promise.all([
         sb.from("stages_public").select("*").eq("status", "open").order("sort_order").limit(8),
-        sb.from("stage_posts_public").select("*").order("created_at", { ascending: false }).limit(40),
+        postsQuery,
         sb.from("member_hearts_public").select("*"),
         sb.from("members_public").select("display_name"),
-        sb.from("stage_events_public").select("*").eq("status", "open").limit(1),
+        preview ? Promise.resolve({ data: [], error: null }) : sb.from("stage_events_public").select("*").eq("status", "open").limit(1),
       ]);
       if (stagesRes.error || postsRes.error || heartsRes.error || membersRes.error || eventRes.error) {
         throw new Error("home load failed");

@@ -16,14 +16,18 @@ import CommentSection from "./CommentSection";
 import { Thumb } from "./HomeAtoms";
 import { useLang } from "./LangProvider";
 import { useSession } from "./SessionProvider";
+import { isLaunchPreview } from "@/lib/launchPreview";
 
 type HeartState = { hearts: MemberHeartPublic[]; liked: boolean; likeCount: number; viewCount: number };
 
 // 리스트 컨텍스트 로더 — ?list=stage:<id> | hearts | recent(기본)
 async function loadFeedList(listParam: string | null, seedId: string): Promise<StagePostPublic[]> {
+  const preview = isLaunchPreview(); // 배포초기 프리뷰 — 공식만
   if (listParam?.startsWith("stage:")) {
     const stageId = listParam.slice(6);
-    const { data } = await sb.from("stage_posts_public").select("*").eq("stage_id", stageId).order("created_at", { ascending: false }).limit(100);
+    let q = sb.from("stage_posts_public").select("*").eq("stage_id", stageId).order("created_at", { ascending: false }).limit(100);
+    if (preview) q = q.eq("is_official", true);
+    const { data } = await q;
     const rows = (data ?? []) as StagePostPublic[];
     if (rows.some((p) => p.id === seedId)) return rows;
   } else if (listParam === "hearts") {
@@ -36,7 +40,9 @@ async function loadFeedList(listParam: string | null, seedId: string): Promise<S
       if (rows.some((p) => p.id === seedId)) return rows;
     }
   } else {
-    const { data } = await sb.from("stage_posts_public").select("*").order("created_at", { ascending: false }).limit(100);
+    let q = sb.from("stage_posts_public").select("*").order("created_at", { ascending: false }).limit(100);
+    if (preview) q = q.eq("is_official", true);
+    const { data } = await q;
     const rows = (data ?? []) as StagePostPublic[];
     if (rows.some((p) => p.id === seedId)) return rows;
   }

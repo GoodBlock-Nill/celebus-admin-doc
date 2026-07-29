@@ -7,6 +7,7 @@ import { LangProvider } from "./LangProvider";
 import SessionProvider from "./SessionProvider";
 import Header from "./Header";
 import BottomNav from "./BottomNav";
+import LaunchPreviewToggle from "./LaunchPreviewToggle";
 
 export default function Shell({ children }: { children: React.ReactNode }) {
   return (
@@ -15,6 +16,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         <Header />
         <main className="mx-auto max-w-2xl px-4 pb-28 pt-4">{children}</main>
         <BottomNav />
+        <LaunchPreviewToggle />
       </SessionProvider>
     </LangProvider>
   );

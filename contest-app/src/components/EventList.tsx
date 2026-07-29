@@ -7,6 +7,7 @@ import { Trophy, CalendarDays, Heart } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StageEventPublic, StagePostPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
+import { isLaunchPreview } from "@/lib/launchPreview";
 
 export default function EventList() {
   const { t } = useLang();
@@ -16,9 +17,11 @@ export default function EventList() {
 
   useEffect(() => {
     (async () => {
+      // 배포초기 프리뷰: 오픈 첫날엔 이벤트·Pick 없음(팬 활동 전)
+      const preview = isLaunchPreview();
       const [evRes, heartsRes] = await Promise.all([
-        sb.from("stage_events_public").select("*").order("created_at", { ascending: false }),
-        sb.from("member_hearts_public").select("*"),
+        preview ? Promise.resolve({ data: [] }) : sb.from("stage_events_public").select("*").order("created_at", { ascending: false }),
+        preview ? Promise.resolve({ data: [] }) : sb.from("member_hearts_public").select("*"),
       ]);
       setEvents((evRes.data ?? []) as StageEventPublic[]);
       const counts = new Map<string, number>();
