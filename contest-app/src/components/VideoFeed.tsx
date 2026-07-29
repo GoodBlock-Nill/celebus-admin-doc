@@ -47,7 +47,8 @@ async function loadFeedList(listParam: string | null, seedId: string): Promise<S
 
 export default function VideoFeed({ postId }: { postId: string }) {
   const { t } = useLang();
-  const { requireLogin } = useSession();
+  const { requireLogin, member } = useSession();
+  const isMemberMe = !!member;
   const router = useRouter();
   const listParam = useSearchParams().get("list");
   const focus = useSearchParams().get("focus"); // 알림 딥링크: comment 시 시트 오픈
@@ -149,6 +150,20 @@ export default function VideoFeed({ postId }: { postId: string }) {
     }
   }
 
+  // 멤버 본인 — 하트 남기기/취소(코어 액션). 성공 후 해당 항목 하트 재조회
+  async function toggleMemberHeart(post: StagePostPublic) {
+    if (!requireLogin(() => toggleMemberHeart(post))) return;
+    const res = await fetch(`/api/stage/posts/${post.id}/member-heart`, { method: "POST" }).catch(() => null);
+    if (!res?.ok) return void toast(t("err_server"));
+    const { data } = await sb.from("member_hearts_public").select("*").eq("post_id", post.id);
+    setStates((prev) => {
+      const n = new Map(prev);
+      const cur = n.get(post.id) ?? { hearts: [], liked: false, likeCount: post.like_count };
+      n.set(post.id, { ...cur, hearts: (data ?? []) as MemberHeartPublic[] });
+      return n;
+    });
+  }
+
   async function report(post: StagePostPublic) {
     if (!requireLogin(() => report(post))) return;
     try {
@@ -215,6 +230,14 @@ export default function VideoFeed({ postId }: { postId: string }) {
 
               {/* 우측 액션 레일 */}
               <div className="absolute bottom-[max(6rem,calc(env(safe-area-inset-bottom)+5rem))] right-2.5 z-10 flex flex-col items-center gap-4">
+                {isMemberMe && (
+                  <button onClick={() => toggleMemberHeart(post)} aria-label={t("mh_button")} className="flex flex-col items-center gap-1 text-white">
+                    <span className="brand-gradient flex h-11 w-11 items-center justify-center rounded-full shadow-[0_4px_12px_-2px_rgba(108,77,230,0.8)] active:scale-90">
+                      <Heart className="h-5 w-5 fill-current" />
+                    </span>
+                    <span className="text-[10px] font-bold drop-shadow">{t("mh_button")}</span>
+                  </button>
+                )}
                 <RailButton icon={Heart} label={String(st?.likeCount ?? post.like_count)} active={st?.liked} onClick={() => toggleLike(post)} ariaLabel={t("action_like")} />
                 <RailButton icon={MessageCircle} onClick={() => setCommentsFor(post.id)} ariaLabel={t("comment_title")} />
                 <div className="flex flex-col items-center">
