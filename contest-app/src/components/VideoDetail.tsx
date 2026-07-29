@@ -2,8 +2,9 @@
 
 // 영상 상세 — 딥링크 가능한 라우트(/video/[id]). 기존 모달을 공유 가능한 전체 화면으로 전환(Wave 9).
 // 임베드 + 멤버 하트 라인 + 팬 좋아요 + 자랑 + 댓글 + 신고. 데이터·핸들러를 자체 보유.
-import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { ChevronLeft, Heart, Flag, ExternalLink } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
@@ -22,6 +23,10 @@ export default function VideoDetail({ postId }: { postId: string }) {
   const { requireLogin, member } = useSession();
   const isMemberMe = !!member;
   const router = useRouter();
+  const focus = useSearchParams().get("focus"); // 알림 딥링크: heart | comment
+  const heartsRef = useRef<HTMLDivElement>(null);
+  const commentsRef = useRef<HTMLDivElement>(null);
+  const [highlight, setHighlight] = useState<"heart" | "comment" | null>(null);
   const [post, setPost] = useState<StagePostPublic | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [hearts, setHearts] = useState<MemberHeartPublic[]>([]);
@@ -58,6 +63,19 @@ export default function VideoDetail({ postId }: { postId: string }) {
   useEffect(() => {
     void load();
   }, [load]);
+
+  // 알림 딥링크 — 로드 후 해당 반응/댓글 위치로 스크롤 + 잠깐 강조
+  useEffect(() => {
+    if (loading || !post || !focus) return;
+    const target = focus === "comment" ? commentsRef.current : heartsRef.current;
+    if (!target) return;
+    const id = setTimeout(() => {
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+      setHighlight(focus === "comment" ? "comment" : "heart");
+      setTimeout(() => setHighlight(null), 1800);
+    }, 350);
+    return () => clearTimeout(id);
+  }, [loading, post, focus]);
 
   async function toggleLike() {
     if (!requireLogin(() => toggleLike()) || !post) return;
@@ -109,7 +127,12 @@ export default function VideoDetail({ postId }: { postId: string }) {
     return (
       <div>
         {back}
-        <div className="rounded-2xl border border-border bg-card px-4 py-14 text-center text-[13.5px] text-muted">{t("video_not_found")}</div>
+        <div className="rounded-2xl border border-border bg-card px-4 py-14 text-center">
+          <p className="text-[13.5px] text-muted">{t("video_not_found")}</p>
+          <Link href="/stages" className="mt-4 inline-flex items-center rounded-full bg-primary px-5 py-2 text-[13px] font-bold text-white active:scale-95">
+            {t("video_browse_cta")}
+          </Link>
+        </div>
       </div>
     );
   }
@@ -135,9 +158,12 @@ export default function VideoDetail({ postId }: { postId: string }) {
         <EntryEmbed entry={stagePostAsEntry(post)} />
       </div>
 
-      {/* 멤버 하트 라인 (은은한 브랜드 칩) */}
+      {/* 멤버 하트 라인 (은은한 브랜드 칩) — 알림 딥링크 시 강조 */}
       {hearts.length > 0 && (
-        <div className="mt-3 space-y-2">
+        <div
+          ref={heartsRef}
+          className={`mt-3 space-y-2 rounded-2xl transition-shadow ${highlight === "heart" ? "shadow-[0_0_0_2px_var(--color-primary)]" : ""}`}
+        >
           {grandSlam && (
             <div className="rounded-xl bg-primary-soft px-3 py-2 text-center text-[13px] font-bold text-primary-strong">{t("grandslam")}</div>
           )}
@@ -175,7 +201,12 @@ export default function VideoDetail({ postId }: { postId: string }) {
         </button>
       </div>
 
-      <CommentSection postId={post.id} />
+      <div
+        ref={commentsRef}
+        className={`rounded-2xl transition-shadow ${highlight === "comment" ? "shadow-[0_0_0_2px_var(--color-primary)]" : ""}`}
+      >
+        <CommentSection postId={post.id} />
+      </div>
     </div>
   );
 }
