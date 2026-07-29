@@ -20,6 +20,8 @@ const FRAME_SRC = [
 
 export default withSerwist({
   reactStrictMode: true,
+  // dev 모드 좌하단 인디케이터 숨김 — 리뷰 캡처에서 UI 요소로 오인되던 검은 원 제거(프로덕션 무관)
+  devIndicators: false,
   async headers() {
     return [
       {

@@ -207,7 +207,10 @@ export default function EventPlay({ eventId }: { eventId: string }) {
               <p className="rounded-xl border border-border bg-card-2 px-3 py-3 text-center text-[13px] text-muted">{t("ev_not_enough")}</p>
             ))}
           {event.status === "open" && votesLabel && (
-            <p className="text-center text-[11.5px] font-semibold text-subtle">{votesLabel}</p>
+            <div className="text-center">
+              <p className="text-[11.5px] font-semibold text-muted">{votesLabel}</p>
+              <p className="mt-0.5 text-[11px] text-muted">{t("ev_votes_help").replace("{cap}", String(votes?.cap ?? 3))}</p>
+            </div>
           )}
           <button
             onClick={() => setShowStandings((s) => !s)}

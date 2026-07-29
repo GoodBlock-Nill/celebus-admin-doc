@@ -158,29 +158,37 @@ export default function VideoDetail({ postId }: { postId: string }) {
         <EntryEmbed entry={stagePostAsEntry(post)} />
       </div>
 
-      {/* 멤버 하트 라인 (은은한 브랜드 칩) — 알림 딥링크 시 강조 */}
+      {/* 멤버 반응 — 정보 패널(누를 수 없음). 라벨을 달아 액션 버튼과 명확히 구분(VIDEO-01) */}
       {hearts.length > 0 && (
-        <div
+        <section
           ref={heartsRef}
-          className={`mt-3 space-y-2 rounded-2xl transition-shadow ${highlight === "heart" ? "shadow-[0_0_0_2px_var(--color-primary)]" : ""}`}
+          aria-label={t("home_reaction_title")}
+          className={`mt-3 space-y-1.5 rounded-2xl transition-shadow ${highlight === "heart" ? "shadow-[0_0_0_2px_var(--color-primary)]" : ""}`}
         >
+          <div className="flex items-center gap-1.5 px-1 text-[10.5px] font-extrabold uppercase tracking-wider text-primary-strong">
+            <Heart className="h-3 w-3 fill-current" /> {t("home_reaction_title")}
+          </div>
           {grandSlam && (
-            <div className="rounded-xl bg-primary-soft px-3 py-2 text-center text-[13px] font-bold text-primary-strong">{t("grandslam")}</div>
+            <div className="rounded-xl bg-primary-soft px-3 py-2">
+              <div className="text-[13px] font-bold text-primary-strong">{t("grandslam")}</div>
+              <p className="mt-0.5 text-[11.5px] text-muted">{t("grandslam_help")}</p>
+            </div>
           )}
           <MemberHeartsLine hearts={hearts} />
-          <BragButton post={post} hearts={hearts} />
-        </div>
+        </section>
       )}
 
       <div className="mt-3">
         <h1 className="text-[16px] font-bold text-fg">{post.title}</h1>
-        <div className="text-[12.5px] text-subtle">@{post.handle}</div>
+        <div className="text-[12.5px] text-muted">@{post.handle}</div>
         {post.description && <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{post.description}</p>}
       </div>
 
+      {/* 액션 — 팬 좋아요(주 액션)·원본(보조)·신고(유틸). 멤버 본인만 멤버 하트(그라데) 노출 */}
       <div className="mt-4 flex items-center gap-2">
         <button
           onClick={toggleLike}
+          aria-pressed={liked}
           className={`flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-full py-2.5 text-[14px] font-bold ${
             liked ? "bg-primary-soft text-primary-strong" : "bg-primary text-white"
           }`}
@@ -193,13 +201,20 @@ export default function VideoDetail({ postId }: { postId: string }) {
             <Heart className="h-4 w-4 fill-current" /> {t("mh_button")}
           </button>
         )}
-        <a href={post.source_url} target="_blank" rel="noreferrer noopener" className="flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-card-2 px-4 py-2.5 text-[13px] font-bold text-muted">
+        <a href={post.source_url} target="_blank" rel="noreferrer noopener" className="flex h-11 items-center gap-1.5 rounded-full border border-border bg-card-2 px-4 text-[13px] font-bold text-muted">
           <ExternalLink className="h-4 w-4" /> {t("stage_open_original")}
         </a>
-        <button onClick={report} disabled={reporting} aria-label={t("stage_report")} className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-card-2 text-subtle disabled:opacity-50">
+        <button onClick={report} disabled={reporting} aria-label={t("stage_report")} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-card-2 text-subtle disabled:opacity-50">
           <Flag className="h-4 w-4" />
         </button>
       </div>
+
+      {/* 자랑하기 — 멤버 반응이 있을 때만. 공유 액션이므로 정보 패널과 분리해 하단 CTA로 배치 */}
+      {hearts.length > 0 && (
+        <div className="mt-2">
+          <BragButton post={post} hearts={hearts} />
+        </div>
+      )}
 
       <div
         ref={commentsRef}

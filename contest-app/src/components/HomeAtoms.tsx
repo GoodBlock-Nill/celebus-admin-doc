@@ -3,6 +3,7 @@
 // Home 화면 전용 프레젠테이션 원자 컴포넌트 — 썸네일, 멤버 아바타 스택, 섹션 헤더, 로딩 스켈레톤.
 import Link from "next/link";
 import type { MemberHeartPublic } from "@/lib/types";
+import { useLang } from "./LangProvider";
 
 export const CATEGORY_LABEL: Record<string, string> = {
   fancam: "직캠",
@@ -69,15 +70,16 @@ export function AvatarStack({
 }
 
 export function SectionHeader({ title, sub, moreHref }: { title: string; sub?: string; moreHref?: string }) {
+  const { t } = useLang();
   return (
     <div className="mb-2.5 mt-7 flex items-end px-0.5">
       <div className="min-w-0">
         <h2 className="text-[16px] font-extrabold tracking-tight text-fg">{title}</h2>
-        {sub && <p className="mt-0.5 text-[12px] text-subtle">{sub}</p>}
+        {sub && <p className="mt-0.5 text-[12px] text-muted">{sub}</p>}
       </div>
       {moreHref && (
-        <Link href={moreHref} className="ml-auto shrink-0 text-[12.5px] font-bold text-primary">
-          더보기
+        <Link href={moreHref} className="ml-auto flex min-h-11 shrink-0 items-center text-[12.5px] font-bold text-primary">
+          {t("home_see_all")}
         </Link>
       )}
     </div>

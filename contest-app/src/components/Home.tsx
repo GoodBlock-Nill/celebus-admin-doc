@@ -9,12 +9,14 @@ import { Play, RefreshCw } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StageEventPublic, StagePostPublic, StagePublic } from "@/lib/types";
 import { AvatarStack, CATEGORY_LABEL, LoadingSkeleton, SectionHeader, Thumb, timeAgo } from "./HomeAtoms";
+import { useLang } from "./LangProvider";
 
 interface HeroPost extends StagePostPublic {
   __stageTitle?: string;
 }
 
 export default function Home() {
+  const { t } = useLang();
   const [stages, setStages] = useState<StagePublic[]>([]);
   const [posts, setPosts] = useState<StagePostPublic[]>([]);
   const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
@@ -110,18 +112,18 @@ export default function Home() {
         <LoadingSkeleton />
       ) : error ? (
         <div className="rounded-2xl border border-border bg-card px-4 py-14 text-center">
-          <p className="mb-4 text-[13.5px] text-muted">문제가 발생했어요. 잠시 후 다시 시도해주세요.</p>
+          <p className="mb-4 text-[13.5px] text-muted">{t("home_err")}</p>
           <button
             onClick={() => void load()}
             className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2 text-[13px] font-bold text-white active:scale-95"
           >
-            <RefreshCw className="h-3.5 w-3.5" /> 다시 시도
+            <RefreshCw className="h-3.5 w-3.5" /> {t("home_retry")}
           </button>
         </div>
       ) : isFullyEmpty ? (
         <div className="rounded-2xl border border-border bg-card px-4 py-16 text-center text-[13.5px] leading-relaxed text-muted">
-          아직 열린 공연이 없어요.
-          <br />곧 만나요!
+          {t("home_empty_l1")}
+          <br />{t("home_empty_l2")}
         </div>
       ) : (
         <>
@@ -139,7 +141,7 @@ export default function Home() {
                 {heroHearts.length > 0 && (
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/90 py-1 pl-1 pr-2.5 text-[11px] font-extrabold text-white backdrop-blur-sm">
                     <AvatarStack hearts={heroHearts} size={18} ring="ring-white/60" />
-                    {heroGrandSlam ? "멤버 전원 하트" : "멤버 하트"}
+                    {heroGrandSlam ? t("member_all_heart_badge") : t("member_heart_badge")}
                   </span>
                 )}
                 <h1 className="mt-2.5 line-clamp-2 text-[20px] font-extrabold leading-tight tracking-tight text-white drop-shadow-md">
@@ -155,7 +157,7 @@ export default function Home() {
 
           {reactionItems.length > 0 && (
             <div>
-              <SectionHeader title="멤버 반응" sub="최근 내 영상에 남은 반응" />
+              <SectionHeader title={t("home_reaction_title")} sub={t("home_reaction_sub")} />
               <div className="space-y-2.5">
                 {reactionItems.map(({ post, heart }) => (
                   <Link
@@ -168,13 +170,13 @@ export default function Home() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <strong className="line-clamp-2 block text-[13px] font-bold leading-snug text-fg">
-                        {heart.display_name} 님이 하트를 보냈어요
+                        {t("home_reaction_line").replace("{name}", heart.display_name)}
                       </strong>
-                      <p className="mt-0.5 truncate text-[11px] text-subtle">
+                      <p className="mt-0.5 truncate text-[11px] text-muted">
                         {post.title} · {timeAgo(heart.created_at)}
                       </p>
                       <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-extrabold text-primary-strong">
-                        멤버 하트
+                        {t("member_heart_badge")}
                       </span>
                     </div>
                   </Link>
@@ -185,7 +187,7 @@ export default function Home() {
 
           {stages.length > 0 && (
             <div>
-              <SectionHeader title="V01D 아카이브" moreHref="/stages" />
+              <SectionHeader title={t("home_archive_title")} sub={t("home_archive_sub")} moreHref="/stages" />
               <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
                 {stages.map((s) => (
                   <Link key={s.id} href={`/stage/${s.id}`} className="w-[156px] shrink-0 active:scale-[0.98]">
@@ -199,8 +201,8 @@ export default function Home() {
                       )}
                     </div>
                     <strong className="mt-2 block truncate text-[12.5px] font-bold text-fg">{s.title}</strong>
-                    <small className="mt-0.5 block text-[11px] text-subtle">
-                      영상 <span className="tabular-nums">{s.post_count}</span>개 · 업로드 가능
+                    <small className="mt-0.5 block text-[11px] text-muted">
+                      {t("home_stage_meta").replace("{n}", String(s.post_count))}
                     </small>
                   </Link>
                 ))}
@@ -210,7 +212,7 @@ export default function Home() {
 
           {event && (
             <div>
-              <SectionHeader title="지금 진행 중인 월드컵" />
+              <SectionHeader title={t("home_wc_title")} />
               <Link
                 href={`/event/${event.id}`}
                 className="flex items-center gap-3 rounded-2xl border border-[#dfe0ff] bg-primary-soft p-3.5 active:scale-[0.99]"
@@ -220,7 +222,7 @@ export default function Home() {
                 </div>
                 <div className="min-w-0 flex-1">
                   <strong className="block truncate text-[13.5px] font-extrabold text-fg">{event.title}</strong>
-                  <p className="mt-0.5 truncate text-[11.5px] text-muted">{event.stage_title} · 진행 중</p>
+                  <p className="mt-0.5 truncate text-[11.5px] text-muted">{event.stage_title} · {t("home_wc_ongoing")}</p>
                 </div>
                 <span className="shrink-0 text-[18px] text-subtle">›</span>
               </Link>
@@ -229,7 +231,7 @@ export default function Home() {
 
           {hallItems.length > 0 && (
             <div>
-              <SectionHeader title="V01D Pick" moreHref="/hearts" />
+              <SectionHeader title={t("hall_title")} sub={t("hall_sub")} moreHref="/hearts" />
               <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
                 {hallItems.map(({ post, count }) => {
                   const grandSlam = membersTotal > 0 && count >= membersTotal;
@@ -239,12 +241,12 @@ export default function Home() {
                         <Thumb url={post.thumbnail_url} />
                         <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
                         <span className="absolute left-2 top-2 rounded-md bg-black/45 px-2 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
-                          {grandSlam ? "멤버 전원" : CATEGORY_LABEL[post.category] ?? post.category}
+                          {grandSlam ? t("member_all_short") : CATEGORY_LABEL[post.category] ?? post.category}
                         </span>
                       </div>
                       <strong className="mt-2 line-clamp-1 block text-[12.5px] font-bold text-fg">{post.title}</strong>
-                      <small className="mt-0.5 block text-[11px] text-subtle">
-                        멤버 하트 <span className="tabular-nums">{count}</span>개
+                      <small className="mt-0.5 block text-[11px] text-muted">
+                        {t("home_pick_hearts").replace("{n}", String(count))}
                       </small>
                     </Link>
                   );

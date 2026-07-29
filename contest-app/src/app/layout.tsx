@@ -59,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko" className={`${noto.variable} ${display.variable}`}>
       <body className="font-sans">
         {children}
-        <Toaster position="top-center" theme="dark" richColors />
+        <Toaster position="top-center" theme="light" richColors />
       </body>
     </html>
   );
