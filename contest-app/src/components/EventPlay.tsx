@@ -84,7 +84,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
 
   function start() {
     if (size < 2) return;
-    if (!requireLogin()) return; // 월드컵 투표는 집계에 영향 → 로그인 필수
+    if (!requireLogin(() => start())) return; // 월드컵 투표는 집계에 영향 → 로그인 필수
 
     const entrants = shuffle(pool).slice(0, size);
     setCurrent(entrants);

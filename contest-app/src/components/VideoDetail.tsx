@@ -60,7 +60,7 @@ export default function VideoDetail({ postId }: { postId: string }) {
   }, [load]);
 
   async function toggleLike() {
-    if (!requireLogin() || !post) return;
+    if (!requireLogin(() => toggleLike()) || !post) return;
     try {
       const res = await fetch(`/api/stage/posts/${post.id}/like`, { method: "POST" });
       const j = await res.json();
@@ -73,7 +73,7 @@ export default function VideoDetail({ postId }: { postId: string }) {
   }
 
   async function toggleMemberHeart() {
-    if (!requireLogin() || !post) return;
+    if (!requireLogin(() => toggleMemberHeart()) || !post) return;
     const res = await fetch(`/api/stage/posts/${post.id}/member-heart`, { method: "POST" }).catch(() => null);
     if (res?.ok) {
       const { data } = await sb.from("member_hearts_public").select("*").eq("post_id", post.id);
@@ -85,7 +85,7 @@ export default function VideoDetail({ postId }: { postId: string }) {
 
   async function report() {
     if (reporting || !post) return;
-    if (!requireLogin()) return;
+    if (!requireLogin(() => report())) return;
     setReporting(true);
     try {
       const res = await fetch(`/api/stage/posts/${post.id}/report`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });

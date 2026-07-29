@@ -74,7 +74,7 @@ export default function StageView({ stageId }: { stageId: string }) {
   }, [load]);
 
   async function toggleLike(post: StagePostPublic) {
-    if (!requireLogin()) return;
+    if (!requireLogin(() => toggleLike(post))) return;
     try {
       const res = await fetch(`/api/stage/posts/${post.id}/like`, { method: "POST" });
       const j = await res.json();
@@ -128,7 +128,7 @@ export default function StageView({ stageId }: { stageId: string }) {
           </div>
           {stage?.status === "open" && (
             <button
-              onClick={() => requireLogin() && setUploading(true)}
+              onClick={() => requireLogin(() => setUploading(true)) && setUploading(true)}
               className="flex shrink-0 items-center gap-1 rounded-full bg-primary px-3.5 py-2 text-[12px] font-extrabold text-white shadow-sm active:scale-95"
             >
               <Plus className="h-3.5 w-3.5" /> {t("stage_upload_cta")}

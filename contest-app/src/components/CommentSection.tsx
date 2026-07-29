@@ -89,7 +89,7 @@ export default function CommentSection({ postId }: { postId: string }) {
 
   async function submit() {
     if (busy || !body.trim()) return;
-    if (!requireLogin()) return;
+    if (!requireLogin(() => submit())) return;
     setBusy(true);
     try {
       const res = await fetch(`/api/stage/posts/${postId}/comments`, {
@@ -120,7 +120,7 @@ export default function CommentSection({ postId }: { postId: string }) {
   }
 
   async function report(id: string) {
-    if (!requireLogin()) return;
+    if (!requireLogin(() => report(id))) return;
     const res = await fetch(`/api/stage/comments/${id}/report`, { method: "POST" });
     const j = await res.json().catch(() => ({}));
     toast(res.ok || j.code === "already" ? t("comment_reported") : t("err_server"));
