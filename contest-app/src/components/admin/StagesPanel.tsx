@@ -129,7 +129,7 @@ export default function StagesPanel() {
           >
             <h3 className="text-[15px] font-bold text-fg">{editing === "new" ? "스테이지 생성" : "스테이지 수정"}</h3>
             <label className="block text-[12px] font-bold text-fg/60">
-              공연명
+              아카이브명
               <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={80} placeholder="예: 2026 여름 부산 버스킹"
                 className="mt-1 w-full rounded-xl bg-white/6 px-3 py-3 text-[13.5px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/30" />
             </label>
