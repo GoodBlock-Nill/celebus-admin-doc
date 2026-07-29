@@ -3,21 +3,23 @@
 // FanStage 관리자 — 로그인 게이트 + 탭 SPA (운영자 전용, 한국어 고정)
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { UserRound, Clapperboard, BarChart3, FileText, Image as ImageIcon, ScrollText, Trophy } from "lucide-react";
+import { UserRound, Clapperboard, BarChart3, FileText, Image as ImageIcon, ScrollText, Trophy, Star } from "lucide-react";
 import type { ContestRow, LogRow } from "@/lib/admin-types";
 import { adminFetch, getAdminPw, setAdminPw } from "@/lib/admin-types";
 import ContestsPanel from "@/components/admin/ContestsPanel";
 import StagesPanel from "@/components/admin/StagesPanel";
+import FeaturedPanel from "@/components/admin/FeaturedPanel";
 import MembersPanel from "@/components/admin/MembersPanel";
 import EventsPanel from "@/components/admin/EventsPanel";
 import EntriesPanel from "@/components/admin/EntriesPanel";
 import AwardsPanel from "@/components/admin/AwardsPanel";
 
-type Tab = "overview" | "stages" | "events" | "members" | "contests" | "entries" | "awards" | "logs";
+type Tab = "overview" | "stages" | "featured" | "events" | "members" | "contests" | "entries" | "awards" | "logs";
 
 const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
   { key: "overview", label: "개요", icon: <BarChart3 className="h-4 w-4" /> },
   { key: "stages", label: "스테이지", icon: <Clapperboard className="h-4 w-4" /> },
+  { key: "featured", label: "대표영상", icon: <Star className="h-4 w-4" /> },
   { key: "events", label: "이벤트", icon: <Trophy className="h-4 w-4" /> },
   { key: "members", label: "멤버", icon: <UserRound className="h-4 w-4" /> },
   { key: "contests", label: "콘테스트", icon: <FileText className="h-4 w-4" /> },
@@ -215,6 +217,7 @@ export default function AdminPage() {
           </div>
           {tab === "overview" && <Overview stats={stats} />}
           {tab === "stages" && <StagesPanel />}
+          {tab === "featured" && <FeaturedPanel />}
           {tab === "events" && <EventsPanel />}
           {tab === "members" && <MembersPanel />}
           {tab === "contests" && <ContestsPanel />}

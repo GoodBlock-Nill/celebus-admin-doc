@@ -32,6 +32,7 @@ export default function Home() {
   const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
   const [membersTotal, setMembersTotal] = useState(0);
   const [event, setEvent] = useState<StageEventPublic | null>(null);
+  const [featuredPost, setFeaturedPost] = useState<StagePostPublic | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -43,18 +44,24 @@ export default function Home() {
       const preview = isLaunchPreview();
       let postsQuery = sb.from("stage_posts_public").select("*").order("created_at", { ascending: false }).limit(40);
       if (preview) postsQuery = postsQuery.eq("is_official", true);
-      const [stagesRes, postsRes, heartsRes, membersRes, eventRes] = await Promise.all([
+      // 관리자가 고정한 대표 영상(있으면 히어로 우선)
+      let featuredQuery = sb.from("stage_posts_public").select("*").eq("featured", true);
+      if (preview) featuredQuery = featuredQuery.eq("is_official", true);
+      featuredQuery = featuredQuery.order("created_at", { ascending: false }).limit(1);
+      const [stagesRes, postsRes, heartsRes, membersRes, eventRes, featuredRes] = await Promise.all([
         sb.from("stages_public").select("*").eq("status", "open").order("sort_order").limit(8),
         postsQuery,
         sb.from("member_hearts_public").select("*"),
         sb.from("members_public").select("display_name"),
         preview ? Promise.resolve({ data: [], error: null }) : sb.from("stage_events_public").select("*").eq("status", "open").limit(1),
+        featuredQuery,
       ]);
       if (stagesRes.error || postsRes.error || heartsRes.error || membersRes.error || eventRes.error) {
         throw new Error("home load failed");
       }
       setStages((stagesRes.data ?? []) as StagePublic[]);
       setPosts((postsRes.data ?? []) as StagePostPublic[]);
+      setFeaturedPost(((featuredRes.data ?? []) as StagePostPublic[])[0] ?? null);
       const map = new Map<string, MemberHeartPublic[]>();
       for (const h of (heartsRes.data ?? []) as MemberHeartPublic[]) {
         map.set(h.post_id, [...(map.get(h.post_id) ?? []), h]);
@@ -74,8 +81,12 @@ export default function Home() {
     void load();
   }, [load]);
 
-  // 히어로 = 멤버 하트를 가장 많이 받은 영상 (동률·전무 시 최신 영상으로 대체)
+  // 히어로 우선순위: ① 관리자 고정(featured) → ② 멤버 하트 최다 → ③ 최신
   const heroPost = useMemo<HeroPost | null>(() => {
+    if (featuredPost) {
+      const stageTitle = stages.find((s) => s.id === featuredPost.stage_id)?.title;
+      return { ...featuredPost, __stageTitle: stageTitle };
+    }
     if (posts.length === 0) return null;
     let best = posts[0];
     let bestCount = hearts.get(posts[0].id)?.length ?? 0;
@@ -88,7 +99,7 @@ export default function Home() {
     }
     const stageTitle = stages.find((s) => s.id === best.stage_id)?.title;
     return { ...best, __stageTitle: stageTitle };
-  }, [posts, hearts, stages]);
+  }, [posts, hearts, stages, featuredPost]);
   const heroHearts = heroPost ? hearts.get(heroPost.id) ?? [] : [];
   const heroGrandSlam = membersTotal > 0 && heroHearts.length >= membersTotal;
 
@@ -233,16 +244,19 @@ export default function Home() {
                     <div className="relative h-[92px] overflow-hidden rounded-2xl">
                       <Thumb url={s.cover_url} />
                       <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
-                      {s.event_date && (
-                        <span className="absolute left-2 top-2 rounded-md bg-black/45 px-2 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
-                          {s.event_date}
-                        </span>
-                      )}
-                      {s.is_official && (
-                        <span className="brand-gradient absolute right-2 top-2 rounded-md px-1.5 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
-                          {t("archive_official")}
-                        </span>
-                      )}
+                      {/* 뱃지는 좌측 상단으로 통일(공식 위·날짜 아래) */}
+                      <div className="absolute left-2 top-2 flex flex-col items-start gap-1">
+                        {s.is_official && (
+                          <span className="brand-gradient rounded-md px-1.5 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
+                            {t("archive_official")}
+                          </span>
+                        )}
+                        {s.event_date && (
+                          <span className="rounded-md bg-black/45 px-2 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
+                            {s.event_date}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <strong className="mt-2 block truncate text-[12.5px] font-bold text-fg">{s.title}</strong>
                     <small className="mt-0.5 block text-[11px] text-muted">
