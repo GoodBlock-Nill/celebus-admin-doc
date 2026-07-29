@@ -87,6 +87,8 @@ export const messages: Record<Lang, Dict> = {
     stage_posts_n: "영상 {n}개",
     stage_list_empty: "아직 열린 공연이 없어요. 곧 찾아올게요!",
     stage_not_found: "공연을 찾을 수 없어요.",
+    nav_back: "뒤로",
+    video_not_found: "영상을 찾을 수 없어요.",
     err_stage_closed: "보관된 공연에는 올릴 수 없어요.",
     err_stage_not_found: "공연을 찾을 수 없어요.",
     // ── 스테이지 (W1) ──
@@ -359,6 +361,8 @@ export const messages: Record<Lang, Dict> = {
     stage_posts_n: "{n} videos",
     stage_list_empty: "No shows open yet. Coming soon!",
     stage_not_found: "Show not found.",
+    nav_back: "Back",
+    video_not_found: "Video not found.",
     err_stage_closed: "This show is archived.",
     err_stage_not_found: "Show not found.",
     // ── Stage (W1) ──
@@ -621,6 +625,8 @@ export const messages: Record<Lang, Dict> = {
     stage_posts_n: "動画{n}本",
     stage_list_empty: "まだ公演がありません。お楽しみに！",
     stage_not_found: "公演が見つかりません。",
+    nav_back: "戻る",
+    video_not_found: "動画が見つかりません。",
     err_stage_closed: "アーカイブ済みの公演には投稿できません。",
     err_stage_not_found: "公演が見つかりません。",
     // ── ステージ (W1) ──

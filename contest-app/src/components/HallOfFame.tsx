@@ -5,20 +5,19 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ChevronLeft, Trophy } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import StageCard from "./StageCard";
-import StageDetailModal from "./StageDetailModal";
 import { useLang } from "./LangProvider";
 
 export default function HallOfFame() {
   const { t } = useLang();
+  const router = useRouter();
   const [posts, setPosts] = useState<StagePostPublic[]>([]);
   const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
   const [liked, setLiked] = useState<Set<string>>(new Set());
   const [membersTotal, setMembersTotal] = useState(0);
-  const [isMemberMe, setIsMemberMe] = useState(false);
-  const [openPost, setOpenPost] = useState<StagePostPublic | null>(null);
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
@@ -50,7 +49,6 @@ export default function HallOfFame() {
   useEffect(() => {
     void load();
     sb.from("members_public").select("display_name").then(({ data }) => setMembersTotal((data ?? []).length));
-    fetch("/api/stage/me").then((r) => r.json()).then((j) => setIsMemberMe(!!j.member)).catch(() => {});
   }, [load]);
 
   async function toggleLike(post: StagePostPublic) {
@@ -66,16 +64,9 @@ export default function HallOfFame() {
       });
       const apply = (p: StagePostPublic) => (p.id === post.id ? { ...p, like_count: j.like_count as number } : p);
       setPosts((prev) => prev.map(apply));
-      setOpenPost((prev) => (prev && prev.id === post.id ? apply(prev) : prev));
     } catch {
       toast(t("err_server"));
     }
-  }
-
-  async function toggleMemberHeart(post: StagePostPublic) {
-    const res = await fetch(`/api/stage/posts/${post.id}/member-heart`, { method: "POST" }).catch(() => null);
-    if (res?.ok) void load();
-    else toast(t("err_server"));
   }
 
   return (
@@ -108,25 +99,13 @@ export default function HallOfFame() {
               liked={liked.has(p.id)}
               hearts={hearts.get(p.id) ?? []}
               grandSlam={membersTotal > 0 && (hearts.get(p.id)?.length ?? 0) >= membersTotal}
-              onOpen={() => setOpenPost(p)}
+              onOpen={() => router.push(`/video/${p.id}`)}
               onToggleLike={() => void toggleLike(p)}
             />
           ))}
         </div>
       )}
 
-      {openPost && (
-        <StageDetailModal
-          post={openPost}
-          liked={liked.has(openPost.id)}
-          hearts={hearts.get(openPost.id) ?? []}
-          grandSlam={membersTotal > 0 && (hearts.get(openPost.id)?.length ?? 0) >= membersTotal}
-          isMemberMe={isMemberMe}
-          onClose={() => setOpenPost(null)}
-          onToggleLike={() => void toggleLike(openPost)}
-          onToggleMemberHeart={() => void toggleMemberHeart(openPost)}
-        />
-      )}
     </div>
   );
 }

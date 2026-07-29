@@ -93,7 +93,7 @@ export default function NotificationBell() {
                     </div>
                   );
                   return n.post_id ? (
-                    <Link key={n.id} href={`/stage-post/${n.post_id}`} onClick={() => setOpen(false)} className="block">
+                    <Link key={n.id} href={`/video/${n.post_id}`} onClick={() => setOpen(false)} className="block">
                       {inner}
                     </Link>
                   ) : (

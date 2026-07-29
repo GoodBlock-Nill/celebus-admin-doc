@@ -105,7 +105,7 @@ function EmptyState({ message, cta }: { message: string; cta?: boolean }) {
 function VideoRow({ post, hearts, membersTotal }: { post: MyPost; hearts: MemberHeartPublic[]; membersTotal: number }) {
   const line = heartLine(hearts, membersTotal);
   return (
-    <Link href={`/stage-post/${post.id}`} className="flex gap-[11px] border-b border-border px-1 py-[13px] last:border-b-0">
+    <Link href={`/video/${post.id}`} className="flex gap-[11px] border-b border-border px-1 py-[13px] last:border-b-0">
       <Thumb url={post.thumbnail_url} />
       <div className="min-w-0 flex-1">
         <div className="line-clamp-1 text-[12.5px] font-bold text-fg">{post.title}</div>

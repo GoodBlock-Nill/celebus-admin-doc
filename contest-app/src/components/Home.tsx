@@ -127,7 +127,7 @@ export default function Home() {
         <>
           {heroPost && (
             <Link
-              href={`/stage-post/${heroPost.id}`}
+              href={`/video/${heroPost.id}`}
               className="relative mt-1 block aspect-[16/10] w-full overflow-hidden rounded-3xl shadow-sm active:scale-[0.99]"
             >
               <Thumb url={heroPost.thumbnail_url} />
@@ -160,7 +160,7 @@ export default function Home() {
                 {reactionItems.map(({ post, heart }) => (
                   <Link
                     key={post.id}
-                    href={`/stage-post/${post.id}`}
+                    href={`/video/${post.id}`}
                     className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-sm active:scale-[0.99]"
                   >
                     <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl">
@@ -232,7 +232,7 @@ export default function Home() {
                 {hallItems.map(({ post, count }) => {
                   const grandSlam = membersTotal > 0 && count >= membersTotal;
                   return (
-                    <Link key={post.id} href={`/stage-post/${post.id}`} className="w-[156px] shrink-0 active:scale-[0.98]">
+                    <Link key={post.id} href={`/video/${post.id}`} className="w-[156px] shrink-0 active:scale-[0.98]">
                       <div className="relative h-[92px] overflow-hidden rounded-2xl">
                         <Thumb url={post.thumbnail_url} />
                         <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />

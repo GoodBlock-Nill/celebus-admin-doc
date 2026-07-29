@@ -5,11 +5,11 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Plus, ChevronLeft, CalendarDays } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StageCategory, StagePostPublic, StagePublic } from "@/lib/types";
 import { STAGE_CATEGORY_KEYS } from "@/lib/types";
 import StageCard from "./StageCard";
-import StageDetailModal from "./StageDetailModal";
 import StageUploadModal from "./StageUploadModal";
 import { useLang } from "./LangProvider";
 import { useSession } from "./SessionProvider";
@@ -18,15 +18,14 @@ type Filter = "all" | StageCategory;
 
 export default function StageView({ stageId }: { stageId: string }) {
   const { t } = useLang();
-  const { member, requireLogin } = useSession();
-  const isMemberMe = !!member;
+  const { requireLogin } = useSession();
+  const router = useRouter();
   const [stage, setStage] = useState<StagePublic | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [posts, setPosts] = useState<StagePostPublic[]>([]);
   const [liked, setLiked] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<Filter>("all");
   const [loading, setLoading] = useState(true);
-  const [openPost, setOpenPost] = useState<StagePostPublic | null>(null);
   const [uploading, setUploading] = useState(false);
   const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
   const [membersTotal, setMembersTotal] = useState(0);
@@ -74,20 +73,6 @@ export default function StageView({ stageId }: { stageId: string }) {
     void load();
   }, [load]);
 
-  async function toggleMemberHeart(post: StagePostPublic) {
-    if (!requireLogin()) return;
-    try {
-      const res = await fetch(`/api/stage/posts/${post.id}/member-heart`, { method: "POST" });
-      if (!res.ok) {
-        toast(t("err_server"));
-        return;
-      }
-      void loadHearts(posts.map((p) => p.id)); // 하트 표시 갱신
-    } catch {
-      toast(t("err_server"));
-    }
-  }
-
   async function toggleLike(post: StagePostPublic) {
     if (!requireLogin()) return;
     try {
@@ -105,7 +90,6 @@ export default function StageView({ stageId }: { stageId: string }) {
       });
       const apply = (p: StagePostPublic) => (p.id === post.id ? { ...p, like_count: j.like_count as number } : p);
       setPosts((prev) => prev.map(apply));
-      setOpenPost((prev) => (prev && prev.id === post.id ? apply(prev) : prev));
     } catch {
       toast(t("err_server"));
     }
@@ -201,25 +185,13 @@ export default function StageView({ stageId }: { stageId: string }) {
               liked={liked.has(p.id)}
               hearts={hearts.get(p.id) ?? []}
               grandSlam={membersTotal > 0 && (hearts.get(p.id)?.length ?? 0) >= membersTotal}
-              onOpen={() => setOpenPost(p)}
+              onOpen={() => router.push(`/video/${p.id}`)}
               onToggleLike={() => void toggleLike(p)}
             />
           ))}
         </div>
       )}
 
-      {openPost && (
-        <StageDetailModal
-          post={openPost}
-          liked={liked.has(openPost.id)}
-          hearts={hearts.get(openPost.id) ?? []}
-          grandSlam={membersTotal > 0 && (hearts.get(openPost.id)?.length ?? 0) >= membersTotal}
-          isMemberMe={isMemberMe}
-          onClose={() => setOpenPost(null)}
-          onToggleLike={() => void toggleLike(openPost)}
-          onToggleMemberHeart={() => void toggleMemberHeart(openPost)}
-        />
-      )}
       {uploading && <StageUploadModal stageId={stageId} onClose={() => setUploading(false)} onPosted={() => void load()} />}
     </div>
   );
