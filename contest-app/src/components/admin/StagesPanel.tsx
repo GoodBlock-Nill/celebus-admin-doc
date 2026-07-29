@@ -15,10 +15,11 @@ type StageRow = {
   status: "open" | "archived";
   hidden: boolean;
   post_count: number;
+  is_official: boolean;
   created_at: string;
 };
 
-const EMPTY = { title: "", description: "", event_date: "", cover_url: "" };
+const EMPTY = { title: "", description: "", event_date: "", cover_url: "", is_official: false };
 
 export default function StagesPanel() {
   const [stages, setStages] = useState<StageRow[]>([]);
@@ -37,7 +38,7 @@ export default function StagesPanel() {
 
   function openEdit(s: StageRow | "new") {
     setEditing(s);
-    setForm(s === "new" ? EMPTY : { title: s.title, description: s.description, event_date: s.event_date ?? "", cover_url: s.cover_url ?? "" });
+    setForm(s === "new" ? EMPTY : { title: s.title, description: s.description, event_date: s.event_date ?? "", cover_url: s.cover_url ?? "", is_official: s.is_official });
   }
 
   async function save() {
@@ -48,6 +49,7 @@ export default function StagesPanel() {
       description: form.description.trim(),
       event_date: form.event_date || null,
       cover_url: form.cover_url.trim() || null,
+      is_official: form.is_official,
     });
     const res =
       editing !== "new" && editing
@@ -87,6 +89,7 @@ export default function StagesPanel() {
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <span className="truncate text-[14px] font-bold text-fg">{s.title}</span>
+                {s.is_official && <span className="shrink-0 rounded-full bg-primary/20 px-2 py-0.5 text-[10.5px] font-bold text-primary-400">V01D 공식</span>}
                 <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold ${s.status === "open" ? "bg-primary/20 text-primary-400" : "bg-white/8 text-fg/50"}`}>
                   {s.status === "open" ? "진행중" : "보관"}
                 </span>
@@ -150,6 +153,10 @@ export default function StagesPanel() {
                   className="mt-1 w-full rounded-xl bg-white/6 px-3 py-3 text-[13.5px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/30" />
               </label>
             </div>
+            <label className="flex cursor-pointer items-center gap-2.5 rounded-xl bg-white/6 px-3 py-3 ring-1 ring-white/10">
+              <input type="checkbox" checked={form.is_official} onChange={(e) => setForm({ ...form, is_official: e.target.checked })} className="h-4 w-4 accent-primary" />
+              <span className="text-[13px] font-bold text-fg">V01D 공식 아카이브 (열람 전용 · 팬 업로드 불가)</span>
+            </label>
             <button onClick={save} disabled={busy || !form.title.trim()} className="w-full rounded-full bg-primary py-3 text-[14px] font-bold text-white disabled:opacity-40">
               {editing === "new" ? "생성하기" : "저장하기"}
             </button>

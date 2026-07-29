@@ -9,6 +9,7 @@ const createSchema = z.object({
   description: z.string().trim().max(500).default(""),
   cover_url: z.string().trim().url().max(500).nullable().optional(),
   event_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
+  is_official: z.boolean().optional().default(false), // 공식 아카이브(열람 전용)
 });
 
 // 스테이지(공연 컨테이너) 관리 — contests와 동일 패턴(service_role 직접)

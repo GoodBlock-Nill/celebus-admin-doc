@@ -12,6 +12,7 @@ const patchSchema = z.object({
   status: z.enum(["open", "archived"]).optional(),
   hidden: z.boolean().optional(),
   sort_order: z.number().int().optional(),
+  is_official: z.boolean().optional(), // 공식 아카이브(열람 전용) 토글
 });
 
 export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
