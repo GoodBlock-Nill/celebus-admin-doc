@@ -5,11 +5,14 @@
 // 진행 중인 월드컵 진입 → 명예의 전당 프리뷰. 멤버 반응 표현은 은은하게(글로우·컨페티 없음).
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Play, RefreshCw } from "lucide-react";
+import { Play, Plus, RefreshCw } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StageEventPublic, StagePostPublic, StagePublic } from "@/lib/types";
 import { AvatarStack, CATEGORY_LABEL, LoadingSkeleton, SectionHeader, Thumb, timeAgo } from "./HomeAtoms";
 import { useLang } from "./LangProvider";
+import { useSession } from "./SessionProvider";
+import HowItWorks from "./HowItWorks";
+import GlobalUploadSheet from "./GlobalUploadSheet";
 
 interface HeroPost extends StagePostPublic {
   __stageTitle?: string;
@@ -17,6 +20,12 @@ interface HeroPost extends StagePostPublic {
 
 export default function Home() {
   const { t } = useLang();
+  const { requireLogin } = useSession();
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const openUpload = () => {
+    if (!requireLogin(() => setUploadOpen(true))) return;
+    setUploadOpen(true);
+  };
   const [stages, setStages] = useState<StagePublic[]>([]);
   const [posts, setPosts] = useState<StagePostPublic[]>([]);
   const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
@@ -104,9 +113,10 @@ export default function Home() {
 
   return (
     <div>
-      <p className="px-0.5 pb-1 text-[12px] font-semibold tracking-tight text-subtle">
+      <p className="px-0.5 text-[12px] font-semibold tracking-tight text-subtle">
         Your moment. <b className="font-extrabold text-primary-strong">Their response.</b>
       </p>
+      <p className="px-0.5 pb-1 pt-0.5 text-[12.5px] leading-snug text-muted break-keep">{t("home_valueprop")}</p>
 
       {loading ? (
         <LoadingSkeleton />
@@ -121,12 +131,36 @@ export default function Home() {
           </button>
         </div>
       ) : isFullyEmpty ? (
-        <div className="rounded-2xl border border-border bg-card px-4 py-16 text-center text-[13.5px] leading-relaxed text-muted">
-          {t("home_empty_l1")}
-          <br />{t("home_empty_l2")}
+        // 콜드스타트 — 막다른 문구 대신 온보딩 + 첫 업로드 유도(Q1)
+        <div className="mt-1">
+          <HowItWorks forced />
+          <div className="mt-3 rounded-2xl border border-border bg-card px-4 py-10 text-center shadow-sm">
+            <div className="text-[15px] font-bold text-fg">{t("home_empty_title")}</div>
+            <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted">{t("home_firstpost_sub")}</p>
+            <button
+              onClick={openUpload}
+              className="mt-4 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-primary px-6 text-[14px] font-bold text-white active:scale-[0.98]"
+            >
+              <Plus className="h-4 w-4" strokeWidth={2.6} /> {t("home_empty_upload")}
+            </button>
+          </div>
         </div>
       ) : (
         <>
+          <HowItWorks />
+          {/* 공연은 있지만 아직 영상이 0 — 첫 업로더 유도(Q1) */}
+          {!heroPost && (
+            <div className="mt-2 rounded-3xl border border-dashed border-primary/40 bg-primary-soft/40 px-4 py-8 text-center">
+              <div className="text-[14px] font-bold text-fg">{t("home_firstpost_title")}</div>
+              <p className="mt-1 text-[12.5px] leading-relaxed text-muted">{t("home_firstpost_sub")}</p>
+              <button
+                onClick={openUpload}
+                className="mt-3.5 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-primary px-6 text-[14px] font-bold text-white active:scale-[0.98]"
+              >
+                <Plus className="h-4 w-4" strokeWidth={2.6} /> {t("home_empty_upload")}
+              </button>
+            </div>
+          )}
           {heroPost && (
             <Link
               href={`/video/${heroPost.id}`}
@@ -258,6 +292,8 @@ export default function Home() {
           <div className="h-2" />
         </>
       )}
+
+      {uploadOpen && <GlobalUploadSheet onClose={() => setUploadOpen(false)} />}
     </div>
   );
 }
