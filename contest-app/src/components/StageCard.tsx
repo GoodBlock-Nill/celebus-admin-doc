@@ -1,7 +1,7 @@
 "use client";
 
 // 스테이지 피드 카드 — 썸네일 + 플랫폼 + 카테고리 + 팬 하트. 탭하면 상세(임베드) 열림.
-import { Heart, ImageOff, Play } from "lucide-react";
+import { Heart, ImageOff, Play, Eye } from "lucide-react";
 import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
 
@@ -88,6 +88,9 @@ export default function StageCard({
         </button>
         <div className="mt-1 flex items-center gap-2">
           <span className="min-w-0 flex-1 truncate text-[11px] text-muted">@{post.handle}</span>
+          <span className="flex shrink-0 items-center gap-0.5 text-[11px] text-subtle" aria-label={t("views_label")}>
+            <Eye className="h-3.5 w-3.5" /> <span className="tabular-nums">{post.view_count.toLocaleString()}</span>
+          </span>
           <button
             onClick={onToggleLike}
             aria-label={t("action_like")}

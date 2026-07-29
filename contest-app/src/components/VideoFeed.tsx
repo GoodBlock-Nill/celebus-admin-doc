@@ -6,7 +6,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { X, Heart, MessageCircle, Flag, ExternalLink, Play } from "lucide-react";
+import { X, Heart, MessageCircle, Flag, ExternalLink, Play, Eye } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import { stagePostAsEntry } from "@/lib/types";
@@ -17,7 +17,7 @@ import { Thumb } from "./HomeAtoms";
 import { useLang } from "./LangProvider";
 import { useSession } from "./SessionProvider";
 
-type HeartState = { hearts: MemberHeartPublic[]; liked: boolean; likeCount: number };
+type HeartState = { hearts: MemberHeartPublic[]; liked: boolean; likeCount: number; viewCount: number };
 
 // 리스트 컨텍스트 로더 — ?list=stage:<id> | hearts | recent(기본)
 async function loadFeedList(listParam: string | null, seedId: string): Promise<StagePostPublic[]> {
@@ -117,10 +117,12 @@ export default function VideoFeed({ postId }: { postId: string }) {
       ]);
       setStates((prev) => {
         const n = new Map(prev);
+        const cur = n.get(post.id);
         n.set(post.id, {
           hearts: (hs ?? []) as MemberHeartPublic[],
           liked: (likeRes.liked ?? []).includes(post.id),
           likeCount: post.like_count,
+          viewCount: cur?.viewCount ?? post.view_count,
         });
         return n;
       });
@@ -128,10 +130,33 @@ export default function VideoFeed({ postId }: { postId: string }) {
     [states],
   );
 
+  // 조회 집계 — 세션당 1회(클라 dedup) + 서버 30분 창 dedup. 활성 항목만
+  const viewedRef = useRef<Set<string>>(new Set());
+  const recordView = useCallback(async (post: StagePostPublic) => {
+    if (viewedRef.current.has(post.id)) return;
+    viewedRef.current.add(post.id);
+    try {
+      const j = await fetch(`/api/stage/posts/${post.id}/view`, { method: "POST" }).then((r) => r.json());
+      if (typeof j.view_count === "number") {
+        setStates((prev) => {
+          const n = new Map(prev);
+          const cur = n.get(post.id) ?? { hearts: [], liked: false, likeCount: post.like_count, viewCount: post.view_count };
+          n.set(post.id, { ...cur, viewCount: j.view_count });
+          return n;
+        });
+      }
+    } catch {
+      /* 조회 집계는 보조 — 실패 무시 */
+    }
+  }, []);
+
   useEffect(() => {
     const p = posts[active];
-    if (p) void ensureState(p);
-  }, [active, posts, ensureState]);
+    if (p) {
+      void ensureState(p);
+      void recordView(p);
+    }
+  }, [active, posts, ensureState, recordView]);
 
   async function toggleLike(post: StagePostPublic) {
     if (!requireLogin(() => toggleLike(post))) return;
@@ -158,7 +183,7 @@ export default function VideoFeed({ postId }: { postId: string }) {
     const { data } = await sb.from("member_hearts_public").select("*").eq("post_id", post.id);
     setStates((prev) => {
       const n = new Map(prev);
-      const cur = n.get(post.id) ?? { hearts: [], liked: false, likeCount: post.like_count };
+      const cur = n.get(post.id) ?? { hearts: [], liked: false, likeCount: post.like_count, viewCount: post.view_count };
       n.set(post.id, { ...cur, hearts: (data ?? []) as MemberHeartPublic[] });
       return n;
     });
@@ -258,7 +283,12 @@ export default function VideoFeed({ postId }: { postId: string }) {
                   </div>
                 )}
                 <h1 className="line-clamp-2 text-[16px] font-bold leading-snug text-white drop-shadow-md">{post.title}</h1>
-                <div className="mt-0.5 text-[12.5px] font-semibold text-white/85">@{post.handle}</div>
+                <div className="mt-0.5 flex items-center gap-2 text-[12.5px] font-semibold text-white/85">
+                  <span className="truncate">@{post.handle}</span>
+                  <span className="flex shrink-0 items-center gap-1 text-white/75" aria-label={t("views_label")}>
+                    <Eye className="h-3.5 w-3.5" /> <span className="tabular-nums">{(st?.viewCount ?? post.view_count).toLocaleString()}</span>
+                  </span>
+                </div>
               </div>
             </section>
           );

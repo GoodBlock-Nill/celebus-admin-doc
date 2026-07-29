@@ -115,6 +115,7 @@ export interface StagePostPublic {
   thumbnail_url: string | null;
   oembed_title: string | null;
   oembed_author: string | null;
+  view_count: number;
 }
 
 // EntryEmbed(임베드 렌더러) 재사용을 위한 어댑터 — 스테이지 게시물을 EntryPublic 형태로
