@@ -17,6 +17,11 @@ type Resolved = {
   oembed: { thumbnail_url?: string; title?: string } | null;
 };
 
+// 핸들 정리 — @·공백·URL 제거, 계정 아이디만 남김
+function cleanHandle(v: string): string {
+  return v.replace(/https?:\/\/\S*/gi, "").replace(/[@\s]/g, "").slice(0, 40);
+}
+
 export default function StageUploadModal({ stageId, onClose, onPosted, onBack }: { stageId: string; onClose: () => void; onPosted: () => void; onBack?: () => void }) {
   const { t } = useLang();
   const [url, setUrl] = useState("");
@@ -164,6 +169,14 @@ export default function StageUploadModal({ stageId, onClose, onPosted, onBack }:
               <div className="min-w-0 flex-1">
                 <PlatformBadge platform={resolved.platform} />
                 <div className="mt-1 truncate text-[12px] text-muted">{resolved.oembed?.title ?? resolved.canonicalUrl}</div>
+                {resolved.authorHandle && (
+                  <div className="mt-1 flex items-center gap-1.5 text-[11.5px] text-muted">
+                    <span className="truncate">
+                      <span className="font-semibold">{t("stage_source_label")}</span> @{resolved.authorHandle}
+                    </span>
+                    <span className="shrink-0 rounded-full bg-primary-soft px-1.5 py-0.5 text-[9px] font-bold text-primary-strong">{t("stage_source_verified")}</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -182,8 +195,20 @@ export default function StageUploadModal({ stageId, onClose, onPosted, onBack }:
             {needHandle && (
               <label className="block text-[12px] font-bold text-muted">
                 {t("stage_handle_label")}
-                <input value={handle} onChange={(e) => setHandle(e.target.value)} maxLength={40} placeholder={t("stage_handle_ph")}
-                  className="mt-1 w-full rounded-xl border border-border bg-bg px-3 py-3 text-[13.5px] text-fg outline-none focus:ring-2 focus:ring-primary placeholder:text-subtle" />
+                <div className="mt-1 flex items-center gap-0.5 rounded-xl border border-border bg-bg px-3 focus-within:ring-2 focus-within:ring-primary">
+                  <span className="text-[14px] font-bold text-subtle">@</span>
+                  <input
+                    value={handle}
+                    onChange={(e) => setHandle(cleanHandle(e.target.value))}
+                    maxLength={40}
+                    placeholder={t("stage_handle_ph")}
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    className="min-w-0 flex-1 bg-transparent py-3 text-[13.5px] text-fg outline-none placeholder:text-subtle"
+                  />
+                </div>
+                <p className="mt-1 text-[11px] font-normal text-subtle">{t("stage_handle_help")}</p>
               </label>
             )}
 
