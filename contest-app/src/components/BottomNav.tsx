@@ -42,11 +42,12 @@ export default function BottomNav() {
             <TabLink key={it.href} item={it} active={it.match(pathname)} label={t(it.key)} />
           ))}
 
-          {/* 중앙 올리기 — 공연을 골라 링크만 붙여넣으면 끝 */}
-          <button onClick={openUpload} aria-label={t("nav_upload_tab")} className="mx-1 -mt-1 flex flex-col items-center">
-            <span className="brand-gradient flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-[0_8px_18px_-6px_rgba(108,77,230,0.7)] transition-transform active:scale-90">
+          {/* 중앙 올리기 — 다른 탭과 같은 [아이콘+라벨] 리듬으로 정렬하되 살짝 띄운 FAB */}
+          <button onClick={openUpload} aria-label={t("nav_upload_tab")} className="flex flex-1 flex-col items-center gap-0.5 pb-1.5 pt-0.5">
+            <span className="brand-gradient -mt-3 flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-[0_8px_18px_-6px_rgba(108,77,230,0.7)] transition-transform active:scale-90">
               <Plus className="h-6 w-6" strokeWidth={2.6} />
             </span>
+            <span aria-hidden className="text-[9.5px] font-bold opacity-0">＋</span>
           </button>
 
           {/* 오른쪽 2개 */}
