@@ -3,7 +3,7 @@
 // 스테이지 업로드 — 2스텝: 링크 미리보기 → 제목·카테고리 → 게시. (콘테스트 응모와 달리 비번·전화 없음)
 import { useState } from "react";
 import { toast } from "sonner";
-import { X, Link2 } from "lucide-react";
+import { X, Link2, ChevronLeft } from "lucide-react";
 import type { Platform, StageCategory } from "@/lib/types";
 import { STAGE_CATEGORY_KEYS } from "@/lib/types";
 import PlatformBadge from "./PlatformBadge";
@@ -17,7 +17,7 @@ type Resolved = {
   oembed: { thumbnail_url?: string; title?: string } | null;
 };
 
-export default function StageUploadModal({ stageId, onClose, onPosted }: { stageId: string; onClose: () => void; onPosted: () => void }) {
+export default function StageUploadModal({ stageId, onClose, onPosted, onBack }: { stageId: string; onClose: () => void; onPosted: () => void; onBack?: () => void }) {
   const { t } = useLang();
   const [url, setUrl] = useState("");
   const [resolved, setResolved] = useState<Resolved | null>(null);
@@ -92,7 +92,13 @@ export default function StageUploadModal({ stageId, onClose, onPosted }: { stage
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-[16px] font-bold text-fg">{t("stage_upload_cta")}</h2>
+          {onBack ? (
+            <button onClick={onBack} className="flex min-h-9 items-center gap-1 text-[13px] font-bold text-muted hover:text-fg">
+              <ChevronLeft className="h-4 w-4" /> {t("upload_change_stage")}
+            </button>
+          ) : (
+            <h2 className="text-[16px] font-bold text-fg">{t("stage_upload_cta")}</h2>
+          )}
           <button onClick={onClose} aria-label="닫기" className="flex h-11 w-11 items-center justify-center rounded-full text-muted hover:text-fg">
             <X className="h-5 w-5" />
           </button>
