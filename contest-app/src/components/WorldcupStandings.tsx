@@ -63,6 +63,7 @@ export default function WorldcupStandings({
 
   return (
     <div className="space-y-1.5">
+      <p className="px-1 pb-1 text-[11px] leading-relaxed text-subtle">{t("ev_rate_help")}</p>
       {rows.map((s, i) => {
         const p = posts.get(s.post_id)!;
         const picks = memberPicks.get(s.post_id) ?? 0;

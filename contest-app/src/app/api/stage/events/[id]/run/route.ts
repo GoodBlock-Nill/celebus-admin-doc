@@ -2,12 +2,29 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { admin } from "@/lib/db-admin";
 import { assertSameOrigin } from "@/lib/origin";
-import { requireUserId } from "@/lib/identity";
+import { requireUserId, peekUserId } from "@/lib/identity";
+
+const VOTE_CAP = 3; // worldcup_submit_run의 신원당 집계 캡과 동일
 
 const bodySchema = z.object({
   picks: z.array(z.object({ w: z.string().uuid(), l: z.string().uuid() })).min(1).max(31),
   winner: z.string().uuid(),
 });
+
+// 내 집계 런 수 조회 (잔여 투표 표시용)
+export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }) {
+  const { id } = await ctx.params;
+  if (!z.string().uuid().safeParse(id).success) return NextResponse.json({ counted_runs: 0, cap: VOTE_CAP });
+  const user = peekUserId(req);
+  if (!user) return NextResponse.json({ counted_runs: 0, cap: VOTE_CAP });
+  const { count } = await admin()
+    .from("worldcup_runs")
+    .select("*", { count: "exact", head: true })
+    .eq("event_id", id)
+    .eq("user_id", user)
+    .eq("counted", true);
+  return NextResponse.json({ counted_runs: count ?? 0, cap: VOTE_CAP });
+}
 
 // 월드컵 런 제출 — 구조·소속 검증과 집계는 RPC(신원당 3회 캡)
 export async function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {

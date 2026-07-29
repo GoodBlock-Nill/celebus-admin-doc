@@ -1,7 +1,7 @@
 "use client";
 
 // 월드컵 이벤트 — 이상형월드컵 형식: 무작위 개인 대진 → 1:1 대결 → 나의 우승작 → 집계 반영.
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { ChevronLeft, Trophy, Play } from "lucide-react";
@@ -67,6 +67,16 @@ export default function EventPlay({ eventId }: { eventId: string }) {
   const [picks, setPicks] = useState<Pick[]>([]);
   const [winner, setWinner] = useState<StagePostPublic | null>(null);
   const [counted, setCounted] = useState<boolean | null>(null);
+  const [votes, setVotes] = useState<{ used: number; cap: number } | null>(null); // 잔여 투표
+
+  const loadVotes = useCallback(async () => {
+    try {
+      const j = await fetch(`/api/stage/events/${eventId}/run`).then((r) => r.json());
+      setVotes({ used: j.counted_runs ?? 0, cap: j.cap ?? 3 });
+    } catch {
+      /* 잔여 투표는 보조 정보 */
+    }
+  }, [eventId]);
 
   useEffect(() => {
     (async () => {
@@ -78,7 +88,14 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       setPool((ps ?? []) as StagePostPublic[]);
       if (e.status === "announced") setShowStandings(true);
     })();
-  }, [eventId]);
+    void loadVotes();
+  }, [eventId, loadVotes]);
+
+  const votesLabel = votes
+    ? votes.used >= votes.cap
+      ? t("ev_votes_done").replace("{cap}", String(votes.cap))
+      : t("ev_votes").replace("{n}", String(votes.used)).replace("{cap}", String(votes.cap))
+    : "";
 
   const size = useMemo(() => bracketSize(pool.length), [pool.length]);
 
@@ -120,8 +137,10 @@ export default function EventPlay({ eventId }: { eventId: string }) {
           body: JSON.stringify({ picks: newPicks, winner: winnerPost.id }),
         });
         const j = await res.json().catch(() => ({}));
-        if (res.ok) setCounted(!!j.counted);
-        else toast(t("err_server"));
+        if (res.ok) {
+          setCounted(!!j.counted);
+          void loadVotes(); // 집계 후 잔여 투표 갱신
+        } else toast(t("err_server"));
       } catch {
         toast(t("err_server"));
       }
@@ -141,7 +160,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
 
   return (
     <div>
-      <Link href="/" className="mb-2 inline-flex min-h-11 items-center gap-1 text-[13px] font-bold text-muted">
+      <Link href="/events" className="mb-2 inline-flex min-h-11 items-center gap-1 text-[13px] font-bold text-muted">
         <ChevronLeft className="h-4 w-4" /> {t("event_tab")}
       </Link>
       <div className="mb-4">
@@ -187,6 +206,9 @@ export default function EventPlay({ eventId }: { eventId: string }) {
             ) : (
               <p className="rounded-xl border border-border bg-card-2 px-3 py-3 text-center text-[13px] text-muted">{t("ev_not_enough")}</p>
             ))}
+          {event.status === "open" && votesLabel && (
+            <p className="text-center text-[11.5px] font-semibold text-subtle">{votesLabel}</p>
+          )}
           <button
             onClick={() => setShowStandings((s) => !s)}
             className="w-full rounded-full border border-border bg-card-2 py-3 text-[13.5px] font-bold text-fg"
@@ -200,10 +222,11 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       {/* 대결 */}
       {phase === "playing" && a && b && (
         <div>
-          <div className="mb-3 flex items-center justify-between text-[12.5px] font-bold">
+          <div className="mb-1 flex items-center justify-between text-[12.5px] font-bold">
             <span className="rounded-full bg-primary-soft px-3 py-1 text-primary-strong">{t("ev_round_of").replace("{n}", String(roundSize))}</span>
             <span className="text-muted">{matchIdx + 1} / {Math.floor(roundSize / 2)}</span>
           </div>
+          {votesLabel && <p className="mb-3 text-center text-[11px] font-semibold text-subtle">{votesLabel}</p>}
           <p className="mb-3 text-center text-[14px] font-bold text-fg">{t("ev_pick_one")}</p>
           <div className="space-y-3">
             <MatchTile post={a} onPick={() => void pick(a, b)} />
