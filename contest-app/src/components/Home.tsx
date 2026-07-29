@@ -238,10 +238,15 @@ export default function Home() {
                           {s.event_date}
                         </span>
                       )}
+                      {s.is_official && (
+                        <span className="brand-gradient absolute right-2 top-2 rounded-md px-1.5 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
+                          {t("archive_official")}
+                        </span>
+                      )}
                     </div>
                     <strong className="mt-2 block truncate text-[12.5px] font-bold text-fg">{s.title}</strong>
                     <small className="mt-0.5 block text-[11px] text-muted">
-                      {t("home_stage_meta").replace("{n}", String(s.post_count))}
+                      {t(s.is_official ? "home_stage_meta_official" : "home_stage_meta").replace("{n}", String(s.post_count))}
                     </small>
                   </Link>
                 ))}
