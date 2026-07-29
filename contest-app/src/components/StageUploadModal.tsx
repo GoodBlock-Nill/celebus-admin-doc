@@ -1,9 +1,9 @@
 "use client";
 
 // 스테이지 업로드 — 2스텝: 링크 미리보기 → 제목·카테고리 → 게시. (콘테스트 응모와 달리 비번·전화 없음)
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { X, Link2, ChevronLeft } from "lucide-react";
+import { X, Link2, ChevronLeft, Loader2, AlertCircle } from "lucide-react";
 import type { Platform, StageCategory } from "@/lib/types";
 import { STAGE_CATEGORY_KEYS } from "@/lib/types";
 import PlatformBadge from "./PlatformBadge";
@@ -26,26 +26,43 @@ export default function StageUploadModal({ stageId, onClose, onPosted, onBack }:
   const [handle, setHandle] = useState("");
   const [category, setCategory] = useState<StageCategory>("fancam");
   const [busy, setBusy] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null); // i18n key
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   async function preview() {
-    if (busy || url.trim().length < 8) return;
-    setBusy(true);
+    if (previewing || url.trim().length < 8) return;
+    setPreviewing(true);
+    setPreviewError(null);
+    setResolved(null);
     try {
       const res = await fetch("/api/stage/resolve", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ stage_id: stageId, url: url.trim() }) });
-      const j = await res.json();
+      const j = await res.json().catch(() => ({}));
       if (!res.ok) {
-        toast(t("err_invalid"));
+        setPreviewError(j.code === "unsupported" ? "err_invalid" : "err_invalid"); // 지원하지 않는 링크
       } else if (j.duplicate) {
-        toast(t("err_duplicate"));
+        setPreviewError("err_duplicate");
       } else {
         setResolved(j);
         if (!title && j.oembed?.title) setTitle(String(j.oembed.title).slice(0, 80));
       }
     } catch {
-      toast(t("err_server"));
+      setPreviewError("err_server");
     }
-    setBusy(false);
+    setPreviewing(false);
   }
+
+  // 붙여넣기/입력 즉시 미리보기 (디바운스) — URL처럼 보일 때만
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    const u = url.trim();
+    if (resolved || u.length < 12 || !/^https?:\/\/|\.(com|net|be|tv|app)/i.test(u)) return;
+    debounceRef.current = setTimeout(() => void preview(), 600);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]);
 
   async function submit() {
     if (busy || !resolved || !title.trim()) return;
@@ -104,26 +121,32 @@ export default function StageUploadModal({ stageId, onClose, onPosted, onBack }:
           </button>
         </div>
 
-        {/* 1스텝: 링크 */}
+        {/* 1스텝: 링크 (붙여넣기 즉시 미리보기 · 인라인 오류) */}
         <div className="flex gap-2">
-          <div className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-border bg-bg px-3 focus-within:ring-2 focus-within:ring-primary">
+          <div className={`flex min-w-0 flex-1 items-center gap-2 rounded-xl border bg-bg px-3 focus-within:ring-2 ${previewError ? "border-danger focus-within:ring-danger" : "border-border focus-within:ring-primary"}`}>
             <Link2 className="h-4 w-4 shrink-0 text-subtle" />
             <input
               value={url}
-              onChange={(e) => { setUrl(e.target.value); setResolved(null); }}
+              onChange={(e) => { setUrl(e.target.value); setResolved(null); setPreviewError(null); }}
               onKeyDown={(e) => e.key === "Enter" && preview()}
               placeholder={t("stage_url_ph")}
               className="min-w-0 flex-1 bg-transparent py-3 text-[13.5px] text-fg outline-none placeholder:text-subtle"
             />
+            {previewing && <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" />}
           </div>
           <button
             onClick={preview}
-            disabled={busy}
+            disabled={previewing || url.trim().length < 8}
             className="shrink-0 rounded-xl border border-border bg-card-2 px-4 text-[13px] font-bold text-fg disabled:opacity-50"
           >
             {t("stage_preview")}
           </button>
         </div>
+        {previewError && (
+          <p className="mt-1.5 flex items-center gap-1.5 px-0.5 text-[12px] font-semibold text-danger">
+            <AlertCircle className="h-3.5 w-3.5 shrink-0" /> {t(previewError)}
+          </p>
+        )}
 
         {/* 2스텝: 미리보기 + 상세 */}
         {resolved && (
