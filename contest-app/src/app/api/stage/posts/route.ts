@@ -50,6 +50,7 @@ export async function POST(req: Request) {
   });
   if (error || !result) return NextResponse.json({ code: "server", error: "저장 중 오류가 발생했어요." }, { status: 500 });
   if (result === "not_found") return NextResponse.json({ code: "not_found", error: "스테이지를 찾을 수 없어요." }, { status: 404 });
+  if (result === "official_readonly") return NextResponse.json({ code: "official_readonly", error: "공식 아카이브에는 올릴 수 없어요." }, { status: 403 });
   if (result === "closed") return NextResponse.json({ code: "closed", error: "보관된 스테이지에는 올릴 수 없어요." }, { status: 400 });
   if (result === "duplicate") return NextResponse.json({ code: "duplicate", error: "이미 올라온 영상이에요." }, { status: 409 });
   if (result === "rate_capped") return NextResponse.json({ code: "rate_capped", error: "오늘 업로드 한도에 도달했어요. 내일 다시 올려주세요." }, { status: 429 });

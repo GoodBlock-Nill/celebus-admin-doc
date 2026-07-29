@@ -18,7 +18,8 @@ export default function GlobalUploadSheet({ onClose }: { onClose: () => void }) 
 
   useEffect(() => {
     (async () => {
-      const { data } = await sb.from("stages_public").select("*").eq("status", "open").order("sort_order").limit(30);
+      // 공식 아카이브(is_official)는 열람 전용이라 업로드 대상에서 제외
+      const { data } = await sb.from("stages_public").select("*").eq("status", "open").eq("is_official", false).order("sort_order").limit(30);
       setStages((data ?? []) as StagePublic[]);
       setLoading(false);
     })();

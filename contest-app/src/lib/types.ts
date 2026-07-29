@@ -92,6 +92,7 @@ export interface StagePublic {
   post_count: number;
   sort_order: number;
   created_at: string;
+  is_official: boolean;
 }
 
 // 스테이지 게시물 — stage_posts_public 뷰

@@ -3,7 +3,7 @@
 // 스테이지(공연) 상세 — 해당 공연의 영상 아카이브. 카테고리 필터 + 업로드 + 하트 + 임베드 상세.
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, ChevronLeft, CalendarDays } from "lucide-react";
+import { Plus, ChevronLeft, CalendarDays, BadgeCheck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { sb } from "@/lib/supabase-browser";
@@ -128,7 +128,7 @@ export default function StageView({ stageId }: { stageId: string }) {
               {stage && <span>{t("stage_posts_n").replace("{n}", String(stage.post_count))}</span>}
             </div>
           </div>
-          {stage?.status === "open" && (
+          {stage?.status === "open" && !stage.is_official && (
             <button
               onClick={() => requireLogin(() => setUploading(true)) && setUploading(true)}
               className="flex min-h-11 shrink-0 items-center gap-1 rounded-full bg-primary px-3.5 text-[12px] font-extrabold text-white shadow-sm active:scale-95"
@@ -137,7 +137,12 @@ export default function StageView({ stageId }: { stageId: string }) {
             </button>
           )}
         </div>
-        {stage?.status === "archived" && (
+        {stage?.is_official && (
+          <p className="mt-2 inline-flex items-center gap-1.5 rounded-xl border border-[#e2d6ff] bg-primary-soft px-3 py-2 text-[12px] font-bold text-primary-strong">
+            <BadgeCheck className="h-3.5 w-3.5" /> {t("archive_official")} · {t("archive_view_only")}
+          </p>
+        )}
+        {stage?.status === "archived" && !stage?.is_official && (
           <p className="mt-2 rounded-xl border border-border bg-card-2 px-3 py-2 text-[12px] text-muted">{t("stage_archived_note")}</p>
         )}
       </div>

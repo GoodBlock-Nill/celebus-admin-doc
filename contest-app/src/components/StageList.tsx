@@ -3,7 +3,7 @@
 // 홈 스테이지 탭 — 관리자가 연 공연 스테이지 목록. 탭하면 해당 스테이지(공연별 영상 아카이브)로 이동.
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, Clapperboard, Trophy } from "lucide-react";
+import { CalendarDays, Clapperboard, Trophy, BadgeCheck } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { StagePublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
@@ -42,13 +42,19 @@ function StageCardItem({ stage }: { stage: StagePublic }) {
           <span className="tabular-nums">{t("stage_posts_n").replace("{n}", String(stage.post_count))}</span>
         </div>
         <div className="mt-3 flex items-center">
-          <span
-            className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold ${
-              stage.status === "open" ? "bg-[#eaf7f0] text-[#21845f]" : "bg-card-2 text-muted"
-            }`}
-          >
-            {t(stage.status === "open" ? "stage_open" : "stage_archived")}
-          </span>
+          {stage.is_official ? (
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-bold text-primary-strong">
+              <BadgeCheck className="h-3 w-3" /> {t("archive_official")} · {t("archive_view_only")}
+            </span>
+          ) : (
+            <span
+              className={`shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold ${
+                stage.status === "open" ? "bg-[#eaf7f0] text-[#21845f]" : "bg-card-2 text-muted"
+              }`}
+            >
+              {t(stage.status === "open" ? "stage_open" : "stage_archived")}
+            </span>
+          )}
           <span className="ml-auto text-[11px] font-bold text-primary-strong">{t("stage_open_cta")} ›</span>
         </div>
       </div>
