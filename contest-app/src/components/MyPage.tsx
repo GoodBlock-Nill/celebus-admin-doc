@@ -40,7 +40,7 @@ const TABS: { key: Tab; label: string }[] = [
 ];
 
 function heartLine(hearts: MemberHeartPublic[], membersTotal: number): { text: string; active: boolean } {
-  if (hearts.length === 0) return { text: "아직 멤버 반응 없음", active: false };
+  if (hearts.length === 0) return { text: "○ 멤버 반응 기다리는 중", active: false };
   if (membersTotal > 0 && hearts.length >= membersTotal) return { text: "● 멤버 전원 하트", active: true };
   const sorted = [...hearts].sort((a, b) => a.sort_order - b.sort_order);
   const first = sorted[0].display_name;
