@@ -270,7 +270,7 @@ export default function Home() {
                 {hallItems.map(({ post, count }) => {
                   const grandSlam = membersTotal > 0 && count >= membersTotal;
                   return (
-                    <Link key={post.id} href={`/video/${post.id}`} className="w-[156px] shrink-0 active:scale-[0.98]">
+                    <Link key={post.id} href={`/video/${post.id}?list=hearts`} className="w-[156px] shrink-0 active:scale-[0.98]">
                       <div className="relative h-[92px] overflow-hidden rounded-2xl">
                         <Thumb url={post.thumbnail_url} />
                         <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />

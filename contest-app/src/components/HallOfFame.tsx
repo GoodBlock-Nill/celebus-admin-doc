@@ -99,7 +99,7 @@ export default function HallOfFame() {
               liked={liked.has(p.id)}
               hearts={hearts.get(p.id) ?? []}
               grandSlam={membersTotal > 0 && (hearts.get(p.id)?.length ?? 0) >= membersTotal}
-              onOpen={() => router.push(`/video/${p.id}`)}
+              onOpen={() => router.push(`/video/${p.id}?list=hearts`)}
               onToggleLike={() => void toggleLike(p)}
             />
           ))}

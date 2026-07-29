@@ -8,7 +8,7 @@ import { Share2, Heart } from "lucide-react";
 import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
 
-export default function BragButton({ post, hearts }: { post: StagePostPublic; hearts: MemberHeartPublic[] }) {
+export default function BragButton({ post, hearts, variant }: { post: StagePostPublic; hearts: MemberHeartPublic[]; variant?: "rail" }) {
   const { t } = useLang();
   const cardRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
@@ -41,9 +41,22 @@ export default function BragButton({ post, hearts }: { post: StagePostPublic; he
       <button
         onClick={share}
         disabled={busy}
-        className="flex w-full items-center justify-center gap-1.5 rounded-full border border-primary/30 bg-primary-soft py-2.5 text-[13px] font-bold text-primary-strong disabled:opacity-50"
+        className={
+          variant === "rail"
+            ? "flex flex-col items-center gap-1 text-white disabled:opacity-50"
+            : "flex w-full items-center justify-center gap-1.5 rounded-full border border-primary/30 bg-primary-soft py-2.5 text-[13px] font-bold text-primary-strong disabled:opacity-50"
+        }
+        aria-label={variant === "rail" ? t("brag_share") : undefined}
       >
-        <Share2 className="h-4 w-4" /> {t("brag_share")}
+        {variant === "rail" ? (
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm active:scale-90">
+            <Share2 className="h-5 w-5" />
+          </span>
+        ) : (
+          <>
+            <Share2 className="h-4 w-4" /> {t("brag_share")}
+          </>
+        )}
       </button>
 
       {/* 캡처용 카드 (화면 밖 렌더) */}

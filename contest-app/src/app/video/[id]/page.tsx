@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Shell from "@/components/Shell";
-import VideoDetail from "@/components/VideoDetail";
+import VideoFeed from "@/components/VideoFeed";
 import { anon } from "@/lib/db-anon";
 
 export const dynamic = "force-dynamic";
@@ -27,7 +27,7 @@ export default async function VideoPage({ params }: { params: Promise<{ id: stri
   const { id } = await params;
   return (
     <Shell>
-      <VideoDetail postId={id} />
+      <VideoFeed postId={id} />
     </Shell>
   );
 }

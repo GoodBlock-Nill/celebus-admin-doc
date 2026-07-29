@@ -91,7 +91,7 @@ export default function EventList() {
           </div>
           <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
             {pick.map(({ post, count }) => (
-              <Link key={post.id} href={`/video/${post.id}`} className="w-[132px] shrink-0 active:scale-[0.98]">
+              <Link key={post.id} href={`/video/${post.id}?list=hearts`} className="w-[132px] shrink-0 active:scale-[0.98]">
                 <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-border">
                   {post.thumbnail_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
