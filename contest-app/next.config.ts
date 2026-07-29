@@ -6,16 +6,12 @@ const withSerwist = withSerwistInit({
   disable: process.env.NODE_ENV === "development",
 });
 
-// frame-src만 제한하는 CSP — 임베드 가능한 iframe 출처를 5개 플랫폼으로 한정
+// frame-src만 제한하는 CSP — 업로드 허용 플랫폼(YouTube·TikTok)의 임베드 출처만 허용
 const FRAME_SRC = [
   "'self'",
   "https://www.youtube-nocookie.com",
   "https://www.youtube.com",
   "https://www.tiktok.com",
-  "https://www.instagram.com",
-  "https://www.threads.com",
-  "https://www.threads.net",
-  "https://platform.twitter.com",
 ].join(" ");
 
 export default withSerwist({
