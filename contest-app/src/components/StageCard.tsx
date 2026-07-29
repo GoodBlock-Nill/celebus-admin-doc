@@ -1,7 +1,7 @@
 "use client";
 
 // 스테이지 피드 카드 — 썸네일 + 플랫폼 + 카테고리 + 팬 하트. 탭하면 상세(임베드) 열림.
-import { Heart, ImageOff, Play, Eye } from "lucide-react";
+import { Heart, ImageOff, Play, Eye, BadgeCheck } from "lucide-react";
 import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
 
@@ -78,6 +78,11 @@ export default function StageCard({
         <span className="absolute left-2 top-2 rounded-lg bg-black/45 px-2 py-1 text-[9.5px] font-extrabold text-white backdrop-blur-sm">
           {t(`cat_${post.category}`)}
         </span>
+        {post.is_official && (
+          <span className="brand-gradient absolute right-2 top-2 flex items-center gap-0.5 rounded-lg px-1.5 py-1 text-[9.5px] font-extrabold text-white shadow-sm">
+            <BadgeCheck className="h-3 w-3" /> {t("official_badge")}
+          </span>
+        )}
         <span className="absolute bottom-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-white/95 text-primary shadow-sm">
           <Play className="h-3 w-3 fill-current" />
         </span>

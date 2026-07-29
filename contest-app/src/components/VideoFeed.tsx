@@ -6,7 +6,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { X, Heart, MessageCircle, Flag, ExternalLink, Play, Eye } from "lucide-react";
+import { X, Heart, MessageCircle, Flag, ExternalLink, Play, Eye, BadgeCheck } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import { stagePostAsEntry } from "@/lib/types";
@@ -280,6 +280,12 @@ export default function VideoFeed({ postId }: { postId: string }) {
                   <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-primary/85 py-1 pl-1 pr-3 backdrop-blur-sm">
                     <Heart className="ml-1 h-3.5 w-3.5 shrink-0 fill-current text-white" />
                     <span className="text-[11.5px] font-extrabold text-white">{grandSlam ? t("member_all_heart_badge") : t("member_heart_badge")}</span>
+                  </div>
+                )}
+                {post.is_official && (
+                  <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 backdrop-blur-sm">
+                    <BadgeCheck className="h-3.5 w-3.5 text-primary-400" />
+                    <span className="text-[11px] font-extrabold text-white">{t("official_badge")}</span>
                   </div>
                 )}
                 <h1 className="line-clamp-2 text-[16px] font-bold leading-snug text-white drop-shadow-md">{post.title}</h1>
