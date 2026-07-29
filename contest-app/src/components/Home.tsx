@@ -185,7 +185,7 @@ export default function Home() {
 
           {stages.length > 0 && (
             <div>
-              <SectionHeader title="지금 열린 공연" moreHref="/stages" />
+              <SectionHeader title="V01D 아카이브" moreHref="/stages" />
               <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
                 {stages.map((s) => (
                   <Link key={s.id} href={`/stage/${s.id}`} className="w-[156px] shrink-0 active:scale-[0.98]">
@@ -229,7 +229,7 @@ export default function Home() {
 
           {hallItems.length > 0 && (
             <div>
-              <SectionHeader title="명예의 전당" moreHref="/hearts" />
+              <SectionHeader title="V01D Pick" moreHref="/hearts" />
               <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
                 {hallItems.map(({ post, count }) => {
                   const grandSlam = membersTotal > 0 && count >= membersTotal;
