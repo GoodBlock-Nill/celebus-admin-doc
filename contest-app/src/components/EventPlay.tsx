@@ -4,9 +4,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
-import { ChevronLeft, Trophy, Play } from "lucide-react";
+import { ChevronLeft, Trophy, Play, Check } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { StageEventPublic, StagePostPublic } from "@/lib/types";
+import { stagePostAsEntry } from "@/lib/types";
+import EntryEmbed from "./EntryEmbed";
 import WorldcupStandings from "./WorldcupStandings";
 import { useLang } from "./LangProvider";
 import { useSession } from "./SessionProvider";
@@ -30,26 +32,41 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-// 대결 카드 한 쪽
-function MatchTile({ post, onPick }: { post: StagePostPublic; onPick: () => void }) {
+// 대결 카드 한 쪽 — ▶로 영상을 재생해 본 뒤(재생 ≠ 투표), '이 영상 선택'으로 투표
+function MatchTile({ post, onPick, pickLabel }: { post: StagePostPublic; onPick: () => void; pickLabel: string }) {
+  const [playing, setPlaying] = useState(false);
   return (
-    <button
-      onClick={onPick}
-      className="w-full overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-transform active:scale-[0.98]"
-    >
-      {post.thumbnail_url ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={post.thumbnail_url} alt="" className="aspect-video w-full object-cover" />
-      ) : (
-        <div className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-primary-soft to-card-2 text-subtle">
-          🎬
-        </div>
-      )}
-      <div className="px-3 py-2 text-left">
+    <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <div className="relative overflow-hidden bg-black">
+        {playing ? (
+          <EntryEmbed entry={stagePostAsEntry(post)} />
+        ) : (
+          <button onClick={() => setPlaying(true)} aria-label={post.title} className="relative block w-full active:opacity-95">
+            {post.thumbnail_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={post.thumbnail_url} alt="" className="aspect-video w-full object-cover" />
+            ) : (
+              <div className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-primary-soft to-card-2 text-subtle">🎬</div>
+            )}
+            <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/15">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-primary shadow-sm">
+                <Play className="h-5 w-5 fill-current" />
+              </span>
+            </span>
+          </button>
+        )}
+      </div>
+      <div className="px-3 pt-2 text-left">
         <div className="truncate text-[13px] font-bold text-fg">{post.title}</div>
         <div className="truncate text-[11px] text-subtle">@{post.handle}</div>
       </div>
-    </button>
+      <button
+        onClick={onPick}
+        className="m-3 mt-2 flex w-[calc(100%-1.5rem)] items-center justify-center gap-1.5 rounded-full bg-primary py-2.5 text-[13px] font-bold text-white active:scale-[0.99]"
+      >
+        <Check className="h-4 w-4" /> {pickLabel}
+      </button>
+    </div>
   );
 }
 
@@ -229,12 +246,13 @@ export default function EventPlay({ eventId }: { eventId: string }) {
             <span className="rounded-full bg-primary-soft px-3 py-1 text-primary-strong">{t("ev_round_of").replace("{n}", String(roundSize))}</span>
             <span className="text-muted">{matchIdx + 1} / {Math.floor(roundSize / 2)}</span>
           </div>
-          {votesLabel && <p className="mb-3 text-center text-[11px] font-semibold text-subtle">{votesLabel}</p>}
-          <p className="mb-3 text-center text-[14px] font-bold text-fg">{t("ev_pick_one")}</p>
+          {votesLabel && <p className="mb-2 text-center text-[11px] font-semibold text-subtle">{votesLabel}</p>}
+          <p className="text-center text-[14px] font-bold text-fg">{t("ev_pick_one")}</p>
+          <p className="mb-3 text-center text-[11.5px] text-muted">{t("ev_watch_hint")}</p>
           <div className="space-y-3">
-            <MatchTile post={a} onPick={() => void pick(a, b)} />
+            <MatchTile post={a} onPick={() => void pick(a, b)} pickLabel={t("ev_pick_this")} />
             <div className="text-center text-[13px] font-black text-subtle">VS</div>
-            <MatchTile post={b} onPick={() => void pick(b, a)} />
+            <MatchTile post={b} onPick={() => void pick(b, a)} pickLabel={t("ev_pick_this")} />
           </div>
         </div>
       )}
