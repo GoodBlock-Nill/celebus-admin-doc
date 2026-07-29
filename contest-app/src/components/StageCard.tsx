@@ -108,6 +108,9 @@ export default function StageCard({
             <span className="tabular-nums">{post.like_count}</span>
           </button>
         </div>
+        {post.uploader_nickname && (
+          <div className="mt-0.5 truncate text-[10px] text-subtle">{t("uploader_by")} {post.uploader_nickname}</div>
+        )}
         <CardMemberSeenLine hearts={hearts} />
       </div>
     </div>

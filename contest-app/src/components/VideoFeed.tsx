@@ -301,6 +301,11 @@ export default function VideoFeed({ postId }: { postId: string }) {
                     <Eye className="h-3.5 w-3.5" /> <span className="tabular-nums">{(st?.viewCount ?? post.view_count).toLocaleString()}</span>
                   </span>
                 </div>
+                {post.uploader_nickname && (
+                  <div className="mt-0.5 truncate text-[11.5px] text-white/70">
+                    {t("uploader_by")} {post.uploader_nickname}
+                  </div>
+                )}
               </div>
             </section>
           );

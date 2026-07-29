@@ -119,6 +119,7 @@ export interface StagePostPublic {
   view_count: number;
   is_official: boolean;
   featured: boolean;
+  uploader_nickname: string | null;
 }
 
 // EntryEmbed(임베드 렌더러) 재사용을 위한 어댑터 — 스테이지 게시물을 EntryPublic 형태로

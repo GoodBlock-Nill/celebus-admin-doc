@@ -28,6 +28,8 @@ export default function StageUploadModal({ stageId, onClose, onPosted, onBack }:
   const [busy, setBusy] = useState(false);
   const [previewing, setPreviewing] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null); // i18n key
+  const [agreeOriginal, setAgreeOriginal] = useState(false); // 원작자·정책 동의
+  const [agreeOfficial, setAgreeOfficial] = useState(false); // V01D 공식 계정 소개·활용 동의
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   async function preview() {
@@ -66,6 +68,7 @@ export default function StageUploadModal({ stageId, onClose, onPosted, onBack }:
 
   async function submit() {
     if (busy || !resolved || !title.trim()) return;
+    if (!agreeOriginal || !agreeOfficial) return void toast(t("stage_agree_required"));
     setBusy(true);
     try {
       const res = await fetch("/api/stage/posts", {
@@ -196,9 +199,21 @@ export default function StageUploadModal({ stageId, onClose, onPosted, onBack }:
               </div>
             </div>
 
+            {/* 업로드 동의 (원작자·정책 / V01D 공식 활용) */}
+            <div className="space-y-2 rounded-xl border border-border bg-card-2 p-3">
+              <label className="flex cursor-pointer items-start gap-2.5">
+                <input type="checkbox" checked={agreeOriginal} onChange={(e) => setAgreeOriginal(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-primary" />
+                <span className="text-[11.5px] leading-relaxed text-muted break-keep">{t("stage_agree_original")}</span>
+              </label>
+              <label className="flex cursor-pointer items-start gap-2.5">
+                <input type="checkbox" checked={agreeOfficial} onChange={(e) => setAgreeOfficial(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-primary" />
+                <span className="text-[11.5px] leading-relaxed text-muted break-keep">{t("stage_agree_official")}</span>
+              </label>
+            </div>
+
             <button
               onClick={submit}
-              disabled={busy || !title.trim() || (needHandle && !handle.trim())}
+              disabled={busy || !title.trim() || (needHandle && !handle.trim()) || !agreeOriginal || !agreeOfficial}
               className="w-full rounded-full bg-primary py-3.5 text-[14.5px] font-bold text-white disabled:opacity-40"
             >
               {t("stage_submit")}
