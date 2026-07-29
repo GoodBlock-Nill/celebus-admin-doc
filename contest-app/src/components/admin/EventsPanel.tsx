@@ -88,7 +88,7 @@ export default function EventsPanel() {
             <option key={s.id} value={s.id} className="bg-[#141217]">{s.title}</option>
           ))}
         </select>
-        <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={80} placeholder="이벤트명 (예: 부산 버스킹 월드컵)"
+        <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={80} placeholder="이벤트명 (예: 부산 버스킹 모먼트 토너먼트)"
           className="w-full rounded-xl bg-white/6 px-3 py-2.5 text-[13px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/30" />
         <div className="grid grid-cols-2 gap-2">
           <input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} maxLength={500} placeholder="소개 (선택)"
