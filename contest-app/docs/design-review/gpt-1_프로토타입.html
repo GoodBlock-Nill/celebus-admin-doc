@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<!-- saved from url=(0102)https://assets.carat-api.im/upload_from_app/2478910/20260728/ec0eb25a-285d-49cc-b83a-df6f16a9dda4.html -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FanStage · Light Social Prototype</title>
+  <style>
+    :root {
+      --bg: #f4f5f9;
+      --surface: #ffffff;
+      --surface-2: #f8f8fc;
+      --text: #17171c;
+      --muted: #6d6e7b;
+      --faint: #a6a7b2;
+      --line: #e7e7ef;
+      --brand: #5556d9;
+      --brand-deep: #3f40a8;
+      --brand-soft: #eef0ff;
+      --green: #21845f;
+      --red: #c94355;
+      --shadow: 0 18px 50px rgba(31, 33, 74, .14);
+      --radius-card: 18px;
+      --radius-sm: 12px;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--bg); }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(85,86,217,.08), transparent 28rem),
+        linear-gradient(180deg, #f8f8fb 0%, #f1f2f7 100%);
+      font-family: Inter, Pretendard, "Noto Sans KR", "Noto Sans JP", system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; border: 0; cursor: pointer; }
+    .presentation { min-height: 100vh; padding: 40px 24px 60px; }
+    .masthead { max-width: 1200px; margin: 0 auto 26px; display:flex; align-items:flex-end; justify-content:space-between; gap: 24px; }
+    .eyebrow { color: var(--brand); text-transform: uppercase; letter-spacing: .16em; font-size: 11px; font-weight: 800; }
+    h1 { margin: 6px 0 0; font-size: clamp(28px, 4vw, 46px); line-height: 1.02; letter-spacing: -.055em; }
+    .masthead p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+    .status { display:flex; align-items:center; gap:8px; color:var(--muted); font-size:12px; white-space:nowrap; }
+    .status i { display:block; width:8px; height:8px; border-radius:50%; background:#54b58b; box-shadow: 0 0 0 5px #dcf4e8; }
+    .workspace { max-width: 1200px; margin: 0 auto; display:grid; grid-template-columns: minmax(320px, 430px) 1fr; gap: 48px; align-items:start; }
+    .phone-wrap { display:flex; justify-content:center; }
+    .phone {
+      width: 390px; max-width: 100%; min-height: 844px; background: var(--surface); border: 8px solid #15161c; border-radius: 42px; overflow:hidden; box-shadow: var(--shadow); position:relative;
+    }
+    .island { width: 98px; height: 24px; background:#15161c; border-radius: 20px; position:absolute; top:8px; left:50%; transform:translateX(-50%); z-index:10; }
+    .statusbar { height: 28px; padding: 7px 18px 0; display:flex; align-items:center; justify-content:space-between; color:#686a76; font-size:10px; font-weight:800; letter-spacing:.02em; }
+    .status-icons { display:flex; gap:7px; align-items:center; }
+    .status-icons span { display:inline-block; }
+    .app { min-height: 828px; padding-bottom: 76px; background: var(--surface); }
+    .topbar { height: 58px; padding: 10px 18px 8px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; background:rgba(255,255,255,.94); backdrop-filter:blur(18px); z-index:4; }
+    .wordmark { font-weight:900; letter-spacing:-.065em; font-size:20px; }
+    .wordmark span { color:var(--brand); }
+    .icon-btn { width:34px; height:34px; border-radius:50%; background:var(--surface-2); display:grid; place-items:center; color:var(--text); font-size:16px; }
+    .screen { padding: 8px 16px 24px; animation: fade .18s ease-out; }
+    @keyframes fade { from{opacity:.25; transform:translateY(4px)} to{opacity:1; transform:none} }
+    .section { margin-top: 22px; }
+    .section-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    .section-title { font-weight:800; font-size:16px; letter-spacing:-.035em; }
+    .section-link { color:var(--brand); font-weight:700; font-size:12px; }
+    .subcopy { color:var(--muted); font-size:12px; margin-top:4px; line-height:1.5; }
+    .hero { border-radius:22px; padding:20px; min-height:164px; color:white; overflow:hidden; position:relative; background: linear-gradient(135deg, #5556d9 0%, #6869e3 54%, #9c9df1 100%); }
+    .hero:after { content:""; position:absolute; width:170px; height:170px; border-radius:50%; right:-42px; top:-58px; background:rgba(255,255,255,.18); box-shadow: -38px 72px 0 -25px rgba(255,255,255,.13); }
+    .hero small { position:relative; z-index:1; font-weight:700; opacity:.75; font-size:11px; letter-spacing:.04em; }
+    .hero h2 { position:relative; z-index:1; margin:14px 0 6px; max-width:220px; font-size:25px; line-height:1.08; letter-spacing:-.06em; }
+    .hero p { position:relative; z-index:1; margin:0; font-size:12px; opacity:.8; }
+    .hero .hero-btn { position:absolute; z-index:2; bottom:18px; right:18px; padding:9px 12px; border-radius:999px; color:var(--brand-deep); background:#fff; font-size:11px; font-weight:800; }
+    .react-card { border:1px solid var(--line); border-radius:var(--radius-card); padding:12px; display:flex; gap:12px; align-items:center; background:#fff; }
+    .react-thumb { width:70px; height:70px; border-radius:13px; flex:none; }
+    .react-card strong { display:block; font-size:13px; line-height:1.35; letter-spacing:-.02em; }
+    .react-card p { color:var(--muted); margin:4px 0 0; font-size:11px; }
+    .verified { display:inline-flex; align-items:center; gap:5px; color:var(--brand-deep); background:var(--brand-soft); border-radius:999px; padding:5px 8px; font-size:10px; font-weight:800; margin-top:8px; }
+    .verified i { display:grid; place-items:center; width:14px; height:14px; border-radius:50%; background:var(--brand); color:#fff; font-style:normal; font-size:9px; }
+    .h-scroll { display:flex; gap:10px; overflow:hidden; margin-right:-16px; padding-right:16px; }
+    .stage-mini { min-width:158px; border:1px solid var(--line); border-radius:16px; overflow:hidden; background:#fff; }
+    .stage-mini .cover { height:84px; }
+    .stage-mini .inside { padding:10px; }
+    .stage-mini strong { display:block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .stage-mini small { display:block; color:var(--muted); margin-top:5px; font-size:10px; }
+    .event-card { border-radius:16px; background:#f7f7fc; padding:16px; display:flex; align-items:center; gap:12px; border:1px solid var(--line); }
+    .event-icon { width:42px; height:42px; border-radius:13px; background:#e4e5ff; color:var(--brand); display:grid; place-items:center; font-size:18px; }
+    .event-card strong { display:block; font-size:13px; }
+    .event-card p { margin:4px 0 0; font-size:11px; color:var(--muted); }
+    .chevron { margin-left:auto; color:var(--faint); font-size:20px; }
+    .cover { position:relative; overflow:hidden; background:#dfe1f7; }
+    .cover:before, .cover:after { content:""; position:absolute; border-radius:50%; filter:blur(.2px); }
+    .cover:before { width:95px; height:95px; left:-14px; bottom:-38px; background:rgba(255,255,255,.43); }
+    .cover:after { width:65px; height:65px; right:-8px; top:-20px; background:rgba(255,255,255,.26); }
+    .art-a { background: linear-gradient(135deg,#32386e,#767be7 56%,#d9d9ff); }
+    .art-b { background: linear-gradient(135deg,#e6b3a1,#c96987 52%,#474a9b); }
+    .art-c { background: linear-gradient(135deg,#a5d9ca,#4c9eaa 52%,#355c9f); }
+    .art-d { background: linear-gradient(135deg,#f5d38b,#d77d87 52%,#524fa6); }
+    .art-e { background: linear-gradient(135deg,#c7ccf7,#8a76c8 48%,#2f315d); }
+    .art-f { background: linear-gradient(135deg,#d2ebeb,#7ab2d7 50%,#5b5ac6); }
+    .cover-label { position:absolute; left:10px; bottom:9px; color:#fff; font-size:10px; font-weight:800; letter-spacing:.02em; text-shadow:0 1px 5px rgba(0,0,0,.25); }
+    .play { position:absolute; right:9px; bottom:8px; width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,.92); color:var(--brand); display:grid; place-items:center; font-size:10px; }
+    .phone .bottom-nav { position:absolute; bottom:0; left:0; right:0; height:76px; border-top:1px solid var(--line); background:rgba(255,255,255,.96); display:grid; grid-template-columns:repeat(5,1fr); align-items:center; padding:5px 8px 7px; z-index:5; }
+    .nav-item { background:none; color:#999aa5; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:9px; font-weight:700; }
+    .nav-item .nav-icon { width:28px; height:28px; border-radius:10px; display:grid; place-items:center; font-size:17px; }
+    .nav-item.active { color:var(--brand); }
+    .nav-item.active .nav-icon { background:var(--brand-soft); }
+    .nav-item.plus .nav-icon { background:var(--brand); color:#fff; width:40px; height:40px; border-radius:14px; font-size:23px; margin-top:-12px; box-shadow:0 7px 14px rgba(85,86,217,.25); }
+    .nav-item.plus { color:var(--brand); }
+    .right { padding-top:8px; }
+    .right h2 { margin:0; font-size:18px; letter-spacing:-.04em; }
+    .right > p { color:#5d5e6b; font-size:13px; line-height:1.6; margin:8px 0 26px; max-width:520px; }
+    .note-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; }
+    .note { background:rgba(255,255,255,.74); border:1px solid rgba(255,255,255,.9); border-radius:18px; padding:16px; min-height:132px; box-shadow:0 8px 24px rgba(47,48,89,.04); }
+    .note .num { color:var(--brand); font-weight:900; font-size:11px; letter-spacing:.08em; }
+    .note strong { display:block; font-size:14px; margin:8px 0 5px; letter-spacing:-.03em; }
+    .note span { color:#5f606d; font-size:12px; line-height:1.55; }
+    .screen-map { margin-top:18px; background:#fff; border:1px solid var(--line); border-radius:18px; padding:16px; }
+    .screen-map-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .screen-map strong { font-size:13px; }
+    .screen-map small { color:var(--muted); font-size:10px; }
+    .map-buttons { display:flex; flex-wrap:wrap; gap:7px; }
+    .map-buttons button { background:var(--surface-2); color:var(--muted); border-radius:999px; padding:8px 10px; font-size:11px; font-weight:750; }
+    .map-buttons button:hover, .map-buttons button.selected { background:var(--brand-soft); color:var(--brand-deep); }
+    .token-strip { margin-top:18px; display:flex; flex-wrap:wrap; gap:8px; }
+    .token { display:flex; gap:7px; align-items:center; color:var(--muted); font-size:11px; }
+    .swatch { width:16px; height:16px; border-radius:6px; border:1px solid rgba(0,0,0,.06); }
+    .swatch.brand { background:var(--brand); } .swatch.bg { background:var(--bg); } .swatch.text { background:var(--text); } .swatch.soft { background:var(--brand-soft); }
+    .phone .page-title { margin:12px 0 4px; font-size:24px; line-height:1.1; letter-spacing:-.06em; }
+    .phone .page-desc { margin:0; color:var(--muted); font-size:12px; line-height:1.5; }
+    .segmented { display:flex; gap:5px; overflow:hidden; margin:18px 0 12px; }
+    .segmented button { flex:none; padding:8px 12px; border-radius:999px; background:#f4f4f8; color:var(--muted); font-size:11px; font-weight:800; }
+    .segmented button.active { background:var(--brand); color:#fff; }
+    .stage-large { border:1px solid var(--line); border-radius:20px; overflow:hidden; margin-top:14px; background:#fff; }
+    .stage-large .cover { height:142px; }
+    .stage-large .meta { padding:14px; }
+    .stage-large .meta h3 { margin:0; font-size:16px; letter-spacing:-.04em; }
+    .stage-large .meta p { margin:5px 0 0; color:var(--muted); font-size:11px; }
+    .stage-large .meta-row { display:flex; justify-content:space-between; align-items:center; margin-top:13px; }
+    .state { color:var(--green); background:#eaf7f0; border-radius:999px; padding:5px 8px; font-size:10px; font-weight:800; }
+    .outline-btn { border:1px solid var(--line); background:#fff; border-radius:10px; padding:8px 10px; font-size:10px; font-weight:800; color:var(--brand-deep); }
+    .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    .video-card { min-width:0; overflow:hidden; border:1px solid var(--line); border-radius:15px; background:#fff; }
+    .video-card .cover { height:112px; }
+    .video-info { padding:9px; }
+    .video-info strong { display:block; font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .video-info p { color:var(--muted); margin:4px 0 0; font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .micro-row { display:flex; align-items:center; gap:6px; margin-top:7px; color:var(--muted); font-size:9px; }
+    .avatar { width:20px; height:20px; border-radius:50%; background:linear-gradient(135deg,#f3b9af,#7879df); display:inline-grid; place-items:center; color:#fff; font-size:8px; font-weight:900; flex:none; }
+    .avatar.alt { background:linear-gradient(135deg,#78bfd2,#5a53b4); }
+    .avatar.green { background:linear-gradient(135deg,#a1d7bb,#3b8d7b); }
+    .detail-cover { margin:10px -16px 0; height:210px; }
+    .detail-cover .embed-label { position:absolute; top:12px; left:13px; padding:6px 8px; border-radius:7px; color:#fff; background:rgba(15,16,24,.55); font-size:10px; font-weight:800; }
+    .detail-title { font-size:19px; letter-spacing:-.05em; margin:17px 0 4px; }
+    .detail-meta { color:var(--muted); font-size:11px; }
+    .reaction-panel { border:1px solid #dfe0ff; background:var(--brand-soft); border-radius:16px; padding:13px; margin-top:16px; }
+    .reaction-panel .label { color:var(--brand-deep); font-size:10px; font-weight:900; letter-spacing:.02em; margin-bottom:9px; }
+    .reaction-person { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; }
+    .reaction-person + .reaction-person { margin-top:8px; }
+    .heart-mark { margin-left:auto; color:var(--brand); font-size:14px; }
+    .action-row { display:flex; align-items:center; gap:10px; margin:13px 0; }
+    .action { color:var(--muted); font-size:12px; font-weight:700; background:none; padding:6px 0; }
+    .action.primary { color:var(--brand); margin-left:auto; }
+    .comment-box { border-top:1px solid var(--line); padding-top:14px; margin-top:5px; }
+    .comment-box h3 { margin:0 0 11px; font-size:13px; }
+    .comment { display:flex; gap:8px; font-size:11px; line-height:1.4; }
+    .comment strong { display:block; font-size:11px; margin-bottom:2px; }
+    .comment span { color:var(--muted); }
+    .upload-step { display:flex; gap:9px; margin-top:18px; align-items:center; }
+    .step { width:22px; height:22px; display:grid; place-items:center; border-radius:50%; background:var(--brand); color:#fff; font-size:10px; font-weight:900; }
+    .step.off { background:#ebeaf1; color:var(--muted); }
+    .step-label { font-size:12px; font-weight:800; }
+    .field { margin-top:16px; }
+    .field label { display:block; font-size:11px; font-weight:800; margin-bottom:7px; }
+    .input { width:100%; min-height:46px; border:1px solid var(--line); border-radius:12px; padding:12px; color:var(--muted); background:#fff; font-size:12px; }
+    .input.active { border-color:#bfc0ff; box-shadow:0 0 0 3px #f0f0ff; color:var(--text); }
+    .select-row { display:flex; align-items:center; justify-content:space-between; border:1px solid var(--line); border-radius:12px; padding:12px; font-size:12px; }
+    .select-row span { color:var(--muted); }
+    .primary-btn { width:100%; min-height:47px; border-radius:12px; background:var(--brand); color:#fff; font-size:13px; font-weight:850; margin-top:20px; }
+    .primary-btn:hover { background:var(--brand-deep); }
+    .profile { display:flex; gap:12px; align-items:center; margin-top:18px; padding:14px; border:1px solid var(--line); border-radius:18px; }
+    .profile .avatar { width:48px; height:48px; font-size:15px; }
+    .profile strong { display:block; font-size:14px; }
+    .profile p { color:var(--muted); font-size:11px; margin:4px 0 0; }
+    .profile .icon-btn { margin-left:auto; }
+    .my-tabs { display:grid; grid-template-columns:repeat(3,1fr); border-bottom:1px solid var(--line); margin-top:18px; }
+    .my-tabs button { background:none; padding:11px 3px; color:var(--muted); font-size:10px; font-weight:800; border-bottom:2px solid transparent; }
+    .my-tabs button.active { color:var(--brand); border-bottom-color:var(--brand); }
+    .list-video { display:flex; gap:10px; padding:12px 0; border-bottom:1px solid var(--line); }
+    .list-video .cover { width:96px; height:66px; border-radius:11px; flex:none; }
+    .list-video strong { display:block; font-size:12px; margin-top:2px; }
+    .list-video p { color:var(--muted); font-size:10px; line-height:1.4; margin:5px 0 0; }
+    .rank-card { display:flex; align-items:center; gap:10px; border:1px solid var(--line); border-radius:16px; padding:11px; margin-top:10px; }
+    .rank-no { width:23px; color:var(--brand); font-size:12px; font-weight:900; text-align:center; }
+    .rank-card .cover { width:70px; height:58px; border-radius:10px; flex:none; }
+    .rank-card strong { display:block; font-size:11px; }
+    .rank-card p { color:var(--muted); font-size:10px; margin:4px 0 0; }
+    .rank-card .badge { margin-left:auto; color:var(--brand-deep); background:var(--brand-soft); border-radius:999px; padding:5px 7px; font-size:9px; font-weight:800; white-space:nowrap; }
+    .versus { text-align:center; color:var(--brand); font-size:13px; font-weight:900; margin:10px 0; }
+    .match-card { border:1px solid var(--line); border-radius:18px; overflow:hidden; background:#fff; }
+    .match-card .cover { height:124px; }
+    .match-card .inside { padding:11px; display:flex; align-items:center; gap:8px; }
+    .match-card .inside strong { font-size:11px; }
+    .match-card .inside span { margin-left:auto; color:var(--brand); font-size:10px; font-weight:900; }
+    .round-label { color:var(--muted); font-size:11px; margin-top:16px; }
+    .notice { background:#f7f7fc; border:1px dashed #d7d7e4; border-radius:16px; padding:13px; color:var(--muted); font-size:11px; line-height:1.55; margin-top:15px; }
+    @media (max-width: 860px) {
+      .presentation { padding: 22px 12px 40px; }
+      .masthead { align-items:flex-start; flex-direction:column; gap:10px; }
+      .workspace { grid-template-columns:1fr; gap:28px; }
+      .phone-wrap { order:0; }
+      .right { order:1; }
+      .right { padding:0 4px; }
+    }
+    @media (max-width: 420px) {
+      .presentation { padding:0; }
+      .masthead, .right { display:none; }
+      .phone { border:0; border-radius:0; width:100%; min-height:100vh; box-shadow:none; }
+      .app { min-height:100vh; }
+      .island { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="presentation">
+    <header class="masthead">
+      <div>
+        <div class="eyebrow">FANSTAGE · PRODUCT PROTOTYPE</div>
+        <h1>멤버가 봐준 순간을<br>더 선명하게.</h1>
+        <p>Bright social archive · Mobile-first · Stage-led information architecture</p>
+      </div>
+      <div class="status"><i></i> interactive prototype ready</div>
+    </header>
+
+    <section class="workspace">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="island"></div>
+          <div class="app">
+            <div class="statusbar"><span>9:41</span><span class="status-icons"><span>▮▮▮</span><span>Wi‑Fi</span><span>▰</span></span></div>
+            <div class="topbar">
+              <button class="icon-btn" id="backBtn" aria-label="뒤로">‹</button>
+              <div class="wordmark">fan<span>stage</span></div>
+              <button class="icon-btn" id="topAction" aria-label="알림">♡</button>
+            </div>
+            <div id="screen" class="screen">
+      <div class="screen-home">
+        <div class="hero"><small>FAN CONTENT, MEMBER REACTION</small><h2>내 영상이<br>멤버에게 닿는 곳</h2><p>공연별로 모아보고, 마음껏 자랑해보세요.</p><button class="hero-btn" data-screen="stages">스테이지 보기 ›</button></div>
+        <section class="section"><div class="section-head"><div><div class="section-title">멤버가 봤어요</div><div class="subcopy">최근 내 영상에 남은 반응</div></div><button class="section-link" data-screen="my">전체보기</button></div><div class="react-card" data-screen="video"><div class="react-thumb art-a cover"> <span class="play">▶</span></div><div><strong>주연 님이 회원님의 영상을 봤어요</strong><p>2026 여름 부산 버스킹 · 12분 전</p><div class="verified"><i>✓</i> 멤버 하트</div></div></div></section>
+        <section class="section"><div class="section-head"><div class="section-title">진행 중인 스테이지</div><button class="section-link" data-screen="stages">더보기</button></div><div class="h-scroll"><div class="stage-mini" data-screen="stageDetail"><div class="cover art-a"><span class="cover-label">BUSAN LIVE</span></div><div class="inside"><strong>2026 여름 부산 버스킹</strong><small>영상 42개 · 업로드 가능</small></div></div><div class="stage-mini" data-screen="stageDetail"><div class="cover art-b"><span class="cover-label">HONGDAE</span></div><div class="inside"><strong>홍대 라이브 클럽 0628</strong><small>영상 18개 · 업로드 가능</small></div></div></div></section>
+        <section class="section"><div class="section-head"><div><div class="section-title">지금 진행 중인 월드컵</div><div class="subcopy">팬들이 직접 뽑는 이번 공연 베스트</div></div></div><div class="event-card" data-screen="worldcup"><div class="event-icon">VS</div><div><strong>부산 버스킹 베스트컷</strong><p>16강 진행 중 · 참여 1,248명</p></div><span class="chevron">›</span></div></section>
+        <section class="section"><div class="section-head"><div class="section-title">명예의 전당</div><button class="section-link" data-screen="hall">더보기</button></div><div class="h-scroll"><div class="stage-mini" data-screen="hall"><div class="cover art-d"><span class="cover-label">GRAND SLAM</span></div><div class="inside"><strong>멤버 전원 하트</strong><small>멤버 하트 5개</small></div></div><div class="stage-mini" data-screen="hall"><div class="cover art-c"><span class="cover-label">MEMBER PICK</span></div><div class="inside"><strong>여름의 한 장면</strong><small>멤버 하트 4개</small></div></div></div></section>
+      </div></div>
+            <nav class="bottom-nav" aria-label="주요 메뉴">
+              <button class="nav-item active" data-screen="home"><span class="nav-icon">⌂</span><span>홈</span></button>
+              <button class="nav-item" data-screen="stages"><span class="nav-icon">▦</span><span>스테이지</span></button>
+              <button class="nav-item plus" data-screen="upload"><span class="nav-icon">＋</span><span>올리기</span></button>
+              <button class="nav-item" data-screen="worldcup"><span class="nav-icon">VS</span><span>월드컵</span></button>
+              <button class="nav-item" data-screen="my"><span class="nav-icon">○</span><span>마이</span></button>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <aside class="right">
+        <div class="eyebrow">DESIGN SYSTEM / 01</div>
+        <h2>하이브리드 IA를 앱 셸로 검증한 목업</h2>
+        <p>홈은 발견, 스테이지는 공연별 아카이브, 영상 상세는 멤버 반응과 댓글에 집중합니다. 아래 버튼으로 개발 착수 전 주요 화면을 빠르게 확인할 수 있습니다.</p>
+        <div class="note-grid">
+          <div class="note"><div class="num">01</div><strong>Stage-led archive</strong><span>모든 영상은 특정 공연에 귀속되고, 탐색 범위를 상세 화면 안에서 유지합니다.</span></div>
+          <div class="note"><div class="num">02</div><strong>Member proof, not fireworks</strong><span>멤버 아바타와 “봤어요” 상태를 검증 배지처럼 작게 반복 노출합니다.</span></div>
+          <div class="note"><div class="num">03</div><strong>One decision per layer</strong><span>공연 목록은 상태, 상세는 카테고리, 정렬은 바텀 시트로 역할을 분리합니다.</span></div>
+          <div class="note"><div class="num">04</div><strong>Guest-first browsing</strong><span>열람은 로그인 없이 열고, 반응·업로드·마이 접근 때만 인증을 요청합니다.</span></div>
+        </div>
+        <div class="screen-map">
+          <div class="screen-map-head"><strong>화면 바로가기</strong><small>click to inspect</small></div>
+          <div class="map-buttons">
+            <button data-screen="home" class="selected">홈</button><button data-screen="stages" class="">스테이지</button><button data-screen="stageDetail" class="">스테이지 상세</button><button data-screen="video" class="">영상 상세</button><button data-screen="upload" class="">올리기</button><button data-screen="hall" class="">명예의 전당</button><button data-screen="worldcup" class="">월드컵</button><button data-screen="my" class="">마이페이지</button>
+          </div>
+        </div>
+        <div class="token-strip">
+          <div class="token"><i class="swatch brand"></i>Electric indigo</div><div class="token"><i class="swatch soft"></i>Member proof</div><div class="token"><i class="swatch bg"></i>Clean surface</div><div class="token"><i class="swatch text"></i>High legibility</div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+<script>
+  const screen = document.getElementById('screen');
+  const backBtn = document.getElementById('backBtn');
+  let current = 'home';
+  let previous = 'home';
+
+  const thumb = (cls, label='', play=true) => `<div class="cover ${cls}">${label ? `<span class="cover-label">${label}</span>` : ''}${play ? '<span class="play">▶</span>' : ''}</div>`;
+  const avatar = (name, cls='') => `<span class="avatar ${cls}">${name}</span>`;
+
+  const templates = {
+    home: () => `
+      <div class="screen-home">
+        <div class="hero"><small>FAN CONTENT, MEMBER REACTION</small><h2>내 영상이<br>멤버에게 닿는 곳</h2><p>공연별로 모아보고, 마음껏 자랑해보세요.</p><button class="hero-btn" data-screen="stages">스테이지 보기 ›</button></div>
+        <section class="section"><div class="section-head"><div><div class="section-title">멤버가 봤어요</div><div class="subcopy">최근 내 영상에 남은 반응</div></div><button class="section-link" data-screen="my">전체보기</button></div><div class="react-card" data-screen="video"><div class="react-thumb art-a cover"> <span class="play">▶</span></div><div><strong>주연 님이 회원님의 영상을 봤어요</strong><p>2026 여름 부산 버스킹 · 12분 전</p><div class="verified"><i>✓</i> 멤버 하트</div></div></div></section>
+        <section class="section"><div class="section-head"><div class="section-title">진행 중인 스테이지</div><button class="section-link" data-screen="stages">더보기</button></div><div class="h-scroll"><div class="stage-mini" data-screen="stageDetail">${thumb('art-a','BUSAN LIVE',false)}<div class="inside"><strong>2026 여름 부산 버스킹</strong><small>영상 42개 · 업로드 가능</small></div></div><div class="stage-mini" data-screen="stageDetail">${thumb('art-b','HONGDAE',false)}<div class="inside"><strong>홍대 라이브 클럽 0628</strong><small>영상 18개 · 업로드 가능</small></div></div></div></section>
+        <section class="section"><div class="section-head"><div><div class="section-title">지금 진행 중인 월드컵</div><div class="subcopy">팬들이 직접 뽑는 이번 공연 베스트</div></div></div><div class="event-card" data-screen="worldcup"><div class="event-icon">VS</div><div><strong>부산 버스킹 베스트컷</strong><p>16강 진행 중 · 참여 1,248명</p></div><span class="chevron">›</span></div></section>
+        <section class="section"><div class="section-head"><div class="section-title">명예의 전당</div><button class="section-link" data-screen="hall">더보기</button></div><div class="h-scroll"><div class="stage-mini" data-screen="hall">${thumb('art-d','GRAND SLAM',false)}<div class="inside"><strong>멤버 전원 하트</strong><small>멤버 하트 5개</small></div></div><div class="stage-mini" data-screen="hall">${thumb('art-c','MEMBER PICK',false)}<div class="inside"><strong>여름의 한 장면</strong><small>멤버 하트 4개</small></div></div></div></section>
+      </div>`,
+    stages: () => `
+      <div><h2 class="page-title">스테이지</h2><p class="page-desc">공연별 영상 모아보기</p><div class="segmented"><button class="active">진행 중</button><button>보관됨</button><button>⌕</button></div><div class="stage-large" data-screen="stageDetail">${thumb('art-a','2026 SUMMER BUSAN',false)}<div class="meta"><h3>2026 여름 부산 버스킹</h3><p>2026.07.20 · 영상 42개</p><div class="meta-row"><span class="state">업로드 가능</span><button class="outline-btn">열어보기 ›</button></div></div></div><div class="stage-large" data-screen="stageDetail">${thumb('art-b','HONGDAE LIVE 0628',false)}<div class="meta"><h3>홍대 라이브 클럽 0628</h3><p>2026.06.28 · 영상 18개</p><div class="meta-row"><span class="state">업로드 가능</span><button class="outline-btn">열어보기 ›</button></div></div></div><div class="notice">스테이지는 관리자가 만든 공연별 아카이브입니다. 팬 영상은 항상 하나의 스테이지에 소속됩니다.</div></div>`,
+    stageDetail: () => `
+      <div><button class="section-link" data-screen="stages">‹ 스테이지 목록</button><h2 class="page-title" style="margin-top:14px">2026 여름<br>부산 버스킹</h2><p class="page-desc">2026.07.20 · 팬들이 남긴 영상 42개</p><div style="display:flex;justify-content:flex-end;margin-top:-18px"><button class="primary-btn" style="width:auto;margin:0;padding:0 13px;font-size:11px" data-screen="upload">영상 올리기</button></div><div class="segmented"><button class="active">전체</button><button>직캠</button><button>커버</button><button>편집</button><button>기타</button></div><div style="display:flex;justify-content:flex-end;color:var(--muted);font-size:10px;margin:3px 0 10px">최신순⌄</div><div class="grid"><div class="video-card" data-screen="video">${thumb('art-a','직캠')}<div class="video-info"><strong>여름밤 첫 곡</strong><p>@sora · ♡ 24 · 댓글 6</p><div class="micro-row">${avatar('주')}<span style="color:var(--brand-deep);font-weight:800">주연 님이 봤어요</span></div></div></div><div class="video-card" data-screen="video">${thumb('art-b','커버')}<div class="video-info"><strong>부산에서 부른 노래</strong><p>@minji · ♡ 18 · 댓글 3</p><div class="micro-row">${avatar('민','alt')}<span style="color:var(--brand-deep);font-weight:800">민서 님이 봤어요</span></div></div></div><div class="video-card" data-screen="video">${thumb('art-c','편집')}<div class="video-info"><strong>0620 highlight</strong><p>@luna · ♡ 31 · 댓글 8</p><div class="micro-row"><span style="color:var(--muted)">팬 하트 31</span></div></div></div><div class="video-card" data-screen="video">${thumb('art-d','직캠')}<div class="video-info"><strong>드럼 솔로 직캠</strong><p>@bluebird · ♡ 12 · 댓글 1</p><div class="micro-row">${avatar('주')}<span style="color:var(--brand-deep);font-weight:800">주연 님이 봤어요</span></div></div></div></div></div>`,
+    video: () => `
+      <div><button class="section-link" data-screen="stageDetail">‹ 부산 버스킹 · 전체</button><div class="detail-cover cover art-a"><span class="embed-label">YouTube · external embed</span><span class="play" style="width:44px;height:44px;font-size:16px;right:50%;bottom:50%;transform:translate(50%,50%)">▶</span><span class="cover-label">SUMMER BUSKING / FAN CAM</span></div><h2 class="detail-title">여름밤 첫 곡, 부산에서</h2><div class="detail-meta">@sora · 직캠 · 0:42</div><div class="reaction-panel"><div class="label">멤버 반응</div><div class="reaction-person">${avatar('주')}<span>주연 님이 봤어요</span><span class="heart-mark">♥</span></div><div class="reaction-person">${avatar('민','alt')}<span>민서 님이 봤어요</span><span class="heart-mark">♥</span></div></div><div class="action-row"><button class="action">♡ 24</button><button class="action">댓글 6</button><button class="action primary">자랑 카드 만들기 ↗</button></div><div class="comment-box"><h3>멤버 댓글</h3><div class="comment">${avatar('주')}<div><strong>주연 <span style="color:var(--brand)">✓ 멤버</span></strong><span>이 장면 정말 좋았어요. 부산에서 만나서 더 반가웠어요!</span></div></div></div><button class="primary-btn" style="margin-top:20px;background:#f4f4f8;color:var(--brand-deep)" data-screen="video">다음 영상 ›</button></div>`,
+    upload: () => `
+      <div><h2 class="page-title">영상 올리기</h2><p class="page-desc">내가 찍은 순간을 팬스테이지에 남겨보세요.</p><div class="upload-step"><span class="step">1</span><span class="step-label">링크 붙여넣기</span><span class="step off">2</span><span class="step-label" style="color:var(--muted)">정보 확인</span></div><div class="field"><label>스테이지</label><div class="select-row"><b>2026 여름 부산 버스킹</b><span>⌄</span></div></div><div class="field"><label>영상 링크</label><div class="input active">https://youtu.be/your-fan-video</div></div><button class="primary-btn" data-screen="uploadPreview">미리보기 불러오기</button><div class="notice">YouTube, TikTok, Instagram의 공개 영상 링크를 붙여넣을 수 있어요. 원본 영상은 각 플랫폼에 그대로 보관됩니다.</div></div>`,
+    uploadPreview: () => `
+      <div><button class="section-link" data-screen="upload">‹ 링크 수정</button><h2 class="page-title" style="margin-top:14px">정보 확인</h2><div class="react-card" style="margin-top:18px;display:block;padding:0;overflow:hidden"><div class="cover art-c" style="height:150px"><span class="play">▶</span><span class="cover-label">YouTube preview</span></div><div style="padding:12px"><strong>여름밤 첫 곡, 부산에서</strong><p style="color:var(--muted);font-size:11px;margin:5px 0 0">youtube.com · 공개 영상</p></div></div><div class="field"><label>카테고리</label><div class="segmented" style="margin:0"><button class="active">직캠</button><button>커버</button><button>편집</button><button>기타</button></div></div><div class="field"><label>표시 이름</label><div class="input">sora</div></div><div class="notice">등록 후에는 다른 팬들이 영상을 보고 하트와 댓글을 남길 수 있습니다.</div><button class="primary-btn" data-screen="stageDetail">등록하기</button></div>`,
+    hall: () => `
+      <div><h2 class="page-title">명예의 전당</h2><p class="page-desc">멤버 하트로 사랑받은 영상 모음</p><div class="segmented"><button class="active">전체</button><button>그랜드슬램</button></div><div class="rank-card"><div class="rank-no">1</div>${thumb('art-d','GRAND SLAM',false)}<div><strong>여름밤 첫 곡, 부산에서</strong><p>2026 여름 부산 버스킹</p><p style="color:var(--brand-deep);font-weight:800">멤버 하트 5개</p></div><span class="badge">전원 하트</span></div><div class="rank-card"><div class="rank-no">2</div>${thumb('art-c','MEMBER PICK',false)}<div><strong>부산에서 부른 노래</strong><p>홍대 라이브 클럽 0628</p><p style="color:var(--brand-deep);font-weight:800">멤버 하트 4개</p></div></div><div class="rank-card"><div class="rank-no">3</div>${thumb('art-a','MEMBER PICK',false)}<div><strong>드럼 솔로 직캠</strong><p>2026 여름 부산 버스킹</p><p style="color:var(--brand-deep);font-weight:800">멤버 하트 3개</p></div></div></div>`,
+    worldcup: () => `
+      <div><h2 class="page-title">월드컵</h2><p class="page-desc">팬들이 직접 뽑는 이번 공연 베스트</p><div class="section" style="margin-top:18px"><div class="event-card" style="background:var(--brand-soft);border-color:#dfe0ff"><div class="event-icon">VS</div><div><strong>부산 버스킹 베스트컷</strong><p>16강 진행 중 · 참여 1,248명</p></div></div></div><div class="round-label">3 / 8 라운드</div><div class="match-card" style="margin-top:9px" data-screen="video">${thumb('art-a','A · 직캠')}<div class="inside"><strong>여름밤 첫 곡</strong><span>A 선택 ›</span></div></div><div class="versus">VS</div><div class="match-card" data-screen="video">${thumb('art-b','B · 커버')}<div class="inside"><strong>부산에서 부른 노래</strong><span>B 선택 ›</span></div></div><div class="notice">두 영상은 썸네일로 비교하고, 눌렀을 때만 외부 플랫폼에서 재생됩니다.</div></div>`,
+    my: () => `
+      <div><h2 class="page-title">마이페이지</h2><div class="profile">${avatar('S','green')}<div><strong>sora</strong><p>참여 영상 12개 · 멤버 반응 3개</p></div><button class="icon-btn">⚙</button></div><div class="my-tabs"><button class="active">내 영상</button><button>멤버가 봐준 영상</button><button>내 댓글</button></div><div class="list-video" data-screen="video">${thumb('art-a','직캠',false)}<div><strong>여름밤 첫 곡, 부산에서</strong><p>2026 여름 부산 버스킹<br><span style="color:var(--brand-deep);font-weight:800">● 주연 님이 봤어요</span></p></div></div><div class="list-video" data-screen="video">${thumb('art-c','커버',false)}<div><strong>부산에서 부른 노래</strong><p>홍대 라이브 클럽 0628<br><span style="color:var(--brand-deep);font-weight:800">● 민서 님이 봤어요</span></p></div></div><div class="list-video">${thumb('art-e','편집',false)}<div><strong>0620 highlight</strong><p>2026 여름 부산 버스킹<br><span style="color:var(--muted)">아직 멤버 반응 없음</span></p></div></div></div>`
+  };
+
+  function go(next) { previous = current; current = next; render(); }
+  function render() {
+    screen.innerHTML = (templates[current] || templates.home)();
+    document.querySelectorAll('[data-screen]').forEach(el => el.addEventListener('click', () => go(el.dataset.screen)));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.toggle('active', el.dataset.screen === (current === 'stageDetail' || current === 'video' || current === 'uploadPreview' ? 'stages' : current)));
+    window.scrollTo(0,0);
+  }
+  backBtn.addEventListener('click', () => { if (current !== 'home') { current = previous || 'home'; render(); } });
+  document.querySelectorAll('.map-buttons button').forEach(el => el.addEventListener('click', () => { document.querySelectorAll('.map-buttons button').forEach(b=>b.classList.remove('selected')); el.classList.add('selected'); go(el.dataset.screen); }));
+  document.querySelectorAll('.nav-item').forEach(el => el.addEventListener('click', () => go(el.dataset.screen)));
+  render();
+</script>
+
+
+<div id="syno-notification-is-installed"></div></body></html>
