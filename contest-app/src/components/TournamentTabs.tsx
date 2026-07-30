@@ -1,7 +1,7 @@
 "use client";
 
 // 토너먼트 메뉴 — [토너먼트][랭킹] 두 탭. 토너먼트=대회 목록, 랭킹=토너먼트별·크리에이터·D10V Pick
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EventList from "./EventList";
 import RankingView from "./RankingView";
 import { useLang } from "./LangProvider";
@@ -9,6 +9,13 @@ import { useLang } from "./LangProvider";
 export default function TournamentTabs() {
   const { t } = useLang();
   const [tab, setTab] = useState<"list" | "ranking">("list");
+
+  // 랭킹 화면에서 뒤로가기(?tab=ranking) 시 랭킹 탭으로 복원
+  useEffect(() => {
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("tab") === "ranking") {
+      setTab("ranking");
+    }
+  }, []);
   const TABS = [
     { k: "list" as const, label: t("rank_tab_list") },
     { k: "ranking" as const, label: t("rank_tab_ranking") },

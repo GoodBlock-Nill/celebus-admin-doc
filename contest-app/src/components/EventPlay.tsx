@@ -154,10 +154,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       if (e.category) poolQ = poolQ.eq("category", e.category);
       const { data: ps } = await poolQ;
       setPool((ps ?? []) as StagePostPublic[]);
-      // 랭킹 탭에서 진입(view=ranking)하거나 발표된 대회는 랭킹을 바로 연다
-      const wantRanking = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("view") === "ranking";
-      if (e.status === "announced" || wantRanking) setShowStandings(true);
-      if (wantRanking) setTimeout(() => document.getElementById("ev-standings")?.scrollIntoView({ behavior: "smooth", block: "start" }), 350);
+      if (e.status === "announced") setShowStandings(true);
       const { data: pc } = await sb.from("event_participants_public").select("participants").eq("event_id", eventId).maybeSingle();
       setParticipants((pc?.participants as number) ?? 0);
     })();
