@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { adminFetch } from "@/lib/admin-types";
 
 type Stage = { id: string; title: string; is_official: boolean };
-type Post = { id: string; title: string; handle: string; thumbnail_url: string | null; is_official: boolean; stage_id: string };
+type Post = { id: string; title: string; handle: string; thumbnail_url: string | null; is_official: boolean; stage_id: string; category: string };
 type SeedResult = { url: string; ok: boolean; id?: string; code?: string };
 
 // 공식 카테고리 — V01D 공식 채널 플레이리스트 기준
@@ -18,7 +18,10 @@ const CATS = [
   { v: "azit", l: "AZIT" },
   { v: "stud10", l: "STUD10" },
   { v: "outv", l: "OUT THE V01D" },
+  { v: "liveclip", l: "Live Clip" },
+  { v: "shorts", l: "Shorts" },
 ];
+const CAT_LABEL: Record<string, string> = Object.fromEntries(CATS.map((c) => [c.v, c.l]));
 
 export default function OfficialSeedPanel() {
   const [stages, setStages] = useState<Stage[]>([]);
@@ -133,21 +136,57 @@ export default function OfficialSeedPanel() {
         <div className="mb-2 text-[12px] font-bold text-fg/60">등록된 공식 영상 ({posts.length})</div>
         {posts.length === 0 ? (
           <div className="rounded-xl bg-white/[0.04] p-4 text-center text-[12.5px] text-fg/45 ring-1 ring-white/10">아직 등록된 공식 영상이 없어요.</div>
-        ) : posts.map((p) => (
-          <div key={p.id} className="mb-2 flex items-center gap-3 rounded-xl bg-white/[0.04] p-3 ring-1 ring-white/10">
-            <div className="h-11 w-16 shrink-0 overflow-hidden rounded-lg bg-white/8">
-              {p.thumbnail_url && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={p.thumbnail_url} alt="" className="h-full w-full object-cover" />
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-[13px] font-bold text-fg">{p.title}</div>
-              <div className="truncate text-[11px] text-fg/45">@{p.handle}</div>
-            </div>
-            <button onClick={() => void remove(p.id)} className="shrink-0 rounded-full bg-white/8 px-3 py-2 text-[12px] font-bold text-rose-300">삭제</button>
+        ) : (
+          // 카테고리별 그룹핑 — CATS 순서 유지, 목록에 존재하는 카테고리만 노출
+          CATS.map((c) => {
+            const group = posts.filter((p) => p.category === c.v);
+            if (group.length === 0) return null;
+            return (
+              <div key={c.v} className="mb-3">
+                <div className="mb-1.5 flex items-center gap-2">
+                  <span className="rounded-full bg-primary/15 px-2.5 py-1 text-[11px] font-bold text-primary-400">{c.l}</span>
+                  <span className="text-[11px] font-bold text-fg/40">{group.length}건</span>
+                </div>
+                {group.map((p) => (
+                  <div key={p.id} className="mb-2 flex items-center gap-3 rounded-xl bg-white/[0.04] p-3 ring-1 ring-white/10">
+                    <div className="h-11 w-16 shrink-0 overflow-hidden rounded-lg bg-white/8">
+                      {p.thumbnail_url && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={p.thumbnail_url} alt="" className="h-full w-full object-cover" />
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-[13px] font-bold text-fg">{p.title}</div>
+                      <div className="truncate text-[11px] text-fg/45">@{p.handle}</div>
+                    </div>
+                    <button onClick={() => void remove(p.id)} className="shrink-0 rounded-full bg-white/8 px-3 py-2 text-[12px] font-bold text-rose-300">삭제</button>
+                  </div>
+                ))}
+              </div>
+            );
+          })
+        )}
+        {/* 알 수 없는(구) 카테고리 — CATS에 없는 값 방어 */}
+        {posts.filter((p) => !CAT_LABEL[p.category]).length > 0 && (
+          <div className="mb-3">
+            <div className="mb-1.5 text-[11px] font-bold text-fg/40">기타</div>
+            {posts.filter((p) => !CAT_LABEL[p.category]).map((p) => (
+              <div key={p.id} className="mb-2 flex items-center gap-3 rounded-xl bg-white/[0.04] p-3 ring-1 ring-white/10">
+                <div className="h-11 w-16 shrink-0 overflow-hidden rounded-lg bg-white/8">
+                  {p.thumbnail_url && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={p.thumbnail_url} alt="" className="h-full w-full object-cover" />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-[13px] font-bold text-fg">{p.title}</div>
+                  <div className="truncate text-[11px] text-fg/45">@{p.handle}</div>
+                </div>
+                <button onClick={() => void remove(p.id)} className="shrink-0 rounded-full bg-white/8 px-3 py-2 text-[12px] font-bold text-rose-300">삭제</button>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

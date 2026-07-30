@@ -7,7 +7,7 @@ export async function GET(req: Request) {
   if (!isAdmin(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const { data, error } = await admin()
     .from("stage_posts_public")
-    .select("id, title, handle, thumbnail_url, featured, is_official, stage_id, created_at")
+    .select("id, title, handle, thumbnail_url, featured, is_official, stage_id, category, created_at")
     .order("created_at", { ascending: false })
     .limit(50);
   if (error) return NextResponse.json({ error: "조회 실패" }, { status: 500 });
