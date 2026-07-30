@@ -50,9 +50,7 @@ function MatchTile({ post, onPick, pickLabel }: { post: StagePostPublic; onPick:
               <div className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-primary-soft to-card-2 text-subtle">🎬</div>
             )}
             <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/15">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-primary shadow-sm">
-                <Play className="h-5 w-5 fill-current" />
-              </span>
+              <CharmIcon name="play" size={52} className="drop-shadow-lg" />
             </span>
           </button>
         )}

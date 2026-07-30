@@ -5,7 +5,8 @@
 // 진행 중인 월드컵 진입 → 명예의 전당 프리뷰. 멤버 반응 표현은 은은하게(글로우·컨페티 없음).
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { BadgeCheck, Play, Plus, RefreshCw } from "lucide-react";
+import { BadgeCheck, Plus, RefreshCw } from "lucide-react";
+import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StageEventPublic, StagePostPublic, StagePublic } from "@/lib/types";
 import { AvatarStack, CATEGORY_LABEL, LoadingSkeleton, SectionHeader, Thumb, timeAgo } from "./HomeAtoms";
@@ -189,8 +190,8 @@ export default function Home() {
             >
               <Thumb url={heroPost.thumbnail_url} />
               <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/60" />
-              <span className="absolute inset-0 m-auto flex h-13 w-13 items-center justify-center rounded-full bg-white/90 text-primary shadow-sm">
-                <Play className="h-4 w-4 fill-current" />
+              <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <CharmIcon name="play" size={58} className="drop-shadow-lg" />
               </span>
               <div className="absolute inset-x-0 bottom-0 p-4">
                 {heroHearts.length > 0 && (
@@ -284,8 +285,8 @@ export default function Home() {
                           <BadgeCheck className="h-3 w-3" /> {t("official_badge")}
                         </span>
                       </div>
-                      <span className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/45 backdrop-blur-sm">
-                        <Play className="h-3 w-3 fill-white text-white" />
+                      <span className="absolute bottom-1.5 right-1.5">
+                        <CharmIcon name="play" size={30} className="drop-shadow-md" />
                       </span>
                     </div>
                     <strong className="mt-2 block truncate text-[12.5px] font-bold text-fg">{p.title}</strong>

@@ -2,7 +2,8 @@
 
 // 시상대 — 1위를 풀폭 대형으로 강조, 2·3위를 나란히. 정렬 흐트러짐 방지.
 import Link from "next/link";
-import { Crown, Play } from "lucide-react";
+import { Crown } from "lucide-react";
+import { CharmIcon } from "./CharmIcon";
 import type { ContestType, EntryPublic } from "@/lib/types";
 import PlatformGlyph from "./PlatformGlyph";
 import VoteButton from "./VoteButton";
@@ -25,7 +26,6 @@ function Tile({
     rank === 1 ? "ring-2 ring-gold" : rank === 2 ? "ring-1 ring-silver/50" : "ring-1 ring-bronze/50";
   const medalBg = rank === 1 ? "bg-gold text-black" : rank === 2 ? "bg-silver text-black" : "bg-bronze text-white";
   const aspect = big ? "aspect-[16/10]" : "aspect-square";
-  const playSize = big ? "h-12 w-12" : "h-9 w-9";
 
   return (
     <Link href={`/entry/${entry.id}`} className={`group relative block overflow-hidden rounded-[16px] bg-surface-1 ${ring}`}>
@@ -45,9 +45,7 @@ function Tile({
         )}
         {isVideo && entry.thumbnail_url && (
           <span className="absolute inset-0 flex items-center justify-center">
-            <span className={`flex items-center justify-center rounded-full bg-black/55 ring-1 ring-white/25 ${playSize}`}>
-              <Play className={`translate-x-[1px] fill-white text-white ${big ? "h-5 w-5" : "h-4 w-4"}`} />
-            </span>
+            <CharmIcon name="play" size={big ? 46 : 34} className="drop-shadow-lg" />
           </span>
         )}
 

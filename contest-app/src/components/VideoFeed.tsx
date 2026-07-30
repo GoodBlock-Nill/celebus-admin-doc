@@ -6,7 +6,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { X, Heart, MessageCircle, Flag, ExternalLink, Play, Eye, BadgeCheck } from "lucide-react";
+import { X, Heart, MessageCircle, Flag, ExternalLink, Eye, BadgeCheck } from "lucide-react";
+import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import { stagePostAsEntry } from "@/lib/types";
@@ -253,7 +254,7 @@ export default function VideoFeed({ postId }: { postId: string }) {
                   <div className="relative overflow-hidden rounded-2xl">
                     <Thumb url={post.thumbnail_url} />
                     <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                      <span className="flex h-13 w-13 items-center justify-center rounded-full bg-white/90 text-primary"><Play className="h-5 w-5 fill-current" /></span>
+                      <CharmIcon name="play" size={58} className="drop-shadow-lg" />
                     </span>
                   </div>
                 )}
