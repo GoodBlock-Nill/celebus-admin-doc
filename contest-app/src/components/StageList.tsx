@@ -94,8 +94,6 @@ export default function StageList() {
 
   return (
     <div>
-      <h1 className="mb-3 text-[19px] font-bold text-fg">{t("stage_tab")}</h1>
-
       {/* D10V · V01D 탭 — 폴더 참(선택=열림/비선택=닫힘) + 브랜드 톤 */}
       <div className="mb-3 flex gap-2">
         {TABS.map((tb) => {
