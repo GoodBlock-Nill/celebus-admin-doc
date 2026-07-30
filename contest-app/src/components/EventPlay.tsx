@@ -313,6 +313,13 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       {/* 인트로 — 시작 직전 기대감(참여 규모·참가작 미리보기·규칙·시작 CTA) */}
       {phase === "intro" && (
         <div className="space-y-4">
+          {/* 대표 커버(관리자 지정 시) */}
+          {event.cover_url && (
+            <div className="overflow-hidden rounded-2xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={event.cover_url} alt="" className="aspect-[16/9] w-full object-cover" />
+            </div>
+          )}
           {event.description && <p className="text-[13.5px] leading-relaxed text-muted">{event.description}</p>}
 
           {/* 참여 규모 · 참가작 수 · 라운드 */}

@@ -13,7 +13,12 @@ import { isLaunchPreview } from "@/lib/launchPreview";
 
 type Enriched = { event: StageEventPublic; thumbs: string[]; entryCount: number; participants: number };
 
-function CoverCollage({ thumbs, official }: { thumbs: string[]; official: boolean }) {
+function CoverCollage({ coverUrl, thumbs, official }: { coverUrl: string | null; thumbs: string[]; official: boolean }) {
+  // 관리자 지정 대표 커버 우선
+  if (coverUrl) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={coverUrl} alt="" loading="lazy" className="h-full w-full object-cover" />;
+  }
   if (thumbs.length === 0) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary-soft to-primary-soft/30">
@@ -123,7 +128,7 @@ export default function EventList() {
               <Link key={e.id} href={`/event/${e.id}`} className="block overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-transform active:scale-[0.99]">
                 {/* 커버 + 상태 오버레이 */}
                 <div className="relative aspect-[16/9] w-full overflow-hidden bg-card-2">
-                  <CoverCollage thumbs={thumbs} official={e.stage_is_official} />
+                  <CoverCollage coverUrl={e.cover_url} thumbs={thumbs} official={e.stage_is_official} />
                   <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
                   <span className={`absolute left-2.5 top-2.5 rounded-full px-2.5 py-1 text-[10.5px] font-extrabold shadow-sm ${announced ? "bg-amber-100 text-amber-800" : "bg-white/95 text-primary-strong"}`}>
                     {t(announced ? "ev_status_announced" : "ev_status_open")}

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { adminFetch } from "@/lib/admin-types";
+import ImageUploader from "./ImageUploader";
 
 type EventRow = {
   id: string;
@@ -36,7 +37,7 @@ const STATUS_LABEL: Record<EventRow["status"], string> = { open: "진행중", an
 export default function EventsPanel() {
   const [events, setEvents] = useState<EventRow[]>([]);
   const [stages, setStages] = useState<StageOpt[]>([]);
-  const [form, setForm] = useState({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity" as "reward" | "popularity", reward: "", category: "" });
+  const [form, setForm] = useState({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity" as "reward" | "popularity", reward: "", category: "", cover_url: "" });
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
@@ -65,12 +66,13 @@ export default function EventsPanel() {
         reward_type: form.reward_type,
         reward: form.reward_type === "reward" ? form.reward.trim() : "",
         category: form.category || null,
+        cover_url: form.cover_url || null,
       }),
     });
     setBusy(false);
     if (res.ok) {
       toast("토너먼트를 열었어요.");
-      setForm({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity", reward: "", category: "" });
+      setForm({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity", reward: "", category: "", cover_url: "" });
       void load();
     } else {
       const j = await res.json().catch(() => ({}));
@@ -125,6 +127,12 @@ export default function EventsPanel() {
             className="w-full rounded-xl bg-white/6 px-3 py-2.5 text-[13px] text-fg outline-none ring-1 ring-white/10 placeholder:text-fg/30" />
           <input type="date" value={form.ends_at} onChange={(e) => setForm({ ...form, ends_at: e.target.value })}
             className="w-full rounded-xl bg-white/6 px-3 py-2.5 text-[13px] text-fg outline-none ring-1 ring-white/10" />
+        </div>
+
+        {/* 대표 커버 — 없으면 앱에서 참가작 콜라주로 대체 */}
+        <div>
+          <div className="mb-1.5 text-[12px] font-bold text-fg/60">대표 커버 <span className="text-fg/40">(선택 · 미지정 시 참가작 콜라주)</span></div>
+          <ImageUploader value={form.cover_url} onChange={(url) => setForm({ ...form, cover_url: url })} folder="cover" label="커버 업로드" />
         </div>
 
         {/* 토너먼트 유형 — 인기투표형 / 보상형 */}

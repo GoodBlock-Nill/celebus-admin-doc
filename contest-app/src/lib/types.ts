@@ -193,6 +193,7 @@ export interface StageEventPublic {
   // 대상 범위 — stage_is_official: 팬영상(false)/공식영상(true) 아카이브. category: 공식 카테고리 스코프(null=전체)
   stage_is_official: boolean;
   category: string | null;
+  cover_url: string | null; // 대표 커버(관리자 지정, 없으면 참가작 콜라주)
 }
 
 // 월드컵 집계 — worldcup_stats_public 뷰

@@ -11,6 +11,7 @@ const patchSchema = z.object({
   status: z.enum(["open", "announced", "closed"]).optional(),
   reward_type: z.enum(["reward", "popularity"]).optional(),
   reward: z.string().trim().max(200).optional(),
+  cover_url: z.string().trim().url().nullable().optional(),
 });
 
 type StatRow = { post_id: string; runs_appeared: number; final_wins: number; match_wins: number; match_losses: number };
