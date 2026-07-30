@@ -17,7 +17,8 @@ import { isLaunchPreview } from "@/lib/launchPreview";
 
 type Filter = "all" | StageCategory;
 
-export default function StageView({ stageId }: { stageId: string }) {
+// hideHeader: 아카이브 탭 등에 임베드할 때 상단 헤더(뒤로가기·제목·배지) 숨김 — 필터+그리드만 노출
+export default function StageView({ stageId, hideHeader = false }: { stageId: string; hideHeader?: boolean }) {
   const { t } = useLang();
   const { requireLogin } = useSession();
   const router = useRouter();
@@ -111,7 +112,8 @@ export default function StageView({ stageId }: { stageId: string }) {
 
   return (
     <div>
-      {/* 스테이지 헤더 */}
+      {/* 스테이지 헤더 (임베드 시 숨김) */}
+      {!hideHeader && (
       <div className="mb-1">
         <Link href="/" className="mb-2 inline-flex min-h-11 items-center gap-1 text-[13px] font-bold text-muted">
           <ChevronLeft className="h-4 w-4" /> {t("stage_tab")}
@@ -147,6 +149,7 @@ export default function StageView({ stageId }: { stageId: string }) {
           <p className="mt-2 rounded-xl border border-border bg-card-2 px-3 py-2 text-[12px] text-muted">{t("stage_archived_note")}</p>
         )}
       </div>
+      )}
 
       {/* 카테고리 필터 */}
       <div className="mb-1 flex gap-1.5 overflow-x-auto pb-1 pt-3">

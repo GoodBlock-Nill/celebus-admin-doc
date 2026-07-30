@@ -8,6 +8,7 @@ import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StagePublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
+import StageView from "./StageView";
 
 function StageCardItem({ stage }: { stage: StagePublic }) {
   const { t } = useLang();
@@ -83,8 +84,9 @@ export default function StageList() {
     })();
   }, []);
 
-  // D10V = 팬 업로드 아카이브 / V01D = 공식 아카이브
-  const shown = stages.filter((s) => (tab === "v01d" ? s.is_official : !s.is_official));
+  // D10V = 팬 업로드 아카이브(카드 목록) / V01D = 공식 아카이브(영상 직접 노출)
+  const fanStages = stages.filter((s) => !s.is_official);
+  const officialStage = stages.find((s) => s.is_official);
   const TABS: { key: ArchiveTab; label: string }[] = [
     { key: "d10v", label: t("home_archive_title") },
     { key: "v01d", label: t("home_official_title") },
@@ -127,14 +129,24 @@ export default function StageList() {
             <div key={i} className="aspect-[21/12] animate-pulse rounded-2xl border border-border bg-black/[0.05]" />
           ))}
         </div>
-      ) : shown.length === 0 ? (
+      ) : tab === "v01d" ? (
+        // V01D 탭 — 공식 아카이브 안의 영상들을 카테고리 필터와 함께 바로 노출
+        officialStage ? (
+          <StageView stageId={officialStage.id} hideHeader />
+        ) : (
+          <div className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card px-4 py-14 text-center text-[13.5px] text-muted">
+            <CharmIcon name="clapperboard" size={52} />
+            {t("stage_list_empty")}
+          </div>
+        )
+      ) : fanStages.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card px-4 py-14 text-center text-[13.5px] text-muted">
           <CharmIcon name="clapperboard" size={52} />
           {t("stage_list_empty")}
         </div>
       ) : (
         <div className="space-y-3">
-          {shown.map((s) => (
+          {fanStages.map((s) => (
             <StageCardItem key={s.id} stage={s} />
           ))}
         </div>
