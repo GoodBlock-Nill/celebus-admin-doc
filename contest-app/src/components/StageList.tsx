@@ -96,19 +96,29 @@ export default function StageList() {
     <div>
       <h1 className="mb-3 text-[19px] font-bold text-fg">{t("stage_tab")}</h1>
 
-      {/* D10V · V01D 탭 */}
-      <div className="mb-2 flex gap-1.5">
-        {TABS.map((tb) => (
-          <button
-            key={tb.key}
-            onClick={() => setTab(tb.key)}
-            className={`flex min-h-11 flex-1 items-center justify-center rounded-full border px-3.5 text-[13px] font-bold ${
-              tab === tb.key ? "border-fg bg-fg text-white" : "border-border bg-card text-muted"
-            }`}
-          >
-            {tb.label}
-          </button>
-        ))}
+      {/* D10V · V01D 탭 — 폴더 참(선택=열림/비선택=닫힘) + 브랜드 톤 */}
+      <div className="mb-3 flex gap-2">
+        {TABS.map((tb) => {
+          const on = tab === tb.key;
+          return (
+            <button
+              key={tb.key}
+              onClick={() => setTab(tb.key)}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-2xl border px-3 py-2.5 text-[13.5px] font-extrabold transition-all active:scale-[0.98] ${
+                on
+                  ? "border-transparent bg-primary-soft text-primary-strong shadow-[0_3px_12px_-3px_rgba(108,77,230,0.45)]"
+                  : "border-border bg-card text-muted"
+              }`}
+            >
+              <CharmIcon
+                name={on ? "folder-active" : "folder-inactive"}
+                size={28}
+                className={on ? "" : "opacity-60 grayscale"}
+              />
+              {tb.label}
+            </button>
+          );
+        })}
       </div>
       <p className="mb-4 px-0.5 text-[12.5px] text-muted">{t(tab === "v01d" ? "home_official_sub" : "home_archive_sub")}</p>
 

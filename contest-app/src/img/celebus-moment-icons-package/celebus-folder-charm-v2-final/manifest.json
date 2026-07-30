@@ -1,0 +1,85 @@
+{
+  "package": "CELEBUS MOMENT Charm Folder 2.0",
+  "version": "v2-open-closed-final",
+  "count": 2,
+  "usage": "Tab button folder icons: closed inactive state and open active state.",
+  "design": {
+    "style": "2.5D refined matte plastic/clay Charm",
+    "lighting": "soft light from upper-left with ambient shadow",
+    "primary_color": "CELEBUS Violet #6C4DE6",
+    "accent_color": "CELEBUS Coral #FF7A6A, minimal or absent",
+    "state_difference": "closed front cover versus rear-lifted open cover with visible inner lining"
+  },
+  "normalization": {
+    "canvas_px": [
+      256,
+      256
+    ],
+    "format": "PNG",
+    "mode": "RGBA",
+    "max_content_px": 232,
+    "minimum_safe_margin_px": 12
+  },
+  "icons": [
+    {
+      "name": "folder-inactive",
+      "label": "INACTIVE — CLOSED FOLDER",
+      "file": "png-256/folder-inactive.png",
+      "source_url": "https://assets.carat-api.im/moqoavjxc/01KYRGXQM6BWTKFP8S287Z27JN.png",
+      "source_size": [
+        1024,
+        1024
+      ],
+      "source_alpha_bbox": [
+        226,
+        172,
+        856,
+        834
+      ],
+      "normalized_alpha_bbox": [
+        17,
+        12,
+        238,
+        244
+      ],
+      "safe_margin_px": {
+        "left": 17,
+        "top": 12,
+        "right": 18,
+        "bottom": 12
+      },
+      "sha256": "c3454e727b2afcdc2c8292cf6efa4c7fab9534a99e7649dd19a4c6caab335bb4",
+      "bytes": 44742
+    },
+    {
+      "name": "folder-active",
+      "label": "ACTIVE — OPEN FOLDER",
+      "file": "png-256/folder-active.png",
+      "source_url": "https://assets.carat-api.im/moqoavjxc/01KYRH0MEC07PNKSZ7KHFTCB77.png",
+      "source_size": [
+        1440,
+        1440
+      ],
+      "source_alpha_bbox": [
+        340,
+        340,
+        1162,
+        1154
+      ],
+      "normalized_alpha_bbox": [
+        12,
+        13,
+        244,
+        243
+      ],
+      "safe_margin_px": {
+        "left": 12,
+        "top": 13,
+        "right": 12,
+        "bottom": 13
+      },
+      "sha256": "29cb517e4a1f5f3aec2a8aced6ffa54996adb159ed39cffce8ac76ed03963dad",
+      "bytes": 52709
+    }
+  ]
+}

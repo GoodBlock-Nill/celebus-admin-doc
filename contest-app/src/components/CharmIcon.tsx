@@ -2,7 +2,9 @@
 // "크고·브랜드감 필요·상태변화 없는" 자리 전용. 그 외는 라인(lucide) 아이콘 유지.
 // 에셋: /public/charm/{name}.png (256×256 RGBA, 디자이너 제작 2.5D 참)
 
-export type CharmName = "log-in" | "bell" | "image-off" | "clapperboard" | "upload" | "heart" | "trophy" | "message-circle" | "play";
+export type CharmName =
+  | "log-in" | "bell" | "image-off" | "clapperboard" | "upload" | "heart" | "trophy" | "message-circle" | "play"
+  | "folder-active" | "folder-inactive";
 
 export function CharmIcon({ name, size = 32, className = "" }: { name: CharmName; size?: number; className?: string }) {
   return (
