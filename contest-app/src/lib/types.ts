@@ -207,6 +207,22 @@ export interface WorldcupStatPublic {
   match_rate: number;
 }
 
+// 랭킹 탭 — D10V 크리에이터 랭킹(최다업로드) / D10V Pick(최다우승). 팬영상만.
+export interface CreatorRankPublic {
+  owner_id: string;
+  nickname: string | null;
+  uploads: number;
+}
+export interface D10vPickPublic {
+  post_id: string;
+  stage_id: string;
+  title: string;
+  thumbnail_url: string | null;
+  handle: string;
+  total_wins: number;
+  total_match_wins: number;
+}
+
 export interface AwardPublic {
   id: string;
   contest_id: string;

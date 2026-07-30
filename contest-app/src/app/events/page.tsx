@@ -1,12 +1,12 @@
 import Shell from "@/components/Shell";
-import EventList from "@/components/EventList";
+import TournamentTabs from "@/components/TournamentTabs";
 
 export const dynamic = "force-dynamic";
 
 export default function EventsPage() {
   return (
     <Shell>
-      <EventList />
+      <TournamentTabs />
     </Shell>
   );
 }
