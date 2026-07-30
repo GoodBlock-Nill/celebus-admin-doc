@@ -34,6 +34,7 @@ export default function Home() {
   const [membersTotal, setMembersTotal] = useState(0);
   const [event, setEvent] = useState<StageEventPublic | null>(null);
   const [featuredPost, setFeaturedPost] = useState<StagePostPublic | null>(null);
+  const [hallPick, setHallPick] = useState<{ post: StagePostPublic; count: number }[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -69,6 +70,21 @@ export default function Home() {
       }
       setHearts(map);
       setMembersTotal((membersRes.data ?? []).length);
+      // V01D Pick — 멤버 하트 받은 영상(멤버 픽 하이라이트). 홈에 노출하며, 프리뷰 필터와 무관하게 하트 기준으로 조회
+      const heartCounts = new Map<string, number>();
+      for (const h of (heartsRes.data ?? []) as MemberHeartPublic[]) heartCounts.set(h.post_id, (heartCounts.get(h.post_id) ?? 0) + 1);
+      const pickIds = [...heartCounts.keys()];
+      if (pickIds.length) {
+        const { data: pickPosts } = await sb.from("stage_posts_public").select("*").in("id", pickIds);
+        setHallPick(
+          ((pickPosts ?? []) as StagePostPublic[])
+            .map((p) => ({ post: p, count: heartCounts.get(p.id) ?? 0 }))
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 6),
+        );
+      } else {
+        setHallPick([]);
+      }
       const events = (eventRes.data ?? []) as StageEventPublic[];
       setEvent(events[0] ?? null);
     } catch {
@@ -115,15 +131,6 @@ export default function Home() {
     }
     items.sort((a, b) => Date.parse(b.heart.created_at) - Date.parse(a.heart.created_at));
     return items.slice(0, 4);
-  }, [posts, hearts]);
-
-  // 명예의 전당 프리뷰 — 멤버 하트 많은 순
-  const hallItems = useMemo(() => {
-    return posts
-      .map((p) => ({ post: p, count: hearts.get(p.id)?.length ?? 0 }))
-      .filter((x) => x.count > 0)
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 6);
   }, [posts, hearts]);
 
   const isFullyEmpty = !loading && !error && stages.length === 0 && posts.length === 0;
@@ -318,11 +325,11 @@ export default function Home() {
             </div>
           )}
 
-          {hallItems.length > 0 && (
+          {hallPick.length > 0 && (
             <div>
               <SectionHeader title={t("hall_title")} sub={t("hall_sub")} moreHref="/hearts" />
               <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
-                {hallItems.map(({ post, count }) => {
+                {hallPick.map(({ post, count }) => {
                   const grandSlam = membersTotal > 0 && count >= membersTotal;
                   return (
                     <Link key={post.id} href={`/video/${post.id}?list=hearts`} className="w-[156px] shrink-0 active:scale-[0.98]">
