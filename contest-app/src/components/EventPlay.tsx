@@ -34,15 +34,14 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 // 대결 카드 한 쪽 — ▶로 영상을 재생해 본 뒤(재생 ≠ 투표), '이 영상 선택'으로 투표
-function MatchTile({ post, onPick, pickLabel }: { post: StagePostPublic; onPick: () => void; pickLabel: string }) {
-  const [playing, setPlaying] = useState(false);
+function MatchTile({ post, onPick, pickLabel, playing, onPlay }: { post: StagePostPublic; onPick: () => void; pickLabel: string; playing: boolean; onPlay: () => void }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
       <div className="relative overflow-hidden bg-black">
         {playing ? (
           <EntryEmbed entry={stagePostAsEntry(post)} />
         ) : (
-          <button onClick={() => setPlaying(true)} aria-label={post.title} className="relative block w-full active:opacity-95">
+          <button onClick={onPlay} aria-label={post.title} className="relative block w-full active:opacity-95">
             {post.thumbnail_url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={post.thumbnail_url} alt="" className="aspect-video w-full object-cover" />
@@ -80,6 +79,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
   const [current, setCurrent] = useState<StagePostPublic[]>([]); // 현재 라운드 참가자
   const [next, setNext] = useState<StagePostPublic[]>([]);       // 다음 라운드 진출자
   const [matchIdx, setMatchIdx] = useState(0);
+  const [whichPlaying, setWhichPlaying] = useState<0 | 1 | null>(null); // 현재 재생 중인 타일(한 번에 하나만)
   const [picks, setPicks] = useState<Pick[]>([]);
   const [winner, setWinner] = useState<StagePostPublic | null>(null);
   const [counted, setCounted] = useState<boolean | null>(null);
@@ -126,6 +126,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
     setCurrent(entrants);
     setNext([]);
     setMatchIdx(0);
+    setWhichPlaying(null);
     setPicks([]);
     setWinner(null);
     setCounted(null);
@@ -133,6 +134,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
   }
 
   async function pick(winnerPost: StagePostPublic, loserPost: StagePostPublic) {
+    setWhichPlaying(null); // 다음 대결로 넘어가면 재생 중지 (두 영상 동시 재생 방지)
     const newPicks = [...picks, { w: winnerPost.id, l: loserPost.id }];
     const newNext = [...next, winnerPost];
     const nextMatch = matchIdx + 1;
@@ -275,9 +277,11 @@ export default function EventPlay({ eventId }: { eventId: string }) {
           <p className="text-center text-[14px] font-bold text-fg">{t("ev_pick_one")}</p>
           <p className="mb-3 text-center text-[11.5px] text-muted">{t("ev_watch_hint")}</p>
           <div className="space-y-3">
-            <MatchTile post={a} onPick={() => void pick(a, b)} pickLabel={t("ev_pick_this")} />
+            <MatchTile post={a} onPick={() => void pick(a, b)} pickLabel={t("ev_pick_this")}
+              playing={whichPlaying === 0} onPlay={() => setWhichPlaying(0)} />
             <div className="text-center text-[13px] font-black text-subtle">VS</div>
-            <MatchTile post={b} onPick={() => void pick(b, a)} pickLabel={t("ev_pick_this")} />
+            <MatchTile post={b} onPick={() => void pick(b, a)} pickLabel={t("ev_pick_this")}
+              playing={whichPlaying === 1} onPlay={() => setWhichPlaying(1)} />
           </div>
         </div>
       )}
