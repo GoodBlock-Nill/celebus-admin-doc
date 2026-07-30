@@ -5,7 +5,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ImageOff } from "lucide-react";
-import { CharmIcon } from "./CharmIcon";
+import { CharmIcon, type CharmName } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, Platform, StageCategory } from "@/lib/types";
 import { useSession } from "./SessionProvider";
@@ -93,10 +93,11 @@ function StatCard({ n, label, accent }: { n: number; label: string; accent?: boo
   );
 }
 
-function EmptyState({ title, sub, cta }: { title: string; sub?: string; cta?: boolean }) {
+function EmptyState({ title, sub, cta, charm }: { title: string; sub?: string; cta?: boolean; charm?: CharmName }) {
   const { t } = useLang();
   return (
     <div className="flex flex-col items-center gap-2 px-4 py-14 text-center">
+      {charm && <CharmIcon name={charm} size={52} className="mb-1" />}
       <p className="text-[13.5px] font-bold text-fg">{title}</p>
       {sub && <p className="max-w-[15rem] text-[12.5px] leading-relaxed text-muted">{sub}</p>}
       {cta && (
@@ -287,15 +288,15 @@ export default function MyPage() {
         ) : error ? (
           <ErrorState onRetry={() => void load()} />
         ) : tab === "comments" ? (
-          <EmptyState title={t("my_empty_comments")} />
+          <EmptyState title={t("my_empty_comments")} charm="message-circle" />
         ) : tab === "videos" ? (
           posts.length === 0 ? (
-            <EmptyState title={t("my_empty_videos_title")} sub={t("my_empty_videos_sub")} cta />
+            <EmptyState title={t("my_empty_videos_title")} sub={t("my_empty_videos_sub")} cta charm="upload" />
           ) : (
             posts.map((p) => <VideoRow key={p.id} post={p} hearts={hearts.get(p.id) ?? []} membersTotal={membersTotal} />)
           )
         ) : seenPosts.length === 0 ? (
-          <EmptyState title={t("my_empty_seen")} />
+          <EmptyState title={t("my_empty_seen")} charm="heart" />
         ) : (
           seenPosts.map((p) => <VideoRow key={p.id} post={p} hearts={hearts.get(p.id) ?? []} membersTotal={membersTotal} />)
         )}

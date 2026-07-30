@@ -9,6 +9,7 @@ import { contestVisual } from "@/lib/contest-visual";
 import Podium from "./Podium";
 import MediaTile, { type RankDelta } from "./MediaTile";
 import { useLang } from "./LangProvider";
+import { CharmIcon } from "./CharmIcon";
 
 export default function Leaderboard({
   contest,
@@ -44,9 +45,10 @@ export default function Leaderboard({
 
   if (!entries.length) {
     return (
-      <p className="rounded-[16px] border border-dashed border-line py-10 text-center text-sm text-muted">
+      <div className="flex flex-col items-center gap-2 rounded-[16px] border border-dashed border-line py-10 text-center text-sm text-muted">
+        <CharmIcon name="trophy" size={48} />
         {t("rank_empty")}
-      </p>
+      </div>
     );
   }
 

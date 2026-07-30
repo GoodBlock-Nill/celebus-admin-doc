@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Flag, Trash2, CornerDownRight } from "lucide-react";
+import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StageCommentPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
@@ -145,7 +146,10 @@ export default function CommentSection({ postId }: { postId: string }) {
           ))}
         </div>
       ) : ordered.length === 0 ? (
-        <p className="py-3 text-center text-[12.5px] text-subtle">{t("comment_empty")}</p>
+        <div className="flex flex-col items-center gap-1.5 py-6 text-center text-[12.5px] text-subtle">
+          <CharmIcon name="message-circle" size={40} />
+          {t("comment_empty")}
+        </div>
       ) : (
         <div className="max-h-64 space-y-0.5 overflow-y-auto">
           {ordered.map((c) => (

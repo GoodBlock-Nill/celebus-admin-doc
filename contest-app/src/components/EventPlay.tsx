@@ -4,7 +4,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
-import { ChevronLeft, Trophy, Play, Check } from "lucide-react";
+import { ChevronLeft, Play, Check } from "lucide-react";
+import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StageEventPublic, StagePostPublic } from "@/lib/types";
 import { stagePostAsEntry } from "@/lib/types";
@@ -182,7 +183,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       </Link>
       <div className="mb-4">
         <div className="flex items-center gap-2">
-          <Trophy className="h-5 w-5 shrink-0 text-primary" />
+          <CharmIcon name="trophy" size={26} className="shrink-0" />
           <h1 className="min-w-0 flex-1 text-[19px] font-bold text-fg">{event.title}</h1>
         </div>
         <p className="mt-0.5 text-[12px] text-muted">{event.stage_title}</p>

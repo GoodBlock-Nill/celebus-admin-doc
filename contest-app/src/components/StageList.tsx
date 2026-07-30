@@ -3,7 +3,8 @@
 // 홈 스테이지 탭 — 관리자가 연 공연 스테이지 목록. 탭하면 해당 스테이지(공연별 영상 아카이브)로 이동.
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, Clapperboard, Trophy, BadgeCheck } from "lucide-react";
+import { CalendarDays, Trophy, BadgeCheck } from "lucide-react";
+import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StagePublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
@@ -21,7 +22,7 @@ function StageCardItem({ stage }: { stage: StagePublic }) {
           <img src={stage.cover_url} alt="" loading="lazy" className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-gradient-to-br from-primary-soft via-primary-soft/60 to-transparent">
-            <Clapperboard className="h-8 w-8 text-primary-400" />
+            <CharmIcon name="clapperboard" size={44} />
             <span className="text-[10.5px] font-semibold text-primary-strong/70">{t("thumb_no_image")}</span>
           </div>
         )}
@@ -99,7 +100,8 @@ export default function StageList() {
           ))}
         </div>
       ) : stages.length === 0 ? (
-        <div className="rounded-2xl border border-border bg-card px-4 py-14 text-center text-[13.5px] text-muted">
+        <div className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card px-4 py-14 text-center text-[13.5px] text-muted">
+          <CharmIcon name="clapperboard" size={52} />
           {t("stage_list_empty")}
         </div>
       ) : (

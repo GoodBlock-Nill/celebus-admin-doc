@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Trophy, CalendarDays, Heart } from "lucide-react";
+import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StageEventPublic, StagePostPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
@@ -55,7 +56,10 @@ export default function EventList() {
             ))}
           </div>
         ) : events.length === 0 ? (
-          <div className="rounded-2xl border border-border bg-card px-4 py-12 text-center text-[13px] text-muted">{t("ev_list_empty")}</div>
+          <div className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card px-4 py-12 text-center text-[13px] text-muted">
+            <CharmIcon name="trophy" size={52} />
+            {t("ev_list_empty")}
+          </div>
         ) : (
           <div className="space-y-3">
             {events.map((e) => (
