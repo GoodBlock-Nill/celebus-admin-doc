@@ -10,18 +10,21 @@ type Stage = { id: string; title: string; is_official: boolean };
 type Post = { id: string; title: string; handle: string; thumbnail_url: string | null; is_official: boolean; stage_id: string };
 type SeedResult = { url: string; ok: boolean; id?: string; code?: string };
 
+// 공식 카테고리 — V01D 공식 채널 플레이리스트 기준
 const CATS = [
-  { v: "etc", l: "기타" },
-  { v: "fancam", l: "직캠" },
-  { v: "cover", l: "커버" },
-  { v: "edit", l: "편집" },
+  { v: "v1de0", l: "V1DE0" },
+  { v: "oncam", l: "ON CAM" },
+  { v: "log", l: "LOG" },
+  { v: "azit", l: "AZIT" },
+  { v: "stud10", l: "STUD10" },
+  { v: "outv", l: "OUT THE V01D" },
 ];
 
 export default function OfficialSeedPanel() {
   const [stages, setStages] = useState<Stage[]>([]);
   const [stageId, setStageId] = useState<string>("");
   const [urls, setUrls] = useState("");
-  const [category, setCategory] = useState("etc");
+  const [category, setCategory] = useState("v1de0");
   const [busy, setBusy] = useState(false);
   const [results, setResults] = useState<SeedResult[] | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);

@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StageCategory, StagePostPublic, StagePublic } from "@/lib/types";
-import { STAGE_CATEGORY_KEYS } from "@/lib/types";
+import { STAGE_CATEGORY_KEYS, OFFICIAL_CATEGORY_KEYS } from "@/lib/types";
 import StageCard from "./StageCard";
 import StageUploadModal from "./StageUploadModal";
 import { useLang } from "./LangProvider";
@@ -105,7 +105,8 @@ export default function StageView({ stageId }: { stageId: string }) {
     );
   }
 
-  const FILTERS: Filter[] = ["all", ...STAGE_CATEGORY_KEYS];
+  // 공식 아카이브는 공식(플레이리스트) 카테고리, 팬 아카이브는 팬 카테고리로 필터
+  const FILTERS: Filter[] = ["all", ...(stage?.is_official ? OFFICIAL_CATEGORY_KEYS : STAGE_CATEGORY_KEYS)];
   const scopeLabel = t(filter === "all" ? "cat_all" : `cat_${filter}`);
 
   return (

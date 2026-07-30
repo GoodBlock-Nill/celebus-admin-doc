@@ -10,7 +10,7 @@ import { resolveStageUrl } from "@/lib/embed/resolve";
 const schema = z.object({
   stage_id: z.string().uuid(),
   urls: z.array(z.string().url()).min(1).max(30),
-  category: z.enum(["fancam", "cover", "edit", "etc"]).default("etc"),
+  category: z.enum(["fancam", "cover", "edit", "etc", "v1de0", "oncam", "log", "azit", "stud10", "outv"]).default("v1de0"),
   handle: z.string().max(60).optional(), // 미지정 시 oembed 작성자 → 'V01D'
 });
 
