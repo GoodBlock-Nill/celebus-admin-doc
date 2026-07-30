@@ -4,7 +4,8 @@
 // 프로필(아바타·닉네임) + 통계 3종(내 영상/멤버가 봤어요/멤버 전원) + 탭 3종(내 영상/봐준 영상/내 댓글).
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ImageOff, LogIn } from "lucide-react";
+import { ImageOff } from "lucide-react";
+import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, Platform, StageCategory } from "@/lib/types";
 import { useSession } from "./SessionProvider";
@@ -226,9 +227,7 @@ export default function MyPage() {
   if (!signedIn) {
     return (
       <div className="anim-fade-up flex flex-col items-center gap-4 rounded-2xl border border-border bg-card px-6 py-16 text-center shadow-sm">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft text-primary">
-          <LogIn className="h-6 w-6" />
-        </div>
+        <CharmIcon name="log-in" size={64} />
         <div>
           <p className="text-[15px] font-bold text-fg">{t("my_login_title")}</p>
           <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted">{t("my_login_sub")}</p>

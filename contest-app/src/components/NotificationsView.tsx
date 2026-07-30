@@ -5,6 +5,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Bell, Heart, MessageCircle } from "lucide-react";
+import { CharmIcon } from "./CharmIcon";
 import { useLang } from "./LangProvider";
 import { useSession } from "./SessionProvider";
 
@@ -70,7 +71,7 @@ export default function NotificationsView() {
         </div>
       ) : items.length === 0 ? (
         <div className="rounded-2xl border border-border bg-card px-4 py-16 text-center">
-          <Bell className="mx-auto mb-3 h-8 w-8 text-subtle" strokeWidth={1.6} />
+          <CharmIcon name="bell" size={48} className="mx-auto mb-3" />
           <p className="text-[13.5px] text-muted">{t("noti_empty")}</p>
         </div>
       ) : (

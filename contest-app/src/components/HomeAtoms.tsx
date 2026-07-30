@@ -4,6 +4,7 @@
 import Link from "next/link";
 import type { MemberHeartPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
+import { CharmIcon } from "./CharmIcon";
 
 export const CATEGORY_LABEL: Record<string, string> = {
   fancam: "직캠",
@@ -29,7 +30,9 @@ export function Thumb({ url }: { url: string | null }) {
     // eslint-disable-next-line @next/next/no-img-element
     <img src={url} alt="" loading="lazy" className="h-full w-full object-cover" />
   ) : (
-    <div className="h-full w-full bg-gradient-to-br from-primary-soft to-primary-soft/40" />
+    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary-soft to-primary-soft/40">
+      <CharmIcon name="clapperboard" size={40} />
+    </div>
   );
 }
 

@@ -1,7 +1,8 @@
 "use client";
 
 // 스테이지 피드 카드 — 썸네일 + 플랫폼 + 카테고리 + 팬 하트. 탭하면 상세(임베드) 열림.
-import { Heart, ImageOff, Play, Eye, BadgeCheck } from "lucide-react";
+import { Heart, Play, Eye, BadgeCheck } from "lucide-react";
+import { CharmIcon } from "./CharmIcon";
 import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
 
@@ -69,7 +70,7 @@ export default function StageCard({
           <img src={post.thumbnail_url} alt="" loading="lazy" className="aspect-[4/5] w-full object-cover" />
         ) : (
           <div className="flex aspect-[4/5] w-full flex-col items-center justify-center gap-1.5 bg-card-2 text-subtle">
-            <ImageOff className="h-8 w-8" />
+            <CharmIcon name="image-off" size={44} />
             <span className="text-[10px] font-semibold">{t("thumb_no_image")}</span>
           </div>
         )}

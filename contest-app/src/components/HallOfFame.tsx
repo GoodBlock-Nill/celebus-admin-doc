@@ -3,7 +3,8 @@
 // 명예의 전당 — 멤버 하트를 받은 영상 모음 (전 스테이지 통합).
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { ChevronLeft, Trophy } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { CharmIcon } from "./CharmIcon";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { sb } from "@/lib/supabase-browser";
@@ -75,7 +76,7 @@ export default function HallOfFame() {
         <ChevronLeft className="h-4 w-4" /> {t("stage_tab")}
       </Link>
       <div className="mb-4 flex items-center gap-2">
-        <Trophy className="h-5 w-5 text-primary" />
+        <CharmIcon name="trophy" size={28} />
         <div>
           <h1 className="text-[19px] font-bold text-fg">{t("hall_title")}</h1>
           <p className="text-[12.5px] text-muted">{t("hall_sub")}</p>
