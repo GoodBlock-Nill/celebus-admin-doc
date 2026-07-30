@@ -13,6 +13,7 @@ type SeedResult = { url: string; ok: boolean; id?: string; code?: string };
 // 공식 카테고리 — V01D 공식 채널 플레이리스트 기준
 const CATS = [
   { v: "v1de0", l: "V1DE0" },
+  { v: "album01", l: "1st Mini Album [01]" },
   { v: "oncam", l: "ON CAM" },
   { v: "log", l: "LOG" },
   { v: "azit", l: "AZIT" },

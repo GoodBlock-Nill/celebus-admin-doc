@@ -98,7 +98,7 @@ export interface StagePublic {
 // 스테이지 게시물 — stage_posts_public 뷰
 export const STAGE_CATEGORY_KEYS = ["fancam", "cover", "edit", "etc"] as const;
 // 공식 영상 카테고리 — V01D 공식 채널 플레이리스트 기준(공식 아카이브 전용)
-export const OFFICIAL_CATEGORY_KEYS = ["v1de0", "oncam", "log", "azit", "stud10", "outv", "liveclip", "shorts"] as const;
+export const OFFICIAL_CATEGORY_KEYS = ["v1de0", "album01", "oncam", "log", "azit", "stud10", "outv", "liveclip", "shorts"] as const;
 export type StageCategory = (typeof STAGE_CATEGORY_KEYS)[number] | (typeof OFFICIAL_CATEGORY_KEYS)[number];
 
 export interface StagePostPublic {
