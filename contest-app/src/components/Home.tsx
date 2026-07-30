@@ -5,7 +5,7 @@
 // 진행 중인 월드컵 진입 → 명예의 전당 프리뷰. 멤버 반응 표현은 은은하게(글로우·컨페티 없음).
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Play, Plus, RefreshCw } from "lucide-react";
+import { BadgeCheck, Play, Plus, RefreshCw } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StageEventPublic, StagePostPublic, StagePublic } from "@/lib/types";
 import { AvatarStack, CATEGORY_LABEL, LoadingSkeleton, SectionHeader, Thumb, timeAgo } from "./HomeAtoms";
@@ -287,8 +287,8 @@ export default function Home() {
                       <Thumb url={p.thumbnail_url} />
                       <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
                       <div className="absolute left-2 top-2">
-                        <span className="brand-gradient rounded-md px-1.5 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
-                          {t("archive_official")}
+                        <span className="brand-gradient flex items-center gap-0.5 rounded-lg px-1.5 py-1 text-[9.5px] font-extrabold text-white shadow-sm">
+                          <BadgeCheck className="h-3 w-3" /> {t("official_badge")}
                         </span>
                       </div>
                       <span className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/45 backdrop-blur-sm">
