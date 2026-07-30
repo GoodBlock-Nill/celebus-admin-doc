@@ -4,7 +4,7 @@
 // 영상=16:9+재생 오버레이, 이미지=정방형(마소니 시 자연 높이).
 import Link from "next/link";
 import { Crown, ShieldCheck, ArrowUp, ArrowDown, Heart } from "lucide-react";
-import { CharmIcon } from "./CharmIcon";
+import { PlayBadge } from "./CharmIcon";
 import type { ContestType, EntryPublic } from "@/lib/types";
 import { contestVisual } from "@/lib/contest-visual";
 import PlatformGlyph from "./PlatformGlyph";
@@ -59,7 +59,7 @@ export default function MediaTile({
         {/* 영상 재생 오버레이 */}
         {isVideo && entry.thumbnail_url && (
           <span className="absolute inset-0 flex items-center justify-center">
-            <CharmIcon name="play" size={48} className="drop-shadow-lg transition-transform group-hover:scale-110" />
+            <PlayBadge size="md" className="transition-transform group-hover:scale-110" />
           </span>
         )}
 

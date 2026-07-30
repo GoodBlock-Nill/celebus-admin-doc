@@ -2,7 +2,7 @@
 
 // 스테이지 피드 카드 — 썸네일 + 플랫폼 + 카테고리 + 팬 하트. 탭하면 상세(임베드) 열림.
 import { Heart, Eye, BadgeCheck } from "lucide-react";
-import { CharmIcon } from "./CharmIcon";
+import { CharmIcon, PlayBadge } from "./CharmIcon";
 import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
 
@@ -84,8 +84,8 @@ export default function StageCard({
             <BadgeCheck className="h-3 w-3" /> {t("official_badge")}
           </span>
         )}
-        <span className="absolute bottom-1.5 right-1.5">
-          <CharmIcon name="play" size={32} className="drop-shadow-md" />
+        <span className="absolute bottom-2 right-2">
+          <PlayBadge size="sm" />
         </span>
       </button>
       <div className="px-2.5 pb-2.5 pt-2">

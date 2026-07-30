@@ -3,7 +3,7 @@
 // 시상대 — 1위를 풀폭 대형으로 강조, 2·3위를 나란히. 정렬 흐트러짐 방지.
 import Link from "next/link";
 import { Crown } from "lucide-react";
-import { CharmIcon } from "./CharmIcon";
+import { PlayBadge } from "./CharmIcon";
 import type { ContestType, EntryPublic } from "@/lib/types";
 import PlatformGlyph from "./PlatformGlyph";
 import VoteButton from "./VoteButton";
@@ -45,7 +45,7 @@ function Tile({
         )}
         {isVideo && entry.thumbnail_url && (
           <span className="absolute inset-0 flex items-center justify-center">
-            <CharmIcon name="play" size={big ? 46 : 34} className="drop-shadow-lg" />
+            <PlayBadge size={big ? "lg" : "sm"} />
           </span>
         )}
 

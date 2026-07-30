@@ -6,7 +6,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { BadgeCheck, Plus, RefreshCw } from "lucide-react";
-import { CharmIcon } from "./CharmIcon";
+import { PlayBadge } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StageEventPublic, StagePostPublic, StagePublic } from "@/lib/types";
 import { AvatarStack, CATEGORY_LABEL, LoadingSkeleton, SectionHeader, Thumb, timeAgo } from "./HomeAtoms";
@@ -191,7 +191,7 @@ export default function Home() {
               <Thumb url={heroPost.thumbnail_url} />
               <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/60" />
               <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                <CharmIcon name="play" size={58} className="drop-shadow-lg" />
+                <PlayBadge size="lg" />
               </span>
               <div className="absolute inset-x-0 bottom-0 p-4">
                 {heroHearts.length > 0 && (
@@ -285,8 +285,8 @@ export default function Home() {
                           <BadgeCheck className="h-3 w-3" /> {t("official_badge")}
                         </span>
                       </div>
-                      <span className="absolute bottom-1.5 right-1.5">
-                        <CharmIcon name="play" size={30} className="drop-shadow-md" />
+                      <span className="absolute bottom-2 right-2">
+                        <PlayBadge size="sm" />
                       </span>
                     </div>
                     <strong className="mt-2 block truncate text-[12.5px] font-bold text-fg">{p.title}</strong>

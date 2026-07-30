@@ -17,3 +17,16 @@ export function CharmIcon({ name, size = 32, className = "" }: { name: CharmName
     />
   );
 }
+
+// 재생 버튼 — play 참을 반투명 글래스 원형에 얹어 버튼감을 준다(썸네일 위 대비 확보).
+const PLAY_DIM = { sm: "h-10 w-10", md: "h-14 w-14", lg: "h-[68px] w-[68px]" } as const;
+const PLAY_ICON = { sm: 24, md: 34, lg: 44 } as const;
+export function PlayBadge({ size = "md", className = "" }: { size?: "sm" | "md" | "lg"; className?: string }) {
+  return (
+    <span
+      className={`flex items-center justify-center rounded-full bg-black/25 shadow-lg ring-1 ring-white/30 backdrop-blur-md ${PLAY_DIM[size]} ${className}`}
+    >
+      <CharmIcon name="play" size={PLAY_ICON[size]} className="translate-x-[1px] drop-shadow" />
+    </span>
+  );
+}

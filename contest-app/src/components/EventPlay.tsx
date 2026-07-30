@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { ChevronLeft, Play, Check } from "lucide-react";
-import { CharmIcon } from "./CharmIcon";
+import { CharmIcon, PlayBadge } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StageEventPublic, StagePostPublic } from "@/lib/types";
 import { stagePostAsEntry } from "@/lib/types";
@@ -50,7 +50,7 @@ function MatchTile({ post, onPick, pickLabel }: { post: StagePostPublic; onPick:
               <div className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-primary-soft to-card-2 text-subtle">🎬</div>
             )}
             <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/15">
-              <CharmIcon name="play" size={52} className="drop-shadow-lg" />
+              <PlayBadge size="lg" />
             </span>
           </button>
         )}
