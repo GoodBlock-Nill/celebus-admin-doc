@@ -250,13 +250,6 @@ export default function Home() {
                     <div className="relative h-[92px] overflow-hidden rounded-2xl">
                       <Thumb url={s.cover_url} />
                       <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
-                      {s.event_date && (
-                        <div className="absolute left-2 top-2">
-                          <span className="rounded-md bg-black/45 px-2 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
-                            {s.event_date}
-                          </span>
-                        </div>
-                      )}
                     </div>
                     <strong className="mt-2 block truncate text-[12.5px] font-bold text-fg">{s.title}</strong>
                     <small className="mt-0.5 block text-[11px] text-muted">
