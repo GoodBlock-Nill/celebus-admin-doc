@@ -48,6 +48,7 @@ export default function OfficialSeedPanel() {
   useEffect(() => { void loadPosts(); }, [loadPosts]);
 
   const urlList = urls.split(/\s+/).map((u) => u.trim()).filter(Boolean);
+  const catLabel = CATS.find((c) => c.v === category)?.l ?? "";
 
   async function seed() {
     if (busy || !stageId || urlList.length === 0) return;
@@ -95,6 +96,16 @@ export default function OfficialSeedPanel() {
           </select>
         </label>
 
+        <div className="mt-3">
+          <span className="block text-[12px] font-bold text-fg/60">카테고리 선택 <span className="text-fg/40">(등록할 영상이 속한 플레이리스트)</span></span>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            {CATS.map((c) => (
+              <button key={c.v} onClick={() => setCategory(c.v)}
+                className={`rounded-full px-3.5 py-2 text-[12px] font-bold ring-1 ${category === c.v ? "bg-primary text-white ring-primary" : "bg-white/8 text-fg/60 ring-white/10"}`}>{c.l}</button>
+            ))}
+          </div>
+        </div>
+
         <label className="mt-3 block text-[12px] font-bold text-fg/60">
           영상 URL (YouTube · TikTok, 한 줄에 하나 · 최대 30개)
           <textarea value={urls} onChange={(e) => setUrls(e.target.value)} rows={5}
@@ -102,17 +113,9 @@ export default function OfficialSeedPanel() {
             className="mt-1 w-full resize-none rounded-xl bg-white/6 px-3 py-3 text-[13px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/25" />
         </label>
 
-        <div className="mt-2 flex items-center gap-2">
-          <span className="text-[12px] font-bold text-fg/60">카테고리</span>
-          {CATS.map((c) => (
-            <button key={c.v} onClick={() => setCategory(c.v)}
-              className={`rounded-full px-3 py-1.5 text-[12px] font-bold ${category === c.v ? "bg-primary text-white" : "bg-white/8 text-fg/60"}`}>{c.l}</button>
-          ))}
-        </div>
-
         <button onClick={seed} disabled={busy || urlList.length === 0}
           className="mt-3 w-full rounded-full bg-primary py-3 text-[14px] font-bold text-white disabled:opacity-40">
-          {busy ? "등록 중…" : `공식 영상 ${urlList.length}건 등록`}
+          {busy ? "등록 중…" : `${catLabel} 카테고리로 ${urlList.length}건 등록`}
         </button>
 
         {results && (
