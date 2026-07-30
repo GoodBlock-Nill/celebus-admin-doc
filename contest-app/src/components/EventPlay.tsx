@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
-import { ChevronLeft, Play, Check } from "lucide-react";
+import { ChevronLeft, Play, Check, Gift } from "lucide-react";
 import { CharmIcon, PlayBadge } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StageEventPublic, StagePostPublic } from "@/lib/types";
@@ -183,8 +183,25 @@ export default function EventPlay({ eventId }: { eventId: string }) {
         <div className="flex items-center gap-2">
           <CharmIcon name="trophy" size={26} className="shrink-0" />
           <h1 className="min-w-0 flex-1 text-[19px] font-bold text-fg">{event.title}</h1>
+          <span
+            className={`shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-extrabold ${
+              event.reward_type === "reward" ? "bg-amber-100 text-amber-700" : "bg-card-2 text-muted"
+            }`}
+          >
+            {event.reward_type === "reward" && <Gift className="h-3 w-3" />}
+            {t(event.reward_type === "reward" ? "ev_type_reward" : "ev_type_popularity")}
+          </span>
         </div>
         <p className="mt-0.5 text-[12px] text-muted">{event.stage_title}</p>
+        {/* 보상형 — 우승 보상 안내 */}
+        {event.reward_type === "reward" && event.reward && (
+          <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5">
+            <Gift className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+            <p className="text-[12.5px] leading-relaxed text-amber-800">
+              <b>{t("ev_reward_label")}</b> · {event.reward}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* 결과 발표 배너 */}

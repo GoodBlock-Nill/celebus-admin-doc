@@ -9,6 +9,8 @@ const createSchema = z.object({
   title: z.string().trim().min(1).max(80),
   description: z.string().trim().max(500).default(""),
   ends_at: z.string().datetime({ offset: true }).nullable().optional(),
+  reward_type: z.enum(["reward", "popularity"]).default("popularity"),
+  reward: z.string().trim().max(200).default(""),
 });
 
 // 월드컵 이벤트 관리 — 스테이지 단위로 개최

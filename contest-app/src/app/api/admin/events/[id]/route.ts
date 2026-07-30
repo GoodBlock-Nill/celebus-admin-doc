@@ -9,6 +9,8 @@ const patchSchema = z.object({
   description: z.string().trim().max(500).optional(),
   ends_at: z.string().datetime({ offset: true }).nullable().optional(),
   status: z.enum(["open", "announced", "closed"]).optional(),
+  reward_type: z.enum(["reward", "popularity"]).optional(),
+  reward: z.string().trim().max(200).optional(),
 });
 
 type StatRow = { post_id: string; runs_appeared: number; final_wins: number; match_wins: number; match_losses: number };

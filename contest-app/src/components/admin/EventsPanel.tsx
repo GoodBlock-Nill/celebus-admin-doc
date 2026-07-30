@@ -24,7 +24,7 @@ const STATUS_LABEL: Record<EventRow["status"], string> = { open: "진행중", an
 export default function EventsPanel() {
   const [events, setEvents] = useState<EventRow[]>([]);
   const [stages, setStages] = useState<StageOpt[]>([]);
-  const [form, setForm] = useState({ stage_id: "", title: "", description: "", ends_at: "" });
+  const [form, setForm] = useState({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity" as "reward" | "popularity", reward: "" });
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
@@ -48,12 +48,14 @@ export default function EventsPanel() {
         title: form.title.trim(),
         description: form.description.trim(),
         ends_at: form.ends_at ? new Date(form.ends_at + "T23:59:59+09:00").toISOString() : null,
+        reward_type: form.reward_type,
+        reward: form.reward_type === "reward" ? form.reward.trim() : "",
       }),
     });
     setBusy(false);
     if (res.ok) {
       toast("토너먼트를 열었어요.");
-      setForm({ stage_id: "", title: "", description: "", ends_at: "" });
+      setForm({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity", reward: "" });
       void load();
     } else {
       const j = await res.json().catch(() => ({}));
@@ -96,6 +98,29 @@ export default function EventsPanel() {
           <input type="date" value={form.ends_at} onChange={(e) => setForm({ ...form, ends_at: e.target.value })}
             className="w-full rounded-xl bg-white/6 px-3 py-2.5 text-[13px] text-fg outline-none ring-1 ring-white/10" />
         </div>
+
+        {/* 토너먼트 유형 — 인기투표형 / 보상형 */}
+        <div>
+          <div className="mb-1.5 text-[12px] font-bold text-fg/60">토너먼트 유형</div>
+          <div className="flex gap-2">
+            {([
+              { v: "popularity", l: "인기투표형", d: "보상 없이 순위만" },
+              { v: "reward", l: "보상형", d: "우승 보상 있음" },
+            ] as const).map((o) => (
+              <button key={o.v} type="button" onClick={() => setForm({ ...form, reward_type: o.v })}
+                className={`flex-1 rounded-xl px-3 py-2 text-left ring-1 ${form.reward_type === o.v ? "bg-primary/15 ring-primary/60" : "bg-white/6 ring-white/10"}`}>
+                <div className={`text-[13px] font-bold ${form.reward_type === o.v ? "text-primary-400" : "text-fg/80"}`}>{o.l}</div>
+                <div className="text-[11px] text-fg/45">{o.d}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+        {form.reward_type === "reward" && (
+          <input value={form.reward} onChange={(e) => setForm({ ...form, reward: e.target.value })} maxLength={200}
+            placeholder="보상 내용 (예: 우승 업로더에게 V01D 응원봉 + 공식 SNS 소개)"
+            className="w-full rounded-xl bg-white/6 px-3 py-2.5 text-[13px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/30" />
+        )}
+
         <button onClick={create} disabled={busy || !form.stage_id || !form.title.trim()}
           className="flex w-full items-center justify-center gap-1 rounded-full bg-primary py-2.5 text-[13px] font-bold text-white disabled:opacity-40">
           <Plus className="h-4 w-4" /> 토너먼트 열기

@@ -187,6 +187,9 @@ export interface StageEventPublic {
     uploader: { handle: string; days: number } | null;
   } | null;
   created_at: string;
+  // 토너먼트 유형 — 보상형(reward: 우승 보상 있음) / 인기투표형(popularity: 보상 없음)
+  reward_type: "reward" | "popularity";
+  reward: string; // 보상 내용(관리자 기재, 보상형일 때만)
 }
 
 // 월드컵 집계 — worldcup_stats_public 뷰

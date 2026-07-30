@@ -3,7 +3,7 @@
 // 이벤트 탭 — 두 영역 분리(GPT EVT-01): ① 월드컵 이벤트(투표) ② V01D Pick(멤버 하트 영상).
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Trophy, CalendarDays } from "lucide-react";
+import { Trophy, CalendarDays, Gift } from "lucide-react";
 import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StageEventPublic } from "@/lib/types";
@@ -57,8 +57,25 @@ export default function EventList() {
                     {t(e.status === "open" ? "ev_status_open" : "ev_status_announced")}
                   </span>
                 </div>
-                <p className="mt-1 text-[12px] text-muted">{e.stage_title}</p>
+                {/* 유형 배지 — 보상형(골드) / 인기투표형(뉴트럴) */}
+                <div className="mt-1.5 flex items-center gap-1.5">
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-extrabold ${
+                      e.reward_type === "reward" ? "bg-amber-100 text-amber-700" : "bg-card-2 text-muted"
+                    }`}
+                  >
+                    {e.reward_type === "reward" && <Gift className="h-3 w-3" />}
+                    {t(e.reward_type === "reward" ? "ev_type_reward" : "ev_type_popularity")}
+                  </span>
+                  <span className="truncate text-[12px] text-muted">{e.stage_title}</span>
+                </div>
                 {e.description && <p className="mt-1 line-clamp-2 text-[12.5px] text-muted">{e.description}</p>}
+                {e.reward_type === "reward" && e.reward && (
+                  <p className="mt-2 flex items-start gap-1.5 rounded-lg bg-amber-50 px-2.5 py-1.5 text-[11.5px] font-semibold text-amber-800">
+                    <Gift className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                    <span><b>{t("ev_reward_label")}</b> · {e.reward}</span>
+                  </p>
+                )}
                 {e.ends_at && (
                   <p className="mt-1.5 flex items-center gap-1 text-[11.5px] text-subtle">
                     <CalendarDays className="h-3.5 w-3.5" /> ~{e.ends_at.slice(0, 10)}
