@@ -1,0 +1,191 @@
+<title>CELEBUS MOMENT — 모먼트 토너먼트 로직 설명</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{--bg:#F7F7FA;--surface:#fff;--ink:#17171C;--ink2:#5f616e;--ink3:#A6A7B2;--line:#E7E7EF;--violet:#6C4DE6;--violet-strong:#4E2FC0;--magenta:#A855E8;--soft:#F1EBFF;--gold-bg:#fef3c7;--gold-ink:#b45309;--ff:"Pretendard",-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ff);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:920px;margin:0 auto;padding:0 22px}
+header.cv{padding:46px 0 8px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--violet)}
+.bt{background:linear-gradient(120deg,var(--magenta),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+h1{font-size:clamp(26px,4.4vw,38px);font-weight:900;letter-spacing:-.03em;margin:8px 0 8px}
+header.cv p{color:var(--ink2);font-size:14.5px;max-width:640px}
+section{padding:26px 0 4px}
+h2{font-size:18px;font-weight:900;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:8px;background:var(--soft);color:var(--violet-strong);font-size:13px;font-weight:900;flex-shrink:0}
+.lead{color:var(--ink2);font-size:13.5px;margin:8px 0 14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:640px){.grid2,.grid3{grid-template-columns:1fr}}
+.pill{display:inline-block;font-size:11.5px;font-weight:800;padding:5px 11px;border-radius:100px}
+.pill.soft{background:var(--soft);color:var(--violet-strong)}
+.pill.gold{background:var(--gold-bg);color:var(--gold-ink)}
+.pill.gray{background:#eef0f4;color:var(--ink2)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:6px}
+@media(max-width:640px){.steps{grid-template-columns:1fr 1fr}}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:15px 14px}
+.step .k{font-size:11px;font-weight:900;color:var(--violet);letter-spacing:.04em}
+.step .t{font-size:14px;font-weight:800;margin:5px 0 4px}
+.step .d{font-size:11.5px;color:var(--ink2);line-height:1.5}
+table{width:100%;border-collapse:collapse;font-size:13px;overflow:hidden;border-radius:12px;border:1px solid var(--line)}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#faf8ff;font-weight:800;font-size:12px;color:var(--violet-strong)}
+tr:last-child td{border-bottom:none}
+td b{font-weight:800}
+.formula{background:#14121a;color:#e9e6f2;border-radius:12px;padding:15px 17px;font-size:12.5px;line-height:1.7;font-family:ui-monospace,Menlo,monospace;overflow-x:auto}
+.formula .hl{color:#c4b5fd;font-weight:700}
+.flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
+.flow .node{flex:1;min-width:120px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.flow .node .s{font-size:12px;font-weight:900}
+.flow .node .sd{font-size:11px;color:var(--ink2);margin-top:3px}
+.flow .arrow{align-self:center;color:var(--ink3);font-weight:900;font-size:16px}
+.note{background:var(--soft);border:1px solid #e2d6ff;border-radius:14px;padding:14px 16px;font-size:12.5px;color:var(--violet-strong)}
+.note.gold{background:var(--gold-bg);border-color:#fcd88a;color:var(--gold-ink)}
+ul.clean{margin:6px 0 0 2px;list-style:none}
+ul.clean li{position:relative;padding-left:16px;font-size:12.8px;color:var(--ink2);line-height:1.8}
+ul.clean li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--violet)}
+.foot{text-align:center;color:var(--ink3);font-size:12px;padding:30px 0 46px}
+.mt{margin-top:12px}
+b.ink{color:var(--ink)}
+</style>
+
+<header class="cv"><div class="wrap">
+  <div class="eyebrow">Tournament Logic · for Team</div>
+  <h1><span class="bt">모먼트 토너먼트</span> 로직 설명</h1>
+  <p>CELEBUS MOMENT의 토너먼트가 어떻게 작동하는지 — 유형, 플레이 방식, 집계, 수상, 진행 흐름을 한 문서로 정리했습니다. 기획·개발·운영·디자인 공통 참고용.</p>
+</div></header>
+
+<div class="wrap">
+
+  <!-- 한눈에 -->
+  <section>
+    <h2><span class="num">✦</span> 한눈에</h2>
+    <div class="grid2 mt">
+      <div class="card">
+        <div class="pill soft">형식</div>
+        <p class="mt" style="font-size:13.5px"><b class="ink">이상형 월드컵</b> — 아카이브의 공개 영상들이 자동 출전하고, 참여자는 <b class="ink">1:1 대결</b>을 이어가며 <b class="ink">나의 우승작</b>을 뽑습니다.</p>
+      </div>
+      <div class="card">
+        <div class="pill gold">유형</div>
+        <p class="mt" style="font-size:13.5px"><b class="ink">보상형</b>(우승 보상 있음) / <b class="ink">인기투표형</b>(순위만, 보상 없음) 두 가지로 운영됩니다.</p>
+      </div>
+      <div class="card">
+        <div class="pill soft">집계</div>
+        <p class="mt" style="font-size:13.5px">1순위 <b class="ink">우승 비율</b>, 2순위 <b class="ink">1:1 승률</b>. 무작위 대진으로 노출 기회를 통계적으로 공평하게.</p>
+      </div>
+      <div class="card">
+        <div class="pill soft">수상</div>
+        <p class="mt" style="font-size:13.5px">발표 시 <b class="ink">팬인기상 · 아티스트인기상 · 최다업로드상</b> 3종이 자동 계산됩니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 두 유형 -->
+  <section>
+    <h2><span class="num">1</span> 두 가지 유형</h2>
+    <p class="lead">모든 토너먼트는 아래 두 유형 중 하나입니다. 플레이·집계·수상 방식은 <b>동일</b>하며, 차이는 <b>우승 보상 유무</b>뿐입니다.</p>
+    <table>
+      <tr><th style="width:130px">구분</th><th>보상형</th><th>인기투표형</th></tr>
+      <tr>
+        <td><b>배지</b></td>
+        <td><span class="pill gold">🎁 보상형</span></td>
+        <td><span class="pill gray">인기투표형</span></td>
+      </tr>
+      <tr>
+        <td><b>목적</b></td>
+        <td>우승작·업로더에게 실제 보상을 걸고 참여를 독려</td>
+        <td>보상 없이 순수하게 "이번 최고 영상"을 뽑는 재미</td>
+      </tr>
+      <tr>
+        <td><b>보상</b></td>
+        <td>관리자가 <b>보상 내용을 기재</b> (예: 우승 업로더에게 V01D 응원봉 + 공식 SNS 소개). 앱에 보상 내용 표시, <b>지급은 운영이 수동 진행</b>.</td>
+        <td>없음</td>
+      </tr>
+      <tr>
+        <td><b>동일한 점</b></td>
+        <td colspan="2">플레이 방식(개인 랜덤 대진 월드컵), 집계(우승 비율·승률), 3종 수상, 진행 흐름은 두 유형 모두 같습니다.</td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- 플레이 방식 -->
+  <section>
+    <h2><span class="num">2</span> 플레이 방식 — 개인 랜덤 대진</h2>
+    <p class="lead">참여자마다 <b>서로 다른 무작위 대진표</b>를 받아 1:1 대결을 진행합니다. "누구는 특정 영상을 못 봤다"는 편향을 줄이기 위한 설계입니다.</p>
+    <div class="steps">
+      <div class="step"><div class="k">STEP 1</div><div class="t">자동 출전</div><div class="d">해당 아카이브의 공개 영상 전체가 자동으로 후보에 오릅니다. (나중에 올라온 영상도 소급 포함)</div></div>
+      <div class="step"><div class="k">STEP 2</div><div class="t">1:1 대결</div><div class="d">무작위로 짝지어진 두 영상 중 더 좋은 쪽을 선택. 선택한 영상이 다음 라운드로.</div></div>
+      <div class="step"><div class="k">STEP 3</div><div class="t">나의 우승작</div><div class="d">대결을 이어가 마지막에 남은 1개가 "나의 우승작"이 됩니다.</div></div>
+      <div class="step"><div class="k">STEP 4</div><div class="t">집계 반영</div><div class="d">내 대진의 승/패·우승 결과가 전체 통계에 합산됩니다.</div></div>
+    </div>
+    <div class="note mt">대진 크기는 <b>2·4·8·16·32강</b>(대결 수 1·3·7·15·31)만 유효합니다. 서버가 대진 구조와 "모든 후보가 이 아카이브 소속인지"를 검증해 조작을 차단합니다.</div>
+  </section>
+
+  <!-- 집계 -->
+  <section>
+    <h2><span class="num">3</span> 집계 로직 — 우승 비율 우선</h2>
+    <p class="lead">순위는 두 지표로 정해집니다. <b>우승 비율</b>이 1순위, 동률일 때 <b>1:1 승률</b>이 2순위입니다.</p>
+    <div class="grid2">
+      <div class="card">
+        <b class="ink" style="font-size:13.5px">① 우승 비율 (1순위)</b>
+        <p style="font-size:12.5px;color:var(--ink2);margin:6px 0 10px">이 영상이 등장한 대진 중 <b>몇 번 최종 우승했나</b>. 등장 기회 대비 우승률이라 노출 편차에 공평.</p>
+        <div class="formula">우승 비율 = <span class="hl">최종 우승 수</span> ÷ <span class="hl">대진 등장 수</span></div>
+      </div>
+      <div class="card">
+        <b class="ink" style="font-size:13.5px">② 1:1 승률 (2순위)</b>
+        <p style="font-size:12.5px;color:var(--ink2);margin:6px 0 10px">개별 1:1 대결에서의 <b>승리 비율</b>. 우승 비율이 같을 때 순위를 가릅니다.</p>
+        <div class="formula">승률 = <span class="hl">1:1 승리 수</span> ÷ (<span class="hl">승리 수</span> + <span class="hl">패배 수</span>)</div>
+      </div>
+    </div>
+    <div class="note mt"><b>어뷰징 방지 —</b> 집계에 반영되는 플레이는 <b>신원당 이벤트별 최대 3회</b>입니다. 초과 플레이는 허용되지만 통계에는 반영되지 않습니다.</div>
+  </section>
+
+  <!-- 수상 -->
+  <section>
+    <h2><span class="num">4</span> 3종 수상 (발표 시 자동 계산)</h2>
+    <p class="lead">관리자가 <b>발표하기</b>를 누르면 서버가 아래 3종을 자동으로 계산해 확정합니다.</p>
+    <div class="grid3">
+      <div class="card">
+        <div class="pill soft">팬인기상</div>
+        <p class="mt" style="font-size:12.5px;color:var(--ink2)"><b class="ink">우승 비율 1위</b> 영상. (동률 시 승률) 팬 참여 투표로 뽑힌 최고작.</p>
+      </div>
+      <div class="card">
+        <div class="pill soft">아티스트인기상</div>
+        <p class="mt" style="font-size:12.5px;color:var(--ink2)">V01D <b class="ink">멤버가 직접 픽</b>한 영상 중 최다 득표작. 멤버 픽은 발표 전까지 비공개.</p>
+      </div>
+      <div class="card">
+        <div class="pill soft">최다업로드상</div>
+        <p class="mt" style="font-size:12.5px;color:var(--ink2)">해당 아카이브에 <b class="ink">가장 많은 날</b> 영상을 올린 참여자. (하루 1건 인정)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 진행 흐름 -->
+  <section>
+    <h2><span class="num">5</span> 진행 흐름</h2>
+    <div class="flow mt">
+      <div class="node"><div class="s">진행중 (open)</div><div class="sd">참여자 플레이 가능. 멤버 픽·투표 집계 진행(비공개).</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="s">결과 발표 (announced)</div><div class="sd">3종 수상 자동 계산·공개. 멤버 픽 공개.</div></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="s">종료 (closed)</div><div class="sd">목록에서 비노출. 기록 보존.</div></div>
+    </div>
+    <div class="note gold mt"><b>보상형 마무리 —</b> 발표 후 앱에 표시된 보상 내용을 기준으로 <b>운영이 우승 대상에게 보상을 수동 지급</b>합니다. (응원봉·굿즈 배송, 공식 SNS 소개 등)</div>
+  </section>
+
+  <!-- 관리자 -->
+  <section>
+    <h2><span class="num">6</span> 관리자 운영 요약</h2>
+    <div class="card">
+      <ul class="clean">
+        <li><b class="ink">개최</b> — 아카이브를 선택하고 토너먼트명을 입력하면 그 아카이브의 공개 영상이 자동 출전합니다.</li>
+        <li><b class="ink">유형 선택</b> — 생성 시 <b>인기투표형 / 보상형</b> 중 선택. 보상형이면 보상 내용을 텍스트로 기재합니다.</li>
+        <li><b class="ink">발표</b> — [발표하기] 시 3종 수상이 자동 계산되어 앱에 공개됩니다.</li>
+        <li><b class="ink">보상 지급</b> — 보상형은 발표 후 운영이 수동으로 보상을 전달합니다. (자동 지급 아님)</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+<div class="foot">CELEBUS MOMENT · 모먼트 토너먼트 로직 설명 · @Nill Yoo</div>
