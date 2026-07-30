@@ -19,7 +19,6 @@ const CATS = [
   { v: "azit", l: "AZIT" },
   { v: "stud10", l: "STUD10" },
   { v: "outv", l: "OUT THE V01D" },
-  { v: "liveclip", l: "Live Clip" },
   { v: "shorts", l: "Shorts" },
 ];
 const CAT_LABEL: Record<string, string> = Object.fromEntries(CATS.map((c) => [c.v, c.l]));
