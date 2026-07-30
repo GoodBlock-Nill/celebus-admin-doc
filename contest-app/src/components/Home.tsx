@@ -127,6 +127,11 @@ export default function Home() {
 
   const isFullyEmpty = !loading && !error && stages.length === 0 && posts.length === 0;
 
+  // D10V 아카이브 = 팬 업로드 아카이브만 / V01D 아카이브 = 공식영상(최신순)
+  const fanStages = stages.filter((s) => !s.is_official);
+  const officialStage = stages.find((s) => s.is_official);
+  const officialPosts = posts.filter((p) => p.is_official).slice(0, 12); // posts는 이미 최신순
+
   return (
     <div>
       <p className="px-0.5 text-[12px] font-semibold tracking-tight text-subtle">
@@ -235,32 +240,64 @@ export default function Home() {
             </div>
           )}
 
-          {stages.length > 0 && (
+          {/* D10V 아카이브 — 팬 업로드 아카이브만 (공식 제외) */}
+          {fanStages.length > 0 && (
             <div>
               <SectionHeader title={t("home_archive_title")} sub={t("home_archive_sub")} moreHref="/stages" />
               <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
-                {stages.map((s) => (
+                {fanStages.map((s) => (
                   <Link key={s.id} href={`/stage/${s.id}`} className="w-[156px] shrink-0 active:scale-[0.98]">
                     <div className="relative h-[92px] overflow-hidden rounded-2xl">
                       <Thumb url={s.cover_url} />
                       <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
-                      {/* 뱃지는 좌측 상단으로 통일(공식 위·날짜 아래) */}
-                      <div className="absolute left-2 top-2 flex flex-col items-start gap-1">
-                        {s.is_official && (
-                          <span className="brand-gradient rounded-md px-1.5 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
-                            {t("archive_official")}
-                          </span>
-                        )}
-                        {s.event_date && (
+                      {s.event_date && (
+                        <div className="absolute left-2 top-2">
                           <span className="rounded-md bg-black/45 px-2 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
                             {s.event_date}
                           </span>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                     <strong className="mt-2 block truncate text-[12.5px] font-bold text-fg">{s.title}</strong>
                     <small className="mt-0.5 block text-[11px] text-muted">
-                      {t(s.is_official ? "home_stage_meta_official" : "home_stage_meta").replace("{n}", String(s.post_count))}
+                      {t("home_stage_meta").replace("{n}", String(s.post_count))}
+                    </small>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* V01D 아카이브 — 공식영상 최신순 */}
+          {officialPosts.length > 0 && (
+            <div>
+              <SectionHeader
+                title={t("home_official_title")}
+                sub={t("home_official_sub")}
+                moreHref={officialStage ? `/stage/${officialStage.id}` : "/stages"}
+              />
+              <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
+                {officialPosts.map((p) => (
+                  <Link
+                    key={p.id}
+                    href={`/video/${p.id}?list=stage:${p.stage_id}`}
+                    className="w-[156px] shrink-0 active:scale-[0.98]"
+                  >
+                    <div className="relative h-[92px] overflow-hidden rounded-2xl">
+                      <Thumb url={p.thumbnail_url} />
+                      <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
+                      <div className="absolute left-2 top-2">
+                        <span className="brand-gradient rounded-md px-1.5 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
+                          {t("archive_official")}
+                        </span>
+                      </div>
+                      <span className="absolute bottom-1.5 right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-black/45 backdrop-blur-sm">
+                        <Play className="h-3 w-3 fill-white text-white" />
+                      </span>
+                    </div>
+                    <strong className="mt-2 block truncate text-[12.5px] font-bold text-fg">{p.title}</strong>
+                    <small className="mt-0.5 block truncate text-[11px] text-muted">
+                      {t(`cat_${p.category}`)}
                     </small>
                   </Link>
                 ))}
