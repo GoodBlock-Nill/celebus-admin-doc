@@ -2,6 +2,8 @@
 
 // 월드컵 랭킹 — 우승 비율(1순위)·1:1 승률(2순위). 멤버는 여기서 아티스트 픽 선택(비공개, 발표 시 공개).
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import { Play } from "lucide-react";
 import { toast } from "sonner";
 import { sb } from "@/lib/supabase-browser";
 import type { StagePostPublic, WorldcupStatPublic } from "@/lib/types";
@@ -70,19 +72,29 @@ export default function WorldcupStandings({
         return (
           <div key={s.post_id} className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2 shadow-sm">
             <span className={`w-6 shrink-0 text-center text-[14px] font-black ${i < 3 ? "text-primary-strong" : "text-subtle"}`}>{i + 1}</span>
-            {p.thumbnail_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={p.thumbnail_url} alt="" className="h-10 w-16 shrink-0 rounded-lg object-cover" />
-            ) : (
-              <div className="h-10 w-16 shrink-0 rounded-lg bg-gradient-to-br from-primary-soft to-card-2" />
-            )}
-            <div className="min-w-0 flex-1">
-              <div className="truncate text-[12.5px] font-bold text-fg">{p.title}</div>
-              <div className="text-[10.5px] text-subtle">
-                {t("ev_win_rate")} {(s.win_rate * 100).toFixed(0)}% · {t("ev_match_rate")} {(s.match_rate * 100).toFixed(0)}%
-                {picks > 0 && <span className="ml-1 text-primary-strong">· {t("ev_picks_n").replace("{n}", String(picks))}</span>}
+            {/* 썸네일+제목 클릭 → 영상 재생 */}
+            <Link href={`/video/${p.id}?list=stage:${p.stage_id}`} className="flex min-w-0 flex-1 items-center gap-2.5 active:opacity-90">
+              <div className="relative h-10 w-16 shrink-0 overflow-hidden rounded-lg">
+                {p.thumbnail_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={p.thumbnail_url} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <div className="h-full w-full bg-gradient-to-br from-primary-soft to-card-2" />
+                )}
+                <span className="absolute inset-0 flex items-center justify-center bg-black/25">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/90">
+                    <Play className="h-2.5 w-2.5 fill-primary text-primary" />
+                  </span>
+                </span>
               </div>
-            </div>
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-[12.5px] font-bold text-fg">{p.title}</div>
+                <div className="text-[10.5px] text-subtle">
+                  {t("ev_win_rate")} {(s.win_rate * 100).toFixed(0)}% · {t("ev_match_rate")} {(s.match_rate * 100).toFixed(0)}%
+                  {picks > 0 && <span className="ml-1 text-primary-strong">· {t("ev_picks_n").replace("{n}", String(picks))}</span>}
+                </div>
+              </div>
+            </Link>
             {isMemberMe && eventStatus === "open" && (
               <button
                 onClick={() => void setPick(s.post_id)}
