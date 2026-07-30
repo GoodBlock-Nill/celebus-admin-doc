@@ -42,9 +42,10 @@ export default function OfficialSeedPanel() {
 
   const loadPosts = useCallback(async () => {
     if (!stageId) return setPosts([]);
-    const res = await adminFetch("/api/admin/posts");
+    // 스테이지별 전체 조회(최근 50건 제한 우회) — 공식 영상은 수백 건까지 등록 가능
+    const res = await adminFetch(`/api/admin/posts?stage_id=${stageId}&limit=1000`);
     const j = await res.json();
-    setPosts(((j.posts ?? []) as Post[]).filter((p) => p.stage_id === stageId && p.is_official));
+    setPosts(((j.posts ?? []) as Post[]).filter((p) => p.is_official));
   }, [stageId]);
 
   useEffect(() => { void loadStages(); }, [loadStages]);
