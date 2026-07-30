@@ -154,7 +154,10 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       if (e.category) poolQ = poolQ.eq("category", e.category);
       const { data: ps } = await poolQ;
       setPool((ps ?? []) as StagePostPublic[]);
-      if (e.status === "announced") setShowStandings(true);
+      // 랭킹 탭에서 진입(view=ranking)하거나 발표된 대회는 랭킹을 바로 연다
+      const wantRanking = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("view") === "ranking";
+      if (e.status === "announced" || wantRanking) setShowStandings(true);
+      if (wantRanking) setTimeout(() => document.getElementById("ev-standings")?.scrollIntoView({ behavior: "smooth", block: "start" }), 350);
       const { data: pc } = await sb.from("event_participants_public").select("participants").eq("event_id", eventId).maybeSingle();
       setParticipants((pc?.participants as number) ?? 0);
     })();
@@ -413,7 +416,11 @@ export default function EventPlay({ eventId }: { eventId: string }) {
           >
             {t("ev_standings")}
           </button>
-          {showStandings && <WorldcupStandings eventId={eventId} eventStatus={event.status} pool={pool} />}
+          {showStandings && (
+            <div id="ev-standings" className="scroll-mt-4">
+              <WorldcupStandings eventId={eventId} eventStatus={event.status} pool={pool} />
+            </div>
+          )}
         </div>
       )}
 

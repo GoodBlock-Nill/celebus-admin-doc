@@ -55,7 +55,7 @@ export default function RankingView() {
         ) : (
           <div className="space-y-2">
             {events.map((e) => (
-              <Link key={e.id} href={`/event/${e.id}`} className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2.5 shadow-sm active:scale-[0.99]">
+              <Link key={e.id} href={`/event/${e.id}?view=ranking`} className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2.5 shadow-sm active:scale-[0.99]">
                 <Trophy className="h-4 w-4 shrink-0 text-primary" />
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-[13px] font-bold text-fg">{e.title}</div>
