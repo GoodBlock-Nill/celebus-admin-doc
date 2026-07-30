@@ -57,8 +57,12 @@ export default function EventList() {
                     {t(e.status === "open" ? "ev_status_open" : "ev_status_announced")}
                   </span>
                 </div>
-                {/* 유형 배지 — 보상형(골드) / 인기투표형(뉴트럴) */}
-                <div className="mt-1.5 flex items-center gap-1.5">
+                {/* 배지 — 영상 출처(팬/공식) · 카테고리 · 보상 유형 */}
+                <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                  <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-extrabold ${e.stage_is_official ? "bg-primary-soft text-primary-strong" : "bg-[#eaf7f0] text-[#21845f]"}`}>
+                    {t(e.stage_is_official ? "ev_source_official" : "ev_source_fan")}
+                    {e.stage_is_official && e.category ? ` · ${t(`cat_${e.category}`)}` : ""}
+                  </span>
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-extrabold ${
                       e.reward_type === "reward" ? "bg-amber-100 text-amber-700" : "bg-card-2 text-muted"

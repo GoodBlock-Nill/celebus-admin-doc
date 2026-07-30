@@ -100,7 +100,10 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       if (!ev) return;
       const e = ev as StageEventPublic;
       setEvent(e);
-      const { data: ps } = await sb.from("stage_posts_public").select("*").eq("stage_id", e.stage_id).limit(200);
+      // 후보 영상 — 아카이브 전체(카테고리 지정 시 해당 카테고리만)
+      let poolQ = sb.from("stage_posts_public").select("*").eq("stage_id", e.stage_id).limit(200);
+      if (e.category) poolQ = poolQ.eq("category", e.category);
+      const { data: ps } = await poolQ;
       setPool((ps ?? []) as StagePostPublic[]);
       if (e.status === "announced") setShowStandings(true);
     })();
@@ -192,7 +195,13 @@ export default function EventPlay({ eventId }: { eventId: string }) {
             {t(event.reward_type === "reward" ? "ev_type_reward" : "ev_type_popularity")}
           </span>
         </div>
-        <p className="mt-0.5 text-[12px] text-muted">{event.stage_title}</p>
+        <div className="mt-1 flex flex-wrap items-center gap-1.5">
+          <span className={`inline-flex rounded-full px-2 py-0.5 text-[10.5px] font-extrabold ${event.stage_is_official ? "bg-primary-soft text-primary-strong" : "bg-[#eaf7f0] text-[#21845f]"}`}>
+            {t(event.stage_is_official ? "ev_source_official" : "ev_source_fan")}
+            {event.stage_is_official && event.category ? ` · ${t(`cat_${event.category}`)}` : ""}
+          </span>
+          <span className="text-[12px] text-muted">{event.stage_title}</span>
+        </div>
         {/* 보상형 — 우승 보상 안내 */}
         {event.reward_type === "reward" && event.reward && (
           <div className="mt-2.5 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5">

@@ -16,12 +16,15 @@ const patchSchema = z.object({
 type StatRow = { post_id: string; runs_appeared: number; final_wins: number; match_wins: number; match_losses: number };
 
 // 발표(announced) 전환 시 3종 수상 자동 계산 — 팬인기상(우승 비율)·아티스트인기상(멤버 픽)·최다업로드상(유효 업로드 일수)
-async function computeAwards(eventId: string, stageId: string) {
+// category 지정 시 해당 카테고리 영상만 대상. 공식영상 토너먼트(isOfficial)는 최다업로드상 제외(업로더가 단일).
+async function computeAwards(eventId: string, stageId: string, category: string | null, isOfficial: boolean) {
   const db = admin();
+  let postsQ = db.from("stage_posts").select("id, title, handle, owner_id, created_at").eq("stage_id", stageId).eq("hidden", false);
+  if (category) postsQ = postsQ.eq("category", category);
   const [statsRes, picksRes, postsRes] = await Promise.all([
     db.from("worldcup_stats").select("post_id, runs_appeared, final_wins, match_wins, match_losses").eq("event_id", eventId),
     db.from("member_event_picks").select("post_id").eq("event_id", eventId),
-    db.from("stage_posts").select("id, title, handle, owner_id, created_at").eq("stage_id", stageId).eq("hidden", false),
+    postsQ,
   ]);
   const posts = new Map((postsRes.data ?? []).map((p) => [p.id as string, p]));
 
@@ -56,7 +59,8 @@ async function computeAwards(eventId: string, stageId: string) {
   return {
     fan: fanTop ? { post_id: fanTop.id, title: fanTop.title, handle: fanTop.handle } : null,
     artist: artistTop ? { post_id: artistTop.id, title: artistTop.title, handle: artistTop.handle, picks: pickCount.get(artistTopId!) ?? 0 } : null,
-    uploader: uploaderTop ? { handle: uploaderTop.handle, days: uploaderTop.set.size } : null,
+    // 공식영상 토너먼트는 업로더가 단일(@v01d-ix)이라 최다업로드상 미부여
+    uploader: !isOfficial && uploaderTop ? { handle: uploaderTop.handle, days: uploaderTop.set.size } : null,
   };
 }
 
@@ -74,9 +78,14 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
 
   // 발표 전환 → 수상 계산·저장
   if (parsed.data.status === "announced") {
-    const { data: ev } = await db.from("stage_events").select("stage_id").eq("id", id).maybeSingle();
+    const { data: ev } = await db
+      .from("stage_events")
+      .select("stage_id, category, stages(is_official)")
+      .eq("id", id)
+      .maybeSingle();
     if (!ev) return NextResponse.json({ error: "이벤트 없음" }, { status: 404 });
-    update.awards = await computeAwards(id, ev.stage_id as string);
+    const isOfficial = Boolean((ev.stages as { is_official?: boolean } | null)?.is_official);
+    update.awards = await computeAwards(id, ev.stage_id as string, (ev.category as string | null) ?? null, isOfficial);
   }
 
   const { error } = await db.from("stage_events").update(update).eq("id", id);

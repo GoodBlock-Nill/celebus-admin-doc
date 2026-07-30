@@ -17,14 +17,26 @@ type EventRow = {
   created_at: string;
   stages: { title: string } | null;
 };
-type StageOpt = { id: string; title: string };
+type StageOpt = { id: string; title: string; is_official: boolean };
+
+// 공식 카테고리 라벨 (스코프 선택용)
+const OFFICIAL_CATS: { v: string; l: string }[] = [
+  { v: "v1de0", l: "V1DE0" },
+  { v: "album01", l: "1st Mini Album [01]" },
+  { v: "oncam", l: "ON CAM" },
+  { v: "log", l: "LOG" },
+  { v: "azit", l: "AZIT" },
+  { v: "stud10", l: "STUD10" },
+  { v: "outv", l: "OUT THE V01D" },
+  { v: "shorts", l: "Shorts" },
+];
 
 const STATUS_LABEL: Record<EventRow["status"], string> = { open: "진행중", announced: "발표됨", closed: "종료" };
 
 export default function EventsPanel() {
   const [events, setEvents] = useState<EventRow[]>([]);
   const [stages, setStages] = useState<StageOpt[]>([]);
-  const [form, setForm] = useState({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity" as "reward" | "popularity", reward: "" });
+  const [form, setForm] = useState({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity" as "reward" | "popularity", reward: "", category: "" });
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
@@ -32,11 +44,13 @@ export default function EventsPanel() {
     const ev = await evRes.json();
     const st = await stRes.json();
     setEvents(ev.events ?? []);
-    setStages((st.stages ?? []).map((s: { id: string; title: string }) => ({ id: s.id, title: s.title })));
+    setStages((st.stages ?? []).map((s: { id: string; title: string; is_official?: boolean }) => ({ id: s.id, title: s.title, is_official: Boolean(s.is_official) })));
   }, []);
   useEffect(() => {
     void load();
   }, [load]);
+
+  const selectedOfficial = stages.find((s) => s.id === form.stage_id)?.is_official ?? false;
 
   async function create() {
     if (busy || !form.stage_id || !form.title.trim()) return;
@@ -50,12 +64,13 @@ export default function EventsPanel() {
         ends_at: form.ends_at ? new Date(form.ends_at + "T23:59:59+09:00").toISOString() : null,
         reward_type: form.reward_type,
         reward: form.reward_type === "reward" ? form.reward.trim() : "",
+        category: form.category || null,
       }),
     });
     setBusy(false);
     if (res.ok) {
       toast("토너먼트를 열었어요.");
-      setForm({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity", reward: "" });
+      setForm({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity", reward: "", category: "" });
       void load();
     } else {
       const j = await res.json().catch(() => ({}));
@@ -82,14 +97,27 @@ export default function EventsPanel() {
       <div className="space-y-2 rounded-xl bg-white/[0.04] p-3.5 ring-1 ring-white/10">
         <select
           value={form.stage_id}
-          onChange={(e) => setForm({ ...form, stage_id: e.target.value })}
+          onChange={(e) => setForm({ ...form, stage_id: e.target.value, category: "" })}
           className="w-full rounded-xl bg-white/6 px-3 py-2.5 text-[13px] text-fg outline-none ring-1 ring-white/10"
         >
           <option value="">아카이브 선택</option>
           {stages.map((s) => (
-            <option key={s.id} value={s.id} className="bg-[#141217]">{s.title}</option>
+            <option key={s.id} value={s.id} className="bg-[#141217]">{s.title}{s.is_official ? " (공식영상)" : " (팬영상)"}</option>
           ))}
         </select>
+
+        {/* 공식 아카이브 선택 시 — 카테고리 스코프(전체 또는 특정 카테고리) */}
+        {selectedOfficial && (
+          <div>
+            <div className="mb-1.5 text-[12px] font-bold text-fg/60">대상 범위 <span className="text-fg/40">(공식영상 카테고리)</span></div>
+            <div className="flex flex-wrap gap-1.5">
+              {[{ v: "", l: "전체" }, ...OFFICIAL_CATS].map((c) => (
+                <button key={c.v || "all"} type="button" onClick={() => setForm({ ...form, category: c.v })}
+                  className={`rounded-full px-3 py-1.5 text-[12px] font-bold ${form.category === c.v ? "bg-primary text-white" : "bg-white/8 text-fg/60"}`}>{c.l}</button>
+              ))}
+            </div>
+          </div>
+        )}
         <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={80} placeholder="토너먼트명 (예: 부산 버스킹 모먼트 토너먼트)"
           className="w-full rounded-xl bg-white/6 px-3 py-2.5 text-[13px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/30" />
         <div className="grid grid-cols-2 gap-2">

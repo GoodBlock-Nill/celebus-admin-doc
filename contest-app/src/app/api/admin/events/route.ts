@@ -11,6 +11,7 @@ const createSchema = z.object({
   ends_at: z.string().datetime({ offset: true }).nullable().optional(),
   reward_type: z.enum(["reward", "popularity"]).default("popularity"),
   reward: z.string().trim().max(200).default(""),
+  category: z.string().trim().max(40).nullable().optional(),
 });
 
 // 월드컵 이벤트 관리 — 스테이지 단위로 개최
