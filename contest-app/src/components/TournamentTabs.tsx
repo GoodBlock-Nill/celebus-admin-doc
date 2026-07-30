@@ -15,10 +15,14 @@ export default function TournamentTabs() {
   ];
   return (
     <div>
-      <div className="mb-4 flex gap-2">
+      <div role="tablist" aria-label={t("event_tab")} className="mb-4 flex gap-2">
         {TABS.map((tb) => (
           <button
             key={tb.k}
+            role="tab"
+            aria-selected={tab === tb.k}
+            aria-controls={`tab-panel-${tb.k}`}
+            id={`tab-${tb.k}`}
             onClick={() => setTab(tb.k)}
             className={`flex-1 rounded-full py-2.5 text-[13.5px] font-extrabold transition-all active:scale-[0.98] ${
               tab === tb.k
@@ -30,7 +34,9 @@ export default function TournamentTabs() {
           </button>
         ))}
       </div>
-      {tab === "list" ? <EventList /> : <RankingView />}
+      <div id={`tab-panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`}>
+        {tab === "list" ? <EventList /> : <RankingView />}
+      </div>
     </div>
   );
 }

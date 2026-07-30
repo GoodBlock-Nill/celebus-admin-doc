@@ -287,27 +287,50 @@ export default function EventPlay({ eventId }: { eventId: string }) {
         )}
       </div>
 
-      {/* 결과 발표 배너 */}
+      {/* 결과 발표 — 수상 카드 (팬인기상 Hero + 아티스트·업로드 secondary) */}
       {event.status === "announced" && event.awards && (
-        <div className="mb-4 space-y-2 rounded-2xl border border-border bg-card p-4 shadow-sm">
-          <div className="text-[14px] font-bold text-amber-600">{t("ev_results")} 🏆</div>
-          {event.awards.fan && (
-            <div className="text-[13px] text-fg">
-              <b className="text-primary-strong">{t("ev_award_fan")}</b> — {event.awards.fan.title} <span className="text-subtle">@{event.awards.fan.handle}</span>
+        <section className="anim-fade-up mb-4" aria-label={t("ev_results")}>
+          <h2 className="mb-2 flex items-center gap-1.5 text-[14px] font-extrabold text-amber-600"><CharmIcon name="trophy" size={22} /> {t("ev_results")}</h2>
+          {/* 팬인기상 — Hero */}
+          {event.awards.fan && (() => {
+            const fanPost = pool.find((p) => p.id === event.awards!.fan!.post_id);
+            return (
+              <Link href={`/video/${event.awards.fan.post_id}?list=stage:${event.stage_id}`} className="block overflow-hidden rounded-2xl border border-[#fcd88a] bg-gradient-to-b from-amber-50 to-white shadow-sm active:scale-[0.99]">
+                {fanPost?.thumbnail_url && (
+                  <div className="relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={fanPost.thumbnail_url} alt={`${event.awards.fan.title} @${event.awards.fan.handle}`} className="aspect-video w-full object-cover" />
+                    <span className="absolute left-2.5 top-2.5 rounded-full bg-amber-500 px-2.5 py-1 text-[11px] font-extrabold text-white shadow">🏆 {t("ev_award_fan")}</span>
+                  </div>
+                )}
+                <div className="p-3">
+                  {!fanPost?.thumbnail_url && <span className="mb-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10.5px] font-extrabold text-amber-700">🏆 {t("ev_award_fan")}</span>}
+                  <div className="text-[14px] font-extrabold leading-snug text-fg">{event.awards.fan.title}</div>
+                  <div className="text-[12px] text-subtle">@{event.awards.fan.handle}</div>
+                </div>
+              </Link>
+            );
+          })()}
+          {/* 아티스트인기상 · 최다업로드상 — secondary */}
+          {(event.awards.artist || event.awards.uploader) && (
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              {event.awards.artist && (
+                <div className="rounded-xl border border-border bg-card p-3 shadow-sm">
+                  <div className="text-[10.5px] font-extrabold text-primary-strong">{t("ev_award_artist")}</div>
+                  <div className="mt-1 line-clamp-2 text-[12px] font-bold text-fg">{event.awards.artist.title}</div>
+                  <div className="text-[11px] text-subtle">@{event.awards.artist.handle}</div>
+                </div>
+              )}
+              {event.awards.uploader && (
+                <div className="rounded-xl border border-border bg-card p-3 shadow-sm">
+                  <div className="text-[10.5px] font-extrabold text-primary-strong">{t("ev_award_uploader")}</div>
+                  <div className="mt-1 text-[13px] font-bold text-fg">@{event.awards.uploader.handle}</div>
+                  <div className="text-[11px] text-subtle">{t("ev_award_uploader_days").replace("{n}", String(event.awards.uploader.days))}</div>
+                </div>
+              )}
             </div>
           )}
-          {event.awards.artist && (
-            <div className="text-[13px] text-fg">
-              <b className="text-primary-strong">{t("ev_award_artist")}</b> — {event.awards.artist.title} <span className="text-subtle">@{event.awards.artist.handle}</span>
-            </div>
-          )}
-          {event.awards.uploader && (
-            <div className="text-[13px] text-fg">
-              <b className="text-primary-strong">{t("ev_award_uploader")}</b> — @{event.awards.uploader.handle}{" "}
-              <span className="text-subtle">({t("ev_award_uploader_days").replace("{n}", String(event.awards.uploader.days))})</span>
-            </div>
-          )}
-        </div>
+        </section>
       )}
 
       {/* 인트로 — 시작 직전 기대감(참여 규모·참가작 미리보기·규칙·시작 CTA) */}
@@ -407,6 +430,8 @@ export default function EventPlay({ eventId }: { eventId: string }) {
           </p>
           <p className="mt-1 text-center text-[15px] font-extrabold text-fg">{t("ev_pick_prompt")}</p>
           <p className="mb-3 text-center text-[11.5px] text-muted">{t("ev_watch_hint")}</p>
+          {/* 선택 상태 스크린리더 알림 */}
+          <p className="sr-only" aria-live="polite">{picking ? t("ev_selected") : ""}</p>
           <div className="space-y-2.5">
             <MatchTile post={a} corner="A" onPick={() => void pick(a, b)} pickLabel={t("ev_pick_this")}
               playing={whichPlaying === 0} onPlay={() => setWhichPlaying(0)} locked={picking !== null}

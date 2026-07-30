@@ -213,6 +213,7 @@ export interface CreatorRankPublic {
   owner_id: string;
   nickname: string | null;
   uploads: number;
+  avatar_url: string | null;
 }
 export interface D10vPickPublic {
   post_id: string;

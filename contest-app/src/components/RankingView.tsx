@@ -81,13 +81,23 @@ export default function RankingView() {
           <p className="rounded-xl border border-border bg-card px-3 py-4 text-center text-[12.5px] text-muted">{t("rank_empty_soon")}</p>
         ) : (
           <div className="space-y-1.5">
-            {creators.map((c, i) => (
-              <div key={c.owner_id} className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2.5 shadow-sm">
-                <RankBadge i={i} />
-                <div className="min-w-0 flex-1 truncate text-[13px] font-bold text-fg">{c.nickname || t("rank_anon")}</div>
-                <span className="shrink-0 text-[12px] font-bold text-primary-strong">{t("rank_uploads_n").replace("{n}", String(c.uploads))}</span>
-              </div>
-            ))}
+            {creators.map((c, i) => {
+              const name = c.nickname || t("rank_anon");
+              return (
+                <div key={c.owner_id} className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2.5 shadow-sm">
+                  <RankBadge i={i} />
+                  {/* 크리에이터 아바타 (없으면 브랜드 기본) */}
+                  {c.avatar_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={c.avatar_url} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
+                  ) : (
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full brand-gradient text-[13px] font-black text-white">{name.slice(0, 1)}</span>
+                  )}
+                  <div className="min-w-0 flex-1 truncate text-[13px] font-bold text-fg">{name}</div>
+                  <span className="shrink-0 text-[12px] font-bold text-primary-strong">{t("rank_uploads_n").replace("{n}", String(c.uploads))}</span>
+                </div>
+              );
+            })}
           </div>
         )}
       </section>
