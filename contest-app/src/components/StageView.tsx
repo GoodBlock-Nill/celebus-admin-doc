@@ -151,14 +151,16 @@ export default function StageView({ stageId, hideHeader = false }: { stageId: st
       </div>
       )}
 
-      {/* 카테고리 필터 */}
-      <div className="mb-1 flex gap-1.5 overflow-x-auto pb-1 pt-3">
+      {/* 카테고리 필터 — 브랜드 톤 칩(활성=그라데, 비활성=소프트) */}
+      <div className="-mx-4 mb-1 flex gap-2 overflow-x-auto px-4 pb-2 pt-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {FILTERS.map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`flex min-h-11 shrink-0 items-center rounded-full border px-3.5 text-[12.5px] font-bold ${
-              filter === f ? "border-fg bg-fg text-white" : "border-border bg-card text-muted"
+            className={`flex h-9 shrink-0 items-center rounded-full px-4 text-[12.5px] font-bold transition-all active:scale-95 ${
+              filter === f
+                ? "brand-gradient text-white shadow-[0_4px_12px_-3px_rgba(108,77,230,0.55)]"
+                : "bg-primary-soft/60 text-primary-strong/70 hover:bg-primary-soft"
             }`}
           >
             {t(f === "all" ? "cat_all" : `cat_${f}`)}
@@ -168,11 +170,11 @@ export default function StageView({ stageId, hideHeader = false }: { stageId: st
 
       {/* 현재 범위 · 정렬 기준 (최신순 고정) */}
       {stage && (
-        <div className="mb-3 flex items-center px-0.5 py-1">
-          <span className="min-w-0 truncate text-[11.5px] font-semibold text-subtle">
-            {stage.title} · {scopeLabel}
+        <div className="mb-3 flex items-center gap-2 px-0.5 py-1">
+          <span className="min-w-0 truncate text-[11.5px] font-semibold text-subtle">{scopeLabel}</span>
+          <span className="ml-auto flex shrink-0 items-center gap-1 rounded-full bg-card-2 px-2.5 py-1 text-[11px] font-bold text-muted">
+            {t("tab_latest")}
           </span>
-          <span className="ml-auto shrink-0 text-[11.5px] font-bold text-muted">{t("tab_latest")}</span>
         </div>
       )}
 
