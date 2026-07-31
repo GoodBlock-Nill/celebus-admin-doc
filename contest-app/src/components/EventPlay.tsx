@@ -150,8 +150,9 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       if (!ev) return;
       const e = ev as StageEventPublic;
       setEvent(e);
-      // 후보 영상 — 아카이브 전체(카테고리 지정 시 해당 카테고리만)
-      let poolQ = sb.from("stage_posts_public").select("*").eq("stage_id", e.stage_id).limit(200);
+      // 후보 영상 — 참가 아카이브 집합 전체(D10V 복수 지원). 카테고리 지정 시 해당 카테고리만
+      const stageIds = e.stage_ids?.length ? e.stage_ids : [e.stage_id];
+      let poolQ = sb.from("stage_posts_public").select("*").in("stage_id", stageIds).limit(200);
       if (e.category) poolQ = poolQ.eq("category", e.category);
       const { data: ps } = await poolQ;
       setPool((ps ?? []) as StagePostPublic[]);
@@ -252,7 +253,10 @@ export default function EventPlay({ eventId }: { eventId: string }) {
   const b = current[matchIdx * 2 + 1];
   const roundSize = current.length;
   const { title: eventTitle, description: eventDescription } = localizeStageText(event, lang);
-  const stageTitle = localizeTitle(event.stage_title, event.stage_i18n, lang);
+  const stageTitle =
+    event.stage_count && event.stage_count > 1
+      ? t("ev_n_archives").replace("{n}", String(event.stage_count))
+      : localizeTitle(event.stage_title, event.stage_i18n, lang);
 
   return (
     <div>

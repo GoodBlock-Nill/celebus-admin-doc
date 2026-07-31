@@ -205,6 +205,8 @@ export interface StageEventPublic {
   cover_url: string | null; // 대표 커버(관리자 지정, 없으면 참가작 콜라주)
   i18n?: StageI18n; // 토너먼트 다국어(title/description)
   stage_i18n?: StageI18n; // 소속 아카이브 다국어(stage_title 현지화용)
+  stage_ids?: string[] | null; // 참가 아카이브 집합(D10V 복수 지원). null이면 [stage_id]로 폴백
+  stage_count?: number; // 참가 아카이브 수(복수면 'N개 아카이브' 표기)
 }
 
 // 월드컵 집계 — worldcup_stats_public 뷰

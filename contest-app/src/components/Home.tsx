@@ -317,7 +317,10 @@ export default function Home() {
             <SectionHeader title={t("home_wc_title")} />
             {event ? (() => {
               const { title: wcTitle } = localizeStageText(event, lang);
-              const wcStageTitle = localizeTitle(event.stage_title, event.stage_i18n, lang);
+              const wcStageTitle =
+                event.stage_count && event.stage_count > 1
+                  ? t("ev_n_archives").replace("{n}", String(event.stage_count))
+                  : localizeTitle(event.stage_title, event.stage_i18n, lang);
               return (
                 <Link
                   href={`/event/${event.id}`}

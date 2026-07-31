@@ -3,7 +3,7 @@
 // 관리자: 모먼트 토너먼트 — 아카이브 단위 개최, 발표 시 3종 수상 자동 계산.
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
+import { Plus, Check } from "lucide-react";
 import { adminFetch } from "@/lib/admin-types";
 import ImageUploader from "./ImageUploader";
 import { TournamentCardPreview } from "./AppPreview";
@@ -41,7 +41,19 @@ const STATUS_TONE: Record<EventRow["status"], "green" | "amber" | "gray"> = { op
 export default function EventsPanel() {
   const [events, setEvents] = useState<EventRow[]>([]);
   const [stages, setStages] = useState<StageOpt[]>([]);
-  const [form, setForm] = useState({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity" as "reward" | "popularity", reward: "", category: "", cover_url: "", i18n: {} as LangI18n });
+  const [form, setForm] = useState({
+    archiveType: "d10v" as "d10v" | "v01d", // D10V=팬 복수 / V01D=공식 단일
+    stage_id: "", // V01D 단일 공식 아카이브
+    stage_ids: [] as string[], // D10V 복수 팬 아카이브
+    title: "",
+    description: "",
+    ends_at: "",
+    reward_type: "popularity" as "reward" | "popularity",
+    reward: "",
+    category: "",
+    cover_url: "",
+    i18n: {} as LangI18n,
+  });
   const [busy, setBusy] = useState(false);
   const { confirm, confirmEl } = useConfirm();
 
@@ -56,21 +68,31 @@ export default function EventsPanel() {
     void load();
   }, [load]);
 
-  const selectedOfficial = stages.find((s) => s.id === form.stage_id)?.is_official ?? false;
+  const fanStages = stages.filter((s) => !s.is_official);
+  const officialStages = stages.filter((s) => s.is_official);
+  // 선택된 참가 아카이브 집합
+  const stageIds = form.archiveType === "v01d" ? (form.stage_id ? [form.stage_id] : []) : form.stage_ids;
+  const showCategory = form.archiveType === "v01d" && !!form.stage_id; // 카테고리 스코프는 V01D 전용
+
+  function toggleFanStage(id: string) {
+    setForm((f) => ({ ...f, stage_ids: f.stage_ids.includes(id) ? f.stage_ids.filter((x) => x !== id) : [...f.stage_ids, id] }));
+  }
+
+  const resetForm = () => setForm({ archiveType: "d10v", stage_id: "", stage_ids: [], title: "", description: "", ends_at: "", reward_type: "popularity", reward: "", category: "", cover_url: "", i18n: {} });
 
   async function create() {
-    if (busy || !form.stage_id || !form.title.trim()) return;
+    if (busy || stageIds.length === 0 || !form.title.trim()) return;
     setBusy(true);
     const res = await adminFetch("/api/admin/events", {
       method: "POST",
       body: JSON.stringify({
-        stage_id: form.stage_id,
+        stage_ids: stageIds,
         title: form.title.trim(),
         description: form.description.trim(),
         ends_at: form.ends_at ? new Date(form.ends_at + "T23:59:59+09:00").toISOString() : null,
         reward_type: form.reward_type,
         reward: form.reward_type === "reward" ? form.reward.trim() : "",
-        category: form.category || null,
+        category: form.archiveType === "v01d" ? form.category || null : null, // 카테고리는 V01D 전용
         cover_url: form.cover_url || null,
         i18n: cleanStageI18n(form.i18n),
       }),
@@ -78,7 +100,7 @@ export default function EventsPanel() {
     setBusy(false);
     if (res.ok) {
       toast.success("토너먼트를 열었어요.");
-      setForm({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity", reward: "", category: "", cover_url: "", i18n: {} });
+      resetForm();
       void load();
     } else {
       const j = await res.json().catch(() => ({}));
@@ -114,36 +136,86 @@ export default function EventsPanel() {
 
       {/* 생성 폼 */}
       <Card className="space-y-4 p-4">
+        {/* 아카이브 타입 — D10V(팬·복수) / V01D(공식·단일) */}
         <div>
-          <Label>아카이브 선택</Label>
-          <select
-            value={form.stage_id}
-            onChange={(e) => setForm({ ...form, stage_id: e.target.value, category: "" })}
-            className={inputCls}
-          >
-            <option value="">아카이브 선택</option>
-            {stages.map((s) => (
-              <option key={s.id} value={s.id}>{s.title}{s.is_official ? " (공식영상)" : " (팬영상)"}</option>
+          <Label>아카이브 타입</Label>
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              { k: "d10v", title: "D10V 팬 아카이브", desc: "팬 영상 · 복수 선택" },
+              { k: "v01d", title: "V01D 공식", desc: "공식 영상 · 단일" },
+            ] as const).map((o) => (
+              <button
+                key={o.k}
+                type="button"
+                onClick={() => setForm({ ...form, archiveType: o.k, stage_id: "", stage_ids: [], category: "" })}
+                className={`rounded-xl border p-3 text-left transition-colors ${form.archiveType === o.k ? "border-primary bg-primary-soft" : "border-border bg-card hover:bg-surface-2"}`}
+              >
+                <div className={`text-[13px] font-extrabold ${form.archiveType === o.k ? "text-primary-strong" : "text-fg"}`}>{o.title}</div>
+                <div className="text-[11px] text-muted">{o.desc}</div>
+              </button>
             ))}
-          </select>
+          </div>
         </div>
 
-        {/* 공식 아카이브 선택 시 — 카테고리 스코프(전체 또는 특정 카테고리) */}
-        {selectedOfficial && (
-          <div>
-            <Label>대상 범위 <span className="font-medium text-subtle">(공식영상 카테고리)</span></Label>
-            <div className="flex flex-wrap gap-1.5">
-              {[{ v: "", l: "전체" }, ...OFFICIAL_CATS].map((c) => (
-                <button
-                  key={c.v || "all"}
-                  type="button"
-                  onClick={() => setForm({ ...form, category: c.v })}
-                  className={`rounded-full border px-3.5 py-2 text-[12px] font-bold transition-colors ${form.category === c.v ? "border-primary bg-primary text-white" : "border-border bg-card text-muted hover:bg-surface-2"}`}
-                >
-                  {c.l}
-                </button>
-              ))}
+        {form.archiveType === "v01d" ? (
+          <>
+            {/* V01D — 단일 공식 아카이브 */}
+            <div>
+              <Label>공식 아카이브</Label>
+              <select value={form.stage_id} onChange={(e) => setForm({ ...form, stage_id: e.target.value, category: "" })} className={inputCls}>
+                <option value="">공식 아카이브 선택</option>
+                {officialStages.map((s) => (
+                  <option key={s.id} value={s.id}>{s.title}</option>
+                ))}
+              </select>
+              {officialStages.length === 0 && <p className="mt-1 text-[11px] text-subtle">공식 아카이브가 없어요. ‘아카이브’ 탭에서 먼저 만들어주세요.</p>}
             </div>
+            {/* 카테고리 스코프 */}
+            {showCategory && (
+              <div>
+                <Label>대상 범위 <span className="font-medium text-subtle">(공식영상 카테고리)</span></Label>
+                <div className="flex flex-wrap gap-1.5">
+                  {[{ v: "", l: "전체" }, ...OFFICIAL_CATS].map((c) => (
+                    <button
+                      key={c.v || "all"}
+                      type="button"
+                      onClick={() => setForm({ ...form, category: c.v })}
+                      className={`rounded-full border px-3.5 py-2 text-[12px] font-bold transition-colors ${form.category === c.v ? "border-primary bg-primary text-white" : "border-border bg-card text-muted hover:bg-surface-2"}`}
+                    >
+                      {c.l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          // D10V — 팬 아카이브 복수 선택
+          <div>
+            <Label>참가 아카이브 <span className="font-medium text-subtle">(복수 선택 · 선택 영상 전체 합산)</span></Label>
+            {fanStages.length === 0 ? (
+              <p className="text-[12px] text-subtle">팬 아카이브가 없어요. ‘아카이브’ 탭에서 먼저 만들어주세요.</p>
+            ) : (
+              <div className="space-y-1.5">
+                {fanStages.map((s) => {
+                  const on = form.stage_ids.includes(s.id);
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => toggleFanStage(s.id)}
+                      className={`flex w-full items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left transition-colors ${on ? "border-primary bg-primary-soft" : "border-border bg-card hover:bg-surface-2"}`}
+                    >
+                      <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border-2 ${on ? "border-primary bg-primary text-white" : "border-border"}`}>
+                        {on && <Check className="h-3.5 w-3.5" />}
+                      </span>
+                      <span className="truncate text-[13px] font-bold text-fg">{s.title}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {form.stage_ids.length > 0 && <p className="mt-1.5 text-[11.5px] font-bold text-primary-strong">{form.stage_ids.length}개 아카이브 선택됨</p>}
           </div>
         )}
 
@@ -216,7 +288,7 @@ export default function EventsPanel() {
           </div>
         )}
 
-        <Btn variant="primary" className="w-full py-3" disabled={busy || !form.stage_id || !form.title.trim()} onClick={create}>
+        <Btn variant="primary" className="w-full py-3" disabled={busy || stageIds.length === 0 || !form.title.trim()} onClick={create}>
           <Plus className="h-4 w-4" /> 토너먼트 열기
         </Btn>
       </Card>

@@ -20,9 +20,9 @@ type StatRow = { post_id: string; runs_appeared: number; final_wins: number; mat
 
 // 발표(announced) 전환 시 3종 수상 자동 계산 — 팬인기상(우승 비율)·아티스트인기상(멤버 픽)·최다업로드상(유효 업로드 일수)
 // category 지정 시 해당 카테고리 영상만 대상. 공식영상 토너먼트(isOfficial)는 최다업로드상 제외(업로더가 단일).
-async function computeAwards(eventId: string, stageId: string, category: string | null, isOfficial: boolean) {
+async function computeAwards(eventId: string, stageIds: string[], category: string | null, isOfficial: boolean) {
   const db = admin();
-  let postsQ = db.from("stage_posts").select("id, title, handle, owner_id, created_at").eq("stage_id", stageId).eq("hidden", false);
+  let postsQ = db.from("stage_posts").select("id, title, handle, owner_id, created_at").in("stage_id", stageIds).eq("hidden", false);
   if (category) postsQ = postsQ.eq("category", category);
   const [statsRes, picksRes, postsRes] = await Promise.all([
     db.from("worldcup_stats").select("post_id, runs_appeared, final_wins, match_wins, match_losses").eq("event_id", eventId),
@@ -88,7 +88,10 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
       .maybeSingle();
     if (!ev) return NextResponse.json({ error: "이벤트 없음" }, { status: 404 });
     const isOfficial = Boolean((ev.stages as { is_official?: boolean } | null)?.is_official);
-    update.awards = await computeAwards(id, ev.stage_id as string, (ev.category as string | null) ?? null, isOfficial);
+    // 참가 아카이브 집합(복수 지원). 없으면 대표 stage로 폴백
+    const { data: setRows } = await db.from("stage_event_stages").select("stage_id").eq("event_id", id);
+    const stageIds = (setRows ?? []).map((r) => r.stage_id as string);
+    update.awards = await computeAwards(id, stageIds.length ? stageIds : [ev.stage_id as string], (ev.category as string | null) ?? null, isOfficial);
   }
 
   const { error } = await db.from("stage_events").update(update).eq("id", id);

@@ -40,7 +40,10 @@ export default function TournamentRanking({ eventId }: { eventId: string }) {
   if (!event) return <div className="h-40 animate-pulse rounded-2xl border border-border bg-card-2" />;
 
   const { title } = localizeStageText(event, lang);
-  const stageTitle = localizeTitle(event.stage_title, event.stage_i18n, lang);
+  const stageTitle =
+    event.stage_count && event.stage_count > 1
+      ? t("ev_n_archives").replace("{n}", String(event.stage_count))
+      : localizeTitle(event.stage_title, event.stage_i18n, lang);
 
   return (
     <div>
