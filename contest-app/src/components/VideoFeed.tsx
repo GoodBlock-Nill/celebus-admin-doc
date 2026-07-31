@@ -395,10 +395,10 @@ function RailButton({ icon: Icon, label, active, muted, onClick, ariaLabel }: { 
   );
 }
 
-// 진행 표시 (n / total)
+// 진행 표시 (n / total) — 상단 중앙(우측은 소리·전체화면 컨트롤 자리)
 function FeedProgress({ index, total }: { index: number; total: number }) {
   return (
-    <div className="fixed right-3 top-[max(0.9rem,env(safe-area-inset-top))] z-20 rounded-full bg-black/40 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm tabular-nums">
+    <div className="fixed left-1/2 top-[max(0.9rem,env(safe-area-inset-top))] z-20 -translate-x-1/2 rounded-full bg-black/40 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm tabular-nums">
       {index + 1} / {total}
     </div>
   );
