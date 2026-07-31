@@ -8,8 +8,7 @@ import { LangProvider } from "./LangProvider";
 import SessionProvider from "./SessionProvider";
 import Header from "./Header";
 import BottomNav from "./BottomNav";
-import LaunchPreviewToggle from "./LaunchPreviewToggle";
-import DevAuthToggle from "./DevAuthToggle";
+import DevAutoLogin from "./DevAutoLogin";
 
 // iOS가 키보드를 완전히 접고 뷰포트를 되돌리는 데 걸리는 여유 시간
 const KEYBOARD_SETTLE_MS = 60;
@@ -50,8 +49,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           </main>
           <BottomNav />
         </div>
-        <LaunchPreviewToggle />
-        <DevAuthToggle />
+        <DevAutoLogin />
       </SessionProvider>
     </LangProvider>
   );
