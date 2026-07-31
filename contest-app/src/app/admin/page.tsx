@@ -3,7 +3,7 @@
 // FanStage 관리자 — 로그인 게이트 + 탭 SPA (운영자 전용, 한국어 고정)
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { UserRound, Clapperboard, BarChart3, ScrollText, Trophy, Star, BadgeCheck, LogOut } from "lucide-react";
+import { UserRound, Users, Clapperboard, BarChart3, ScrollText, Trophy, Star, BadgeCheck, LogOut } from "lucide-react";
 import type { ContestRow, LogRow } from "@/lib/admin-types";
 import { adminFetch, getAdminPw, setAdminPw } from "@/lib/admin-types";
 import ContestsPanel from "@/components/admin/ContestsPanel";
@@ -14,10 +14,11 @@ import MembersPanel from "@/components/admin/MembersPanel";
 import EventsPanel from "@/components/admin/EventsPanel";
 import EntriesPanel from "@/components/admin/EntriesPanel";
 import AwardsPanel from "@/components/admin/AwardsPanel";
+import UsersPanel from "@/components/admin/UsersPanel";
 import { Btn, inputCls } from "@/components/admin/ui";
 
 // contests/entries/awards는 레거시(콘테스트 시절) — 탭 숨김, 코드·라우트는 보존
-type Tab = "overview" | "stages" | "official" | "featured" | "events" | "members" | "contests" | "entries" | "awards" | "logs";
+type Tab = "overview" | "stages" | "official" | "featured" | "events" | "members" | "users" | "contests" | "entries" | "awards" | "logs";
 
 const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
   { key: "overview", label: "개요", icon: <BarChart3 className="h-4 w-4" /> },
@@ -26,6 +27,7 @@ const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
   { key: "featured", label: "대표영상", icon: <Star className="h-4 w-4" /> },
   { key: "events", label: "토너먼트", icon: <Trophy className="h-4 w-4" /> },
   { key: "members", label: "멤버", icon: <UserRound className="h-4 w-4" /> },
+  { key: "users", label: "유저", icon: <Users className="h-4 w-4" /> },
   { key: "logs", label: "로그", icon: <ScrollText className="h-4 w-4" /> },
 ];
 
@@ -76,14 +78,15 @@ function Login({ onOk }: { onOk: () => void }) {
 
 function Overview({ stats, go }: { stats: Stats | null; go: (t: Tab) => void }) {
   // MOMENT 지표 — 아카이브/영상/멤버/토너먼트 (기존 stats는 로그인 검증용으로만 유지)
-  const [m, setM] = useState<{ archives: number; official: number; videos: number; members: number; tournaments: number } | null>(null);
+  const [m, setM] = useState<{ archives: number; official: number; videos: number; members: number; users: number; tournaments: number } | null>(null);
   useEffect(() => {
     (async () => {
       try {
-        const [stg, mem, ev] = await Promise.all([
+        const [stg, mem, ev, usr] = await Promise.all([
           adminFetch("/api/admin/stages").then((r) => r.json()),
           adminFetch("/api/admin/members").then((r) => r.json()),
           adminFetch("/api/admin/events").then((r) => r.json()),
+          adminFetch("/api/admin/users").then((r) => r.json()),
         ]);
         const stages = (stg.stages ?? []) as { is_official: boolean; post_count: number }[];
         setM({
@@ -91,6 +94,7 @@ function Overview({ stats, go }: { stats: Stats | null; go: (t: Tab) => void }) 
           official: stages.filter((s) => s.is_official).length,
           videos: stages.reduce((a, s) => a + (s.post_count ?? 0), 0),
           members: (mem.members ?? []).length,
+          users: (usr.users ?? []).length,
           tournaments: (ev.events ?? []).length,
         });
       } catch {
@@ -104,6 +108,7 @@ function Overview({ stats, go }: { stats: Stats | null; go: (t: Tab) => void }) 
     ["아카이브", m.archives, "stages"],
     ["공식 아카이브", m.official, "official"],
     ["총 영상", m.videos, "stages"],
+    ["유저", m.users, "users"],
     ["멤버", m.members, "members"],
     ["토너먼트", m.tournaments, "events"],
   ] as const;
@@ -261,6 +266,7 @@ export default function AdminPage() {
           {tab === "featured" && <FeaturedPanel />}
           {tab === "events" && <EventsPanel />}
           {tab === "members" && <MembersPanel />}
+          {tab === "users" && <UsersPanel />}
           {tab === "contests" && <ContestsPanel />}
           {tab === "entries" && <EntriesPanel contests={stats?.contests ?? []} />}
           {tab === "awards" && <AwardsPanel contests={stats?.contests ?? []} />}
