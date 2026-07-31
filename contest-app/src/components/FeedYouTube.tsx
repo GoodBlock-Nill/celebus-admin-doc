@@ -11,6 +11,22 @@ import { useLang } from "./LangProvider";
 
 const ORIGIN = typeof window !== "undefined" ? window.location.origin : "";
 
+// 화면 방향 잠금 — 안드로이드/크로미움만 지원(iOS·데스크톱 미지원 → 조용히 실패).
+// lib.dom 타입 충돌을 피해 구조적 캐스트 사용.
+type OrientationCtl = { lock?: (o: string) => Promise<void>; unlock?: () => void };
+function orientationCtl(): OrientationCtl | null {
+  if (typeof screen === "undefined" || !screen.orientation) return null;
+  return screen.orientation as unknown as OrientationCtl;
+}
+function lockLandscape(): Promise<void> {
+  const o = orientationCtl();
+  return o?.lock ? o.lock("landscape") : Promise.reject(new Error("unsupported"));
+}
+function unlockOrientation(): void {
+  const o = orientationCtl();
+  try { o?.unlock?.(); } catch { /* noop */ }
+}
+
 export default function FeedYouTube({
   id,
   title,
@@ -46,32 +62,43 @@ export default function FeedYouTube({
     return () => clearTimeout(tm);
   }, [soundOn, id]);
 
-  // 네이티브 전체화면 종료(시스템 back 등) 감지
+  // 네이티브 전체화면 종료(시스템 back 등) 감지 + 종료 시 방향 잠금 해제
   useEffect(() => {
-    const onFs = () => setNativeFs(document.fullscreenElement === wrapRef.current);
+    const onFs = () => {
+      const active = document.fullscreenElement === wrapRef.current;
+      setNativeFs(active);
+      if (!active) unlockOrientation();
+    };
     document.addEventListener("fullscreenchange", onFs);
     return () => document.removeEventListener("fullscreenchange", onFs);
   }, []);
 
-  const toggleFullscreen = async () => {
+  const enterFullscreen = async () => {
     const el = wrapRef.current;
     if (!el) return;
-    if (document.fullscreenElement) {
-      try { await document.exitFullscreen(); } catch { /* noop */ }
-      return;
-    }
-    if (cssFs) {
-      setCssFs(false);
-      return;
-    }
-    // 네이티브 우선, 미지원/거부(주로 iOS) 시 CSS 오버레이로 대체
+    // 네이티브 전체화면 + 가로 잠금(안드로이드/크로미움). 성공 시 자동으로 가로 전환
     if (el.requestFullscreen) {
       try {
         await el.requestFullscreen();
+        lockLandscape().catch(() => { /* iOS 등 미지원 — 사용자가 직접 회전 */ });
         return;
       } catch { /* 폴백으로 진행 */ }
     }
+    // iOS 등: CSS 90° 회전으로 세로 화면을 가로로 채움(폰을 가로로 돌리면 정방향)
     setCssFs(true);
+  };
+
+  const exitFullscreen = async () => {
+    unlockOrientation();
+    if (document.fullscreenElement) {
+      try { await document.exitFullscreen(); } catch { /* noop */ }
+    }
+    setCssFs(false);
+  };
+
+  const toggleFullscreen = () => {
+    if (document.fullscreenElement || cssFs) void exitFullscreen();
+    else void enterFullscreen();
   };
 
   const fullscreen = nativeFs || cssFs;
@@ -87,10 +114,18 @@ export default function FeedYouTube({
       <div
         ref={wrapRef}
         className={`overflow-hidden bg-black ${
-          fullscreen ? "fixed inset-0 z-[90] flex items-center justify-center rounded-none" : "relative rounded-2xl"
+          nativeFs
+            ? "fixed inset-0 z-[90] flex items-center justify-center rounded-none"
+            : cssFs
+              ? "fixed inset-0 z-[90] rounded-none"
+              : "relative rounded-2xl"
         }`}
       >
-        <div className={fullscreen ? "h-full w-full" : "aspect-video w-full"}>
+        <div
+          className={nativeFs ? "h-full w-full" : cssFs ? "absolute left-1/2 top-1/2" : "aspect-video w-full"}
+          // CSS 폴백: 세로 뷰포트를 가로로 채우도록 90° 회전(가로=100vh, 세로=100vw)
+          style={cssFs ? { width: "100vh", height: "100vw", transform: "translate(-50%, -50%) rotate(90deg)" } : undefined}
+        >
           <iframe
             ref={iframeRef}
             src={src}
