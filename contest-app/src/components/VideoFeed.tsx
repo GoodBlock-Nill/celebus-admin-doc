@@ -26,7 +26,8 @@ async function loadFeedList(listParam: string | null, seedId: string): Promise<S
   const preview = isLaunchPreview(); // 배포초기 프리뷰 — 공식만
   if (listParam?.startsWith("stage:")) {
     const stageId = listParam.slice(6);
-    let q = sb.from("stage_posts_public").select("*").eq("stage_id", stageId).order("created_at", { ascending: false }).limit(100);
+    // 공식 아카이브는 200+개 — 씨드가 상위 100 밖이면 단건 폴백으로 빠져 스와이프 컨텍스트가 끊긴다. 전체 포함되도록 상한 확대
+    let q = sb.from("stage_posts_public").select("*").eq("stage_id", stageId).order("created_at", { ascending: false }).limit(300);
     if (preview) q = q.eq("is_official", true);
     const { data } = await q;
     const rows = (data ?? []) as StagePostPublic[];
@@ -88,12 +89,23 @@ export default function VideoFeed({ postId }: { postId: string }) {
       setActive(idx);
       setLoading(false);
       if (focus === "comment") setCommentsFor(postId);
-      // 씨드가 첫 항목이 아니면 해당 위치로 즉시 이동
-      requestAnimationFrame(() => {
-        itemRefs.current[idx]?.scrollIntoView({ block: "start" });
-      });
+      // 스크롤은 posts 렌더 커밋 후 별도 이펙트에서 수행(아래) — refs 준비 보장
     })();
   }, [listParam, postId, focus]);
+
+  // 씨드(클릭한 영상) 위치로 스크롤 — posts가 실제로 렌더/커밋된 뒤 실행해 itemRefs 준비를 보장.
+  // (setPosts 직후 rAF는 아직 아이템이 커밋 전이라 스크롤이 무시돼 항상 최신 영상이 재생되던 버그 수정)
+  const seededRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!posts.length) return;
+    if (seededRef.current === postId) return;
+    const idx = posts.findIndex((p) => p.id === postId);
+    seededRef.current = postId;
+    if (idx > 0) {
+      const el = itemRefs.current[idx];
+      if (el) el.scrollIntoView({ block: "start" });
+    }
+  }, [posts, postId]);
 
   // 활성 항목 감지 (뷰포트 중앙)
   useEffect(() => {
