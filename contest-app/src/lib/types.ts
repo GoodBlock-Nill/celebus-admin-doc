@@ -97,7 +97,12 @@ export interface StagePublic {
   created_at: string;
   is_official: boolean;
   i18n?: StageI18n;
+  category?: string | null; // D10V(팬) 아카이브 카테고리 key (공식 아카이브는 미사용)
 }
+
+// D10V(팬) 아카이브 카테고리 — 콘서트/버스킹/페스티벌/팬미팅/행사/팬메이드. 라벨은 t(`arch_cat_${key}`)
+export const ARCHIVE_CATEGORY_KEYS = ["concert", "busking", "festival", "fanmeeting", "event", "fanmade"] as const;
+export type ArchiveCategory = (typeof ARCHIVE_CATEGORY_KEYS)[number];
 
 // 스테이지 게시물 — stage_posts_public 뷰
 export const STAGE_CATEGORY_KEYS = ["fancam", "cover", "edit", "etc"] as const;

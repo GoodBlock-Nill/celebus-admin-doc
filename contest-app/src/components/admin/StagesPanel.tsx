@@ -22,9 +22,20 @@ type StageRow = {
   is_official: boolean;
   created_at: string;
   i18n?: LangI18n | null;
+  category?: string | null;
 };
 
-const EMPTY = { title: "", description: "", event_date: "", cover_url: "", is_official: false, i18n: {} as LangI18n };
+// D10V(팬) 아카이브 카테고리
+const CAT_OPTIONS: { v: string; l: string }[] = [
+  { v: "concert", l: "콘서트" },
+  { v: "busking", l: "버스킹" },
+  { v: "festival", l: "페스티벌" },
+  { v: "fanmeeting", l: "팬미팅" },
+  { v: "event", l: "행사" },
+  { v: "fanmade", l: "팬메이드" },
+];
+
+const EMPTY = { title: "", description: "", event_date: "", cover_url: "", is_official: false, category: "", i18n: {} as LangI18n };
 
 export default function StagesPanel() {
   const [stages, setStages] = useState<StageRow[]>([]);
@@ -43,7 +54,7 @@ export default function StagesPanel() {
 
   function openEdit(s: StageRow | "new") {
     setEditing(s);
-    setForm(s === "new" ? EMPTY : { title: s.title, description: s.description, event_date: s.event_date ?? "", cover_url: s.cover_url ?? "", is_official: s.is_official, i18n: s.i18n ?? {} });
+    setForm(s === "new" ? EMPTY : { title: s.title, description: s.description, event_date: s.event_date ?? "", cover_url: s.cover_url ?? "", is_official: s.is_official, category: s.category ?? "", i18n: s.i18n ?? {} });
   }
 
   async function save() {
@@ -55,6 +66,7 @@ export default function StagesPanel() {
       event_date: form.event_date || null,
       cover_url: form.cover_url.trim() || null,
       is_official: form.is_official,
+      category: form.is_official ? null : form.category || null, // 카테고리는 D10V(팬) 아카이브 전용
       i18n: cleanStageI18n(form.i18n),
     });
     const res =
@@ -168,6 +180,26 @@ export default function StagesPanel() {
                 </div>
               </div>
             </div>
+            {/* 카테고리 — D10V(팬) 아카이브 전용 */}
+            {!form.is_official && (
+              <div>
+                <Label>카테고리 <span className="font-medium text-subtle">(선택 · D10V 아카이브 분류)</span></Label>
+                <div className="flex flex-wrap gap-1.5">
+                  {CAT_OPTIONS.map((c) => (
+                    <button
+                      key={c.v}
+                      type="button"
+                      onClick={() => setForm({ ...form, category: form.category === c.v ? "" : c.v })}
+                      className={`rounded-full border px-3.5 py-1.5 text-[12px] font-bold transition-colors ${
+                        form.category === c.v ? "border-primary bg-primary text-white" : "border-border bg-card text-muted hover:bg-surface-2"
+                      }`}
+                    >
+                      {c.l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             <label className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-border bg-surface-2 px-3 py-3">
               <input type="checkbox" checked={form.is_official} onChange={(e) => setForm({ ...form, is_official: e.target.checked })} className="h-4 w-4 accent-primary" />
               <span className="text-[13px] font-bold text-fg">V01D 공식 아카이브 (열람 전용 · 팬 업로드 불가)</span>

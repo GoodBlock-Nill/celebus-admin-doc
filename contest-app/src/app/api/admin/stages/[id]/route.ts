@@ -4,6 +4,7 @@ import { admin } from "@/lib/db-admin";
 import { isAdmin } from "@/lib/admin-auth";
 import { logAdmin } from "@/lib/admin-log";
 import { stageI18nSchema } from "@/lib/schema";
+import { ARCHIVE_CATEGORY_KEYS } from "@/lib/types";
 
 const patchSchema = z.object({
   title: z.string().trim().min(1).max(80).optional(),
@@ -14,6 +15,7 @@ const patchSchema = z.object({
   hidden: z.boolean().optional(),
   sort_order: z.number().int().optional(),
   is_official: z.boolean().optional(), // 공식 아카이브(열람 전용) 토글
+  category: z.enum(ARCHIVE_CATEGORY_KEYS).nullable().optional(), // D10V 아카이브 카테고리
   i18n: stageI18nSchema, // 다국어(en/ja)
 });
 

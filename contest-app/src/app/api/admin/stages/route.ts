@@ -4,6 +4,7 @@ import { admin } from "@/lib/db-admin";
 import { isAdmin } from "@/lib/admin-auth";
 import { logAdmin } from "@/lib/admin-log";
 import { stageI18nSchema } from "@/lib/schema";
+import { ARCHIVE_CATEGORY_KEYS } from "@/lib/types";
 
 const createSchema = z.object({
   title: z.string().trim().min(1).max(80),
@@ -11,6 +12,7 @@ const createSchema = z.object({
   cover_url: z.string().trim().url().max(500).nullable().optional(),
   event_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
   is_official: z.boolean().optional().default(false), // 공식 아카이브(열람 전용)
+  category: z.enum(ARCHIVE_CATEGORY_KEYS).nullable().optional(), // D10V 아카이브 카테고리
   i18n: stageI18nSchema, // 다국어(en/ja) title·description
 });
 

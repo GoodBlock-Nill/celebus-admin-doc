@@ -7,6 +7,7 @@ import { CalendarDays, Trophy, BadgeCheck } from "lucide-react";
 import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StagePublic } from "@/lib/types";
+import { ARCHIVE_CATEGORY_KEYS } from "@/lib/types";
 import { localizeStageText } from "@/lib/localize";
 import { useLang } from "./LangProvider";
 import StageView from "./StageView";
@@ -59,6 +60,11 @@ function StageCardItem({ stage }: { stage: StagePublic }) {
               {t(stage.status === "open" ? "stage_open" : "stage_archived")}
             </span>
           )}
+          {!stage.is_official && stage.category && (
+            <span className="ml-1.5 shrink-0 rounded-full bg-primary-soft px-2 py-1 text-[10px] font-bold text-primary-strong">
+              {t(`arch_cat_${stage.category}`)}
+            </span>
+          )}
           <span className="ml-auto text-[11px] font-bold text-primary-strong">{t("stage_open_cta")} ›</span>
         </div>
       </div>
@@ -73,6 +79,7 @@ export default function StageList() {
   const [stages, setStages] = useState<StagePublic[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<ArchiveTab>("d10v");
+  const [catFilter, setCatFilter] = useState<string>("all");
 
   useEffect(() => {
     (async () => {
@@ -89,6 +96,9 @@ export default function StageList() {
   // D10V = 팬 업로드 아카이브(카드 목록) / V01D = 공식 아카이브(영상 직접 노출)
   const fanStages = stages.filter((s) => !s.is_official);
   const officialStage = stages.find((s) => s.is_official);
+  // D10V 카테고리 필터 — 실제 존재하는 카테고리만 칩으로 노출
+  const presentCats = ARCHIVE_CATEGORY_KEYS.filter((k) => fanStages.some((s) => s.category === k));
+  const shownFan = catFilter === "all" ? fanStages : fanStages.filter((s) => s.category === catFilter);
   const TABS: { key: ArchiveTab; label: string }[] = [
     { key: "d10v", label: t("home_archive_title") },
     { key: "v01d", label: t("home_official_title") },
@@ -133,6 +143,23 @@ export default function StageList() {
         </Link>
       )}
 
+      {/* D10V 카테고리 필터칩 — 존재하는 카테고리만 */}
+      {tab === "d10v" && presentCats.length > 0 && (
+        <div className="mb-4 -mx-0.5 flex gap-1.5 overflow-x-auto px-0.5 pb-1">
+          {["all", ...presentCats].map((k) => (
+            <button
+              key={k}
+              onClick={() => setCatFilter(k)}
+              className={`shrink-0 rounded-full px-3.5 py-1.5 text-[12.5px] font-bold transition-colors active:scale-[0.97] ${
+                catFilter === k ? "brand-gradient text-white shadow-sm" : "border border-border bg-card text-muted"
+              }`}
+            >
+              {t(`arch_cat_${k}`)}
+            </button>
+          ))}
+        </div>
+      )}
+
       {loading ? (
         <div className="space-y-3">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -156,7 +183,7 @@ export default function StageList() {
         </div>
       ) : (
         <div className="space-y-3">
-          {fanStages.map((s) => (
+          {shownFan.map((s) => (
             <StageCardItem key={s.id} stage={s} />
           ))}
         </div>
