@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Plus, Pencil, X } from "lucide-react";
 import { adminFetch } from "@/lib/admin-types";
 import { Badge, Btn, Card, Empty, Label, inputCls } from "./ui";
+import LangTabsFields, { cleanStageI18n, type LangI18n } from "./LangTabsFields";
 
 type StageRow = {
   id: string;
@@ -18,9 +19,10 @@ type StageRow = {
   post_count: number;
   is_official: boolean;
   created_at: string;
+  i18n?: LangI18n | null;
 };
 
-const EMPTY = { title: "", description: "", event_date: "", cover_url: "", is_official: false };
+const EMPTY = { title: "", description: "", event_date: "", cover_url: "", is_official: false, i18n: {} as LangI18n };
 
 export default function StagesPanel() {
   const [stages, setStages] = useState<StageRow[]>([]);
@@ -39,7 +41,7 @@ export default function StagesPanel() {
 
   function openEdit(s: StageRow | "new") {
     setEditing(s);
-    setForm(s === "new" ? EMPTY : { title: s.title, description: s.description, event_date: s.event_date ?? "", cover_url: s.cover_url ?? "", is_official: s.is_official });
+    setForm(s === "new" ? EMPTY : { title: s.title, description: s.description, event_date: s.event_date ?? "", cover_url: s.cover_url ?? "", is_official: s.is_official, i18n: s.i18n ?? {} });
   }
 
   async function save() {
@@ -51,6 +53,7 @@ export default function StagesPanel() {
       event_date: form.event_date || null,
       cover_url: form.cover_url.trim() || null,
       is_official: form.is_official,
+      i18n: cleanStageI18n(form.i18n),
     });
     const res =
       editing !== "new" && editing
@@ -138,14 +141,17 @@ export default function StagesPanel() {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div>
-              <Label>아카이브명</Label>
-              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={80} placeholder="예: 2026 여름 부산 버스킹" className={inputCls} />
-            </div>
-            <div>
-              <Label>소개</Label>
-              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} maxLength={500} rows={2} className={`${inputCls} resize-none`} />
-            </div>
+            <LangTabsFields
+              koTitle={form.title}
+              koDesc={form.description}
+              i18n={form.i18n}
+              onKoTitle={(v) => setForm({ ...form, title: v })}
+              onKoDesc={(v) => setForm({ ...form, description: v })}
+              onI18n={(v) => setForm({ ...form, i18n: v })}
+              titleLabel="아카이브명"
+              titlePlaceholder="예: 2026 여름 부산 버스킹"
+              descRows={2}
+            />
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <Label>날짜</Label>

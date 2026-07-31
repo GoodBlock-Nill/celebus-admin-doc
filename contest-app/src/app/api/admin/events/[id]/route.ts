@@ -3,6 +3,7 @@ import { z } from "zod";
 import { admin } from "@/lib/db-admin";
 import { isAdmin } from "@/lib/admin-auth";
 import { logAdmin } from "@/lib/admin-log";
+import { stageI18nSchema } from "@/lib/schema";
 
 const patchSchema = z.object({
   title: z.string().trim().min(1).max(80).optional(),
@@ -11,6 +12,7 @@ const patchSchema = z.object({
   status: z.enum(["open", "announced", "closed"]).optional(),
   reward_type: z.enum(["reward", "popularity"]).optional(),
   reward: z.string().trim().max(200).optional(),
+  i18n: stageI18nSchema, // 다국어(en/ja)
   cover_url: z.string().trim().url().nullable().optional(),
 });
 

@@ -8,6 +8,7 @@ import { Gift, Users } from "lucide-react";
 import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StageEventPublic } from "@/lib/types";
+import { localizeStageText } from "@/lib/localize";
 import { useLang } from "./LangProvider";
 import { isLaunchPreview } from "@/lib/launchPreview";
 
@@ -52,7 +53,7 @@ function CoverCollage({ coverUrl, thumbs, official }: { coverUrl: string | null;
 }
 
 export default function EventList() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [rows, setRows] = useState<Enriched[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -120,6 +121,7 @@ export default function EventList() {
         <div className="space-y-3.5">
           {rows.map(({ event: e, thumbs, entryCount, participants }) => {
             const announced = e.status === "announced";
+            const { title, description } = localizeStageText(e, lang);
             const meta = [
               t(e.stage_is_official ? "ev_source_official" : "ev_source_fan") + (e.stage_is_official && e.category ? ` · ${t(`cat_${e.category}`)}` : ""),
               t(e.reward_type === "reward" ? "ev_type_reward" : "ev_type_popularity"),
@@ -142,8 +144,8 @@ export default function EventList() {
                 {/* 본문 */}
                 <div className="p-3.5">
                   <div className="text-[11.5px] font-bold text-muted">{meta.join(" · ")}</div>
-                  <h3 className="mt-0.5 line-clamp-2 text-[15.5px] font-bold leading-snug text-fg">{e.title}</h3>
-                  {e.description && <p className="mt-1 line-clamp-1 text-[12px] text-muted">{e.description}</p>}
+                  <h3 className="mt-0.5 line-clamp-2 text-[15.5px] font-bold leading-snug text-fg">{title}</h3>
+                  {description && <p className="mt-1 line-clamp-1 text-[12px] text-muted">{description}</p>}
                   {e.reward_type === "reward" && e.reward && (
                     <p className="mt-2 flex items-center gap-1.5 text-[11.5px] font-semibold text-amber-700">
                       <Gift className="h-3.5 w-3.5 shrink-0" /> <span className="truncate">{e.reward}</span>

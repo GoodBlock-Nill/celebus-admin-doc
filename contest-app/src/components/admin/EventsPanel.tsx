@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import { adminFetch } from "@/lib/admin-types";
 import ImageUploader from "./ImageUploader";
 import { Badge, Btn, Card, Empty, Label, inputCls, useConfirm } from "./ui";
+import LangTabsFields, { cleanStageI18n, type LangI18n } from "./LangTabsFields";
 
 type EventRow = {
   id: string;
@@ -39,7 +40,7 @@ const STATUS_TONE: Record<EventRow["status"], "green" | "amber" | "gray"> = { op
 export default function EventsPanel() {
   const [events, setEvents] = useState<EventRow[]>([]);
   const [stages, setStages] = useState<StageOpt[]>([]);
-  const [form, setForm] = useState({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity" as "reward" | "popularity", reward: "", category: "", cover_url: "" });
+  const [form, setForm] = useState({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity" as "reward" | "popularity", reward: "", category: "", cover_url: "", i18n: {} as LangI18n });
   const [busy, setBusy] = useState(false);
   const { confirm, confirmEl } = useConfirm();
 
@@ -70,12 +71,13 @@ export default function EventsPanel() {
         reward: form.reward_type === "reward" ? form.reward.trim() : "",
         category: form.category || null,
         cover_url: form.cover_url || null,
+        i18n: cleanStageI18n(form.i18n),
       }),
     });
     setBusy(false);
     if (res.ok) {
       toast.success("토너먼트를 열었어요.");
-      setForm({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity", reward: "", category: "", cover_url: "" });
+      setForm({ stage_id: "", title: "", description: "", ends_at: "", reward_type: "popularity", reward: "", category: "", cover_url: "", i18n: {} });
       void load();
     } else {
       const j = await res.json().catch(() => ({}));
@@ -144,27 +146,18 @@ export default function EventsPanel() {
           </div>
         )}
 
-        <div>
-          <Label>토너먼트명</Label>
-          <input
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            maxLength={80}
-            placeholder="토너먼트명 (예: 부산 버스킹 모먼트 토너먼트)"
-            className={inputCls}
-          />
-        </div>
-
-        <div>
-          <Label>소개 <span className="font-medium text-subtle">(선택)</span></Label>
-          <input
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            maxLength={500}
-            placeholder="소개 (선택)"
-            className={inputCls}
-          />
-        </div>
+        <LangTabsFields
+          koTitle={form.title}
+          koDesc={form.description}
+          i18n={form.i18n}
+          onKoTitle={(v) => setForm({ ...form, title: v })}
+          onKoDesc={(v) => setForm({ ...form, description: v })}
+          onI18n={(v) => setForm({ ...form, i18n: v })}
+          titleLabel="토너먼트명"
+          descLabel="소개"
+          titlePlaceholder="토너먼트명 (예: 부산 버스킹 모먼트 토너먼트)"
+          descRows={2}
+        />
 
         <div>
           <Label>종료일 <span className="font-medium text-subtle">(선택)</span></Label>

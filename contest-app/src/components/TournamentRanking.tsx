@@ -8,11 +8,12 @@ import { ChevronLeft } from "lucide-react";
 import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StageEventPublic, StagePostPublic } from "@/lib/types";
+import { localizeStageText, localizeTitle } from "@/lib/localize";
 import WorldcupStandings from "./WorldcupStandings";
 import { useLang } from "./LangProvider";
 
 export default function TournamentRanking({ eventId }: { eventId: string }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [event, setEvent] = useState<StageEventPublic | null>(null);
   const [pool, setPool] = useState<StagePostPublic[]>([]);
   const [notFound, setNotFound] = useState(false);
@@ -38,6 +39,9 @@ export default function TournamentRanking({ eventId }: { eventId: string }) {
   }
   if (!event) return <div className="h-40 animate-pulse rounded-2xl border border-border bg-card-2" />;
 
+  const { title } = localizeStageText(event, lang);
+  const stageTitle = localizeTitle(event.stage_title, event.stage_i18n, lang);
+
   return (
     <div>
       <Link href="/events?tab=ranking" className="mb-2 inline-flex min-h-11 items-center gap-1 text-[13px] font-bold text-muted">
@@ -47,7 +51,7 @@ export default function TournamentRanking({ eventId }: { eventId: string }) {
       {/* 헤더 */}
       <div className="mb-1 flex items-center gap-2">
         <CharmIcon name="trophy" size={26} className="shrink-0" />
-        <h1 className="min-w-0 flex-1 text-[19px] font-bold leading-tight text-fg">{event.title}</h1>
+        <h1 className="min-w-0 flex-1 text-[19px] font-bold leading-tight text-fg">{title}</h1>
       </div>
       <div className="mb-4 flex flex-wrap items-center gap-1.5">
         <span className={`inline-flex rounded-full px-2 py-0.5 text-[10.5px] font-extrabold ${event.stage_is_official ? "bg-primary-soft text-primary-strong" : "bg-[#eaf7f0] text-[#21845f]"}`}>
@@ -57,7 +61,7 @@ export default function TournamentRanking({ eventId }: { eventId: string }) {
         <span className="rounded-full bg-card-2 px-2 py-0.5 text-[10.5px] font-bold text-muted">
           {t(event.status === "open" ? "ev_status_open" : "ev_status_announced")}
         </span>
-        <span className="text-[12px] text-muted">{event.stage_title}</span>
+        <span className="text-[12px] text-muted">{stageTitle}</span>
       </div>
 
       {/* 순위 (포디움 + 지표) */}

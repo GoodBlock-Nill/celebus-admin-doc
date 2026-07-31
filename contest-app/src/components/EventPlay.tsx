@@ -9,6 +9,7 @@ import { CharmIcon, PlayBadge } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StageEventPublic, StagePostPublic } from "@/lib/types";
 import { stagePostAsEntry } from "@/lib/types";
+import { localizeStageText, localizeTitle } from "@/lib/localize";
 import EntryEmbed from "./EntryEmbed";
 import WorldcupStandings from "./WorldcupStandings";
 import { useLang } from "./LangProvider";
@@ -116,7 +117,7 @@ function JourneyTrack({ startSize, roundSize, t }: { startSize: number; roundSiz
 }
 
 export default function EventPlay({ eventId }: { eventId: string }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { requireLogin } = useSession();
   const [event, setEvent] = useState<StageEventPublic | null>(null);
   const [pool, setPool] = useState<StagePostPublic[]>([]);
@@ -250,6 +251,8 @@ export default function EventPlay({ eventId }: { eventId: string }) {
   const a = current[matchIdx * 2];
   const b = current[matchIdx * 2 + 1];
   const roundSize = current.length;
+  const { title: eventTitle, description: eventDescription } = localizeStageText(event, lang);
+  const stageTitle = localizeTitle(event.stage_title, event.stage_i18n, lang);
 
   return (
     <div>
@@ -259,7 +262,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       <div className="mb-4">
         <div className="flex items-center gap-2">
           <CharmIcon name="trophy" size={26} className="shrink-0" />
-          <h1 className="min-w-0 flex-1 text-[19px] font-bold text-fg">{event.title}</h1>
+          <h1 className="min-w-0 flex-1 text-[19px] font-bold text-fg">{eventTitle}</h1>
           <span
             className={`shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-extrabold ${
               event.reward_type === "reward" ? "bg-amber-100 text-amber-700" : "bg-card-2 text-muted"
@@ -274,7 +277,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
             {t(event.stage_is_official ? "ev_source_official" : "ev_source_fan")}
             {event.stage_is_official && event.category ? ` · ${t(`cat_${event.category}`)}` : ""}
           </span>
-          <span className="text-[12px] text-muted">{event.stage_title}</span>
+          <span className="text-[12px] text-muted">{stageTitle}</span>
         </div>
         {/* 보상형 — 우승 보상 안내 */}
         {event.reward_type === "reward" && event.reward && (
@@ -343,7 +346,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
               <img src={event.cover_url} alt="" className="aspect-[16/9] w-full object-cover" />
             </div>
           )}
-          {event.description && <p className="text-[13.5px] leading-relaxed text-muted">{event.description}</p>}
+          {eventDescription && <p className="text-[13.5px] leading-relaxed text-muted">{eventDescription}</p>}
 
           {/* 참여 규모 · 참가작 수 · 라운드 */}
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] font-semibold text-muted">

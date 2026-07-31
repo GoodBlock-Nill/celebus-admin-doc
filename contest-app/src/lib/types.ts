@@ -82,6 +82,9 @@ export interface EntryPublic {
 }
 
 // 스테이지 (W1) — 관리자가 생성하는 공연 단위 컨테이너. 유저는 스테이지에 영상 업로드.
+// 아카이브·토너먼트 다국어 — base(ko) 외 언어별 title/description. 미입력 시 base(ko) 폴백.
+export type StageI18n = Record<string, { title?: string; description?: string }> | null;
+
 export interface StagePublic {
   id: string;
   title: string;
@@ -93,6 +96,7 @@ export interface StagePublic {
   sort_order: number;
   created_at: string;
   is_official: boolean;
+  i18n?: StageI18n;
 }
 
 // 스테이지 게시물 — stage_posts_public 뷰
@@ -194,6 +198,8 @@ export interface StageEventPublic {
   stage_is_official: boolean;
   category: string | null;
   cover_url: string | null; // 대표 커버(관리자 지정, 없으면 참가작 콜라주)
+  i18n?: StageI18n; // 토너먼트 다국어(title/description)
+  stage_i18n?: StageI18n; // 소속 아카이브 다국어(stage_title 현지화용)
 }
 
 // 월드컵 집계 — worldcup_stats_public 뷰

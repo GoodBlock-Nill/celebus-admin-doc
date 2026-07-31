@@ -9,6 +9,7 @@ import { BadgeCheck, Plus, RefreshCw } from "lucide-react";
 import { PlayBadge } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StageEventPublic, StagePostPublic, StagePublic } from "@/lib/types";
+import { localizeStageText, localizeTitle } from "@/lib/localize";
 import { AvatarStack, CATEGORY_LABEL, LoadingSkeleton, SectionHeader, Thumb, timeAgo } from "./HomeAtoms";
 import { useLang } from "./LangProvider";
 import { useSession } from "./SessionProvider";
@@ -21,7 +22,7 @@ interface HeroPost extends StagePostPublic {
 }
 
 export default function Home() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { requireLogin } = useSession();
   const [uploadOpen, setUploadOpen] = useState(false);
   const openUpload = () => {
@@ -101,7 +102,8 @@ export default function Home() {
   // 히어로 우선순위: ① 관리자 고정(featured) → ② 멤버 하트 최다 → ③ 최신
   const heroPost = useMemo<HeroPost | null>(() => {
     if (featuredPost) {
-      const stageTitle = stages.find((s) => s.id === featuredPost.stage_id)?.title;
+      const stage = stages.find((s) => s.id === featuredPost.stage_id);
+      const stageTitle = stage ? localizeTitle(stage.title, stage.i18n, lang) : undefined;
       return { ...featuredPost, __stageTitle: stageTitle };
     }
     if (posts.length === 0) return null;
@@ -114,9 +116,10 @@ export default function Home() {
         bestCount = c;
       }
     }
-    const stageTitle = stages.find((s) => s.id === best.stage_id)?.title;
+    const stage = stages.find((s) => s.id === best.stage_id);
+    const stageTitle = stage ? localizeTitle(stage.title, stage.i18n, lang) : undefined;
     return { ...best, __stageTitle: stageTitle };
-  }, [posts, hearts, stages, featuredPost]);
+  }, [posts, hearts, stages, featuredPost, lang]);
   const heroHearts = heroPost ? hearts.get(heroPost.id) ?? [] : [];
   const heroGrandSlam = membersTotal > 0 && heroHearts.length >= membersTotal;
 
@@ -253,18 +256,21 @@ export default function Home() {
             <div>
               <SectionHeader title={t("home_archive_title")} sub={t("home_archive_sub")} moreHref="/stages" />
               <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
-                {fanStages.map((s) => (
-                  <Link key={s.id} href={`/stage/${s.id}`} className="w-[156px] shrink-0 active:scale-[0.98]">
-                    <div className="relative h-[92px] overflow-hidden rounded-2xl">
-                      <Thumb url={s.cover_url} />
-                      <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
-                    </div>
-                    <strong className="mt-2 block truncate text-[12.5px] font-bold text-fg">{s.title}</strong>
-                    <small className="mt-0.5 block text-[11px] text-muted">
-                      {t("home_stage_meta").replace("{n}", String(s.post_count))}
-                    </small>
-                  </Link>
-                ))}
+                {fanStages.map((s) => {
+                  const { title: stageTitle } = localizeStageText(s, lang);
+                  return (
+                    <Link key={s.id} href={`/stage/${s.id}`} className="w-[156px] shrink-0 active:scale-[0.98]">
+                      <div className="relative h-[92px] overflow-hidden rounded-2xl">
+                        <Thumb url={s.cover_url} />
+                        <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
+                      </div>
+                      <strong className="mt-2 block truncate text-[12.5px] font-bold text-fg">{stageTitle}</strong>
+                      <small className="mt-0.5 block text-[11px] text-muted">
+                        {t("home_stage_meta").replace("{n}", String(s.post_count))}
+                      </small>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -309,21 +315,25 @@ export default function Home() {
           {/* 진행중인 토너먼트 — 없어도 빈 상태로 항상 노출 */}
           <div>
             <SectionHeader title={t("home_wc_title")} />
-            {event ? (
-              <Link
-                href={`/event/${event.id}`}
-                className="flex items-center gap-3 rounded-2xl border border-[#dfe0ff] bg-primary-soft p-3.5 active:scale-[0.99]"
-              >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-[14px] font-black text-primary">
-                  VS
-                </div>
-                <div className="min-w-0 flex-1">
-                  <strong className="block truncate text-[13.5px] font-extrabold text-fg">{event.title}</strong>
-                  <p className="mt-0.5 truncate text-[11.5px] text-muted">{event.stage_title} · {t("home_wc_ongoing")}</p>
-                </div>
-                <span className="shrink-0 text-[18px] text-subtle">›</span>
-              </Link>
-            ) : (
+            {event ? (() => {
+              const { title: wcTitle } = localizeStageText(event, lang);
+              const wcStageTitle = localizeTitle(event.stage_title, event.stage_i18n, lang);
+              return (
+                <Link
+                  href={`/event/${event.id}`}
+                  className="flex items-center gap-3 rounded-2xl border border-[#dfe0ff] bg-primary-soft p-3.5 active:scale-[0.99]"
+                >
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-[14px] font-black text-primary">
+                    VS
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <strong className="block truncate text-[13.5px] font-extrabold text-fg">{wcTitle}</strong>
+                    <p className="mt-0.5 truncate text-[11.5px] text-muted">{wcStageTitle} · {t("home_wc_ongoing")}</p>
+                  </div>
+                  <span className="shrink-0 text-[18px] text-subtle">›</span>
+                </Link>
+              );
+            })() : (
               <p className="rounded-2xl border border-[#dfe0ff] bg-primary-soft/50 px-3 py-5 text-center text-[12.5px] font-semibold text-muted">
                 {t("home_wc_empty")}
               </p>

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { admin } from "@/lib/db-admin";
 import { isAdmin } from "@/lib/admin-auth";
 import { logAdmin } from "@/lib/admin-log";
+import { stageI18nSchema } from "@/lib/schema";
 
 const createSchema = z.object({
   title: z.string().trim().min(1).max(80),
@@ -10,6 +11,7 @@ const createSchema = z.object({
   cover_url: z.string().trim().url().max(500).nullable().optional(),
   event_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
   is_official: z.boolean().optional().default(false), // 공식 아카이브(열람 전용)
+  i18n: stageI18nSchema, // 다국어(en/ja) title·description
 });
 
 // 스테이지(공연 컨테이너) 관리 — contests와 동일 패턴(service_role 직접)

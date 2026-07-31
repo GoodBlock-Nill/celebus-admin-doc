@@ -3,6 +3,7 @@ import { z } from "zod";
 import { admin } from "@/lib/db-admin";
 import { isAdmin } from "@/lib/admin-auth";
 import { logAdmin } from "@/lib/admin-log";
+import { stageI18nSchema } from "@/lib/schema";
 
 const createSchema = z.object({
   stage_id: z.string().uuid(),
@@ -13,6 +14,7 @@ const createSchema = z.object({
   reward: z.string().trim().max(200).default(""),
   category: z.string().trim().max(40).nullable().optional(),
   cover_url: z.string().trim().url().nullable().optional(),
+  i18n: stageI18nSchema, // 다국어(en/ja) title·description
 });
 
 // 월드컵 이벤트 관리 — 스테이지 단위로 개최

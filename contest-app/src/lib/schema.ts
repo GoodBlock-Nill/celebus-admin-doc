@@ -20,6 +20,13 @@ export const resolveUrlSchema = z.object({
 
 // 스테이지 상시 업로드 (W1) — 콘테스트 응모와 달리 비번·전화 없음(신원 = identity 레이어)
 export const STAGE_CATEGORIES = ["fancam", "cover", "edit", "etc"] as const;
+
+// 아카이브·토너먼트 다국어(i18n) — {en?:{title?,description?}, ja?:{...}}. base(ko)는 별도 컬럼.
+const stageLocaleSchema = z.object({
+  title: z.string().trim().max(200).optional(),
+  description: z.string().trim().max(2000).optional(),
+});
+export const stageI18nSchema = z.record(z.enum(["en", "ja"]), stageLocaleSchema).nullable().optional();
 export const createStagePostSchema = z.object({
   stage_id: z.string().uuid(),
   url: z.string().trim().min(8, "링크를 입력해주세요.").max(500),

@@ -7,11 +7,13 @@ import { CalendarDays, Trophy, BadgeCheck } from "lucide-react";
 import { CharmIcon } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StagePublic } from "@/lib/types";
+import { localizeStageText } from "@/lib/localize";
 import { useLang } from "./LangProvider";
 import StageView from "./StageView";
 
 function StageCardItem({ stage }: { stage: StagePublic }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const { title, description } = localizeStageText(stage, lang);
   return (
     <Link
       href={`/stage/${stage.id}`}
@@ -30,9 +32,9 @@ function StageCardItem({ stage }: { stage: StagePublic }) {
         <div className="media-scrim pointer-events-none absolute inset-0" />
       </div>
       <div className="p-3.5">
-        <h3 className="line-clamp-2 text-[15px] font-bold leading-snug text-fg">{stage.title}</h3>
-        {stage.description && (
-          <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-muted">{stage.description}</p>
+        <h3 className="line-clamp-2 text-[15px] font-bold leading-snug text-fg">{title}</h3>
+        {description && (
+          <p className="mt-1 line-clamp-2 text-[12.5px] leading-relaxed text-muted">{description}</p>
         )}
         <div className="mt-1.5 flex items-center gap-1 text-[11.5px] text-muted">
           {stage.event_date && (

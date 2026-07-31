@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Trophy, ChevronRight, Play } from "lucide-react";
 import { sb } from "@/lib/supabase-browser";
 import type { CreatorRankPublic, D10vPickPublic, StageEventPublic } from "@/lib/types";
+import { localizeStageText } from "@/lib/localize";
 import { useLang } from "./LangProvider";
 import { SectionHeader } from "./HomeAtoms";
 
@@ -15,7 +16,7 @@ function RankBadge({ i }: { i: number }) {
 }
 
 export default function RankingView() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [events, setEvents] = useState<StageEventPublic[]>([]);
   const [creators, setCreators] = useState<CreatorRankPublic[]>([]);
   const [picks, setPicks] = useState<D10vPickPublic[]>([]);
@@ -54,11 +55,13 @@ export default function RankingView() {
           <p className="rounded-xl border border-border bg-card px-3 py-4 text-center text-[12.5px] text-muted">{t("rank_empty_soon")}</p>
         ) : (
           <div className="space-y-2">
-            {events.map((e) => (
+            {events.map((e) => {
+              const { title } = localizeStageText(e, lang);
+              return (
               <Link key={e.id} href={`/event/${e.id}/ranking`} className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2.5 shadow-sm active:scale-[0.99]">
                 <Trophy className="h-4 w-4 shrink-0 text-primary" />
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-[13px] font-bold text-fg">{e.title}</div>
+                  <div className="truncate text-[13px] font-bold text-fg">{title}</div>
                   <div className="mt-0.5 flex items-center gap-1.5 text-[11px]">
                     <span className={`rounded-full px-1.5 py-0.5 font-extrabold ${e.stage_is_official ? "bg-primary-soft text-primary-strong" : "bg-[#eaf7f0] text-[#21845f]"}`}>
                       {t(e.stage_is_official ? "ev_source_official" : "ev_source_fan")}
@@ -69,7 +72,8 @@ export default function RankingView() {
                 </div>
                 <ChevronRight className="h-4 w-4 shrink-0 text-subtle" />
               </Link>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>

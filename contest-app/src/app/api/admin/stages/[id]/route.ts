@@ -3,6 +3,7 @@ import { z } from "zod";
 import { admin } from "@/lib/db-admin";
 import { isAdmin } from "@/lib/admin-auth";
 import { logAdmin } from "@/lib/admin-log";
+import { stageI18nSchema } from "@/lib/schema";
 
 const patchSchema = z.object({
   title: z.string().trim().min(1).max(80).optional(),
@@ -13,6 +14,7 @@ const patchSchema = z.object({
   hidden: z.boolean().optional(),
   sort_order: z.number().int().optional(),
   is_official: z.boolean().optional(), // 공식 아카이브(열람 전용) 토글
+  i18n: stageI18nSchema, // 다국어(en/ja)
 });
 
 export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
