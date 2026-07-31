@@ -306,9 +306,10 @@ export default function Home() {
             </div>
           )}
 
-          {event && (
-            <div>
-              <SectionHeader title={t("home_wc_title")} />
+          {/* 진행중인 토너먼트 — 없어도 빈 상태로 항상 노출 */}
+          <div>
+            <SectionHeader title={t("home_wc_title")} />
+            {event ? (
               <Link
                 href={`/event/${event.id}`}
                 className="flex items-center gap-3 rounded-2xl border border-[#dfe0ff] bg-primary-soft p-3.5 active:scale-[0.99]"
@@ -322,12 +323,21 @@ export default function Home() {
                 </div>
                 <span className="shrink-0 text-[18px] text-subtle">›</span>
               </Link>
-            </div>
-          )}
+            ) : (
+              <p className="rounded-2xl border border-[#dfe0ff] bg-primary-soft/50 px-3 py-5 text-center text-[12.5px] font-semibold text-muted">
+                {t("home_wc_empty")}
+              </p>
+            )}
+          </div>
 
-          {hallPick.length > 0 && (
-            <div>
-              <SectionHeader title={t("hall_title")} sub={t("hall_sub")} moreHref="/hearts" />
+          {/* V01D Pick — 없어도 빈 상태로 항상 노출 */}
+          <div>
+            <SectionHeader title={t("hall_title")} sub={t("hall_sub")} moreHref={hallPick.length > 0 ? "/hearts" : undefined} />
+            {hallPick.length === 0 ? (
+              <p className="rounded-2xl border border-border bg-card px-3 py-5 text-center text-[12.5px] font-semibold text-muted">
+                {t("hall_empty")}
+              </p>
+            ) : (
               <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
                 {hallPick.map(({ post, count }) => {
                   const grandSlam = membersTotal > 0 && count >= membersTotal;
@@ -348,8 +358,8 @@ export default function Home() {
                   );
                 })}
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           <div className="h-2" />
         </>
