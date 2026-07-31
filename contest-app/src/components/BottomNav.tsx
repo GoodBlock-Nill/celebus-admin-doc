@@ -55,6 +55,14 @@ export default function BottomNav() {
           ))}
         </div>
       </nav>
+      {/* iOS 26 standalone: 레이아웃 뷰포트(100vh) 아래 팬텀 영역까지 탭바 배경을 연장 —
+          실제 서피스는 화면 끝까지 이어지므로 흰색으로 채워 바닥 밀착처럼 보이게 한다.
+          투명도 99%: 완전 불투명 fixed 레이어는 팬텀 라인에서 클리핑되므로 컴포지터 경로로 회피 */}
+      <div
+        aria-hidden
+        className="fixed inset-x-0 top-full z-30 h-[40vh]"
+        style={{ background: "rgb(255 255 255 / 0.99)" }}
+      />
       {uploadOpen && <GlobalUploadSheet onClose={() => setUploadOpen(false)} />}
     </>
   );

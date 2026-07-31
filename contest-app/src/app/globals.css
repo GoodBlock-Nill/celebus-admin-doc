@@ -53,7 +53,10 @@
 }
 
 html {
-  background: var(--color-surface-0);
+  /* iOS 26 standalone: 불투명 fixed 셸이 하단 팬텀 바 라인에서 클리핑되고 그 아래로
+     캔버스(html) 배경이 비친다 — 하단 탭바(흰색)와 이어져 보이도록 흰색 유지.
+     페이지 배경은 .app-shell 자체 배경이 담당하므로 화면상 변화 없음 */
+  background: var(--color-card);
   color-scheme: light;
 }
 
