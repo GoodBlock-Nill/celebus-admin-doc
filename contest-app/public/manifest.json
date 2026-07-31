@@ -4,7 +4,7 @@
   "description": "CELEBUS MOMENT — 내가 찍은 순간을 올리면 멤버가 봐줘요. Your moment. Their response.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f7f7fa",
+  "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "orientation": "portrait",
   "icons": [
