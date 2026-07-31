@@ -3,7 +3,7 @@
 // FanStage 관리자 — 로그인 게이트 + 탭 SPA (운영자 전용, 한국어 고정)
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { UserRound, Users, Clapperboard, BarChart3, ScrollText, Trophy, Star, BadgeCheck, LogOut } from "lucide-react";
+import { UserRound, Users, Clapperboard, BarChart3, ScrollText, Trophy, Star, BadgeCheck, ShieldAlert, LogOut } from "lucide-react";
 import type { ContestRow, LogRow } from "@/lib/admin-types";
 import { adminFetch, getAdminPw, setAdminPw } from "@/lib/admin-types";
 import ContestsPanel from "@/components/admin/ContestsPanel";
@@ -15,10 +15,11 @@ import EventsPanel from "@/components/admin/EventsPanel";
 import EntriesPanel from "@/components/admin/EntriesPanel";
 import AwardsPanel from "@/components/admin/AwardsPanel";
 import UsersPanel from "@/components/admin/UsersPanel";
+import BannedWordsPanel from "@/components/admin/BannedWordsPanel";
 import { Btn, inputCls } from "@/components/admin/ui";
 
 // contests/entries/awards는 레거시(콘테스트 시절) — 탭 숨김, 코드·라우트는 보존
-type Tab = "overview" | "stages" | "official" | "featured" | "events" | "members" | "users" | "contests" | "entries" | "awards" | "logs";
+type Tab = "overview" | "stages" | "official" | "featured" | "events" | "members" | "users" | "banned" | "contests" | "entries" | "awards" | "logs";
 
 const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
   { key: "overview", label: "개요", icon: <BarChart3 className="h-4 w-4" /> },
@@ -28,6 +29,7 @@ const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
   { key: "events", label: "토너먼트", icon: <Trophy className="h-4 w-4" /> },
   { key: "members", label: "멤버", icon: <UserRound className="h-4 w-4" /> },
   { key: "users", label: "유저", icon: <Users className="h-4 w-4" /> },
+  { key: "banned", label: "금칙어", icon: <ShieldAlert className="h-4 w-4" /> },
   { key: "logs", label: "로그", icon: <ScrollText className="h-4 w-4" /> },
 ];
 
@@ -267,6 +269,7 @@ export default function AdminPage() {
           {tab === "events" && <EventsPanel />}
           {tab === "members" && <MembersPanel />}
           {tab === "users" && <UsersPanel />}
+          {tab === "banned" && <BannedWordsPanel />}
           {tab === "contests" && <ContestsPanel />}
           {tab === "entries" && <EntriesPanel contests={stats?.contests ?? []} />}
           {tab === "awards" && <AwardsPanel contests={stats?.contests ?? []} />}

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { admin } from "@/lib/db-admin";
 import { createStagePostSchema } from "@/lib/schema";
-import { containsProfanity } from "@/lib/profanity";
+import { checkProfanity } from "@/lib/profanity";
 import { assertSameOrigin } from "@/lib/origin";
 import { resolveStageUrl } from "@/lib/embed/resolve";
 import { requireUserId } from "@/lib/identity";
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
   }
   const { stage_id, url, title, description, handle, category } = parsed.data;
 
-  if (containsProfanity(title, description, handle ?? "")) {
+  if (await checkProfanity(title, description, handle ?? "")) {
     return NextResponse.json({ code: "profanity", error: "부적절한 표현이 포함되어 있어요." }, { status: 400 });
   }
 

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { admin } from "@/lib/db-admin";
 import { assertSameOrigin } from "@/lib/origin";
-import { containsProfanity } from "@/lib/profanity";
+import { checkProfanity } from "@/lib/profanity";
 import { requireUserId, peekUserId } from "@/lib/identity";
 
 const bodySchema = z.object({
@@ -18,7 +18,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
 
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ code: "bad_input", error: "입력값을 확인해주세요." }, { status: 400 });
-  if (containsProfanity(parsed.data.body)) return NextResponse.json({ code: "profanity", error: "부적절한 표현이 포함되어 있어요." }, { status: 400 });
+  if (await checkProfanity(parsed.data.body)) return NextResponse.json({ code: "profanity", error: "부적절한 표현이 포함되어 있어요." }, { status: 400 });
 
   const user = requireUserId(req);
   if (!user) return NextResponse.json({ code: "login_required", error: "CELEBUS 로그인이 필요해요." }, { status: 401 });
