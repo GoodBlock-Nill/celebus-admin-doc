@@ -1,6 +1,7 @@
 "use client";
 
 // 관리자 이미지 등록 시 "앱에서 이렇게 보여요" 미리보기 — 실제 앱 표시 스타일을 축약 재현.
+import { Trophy, Gift } from "lucide-react";
 import { CharmIcon } from "../CharmIcon";
 
 // 아카이브 카드 미리보기 (앱 StageList 카드 스타일)
@@ -22,6 +23,51 @@ export function CoverCardPreview({ coverUrl, title, description }: { coverUrl: s
       <div className="p-3">
         <div className="line-clamp-2 text-[13px] font-bold leading-snug text-fg">{title.trim() || "아카이브 제목"}</div>
         {description.trim() && <div className="mt-1 line-clamp-2 text-[11.5px] leading-relaxed text-muted">{description}</div>}
+      </div>
+    </div>
+  );
+}
+
+// 토너먼트 카드 미리보기 (앱 EventList 카드 스타일 · 16:9 커버)
+export function TournamentCardPreview({
+  coverUrl,
+  title,
+  description,
+  rewardType,
+  reward,
+}: {
+  coverUrl: string;
+  title: string;
+  description: string;
+  rewardType: "reward" | "popularity";
+  reward: string;
+}) {
+  return (
+    <div className="w-[240px] shrink-0 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <div className="relative aspect-[16/9] w-full overflow-hidden bg-surface-2">
+        {coverUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={coverUrl} alt="" className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-gradient-to-br from-primary-soft via-primary-soft/60 to-transparent text-center">
+            <Trophy className="h-6 w-6 text-primary-strong/70" />
+            <span className="px-3 text-[10px] font-semibold text-primary-strong/70">커버 미지정 · 앱에선 참가작 콜라주로 표시</span>
+          </div>
+        )}
+        <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+        <span className="absolute left-2 top-2 rounded-full bg-white/95 px-2 py-0.5 text-[9.5px] font-extrabold text-primary-strong shadow-sm">진행중</span>
+      </div>
+      <div className="p-3">
+        <div className="line-clamp-2 text-[13.5px] font-bold leading-snug text-fg">{title.trim() || "토너먼트 제목"}</div>
+        {description.trim() && <div className="mt-0.5 line-clamp-1 text-[11.5px] text-muted">{description}</div>}
+        {rewardType === "reward" && reward.trim() && (
+          <div className="mt-1.5 flex items-center gap-1 text-[11px] font-semibold text-[#b45309]">
+            <Gift className="h-3 w-3 shrink-0" /> <span className="truncate">{reward}</span>
+          </div>
+        )}
+        <div className="mt-2 flex justify-end">
+          <span className="brand-gradient rounded-full px-3 py-1 text-[11px] font-extrabold text-white">참여하기</span>
+        </div>
       </div>
     </div>
   );

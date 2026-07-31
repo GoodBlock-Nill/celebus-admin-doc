@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Plus } from "lucide-react";
 import { adminFetch } from "@/lib/admin-types";
 import ImageUploader from "./ImageUploader";
+import { TournamentCardPreview } from "./AppPreview";
 import { Badge, Btn, Card, Empty, Label, inputCls, useConfirm } from "./ui";
 import LangTabsFields, { cleanStageI18n, type LangI18n } from "./LangTabsFields";
 
@@ -172,7 +173,13 @@ export default function EventsPanel() {
         {/* 대표 커버 — 없으면 앱에서 참가작 콜라주로 대체 */}
         <div>
           <Label>대표 커버 <span className="font-medium text-subtle">(선택 · 미지정 시 참가작 콜라주)</span></Label>
-          <ImageUploader value={form.cover_url} onChange={(url) => setForm({ ...form, cover_url: url })} folder="cover" label="커버 업로드" />
+          <div className="flex flex-wrap items-start gap-3">
+            <ImageUploader value={form.cover_url} onChange={(url) => setForm({ ...form, cover_url: url })} folder="cover" label="커버 업로드" className="h-[112px] w-40" />
+            <div>
+              <div className="mb-1 text-[11px] font-bold text-subtle">앱 미리보기</div>
+              <TournamentCardPreview coverUrl={form.cover_url} title={form.title} description={form.description} rewardType={form.reward_type} reward={form.reward} />
+            </div>
+          </div>
         </div>
 
         {/* 토너먼트 유형 — 인기투표형 / 보상형 */}
