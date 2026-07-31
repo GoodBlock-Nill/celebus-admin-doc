@@ -83,7 +83,7 @@ export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }>
   if (parsed.data.status === "announced") {
     const { data: ev } = await db
       .from("stage_events")
-      .select("stage_id, category, stages(is_official)")
+      .select("stage_id, category, stages!stage_events_stage_id_fkey(is_official)")
       .eq("id", id)
       .maybeSingle();
     if (!ev) return NextResponse.json({ error: "이벤트 없음" }, { status: 404 });

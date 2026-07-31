@@ -22,7 +22,7 @@ export async function GET(req: Request) {
   if (!isAdmin(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const { data, error } = await admin()
     .from("stage_events")
-    .select("*, stages(title)")
+    .select("*, stages!stage_events_stage_id_fkey(title)")
     .order("created_at", { ascending: false });
   if (error) return NextResponse.json({ error: "조회 실패" }, { status: 500 });
   return NextResponse.json({ events: data });
