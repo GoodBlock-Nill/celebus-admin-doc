@@ -3,8 +3,9 @@
 // 관리자: 아카이브(공연 컨테이너) 관리 — 생성·수정·상태 전환. 유저 업로드는 open 아카이브에만 가능.
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Plus, Pencil } from "lucide-react";
+import { Plus, Pencil, X } from "lucide-react";
 import { adminFetch } from "@/lib/admin-types";
+import { Badge, Btn, Card, Empty, Label, inputCls } from "./ui";
 
 type StageRow = {
   id: string;
@@ -57,109 +58,114 @@ export default function StagesPanel() {
         : await adminFetch("/api/admin/stages", { method: "POST", body });
     setBusy(false);
     if (res.ok) {
-      toast("저장했어요.");
+      toast.success("저장했어요.");
       setEditing(null);
       void load();
     } else {
       const j = await res.json().catch(() => ({}));
-      toast(j.error ?? "저장 실패");
+      toast.error(j.error ?? "저장 실패");
     }
   }
 
   async function patch(id: string, patch: Record<string, unknown>, done: string) {
     const res = await adminFetch(`/api/admin/stages/${id}`, { method: "PATCH", body: JSON.stringify(patch) });
     if (res.ok) {
-      toast(done);
+      toast.success(done);
       void load();
-    } else toast("변경 실패");
+    } else toast.error("변경 실패");
   }
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <p className="text-[12.5px] text-fg/50">유저는 &lsquo;진행중&rsquo; 아카이브에만 영상을 올릴 수 있어요. 보관하면 열람만 가능해요.</p>
-        <button onClick={() => openEdit("new")} className="flex shrink-0 items-center gap-1 rounded-full bg-primary px-4 py-2 text-[13px] font-bold text-white">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-[12.5px] text-muted">유저는 &lsquo;진행중&rsquo; 아카이브에만 영상을 올릴 수 있어요. 보관하면 열람만 가능해요.</p>
+        <Btn variant="primary" size="sm" className="shrink-0" onClick={() => openEdit("new")}>
           <Plus className="h-4 w-4" /> 아카이브 생성
-        </button>
+        </Btn>
       </div>
 
-      {stages.map((s) => (
-        <div key={s.id} className="rounded-xl bg-white/[0.04] p-3.5 ring-1 ring-white/10">
-          <div className="flex items-center gap-2">
-            <div className="min-w-0 flex-1">
+      {stages.length === 0 ? (
+        <Empty>아카이브가 없어요. 첫 아카이브를 생성해보세요.</Empty>
+      ) : (
+        <div className="space-y-2">
+          {stages.map((s) => (
+            <Card key={s.id} className="p-3.5">
               <div className="flex items-center gap-2">
-                <span className="truncate text-[14px] font-bold text-fg">{s.title}</span>
-                {s.is_official && <span className="shrink-0 rounded-full bg-primary/20 px-2 py-0.5 text-[10.5px] font-bold text-primary-400">V01D 공식</span>}
-                <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10.5px] font-bold ${s.status === "open" ? "bg-primary/20 text-primary-400" : "bg-white/8 text-fg/50"}`}>
-                  {s.status === "open" ? "진행중" : "보관"}
-                </span>
-                {s.hidden && <span className="shrink-0 rounded-full bg-white/8 px-2 py-0.5 text-[10.5px] font-bold text-fg/50">숨김</span>}
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="truncate text-[14px] font-bold text-fg">{s.title}</span>
+                    {s.is_official && <Badge tone="primary">V01D 공식</Badge>}
+                    <Badge tone={s.status === "open" ? "green" : "gray"}>{s.status === "open" ? "진행중" : "보관"}</Badge>
+                    {s.hidden && <Badge tone="neutral">숨김</Badge>}
+                  </div>
+                  <div className="mt-0.5 text-[11.5px] text-subtle">
+                    {s.event_date ?? "일자 미정"} · 영상 {s.post_count}개
+                  </div>
+                </div>
+                <Btn variant="ghost" size="sm" aria-label="수정" onClick={() => openEdit(s)}>
+                  <Pencil className="h-4 w-4" />
+                </Btn>
               </div>
-              <div className="mt-0.5 text-[11.5px] text-fg/45">
-                {s.event_date ?? "일자 미정"} · 영상 {s.post_count}개
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                <Btn
+                  variant="outline"
+                  size="sm"
+                  onClick={() => patch(s.id, { status: s.status === "open" ? "archived" : "open" }, s.status === "open" ? "보관했어요." : "다시 열었어요.")}
+                >
+                  {s.status === "open" ? "보관하기" : "다시 열기"}
+                </Btn>
+                <Btn variant="outline" size="sm" onClick={() => patch(s.id, { hidden: !s.hidden }, s.hidden ? "공개했어요." : "숨겼어요.")}>
+                  {s.hidden ? "공개하기" : "숨기기"}
+                </Btn>
               </div>
-            </div>
-            <button onClick={() => openEdit(s)} aria-label="수정" className="flex h-10 w-10 items-center justify-center rounded-full bg-white/6 text-fg/60">
-              <Pencil className="h-4 w-4" />
-            </button>
-          </div>
-          <div className="mt-2.5 flex flex-wrap gap-1.5">
-            <button
-              onClick={() => patch(s.id, { status: s.status === "open" ? "archived" : "open" }, s.status === "open" ? "보관했어요." : "다시 열었어요.")}
-              className="rounded-full bg-white/8 px-3 py-1.5 text-[12px] font-bold text-fg/70"
-            >
-              {s.status === "open" ? "보관하기" : "다시 열기"}
-            </button>
-            <button
-              onClick={() => patch(s.id, { hidden: !s.hidden }, s.hidden ? "공개했어요." : "숨겼어요.")}
-              className="rounded-full bg-white/8 px-3 py-1.5 text-[12px] font-bold text-fg/70"
-            >
-              {s.hidden ? "공개하기" : "숨기기"}
-            </button>
-          </div>
+            </Card>
+          ))}
         </div>
-      ))}
-      {stages.length === 0 && <p className="py-8 text-center text-[13px] text-fg/40">아카이브가 없어요. 첫 아카이브를 생성해보세요.</p>}
+      )}
 
       {/* 생성/수정 폼 */}
       {editing && (
-        <div className="anim-backdrop-in fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-0 sm:items-center sm:p-4" onClick={() => setEditing(null)}>
+        <div className="anim-backdrop-in fixed inset-0 z-[60] flex items-end justify-center bg-black/40 p-0 sm:items-center sm:p-4" onClick={() => setEditing(null)}>
           <div
             role="dialog"
             aria-modal="true"
-            className="max-h-[92dvh] w-full max-w-lg space-y-3 overflow-y-auto rounded-t-2xl bg-[#141217] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:rounded-2xl"
+            className="max-h-[92dvh] w-full max-w-lg space-y-3 overflow-y-auto rounded-t-2xl border border-border bg-card p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:rounded-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-[15px] font-bold text-fg">{editing === "new" ? "아카이브 생성" : "아카이브 수정"}</h3>
-            <label className="block text-[12px] font-bold text-fg/60">
-              아카이브명
-              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={80} placeholder="예: 2026 여름 부산 버스킹"
-                className="mt-1 w-full rounded-xl bg-white/6 px-3 py-3 text-[13.5px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/30" />
-            </label>
-            <label className="block text-[12px] font-bold text-fg/60">
-              소개
-              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} maxLength={500} rows={2}
-                className="mt-1 w-full resize-none rounded-xl bg-white/6 px-3 py-3 text-[13.5px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60" />
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              <label className="block text-[12px] font-bold text-fg/60">
-                날짜
-                <input type="date" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })}
-                  className="mt-1 w-full rounded-xl bg-white/6 px-3 py-3 text-[13.5px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60" />
-              </label>
-              <label className="block text-[12px] font-bold text-fg/60">
-                커버 이미지 URL (선택)
-                <input value={form.cover_url} onChange={(e) => setForm({ ...form, cover_url: e.target.value })} placeholder="https://…"
-                  className="mt-1 w-full rounded-xl bg-white/6 px-3 py-3 text-[13.5px] text-fg outline-none ring-1 ring-white/10 focus:ring-primary/60 placeholder:text-fg/30" />
-              </label>
+            <div className="flex items-center justify-between">
+              <h3 className="text-[15px] font-bold text-fg">{editing === "new" ? "아카이브 생성" : "아카이브 수정"}</h3>
+              <button onClick={() => setEditing(null)} aria-label="닫기" className="flex h-8 w-8 items-center justify-center rounded-full text-subtle hover:bg-surface-2 hover:text-fg">
+                <X className="h-4 w-4" />
+              </button>
             </div>
-            <label className="flex cursor-pointer items-center gap-2.5 rounded-xl bg-white/6 px-3 py-3 ring-1 ring-white/10">
+            <div>
+              <Label>아카이브명</Label>
+              <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} maxLength={80} placeholder="예: 2026 여름 부산 버스킹" className={inputCls} />
+            </div>
+            <div>
+              <Label>소개</Label>
+              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} maxLength={500} rows={2} className={`${inputCls} resize-none`} />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <Label>날짜</Label>
+                <input type="date" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })} className={inputCls} />
+              </div>
+              <div>
+                <Label>커버 이미지 URL (선택)</Label>
+                <input value={form.cover_url} onChange={(e) => setForm({ ...form, cover_url: e.target.value })} placeholder="https://…" className={inputCls} />
+              </div>
+            </div>
+            <label className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-border bg-surface-2 px-3 py-3">
               <input type="checkbox" checked={form.is_official} onChange={(e) => setForm({ ...form, is_official: e.target.checked })} className="h-4 w-4 accent-primary" />
               <span className="text-[13px] font-bold text-fg">V01D 공식 아카이브 (열람 전용 · 팬 업로드 불가)</span>
             </label>
-            <button onClick={save} disabled={busy || !form.title.trim()} className="w-full rounded-full bg-primary py-3 text-[14px] font-bold text-white disabled:opacity-40">
-              {editing === "new" ? "생성하기" : "저장하기"}
-            </button>
+            <div className="flex gap-2 pt-1">
+              <Btn variant="ghost" className="flex-1 py-3" onClick={() => setEditing(null)}>취소</Btn>
+              <Btn variant="primary" className="flex-[2] py-3" disabled={busy || !form.title.trim()} onClick={save}>
+                {editing === "new" ? "생성하기" : "저장하기"}
+              </Btn>
+            </div>
           </div>
         </div>
       )}

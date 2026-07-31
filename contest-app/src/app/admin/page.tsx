@@ -3,7 +3,7 @@
 // FanStage 관리자 — 로그인 게이트 + 탭 SPA (운영자 전용, 한국어 고정)
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { UserRound, Clapperboard, BarChart3, ScrollText, Trophy, Star, BadgeCheck } from "lucide-react";
+import { UserRound, Clapperboard, BarChart3, ScrollText, Trophy, Star, BadgeCheck, LogOut } from "lucide-react";
 import type { ContestRow, LogRow } from "@/lib/admin-types";
 import { adminFetch, getAdminPw, setAdminPw } from "@/lib/admin-types";
 import ContestsPanel from "@/components/admin/ContestsPanel";
@@ -14,6 +14,7 @@ import MembersPanel from "@/components/admin/MembersPanel";
 import EventsPanel from "@/components/admin/EventsPanel";
 import EntriesPanel from "@/components/admin/EntriesPanel";
 import AwardsPanel from "@/components/admin/AwardsPanel";
+import { Btn, inputCls } from "@/components/admin/ui";
 
 // contests/entries/awards는 레거시(콘테스트 시절) — 탭 숨김, 코드·라우트는 보존
 type Tab = "overview" | "stages" | "official" | "featured" | "events" | "members" | "contests" | "entries" | "awards" | "logs";
@@ -51,9 +52,11 @@ function Login({ onOk }: { onOk: () => void }) {
   }
 
   return (
-    <div className="flex min-h-dvh items-center justify-center p-4">
-      <div className="w-full max-w-xs rounded-3xl border border-border bg-card p-6 text-center">
-        <h1 className="mb-1 text-lg font-black">CELEBUS MOMENT 관리자</h1>
+    <div className="flex min-h-dvh items-center justify-center bg-surface-0 p-4">
+      <div className="w-full max-w-xs rounded-3xl border border-border bg-card p-6 text-center shadow-sm">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/symbol.svg" alt="" className="mx-auto mb-3 h-8 w-8" />
+        <h1 className="mb-1 text-lg font-black text-fg">CELEBUS MOMENT 관리자</h1>
         <p className="mb-4 text-[12px] text-muted">관리자 비밀번호를 입력하세요</p>
         <input
           type="password"
@@ -61,17 +64,17 @@ function Login({ onOk }: { onOk: () => void }) {
           autoFocus
           onChange={(e) => setPw(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && submit()}
-          className="mb-3 w-full rounded-xl border border-border bg-bg px-3 py-2.5 text-sm outline-none focus:border-primary/60"
+          className={`${inputCls} mb-3 text-center`}
         />
-        <button onClick={submit} disabled={busy || !pw} className="w-full rounded-full bg-primary py-2.5 text-[14px] font-black text-white disabled:opacity-40">
-          로그인
-        </button>
+        <Btn variant="primary" className="w-full py-2.5" disabled={busy || !pw} onClick={submit}>
+          {busy ? "확인 중…" : "로그인"}
+        </Btn>
       </div>
     </div>
   );
 }
 
-function Overview({ stats }: { stats: Stats | null }) {
+function Overview({ stats, go }: { stats: Stats | null; go: (t: Tab) => void }) {
   // MOMENT 지표 — 아카이브/영상/멤버/토너먼트 (기존 stats는 로그인 검증용으로만 유지)
   const [m, setM] = useState<{ archives: number; official: number; videos: number; members: number; tournaments: number } | null>(null);
   useEffect(() => {
@@ -98,20 +101,24 @@ function Overview({ stats }: { stats: Stats | null }) {
   void stats;
   if (!m) return <div className="h-40 animate-pulse rounded-2xl bg-card" />;
   const cards = [
-    ["아카이브", m.archives],
-    ["공식 아카이브", m.official],
-    ["총 영상", m.videos],
-    ["멤버", m.members],
-    ["토너먼트", m.tournaments],
+    ["아카이브", m.archives, "stages"],
+    ["공식 아카이브", m.official, "official"],
+    ["총 영상", m.videos, "stages"],
+    ["멤버", m.members, "members"],
+    ["토너먼트", m.tournaments, "events"],
   ] as const;
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-        {cards.map(([label, n]) => (
-          <div key={label} className="rounded-[16px] bg-surface-1 p-4 ring-1 ring-hairline">
+        {cards.map(([label, n, target]) => (
+          <button
+            key={label}
+            onClick={() => go(target)}
+            className="rounded-[16px] border border-hairline bg-surface-1 p-4 text-left transition-colors hover:border-primary/40 hover:bg-surface-2"
+          >
             <p className="text-[11px] font-bold text-muted">{label}</p>
             <p className="mt-1 text-2xl font-black text-primary-400">{n.toLocaleString()}</p>
-          </div>
+          </button>
         ))}
       </div>
       <div className="rounded-[16px] bg-surface-1 p-4 ring-1 ring-hairline">
@@ -139,13 +146,17 @@ function Logs() {
   return (
     <div className="space-y-1.5">
       {logs.map((l) => (
-        <div key={l.id} className="rounded-xl border border-border bg-card px-3 py-2 text-[12px]">
-          <span className="font-bold">{l.action}</span>
-          {l.detail && <span className="text-muted"> — {l.detail}</span>}
-          <span className="float-right text-[11px] text-muted">{new Date(l.created_at).toLocaleString("ko")}</span>
+        <div key={l.id} className="flex items-start justify-between gap-3 rounded-xl border border-border bg-card px-3.5 py-2.5 text-[12.5px]">
+          <div className="min-w-0">
+            <span className="font-bold text-fg">{l.action}</span>
+            {l.detail && <span className="text-muted"> — {l.detail}</span>}
+          </div>
+          <span className="shrink-0 tabular-nums text-[11px] text-subtle">{new Date(l.created_at).toLocaleString("ko")}</span>
         </div>
       ))}
-      {!logs.length && <p className="py-10 text-center text-[13px] text-muted">로그가 없어요</p>}
+      {!logs.length && (
+        <p className="rounded-2xl border border-border bg-card py-12 text-center text-[13px] text-muted">아직 기록된 로그가 없어요.</p>
+      )}
     </div>
   );
 }
@@ -163,6 +174,13 @@ export default function AdminPage() {
     } else {
       setAuthed(false);
     }
+  }
+
+  function logout() {
+    setAdminPw("");
+    setStats(null);
+    setAuthed(false);
+    setTab("overview");
   }
 
   useEffect(() => {
@@ -209,6 +227,12 @@ export default function AdminPage() {
           </h1>
         </div>
         {nav}
+        <button
+          onClick={logout}
+          className="mt-auto flex items-center gap-2.5 rounded-[12px] px-3 py-2.5 text-[13.5px] font-bold text-muted transition-colors hover:bg-surface-2 hover:text-fg"
+        >
+          <LogOut className="h-4 w-4" /> 로그아웃
+        </button>
       </aside>
 
       {/* 모바일 상단 바 */}
@@ -217,6 +241,9 @@ export default function AdminPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/symbol.svg" alt="" className="h-5 w-5" />
           <h1 className="text-[14px] font-black">CELEBUS MOMENT 관리자</h1>
+          <button onClick={logout} aria-label="로그아웃" className="ml-auto flex h-8 w-8 items-center justify-center rounded-full text-muted hover:bg-surface-2 hover:text-fg">
+            <LogOut className="h-4 w-4" />
+          </button>
         </div>
         <div className="flex gap-1.5 overflow-x-auto px-4 pb-2.5">{nav}</div>
       </div>
@@ -228,7 +255,7 @@ export default function AdminPage() {
             {cur?.icon}
             <h2 className="text-[18px] font-black">{cur?.label}</h2>
           </div>
-          {tab === "overview" && <Overview stats={stats} />}
+          {tab === "overview" && <Overview stats={stats} go={setTab} />}
           {tab === "stages" && <StagesPanel />}
           {tab === "official" && <OfficialSeedPanel />}
           {tab === "featured" && <FeaturedPanel />}
