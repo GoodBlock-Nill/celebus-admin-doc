@@ -6,12 +6,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Plus, X } from "lucide-react";
 import { adminFetch } from "@/lib/admin-types";
-import { Btn, Card, Empty, SearchInput, inputCls } from "./ui";
+import { Badge, Btn, Card, Empty, SearchInput, inputCls } from "./ui";
 
 type Word = { word: string; created_at: string };
 
 export default function BannedWordsPanel() {
   const [words, setWords] = useState<Word[]>([]);
+  const [builtin, setBuiltin] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
@@ -20,6 +21,7 @@ export default function BannedWordsPanel() {
     const res = await adminFetch("/api/admin/banned-words");
     const j = await res.json();
     setWords(j.words ?? []);
+    setBuiltin(j.builtin ?? []);
   }, []);
   useEffect(() => {
     void load();
@@ -53,6 +55,10 @@ export default function BannedWordsPanel() {
     const kw = q.trim().toLowerCase();
     return kw ? words.filter((w) => w.word.toLowerCase().includes(kw)) : words;
   }, [words, q]);
+  const filteredBuiltin = useMemo(() => {
+    const kw = q.trim().toLowerCase();
+    return kw ? builtin.filter((w) => w.toLowerCase().includes(kw)) : builtin;
+  }, [builtin, q]);
 
   return (
     <div className="space-y-4">
@@ -77,29 +83,54 @@ export default function BannedWordsPanel() {
         </div>
       </Card>
 
-      <SearchInput value={q} onChange={setQ} placeholder="금칙어 검색" />
-      <div className="text-[12px] font-bold text-muted">
-        {q ? `‘${q}’ 검색결과 ${filtered.length.toLocaleString()}개` : `등록된 금칙어 ${words.length.toLocaleString()}개`}
-      </div>
+      <SearchInput value={q} onChange={setQ} placeholder="금칙어 검색 (관리자 추가·기본 내장 전체)" />
 
-      {filtered.length === 0 ? (
-        <Empty>{q ? "검색 결과가 없어요." : "아직 추가된 금칙어가 없어요. (기본 내장 금칙어는 계속 적용돼요)"}</Empty>
-      ) : (
-        <div className="flex flex-wrap gap-2">
-          {filtered.map((w) => (
-            <span key={w.word} className="inline-flex items-center gap-1 rounded-full border border-border bg-card py-1.5 pl-3.5 pr-1.5 text-[13px] font-bold text-fg">
-              {w.word}
-              <button
-                onClick={() => void remove(w.word)}
-                aria-label={`${w.word} 삭제`}
-                className="flex h-5 w-5 items-center justify-center rounded-full text-subtle hover:bg-surface-2 hover:text-[#c0392b]"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            </span>
-          ))}
+      {/* 관리자 추가 — 편집 가능 */}
+      <section className="space-y-2">
+        <div className="flex items-center gap-2">
+          <h3 className="text-[13px] font-bold text-fg">관리자 추가</h3>
+          <span className="text-[11px] font-bold text-subtle">{q ? `${filtered.length}개` : `${words.length}개`}</span>
         </div>
-      )}
+        {filtered.length === 0 ? (
+          <Empty>{q ? "검색 결과가 없어요." : "아직 추가된 금칙어가 없어요."}</Empty>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {filtered.map((w) => (
+              <span key={w.word} className="inline-flex items-center gap-1 rounded-full border border-border bg-card py-1.5 pl-3.5 pr-1.5 text-[13px] font-bold text-fg">
+                {w.word}
+                <button
+                  onClick={() => void remove(w.word)}
+                  aria-label={`${w.word} 삭제`}
+                  className="flex h-5 w-5 items-center justify-center rounded-full text-subtle hover:bg-surface-2 hover:text-[#c0392b]"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* 기본 내장 — 읽기 전용(코드 레벨 안전망) */}
+      <section className="space-y-2">
+        <div className="flex items-center gap-2">
+          <h3 className="text-[13px] font-bold text-fg">기본 내장</h3>
+          <Badge tone="gray">읽기 전용</Badge>
+          <span className="text-[11px] font-bold text-subtle">{q ? `${filteredBuiltin.length}개` : `${builtin.length}개`}</span>
+        </div>
+        <p className="text-[11.5px] text-subtle">앱에 기본 적용되는 안전망 금칙어예요. 코드로 관리되어 여기서는 삭제할 수 없어요.</p>
+        {filteredBuiltin.length === 0 ? (
+          <Empty>{q ? "검색 결과가 없어요." : "내장 금칙어가 없어요."}</Empty>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {filteredBuiltin.map((w) => (
+              <span key={w} className="inline-flex items-center rounded-full bg-surface-2 px-3.5 py-1.5 text-[13px] font-bold text-muted">
+                {w}
+              </span>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

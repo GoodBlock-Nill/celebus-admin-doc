@@ -3,7 +3,7 @@ import { z } from "zod";
 import { admin } from "@/lib/db-admin";
 import { isAdmin } from "@/lib/admin-auth";
 import { logAdmin } from "@/lib/admin-log";
-import { invalidateBannedWordsCache } from "@/lib/profanity";
+import { invalidateBannedWordsCache, BADWORDS } from "@/lib/profanity";
 
 // 금칙어 관리 — 관리자 전용. lib/profanity.ts 기본 리스트에 병합되어 댓글·업로드·닉네임 검사에 사용.
 const addSchema = z.object({ word: z.string().trim().min(1).max(40) });
@@ -15,7 +15,8 @@ export async function GET(req: Request) {
     .select("word, created_at")
     .order("created_at", { ascending: false });
   if (error) return NextResponse.json({ error: "조회 실패" }, { status: 500 });
-  return NextResponse.json({ words: data });
+  // words: 관리자 추가분(편집 가능) / builtin: 코드 내장 기본 리스트(읽기 전용)
+  return NextResponse.json({ words: data, builtin: BADWORDS });
 }
 
 export async function POST(req: Request) {
