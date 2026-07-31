@@ -7,6 +7,8 @@ import { Plus, Pencil, X } from "lucide-react";
 import { adminFetch } from "@/lib/admin-types";
 import { Badge, Btn, Card, Empty, Label, inputCls } from "./ui";
 import LangTabsFields, { cleanStageI18n, type LangI18n } from "./LangTabsFields";
+import ImageUploader from "./ImageUploader";
+import { CoverCardPreview } from "./AppPreview";
 
 type StageRow = {
   id: string;
@@ -152,14 +154,18 @@ export default function StagesPanel() {
               titlePlaceholder="예: 2026 여름 부산 버스킹"
               descRows={2}
             />
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <Label>날짜</Label>
-                <input type="date" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })} className={inputCls} />
-              </div>
-              <div>
-                <Label>커버 이미지 URL (선택)</Label>
-                <input value={form.cover_url} onChange={(e) => setForm({ ...form, cover_url: e.target.value })} placeholder="https://…" className={inputCls} />
+            <div>
+              <Label>날짜</Label>
+              <input type="date" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })} className={inputCls} />
+            </div>
+            <div>
+              <Label>대표 커버 이미지 (선택)</Label>
+              <div className="flex flex-wrap items-start gap-3">
+                <ImageUploader value={form.cover_url} onChange={(url) => setForm({ ...form, cover_url: url })} folder="cover" label="커버 업로드" className="h-[112px] w-40" />
+                <div>
+                  <div className="mb-1 text-[11px] font-bold text-subtle">앱 미리보기</div>
+                  <CoverCardPreview coverUrl={form.cover_url} title={form.title} description={form.description} />
+                </div>
               </div>
             </div>
             <label className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-border bg-surface-2 px-3 py-3">

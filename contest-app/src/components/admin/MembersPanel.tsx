@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { Plus, Trash2, Copy } from "lucide-react";
 import { adminFetch } from "@/lib/admin-types";
 import { Btn, Card, Empty, Label, inputCls, useConfirm } from "./ui";
+import ImageUploader from "./ImageUploader";
+import { AvatarPreview } from "./AppPreview";
 
 type MemberRow = { user_id: string; display_name: string; avatar_url: string | null; created_at: string };
 
@@ -96,25 +98,24 @@ export default function MembersPanel() {
             className={inputCls}
           />
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <Label>표시 이름</Label>
-            <input
-              value={form.display_name}
-              onChange={(e) => setForm({ ...form, display_name: e.target.value })}
-              placeholder="예: 주연"
-              maxLength={30}
-              className={inputCls}
-            />
-          </div>
-          <div>
-            <Label>아바타 URL (선택)</Label>
-            <input
-              value={form.avatar_url}
-              onChange={(e) => setForm({ ...form, avatar_url: e.target.value })}
-              placeholder="아바타 URL"
-              className={inputCls}
-            />
+        <div>
+          <Label>표시 이름</Label>
+          <input
+            value={form.display_name}
+            onChange={(e) => setForm({ ...form, display_name: e.target.value })}
+            placeholder="예: 주연"
+            maxLength={30}
+            className={inputCls}
+          />
+        </div>
+        <div>
+          <Label>아바타 이미지 (선택)</Label>
+          <div className="flex flex-wrap items-start gap-3">
+            <ImageUploader value={form.avatar_url} onChange={(url) => setForm({ ...form, avatar_url: url })} folder="cover" label="아바타 업로드" className="h-20 w-20" />
+            <div className="min-w-[200px] flex-1">
+              <div className="mb-1 text-[11px] font-bold text-subtle">앱 미리보기</div>
+              <AvatarPreview avatarUrl={form.avatar_url} name={form.display_name} />
+            </div>
           </div>
         </div>
         <Btn variant="primary" className="w-full py-3" disabled={busy || !form.user_id.trim() || !form.display_name.trim()} onClick={save}>
