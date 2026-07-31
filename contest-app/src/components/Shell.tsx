@@ -10,7 +10,6 @@ import Header from "./Header";
 import BottomNav from "./BottomNav";
 import LaunchPreviewToggle from "./LaunchPreviewToggle";
 import DevAuthToggle from "./DevAuthToggle";
-import ViewportDebug from "./ViewportDebug";
 
 // iOS가 키보드를 완전히 접고 뷰포트를 되돌리는 데 걸리는 여유 시간
 const KEYBOARD_SETTLE_MS = 60;
@@ -53,8 +52,6 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         </div>
         <LaunchPreviewToggle />
         <DevAuthToggle />
-        {/* [임시] iOS 26 하단 갭 진단 — 원인 확정 후 제거 */}
-        <ViewportDebug />
       </SessionProvider>
     </LangProvider>
   );
