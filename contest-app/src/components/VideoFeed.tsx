@@ -6,12 +6,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
-import { X, Heart, MessageCircle, Flag, ExternalLink, Eye, BadgeCheck } from "lucide-react";
+import { X, Heart, MessageCircle, Flag, ExternalLink, Eye, EyeOff, BadgeCheck } from "lucide-react";
 import { PlayBadge } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
 import { stagePostAsEntry } from "@/lib/types";
 import EntryEmbed from "./EntryEmbed";
+import FeedYouTube from "./FeedYouTube";
 import BragButton from "./BragButton";
 import CommentSection from "./CommentSection";
 import { Thumb } from "./HomeAtoms";
@@ -68,8 +69,20 @@ export default function VideoFeed({ postId }: { postId: string }) {
   const [active, setActive] = useState(0);
   const [states, setStates] = useState<Map<string, HeartState>>(new Map());
   const [commentsFor, setCommentsFor] = useState<string | null>(null);
+  const [soundOn, setSoundOn] = useState(false); // 자동재생은 muted, 사용자가 켜면 이후 영상도 유지
+  const [chromeHidden, setChromeHidden] = useState(false); // 레일·메타 오버레이 숨김(가로모드 자동)
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
+
+  // 가로모드 진입 시 오버레이 자동 숨김(영상 시청 방해 제거), 세로 복귀 시 표시
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(orientation: landscape)");
+    const apply = () => setChromeHidden(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   // 리스트 로드 + 씨드 위치로 스크롤
   useEffect(() => {
@@ -220,6 +233,7 @@ export default function VideoFeed({ postId }: { postId: string }) {
   }
 
   const activePost = posts[active];
+  const chromeCls = chromeHidden ? "pointer-events-none opacity-0" : "opacity-100";
 
   if (notFound) {
     return (
@@ -241,12 +255,34 @@ export default function VideoFeed({ postId }: { postId: string }) {
         <X className="h-5 w-5" />
       </button>
 
+      {/* UI 숨김/표시 토글 — 오버레이가 영상을 가릴 때 사용(가로모드 자동 숨김도 여기서 복원) */}
+      <button
+        onClick={() => setChromeHidden((h) => !h)}
+        aria-label={chromeHidden ? t("video_show_ui") : t("video_hide_ui")}
+        aria-pressed={chromeHidden}
+        className="fixed left-[3.75rem] top-[max(0.75rem,env(safe-area-inset-top))] z-20 flex h-11 w-11 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm active:scale-95"
+      >
+        {chromeHidden ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+      </button>
+
       {loading ? (
         <div className="flex h-[100dvh] items-center justify-center">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/30 border-t-white" />
         </div>
       ) : (
         posts.map((post, i) => {
+          // 윈도잉 — 활성 ±2만 실제 콘텐츠 렌더. 그 외는 빈 셸(높이·스냅·ref 유지)로 DOM/이미지 부하 최소화
+          const near = Math.abs(i - active) <= 2;
+          if (!near) {
+            return (
+              <section
+                key={post.id}
+                data-idx={i}
+                ref={(el) => { itemRefs.current[i] = el; }}
+                className="h-[100dvh] snap-start snap-always"
+              />
+            );
+          }
           const st = states.get(post.id);
           const hearts = st?.hearts ?? [];
           const grandSlam = membersTotal > 0 && hearts.length >= membersTotal;
@@ -258,10 +294,14 @@ export default function VideoFeed({ postId }: { postId: string }) {
               ref={(el) => { itemRefs.current[i] = el; }}
               className="relative flex h-[100dvh] snap-start snap-always items-center justify-center overflow-hidden"
             >
-              {/* 영상 (활성만 임베드, 그 외 포스터) */}
+              {/* 영상 (활성 유튜브는 자동재생, 그 외 포스터) */}
               <div className="w-full max-w-2xl px-3">
                 {isActive ? (
-                  <EntryEmbed entry={stagePostAsEntry(post)} />
+                  post.platform === "youtube" ? (
+                    <FeedYouTube id={post.external_id} title={post.title} soundOn={soundOn} onToggleSound={() => setSoundOn((s) => !s)} />
+                  ) : (
+                    <EntryEmbed entry={stagePostAsEntry(post)} />
+                  )
                 ) : (
                   <div className="relative overflow-hidden rounded-2xl">
                     <Thumb url={post.thumbnail_url} />
@@ -272,12 +312,12 @@ export default function VideoFeed({ postId }: { postId: string }) {
                 )}
               </div>
 
-              {/* 우측 액션 레일 */}
-              <div className="absolute bottom-[max(6rem,calc(env(safe-area-inset-bottom)+5rem))] right-2.5 z-10 flex flex-col items-center gap-4">
+              {/* 우측 액션 레일 (가로모드/숨김 시 페이드) */}
+              <div className={`absolute bottom-[max(6rem,calc(env(safe-area-inset-bottom)+5rem))] right-2 z-10 flex flex-col items-center gap-3.5 transition-opacity duration-200 ${chromeCls}`}>
                 {isMemberMe && (
                   <button onClick={() => toggleMemberHeart(post)} aria-label={t("mh_button")} className="flex flex-col items-center gap-1 text-white">
-                    <span className="brand-gradient flex h-11 w-11 items-center justify-center rounded-full shadow-[0_4px_12px_-2px_rgba(108,77,230,0.8)] active:scale-90">
-                      <Heart className="h-5 w-5 fill-current" />
+                    <span className="brand-gradient flex h-10 w-10 items-center justify-center rounded-full shadow-[0_4px_12px_-2px_rgba(108,77,230,0.8)] active:scale-90">
+                      <Heart className="h-[18px] w-[18px] fill-current" />
                     </span>
                     <span className="text-[10px] font-bold drop-shadow">{t("mh_button")}</span>
                   </button>
@@ -288,13 +328,13 @@ export default function VideoFeed({ postId }: { postId: string }) {
                   <BragButton post={post} hearts={hearts} variant="rail" />
                 </div>
                 <a href={post.source_url} target="_blank" rel="noreferrer noopener" aria-label={t("stage_open_original")} className="flex flex-col items-center gap-1 text-white">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm active:scale-90"><ExternalLink className="h-5 w-5" /></span>
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm active:scale-90"><ExternalLink className="h-[18px] w-[18px]" /></span>
                 </a>
                 <RailButton icon={Flag} onClick={() => report(post)} ariaLabel={t("stage_report")} muted />
               </div>
 
-              {/* 하단 메타 + 멤버 반응 */}
-              <div className="absolute inset-x-0 bottom-[max(5.5rem,calc(env(safe-area-inset-bottom)+4.5rem))] left-4 right-16 z-10">
+              {/* 하단 메타 + 멤버 반응 (가로모드/숨김 시 페이드) */}
+              <div className={`absolute inset-x-0 bottom-[max(5.5rem,calc(env(safe-area-inset-bottom)+4.5rem))] left-4 right-16 z-10 transition-opacity duration-200 ${chromeCls}`}>
                 {hearts.length > 0 && (
                   <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-primary/85 py-1 pl-1 pr-3 backdrop-blur-sm">
                     <Heart className="ml-1 h-3.5 w-3.5 shrink-0 fill-current text-white" />
@@ -347,8 +387,8 @@ export default function VideoFeed({ postId }: { postId: string }) {
 function RailButton({ icon: Icon, label, active, muted, onClick, ariaLabel }: { icon: typeof Heart; label?: string; active?: boolean; muted?: boolean; onClick: () => void; ariaLabel: string }) {
   return (
     <button onClick={onClick} aria-label={ariaLabel} aria-pressed={active} className="flex flex-col items-center gap-1 text-white">
-      <span className={`flex h-11 w-11 items-center justify-center rounded-full backdrop-blur-sm active:scale-90 ${active ? "bg-primary text-white" : muted ? "bg-white/10 text-white/80" : "bg-white/15"}`}>
-        <Icon className={`h-5 w-5 ${active ? "fill-current" : ""}`} />
+      <span className={`flex h-10 w-10 items-center justify-center rounded-full backdrop-blur-sm active:scale-90 ${active ? "bg-primary text-white" : muted ? "bg-white/10 text-white/80" : "bg-white/15"}`}>
+        <Icon className={`h-[18px] w-[18px] ${active ? "fill-current" : ""}`} />
       </span>
       {label && <span className="text-[10.5px] font-bold tabular-nums drop-shadow">{label}</span>}
     </button>
