@@ -38,13 +38,12 @@ export default function Shell({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  // 뷰포트 앵커 고정 셸(fixed inset-0) + 내부 스크롤. 100dvh 계산 지연·키보드 스크롤 오프셋과
-  // 무관하게 항상 가시 영역을 꽉 채우므로 하단 탭바가 바닥에 밀착된다.
-  // body가 스크롤하지 않아 iOS Safari 하단 툴바가 접혔다 펴지지 않으므로 튀는 현상도 없다.
+  // 뷰포트 앵커 고정 셸(.app-shell, globals.css) + 내부 스크롤. iOS 26 standalone의
+  // 하단 뷰포트 축소 버그 대응 포함. body가 스크롤하지 않아 하단 탭바가 튀지 않는다.
   return (
     <LangProvider>
       <SessionProvider>
-        <div className="fixed inset-0 flex flex-col overflow-hidden">
+        <div className="app-shell flex flex-col overflow-hidden">
           <Header />
           <main className="flex-1 overflow-y-auto overscroll-contain">
             <div className="mx-auto max-w-2xl px-4 pb-6 pt-4">{children}</div>
