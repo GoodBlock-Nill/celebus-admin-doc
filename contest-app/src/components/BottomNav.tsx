@@ -34,7 +34,7 @@ export default function BottomNav() {
     <>
       <nav
         aria-label={t("nav_home_aria")}
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/92 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl"
+        className="z-30 shrink-0 border-t border-border bg-card pb-[env(safe-area-inset-bottom)]"
       >
         <div className="mx-auto flex max-w-2xl items-end justify-around px-3 pt-2">
           {/* 왼쪽 2개 */}
