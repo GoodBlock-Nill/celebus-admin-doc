@@ -19,6 +19,7 @@ type Pick = { w: string; l: string };
 type Phase = "intro" | "playing" | "done";
 
 function bracketSize(n: number): number {
+  if (n >= 32) return 32; // 서버 RPC가 최대 31경기(32강)까지 허용
   if (n >= 16) return 16;
   if (n >= 8) return 8;
   if (n >= 4) return 4;
