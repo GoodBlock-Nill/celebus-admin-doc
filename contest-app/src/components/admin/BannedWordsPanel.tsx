@@ -4,15 +4,16 @@
 // 댓글·팬 업로드·닉네임 검사에 사용된다(매칭 시 등록 차단). 변경은 서버 캐시 TTL(최대 1분) 내 반영.
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Ban, RotateCcw } from "lucide-react";
 import { adminFetch } from "@/lib/admin-types";
-import { Badge, Btn, Card, Empty, SearchInput, inputCls } from "./ui";
+import { Btn, Card, Empty, SearchInput, inputCls } from "./ui";
 
 type Word = { word: string; created_at: string };
 
 export default function BannedWordsPanel() {
   const [words, setWords] = useState<Word[]>([]);
   const [builtin, setBuiltin] = useState<string[]>([]);
+  const [disabled, setDisabled] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [q, setQ] = useState("");
   const [busy, setBusy] = useState(false);
@@ -22,6 +23,7 @@ export default function BannedWordsPanel() {
     const j = await res.json();
     setWords(j.words ?? []);
     setBuiltin(j.builtin ?? []);
+    setDisabled(j.disabled ?? []);
   }, []);
   useEffect(() => {
     void load();
@@ -51,6 +53,15 @@ export default function BannedWordsPanel() {
     } else toast.error("삭제 실패");
   }
 
+  // 내장 금칙어 비활성/재활성(오탐 대응)
+  async function toggleBuiltin(w: string, off: boolean) {
+    const res = await adminFetch("/api/admin/banned-words", { method: "PATCH", body: JSON.stringify({ word: w, disabled: off }) });
+    if (res.ok) {
+      toast.success(off ? "내장 금칙어를 비활성화했어요." : "다시 활성화했어요.");
+      void load();
+    } else toast.error("처리 실패");
+  }
+
   const filtered = useMemo(() => {
     const kw = q.trim().toLowerCase();
     return kw ? words.filter((w) => w.word.toLowerCase().includes(kw)) : words;
@@ -59,6 +70,7 @@ export default function BannedWordsPanel() {
     const kw = q.trim().toLowerCase();
     return kw ? builtin.filter((w) => w.toLowerCase().includes(kw)) : builtin;
   }, [builtin, q]);
+  const disabledSet = useMemo(() => new Set(disabled), [disabled]);
 
   return (
     <div className="space-y-4">
@@ -111,23 +123,43 @@ export default function BannedWordsPanel() {
         )}
       </section>
 
-      {/* 기본 내장 — 읽기 전용(코드 레벨 안전망) */}
+      {/* 기본 내장 — 안전망(개별 비활성/재활성 가능) */}
       <section className="space-y-2">
         <div className="flex items-center gap-2">
           <h3 className="text-[13px] font-bold text-fg">기본 내장</h3>
-          <Badge tone="gray">읽기 전용</Badge>
-          <span className="text-[11px] font-bold text-subtle">{q ? `${filteredBuiltin.length}개` : `${builtin.length}개`}</span>
+          <span className="text-[11px] font-bold text-subtle">
+            {q ? `${filteredBuiltin.length}개` : `${builtin.length}개`}
+            {disabled.length > 0 && <span className="text-[#c0392b]"> · {disabled.length}개 비활성</span>}
+          </span>
         </div>
-        <p className="text-[11.5px] text-subtle">앱에 기본 적용되는 안전망 금칙어예요. 코드로 관리되어 여기서는 삭제할 수 없어요.</p>
+        <p className="text-[11.5px] text-subtle">앱 기본 적용 안전망 금칙어예요. 코드 관리라 삭제는 안 되지만, 오탐이 우려되면 개별 <b className="text-fg/70">비활성화</b>할 수 있어요.</p>
         {filteredBuiltin.length === 0 ? (
           <Empty>{q ? "검색 결과가 없어요." : "내장 금칙어가 없어요."}</Empty>
         ) : (
           <div className="flex flex-wrap gap-2">
-            {filteredBuiltin.map((w) => (
-              <span key={w} className="inline-flex items-center rounded-full bg-surface-2 px-3.5 py-1.5 text-[13px] font-bold text-muted">
-                {w}
-              </span>
-            ))}
+            {filteredBuiltin.map((w) => {
+              const off = disabledSet.has(w);
+              return (
+                <span
+                  key={w}
+                  className={`inline-flex items-center gap-1 rounded-full border py-1.5 pl-3.5 pr-1.5 text-[13px] font-bold ${
+                    off ? "border-dashed border-border bg-surface-1 text-subtle line-through" : "border-border bg-surface-2 text-muted"
+                  }`}
+                >
+                  {w}
+                  <button
+                    onClick={() => void toggleBuiltin(w, !off)}
+                    aria-label={off ? `${w} 활성화` : `${w} 비활성화`}
+                    title={off ? "다시 활성화" : "비활성화"}
+                    className={`flex h-5 w-5 items-center justify-center rounded-full ${
+                      off ? "text-primary hover:bg-surface-2" : "text-subtle hover:bg-card hover:text-[#c0392b]"
+                    }`}
+                  >
+                    {off ? <RotateCcw className="h-3 w-3" /> : <Ban className="h-3 w-3" />}
+                  </button>
+                </span>
+              );
+            })}
           </div>
         )}
       </section>
