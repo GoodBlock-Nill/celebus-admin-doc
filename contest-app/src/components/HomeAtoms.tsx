@@ -1,8 +1,7 @@
 "use client";
 
-// Home 화면 전용 프레젠테이션 원자 컴포넌트 — 썸네일, 멤버 아바타 스택, 섹션 헤더, 로딩 스켈레톤.
+// Home 화면 전용 프레젠테이션 원자 컴포넌트 — 썸네일, 섹션 헤더, 로딩 스켈레톤.
 import Link from "next/link";
-import type { MemberHeartPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
 import { CharmIcon } from "./CharmIcon";
 
@@ -36,41 +35,6 @@ export function Thumb({ url }: { url: string | null }) {
   );
 }
 
-export function AvatarStack({
-  hearts,
-  size = 18,
-  ring = "ring-card",
-}: {
-  hearts: MemberHeartPublic[];
-  size?: number;
-  ring?: string;
-}) {
-  const sorted = [...hearts].sort((a, b) => a.sort_order - b.sort_order).slice(0, 5);
-  return (
-    <span className="flex -space-x-1.5">
-      {sorted.map((h) =>
-        h.avatar_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            key={h.member_id}
-            src={h.avatar_url}
-            alt={h.display_name}
-            style={{ width: size, height: size }}
-            className={`rounded-full object-cover ring-2 ${ring}`}
-          />
-        ) : (
-          <span
-            key={h.member_id}
-            style={{ width: size, height: size, fontSize: size * 0.44 }}
-            className={`flex items-center justify-center rounded-full bg-primary-soft font-bold text-primary-strong ring-2 ${ring}`}
-          >
-            {h.display_name.slice(0, 1)}
-          </span>
-        ),
-      )}
-    </span>
-  );
-}
 
 export function SectionHeader({ title, sub, moreHref }: { title: string; sub?: string; moreHref?: string }) {
   const { t } = useLang();

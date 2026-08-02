@@ -8,9 +8,9 @@ import Link from "next/link";
 import { BadgeCheck, Plus, RefreshCw } from "lucide-react";
 import { PlayBadge } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
-import type { MemberHeartPublic, StageEventPublic, StagePostPublic, StagePublic } from "@/lib/types";
+import type { StageEventPublic, StagePostPublic, StagePublic } from "@/lib/types";
 import { localizeStageText, localizeTitle } from "@/lib/localize";
-import { AvatarStack, CATEGORY_LABEL, LoadingSkeleton, SectionHeader, Thumb, timeAgo } from "./HomeAtoms";
+import { CATEGORY_LABEL, LoadingSkeleton, SectionHeader, Thumb } from "./HomeAtoms";
 import { useLang } from "./LangProvider";
 import { useSession } from "./SessionProvider";
 import HowItWorks from "./HowItWorks";
@@ -31,11 +31,11 @@ export default function Home() {
   };
   const [stages, setStages] = useState<StagePublic[]>([]);
   const [posts, setPosts] = useState<StagePostPublic[]>([]);
-  const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
-  const [membersTotal, setMembersTotal] = useState(0);
   const [event, setEvent] = useState<StageEventPublic | null>(null);
   const [featuredPost, setFeaturedPost] = useState<StagePostPublic | null>(null);
   const [hallPick, setHallPick] = useState<{ post: StagePostPublic; count: number }[]>([]);
+  // 멤버 반응(하트)은 비공개 — 업로더 본인 영상에 남은 하트 총합만(익명)
+  const [memberHeartTotal, setMemberHeartTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -51,43 +51,41 @@ export default function Home() {
       let featuredQuery = sb.from("stage_posts_public").select("*").eq("featured", true);
       if (preview) featuredQuery = featuredQuery.eq("is_official", true);
       featuredQuery = featuredQuery.order("created_at", { ascending: false }).limit(1);
-      const [stagesRes, postsRes, heartsRes, membersRes, eventRes, featuredRes] = await Promise.all([
+      const [stagesRes, postsRes, eventRes, featuredRes] = await Promise.all([
         sb.from("stages_public").select("*").eq("status", "open").order("sort_order").limit(8),
         postsQuery,
-        sb.from("member_hearts_public").select("*"),
-        sb.from("members_public").select("display_name"),
         preview ? Promise.resolve({ data: [], error: null }) : sb.from("stage_events_public").select("*").eq("status", "open").limit(1),
         featuredQuery,
       ]);
-      if (stagesRes.error || postsRes.error || heartsRes.error || membersRes.error || eventRes.error) {
+      if (stagesRes.error || postsRes.error || eventRes.error) {
         throw new Error("home load failed");
       }
+      const postRows = (postsRes.data ?? []) as StagePostPublic[];
       setStages((stagesRes.data ?? []) as StagePublic[]);
-      setPosts((postsRes.data ?? []) as StagePostPublic[]);
+      setPosts(postRows);
       setFeaturedPost(((featuredRes.data ?? []) as StagePostPublic[])[0] ?? null);
-      const map = new Map<string, MemberHeartPublic[]>();
-      for (const h of (heartsRes.data ?? []) as MemberHeartPublic[]) {
-        map.set(h.post_id, [...(map.get(h.post_id) ?? []), h]);
-      }
-      setHearts(map);
-      setMembersTotal((membersRes.data ?? []).length);
-      // V01D Pick — 멤버 하트 받은 영상(멤버 픽 하이라이트). 홈에 노출하며, 프리뷰 필터와 무관하게 하트 기준으로 조회
-      const heartCounts = new Map<string, number>();
-      for (const h of (heartsRes.data ?? []) as MemberHeartPublic[]) heartCounts.set(h.post_id, (heartCounts.get(h.post_id) ?? 0) + 1);
-      const pickIds = [...heartCounts.keys()];
-      if (pickIds.length) {
-        const { data: pickPosts } = await sb.from("stage_posts_public").select("*").in("id", pickIds);
-        setHallPick(
-          ((pickPosts ?? []) as StagePostPublic[])
-            .map((p) => ({ post: p, count: heartCounts.get(p.id) ?? 0 }))
-            .sort((a, b) => b.count - a.count)
-            .slice(0, 6),
-        );
-      } else {
-        setHallPick([]);
-      }
+      // 팬 인기 영상 — 좋아요 최다 영상 하이라이트(좋아요 1개 이상만)
+      setHallPick(
+        [...postRows]
+          .filter((p) => p.like_count > 0)
+          .sort((a, b) => b.like_count - a.like_count)
+          .slice(0, 6)
+          .map((p) => ({ post: p, count: p.like_count })),
+      );
       const events = (eventRes.data ?? []) as StageEventPublic[];
       setEvent(events[0] ?? null);
+      // 멤버 반응(비공개) — 업로더 본인 영상에 남은 멤버 하트 총합만(익명)
+      try {
+        const mineRes = await fetch("/api/stage/mine");
+        const mine = await mineRes.json();
+        const total = ((mine.memberHearts ?? []) as { post_id: string; count: number }[]).reduce(
+          (sum, m) => sum + (m.count ?? 0),
+          0,
+        );
+        setMemberHeartTotal(total);
+      } catch {
+        setMemberHeartTotal(0);
+      }
     } catch {
       setError(true);
     } finally {
@@ -99,7 +97,7 @@ export default function Home() {
     void load();
   }, [load]);
 
-  // 히어로 우선순위: ① 관리자 고정(featured) → ② 멤버 하트 최다 → ③ 최신
+  // 히어로 우선순위: ① 관리자 고정(featured) → ② 팬 좋아요 최다 → ③ 최신
   const heroPost = useMemo<HeroPost | null>(() => {
     if (featuredPost) {
       const stage = stages.find((s) => s.id === featuredPost.stage_id);
@@ -108,33 +106,13 @@ export default function Home() {
     }
     if (posts.length === 0) return null;
     let best = posts[0];
-    let bestCount = hearts.get(posts[0].id)?.length ?? 0;
     for (const p of posts) {
-      const c = hearts.get(p.id)?.length ?? 0;
-      if (c > bestCount) {
-        best = p;
-        bestCount = c;
-      }
+      if (p.like_count > best.like_count) best = p;
     }
     const stage = stages.find((s) => s.id === best.stage_id);
     const stageTitle = stage ? localizeTitle(stage.title, stage.i18n, lang) : undefined;
     return { ...best, __stageTitle: stageTitle };
-  }, [posts, hearts, stages, featuredPost, lang]);
-  const heroHearts = heroPost ? hearts.get(heroPost.id) ?? [] : [];
-  const heroGrandSlam = membersTotal > 0 && heroHearts.length >= membersTotal;
-
-  // 멤버가 봤어요 — 최근 멤버 반응이 남은 영상 (최근 반응 순)
-  const reactionItems = useMemo(() => {
-    const items: { post: StagePostPublic; heart: MemberHeartPublic }[] = [];
-    for (const p of posts) {
-      const hs = hearts.get(p.id);
-      if (!hs || hs.length === 0) continue;
-      const latest = [...hs].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))[0];
-      items.push({ post: p, heart: latest });
-    }
-    items.sort((a, b) => Date.parse(b.heart.created_at) - Date.parse(a.heart.created_at));
-    return items.slice(0, 4);
-  }, [posts, hearts]);
+  }, [posts, stages, featuredPost, lang]);
 
   const isFullyEmpty = !loading && !error && stages.length === 0 && posts.length === 0;
 
@@ -204,10 +182,9 @@ export default function Home() {
                 <PlayBadge size="lg" />
               </span>
               <div className="absolute inset-x-0 bottom-0 p-4">
-                {heroHearts.length > 0 && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/90 py-1 pl-1 pr-2.5 text-[11px] font-extrabold text-white backdrop-blur-sm">
-                    <AvatarStack hearts={heroHearts} size={18} ring="ring-white/60" />
-                    {heroGrandSlam ? t("member_all_heart_badge") : t("member_heart_badge")}
+                {heroPost.like_count > 0 && (
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/90 py-1 px-2.5 text-[11px] font-extrabold text-white backdrop-blur-sm">
+                    {t("home_pick_hearts").replace("{n}", String(heroPost.like_count))}
                   </span>
                 )}
                 <h1 className="mt-2.5 line-clamp-2 text-[20px] font-extrabold leading-tight tracking-tight text-white drop-shadow-md">
@@ -221,32 +198,19 @@ export default function Home() {
             </Link>
           )}
 
-          {reactionItems.length > 0 && (
+          {/* 멤버 반응 — 업로더 본인만 보는 비공개 요약(익명, 멤버 이름 비노출) */}
+          {memberHeartTotal > 0 && (
             <div>
               <SectionHeader title={t("home_reaction_title")} sub={t("home_reaction_sub")} />
-              <div className="space-y-2.5">
-                {reactionItems.map(({ post, heart }) => (
-                  <Link
-                    key={post.id}
-                    href={`/video/${post.id}`}
-                    className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-sm active:scale-[0.99]"
-                  >
-                    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl">
-                      <Thumb url={post.thumbnail_url} />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <strong className="line-clamp-2 block text-[13px] font-bold leading-snug text-fg">
-                        {t("home_reaction_line").replace("{name}", heart.display_name)}
-                      </strong>
-                      <p className="mt-0.5 truncate text-[11px] text-muted">
-                        {post.title} · {timeAgo(heart.created_at)}
-                      </p>
-                      <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-primary-soft px-2.5 py-1 text-[10px] font-extrabold text-primary-strong">
-                        {t("member_heart_badge")}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
+              <div className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3.5 shadow-sm">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-[18px]">
+                  💜
+                </div>
+                <strong className="min-w-0 flex-1 text-[13px] font-bold leading-snug text-fg break-keep">
+                  {memberHeartTotal === 1
+                    ? t("mh_private_one")
+                    : t("mh_private_many").replace("{n}", String(memberHeartTotal))}
+                </strong>
               </div>
             </div>
           )}
@@ -343,7 +307,7 @@ export default function Home() {
             )}
           </div>
 
-          {/* V01D Pick — 없어도 빈 상태로 항상 노출 */}
+          {/* 팬 인기 영상 — 없어도 빈 상태로 항상 노출 */}
           <div>
             <SectionHeader title={t("hall_title")} sub={t("hall_sub")} moreHref={hallPick.length > 0 ? "/hearts" : undefined} />
             {hallPick.length === 0 ? (
@@ -352,24 +316,21 @@ export default function Home() {
               </p>
             ) : (
               <div className="-mx-0.5 flex gap-2.5 overflow-x-auto px-0.5 pb-1">
-                {hallPick.map(({ post, count }) => {
-                  const grandSlam = membersTotal > 0 && count >= membersTotal;
-                  return (
-                    <Link key={post.id} href={`/video/${post.id}?list=hearts`} className="w-[156px] shrink-0 active:scale-[0.98]">
-                      <div className="relative h-[92px] overflow-hidden rounded-2xl">
-                        <Thumb url={post.thumbnail_url} />
-                        <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
-                        <span className="absolute left-2 top-2 rounded-md bg-black/45 px-2 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
-                          {grandSlam ? t("member_all_short") : CATEGORY_LABEL[post.category] ?? post.category}
-                        </span>
-                      </div>
-                      <strong className="mt-2 line-clamp-1 block text-[12.5px] font-bold text-fg">{post.title}</strong>
-                      <small className="mt-0.5 block text-[11px] text-muted">
-                        {t("home_pick_hearts").replace("{n}", String(count))}
-                      </small>
-                    </Link>
-                  );
-                })}
+                {hallPick.map(({ post, count }) => (
+                  <Link key={post.id} href={`/video/${post.id}?list=hearts`} className="w-[156px] shrink-0 active:scale-[0.98]">
+                    <div className="relative h-[92px] overflow-hidden rounded-2xl">
+                      <Thumb url={post.thumbnail_url} />
+                      <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/10 to-black/40" />
+                      <span className="absolute left-2 top-2 rounded-md bg-black/45 px-2 py-1 text-[9px] font-extrabold text-white backdrop-blur-sm">
+                        {CATEGORY_LABEL[post.category] ?? post.category}
+                      </span>
+                    </div>
+                    <strong className="mt-2 line-clamp-1 block text-[12.5px] font-bold text-fg">{post.title}</strong>
+                    <small className="mt-0.5 block text-[11px] text-muted">
+                      {t("home_pick_hearts").replace("{n}", String(count))}
+                    </small>
+                  </Link>
+                ))}
               </div>
             )}
           </div>

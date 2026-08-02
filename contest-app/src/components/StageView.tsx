@@ -7,7 +7,7 @@ import { Plus, ChevronLeft, CalendarDays, BadgeCheck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { sb } from "@/lib/supabase-browser";
-import type { MemberHeartPublic, StageCategory, StagePostPublic, StagePublic } from "@/lib/types";
+import type { StageCategory, StagePostPublic, StagePublic } from "@/lib/types";
 import { STAGE_CATEGORY_KEYS, OFFICIAL_CATEGORY_KEYS } from "@/lib/types";
 import StageCard from "./StageCard";
 import StageUploadModal from "./StageUploadModal";
@@ -29,8 +29,6 @@ export default function StageView({ stageId, hideHeader = false }: { stageId: st
   const [filter, setFilter] = useState<Filter>("all");
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
-  const [membersTotal, setMembersTotal] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -38,18 +36,7 @@ export default function StageView({ stageId, hideHeader = false }: { stageId: st
       if (!data) setNotFound(true);
       else setStage(data as StagePublic);
     })();
-    sb.from("members_public").select("display_name").then(({ data }) => setMembersTotal((data ?? []).length));
   }, [stageId]);
-
-  const loadHearts = useCallback(async (ids: string[]) => {
-    if (!ids.length) return;
-    const { data } = await sb.from("member_hearts_public").select("*").in("post_id", ids);
-    const map = new Map<string, MemberHeartPublic[]>();
-    for (const h of (data ?? []) as MemberHeartPublic[]) {
-      map.set(h.post_id, [...(map.get(h.post_id) ?? []), h]);
-    }
-    setHearts(map);
-  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -61,16 +48,15 @@ export default function StageView({ stageId, hideHeader = false }: { stageId: st
     setPosts(rows);
     setLoading(false);
     if (rows.length) {
-      void loadHearts(rows.map((r) => r.id));
       try {
         const res = await fetch(`/api/stage/mine?liked_for=${rows.map((r) => r.id).join(",")}`);
         const j = await res.json();
         setLiked(new Set<string>(j.liked ?? []));
       } catch {
-        /* 하트 상태는 보조 정보 — 실패 무시 */
+        /* 좋아요 상태는 보조 정보 — 실패 무시 */
       }
     }
-  }, [stageId, filter, loadHearts]);
+  }, [stageId, filter]);
 
   useEffect(() => {
     void load();
@@ -196,8 +182,6 @@ export default function StageView({ stageId, hideHeader = false }: { stageId: st
               key={p.id}
               post={p}
               liked={liked.has(p.id)}
-              hearts={hearts.get(p.id) ?? []}
-              grandSlam={membersTotal > 0 && (hearts.get(p.id)?.length ?? 0) >= membersTotal}
               onOpen={() => router.push(`/video/${p.id}?list=stage:${stageId}`)}
               onToggleLike={() => void toggleLike(p)}
             />

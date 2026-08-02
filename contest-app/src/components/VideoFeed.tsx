@@ -9,18 +9,17 @@ import { toast } from "sonner";
 import { X, Heart, MessageCircle, Flag, ExternalLink, Eye, EyeOff, BadgeCheck } from "lucide-react";
 import { PlayBadge } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
-import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
+import type { StagePostPublic } from "@/lib/types";
 import { stagePostAsEntry } from "@/lib/types";
 import EntryEmbed from "./EntryEmbed";
 import FeedYouTube from "./FeedYouTube";
-import BragButton from "./BragButton";
 import CommentSection from "./CommentSection";
 import { Thumb } from "./HomeAtoms";
 import { useLang } from "./LangProvider";
 import { useSession } from "./SessionProvider";
 import { isLaunchPreview } from "@/lib/launchPreview";
 
-type HeartState = { hearts: MemberHeartPublic[]; liked: boolean; likeCount: number; viewCount: number };
+type HeartState = { memberHearted: boolean; liked: boolean; likeCount: number; viewCount: number };
 
 // 리스트 컨텍스트 로더 — ?list=stage:<id> | hearts | recent(기본)
 async function loadFeedList(listParam: string | null, seedId: string): Promise<StagePostPublic[]> {
@@ -33,15 +32,6 @@ async function loadFeedList(listParam: string | null, seedId: string): Promise<S
     const { data } = await q;
     const rows = (data ?? []) as StagePostPublic[];
     if (rows.some((p) => p.id === seedId)) return rows;
-  } else if (listParam === "hearts") {
-    const { data: hs } = await sb.from("member_hearts_public").select("post_id").order("created_at", { ascending: false }).limit(300);
-    const ids = [...new Set((hs ?? []).map((h) => h.post_id as string))];
-    if (ids.length) {
-      const { data } = await sb.from("stage_posts_public").select("*").in("id", ids);
-      const order = new Map(ids.map((id, i) => [id, i]));
-      const rows = ((data ?? []) as StagePostPublic[]).sort((a, b) => (order.get(a.id) ?? 999) - (order.get(b.id) ?? 999));
-      if (rows.some((p) => p.id === seedId)) return rows;
-    }
   } else {
     let q = sb.from("stage_posts_public").select("*").order("created_at", { ascending: false }).limit(100);
     if (preview) q = q.eq("is_official", true);
@@ -63,7 +53,6 @@ export default function VideoFeed({ postId }: { postId: string }) {
   const focus = useSearchParams().get("focus"); // 알림 딥링크: comment 시 시트 오픈
 
   const [posts, setPosts] = useState<StagePostPublic[]>([]);
-  const [membersTotal, setMembersTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [active, setActive] = useState(0);
@@ -87,11 +76,7 @@ export default function VideoFeed({ postId }: { postId: string }) {
   // 리스트 로드 + 씨드 위치로 스크롤
   useEffect(() => {
     (async () => {
-      const [list, { data: ms }] = await Promise.all([
-        loadFeedList(listParam, postId),
-        sb.from("members_public").select("display_name"),
-      ]);
-      setMembersTotal((ms ?? []).length);
+      const list = await loadFeedList(listParam, postId);
       if (list.length === 0) {
         setNotFound(true);
         setLoading(false);
@@ -143,16 +128,15 @@ export default function VideoFeed({ postId }: { postId: string }) {
   const ensureState = useCallback(
     async (post: StagePostPublic) => {
       if (states.has(post.id)) return;
-      const [{ data: hs }, likeRes] = await Promise.all([
-        sb.from("member_hearts_public").select("*").eq("post_id", post.id),
-        fetch(`/api/stage/mine?liked_for=${post.id}`).then((r) => r.json()).catch(() => ({ liked: [] })),
-      ]);
+      const mineRes = await fetch(`/api/stage/mine?liked_for=${post.id}&member_heart_for=${post.id}`)
+        .then((r) => r.json())
+        .catch(() => ({ liked: [], memberHearted: [] }));
       setStates((prev) => {
         const n = new Map(prev);
         const cur = n.get(post.id);
         n.set(post.id, {
-          hearts: (hs ?? []) as MemberHeartPublic[],
-          liked: (likeRes.liked ?? []).includes(post.id),
+          memberHearted: (mineRes.memberHearted ?? []).includes(post.id),
+          liked: (mineRes.liked ?? []).includes(post.id),
           likeCount: post.like_count,
           viewCount: cur?.viewCount ?? post.view_count,
         });
@@ -172,7 +156,7 @@ export default function VideoFeed({ postId }: { postId: string }) {
       if (typeof j.view_count === "number") {
         setStates((prev) => {
           const n = new Map(prev);
-          const cur = n.get(post.id) ?? { hearts: [], liked: false, likeCount: post.like_count, viewCount: post.view_count };
+          const cur = n.get(post.id) ?? { memberHearted: false, liked: false, likeCount: post.like_count, viewCount: post.view_count };
           n.set(post.id, { ...cur, viewCount: j.view_count });
           return n;
         });
@@ -207,16 +191,16 @@ export default function VideoFeed({ postId }: { postId: string }) {
     }
   }
 
-  // 멤버 본인 — 하트 남기기/취소(코어 액션). 성공 후 해당 항목 하트 재조회
+  // 멤버 본인 — 하트 남기기/취소(코어 액션). 응답의 새 상태로 갱신
   async function toggleMemberHeart(post: StagePostPublic) {
     if (!requireLogin(() => toggleMemberHeart(post))) return;
     const res = await fetch(`/api/stage/posts/${post.id}/member-heart`, { method: "POST" }).catch(() => null);
     if (!res?.ok) return void toast(t("err_server"));
-    const { data } = await sb.from("member_hearts_public").select("*").eq("post_id", post.id);
+    const j = await res.json().catch(() => ({}));
     setStates((prev) => {
       const n = new Map(prev);
-      const cur = n.get(post.id) ?? { hearts: [], liked: false, likeCount: post.like_count, viewCount: post.view_count };
-      n.set(post.id, { ...cur, hearts: (data ?? []) as MemberHeartPublic[] });
+      const cur = n.get(post.id) ?? { memberHearted: false, liked: false, likeCount: post.like_count, viewCount: post.view_count };
+      n.set(post.id, { ...cur, memberHearted: !!j.hearted });
       return n;
     });
   }
@@ -284,8 +268,7 @@ export default function VideoFeed({ postId }: { postId: string }) {
             );
           }
           const st = states.get(post.id);
-          const hearts = st?.hearts ?? [];
-          const grandSlam = membersTotal > 0 && hearts.length >= membersTotal;
+          const memberHearted = st?.memberHearted ?? false;
           const isActive = i === active;
           return (
             <section
@@ -315,18 +298,15 @@ export default function VideoFeed({ postId }: { postId: string }) {
               {/* 우측 액션 레일 (가로모드/숨김 시 페이드) */}
               <div className={`absolute bottom-[max(6rem,calc(env(safe-area-inset-bottom)+5rem))] right-2 z-10 flex flex-col items-center gap-3.5 transition-opacity duration-200 ${chromeCls}`}>
                 {isMemberMe && (
-                  <button onClick={() => toggleMemberHeart(post)} aria-label={t("mh_button")} className="flex flex-col items-center gap-1 text-white">
+                  <button onClick={() => toggleMemberHeart(post)} aria-label={t("mh_button")} aria-pressed={memberHearted} className="flex flex-col items-center gap-1 text-white">
                     <span className="brand-gradient flex h-10 w-10 items-center justify-center rounded-full shadow-[0_4px_12px_-2px_rgba(108,77,230,0.8)] active:scale-90">
-                      <Heart className="h-[18px] w-[18px] fill-current" />
+                      <Heart className={`h-[18px] w-[18px] ${memberHearted ? "fill-current" : ""}`} />
                     </span>
                     <span className="text-[10px] font-bold drop-shadow">{t("mh_button")}</span>
                   </button>
                 )}
                 <RailButton icon={Heart} label={String(st?.likeCount ?? post.like_count)} active={st?.liked} onClick={() => toggleLike(post)} ariaLabel={t("action_like")} />
                 <RailButton icon={MessageCircle} onClick={() => setCommentsFor(post.id)} ariaLabel={t("comment_title")} />
-                <div className="flex flex-col items-center">
-                  <BragButton post={post} hearts={hearts} variant="rail" />
-                </div>
                 <a href={post.source_url} target="_blank" rel="noreferrer noopener" aria-label={t("stage_open_original")} className="flex flex-col items-center gap-1 text-white">
                   <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm active:scale-90"><ExternalLink className="h-[18px] w-[18px]" /></span>
                 </a>
@@ -335,12 +315,6 @@ export default function VideoFeed({ postId }: { postId: string }) {
 
               {/* 하단 메타 + 멤버 반응 (가로모드/숨김 시 페이드) */}
               <div className={`absolute inset-x-0 bottom-[max(5.5rem,calc(env(safe-area-inset-bottom)+4.5rem))] left-4 right-16 z-10 transition-opacity duration-200 ${chromeCls}`}>
-                {hearts.length > 0 && (
-                  <div className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-primary/85 py-1 pl-1 pr-3 backdrop-blur-sm">
-                    <Heart className="ml-1 h-3.5 w-3.5 shrink-0 fill-current text-white" />
-                    <span className="text-[11.5px] font-extrabold text-white">{grandSlam ? t("member_all_heart_badge") : t("member_heart_badge")}</span>
-                  </div>
-                )}
                 {post.is_official && (
                   <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 backdrop-blur-sm">
                     <BadgeCheck className="h-3.5 w-3.5 text-primary-400" />

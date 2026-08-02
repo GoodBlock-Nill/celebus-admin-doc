@@ -1,13 +1,12 @@
 "use client";
 
-// 마이페이지 — 내 영상·멤버 반응·내 댓글. 열람은 로그인 필수(상호작용 지점).
-// 프로필(아바타·닉네임) + 통계 3종(내 영상/멤버가 봤어요/멤버 전원) + 탭 3종(내 영상/봐준 영상/내 댓글).
+// 마이페이지 — 내 영상·멤버 반응(익명 집계)·내 댓글. 열람은 로그인 필수(상호작용 지점).
+// 프로필(아바타·닉네임) + 통계 2종(내 영상/받은 멤버 하트) + 탭 3종(내 영상/하트 받은 영상/내 댓글).
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ImageOff } from "lucide-react";
 import { CharmIcon, type CharmName } from "./CharmIcon";
-import { sb } from "@/lib/supabase-browser";
-import type { MemberHeartPublic, Platform, StageCategory } from "@/lib/types";
+import type { Platform, StageCategory } from "@/lib/types";
 import { useSession } from "./SessionProvider";
 import { useLang } from "./LangProvider";
 import ErrorState from "./ErrorState";
@@ -33,6 +32,7 @@ interface MyPost {
 interface MineResponse {
   posts?: MyPost[];
   liked?: string[];
+  memberHearts?: { post_id: string; count: number }[];
 }
 
 type Tab = "videos" | "seen" | "comments";
@@ -43,15 +43,12 @@ const TABS: { key: Tab; labelKey: string }[] = [
   { key: "comments", labelKey: "my_tab_comments" },
 ];
 
-function heartLine(hearts: MemberHeartPublic[], membersTotal: number, t: TFn): { text: string; active: boolean } {
-  if (hearts.length === 0) return { text: `○ ${t("mh_waiting")}`, active: false };
-  if (membersTotal > 0 && hearts.length >= membersTotal) return { text: `● ${t("grandslam")}`, active: true };
-  const sorted = [...hearts].sort((a, b) => a.sort_order - b.sort_order);
-  const first = sorted[0].display_name;
+function heartLine(count: number, t: TFn): { text: string; active: boolean } {
+  if (count === 0) return { text: `○ ${t("mh_waiting")}`, active: false };
   const text =
-    sorted.length === 1
-      ? `● ${t("mh_likes_one").replace("{name}", first)}`
-      : `● ${t("mh_likes_many").replace("{name}", first).replace("{n}", String(sorted.length - 1))}`;
+    count === 1
+      ? `● ${t("mh_private_one")}`
+      : `● ${t("mh_private_many").replace("{n}", String(count))}`;
   return { text, active: true };
 }
 
@@ -112,9 +109,9 @@ function EmptyState({ title, sub, cta, charm }: { title: string; sub?: string; c
   );
 }
 
-function VideoRow({ post, hearts, membersTotal }: { post: MyPost; hearts: MemberHeartPublic[]; membersTotal: number }) {
+function VideoRow({ post, count }: { post: MyPost; count: number }) {
   const { t } = useLang();
-  const line = heartLine(hearts, membersTotal, t);
+  const line = heartLine(count, t);
   return (
     <Link href={`/video/${post.id}`} className="flex gap-[11px] border-b border-border px-1 py-[13px] last:border-b-0">
       <Thumb url={post.thumbnail_url} />
@@ -147,8 +144,7 @@ export default function MyPage() {
   const { t } = useLang();
   const { signedIn, member, nickname, loading: sessionLoading, requireLogin } = useSession();
   const [posts, setPosts] = useState<MyPost[]>([]);
-  const [hearts, setHearts] = useState<Map<string, MemberHeartPublic[]>>(new Map());
-  const [membersTotal, setMembersTotal] = useState(0);
+  const [hearts, setHearts] = useState<Map<string, number>>(new Map());
   const [tab, setTab] = useState<Tab>("videos");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -157,29 +153,16 @@ export default function MyPage() {
     setLoading(true);
     setError(false);
     try {
-      const [mineJson, membersRes] = await Promise.all([
-        fetch("/api/stage/mine").then((r) => {
-          if (!r.ok) throw new Error("mine_failed");
-          return r.json() as Promise<MineResponse>;
-        }),
-        sb.from("members_public").select("display_name"),
-      ]);
-      const myPosts = mineJson.posts ?? [];
-      setPosts(myPosts);
-      setMembersTotal((membersRes.data ?? []).length);
+      const mineJson = await fetch("/api/stage/mine").then((r) => {
+        if (!r.ok) throw new Error("mine_failed");
+        return r.json() as Promise<MineResponse>;
+      });
+      setPosts(mineJson.posts ?? []);
 
-      const ids = myPosts.map((p) => p.id);
-      if (ids.length) {
-        const { data: hs, error: heartsErr } = await sb.from("member_hearts_public").select("*").in("post_id", ids);
-        if (heartsErr) throw heartsErr;
-        const map = new Map<string, MemberHeartPublic[]>();
-        for (const h of (hs ?? []) as MemberHeartPublic[]) {
-          map.set(h.post_id, [...(map.get(h.post_id) ?? []), h]);
-        }
-        setHearts(map);
-      } else {
-        setHearts(new Map());
-      }
+      // 멤버 하트는 익명 집계(post_id → count). 업로더 본인에게만 반환됨.
+      const map = new Map<string, number>();
+      for (const h of mineJson.memberHearts ?? []) map.set(h.post_id, h.count);
+      setHearts(map);
     } catch {
       setError(true);
     } finally {
@@ -193,16 +176,11 @@ export default function MyPage() {
 
   const stats = useMemo(() => {
     let totalHearts = 0;
-    let grandSlamCount = 0;
-    for (const p of posts) {
-      const h = hearts.get(p.id) ?? [];
-      totalHearts += h.length;
-      if (membersTotal > 0 && h.length >= membersTotal) grandSlamCount += 1;
-    }
-    return { videoCount: posts.length, totalHearts, grandSlamCount };
-  }, [posts, hearts, membersTotal]);
+    for (const p of posts) totalHearts += hearts.get(p.id) ?? 0;
+    return { videoCount: posts.length, totalHearts };
+  }, [posts, hearts]);
 
-  const seenPosts = useMemo(() => posts.filter((p) => (hearts.get(p.id)?.length ?? 0) > 0), [posts, hearts]);
+  const seenPosts = useMemo(() => posts.filter((p) => (hearts.get(p.id) ?? 0) > 0), [posts, hearts]);
 
   // 세션 확인 중 — 프로필/통계 스켈레톤
   if (sessionLoading) {
@@ -261,8 +239,7 @@ export default function MyPage() {
       {/* 통계 */}
       <div className="mt-3 flex gap-[9px]">
         <StatCard n={stats.videoCount} label={t("my_stat_videos")} />
-        <StatCard n={stats.totalHearts} label={t("member_heart_badge")} accent />
-        <StatCard n={stats.grandSlamCount} label={t("member_all_short")} />
+        <StatCard n={stats.totalHearts} label={t("mh_button")} accent />
       </div>
 
       {/* 탭 */}
@@ -293,12 +270,12 @@ export default function MyPage() {
           posts.length === 0 ? (
             <EmptyState title={t("my_empty_videos_title")} sub={t("my_empty_videos_sub")} cta charm="upload" />
           ) : (
-            posts.map((p) => <VideoRow key={p.id} post={p} hearts={hearts.get(p.id) ?? []} membersTotal={membersTotal} />)
+            posts.map((p) => <VideoRow key={p.id} post={p} count={hearts.get(p.id) ?? 0} />)
           )
         ) : seenPosts.length === 0 ? (
           <EmptyState title={t("my_empty_seen")} charm="heart" />
         ) : (
-          seenPosts.map((p) => <VideoRow key={p.id} post={p} hearts={hearts.get(p.id) ?? []} membersTotal={membersTotal} />)
+          seenPosts.map((p) => <VideoRow key={p.id} post={p} count={hearts.get(p.id) ?? 0} />)
         )}
       </div>
     </div>

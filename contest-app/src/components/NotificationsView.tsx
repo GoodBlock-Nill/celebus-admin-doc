@@ -42,7 +42,7 @@ export default function NotificationsView() {
 
   function line(n: Noti): string {
     const name = n.payload.member_name ?? "";
-    if (n.type === "member_heart") return t("noti_member_heart").replace("{name}", name);
+    if (n.type === "member_heart") return t("noti_member_heart"); // 익명 — 멤버 이름 미주입
     if (n.type === "member_comment") return t("noti_member_comment").replace("{name}", name);
     return t("noti_fan_comment");
   }

@@ -3,67 +3,23 @@
 // 스테이지 피드 카드 — 썸네일 + 플랫폼 + 카테고리 + 팬 하트. 탭하면 상세(임베드) 열림.
 import { Heart, Eye, BadgeCheck } from "lucide-react";
 import { CharmIcon, PlayBadge } from "./CharmIcon";
-import type { MemberHeartPublic, StagePostPublic } from "@/lib/types";
+import type { StagePostPublic } from "@/lib/types";
 import { useLang } from "./LangProvider";
-
-// 카드 전용 컴팩트 멤버 반응 라인 — 작은 아바타 + 인디고 텍스트 (은은하게, 광택/컨페티 없음)
-function CardMemberSeenLine({ hearts }: { hearts: MemberHeartPublic[] }) {
-  const { t } = useLang();
-  if (hearts.length === 0) return null;
-  const sorted = [...hearts].sort((a, b) => a.sort_order - b.sort_order);
-  const text =
-    sorted.length === 1
-      ? t("mh_likes_one").replace("{name}", sorted[0].display_name)
-      : t("mh_likes_many").replace("{name}", sorted[0].display_name).replace("{n}", String(sorted.length - 1));
-  return (
-    <div className="mt-1.5 flex items-center gap-1.5">
-      <span className="flex shrink-0 -space-x-1">
-        {sorted.slice(0, 5).map((h) =>
-          h.avatar_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={h.member_id}
-              src={h.avatar_url}
-              alt={h.display_name}
-              className="h-4 w-4 rounded-full object-cover ring-2 ring-card"
-            />
-          ) : (
-            <span
-              key={h.member_id}
-              className="flex h-4 w-4 items-center justify-center rounded-full bg-primary-soft text-[7px] font-bold text-primary-strong ring-2 ring-card"
-            >
-              {h.display_name.slice(0, 1)}
-            </span>
-          ),
-        )}
-      </span>
-      <span className="min-w-0 truncate text-[10.5px] font-bold text-primary-strong">{text}</span>
-    </div>
-  );
-}
 
 export default function StageCard({
   post,
   liked,
-  hearts = [],
-  grandSlam = false,
   onOpen,
   onToggleLike,
 }: {
   post: StagePostPublic;
   liked: boolean;
-  hearts?: MemberHeartPublic[];
-  grandSlam?: boolean;
   onOpen: () => void;
   onToggleLike: () => void;
 }) {
   const { t } = useLang();
   return (
-    <div
-      className={`overflow-hidden rounded-2xl bg-card shadow-sm ${
-        grandSlam ? "border-2 border-gold" : "border border-border"
-      }`}
-    >
+    <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
       <button onClick={onOpen} className="relative block w-full text-left" aria-label={post.title}>
         {post.thumbnail_url ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -112,7 +68,6 @@ export default function StageCard({
         {post.uploader_nickname && (
           <div className="mt-0.5 truncate text-[10px] text-subtle">{t("uploader_by")} {post.uploader_nickname}</div>
         )}
-        <CardMemberSeenLine hearts={hearts} />
       </div>
     </div>
   );

@@ -244,7 +244,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
     const url = `${location.origin}/video/${winner.id}?list=stage:${winner.stage_id}`;
     try {
       if (navigator.share) await navigator.share({ title: winner.title, text: `${t("ev_my_winner")} — ${winner.title}`, url });
-      else { await navigator.clipboard.writeText(url); toast(t("brag_saved")); }
+      else { await navigator.clipboard.writeText(url); toast(t("copied")); }
     } catch { /* 취소·미지원 무시 */ }
   }
 
