@@ -1,6 +1,8 @@
 "use client";
 
-// 월드컵 랭킹 — 우승 비율(1순위)·1:1 승률(2순위). 멤버는 여기서 아티스트 픽 선택(비공개, 발표 시 공개).
+// 월드컵 랭킹 — 우승 비율(1순위)·1:1 승률(2순위). 멤버는 여기서 아티스트 픽 선택.
+// 멤버 픽은 항상 비공개 — 팬에게 영상별 멤버 픽 수를 노출하지 않는다(ix 편애 논란 차단).
+// 아티스트인기상 수상작(단일)만 발표 결과에 익명으로 표시된다.
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Play } from "lucide-react";
@@ -20,7 +22,6 @@ export default function WorldcupStandings({
 }) {
   const { t } = useLang();
   const [stats, setStats] = useState<WorldcupStatPublic[]>([]);
-  const [memberPicks, setMemberPicks] = useState<Map<string, number>>(new Map());
   const [isMemberMe, setIsMemberMe] = useState(false);
   const [myPick, setMyPick] = useState<string | null>(null);
 
@@ -28,13 +29,7 @@ export default function WorldcupStandings({
     const { data } = await sb.from("worldcup_stats_public").select("*").eq("event_id", eventId);
     const rows = ((data ?? []) as WorldcupStatPublic[]).sort((x, y) => y.win_rate - x.win_rate || y.match_rate - x.match_rate);
     setStats(rows);
-    if (eventStatus === "announced") {
-      const { data: picks } = await sb.from("member_event_picks_public").select("post_id").eq("event_id", eventId);
-      const m = new Map<string, number>();
-      for (const p of picks ?? []) m.set(p.post_id as string, (m.get(p.post_id as string) ?? 0) + 1);
-      setMemberPicks(m);
-    }
-  }, [eventId, eventStatus]);
+  }, [eventId]);
 
   useEffect(() => {
     void load();
@@ -104,7 +99,6 @@ export default function WorldcupStandings({
               </div>
               <div className={`mt-1.5 w-full truncate text-center font-bold text-fg ${top ? "text-[12px]" : "text-[11px]"}`}>{p.title}</div>
               <div className="mt-0.5 text-[11px] font-black text-primary-strong tabular-nums">{t("ev_win_rate")} {(s.win_rate * 100).toFixed(0)}%</div>
-              {(memberPicks.get(s.post_id) ?? 0) > 0 && <div className="text-[9.5px] font-bold text-primary-strong">{t("ev_picks_n").replace("{n}", String(memberPicks.get(s.post_id)))}</div>}
               <div className="mt-1">{pickBtn(s.post_id)}</div>
             </Link>
           );
