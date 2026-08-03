@@ -44,7 +44,7 @@ async function loadFeedList(listParam: string | null, seedId: string): Promise<S
   return data ? [data as StagePostPublic] : [];
 }
 
-export default function VideoFeed({ postId }: { postId: string }) {
+export default function VideoFeed({ postId, initialPosts }: { postId: string; initialPosts?: StagePostPublic[] }) {
   const { t } = useLang();
   const { requireLogin, member } = useSession();
   const isMemberMe = !!member;
@@ -52,10 +52,13 @@ export default function VideoFeed({ postId }: { postId: string }) {
   const listParam = useSearchParams().get("list");
   const focus = useSearchParams().get("focus"); // 알림 딥링크: comment 시 시트 오픈
 
-  const [posts, setPosts] = useState<StagePostPublic[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
-  const [active, setActive] = useState(0);
+  // 서버 주입(initialPosts)이 있으면 그걸로 초기화 → 클라 재조회 없이 씨드 영상 즉시 렌더
+  const [posts, setPosts] = useState<StagePostPublic[]>(initialPosts ?? []);
+  const [loading, setLoading] = useState(!initialPosts);
+  const [notFound, setNotFound] = useState(initialPosts != null && initialPosts.length === 0);
+  const [active, setActive] = useState(() =>
+    initialPosts && initialPosts.length ? Math.max(0, initialPosts.findIndex((p) => p.id === postId)) : 0,
+  );
   const [states, setStates] = useState<Map<string, HeartState>>(new Map());
   const [commentsFor, setCommentsFor] = useState<string | null>(null);
   const [soundOn, setSoundOn] = useState(false); // 자동재생은 muted, 사용자가 켜면 이후 영상도 유지
@@ -75,6 +78,11 @@ export default function VideoFeed({ postId }: { postId: string }) {
 
   // 리스트 로드 + 씨드 위치로 스크롤
   useEffect(() => {
+    // 서버 주입이 있으면 재조회 skip(씨드는 이미 초기 상태에 있음) — focus 딥링크만 처리
+    if (initialPosts) {
+      if (focus === "comment") setCommentsFor(postId);
+      return;
+    }
     (async () => {
       const list = await loadFeedList(listParam, postId);
       if (list.length === 0) {
@@ -89,7 +97,7 @@ export default function VideoFeed({ postId }: { postId: string }) {
       if (focus === "comment") setCommentsFor(postId);
       // 스크롤은 posts 렌더 커밋 후 별도 이펙트에서 수행(아래) — refs 준비 보장
     })();
-  }, [listParam, postId, focus]);
+  }, [listParam, postId, focus, initialPosts]);
 
   // 씨드(클릭한 영상) 위치로 스크롤 — posts가 실제로 렌더/커밋된 뒤 실행해 itemRefs 준비를 보장.
   // (setPosts 직후 rAF는 아직 아이템이 커밋 전이라 스크롤이 무시돼 항상 최신 영상이 재생되던 버그 수정)
