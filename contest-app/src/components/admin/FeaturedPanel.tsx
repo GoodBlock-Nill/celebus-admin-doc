@@ -1,7 +1,7 @@
 "use client";
 
 // 홈 대표 영상 — 관리자가 홈 히어로로 고정할 영상을 지정/해제. 단일 대표(지정 시 나머지 자동 해제).
-// 대표 미지정 시 홈은 자동 로직(멤버 하트 최다 → 최신)으로 히어로를 고른다.
+// 대표 미지정 시 홈은 자동 로직(좋아요 최다 → 최신)으로 히어로를 고른다.
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Star } from "lucide-react";
@@ -60,7 +60,7 @@ export default function FeaturedPanel() {
   return (
     <div className="space-y-4">
       <Card className="p-4 text-[12.5px] leading-relaxed text-muted">
-        홈 메인(히어로)에 고정할 영상을 지정해요. <b className="text-fg/80">미지정 시</b> 자동(멤버 하트 최다 → 최신)으로 노출됩니다.
+        홈 메인(히어로)에 고정할 영상을 지정해요. <b className="text-fg/80">미지정 시</b> 자동(좋아요 최다 → 최신)으로 노출됩니다.
       </Card>
 
       {/* 현재 대표 — 없으면 자동 노출 안내 */}

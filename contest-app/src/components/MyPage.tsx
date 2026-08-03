@@ -1,7 +1,7 @@
 "use client";
 
 // 마이페이지 — 내 영상·멤버 반응(익명 집계)·내 댓글. 열람은 로그인 필수(상호작용 지점).
-// 프로필(아바타·닉네임) + 통계 2종(내 영상/받은 멤버 하트) + 탭 3종(내 영상/하트 받은 영상/내 댓글).
+// 프로필(아바타·닉네임) + 통계 2종(내 영상/멤버가 본 영상 수) + 탭 3종(내 영상/멤버가 본 영상/내 댓글).
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ImageOff } from "lucide-react";
@@ -239,7 +239,7 @@ export default function MyPage() {
       {/* 통계 */}
       <div className="mt-3 flex gap-[9px]">
         <StatCard n={stats.videoCount} label={t("my_stat_videos")} />
-        <StatCard n={stats.totalHearts} label={t("mh_button")} accent />
+        <StatCard n={stats.totalHearts} label={t("home_reaction_title")} accent />
       </div>
 
       {/* 탭 */}
