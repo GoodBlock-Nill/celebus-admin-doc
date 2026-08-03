@@ -62,6 +62,13 @@ export default function FeedYouTube({
     return () => clearTimeout(tm);
   }, [soundOn, id]);
 
+  // 화질 상향 — best-effort: 로드 후 고화질을 제안(YouTube 자동선택이 저화질로 시작하는 것 완화).
+  // 실제 화질을 결정하는 핵심은 아래 iframe 2배 렌더(고해상도 스트림 유도)이며, 이건 보조 힌트.
+  useEffect(() => {
+    const timers = [800, 2000].map((ms) => setTimeout(() => command("setPlaybackQuality", ["hd1080"]), ms));
+    return () => timers.forEach(clearTimeout);
+  }, [id]);
+
   // 네이티브 전체화면 종료(시스템 back 등) 감지 + 종료 시 방향 잠금 해제
   useEffect(() => {
     const onFs = () => {
@@ -130,7 +137,15 @@ export default function FeedYouTube({
             ref={iframeRef}
             src={src}
             title={title}
-            className="h-full w-full"
+            className="h-full w-full border-0"
+            // 인라인 재생 시 2배 크기로 렌더 후 0.5배 축소 → YouTube가 큰 플레이어로 인식해
+            // 고해상도(720p+) 스트림을 선택. 화면엔 선명하게 다운스케일(레티나 대응).
+            // 전체화면(native/css)은 이미 큰 크기라 스케일 없이 원본 그대로.
+            style={
+              fullscreen
+                ? undefined
+                : { width: "200%", height: "200%", transform: "scale(0.5)", transformOrigin: "top left" }
+            }
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
             allowFullScreen
           />
