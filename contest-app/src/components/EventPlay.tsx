@@ -19,8 +19,7 @@ type Pick = { w: string; l: string };
 type Phase = "intro" | "playing" | "done";
 
 function bracketSize(n: number): number {
-  if (n >= 32) return 32; // 서버 RPC가 최대 31경기(32강)까지 허용
-  if (n >= 16) return 16;
+  if (n >= 16) return 16; // 16강 상한 — 32강은 라운드가 너무 많아 16강부터 시작
   if (n >= 8) return 8;
   if (n >= 4) return 4;
   return n >= 2 ? 2 : 0;
@@ -421,14 +420,12 @@ export default function EventPlay({ eventId }: { eventId: string }) {
             </div>
           )}
 
-          {/* 시작 CTA (하단 sticky, safe-area 포함) */}
+          {/* 시작 CTA — 콘텐츠 흐름 안에 자연스럽게 배치(하단 sticky 아님) */}
           {event.status === "open" &&
             (size >= 2 ? (
-              <div className="sticky bottom-[calc(env(safe-area-inset-bottom)+76px)] z-10 -mx-4 border-t border-border bg-bg/90 px-4 py-3 backdrop-blur-md">
-                <button onClick={start} className="flex w-full items-center justify-center gap-2 rounded-full brand-gradient py-3.5 text-[15px] font-extrabold text-white shadow-[0_6px_16px_-4px_rgba(108,77,230,0.5)] active:scale-[0.99]">
-                  <Play className="h-4 w-4 fill-white" /> {t("ev_play")} · {size === 2 ? t("ev_final") : t("ev_round_of").replace("{n}", String(size))}
-                </button>
-              </div>
+              <button onClick={start} className="flex w-full items-center justify-center gap-2 rounded-full brand-gradient py-3.5 text-[15px] font-extrabold text-white shadow-[0_6px_16px_-4px_rgba(108,77,230,0.5)] active:scale-[0.99]">
+                <Play className="h-4 w-4 fill-white" /> {t("ev_play")} · {size === 2 ? t("ev_final") : t("ev_round_of").replace("{n}", String(size))}
+              </button>
             ) : (
               <p className="rounded-xl border border-border bg-card-2 px-3 py-3 text-center text-[13px] text-muted">{t("ev_not_enough")}</p>
             ))}
