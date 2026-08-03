@@ -40,7 +40,8 @@ export default function Header() {
             className="flex items-center transition-opacity hover:opacity-80"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="CELEBUS MOMENT" loading="lazy" className="h-5 w-auto shrink-0" />
+            {/* 헤더 로고는 상단 고정 노출 → eager + 명시 크기(1412×128, 약 220×20)로 레이아웃 이동 방지 */}
+            <img src="/logo.png" alt="CELEBUS MOMENT" width={220} height={20} className="h-5 w-auto shrink-0" />
           </Link>
           <NotificationBell />
         </div>
