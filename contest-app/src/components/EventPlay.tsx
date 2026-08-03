@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
-import { ChevronLeft, Play, Check, Gift, Share2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play, Check, Gift, Share2 } from "lucide-react";
 import { CharmIcon, PlayBadge } from "./CharmIcon";
 import { sb } from "@/lib/supabase-browser";
 import type { StageEventPublic, StagePostPublic } from "@/lib/types";
@@ -116,6 +116,63 @@ function JourneyTrack({ startSize, roundSize, t }: { startSize: number; roundSiz
   );
 }
 
+// 라운드 완료 인터스티셜 — 월드컵식 진행감(16강→8강→4강→결승 사이에 결과·축하·진출작 노출)
+function RoundClear({ from, advancers, startSize, onContinue, t }: {
+  from: number; advancers: StagePostPublic[]; startSize: number; onContinue: () => void; t: (k: string) => string;
+}) {
+  const nextSize = Math.floor(from / 2);
+  const nextLabel = nextSize === 2 ? t("ev_final") : t("ev_round_of").replace("{n}", String(nextSize));
+  const cols = advancers.length >= 4 ? "grid-cols-4" : "grid-cols-2";
+  return (
+    <div className="anim-fade-up space-y-4">
+      <div className="relative overflow-hidden rounded-3xl border border-[#e2d6ff] bg-gradient-to-b from-primary-soft to-white p-5 text-center shadow-sm">
+        <span aria-hidden className="pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full bg-[#d9c8ff]/40 blur-2xl" />
+        <span aria-hidden className="pointer-events-none absolute -bottom-12 -left-6 h-28 w-28 rounded-full bg-[#ffd6e8]/40 blur-2xl" />
+        <div className="relative flex items-center justify-center">
+          <CharmIcon name="trophy" size={42} className="drop-shadow" />
+        </div>
+        <div className="relative mt-1 text-[11.5px] font-extrabold uppercase tracking-wider text-primary-strong">
+          {t("ev_round_of_done").replace("{n}", String(from))}
+        </div>
+        <h2 className="relative mt-0.5 text-[20px] font-extrabold tracking-tight text-fg">{t("ev_round_clear_title")}</h2>
+        <p className="relative mt-1.5 text-[12.5px] font-semibold text-muted break-keep">
+          {t("ev_round_survivors").replace("{n}", String(advancers.length))}
+        </p>
+      </div>
+
+      {/* 진출작 — 스태거 등장 */}
+      <div className={`grid ${cols} gap-2`}>
+        {advancers.map((p, i) => (
+          <div
+            key={p.id}
+            className="anim-fade-up relative aspect-video overflow-hidden rounded-xl bg-card-2 ring-1 ring-primary/15 shadow-sm"
+            style={{ animationDelay: `${Math.min(i, 8) * 45}ms` }}
+          >
+            {p.thumbnail_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={p.thumbnail_url} alt="" loading="lazy" className="h-full w-full object-cover" />
+            ) : (
+              <div className="h-full w-full bg-gradient-to-br from-primary-soft to-card-2" />
+            )}
+            <span className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
+          </div>
+        ))}
+      </div>
+
+      {/* 진행 트랙(완료/다음 라운드 하이라이트) */}
+      <JourneyTrack startSize={startSize} roundSize={nextSize} t={t} />
+
+      {/* 다음 라운드 시작 */}
+      <button
+        onClick={onContinue}
+        className="flex w-full items-center justify-center gap-1.5 rounded-full brand-gradient py-3.5 text-[15px] font-extrabold text-white shadow-[0_6px_16px_-4px_rgba(108,77,230,0.5)] active:scale-[0.99]"
+      >
+        {t("ev_round_next_cta").replace("{label}", nextLabel)} <ChevronRight className="h-4 w-4" />
+      </button>
+    </div>
+  );
+}
+
 export default function EventPlay({ eventId }: { eventId: string }) {
   const { t, lang } = useLang();
   const { requireLogin } = useSession();
@@ -130,6 +187,8 @@ export default function EventPlay({ eventId }: { eventId: string }) {
   const [whichPlaying, setWhichPlaying] = useState<0 | 1 | null>(null); // 현재 재생 중인 타일(한 번에 하나만)
   const [picking, setPicking] = useState<{ w: string; l: string } | null>(null); // 선택 전환 연출(승자/탈락) 중 잠금
   const [picks, setPicks] = useState<Pick[]>([]);
+  // 라운드 종료 인터스티셜(월드컵식) — 중간 라운드가 끝나면 결과를 보여주고 사용자가 다음 라운드 시작
+  const [roundEnd, setRoundEnd] = useState<{ from: number; advancers: StagePostPublic[] } | null>(null);
   const [winner, setWinner] = useState<StagePostPublic | null>(null);
   const [counted, setCounted] = useState<boolean | null>(null);
   const [votes, setVotes] = useState<{ used: number; cap: number } | null>(null); // 잔여 투표
@@ -181,9 +240,20 @@ export default function EventPlay({ eventId }: { eventId: string }) {
     setMatchIdx(0);
     setWhichPlaying(null);
     setPicks([]);
+    setRoundEnd(null);
     setWinner(null);
     setCounted(null);
     setPhase("playing");
+  }
+
+  // 라운드 완료 인터스티셜에서 '다음 라운드' — 다음 라운드 참가작으로 전환
+  function continueRound() {
+    if (!roundEnd) return;
+    setCurrent(roundEnd.advancers);
+    setNext([]);
+    setMatchIdx(0);
+    setWhichPlaying(null);
+    setRoundEnd(null);
   }
 
   // 선택 → 승자/탈락 연출(150~460ms) → 다음 대결. 연출 중 중복 입력 잠금.
@@ -232,10 +302,9 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       }
       return;
     }
+    // 중간 라운드 종료 — 즉시 다음 라운드로 넘기지 않고 결과 인터스티셜 표시(월드컵식 진행감)
     setPicks(newPicks);
-    setCurrent(newNext);
-    setNext([]);
-    setMatchIdx(0);
+    setRoundEnd({ from: current.length, advancers: newNext });
   }
 
   async function shareWinner() {
@@ -445,7 +514,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
       )}
 
       {/* 대결 */}
-      {phase === "playing" && a && b && (
+      {phase === "playing" && !roundEnd && a && b && (
         <div>
           {/* 나의 여정 */}
           <div className="mb-3">
@@ -471,6 +540,11 @@ export default function EventPlay({ eventId }: { eventId: string }) {
               selectedLabel={t("ev_selected")} eliminatedLabel={t("ev_eliminated")} />
           </div>
         </div>
+      )}
+
+      {/* 라운드 완료 인터스티셜 (월드컵식 진행감) */}
+      {phase === "playing" && roundEnd && (
+        <RoundClear from={roundEnd.from} advancers={roundEnd.advancers} startSize={size} onContinue={continueRound} t={t} />
       )}
 
       {/* 결과 — 나의 우승작 Hero */}
