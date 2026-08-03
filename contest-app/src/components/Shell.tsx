@@ -4,6 +4,7 @@
 // 상호작용(하트·댓글·업로드·마이) 시점에만 로그인 유도 모달이 뜬다.
 // CELEBUS 복귀 버튼은 헤더 최상단(언어 선택 옆)으로 이동. 하단은 탭 내비게이션.
 import { useEffect } from "react";
+import type { Lang } from "@/lib/i18n";
 import { LangProvider } from "./LangProvider";
 import SessionProvider from "./SessionProvider";
 import Header from "./Header";
@@ -13,7 +14,7 @@ import DevAutoLogin from "./DevAutoLogin";
 // iOS가 키보드를 완전히 접고 뷰포트를 되돌리는 데 걸리는 여유 시간
 const KEYBOARD_SETTLE_MS = 60;
 
-export default function Shell({ children }: { children: React.ReactNode }) {
+export default function Shell({ children, initialLang }: { children: React.ReactNode; initialLang?: Lang }) {
   // iOS는 입력창 포커스 시 문서(레이아웃 뷰포트)를 강제로 밀어 올리는데,
   // 키보드가 닫힌 뒤에도 이 오프셋이 남아 하단 탭바가 바닥에서 떠 보이는 경우가 있다.
   // 키보드 종료 시점(뷰포트 복원·포커스 해제)에 원점으로 복귀시킨다.
@@ -40,7 +41,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   // 뷰포트 앵커 고정 셸(.app-shell, globals.css) + 내부 스크롤. iOS 26 standalone의
   // 하단 뷰포트 축소 버그 대응 포함. body가 스크롤하지 않아 하단 탭바가 튀지 않는다.
   return (
-    <LangProvider>
+    <LangProvider initialLang={initialLang}>
       <SessionProvider>
         <div className="app-shell flex flex-col overflow-hidden">
           <Header />

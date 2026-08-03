@@ -1,10 +1,18 @@
+import { Suspense } from "react";
 import Shell from "@/components/Shell";
-import Home from "@/components/Home";
+import HomeServer from "@/components/HomeServer";
+import { LoadingSkeleton } from "@/components/HomeAtoms";
+import { getServerLang } from "@/lib/server-lang";
 
-export default function HomePage() {
+// 홈은 서버 렌더(HomeServer) — 히어로 이미지를 초기 HTML에 포함해 LCP/CLS 개선.
+// 쿠키(언어)를 읽으므로 동적 렌더이나, 홈 데이터는 home-data의 unstable_cache(30s)로 공유 캐시.
+export default async function HomePage() {
+  const lang = await getServerLang();
   return (
-    <Shell>
-      <Home />
+    <Shell initialLang={lang}>
+      <Suspense fallback={<LoadingSkeleton />}>
+        <HomeServer />
+      </Suspense>
     </Shell>
   );
 }
