@@ -389,20 +389,28 @@ export default function EventPlay({ eventId }: { eventId: string }) {
               <span aria-hidden className="hiw-twinkle text-[13px]">✨</span>
               <h3 className="text-[13.5px] font-extrabold tracking-tight text-fg">{t("ev_how_title")}</h3>
             </div>
-            <div className="grid grid-cols-3 gap-2.5">
-              {[t("ev_how_1"), t("ev_how_2"), t("ev_how_3")].map((label, i) => (
-                <div key={i} className="text-center">
-                  <div className="relative aspect-square overflow-hidden rounded-2xl bg-gradient-to-b from-[#241a2e] to-[#171019] ring-1 ring-primary/15 shadow-[0_6px_18px_-8px_rgba(168,85,232,0.5)]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/event/step${i + 1}.webp`} alt="" loading="lazy" className="h-full w-full object-cover" />
-                    <span className="absolute left-1.5 top-1.5 flex h-[19px] w-[19px] items-center justify-center rounded-full bg-white/95 text-[10.5px] font-black text-primary shadow-sm ring-1 ring-primary/10">
-                      {i + 1}
-                    </span>
-                    <span className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent" />
+            <div className="grid grid-cols-3 gap-2">
+              {[t("ev_how_1"), t("ev_how_2"), t("ev_how_3")].map((label, i) => {
+                // 이미지 배치: 1=영상보기, 2=두 카드(고르기), 3=연주(우승 확인) — 배경 투명 그대로 노출
+                const imgNo = [1, 3, 2][i];
+                return (
+                  <div key={i} className="text-center">
+                    <div className="relative aspect-square">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={`/event/step${imgNo}.webp`}
+                        alt=""
+                        loading="lazy"
+                        className="h-full w-full object-contain drop-shadow-[0_5px_12px_rgba(168,85,232,0.35)]"
+                      />
+                      <span className="absolute left-0 top-0 flex h-[19px] w-[19px] items-center justify-center rounded-full bg-primary text-[10.5px] font-black text-white shadow-sm">
+                        {i + 1}
+                      </span>
+                    </div>
+                    <p className="mt-1.5 text-[11px] font-bold leading-tight text-fg break-keep">{label}</p>
                   </div>
-                  <p className="mt-2 text-[11px] font-bold leading-tight text-fg break-keep">{label}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
