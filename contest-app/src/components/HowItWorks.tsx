@@ -16,24 +16,34 @@ const STEPS: Step[] = [
   { charm: "trophy", titleKey: "hiw3_title", subKey: "hiw3_sub", tint: "from-[#fff2d0] to-[#ffe3a8]", accent: "✨" },
 ];
 
-export default function HowItWorks({ forced = false }: { forced?: boolean }) {
+// initialShow: 서버(HomeServer)가 moment_hiw_seen 쿠키로 판정해 넘긴 초기 노출 여부.
+// 이 값으로 SSR·클라 초기 렌더를 일치시켜 마운트 후 등장(히어로 밀림) 레이아웃 이동을 없앤다.
+export default function HowItWorks({ forced = false, initialShow }: { forced?: boolean; initialShow?: boolean }) {
   const { t } = useLang();
-  const [show, setShow] = useState(forced);
+  const [show, setShow] = useState(forced ? true : (initialShow ?? false));
 
   useEffect(() => {
-    if (forced) return;
+    // 서버가 initialShow를 주면(홈) 그 값을 신뢰 → 마운트 후 변경 없음(CLS 방지).
+    // initialShow가 없는 호출부에서만 기존 localStorage 판정으로 폴백.
+    if (forced || initialShow !== undefined) return;
     try {
       setShow(localStorage.getItem("moment_hiw_seen") !== "1");
     } catch {
       /* 스토리지 불가 시 노출 */
     }
-  }, [forced]);
+  }, [forced, initialShow]);
 
   if (!show) return null;
 
   function dismiss() {
     try {
       localStorage.setItem("moment_hiw_seen", "1");
+    } catch {
+      /* noop */
+    }
+    try {
+      // 서버가 다음 SSR에서 숨기도록 쿠키에도 기록
+      document.cookie = "moment_hiw_seen=1; path=/; max-age=31536000; samesite=lax";
     } catch {
       /* noop */
     }

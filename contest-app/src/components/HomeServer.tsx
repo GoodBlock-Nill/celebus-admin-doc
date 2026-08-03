@@ -1,5 +1,6 @@
 // 홈 (서버 컴포넌트) — 데이터를 서버에서 조회·렌더해 히어로 이미지를 초기 HTML에 포함(LCP/CLS 개선).
 // 상호작용·유저별 데이터는 클라이언트 섬(UploadButton·MemberSummary·HowItWorks)으로 분리.
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { BadgeCheck } from "lucide-react";
 import { PlayBadge } from "./CharmIcon";
@@ -19,6 +20,8 @@ const CTA_CLS =
 export default async function HomeServer() {
   const lang = await getServerLang();
   const t = serverT(lang);
+  // 온보딩(HowItWorks) 노출 여부를 쿠키로 서버에서 결정 → SSR·클라 일치로 히어로 밀림(CLS) 방지
+  const hiwShow = (await cookies()).get("moment_hiw_seen")?.value !== "1";
 
   let data;
   try {
@@ -68,7 +71,7 @@ export default async function HomeServer() {
   return (
     <div>
       <Header t={t} />
-      <HowItWorks />
+      <HowItWorks initialShow={hiwShow} />
 
       {/* 공연은 있지만 영상 0 — 첫 업로더 유도 */}
       {!heroBase && (
