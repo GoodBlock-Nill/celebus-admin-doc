@@ -48,12 +48,13 @@ export default function WorldcupStandings({
   }
 
   const posts = new Map(pool.map((p) => [p.id, p]));
-  const rows = stats.filter((s) => posts.has(s.post_id));
+  // 최대 100위까지만 표시 (stats는 win_rate 내림차순 정렬됨)
+  const rows = stats.filter((s) => posts.has(s.post_id)).slice(0, 100);
 
   if (rows.length === 0) {
     return (
       <p className="rounded-xl border border-border bg-card px-3 py-4 text-center text-[12.5px] text-muted">
-        {t("ev_list_empty")}
+        {t("rank_empty_soon")}
       </p>
     );
   }
