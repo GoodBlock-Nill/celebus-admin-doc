@@ -132,7 +132,7 @@ export default function MembersPanel() {
             <Card key={m.user_id} className="flex items-center gap-3 p-3">
               {m.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={m.avatar_url} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
+                <img src={m.avatar_url} alt="" loading="lazy" className="h-9 w-9 shrink-0 rounded-full object-cover" />
               ) : (
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-soft text-[14px] font-bold text-primary-strong">
                   {m.display_name.slice(0, 1)}

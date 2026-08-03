@@ -23,6 +23,7 @@ export default function PrizeShowcase({ contest }: { contest: ContestPublic }) {
                 <img
                   src={p.image_url}
                   alt={p.name}
+                  loading="lazy"
                   className="h-14 w-14 shrink-0 rounded-[12px] object-cover ring-1 ring-hairline"
                 />
               ) : (

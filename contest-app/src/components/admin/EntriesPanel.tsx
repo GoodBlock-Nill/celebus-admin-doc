@@ -80,7 +80,7 @@ export default function EntriesPanel({ contests }: { contests: ContestRow[] }) {
           <div className="flex items-start gap-3">
             {e.oembed?.thumbnail_url && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={e.oembed.thumbnail_url} alt="" className="h-14 w-20 shrink-0 rounded-lg object-cover" />
+              <img src={e.oembed.thumbnail_url} alt="" loading="lazy" className="h-14 w-20 shrink-0 rounded-lg object-cover" />
             )}
             <div className="min-w-0 flex-1">
               <p className="mb-0.5 flex flex-wrap items-center gap-1.5 text-[11px] text-muted">

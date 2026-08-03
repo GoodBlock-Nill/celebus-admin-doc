@@ -24,10 +24,17 @@ export function timeAgo(iso: string): string {
   return iso.slice(0, 10);
 }
 
-export function Thumb({ url }: { url: string | null }) {
+// priority=true는 LCP(홈 히어로 등)용 — lazy 해제 + 높은 우선순위로 조기 로드해 LCP 단축.
+export function Thumb({ url, priority = false }: { url: string | null; priority?: boolean }) {
   return url ? (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={url} alt="" loading="lazy" className="h-full w-full object-cover" />
+    <img
+      src={url}
+      alt=""
+      loading={priority ? "eager" : "lazy"}
+      fetchPriority={priority ? "high" : undefined}
+      className="h-full w-full object-cover"
+    />
   ) : (
     <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary-soft to-primary-soft/40">
       <CharmIcon name="clapperboard" size={40} />

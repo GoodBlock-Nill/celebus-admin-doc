@@ -162,7 +162,7 @@ export default function StageUploadModal({ stageId, onClose, onPosted, onBack }:
             <div className="flex items-center gap-3 rounded-xl border border-border bg-card-2 p-2.5">
               {resolved.oembed?.thumbnail_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={resolved.oembed.thumbnail_url} alt="" className="h-14 w-24 shrink-0 rounded-lg object-cover" />
+                <img src={resolved.oembed.thumbnail_url} alt="" loading="lazy" className="h-14 w-24 shrink-0 rounded-lg object-cover" />
               ) : (
                 <div className="h-14 w-24 shrink-0 rounded-lg bg-gradient-to-br from-primary-soft to-card-2" />
               )}

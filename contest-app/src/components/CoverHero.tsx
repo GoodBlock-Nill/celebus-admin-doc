@@ -47,7 +47,7 @@ export default function CoverHero({
       <div className="relative aspect-[16/10] w-full bg-surface-2">
         {contest.cover_image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={contest.cover_image_url} alt="" className="h-full w-full object-cover" />
+          <img src={contest.cover_image_url} alt="" loading="lazy" className="h-full w-full object-cover" />
         ) : (
           <div
             className="h-full w-full"

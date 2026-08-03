@@ -51,7 +51,7 @@ export default function ImageUploader({
     return (
       <div className="relative inline-block">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={value} alt="" className={`${className} rounded-lg object-cover ring-1 ring-hairline`} />
+        <img src={value} alt="" loading="lazy" className={`${className} rounded-lg object-cover ring-1 ring-hairline`} />
         <button
           type="button"
           onClick={() => onChange("")}

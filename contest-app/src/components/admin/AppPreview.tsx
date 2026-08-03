@@ -11,7 +11,7 @@ export function CoverCardPreview({ coverUrl, title, description }: { coverUrl: s
       <div className="relative h-[112px] w-full overflow-hidden bg-surface-2">
         {coverUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={coverUrl} alt="" className="h-full w-full object-cover" />
+          <img src={coverUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-gradient-to-br from-primary-soft via-primary-soft/60 to-transparent">
             <CharmIcon name="clapperboard" size={34} />
@@ -47,7 +47,7 @@ export function TournamentCardPreview({
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-surface-2">
         {coverUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={coverUrl} alt="" className="h-full w-full object-cover" />
+          <img src={coverUrl} alt="" loading="lazy" className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-gradient-to-br from-primary-soft via-primary-soft/60 to-transparent text-center">
             <Trophy className="h-6 w-6 text-primary-strong/70" />
@@ -80,7 +80,7 @@ export function AvatarPreview({ avatarUrl, name }: { avatarUrl: string; name: st
     <div className="flex items-center gap-2.5 rounded-xl border border-border bg-card px-3 py-2.5">
       {avatarUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={avatarUrl} alt="" className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-primary/30" />
+        <img src={avatarUrl} alt="" loading="lazy" className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-primary/30" />
       ) : (
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-soft text-[15px] font-bold text-primary-strong ring-2 ring-primary/20">
           {initial}

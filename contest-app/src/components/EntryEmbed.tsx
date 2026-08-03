@@ -4,9 +4,11 @@
 // 원칙: 임베드 실패/차단 시 FallbackCard가 1급 UI로 대체한다.
 
 import { useEffect, useRef, useState } from "react";
-import LiteYouTubeEmbed from "react-lite-youtube-embed";
+import dynamic from "next/dynamic";
 import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
-import { Tweet } from "react-tweet";
+// 임베드 라이브러리는 상세 화면(레거시 콘테스트)에서만 필요 → 지연 로드로 메인 번들에서 분리
+const LiteYouTubeEmbed = dynamic(() => import("react-lite-youtube-embed"), { ssr: false });
+const Tweet = dynamic(() => import("react-tweet").then((m) => m.Tweet), { ssr: false });
 import { ExternalLink } from "lucide-react";
 import type { EntryPublic, Platform } from "@/lib/types";
 import { PLATFORM_LABELS } from "@/lib/i18n";

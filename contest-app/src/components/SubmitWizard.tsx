@@ -228,12 +228,15 @@ function SubmitBody({ slug }: { slug: string }) {
           {resolved && (
             <div className="rounded-2xl border border-primary/40 bg-card p-3">
               {resolved.oembed?.thumbnail_url && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={resolved.oembed.thumbnail_url}
-                  alt=""
-                  className="mb-2 max-h-56 w-full rounded-xl object-cover"
-                />
+                <div className="mb-2 aspect-video w-full overflow-hidden rounded-xl">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={resolved.oembed.thumbnail_url}
+                    alt=""
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
               )}
               <div className="flex items-center gap-2 text-[12px] text-muted">
                 <PlatformIcon platform={resolved.platform} className="h-4 w-4" />

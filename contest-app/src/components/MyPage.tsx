@@ -55,7 +55,7 @@ function heartLine(count: number, t: TFn): { text: string; active: boolean } {
 function Avatar({ nickname, avatarUrl }: { nickname: string; avatarUrl?: string | null }) {
   if (avatarUrl) {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={avatarUrl} alt={nickname} className="h-[58px] w-[58px] shrink-0 rounded-full object-cover" />;
+    return <img src={avatarUrl} alt={nickname} loading="lazy" className="h-[58px] w-[58px] shrink-0 rounded-full object-cover" />;
   }
   const initial = nickname.trim().slice(0, 1) || "?";
   return (

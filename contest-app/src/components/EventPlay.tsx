@@ -63,7 +63,7 @@ function MatchTile({ post, corner, onPick, pickLabel, playing, onPlay, pickState
           <button onClick={onPlay} disabled={locked} aria-label={post.title} className="relative block w-full active:opacity-95 disabled:opacity-100">
             {post.thumbnail_url ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={post.thumbnail_url} alt="" className="aspect-video w-full object-cover" />
+              <img src={post.thumbnail_url} alt="" loading="lazy" className="aspect-video w-full object-cover" />
             ) : (
               <div className="flex aspect-video w-full items-center justify-center bg-gradient-to-br from-primary-soft to-card-2 text-subtle">🎬</div>
             )}
@@ -307,7 +307,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
                 {fanPost?.thumbnail_url && (
                   <div className="relative">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={fanPost.thumbnail_url} alt={`${event.awards.fan.title} @${event.awards.fan.handle}`} className="aspect-video w-full object-cover" />
+                    <img src={fanPost.thumbnail_url} alt={`${event.awards.fan.title} @${event.awards.fan.handle}`} loading="lazy" className="aspect-video w-full object-cover" />
                     <span className="absolute left-2.5 top-2.5 rounded-full bg-amber-500 px-2.5 py-1 text-[11px] font-extrabold text-white shadow">🏆 {t("ev_award_fan")}</span>
                   </div>
                 )}
@@ -348,7 +348,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
           {event.cover_url && (
             <div className="overflow-hidden rounded-2xl">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={event.cover_url} alt="" className="aspect-[16/9] w-full object-cover" />
+              <img src={event.cover_url} alt="" loading="lazy" className="aspect-[16/9] w-full object-cover" />
             </div>
           )}
           {eventDescription && <p className="text-[13.5px] leading-relaxed text-muted">{eventDescription}</p>}
@@ -469,7 +469,7 @@ export default function EventPlay({ eventId }: { eventId: string }) {
             <div className="relative mx-auto mt-3 w-full max-w-[300px]">
               {winner.thumbnail_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={winner.thumbnail_url} alt="" className="aspect-video w-full rounded-2xl object-cover shadow-md ring-2 ring-primary/30" />
+                <img src={winner.thumbnail_url} alt="" loading="lazy" className="aspect-video w-full rounded-2xl object-cover shadow-md ring-2 ring-primary/30" />
               ) : (
                 <div className="aspect-video w-full rounded-2xl bg-gradient-to-br from-primary-soft to-card-2" />
               )}

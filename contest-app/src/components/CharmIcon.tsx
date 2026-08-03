@@ -14,6 +14,7 @@ export function CharmIcon({ name, size = 32, className = "" }: { name: CharmName
       alt=""
       width={size}
       height={size}
+      loading="lazy"
       className={className}
       style={{ width: size, height: size, objectFit: "contain" }}
     />

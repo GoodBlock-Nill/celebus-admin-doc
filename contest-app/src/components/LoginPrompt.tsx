@@ -38,7 +38,7 @@ export default function LoginPrompt({ onClose, onDone }: { onClose: () => void; 
       >
         <div className="mb-3 flex items-center justify-between">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="CELEBUS MOMENT" className="h-[18px] w-auto" />
+          <img src="/logo.png" alt="CELEBUS MOMENT" loading="lazy" className="h-[18px] w-auto" />
           <button onClick={onClose} aria-label="닫기" className="flex h-11 w-11 items-center justify-center rounded-full text-subtle hover:text-fg">
             <X className="h-5 w-5" />
           </button>

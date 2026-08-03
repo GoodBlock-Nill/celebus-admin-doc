@@ -89,7 +89,7 @@ export default function WorldcupStandings({
               <div className={`relative w-full overflow-hidden rounded-lg ${top ? "aspect-square" : "aspect-video"}`}>
                 {p.thumbnail_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.thumbnail_url} alt={`${p.title} @${p.handle}`} className="h-full w-full object-cover" />
+                  <img src={p.thumbnail_url} alt={`${p.title} @${p.handle}`} loading="lazy" className="h-full w-full object-cover" />
                 ) : (
                   <div className="h-full w-full bg-gradient-to-br from-primary-soft to-card-2" />
                 )}
@@ -117,7 +117,7 @@ export default function WorldcupStandings({
                 <Link href={`/video/${p.id}?list=stage:${p.stage_id}`} className="relative h-11 w-16 shrink-0 overflow-hidden rounded-lg active:opacity-90">
                   {p.thumbnail_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.thumbnail_url} alt={`${p.title} @${p.handle}`} className="h-full w-full object-cover" />
+                    <img src={p.thumbnail_url} alt={`${p.title} @${p.handle}`} loading="lazy" className="h-full w-full object-cover" />
                   ) : (
                     <div className="h-full w-full bg-gradient-to-br from-primary-soft to-card-2" />
                   )}

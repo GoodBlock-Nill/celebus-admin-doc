@@ -80,7 +80,7 @@ export default function UsersPanel() {
             <Card key={u.user_id} className="flex items-center gap-3 p-3">
               {u.avatar_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={u.avatar_url} alt="" className="h-10 w-10 shrink-0 rounded-full object-cover" />
+                <img src={u.avatar_url} alt="" loading="lazy" className="h-10 w-10 shrink-0 rounded-full object-cover" />
               ) : (
                 <span className="brand-gradient flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[14px] font-black text-white">
                   {(u.nickname || "?").slice(0, 1)}
@@ -179,7 +179,7 @@ function UserPostsModal({ user, onClose }: { user: UserRow; onClose: () => void 
                 <div className="h-11 w-16 shrink-0 overflow-hidden rounded-lg bg-surface-2">
                   {p.thumbnail_url && (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.thumbnail_url} alt="" className="h-full w-full object-cover" />
+                    <img src={p.thumbnail_url} alt="" loading="lazy" className="h-full w-full object-cover" />
                   )}
                 </div>
                 <div className="min-w-0 flex-1">

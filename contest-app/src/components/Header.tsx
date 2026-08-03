@@ -40,7 +40,7 @@ export default function Header() {
             className="flex items-center transition-opacity hover:opacity-80"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="CELEBUS MOMENT" className="h-5 w-auto shrink-0" />
+            <img src="/logo.png" alt="CELEBUS MOMENT" loading="lazy" className="h-5 w-auto shrink-0" />
           </Link>
           <NotificationBell />
         </div>

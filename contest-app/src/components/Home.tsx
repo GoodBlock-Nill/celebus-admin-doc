@@ -176,7 +176,7 @@ export default function Home() {
               href={`/video/${heroPost.id}`}
               className="relative mt-1 block aspect-[16/10] w-full overflow-hidden rounded-3xl shadow-sm active:scale-[0.99]"
             >
-              <Thumb url={heroPost.thumbnail_url} />
+              <Thumb url={heroPost.thumbnail_url} priority />
               <span className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/60" />
               <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
                 <PlayBadge size="lg" />

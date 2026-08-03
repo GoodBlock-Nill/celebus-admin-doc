@@ -181,7 +181,7 @@ function ContestBody({ slug }: { slug: string }) {
                     <div className="h-16 w-16 shrink-0 bg-surface-2">
                       {entry?.thumbnail_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={entry.thumbnail_url} alt="" className="h-full w-full object-cover" />
+                        <img src={entry.thumbnail_url} alt="" loading="lazy" className="h-full w-full object-cover" />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-xl">🏆</div>
                       )}

@@ -32,7 +32,7 @@ function CommentRow({
         {isReply && <CornerDownRight className="h-3.5 w-3.5 shrink-0 text-subtle" />}
         {c.is_member && c.member_avatar ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={c.member_avatar} alt="" className="h-5 w-5 rounded-full object-cover ring-2 ring-card" />
+          <img src={c.member_avatar} alt="" loading="lazy" className="h-5 w-5 rounded-full object-cover ring-2 ring-card" />
         ) : null}
         <span className={`text-[12px] font-bold ${c.is_member ? "text-primary-strong" : "text-muted"}`}>
           {c.is_member ? c.member_name : c.fan_label}

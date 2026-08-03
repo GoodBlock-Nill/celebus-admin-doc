@@ -93,7 +93,7 @@ export default function RankingView() {
                   {/* 크리에이터 아바타 (없으면 브랜드 기본) */}
                   {c.avatar_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={c.avatar_url} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover" />
+                    <img src={c.avatar_url} alt="" loading="lazy" className="h-9 w-9 shrink-0 rounded-full object-cover" />
                   ) : (
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full brand-gradient text-[13px] font-black text-white">{name.slice(0, 1)}</span>
                   )}
@@ -119,7 +119,7 @@ export default function RankingView() {
                 <div className="relative h-10 w-16 shrink-0 overflow-hidden rounded-lg">
                   {p.thumbnail_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={p.thumbnail_url} alt="" className="h-full w-full object-cover" />
+                    <img src={p.thumbnail_url} alt="" loading="lazy" className="h-full w-full object-cover" />
                   ) : (
                     <div className="h-full w-full bg-gradient-to-br from-primary-soft to-card-2" />
                   )}

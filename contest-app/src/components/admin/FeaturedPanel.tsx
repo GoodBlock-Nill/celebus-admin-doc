@@ -72,7 +72,7 @@ export default function FeaturedPanel() {
           <div className="h-12 w-16 shrink-0 overflow-hidden rounded-lg bg-surface-2">
             {featured.thumbnail_url && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={featured.thumbnail_url} alt="" className="h-full w-full object-cover" />
+              <img src={featured.thumbnail_url} alt="" loading="lazy" className="h-full w-full object-cover" />
             )}
           </div>
           <div className="min-w-0 flex-1">
@@ -107,7 +107,7 @@ export default function FeaturedPanel() {
               <div className="h-12 w-16 shrink-0 overflow-hidden rounded-lg bg-surface-2">
                 {p.thumbnail_url && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.thumbnail_url} alt="" className="h-full w-full object-cover" />
+                  <img src={p.thumbnail_url} alt="" loading="lazy" className="h-full w-full object-cover" />
                 )}
               </div>
               <div className="min-w-0 flex-1">

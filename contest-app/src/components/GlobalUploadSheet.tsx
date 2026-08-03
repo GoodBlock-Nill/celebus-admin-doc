@@ -79,7 +79,7 @@ export default function GlobalUploadSheet({ onClose }: { onClose: () => void }) 
                 <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg">
                   {s.cover_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={s.cover_url} alt="" className="h-full w-full object-cover" />
+                    <img src={s.cover_url} alt="" loading="lazy" className="h-full w-full object-cover" />
                   ) : (
                     <div className="h-full w-full bg-gradient-to-br from-primary-soft to-card-2" />
                   )}
