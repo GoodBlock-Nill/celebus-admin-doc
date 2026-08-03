@@ -17,6 +17,10 @@ type EventRow = {
   description: string;
   status: "open" | "announced" | "closed";
   ends_at: string | null;
+  reward_type?: "reward" | "popularity";
+  reward?: string;
+  cover_url?: string | null;
+  i18n?: LangI18n;
   awards: { fan?: { title: string } | null; artist?: { title: string } | null; uploader?: { handle: string } | null } | null;
   created_at: string;
   stages: { title: string } | null;
@@ -55,6 +59,7 @@ export default function EventsPanel() {
     i18n: {} as LangI18n,
   });
   const [busy, setBusy] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null); // 수정 중인 토너먼트
   const { confirm, confirmEl } = useConfirm();
 
   const load = useCallback(async () => {
@@ -314,6 +319,11 @@ export default function EventsPanel() {
               </div>
             </div>
             <div className="mt-2.5 flex flex-wrap gap-1.5">
+              {e.status !== "closed" && (
+                <Btn size="sm" variant="outline" onClick={() => setEditingId(editingId === e.id ? null : e.id)}>
+                  {editingId === e.id ? "수정 닫기" : "수정"}
+                </Btn>
+              )}
               {e.status === "open" && (
                 <Btn size="sm" variant="primary" onClick={() => void announce(e.id)}>발표하기</Btn>
               )}
@@ -324,11 +334,115 @@ export default function EventsPanel() {
                 <Btn size="sm" variant="outline" onClick={() => void setStatus(e.id, "open")}>다시 열기</Btn>
               )}
             </div>
+            {editingId === e.id && (
+              <EventEditForm event={e} onSaved={() => { setEditingId(null); void load(); }} onCancel={() => setEditingId(null)} />
+            )}
           </Card>
         ))}
         {events.length === 0 && <Empty>토너먼트가 없어요.</Empty>}
       </div>
       {confirmEl}
+    </div>
+  );
+}
+
+// 토너먼트 수정 폼 (인라인) — PATCH 지원 필드만: 토너먼트명·소개·다국어·종료일·커버·유형·보상.
+// 참가 아카이브는 생성 시 확정이라 수정 불가.
+function EventEditForm({ event, onSaved, onCancel }: { event: EventRow; onSaved: () => void; onCancel: () => void }) {
+  const [f, setF] = useState({
+    title: event.title,
+    description: event.description ?? "",
+    ends_at: event.ends_at ? event.ends_at.slice(0, 10) : "",
+    reward_type: event.reward_type ?? ("popularity" as "reward" | "popularity"),
+    reward: event.reward ?? "",
+    cover_url: event.cover_url ?? "",
+    i18n: (event.i18n ?? {}) as LangI18n,
+  });
+  const [busy, setBusy] = useState(false);
+
+  async function save() {
+    if (busy || !f.title.trim()) return;
+    setBusy(true);
+    const res = await adminFetch(`/api/admin/events/${event.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({
+        title: f.title.trim(),
+        description: f.description.trim(),
+        ends_at: f.ends_at ? new Date(f.ends_at + "T23:59:59+09:00").toISOString() : null,
+        reward_type: f.reward_type,
+        reward: f.reward_type === "reward" ? f.reward.trim() : "",
+        cover_url: f.cover_url || null,
+        i18n: cleanStageI18n(f.i18n),
+      }),
+    });
+    setBusy(false);
+    if (res.ok) {
+      toast.success("토너먼트를 수정했어요.");
+      onSaved();
+    } else {
+      const j = await res.json().catch(() => ({}));
+      toast.error(j.error ?? "수정 실패");
+    }
+  }
+
+  return (
+    <div className="mt-3 space-y-3 rounded-xl border border-primary/30 bg-primary-soft/20 p-3">
+      <LangTabsFields
+        koTitle={f.title}
+        koDesc={f.description}
+        i18n={f.i18n}
+        onKoTitle={(v) => setF({ ...f, title: v })}
+        onKoDesc={(v) => setF({ ...f, description: v })}
+        onI18n={(v) => setF({ ...f, i18n: v })}
+        titleLabel="토너먼트명"
+        descLabel="소개"
+        titlePlaceholder="토너먼트명"
+        descRows={2}
+      />
+      <div>
+        <Label>종료일 <span className="font-medium text-subtle">(선택)</span></Label>
+        <input type="date" value={f.ends_at} onChange={(e) => setF({ ...f, ends_at: e.target.value })} className={inputCls} />
+      </div>
+      <div>
+        <Label>대표 커버 <span className="font-medium text-subtle">(선택 · 미지정 시 참가작 콜라주)</span></Label>
+        <div className="flex flex-wrap items-start gap-3">
+          <ImageUploader value={f.cover_url} onChange={(url) => setF({ ...f, cover_url: url })} folder="cover" label="커버 업로드" className="h-[112px] w-40" />
+          <div>
+            <div className="mb-1 text-[11px] font-bold text-subtle">앱 미리보기</div>
+            <TournamentCardPreview coverUrl={f.cover_url} title={f.title} description={f.description} rewardType={f.reward_type} reward={f.reward} />
+          </div>
+        </div>
+      </div>
+      <div>
+        <Label>토너먼트 유형</Label>
+        <div className="flex gap-2">
+          {([
+            { v: "popularity", l: "인기투표형", d: "보상 없이 순위만" },
+            { v: "reward", l: "보상형", d: "우승 보상 있음" },
+          ] as const).map((o) => (
+            <button
+              key={o.v}
+              type="button"
+              onClick={() => setF({ ...f, reward_type: o.v })}
+              className={`flex-1 rounded-xl border px-3.5 py-2.5 text-left transition-colors ${f.reward_type === o.v ? "border-primary bg-primary-soft" : "border-border bg-card hover:bg-surface-2"}`}
+            >
+              <div className={`text-[13px] font-bold ${f.reward_type === o.v ? "text-primary-strong" : "text-fg"}`}>{o.l}</div>
+              <div className="text-[11px] text-subtle">{o.d}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+      {f.reward_type === "reward" && (
+        <div>
+          <Label>보상 내용</Label>
+          <input value={f.reward} onChange={(e) => setF({ ...f, reward: e.target.value })} maxLength={200} placeholder="보상 내용" className={inputCls} />
+        </div>
+      )}
+      <div className="flex gap-2 pt-0.5">
+        <Btn variant="outline" className="flex-1" onClick={onCancel}>취소</Btn>
+        <Btn variant="primary" className="flex-1" disabled={busy || !f.title.trim()} onClick={() => void save()}>저장</Btn>
+      </div>
+      <p className="text-[11px] leading-relaxed text-subtle">※ 참가 아카이브는 생성 시 확정돼 수정할 수 없어요. 바꾸려면 새 토너먼트를 열어주세요.</p>
     </div>
   );
 }
