@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LayoutGrid, ChevronLeft } from "lucide-react";
+import { LayoutGrid, ChevronLeft, Ticket } from "lucide-react";
 import { GAME_CONFIG } from "@/lib/game-config";
 import { getNick, getAvatar, fetchAccount, getDailyStatus, claimWeeklyReward, type WeeklyReward } from "@/lib/game-api";
 import { kstWeekStart } from "@/lib/week";
@@ -20,11 +20,13 @@ export default function Home({
   onPlay,
   onOpenLeaderboard,
   onOpenShop,
+  onOpenGacha,
   onOpenMore,
 }: {
   onPlay: (mode: "free" | "daily") => void;
   onOpenLeaderboard: () => void;
   onOpenShop: () => void;
+  onOpenGacha: () => void;
   onOpenMore: () => void;
 }) {
   const { t } = useLang();
@@ -216,6 +218,12 @@ export default function Home({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/nav-shop.png" alt="" className="h-9 w-9 object-contain drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)]" />
           <span className="text-[11px] font-bold text-white">{t("home_shop")}</span>
+        </button>
+        <button onClick={onOpenGacha} className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90">
+          <span className="flex h-9 w-9 items-center justify-center">
+            <Ticket className="h-7 w-7 text-primary-400 drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)]" strokeWidth={2.5} />
+          </span>
+          <span className="text-[11px] font-bold text-white">{t("home_gacha")}</span>
         </button>
         <button onClick={onOpenMore} className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90">
           <span className="flex h-9 w-9 items-center justify-center">

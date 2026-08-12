@@ -13,6 +13,7 @@ import {
   Settings2,
   ScrollText,
   ExternalLink,
+  Ticket,
 } from "lucide-react";
 import { aget } from "@/lib/admin-api";
 import { BTN, INPUT } from "@/components/admin/ui";
@@ -21,6 +22,7 @@ import AdminMembers from "@/components/admin/AdminMembers";
 import AdminBoard from "@/components/admin/AdminBoard";
 import AdminBanned from "@/components/admin/AdminBanned";
 import AdminEconomy from "@/components/admin/AdminEconomy";
+import AdminGacha from "@/components/admin/AdminGacha";
 import AdminConfig from "@/components/admin/AdminConfig";
 import AdminLogs from "@/components/admin/AdminLogs";
 
@@ -30,6 +32,7 @@ const TABS = [
   { key: "board", label: "리더보드", icon: Trophy, desc: "기간별 기록·보상 정산 CSV·기록 삭제" },
   { key: "banned", label: "금칙어", icon: Ban, desc: "닉네임 금칙어 관리" },
   { key: "economy", label: "경제", icon: Coins, desc: "CP 발행·소진·유통 + 아이템 가격" },
+  { key: "gacha", label: "가챠", icon: Ticket, desc: "재화 뽑기 이벤트·확률표 관리" },
   { key: "config", label: "설정", icon: Settings2, desc: "게임 밸런스·연출·테마 원격 설정" },
   { key: "logs", label: "로그", icon: ScrollText, desc: "관리자 행동·시스템 이벤트 활동 로그" },
 ] as const;
@@ -172,6 +175,7 @@ export default function AdminPage() {
           {tab === "board" && <AdminBoard />}
           {tab === "banned" && <AdminBanned />}
           {tab === "economy" && <AdminEconomy />}
+          {tab === "gacha" && <AdminGacha />}
           {tab === "config" && <AdminConfig />}
           {tab === "logs" && <AdminLogs />}
         </div>

@@ -354,6 +354,75 @@ export async function fetchGachaWallet(): Promise<GachaWallet> {
   }
 }
 
+// ── 가챠 이벤트·뽑기 (Phase 3: 재화 확률형) ──
+export type L10nText = { ko?: string; en?: string; ja?: string };
+export type GachaGrade = "S" | "A" | "B" | "C" | "D";
+export type GachaReward = { cp?: number; item?: string; qty?: number } | null;
+export type GachaPoolItem = {
+  grade: GachaGrade;
+  prize: L10nText;
+  image_url: string | null;
+  is_physical: boolean;
+  weight: number | null;
+  total_qty: number | null;
+  remaining_qty: number | null;
+  reward_payload: GachaReward;
+  sort: number;
+};
+export type GachaEvent = {
+  id: string;
+  kind: "digital" | "physical_box";
+  title: L10nText;
+  description: L10nText;
+  image_url: string | null;
+  starts_at: string | null;
+  ends_at: string | null;
+  pool: GachaPoolItem[];
+};
+export type GachaStatus = GachaWallet & { events: GachaEvent[] };
+
+export async function fetchGachaStatus(): Promise<GachaStatus> {
+  try {
+    const res = await fetch("/api/gacha/status");
+    const data = await res.json();
+    return {
+      free_tickets: data?.free_tickets ?? 0,
+      paid_tickets: data?.paid_tickets ?? 0,
+      events: Array.isArray(data?.events) ? data.events : [],
+    };
+  } catch {
+    return { free_tickets: 0, paid_tickets: 0, events: [] };
+  }
+}
+
+export type GachaDrawCard = { draw_id: string; grade: GachaGrade; prize: L10nText; image_url: string | null; reward: GachaReward };
+export type GachaDrawResponse =
+  | { ok: true; results: GachaDrawCard[]; bonus_ticket: boolean; celeb_point: number; wallet: GachaWallet }
+  | { ok: false; reason: string };
+
+export async function drawGacha(eventId: string, count: 1 | 10): Promise<GachaDrawResponse> {
+  try {
+    const res = await fetch("/api/gacha/draw", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ event_id: eventId, count }),
+    });
+    const data = await res.json();
+    if (data?.status === "ok") {
+      return {
+        ok: true,
+        results: data.results ?? [],
+        bonus_ticket: !!data.bonus_ticket,
+        celeb_point: data.celeb_point ?? 0,
+        wallet: { free_tickets: data.free_tickets ?? 0, paid_tickets: data.paid_tickets ?? 0 },
+      };
+    }
+    return { ok: false, reason: data?.reason ?? "error" };
+  } catch {
+    return { ok: false, reason: "error" };
+  }
+}
+
 export type BuyTicketResult = { ok: true; celeb_point: number; wallet: GachaWallet } | { ok: false; reason: string };
 
 export async function buyGachaTicket(qty = 1): Promise<BuyTicketResult> {

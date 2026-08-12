@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import GachaScreen from "./GachaScreen";
 import Home from "./Home";
 import Match3Game from "./Match3Game";
 import Leaderboard from "./Leaderboard";
@@ -29,7 +30,8 @@ type Screen =
   | { name: "mypage" }
   | { name: "items" }
   | { name: "settings" }
-  | { name: "theme" };
+  | { name: "theme" }
+  | { name: "gacha" };
 
 export default function AppShell() {
   const { t } = useLang();
@@ -165,12 +167,16 @@ export default function AppShell() {
     case "theme":
       body = <ThemeSettings onBack={more} />;
       break;
+    case "gacha":
+      body = <GachaScreen onBack={home} onOpenShop={() => go({ name: "shop" })} />;
+      break;
     default:
       body = (
         <Home
           onPlay={(mode) => void startGame(mode)}
           onOpenLeaderboard={() => go({ name: "leaderboard" })}
           onOpenShop={() => go({ name: "shop" })}
+          onOpenGacha={() => go({ name: "gacha" })}
           onOpenMore={more}
         />
       );
