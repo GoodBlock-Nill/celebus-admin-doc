@@ -3,7 +3,7 @@
 // 가챠 화면 (Phase 3: 재화 확률형) — 대기(카드 부유) → 뽑기(셔플 긴장) → 공개(등급 글로우 + 플립).
 // 유상 이용권은 이 재화 뽑기 전용(사행성 분리 — 실물 뽑기는 무상 전용, Phase 4).
 import { useEffect, useRef, useState } from "react";
-import { Sparkles, Ticket } from "lucide-react";
+import { Sparkles, Ticket, X } from "lucide-react";
 import { toast } from "sonner";
 import { drawGacha, fetchGachaStatus, fetchMyPrizes, type GachaDrawCard, type GachaEvent, type GachaWallet, type PrizeWinner } from "@/lib/game-api";
 import { sfxCoin, sfxNewBest, sfxPower, sfxSpecial, unlockAudio } from "@/lib/sfx";
@@ -34,6 +34,7 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
   const [bonus, setBonus] = useState(false);
   const [showOdds, setShowOdds] = useState(false);
   const [prizeList, setPrizeList] = useState<PrizeWinner[] | null>(null); // 실물 당첨 수령 모달
+  const [showIntro, setShowIntro] = useState(false); // 첫 진입 안내 (닫으면 다시 안 뜸)
   const busyRef = useRef(false);
   const sfxDone = useRef<Set<number>>(new Set());
 
@@ -50,9 +51,23 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
 
   useEffect(() => {
     unlockAudio();
+    try {
+      if (!localStorage.getItem("gacha_intro_seen")) setShowIntro(true);
+    } catch {
+      /* ignore */
+    }
     void refresh(false).finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const dismissIntro = () => {
+    setShowIntro(false);
+    try {
+      localStorage.setItem("gacha_intro_seen", "1");
+    } catch {
+      /* ignore */
+    }
+  };
 
   const event = events.find((e) => e.id === selectedId) ?? null;
   const isBox = event?.kind === "physical_box";
@@ -128,11 +143,15 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
   const ticketChip = (
     <span className="flex items-center gap-1 rounded-full bg-surface-1 px-3 py-1.5 text-[12px] font-black text-fg ring-1 ring-hairline">
       <Ticket className="h-4 w-4 text-primary-400" />
+      <span className="text-[10.5px] font-bold text-subtle">{t("gacha_free_short")}</span>
       <span className="tabular-nums">{wallet.free_tickets}</span>
       <span className="text-subtle">·</span>
+      <span className="text-[10.5px] font-bold text-subtle">{t("gacha_paid_short")}</span>
       <span className="tabular-nums text-muted">{wallet.paid_tickets}</span>
     </span>
   );
+  // 뽑기 가능 여부 — 실물 박스는 무상 전용 (버튼 비활성 + 하단 획득 가이드)
+  const canDraw = (count: number) => (isBox ? wallet.free_tickets >= count : wallet.free_tickets + wallet.paid_tickets >= count);
 
   return (
     <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-safe pb-safe pt-safe">
@@ -144,6 +163,17 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
         <p className="mt-20 text-center text-[13px] text-muted break-keep">{t("gacha_no_event")}</p>
       ) : (
         <>
+          {/* 첫 진입 안내 — 이용권 획득 경로·유상 규칙 (닫으면 다시 안 뜸) */}
+          {showIntro && stage === "idle" && (
+            <div className="mt-3 flex items-start gap-2 rounded-[14px] bg-primary/10 px-3.5 py-3 ring-1 ring-primary/30">
+              <Ticket className="mt-0.5 h-4 w-4 shrink-0 text-primary-400" />
+              <p className="min-w-0 flex-1 text-[12px] leading-snug text-fg break-keep">{t("gacha_ticket_desc")}</p>
+              <button onClick={dismissIntro} aria-label={t("notice_close")} className="shrink-0 text-subtle hover:text-fg">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+
           {/* 이벤트 전환 (실물 이벤트 진행 중일 때 재화 가챠와 병행 노출) */}
           {events.length > 1 && stage === "idle" && (
             <div className="mt-3 flex justify-center gap-1.5">
@@ -252,17 +282,28 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
           ) : stage === "idle" ? (
             <div className="mb-4 flex flex-col gap-2">
               <div className="flex gap-2">
-                <button onClick={() => void doDraw(1)} className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
+                <button
+                  onClick={() => void doDraw(1)}
+                  disabled={!canDraw(1)}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99] disabled:opacity-40"
+                >
                   {t("gacha_draw1")} <span className="flex items-center text-[12px] font-bold opacity-80"><Ticket className="mr-0.5 h-3.5 w-3.5" />1</span>
                 </button>
                 <button
                   onClick={() => void doDraw(10)}
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-3.5 text-[15px] font-black text-white ring-1 ring-white/15 active:scale-[0.99]"
+                  disabled={!canDraw(10)}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-3.5 text-[15px] font-black text-white ring-1 ring-white/15 active:scale-[0.99] disabled:opacity-40"
                   style={{ background: "linear-gradient(180deg, #f0a53c 0%, #c07d1c 100%)" }}
                 >
                   {t("gacha_draw10")} <span className="flex items-center text-[12px] font-bold opacity-80"><Ticket className="mr-0.5 h-3.5 w-3.5" />10</span>
                 </button>
               </div>
+              {!canDraw(1) && (
+                // 뽑을 수 없는 상태 — 획득 경로 안내 (실물 박스에서 유상만 보유한 경우 포함)
+                <p className="text-center text-[12px] font-bold leading-snug text-gold break-keep">
+                  {isBox && wallet.paid_tickets > 0 ? t("gacha_free_only") : t("gacha_earn_hint")}
+                </p>
+              )}
               <div className="flex items-center justify-center gap-4">
                 <button onClick={() => setShowOdds(true)} className="text-[12px] font-bold text-muted underline underline-offset-2">
                   {t("gacha_odds")}

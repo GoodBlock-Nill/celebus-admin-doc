@@ -16,7 +16,15 @@ const CONFETTI = Array.from({ length: 16 }, (_, i) => ({
   delay: (i % 5) * 0.12,
 }));
 
-export default function WeeklyResultModal({ data, onClose }: { data: WeeklyReward; onClose: () => void }) {
+export default function WeeklyResultModal({
+  data,
+  onClose,
+  onGoGacha,
+}: {
+  data: WeeklyReward;
+  onClose: () => void;
+  onGoGacha?: () => void; // 이용권 획득 시 가챠로 바로 이동 (획득→사용 전환 연결)
+}) {
   const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
   useFocusTrap(ref, true, onClose);
@@ -82,9 +90,18 @@ export default function WeeklyResultModal({ data, onClose }: { data: WeeklyRewar
           <p className="mt-3 text-[12px] leading-snug text-muted break-keep">{t("weekly_no_reward")}</p>
         )}
 
+        {ticketTotal > 0 && onGoGacha && (
+          <button
+            onClick={onGoGacha}
+            className="mt-5 flex w-full items-center justify-center gap-1.5 rounded-full py-3 text-[15px] font-black text-white ring-1 ring-white/15 active:scale-[0.99]"
+            style={{ background: "linear-gradient(180deg, #f0a53c 0%, #c07d1c 100%)" }}
+          >
+            <Ticket className="h-4 w-4" /> {t("weekly_go_gacha")}
+          </button>
+        )}
         <button
           onClick={onClose}
-          className="mt-5 w-full rounded-full bg-primary py-3 text-[15px] font-black text-white active:scale-[0.99]"
+          className={`${ticketTotal > 0 && onGoGacha ? "mt-2" : "mt-5"} w-full rounded-full bg-primary py-3 text-[15px] font-black text-white active:scale-[0.99]`}
         >
           {t("weekly_confirm")}
         </button>

@@ -44,3 +44,21 @@ export function voteThrottled(ip: string): boolean {
   rec.count += 1;
   return rec.count > VOTE_MAX;
 }
+
+// 가챠 IP 총량 스로틀 — 뽑기·이용권 구매 전용. 투표 스로틀(voteThrottled, 시간당 30)과 분리:
+// 이용권을 모아 1회 뽑기를 반복하는 정상 사용이 투표 한도에 걸리지 않도록 넉넉하게(시간당 120).
+const gacha = new Map<string, { count: number; resetAt: number }>();
+const GACHA_WINDOW_MS = 60 * 60 * 1000; // 1시간
+const GACHA_MAX = 120;
+
+export function gachaThrottled(ip: string): boolean {
+  const now = Date.now();
+  const rec = gacha.get(ip);
+  if (!rec || now > rec.resetAt) {
+    gacha.set(ip, { count: 1, resetAt: now + GACHA_WINDOW_MS });
+    if (gacha.size > 5000) for (const [k, v] of gacha) if (now > v.resetAt) gacha.delete(k);
+    return false;
+  }
+  rec.count += 1;
+  return rec.count > GACHA_MAX;
+}

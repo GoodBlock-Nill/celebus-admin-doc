@@ -216,8 +216,8 @@ export default function Home({
         </div>
       </div>
 
-      {/* 하단 내비 (랭킹 · 아이템상점 · 더보기) — 3D 일러스트 아이콘 */}
-      <div className="mx-5 mb-safe mt-3 grid grid-cols-3 rounded-[22px] bg-black/45 px-2 py-2.5 ring-1 ring-white/15 backdrop-blur">
+      {/* 하단 내비 (랭킹 · 아이템상점 · 가챠 · 더보기) — 3D 일러스트 아이콘 */}
+      <div className="mx-5 mb-safe mt-3 grid grid-cols-4 rounded-[22px] bg-black/45 px-2 py-2.5 ring-1 ring-white/15 backdrop-blur">
         <button onClick={onOpenLeaderboard} className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/nav-ranking.png" alt="" className="h-9 w-9 object-contain drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)]" />
@@ -242,9 +242,19 @@ export default function Home({
         </button>
       </div>
 
-      {weekly && <WeeklyResultModal data={weekly} onClose={() => setWeekly(null)} />}
+      {weekly && (
+        <WeeklyResultModal
+          data={weekly}
+          onClose={() => setWeekly(null)}
+          onGoGacha={() => {
+            setWeekly(null);
+            onOpenGacha();
+          }}
+        />
+      )}
 
-      {showPrizes && pendingPrizes.length > 0 && (
+      {/* 실물 당첨 리마인드 — 주간 결과 모달을 닫은 뒤에 순차 노출 (겹침 방지) */}
+      {!weekly && showPrizes && pendingPrizes.length > 0 && (
         <PrizeClaimModal
           winners={pendingPrizes}
           onClose={() => setShowPrizes(false)}

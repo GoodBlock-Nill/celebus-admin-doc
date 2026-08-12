@@ -3,7 +3,7 @@ import { z } from "zod";
 import { admin } from "@/lib/db-admin";
 import { playerHash, hashWithSalt, getClientIp } from "@/lib/hash";
 import { assertSameOrigin } from "@/lib/origin";
-import { voteThrottled } from "@/lib/ratelimit";
+import { gachaThrottled } from "@/lib/ratelimit";
 import { readVoterId, signAnonId, VID_COOKIE, VID_COOKIE_OPTS } from "@/lib/anon-identity";
 
 const ISSUE_CAP = Number(process.env.VOTE_ISSUE_CAP) || 5;
@@ -20,7 +20,7 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: "잘못된 요청이에요." }, { status: 400 });
 
   const ip = getClientIp(req);
-  if (voteThrottled(ip)) return NextResponse.json({ status: "limit" });
+  if (gachaThrottled(ip)) return NextResponse.json({ status: "limit" }); // 가챠 전용 한도 — 투표 스로틀과 분리
 
   const { id: anonId, isNew } = readVoterId(req);
   if (isNew) {
