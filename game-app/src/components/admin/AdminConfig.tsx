@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { aget, asend } from "@/lib/admin-api";
 import { GAME_CONFIG } from "@/lib/game-config";
+import AdminRewards, { type RewardsOverlay } from "./AdminRewards";
 import { BTN, BTN_GHOST, Card, INPUT } from "./ui";
 
 type Overlay = Record<string, Record<string, unknown>>;
@@ -181,10 +182,14 @@ export default function AdminConfig() {
     setBusy(true);
     setMsg(null);
     try {
-      await asend("/api/admin/config", "PUT", { config: o });
-      setSaved(JSON.stringify(o));
-      setRaw(JSON.stringify(o, null, 2));
-      setMsg("저장했어요 — 유저는 다음 게임 실행부터 반영돼요.");
+      const r = await asend<{ status?: string; error?: string }>("/api/admin/config", "PUT", { config: o });
+      if (r.error) {
+        setMsg(r.error === "bad_rewards" ? "주간 랭킹 보상 값이 올바르지 않아 저장하지 못했어요." : "저장에 실패했어요.");
+      } else {
+        setSaved(JSON.stringify(o));
+        setRaw(JSON.stringify(o, null, 2));
+        setMsg("저장했어요 — 유저는 다음 게임 실행부터 반영돼요.");
+      }
     } catch {
       setMsg("저장에 실패했어요.");
     }
@@ -195,6 +200,18 @@ export default function AdminConfig() {
     const c = JSON.parse(saved) as Overlay;
     setOverlay(c);
     setRaw(JSON.stringify(c, null, 2));
+    setMsg(null);
+  };
+
+  // rewards 그룹은 배열·중첩 구조라 GROUPS 폼 대신 전용 폼(AdminRewards)으로 편집
+  const setRewards = (v: RewardsOverlay | undefined) => {
+    setOverlay((o) => {
+      const next = { ...o };
+      if (v === undefined) delete next.rewards;
+      else next.rewards = v as unknown as Record<string, unknown>;
+      setRaw(JSON.stringify(next, null, 2));
+      return next;
+    });
     setMsg(null);
   };
 
@@ -261,6 +278,8 @@ export default function AdminConfig() {
           </div>
         </Card>
       ))}
+
+      <AdminRewards value={overlay.rewards as RewardsOverlay | undefined} onChange={setRewards} />
 
       {/* 고급 — 원본 JSON (접이식). 데일리 미션 pool·타일·아바타 등 배열/중첩 값 편집용 */}
       <Card title="고급 — 오버레이 원본(JSON)">

@@ -46,8 +46,13 @@ export interface GameConfig {
   // 데일리 미션 목표·보상 (KST 일 리셋) — 관리자 튜닝
   // 데일리 미션 — 풀에서 매일 count개 로테이션(KST 날짜 결정론). id별 목표·보상 CP. 관리자 튜닝.
   missions: { count: number; pool: { id: MissionId; goal: number; cp: number }[] };
-  // 주간 랭킹 보상표 — 인덱스 = 순위-1 (CP). 두 모드 각각 지급 — 관리자 튜닝(고급 JSON)
-  rewards: { weeklyTop: number[] };
+  // 주간 랭킹 보상 — weeklyTop: 인덱스 = 순위-1 (CP). weeklyTickets: 순위 구간별 가챠 이용권(무상) + others(구간 밖 기록 보유자 전원 지급 장수).
+  //   ticketPrice: 유상 이용권 상점 가격(CP). 두 모드 각각 지급, 수령 시점에 적용(소급 주의) — 관리자 튜닝(전용 폼)
+  rewards: {
+    weeklyTop: number[];
+    weeklyTickets: { tiers: { from: number; to: number; tickets: number }[]; others: number };
+    ticketPrice: number;
+  };
   // 이어하기 하트 (일반 매치 전용) — 판당 기본 start개 + 상점 구매 보유분. slots=표시 슬롯 수, maxPerRun=판당 사용 상한(랭킹 공정성), price=상점 폴백 표시가(권위는 카탈로그) — 관리자 튜닝
   hearts: { start: number; slots: number; maxPerRun: number; continueSec: number; price: number };
   // CELEB PASS 시즌 누적 트랙(Wave A) — 판당 XP = xpBase + floor(min(경과초,xpSecCap)/xpSecDiv), 성과 무관.
@@ -150,7 +155,18 @@ export const GAME_CONFIG: GameConfig = {
       { id: "normal", goal: 2, cp: 20 }, // 일반 매치 N판
     ],
   },
-  rewards: { weeklyTop: [100, 70, 50, 30, 30, 20, 20, 20, 20, 20] },
+  rewards: {
+    weeklyTop: [100, 70, 50, 30, 30, 20, 20, 20, 20, 20],
+    weeklyTickets: {
+      tiers: [
+        { from: 1, to: 1, tickets: 10 },
+        { from: 2, to: 5, tickets: 5 },
+        { from: 6, to: 10, tickets: 3 },
+      ],
+      others: 1,
+    },
+    ticketPrice: 500,
+  },
   hearts: { start: 1, slots: 6, maxPerRun: 3, continueSec: 30, price: 5 },
   coasting: { warmupSec: 15, streakT1Days: 3, streakT1Sec: 5, streakT2Days: 7, streakT2Sec: 10, graceThreshold: 0.7, graceSec: 5, gracePerRun: 1 },
   pass: {
