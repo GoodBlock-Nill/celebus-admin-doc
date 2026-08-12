@@ -49,6 +49,14 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
   const [showIntro, setShowIntro] = useState(false); // 첫 진입 안내 (닫으면 다시 안 뜸)
   const busyRef = useRef(false);
   const sfxDone = useRef<Set<number>>(new Set());
+  const tabsRef = useRef<HTMLDivElement>(null);
+
+  // 선택한 이벤트 칩을 가로 스크롤 중앙으로 — 이벤트가 많아 칩이 화면 밖에 있어도 현재 위치가 보이도록
+  useEffect(() => {
+    if (stage !== "idle") return;
+    const chip = tabsRef.current?.querySelector<HTMLElement>(`[data-event-id="${CSS.escape(selectedId ?? "")}"]`);
+    chip?.scrollIntoView({ inline: "center", block: "nearest", behavior: reducedMotion() ? "auto" : "smooth" });
+  }, [selectedId, stage]);
 
   const refresh = (keepSelection = true) =>
     fetchGachaStatus().then((s) => {
@@ -188,20 +196,24 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
             </div>
           )}
 
-          {/* 이벤트 전환 (실물 이벤트 진행 중일 때 재화 가챠와 병행 노출) */}
+          {/* 이벤트 전환 (실물 이벤트 진행 중일 때 재화 가챠와 병행 노출)
+              — 다수 이벤트 시 줄바꿈 대신 가로 스크롤 단일 라인 (칩 내 제목 개행 금지, 선택 칩 자동 센터링) */}
           {events.length > 1 && stage === "idle" && (
-            <div className="mt-3 flex justify-center gap-1.5">
-              {events.map((e) => (
-                <button
-                  key={e.id}
-                  onClick={() => setSelectedId(e.id)}
-                  className={`rounded-full px-3.5 py-1.5 text-[12px] font-bold ring-1 transition-colors ${
-                    e.id === selectedId ? "bg-primary text-white ring-primary" : "bg-surface-1 text-muted ring-hairline"
-                  }`}
-                >
-                  {e.title[lang] || e.title.ko}
-                </button>
-              ))}
+            <div ref={tabsRef} className="gacha-event-tabs mt-3 overflow-x-auto scrollbar-none">
+              <div className="mx-auto flex w-max gap-1.5 px-1 py-0.5">
+                {events.map((e) => (
+                  <button
+                    key={e.id}
+                    data-event-id={e.id}
+                    onClick={() => setSelectedId(e.id)}
+                    className={`max-w-[160px] shrink-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-3.5 py-1.5 text-[12px] font-bold ring-1 transition-colors ${
+                      e.id === selectedId ? "bg-primary text-white ring-primary" : "bg-surface-1 text-muted ring-hairline"
+                    }`}
+                  >
+                    {e.title[lang] || e.title.ko}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 

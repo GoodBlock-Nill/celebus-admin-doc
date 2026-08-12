@@ -559,6 +559,12 @@ body {
   display: none;
 }
 
+/* 이벤트 전환 칩 가로 스크롤 — 양끝 페이드로 "더 있음"을 암시 (칩이 적어 중앙 정렬일 땐 빈 영역이라 영향 없음) */
+.gacha-event-tabs {
+  mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+}
+
 /* ── 가챠 카드 연출 (GachaScreen) — CSS 3D 플립·홀로 시머·등급 글로우. transform/opacity만 사용 ── */
 @keyframes gacha-float {
   0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
