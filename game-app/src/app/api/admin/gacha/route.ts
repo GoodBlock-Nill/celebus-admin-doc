@@ -20,6 +20,7 @@ const poolItemSchema = z
     prize: l10n,
     image_url: z.union([z.literal(""), z.string().url().max(500)]).optional(),
     is_physical: z.boolean().default(false),
+    fulfillment: z.enum(["delivery", "mobile_ticket"]).default("delivery"), // 실물 지급 방식 — 모바일 티켓은 CELEBUS 앱 지급(주소·수령 정보 불필요)
     requires_address: z.boolean().default(false),
     reward_payload: rewardSchema.nullish(), // 실물 행은 null
     weight: z.number().int().min(1).max(1000000).nullish(), // digital 전용
@@ -110,7 +111,8 @@ export async function POST(req: Request) {
         prize: p.prize,
         image_url: p.image_url || null,
         is_physical: kind === "physical_box" ? p.is_physical : false,
-        requires_address: p.is_physical ? p.requires_address : false,
+        fulfillment: p.is_physical ? p.fulfillment : "delivery",
+        requires_address: p.is_physical && p.fulfillment !== "mobile_ticket" ? p.requires_address : false,
         reward_payload: p.is_physical ? null : (p.reward_payload ?? null),
         weight: kind === "digital" ? p.weight : null,
         total_qty: kind === "physical_box" ? p.total_qty : null,

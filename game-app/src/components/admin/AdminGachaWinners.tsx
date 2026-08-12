@@ -10,9 +10,10 @@ import { BTN_GHOST, DataTable, TD, fmtDate } from "./ui";
 type WinnerRow = {
   id: string;
   status: "pending" | "submitted" | "shipped" | "expired" | "revoked";
+  fulfillment?: "delivery" | "mobile_ticket";
   display_expired: boolean;
   claim_deadline: string;
-  snapshot: { prize?: { ko?: string }; grade?: string; nickname?: string };
+  snapshot: { prize?: { ko?: string }; grade?: string; nickname?: string; celebus_uid?: string };
   submitted_at: string | null;
   shipped_at: string | null;
   admin_memo: string | null;
@@ -112,23 +113,28 @@ export default function AdminGachaWinners({ eventId }: { eventId: string }) {
         <DataTable head={["당첨일", "상품", "닉네임", "상태", "기한", "수령 정보", "액션"]}>
           {rows.map((r) => {
             const actionable = r.status === "pending" || r.status === "submitted";
+            const isMobile = r.fulfillment === "mobile_ticket";
             return (
               <tr key={r.id}>
                 <td className={`${TD} whitespace-nowrap text-[12.5px] text-subtle`}>{fmtDate(r.created_at)}</td>
                 <td className={`${TD} whitespace-nowrap font-bold`}>
                   <span className="mr-1 text-gold">{r.snapshot.grade}</span>
                   {r.snapshot.prize?.ko}
+                  {isMobile && <span className="ml-1.5 rounded-full bg-primary/15 px-1.5 py-0.5 text-[10.5px] font-bold text-primary-400">모바일 티켓</span>}
                 </td>
                 <td className={TD}>{r.snapshot.nickname || <span className="text-subtle">익명</span>}</td>
                 <td className={`${TD} whitespace-nowrap`}>
                   <span className={`rounded-full px-2 py-0.5 text-[11.5px] font-bold ${r.status === "submitted" ? "bg-primary/20 text-primary-400" : r.status === "shipped" ? "bg-gold/15 text-gold" : "bg-surface-2 text-muted"}`}>
-                    {STATUS_LABEL[r.status]}
+                    {isMobile && r.status === "submitted" ? "지급 대기" : isMobile && r.status === "shipped" ? "지급 완료" : STATUS_LABEL[r.status]}
                   </span>
                   {r.display_expired && actionable && <span className="ml-1 text-[11px] font-bold text-danger">기한 경과</span>}
                 </td>
                 <td className={`${TD} whitespace-nowrap text-[12.5px] text-subtle`}>{fmtDate(r.claim_deadline)}</td>
                 <td className={`${TD} min-w-[180px] text-[12.5px]`}>
-                  {r.info ? (
+                  {isMobile ? (
+                    // 모바일 티켓 — 수령 정보 대신 지급 대상 CELEBUS 계정 표시 (일정 확정 후 CELEBUS 앱으로 지급)
+                    <span className="font-mono text-[12px] text-primary-400">{r.snapshot.celebus_uid || <span className="text-subtle">CELEBUS 계정 없음</span>}</span>
+                  ) : r.info ? (
                     <>
                       {r.info.name} · {r.info.phone}
                       {r.info.address && <div className="text-subtle">{r.info.address}</div>}
@@ -143,7 +149,7 @@ export default function AdminGachaWinners({ eventId }: { eventId: string }) {
                   <div className="flex gap-1.5">
                     {r.status === "submitted" && (
                       <button onClick={() => void act(r.id, "ship")} disabled={busy} className={BTN_GHOST}>
-                        발송 완료
+                        {isMobile ? "지급 완료" : "발송 완료"}
                       </button>
                     )}
                     {actionable && r.display_expired && (

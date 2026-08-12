@@ -404,6 +404,7 @@ export type GachaDrawCard = {
   physical?: boolean; // 실물 당첨 (박스 가챠)
   winner_id?: string | null;
   requires_address?: boolean;
+  fulfillment?: "delivery" | "mobile_ticket"; // 모바일 티켓 = CELEBUS 앱 지급 (수령 정보 불필요)
 };
 export type GachaDrawResponse =
   | { ok: true; results: GachaDrawCard[]; count: number; bonus_ticket: boolean; celeb_point: number; wallet: GachaWallet }
@@ -439,8 +440,9 @@ export type PrizeWinner = {
   id: string;
   status: PrizeStatus;
   claim_deadline: string;
-  snapshot: { prize?: L10nText; grade?: GachaGrade; nickname?: string };
+  snapshot: { prize?: L10nText; grade?: GachaGrade; nickname?: string; celebus_uid?: string };
   requires_address: boolean;
+  fulfillment?: "delivery" | "mobile_ticket"; // 모바일 티켓 = 일정 확정 후 CELEBUS 앱으로 지급 (입력·기한 무효 없음)
   info: { name: string; phone: string; address: string; note: string } | null;
 };
 

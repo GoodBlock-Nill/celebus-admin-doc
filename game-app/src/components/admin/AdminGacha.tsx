@@ -11,11 +11,13 @@ import { BTN, BTN_GHOST, Card, INPUT } from "./ui";
 type Grade = "S" | "A" | "B" | "C" | "D";
 type Kind = "digital" | "physical_box";
 type L10n = { ko?: string; en?: string; ja?: string };
+type Fulfillment = "delivery" | "mobile_ticket";
 type PoolItem = {
   id?: string;
   grade: Grade;
   prize: L10n;
   is_physical: boolean;
+  fulfillment: Fulfillment; // 모바일 티켓 = CELEBUS 앱 지급 (주소·수령 정보 불필요)
   requires_address: boolean;
   reward_payload: { cp?: number; item?: string; qty?: number } | null;
   weight: number | null;
@@ -55,15 +57,16 @@ const emptyForm = (kind: Kind): Form => ({
   pool:
     kind === "digital"
       ? [
-          { grade: "A", prize: { ko: "300 CP" }, is_physical: false, requires_address: false, reward_payload: { cp: 300 }, weight: 5, total_qty: null, per_user_cap: null, sort: 1 },
-          { grade: "B", prize: { ko: "하트 1개" }, is_physical: false, requires_address: false, reward_payload: { item: "heart", qty: 1 }, weight: 10, total_qty: null, per_user_cap: null, sort: 2 },
-          { grade: "C", prize: { ko: "50 CP" }, is_physical: false, requires_address: false, reward_payload: { cp: 50 }, weight: 25, total_qty: null, per_user_cap: null, sort: 3 },
-          { grade: "D", prize: { ko: "20 CP" }, is_physical: false, requires_address: false, reward_payload: { cp: 20 }, weight: 60, total_qty: null, per_user_cap: null, sort: 4 },
+          { grade: "A", prize: { ko: "300 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 300 }, weight: 5, total_qty: null, per_user_cap: null, sort: 1 },
+          { grade: "B", prize: { ko: "하트 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "heart", qty: 1 }, weight: 10, total_qty: null, per_user_cap: null, sort: 2 },
+          { grade: "C", prize: { ko: "50 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 50 }, weight: 25, total_qty: null, per_user_cap: null, sort: 3 },
+          { grade: "D", prize: { ko: "20 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 20 }, weight: 60, total_qty: null, per_user_cap: null, sort: 4 },
         ]
       : [
-          { grade: "S", prize: { ko: "V01D 콘서트 초대권" }, is_physical: true, requires_address: false, reward_payload: null, weight: null, total_qty: 2, per_user_cap: 2, sort: 1 },
-          { grade: "B", prize: { ko: "한정 포토카드 세트" }, is_physical: true, requires_address: true, reward_payload: null, weight: null, total_qty: 30, per_user_cap: null, sort: 2 },
-          { grade: "D", prize: { ko: "30 CP" }, is_physical: false, requires_address: false, reward_payload: { cp: 30 }, weight: null, total_qty: 100, per_user_cap: null, sort: 3 },
+          // 콘서트 티켓 = 모바일 티켓 (일정 확정 후 CELEBUS 앱 지급 — 사용자 결정 2026-08-12)
+          { grade: "S", prize: { ko: "V01D 콘서트 모바일 티켓" }, is_physical: true, fulfillment: "mobile_ticket", requires_address: false, reward_payload: null, weight: null, total_qty: 2, per_user_cap: 2, sort: 1 },
+          { grade: "B", prize: { ko: "한정 포토카드 세트" }, is_physical: true, fulfillment: "delivery", requires_address: true, reward_payload: null, weight: null, total_qty: 30, per_user_cap: null, sort: 2 },
+          { grade: "D", prize: { ko: "30 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 30 }, weight: null, total_qty: 100, per_user_cap: null, sort: 3 },
         ],
 });
 
@@ -96,7 +99,7 @@ export default function AdminGacha() {
       pool: (ev.game_gacha_pool_item ?? [])
         .filter((p) => ev.kind === "physical_box" || (p.weight ?? 0) > 0)
         .sort((a, b) => a.sort - b.sort)
-        .map((p) => ({ ...p, prize: { ...p.prize }, reward_payload: p.reward_payload ? { ...p.reward_payload } : null })),
+        .map((p) => ({ ...p, fulfillment: p.fulfillment ?? "delivery", prize: { ...p.prize }, reward_payload: p.reward_payload ? { ...p.reward_payload } : null })),
     });
   };
 
@@ -129,6 +132,7 @@ export default function AdminGacha() {
           grade: p.grade,
           prize: p.prize,
           is_physical: p.is_physical,
+          fulfillment: p.fulfillment,
           requires_address: p.requires_address,
           reward_payload: p.is_physical ? null : p.reward_payload,
           weight: form.kind === "digital" ? p.weight : null,
@@ -279,10 +283,20 @@ export default function AdminGacha() {
                     )}
                     {p.is_physical ? (
                       <>
-                        <label className="flex items-center gap-1 text-[12px] font-bold text-muted">
-                          <input type="checkbox" checked={p.requires_address} onChange={(e) => setPool(i, { requires_address: e.target.checked })} className="h-4 w-4" />
-                          주소 필요
-                        </label>
+                        <select
+                          value={p.fulfillment}
+                          onChange={(e) => setPool(i, { fulfillment: e.target.value as Fulfillment, ...(e.target.value === "mobile_ticket" ? { requires_address: false } : {}) })}
+                          className={`${INPUT} w-32`}
+                        >
+                          <option value="delivery">배송</option>
+                          <option value="mobile_ticket">모바일 티켓</option>
+                        </select>
+                        {p.fulfillment !== "mobile_ticket" && (
+                          <label className="flex items-center gap-1 text-[12px] font-bold text-muted">
+                            <input type="checkbox" checked={p.requires_address} onChange={(e) => setPool(i, { requires_address: e.target.checked })} className="h-4 w-4" />
+                            주소 필요
+                          </label>
+                        )}
                         <span className="text-[12px] text-subtle">1인 상한</span>
                         <input
                           value={p.per_user_cap != null ? String(p.per_user_cap) : ""}
@@ -368,8 +382,8 @@ export default function AdminGacha() {
                         pool: [
                           ...f.pool,
                           f.kind === "digital"
-                            ? { grade: "D", prize: { ko: "" }, is_physical: false, requires_address: false, reward_payload: { cp: 20 }, weight: 10, total_qty: null, per_user_cap: null, sort: f.pool.length }
-                            : { grade: "D", prize: { ko: "" }, is_physical: false, requires_address: false, reward_payload: { cp: 20 }, weight: null, total_qty: 10, per_user_cap: null, sort: f.pool.length },
+                            ? { grade: "D", prize: { ko: "" }, is_physical: false, fulfillment: "delivery" as Fulfillment, requires_address: false, reward_payload: { cp: 20 }, weight: 10, total_qty: null, per_user_cap: null, sort: f.pool.length }
+                            : { grade: "D", prize: { ko: "" }, is_physical: false, fulfillment: "delivery" as Fulfillment, requires_address: false, reward_payload: { cp: 20 }, weight: null, total_qty: 10, per_user_cap: null, sort: f.pool.length },
                         ],
                       }
                   )

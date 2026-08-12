@@ -55,7 +55,13 @@ export default function PrizeClaimModal({
     onChanged();
   };
 
-  const statusLabel = (w: PrizeWinner) => t(`prize_status_${w.status}`);
+  // 모바일 티켓: 입력 없음 — 지급 대기/완료 라벨로 표시
+  const isMobile = (w: PrizeWinner) => w.fulfillment === "mobile_ticket";
+  const statusLabel = (w: PrizeWinner) => {
+    if (isMobile(w) && w.status === "submitted") return t("prize_status_mobile_wait");
+    if (isMobile(w) && w.status === "shipped") return t("prize_status_mobile_done");
+    return t(`prize_status_${w.status}`);
+  };
   const inputCls =
     "rounded-[12px] bg-surface-1 px-3.5 py-3 text-[14px] text-fg ring-1 ring-hairline placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-primary/60";
 
@@ -78,7 +84,8 @@ export default function PrizeClaimModal({
             <div className="mt-3 flex flex-col gap-2">
               {winners.map((w) => {
                 const grade = w.snapshot.grade ?? "S";
-                const actionable = w.status === "pending" || w.status === "submitted";
+                // 모바일 티켓은 유저 입력이 없음 — 폼 버튼·기한 카운트다운 미노출
+                const actionable = !isMobile(w) && (w.status === "pending" || w.status === "submitted");
                 return (
                   <div key={w.id} className="rounded-[14px] bg-surface-1 px-3.5 py-3 ring-1 ring-hairline">
                     <div className="flex items-center gap-2">
@@ -107,6 +114,9 @@ export default function PrizeClaimModal({
                 );
               })}
             </div>
+            {winners.some(isMobile) && (
+              <p className="mt-2 text-[11.5px] leading-snug text-primary-400 break-keep">{t("prize_mobile_note")}</p>
+            )}
             <button
               onClick={onClose}
               className="mt-4 w-full rounded-full bg-surface-1 py-3 text-[14px] font-bold text-fg ring-1 ring-hairline active:scale-[0.99]"

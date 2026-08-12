@@ -221,18 +221,30 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
                   <Sparkles className="h-4 w-4" /> {t("gacha_bonus_ticket")}
                 </p>
               )}
-              {cards.some((c) => c.physical) && (
-                <>
-                  <p className="text-center text-[12.5px] font-black text-gold break-keep">{t("gacha_physical_win")}</p>
-                  <button
-                    onClick={() => void openPrizeClaim()}
-                    className="w-full rounded-full py-3.5 text-[15px] font-black text-white ring-1 ring-white/15 active:scale-[0.99]"
-                    style={{ background: "linear-gradient(180deg, #f0a53c 0%, #c07d1c 100%)" }}
-                  >
-                    {t("prize_input_cta")}
-                  </button>
-                </>
-              )}
+              {cards.some((c) => c.physical) &&
+                (cards.some((c) => c.physical && c.fulfillment !== "mobile_ticket") ? (
+                  <>
+                    <p className="text-center text-[12.5px] font-black text-gold break-keep">{t("gacha_physical_win")}</p>
+                    <button
+                      onClick={() => void openPrizeClaim()}
+                      className="w-full rounded-full py-3.5 text-[15px] font-black text-white ring-1 ring-white/15 active:scale-[0.99]"
+                      style={{ background: "linear-gradient(180deg, #f0a53c 0%, #c07d1c 100%)" }}
+                    >
+                      {t("prize_input_cta")}
+                    </button>
+                  </>
+                ) : (
+                  // 모바일 티켓만 당첨 — 입력 불필요, CELEBUS 앱 지급 안내만
+                  <>
+                    <p className="text-center text-[12.5px] font-black leading-snug text-gold break-keep">{t("prize_mobile_note")}</p>
+                    <button
+                      onClick={() => void openPrizeClaim()}
+                      className="w-full rounded-full bg-surface-1 py-3 text-[14px] font-bold text-fg ring-1 ring-hairline active:scale-[0.99]"
+                    >
+                      {t("prize_check_cta")}
+                    </button>
+                  </>
+                ))}
               <button onClick={() => setStage("idle")} className="w-full rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
                 {t("gacha_result_done")}
               </button>

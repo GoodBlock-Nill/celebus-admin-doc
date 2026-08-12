@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   const { data, error } = await admin()
     .from("game_prize_winner")
     .select(
-      "id, status, claim_deadline, snapshot, created_at, game_gacha_draw(game_gacha_pool_item(requires_address)), game_prize_claim_info(name, phone, address, note)"
+      "id, status, claim_deadline, snapshot, created_at, game_gacha_draw(game_gacha_pool_item(requires_address, fulfillment)), game_prize_claim_info(name, phone, address, note)"
     )
     .eq("player_hash", playerHash(anonId))
     .order("created_at", { ascending: false })
@@ -20,15 +20,16 @@ export async function GET(req: Request) {
 
   const winners = (data ?? []).map((w) => {
     const raw = w as Record<string, unknown>;
-    const draw = raw.game_gacha_draw as { game_gacha_pool_item?: { requires_address?: boolean } } | null;
+    const draw = raw.game_gacha_draw as { game_gacha_pool_item?: { requires_address?: boolean; fulfillment?: string } } | null;
     const info = raw.game_prize_claim_info as { name: string; phone: string; address: string | null; note: string | null } | null;
     const expired = (w.status === "pending" || w.status === "submitted") && new Date(w.claim_deadline) < new Date();
     return {
       id: w.id,
-      status: expired && w.status === "pending" ? "expired" : w.status, // submitted는 기한 후에도 발송 대상 유지
+      status: expired && w.status === "pending" ? "expired" : w.status, // submitted는 기한 후에도 발송 대상 유지 (모바일 티켓 포함)
       claim_deadline: w.claim_deadline,
       snapshot: w.snapshot,
       requires_address: !!draw?.game_gacha_pool_item?.requires_address,
+      fulfillment: draw?.game_gacha_pool_item?.fulfillment ?? "delivery",
       info: info ? { name: info.name, phone: info.phone, address: info.address ?? "", note: info.note ?? "" } : null,
     };
   });

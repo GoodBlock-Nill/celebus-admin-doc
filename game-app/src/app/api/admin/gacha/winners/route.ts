@@ -20,7 +20,7 @@ export async function GET(req: Request) {
   const { data, error } = await admin()
     .from("game_prize_winner")
     .select(
-      "id, player_hash, status, claim_deadline, snapshot, submitted_at, shipped_at, admin_memo, created_at, game_gacha_draw!inner(event_id, game_gacha_pool_item(prize, grade, requires_address)), game_prize_claim_info(name, phone, address, note, agreed_at)"
+      "id, player_hash, status, claim_deadline, snapshot, submitted_at, shipped_at, admin_memo, created_at, game_gacha_draw!inner(event_id, game_gacha_pool_item(prize, grade, requires_address, fulfillment)), game_prize_claim_info(name, phone, address, note, agreed_at)"
     )
     .eq("game_gacha_draw.event_id", eventId)
     .order("created_at", { ascending: true });
@@ -30,11 +30,15 @@ export async function GET(req: Request) {
 
   const winners = (data ?? []).map((w) => {
     const raw = w as Record<string, unknown>;
+    const draw = raw.game_gacha_draw as { game_gacha_pool_item?: { fulfillment?: string } } | null;
     const info = raw.game_prize_claim_info as { name: string; phone: string; address: string | null; note: string | null; agreed_at: string } | null;
-    const expired = (w.status === "pending" || w.status === "submitted") && new Date(w.claim_deadline) < new Date();
+    // 모바일 티켓은 유저 입력이 없어 기한 만료 개념 미적용 (지급 대기 유지)
+    const fulfillment = draw?.game_gacha_pool_item?.fulfillment ?? "delivery";
+    const expired = fulfillment !== "mobile_ticket" && (w.status === "pending" || w.status === "submitted") && new Date(w.claim_deadline) < new Date();
     return {
       id: w.id,
       status: w.status,
+      fulfillment,
       display_expired: expired, // 조회 시점 기한 경과 표시 ([만료 확정] 전)
       claim_deadline: w.claim_deadline,
       snapshot: w.snapshot,
