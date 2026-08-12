@@ -169,16 +169,16 @@ export default function AdminGacha() {
   return (
     <div className="flex flex-col gap-4">
       <Card
-        title="가챠 이벤트"
+        title="럭키드로우 이벤트"
         right={
           <div className="flex gap-2">
-            <button onClick={() => setForm(emptyForm("digital"))} className={BTN_GHOST}>+ 재화 가챠</button>
+            <button onClick={() => setForm(emptyForm("digital"))} className={BTN_GHOST}>+ 재화 뽑기</button>
             <button onClick={() => setForm(emptyForm("physical_box"))} className={BTN}>+ 실물 박스</button>
           </div>
         }
       >
         {events.length === 0 ? (
-          <p className="text-[13px] text-muted">아직 이벤트가 없어요. 재화 가챠(상시) 또는 실물 박스(이벤트성)를 만들어 보세요.</p>
+          <p className="text-[13px] text-muted">아직 이벤트가 없어요. 재화 뽑기(상시) 또는 실물 박스(이벤트성)를 만들어 보세요.</p>
         ) : (
           <div className="flex flex-col gap-2">
             {events.map((ev) => (
@@ -396,7 +396,7 @@ export default function AdminGacha() {
             <p className="text-[12.5px] leading-relaxed text-muted">
               {form.kind === "digital"
                 ? `확률 = 가중치 ÷ 전체 가중치 합(${totalWeight.toLocaleString()}). 저장 즉시 유저 확률 공시에 반영돼요. 꽝 없음 — 모든 행이 보상을 지급해요.`
-                : "박스 가챠 — 남은 상품 수에 비례한 균등 확률, 뽑힐 때마다 소진되고 전체 소진 시 자동 종료돼요. 실물 뽑기는 무상(랭킹 보상) 이용권 전용이에요. 실물 당첨은 수령 기한 내 정보 미입력 시 무효 처리돼요. 게시 후에는 풀·재고를 수정할 수 없으니 검토 후 게시해 주세요."}
+                : "박스형 — 남은 상품 수에 비례한 균등 확률, 뽑힐 때마다 소진되고 전체 소진 시 자동 종료돼요. 드로우 티켓은 종류 구분 없이 사용돼요(v2.3 통합). 배송형 실물 당첨은 수령 기한 내 정보 미입력 시 무효 처리돼요. 게시 후에는 풀·재고를 수정할 수 없으니 검토 후 게시해 주세요."}
             </p>
           </div>
         </Card>

@@ -117,9 +117,7 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
 
   const doDraw = async (count: 1 | 10) => {
     if (busyRef.current || !event) return;
-    // 실물 박스 = 무상 이용권 전용 (사행성 분리 — 서버 RPC도 강제)
-    if (isBox && wallet.free_tickets < count) return toast.error(wallet.paid_tickets >= count ? t("gacha_free_only") : t("gacha_insufficient"));
-    if (!isBox && wallet.free_tickets + wallet.paid_tickets < count) return toast.error(t("gacha_insufficient"));
+    if (!canDraw(count)) return toast.error(t("gacha_insufficient"));
     busyRef.current = true;
     sfxDone.current = new Set();
     setStage("drawing");
@@ -132,7 +130,6 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
         void refresh(); // 소진·종료 반영
         return toast.error(t("gacha_sold_out"));
       }
-      if (res.reason === "need_free_tickets") return toast.error(t("gacha_free_only"));
       return toast.error(res.reason === "insufficient_tickets" ? t("gacha_insufficient") : t("load_failed"));
     }
     const sorted = [...res.results].sort((a, b) => GRADE_ORDER[a.grade] - GRADE_ORDER[b.grade]);
@@ -156,18 +153,15 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
   const celebrate = stage === "reveal" && (bestGrade === "S" || bestGrade === "A") && flipped.has(cards.length - 1) ? bestGrade : null;
   const cpSum = cards.reduce((s, c) => s + (c.reward?.cp ?? 0), 0);
   const itemCards = cards.filter((c) => c.reward?.item);
+  // 드로우 티켓 단일 표시 (v2.3 통합 — 무상/유상 구분 폐지, 내부 원장만 출처 유지)
+  const totalTickets = wallet.free_tickets + wallet.paid_tickets;
   const ticketChip = (
     <span className="flex items-center gap-1 rounded-full bg-surface-1 px-3 py-1.5 text-[12px] font-black text-fg ring-1 ring-hairline">
       <Ticket className="h-4 w-4 text-primary-400" />
-      <span className="text-[10.5px] font-bold text-subtle">{t("gacha_free_short")}</span>
-      <span className="tabular-nums">{wallet.free_tickets}</span>
-      <span className="text-subtle">·</span>
-      <span className="text-[10.5px] font-bold text-subtle">{t("gacha_paid_short")}</span>
-      <span className="tabular-nums text-muted">{wallet.paid_tickets}</span>
+      <span className="tabular-nums">{totalTickets}</span>
     </span>
   );
-  // 뽑기 가능 여부 — 실물 박스는 무상 전용 (버튼 비활성 + 하단 획득 가이드)
-  const canDraw = (count: number) => (isBox ? wallet.free_tickets >= count : wallet.free_tickets + wallet.paid_tickets >= count);
+  const canDraw = (count: number) => totalTickets >= count;
 
   return (
     <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-safe pb-safe pt-safe">
@@ -217,7 +211,6 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
             {(event.description[lang] || event.description.ko) && (
               <p className="mt-1 text-[12px] text-muted break-keep">{event.description[lang] || event.description.ko}</p>
             )}
-            {isBox && <p className="mt-1 text-[11px] font-bold text-gold break-keep">{t("gacha_free_only")}</p>}
           </div>
 
           {/* 카드 스테이지 */}
@@ -324,10 +317,8 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
                 </button>
               </div>
               {!canDraw(1) && (
-                // 뽑을 수 없는 상태 — 획득 경로 안내 (실물 박스에서 유상만 보유한 경우 포함)
-                <p className="text-center text-[12px] font-bold leading-snug text-gold break-keep">
-                  {isBox && wallet.paid_tickets > 0 ? t("gacha_free_only") : t("gacha_earn_hint")}
-                </p>
+                // 뽑을 수 없는 상태 — 획득 경로 안내
+                <p className="text-center text-[12px] font-bold leading-snug text-gold break-keep">{t("gacha_earn_hint")}</p>
               )}
               {/* 확률 공시 접근성 — 링크가 아닌 버튼으로 노출 (공시 의무 대응) */}
               <div className="flex items-center justify-center gap-2">

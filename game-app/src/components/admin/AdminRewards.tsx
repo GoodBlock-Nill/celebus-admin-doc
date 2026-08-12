@@ -115,7 +115,7 @@ export default function AdminRewards({
         {/* 가챠 이용권 지급표 — 구간 + 그 외 전원 */}
         <div>
           <SubHead
-            label="가챠 이용권 지급표 (무상)"
+            label="드로우 티켓 지급표"
             overridden={value?.weeklyTickets !== undefined}
             onReset={() => patch({}, "weeklyTickets")}
           />
@@ -182,9 +182,9 @@ export default function AdminRewards({
 
       {/* 유상 이용권 가격 */}
       <div className="mt-6">
-        <SubHead label="유상 이용권 가격" overridden={value?.ticketPrice !== undefined} onReset={() => patch({}, "ticketPrice")} />
+        <SubHead label="드로우 티켓 가격 (상점 판매가)" overridden={value?.ticketPrice !== undefined} onReset={() => patch({}, "ticketPrice")} />
         <label className="flex items-center gap-2 text-[13.5px] text-muted">
-          <span className="shrink-0">이용권 1장 (재화 가챠 전용)</span>
+          <span className="shrink-0">티켓 1장</span>
           <input
             value={value?.ticketPrice !== undefined ? String(value.ticketPrice) : ""}
             onChange={(e) => (e.target.value === "" ? patch({}, "ticketPrice") : patch({ ticketPrice: Math.max(1, int(e.target.value)) }))}
@@ -198,7 +198,7 @@ export default function AdminRewards({
 
       <p className="mt-4 rounded-[10px] bg-gold/10 px-3.5 py-2.5 text-[12.5px] leading-relaxed text-gold">
         ⚠️ 이 표는 유저가 <b>수령하는 시점</b>에 적용돼요. 주 종료 후 변경하면 아직 수령하지 않은 유저에게 변경값이 적용되니, 지난주 보상
-        조건을 바꾸려는 게 아니라면 주 시작 전에 변경해 주세요. CP·이용권 모두 두 모드(일반/아이템)에 각각 지급돼요.
+        조건을 바꾸려는 게 아니라면 주 시작 전에 변경해 주세요. CP·티켓 모두 두 모드(일반/아이템)에 각각 지급돼요.
       </p>
     </Card>
   );
