@@ -1,8 +1,12 @@
 "use client";
 
-// 가챠 카드 1장 — 뒷면(로고+홀로 시머) ↔ 앞면(등급 글로우+상품) CSS 3D 플립.
-// 연출 정책: docs/weekly-rank-prize-reward-plan.md §5-2 (수집·도감 요소 없음 — 뽑기 연출 수단으로만 사용)
+// 럭키드로우 카드 1장 — 뒷면(로고+홀로 시머) ↔ 앞면 CSS 3D 플립.
+// 앞면은 관리자가 업로드한 카드 이미지로 전체를 채우고(없으면 보상 아트 폴백),
+// 카드 안에는 텍스트를 두지 않으며 보상명은 카드 하단(밖)에 표기 (사용자 결정 2026-08-12).
+// 등급(S~D)은 내부 분류로만 쓰고 유저에게 글자로 노출하지 않는다 — 색 연출(글로우·컨페티)로만 희소성 표현.
+import { Gift } from "lucide-react";
 import type { GachaDrawCard, GachaGrade } from "@/lib/game-api";
+import { useLang } from "./LangProvider";
 
 export const GRADE_COLORS: Record<GachaGrade, string> = {
   S: "#f5c451", // 골드
@@ -19,7 +23,7 @@ export function rewardLabel(card: GachaDrawCard, t: (k: string) => string): stri
   return "";
 }
 
-// 보상 아이콘 — 재화·아이템은 실아트, 실물은 상품 이미지(image_url) 우선
+// 재화 보상 폴백 아트 — 관리자 카드 이미지가 없을 때 중앙에 표시
 const ITEM_ART: Record<string, string> = {
   heart: "/items/heart.png",
   bomb: "/items/item-bomb.png",
@@ -29,7 +33,6 @@ const ITEM_ART: Record<string, string> = {
 };
 
 function rewardArt(card: GachaDrawCard): string | null {
-  if (card.image_url) return card.image_url;
   if (card.reward?.cp) return "/currency.png";
   if (card.reward?.item) return ITEM_ART[card.reward.item] ?? null;
   return null;
@@ -40,73 +43,83 @@ export default function GachaCard({
   flipped,
   glowing,
   size,
-  lang,
   onTap,
 }: {
   card: GachaDrawCard | null; // null = 뒷면 전용 (대기 연출)
   flipped: boolean;
   glowing?: boolean; // 플립 직전 긴장 연출 — 등급 색 글로우
   size: "lg" | "sm";
-  lang: "ko" | "en" | "ja";
   onTap?: () => void;
 }) {
+  const { t, lang } = useLang();
   const dim = size === "lg" ? "h-[220px] w-[156px]" : "h-[104px] w-[74px]";
   const color = card ? GRADE_COLORS[card.grade] : "#8b5cf6";
   const prizeName = card ? card.prize[lang] || card.prize.ko || "" : "";
+  // 카드 하단 보상 라벨 — 재화는 수량 표기(+100 CP), 실물은 상품명
+  const label = card ? (card.reward ? rewardLabel(card, t) : prizeName) : "";
+  const art = card ? rewardArt(card) : null;
 
   return (
-    <button
-      type="button"
-      onClick={onTap}
-      disabled={!onTap}
-      aria-label={flipped && card ? `${card.grade} — ${prizeName}` : undefined}
-      className={`gacha-card relative shrink-0 ${dim} ${flipped ? "flipped" : ""} ${onTap ? "cursor-pointer" : "cursor-default"}`}
-    >
-      <div className="gacha-card-inner relative h-full w-full">
-        {/* 뒷면 — 보라 그라데이션 + 로고 + 홀로 시머 */}
-        <div
-          className={`gacha-face absolute inset-0 overflow-hidden rounded-[14px] ring-1 ring-white/20 ${glowing ? "gacha-glow" : ""}`}
-          style={{ background: "linear-gradient(160deg, #2a2140 0%, #4a2f8f 55%, #241b38 100%)", "--glow": color } as React.CSSProperties}
-        >
-          <div className="flex h-full w-full flex-col items-center justify-center gap-1">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/celeb-title.png" alt="" className={`${size === "lg" ? "w-[70%]" : "w-[80%]"} object-contain opacity-90`} />
-            <span className={`font-black tracking-widest text-white/35 ${size === "lg" ? "text-[11px]" : "text-[7px]"}`}>V01D POP</span>
-          </div>
-          <div className="gacha-holo pointer-events-none absolute inset-0" />
-        </div>
-
-        {/* 앞면 — 등급색 틴트 배경 + 보상 실아트 + 상품명 */}
-        <div
-          className="gacha-face gacha-front absolute inset-0 overflow-hidden rounded-[14px]"
-          style={{
-            background: `radial-gradient(120% 90% at 50% 0%, ${color}30 0%, transparent 55%), linear-gradient(180deg, ${color}14 0%, var(--color-surface-2) 70%)`,
-            boxShadow: flipped ? `0 0 ${size === "lg" ? 26 : 12}px ${color}66, inset 0 0 0 2px ${color}` : undefined,
-          }}
-        >
-          {card && (
-            <div className={`flex h-full w-full flex-col items-center justify-center ${size === "lg" ? "gap-1.5 p-3" : "gap-0.5 p-1"}`}>
-              <span
-                className={`font-black leading-none ${size === "lg" ? "text-[30px]" : "text-[14px]"}`}
-                style={{ color, textShadow: `0 0 14px ${color}88` }}
-              >
-                {card.grade}
-              </span>
-              {rewardArt(card) ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={rewardArt(card)!}
-                  alt=""
-                  className={`${size === "lg" ? "h-16 w-16" : "h-7 w-7"} rounded-[8px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.4)]`}
-                />
-              ) : null}
-              <span className={`text-center font-black leading-tight text-fg break-keep ${size === "lg" ? "text-[13.5px]" : "text-[8.5px]"}`}>
-                {prizeName}
-              </span>
+    <div className={`flex shrink-0 flex-col items-center ${size === "lg" ? "gap-2" : "gap-1"}`}>
+      <button
+        type="button"
+        onClick={onTap}
+        disabled={!onTap}
+        aria-label={flipped && card ? `${prizeName || label}` : undefined}
+        className={`gacha-card relative shrink-0 ${dim} ${flipped ? "flipped" : ""} ${onTap ? "cursor-pointer" : "cursor-default"}`}
+      >
+        <div className="gacha-card-inner relative h-full w-full">
+          {/* 뒷면 — 보라 그라데이션 + 로고 + 홀로 시머 */}
+          <div
+            className={`gacha-face absolute inset-0 overflow-hidden rounded-[14px] ring-1 ring-white/20 ${glowing ? "gacha-glow" : ""}`}
+            style={{ background: "linear-gradient(160deg, #2a2140 0%, #4a2f8f 55%, #241b38 100%)", "--glow": color } as React.CSSProperties}
+          >
+            <div className="flex h-full w-full flex-col items-center justify-center gap-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/celeb-title.png" alt="" className={`${size === "lg" ? "w-[70%]" : "w-[80%]"} object-contain opacity-90`} />
+              <span className={`font-black tracking-widest text-white/35 ${size === "lg" ? "text-[11px]" : "text-[7px]"}`}>V01D POP</span>
             </div>
-          )}
+            <div className="gacha-holo pointer-events-none absolute inset-0" />
+          </div>
+
+          {/* 앞면 — 관리자 업로드 카드 이미지(전체 채움) > 보상 아트 폴백. 텍스트 없음 */}
+          <div
+            className="gacha-face gacha-front absolute inset-0 overflow-hidden rounded-[14px]"
+            style={{
+              background: `radial-gradient(120% 90% at 50% 0%, ${color}30 0%, transparent 55%), linear-gradient(180deg, ${color}14 0%, var(--color-surface-2) 70%)`,
+              boxShadow: flipped ? `0 0 ${size === "lg" ? 26 : 12}px ${color}66, inset 0 0 0 2px ${color}` : undefined,
+            }}
+          >
+            {card &&
+              (card.image_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={card.image_url} alt="" className="absolute inset-0 h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center">
+                  {art ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={art}
+                      alt=""
+                      className={`${size === "lg" ? "h-24 w-24" : "h-10 w-10"} object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.45)]`}
+                    />
+                  ) : (
+                    <Gift className={size === "lg" ? "h-16 w-16" : "h-7 w-7"} style={{ color }} strokeWidth={1.5} />
+                  )}
+                </div>
+              ))}
+          </div>
         </div>
-      </div>
-    </button>
+      </button>
+
+      {/* 보상 라벨 — 카드 하단, 플립 후 표시 */}
+      <span
+        className={`text-center font-black leading-tight break-keep transition-opacity duration-300 ${flipped && card ? "opacity-100" : "opacity-0"} ${
+          size === "lg" ? "max-w-[170px] text-[14px] text-gold" : "w-[74px] text-[9px] text-fg"
+        }`}
+      >
+        {flipped && card ? label : " "}
+      </span>
+    </div>
   );
 }

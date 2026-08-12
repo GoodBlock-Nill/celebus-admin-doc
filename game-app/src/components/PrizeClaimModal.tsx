@@ -89,9 +89,7 @@ export default function PrizeClaimModal({
                 return (
                   <div key={w.id} className="rounded-[14px] bg-surface-1 px-3.5 py-3 ring-1 ring-hairline">
                     <div className="flex items-center gap-2">
-                      <span className="text-[15px] font-black" style={{ color: GRADE_COLORS[grade] }}>
-                        {grade}
-                      </span>
+                      <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: GRADE_COLORS[grade] }} />
                       <span className="min-w-0 flex-1 truncate text-[13.5px] font-black text-fg">
                         {w.snapshot.prize?.[lang] || w.snapshot.prize?.ko || ""}
                       </span>

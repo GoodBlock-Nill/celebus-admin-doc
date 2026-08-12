@@ -223,21 +223,20 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
                     className={`gacha-float ${i === 1 ? "z-10 -mx-8" : "scale-90 opacity-80"}`}
                     style={{ "--tilt": `${stage === "drawing" ? 0 : tilt}deg`, animationDelay: `${i * 0.4}s` } as React.CSSProperties}
                   >
-                    <GachaCard card={null} flipped={false} glowing={stage === "drawing"} size="lg" lang={lang} />
+                    <GachaCard card={null} flipped={false} glowing={stage === "drawing"} size="lg" />
                   </div>
                 ))}
               </div>
             ) : cards.length === 1 ? (
               <div className="gacha-reveal-pop flex flex-col items-center gap-3">
-                <GachaCard card={cards[0]} flipped={flipped.has(0)} glowing={!flipped.has(0)} size="lg" lang={lang} onTap={() => flipOne(0)} />
+                <GachaCard card={cards[0]} flipped={flipped.has(0)} glowing={!flipped.has(0)} size="lg" onTap={() => flipOne(0)} />
                 {!allFlipped && <p className="text-[12px] font-bold text-muted">{t("gacha_tap_flip")}</p>}
-                {allFlipped && <p className="text-[15px] font-black text-gold">{rewardLabel(cards[0], t)}</p>}
               </div>
             ) : (
               <div className="gacha-reveal-pop flex flex-col items-center gap-3">
-                <div className="grid grid-cols-5 gap-1.5">
+                <div className="grid grid-cols-5 gap-x-1.5 gap-y-1">
                   {cards.map((c, i) => (
-                    <GachaCard key={c.draw_id} card={c} flipped={flipped.has(i)} glowing={!flipped.has(i)} size="sm" lang={lang} onTap={() => flipOne(i)} />
+                    <GachaCard key={c.draw_id} card={c} flipped={flipped.has(i)} glowing={!flipped.has(i)} size="sm" onTap={() => flipOne(i)} />
                   ))}
                 </div>
                 {!allFlipped ? (

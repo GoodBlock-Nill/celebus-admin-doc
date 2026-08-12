@@ -17,6 +17,7 @@ type PoolItem = {
   id?: string;
   grade: Grade;
   prize: L10n;
+  image_url?: string | null; // 결과 카드 앞면 이미지 (업로드 — 없으면 앱이 보상 아트 폴백)
   is_physical: boolean;
   fulfillment: Fulfillment; // 모바일 티켓 = CELEBUS 앱 지급 (주소·수령 정보 불필요)
   requires_address: boolean;
@@ -71,7 +72,26 @@ export default function AdminGacha() {
   const [form, setForm] = useState<Form | null>(null);
   const [winnersFor, setWinnersFor] = useState<string | null>(null); // 당첨자 패널이 열린 이벤트
   const [busy, setBusy] = useState(false);
+  const [uploadingIdx, setUploadingIdx] = useState<number | null>(null); // 카드 이미지 업로드 중인 행
   const [msg, setMsg] = useState<string | null>(null);
+
+  // 결과 카드 이미지 업로드 — 공개 버킷 저장 후 URL을 행에 반영 (풀 저장 시 함께 기록)
+  const uploadCard = async (i: number, file?: File | null) => {
+    if (!file || uploadingIdx != null) return;
+    if (file.size > 3 * 1024 * 1024) return setMsg("이미지가 3MB를 넘어요 — 줄여서 다시 올려 주세요.");
+    setUploadingIdx(i);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/gacha/image", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data?.url) setPool(i, { image_url: data.url });
+      else throw new Error();
+    } catch {
+      setMsg("업로드 실패 — JPG/PNG/WebP 3MB 이하만 가능해요.");
+    }
+    setUploadingIdx(null);
+  };
 
   const load = () =>
     aget<{ events: (GachaEvent & { id: string })[] }>("/api/admin/gacha")
@@ -127,6 +147,7 @@ export default function AdminGacha() {
           id: p.id,
           grade: p.grade,
           prize: p.prize,
+          image_url: p.image_url || "",
           is_physical: p.is_physical,
           fulfillment: p.fulfillment,
           requires_address: p.requires_address,
@@ -260,6 +281,27 @@ export default function AdminGacha() {
                         <option key={g}>{g}</option>
                       ))}
                     </select>
+                    {/* 결과 카드 이미지 — 썸네일 클릭 = 업로드/교체 */}
+                    <label className="relative h-10 w-7 shrink-0 cursor-pointer overflow-hidden rounded-[6px] bg-surface-1 ring-1 ring-hairline" title="결과 카드 이미지 업로드 (5:7 권장)">
+                      {p.image_url ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={p.image_url} alt="" className="h-full w-full object-cover" />
+                      ) : (
+                        <span className="flex h-full w-full items-center justify-center text-[13px] text-subtle">{uploadingIdx === i ? "…" : "+"}</span>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="hidden"
+                        disabled={uploadingIdx != null}
+                        onChange={(e) => void uploadCard(i, e.target.files?.[0])}
+                      />
+                    </label>
+                    {p.image_url && (
+                      <button type="button" onClick={() => setPool(i, { image_url: null })} title="이미지 제거" className="shrink-0 text-subtle hover:text-danger">
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    )}
                     <input
                       value={p.prize.ko ?? ""}
                       onChange={(e) => setPool(i, { prize: { ...p.prize, ko: e.target.value } })}
@@ -387,7 +429,7 @@ export default function AdminGacha() {
             <p className="text-[12.5px] leading-relaxed text-muted">
               {form.kind === "digital"
                 ? `확률 = 가중치 ÷ 전체 가중치 합(${totalWeight.toLocaleString()}). 저장 즉시 유저 확률 공시에 반영돼요. 꽝 없음 — 모든 행이 보상을 지급해요.`
-                : "박스형 — 남은 상품 수에 비례한 균등 확률, 뽑힐 때마다 소진되고 전체 소진 시 자동 종료돼요. 드로우 티켓은 종류 구분 없이 사용돼요(v2.3 통합). 배송형 실물 당첨은 수령 기한 내 정보 미입력 시 무효 처리돼요. 게시 후에는 풀·재고를 수정할 수 없으니 검토 후 게시해 주세요."}
+                : "남은 상품 수에 비례한 균등 확률로 뽑히고, 소진되면 자동 종료돼요. 각 행의 썸네일을 눌러 결과 카드 이미지를 올릴 수 있어요 (세로형 5:7 권장, 예: 500×700 — 없으면 앱이 보상 아트로 표시). 배송형 실물 당첨은 수령 기한 내 정보 미입력 시 무효 처리돼요. 게시 후에는 풀·재고를 수정할 수 없으니 검토 후 게시해 주세요."}
             </p>
           </div>
         </Card>

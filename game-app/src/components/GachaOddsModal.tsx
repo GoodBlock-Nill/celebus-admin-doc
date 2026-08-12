@@ -33,12 +33,12 @@ export default function GachaOddsModal({ event, onClose }: { event: GachaEvent; 
             const pct = total > 0 ? ((p.weight ?? 0) / total) * 100 : 0;
             return (
               <div key={i} className="flex items-center gap-2.5 rounded-[12px] bg-surface-1 px-3 py-2.5 ring-1 ring-hairline">
-                <span
-                  className="w-6 shrink-0 text-center text-[15px] font-black"
-                  style={{ color: GRADE_COLORS[p.grade] }}
-                >
-                  {p.grade}
-                </span>
+                {p.image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={p.image_url} alt="" className="h-7 w-7 shrink-0 rounded-[6px] object-cover" />
+                ) : (
+                  <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: GRADE_COLORS[p.grade] }} />
+                )}
                 <span className="min-w-0 flex-1 truncate text-[13px] font-bold text-fg">{p.prize[lang] || p.prize.ko || ""}</span>
                 {isBox ? (
                   <span className={`shrink-0 text-[13px] font-black tabular-nums ${(p.remaining_qty ?? 0) === 0 ? "text-subtle line-through" : "text-muted"}`}>
