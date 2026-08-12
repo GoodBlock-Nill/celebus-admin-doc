@@ -53,6 +53,8 @@ export interface GameConfig {
     weeklyTickets: { tiers: { from: number; to: number; tickets: number }[]; others: number };
     ticketPrice: number;
   };
+  // 럭키드로우 재화 카드 기본 이미지 — 풀 행에 개별 이미지가 없을 때 재화 종류별로 재사용 (관리자 업로드)
+  gachaCards: Partial<Record<"cp" | "heart" | "bomb" | "line" | "shuffle" | "time", string>>;
   // 이어하기 하트 (일반 매치 전용) — 판당 기본 start개 + 상점 구매 보유분. slots=표시 슬롯 수, maxPerRun=판당 사용 상한(랭킹 공정성), price=상점 폴백 표시가(권위는 카탈로그) — 관리자 튜닝
   hearts: { start: number; slots: number; maxPerRun: number; continueSec: number; price: number };
   // CELEB PASS 시즌 누적 트랙(Wave A) — 판당 XP = xpBase + floor(min(경과초,xpSecCap)/xpSecDiv), 성과 무관.
@@ -167,6 +169,7 @@ export const GAME_CONFIG: GameConfig = {
     },
     ticketPrice: 500,
   },
+  gachaCards: {},
   hearts: { start: 1, slots: 6, maxPerRun: 3, continueSec: 30, price: 5 },
   coasting: { warmupSec: 15, streakT1Days: 3, streakT1Sec: 5, streakT2Days: 7, streakT2Sec: 10, graceThreshold: 0.7, graceSec: 5, gracePerRun: 1 },
   pass: {
@@ -216,7 +219,7 @@ export function signupAvatars(): AvatarDef[] {
 type ConfigOverride = Partial<Omit<GameConfig, "items">>;
 export function mergeRemoteConfig(override: ConfigOverride | null | undefined): void {
   if (!override || typeof override !== "object") return;
-  const obj = ["theme", "game", "audio", "pacing", "levels", "daily", "home", "match", "specials", "scoring", "hearts", "rewards", "missions", "integrity", "coasting", "pass"] as const;
+  const obj = ["theme", "game", "audio", "pacing", "levels", "daily", "home", "match", "specials", "scoring", "hearts", "rewards", "gachaCards", "missions", "integrity", "coasting", "pass"] as const;
   for (const k of obj) {
     const v = override[k];
     if (v && typeof v === "object" && !Array.isArray(v)) Object.assign(GAME_CONFIG[k], v);

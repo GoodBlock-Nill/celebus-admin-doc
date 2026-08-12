@@ -2,6 +2,7 @@
 
 // 뽑기 확률 공시 모달 — 확률형 아이템 공시 의무 대응 (가중치 → % 환산, 실제 추첨 풀과 항상 일치)
 import { useRef } from "react";
+import { GAME_CONFIG } from "@/lib/game-config";
 import type { GachaEvent } from "@/lib/game-api";
 import { useFocusTrap } from "@/lib/use-focus-trap";
 import { GRADE_COLORS } from "./GachaCard";
@@ -33,9 +34,13 @@ export default function GachaOddsModal({ event, onClose }: { event: GachaEvent; 
             const pct = total > 0 ? ((p.weight ?? 0) / total) * 100 : 0;
             return (
               <div key={i} className="flex items-center gap-2.5 rounded-[12px] bg-surface-1 px-3 py-2.5 ring-1 ring-hairline">
-                {p.image_url ? (
+                {(p.image_url ?? (p.reward_payload?.cp != null ? GAME_CONFIG.gachaCards.cp : p.reward_payload?.item ? GAME_CONFIG.gachaCards[p.reward_payload.item as keyof typeof GAME_CONFIG.gachaCards] : null)) ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={p.image_url} alt="" className="h-7 w-7 shrink-0 rounded-[6px] object-cover" />
+                  <img
+                    src={p.image_url ?? (p.reward_payload?.cp != null ? GAME_CONFIG.gachaCards.cp : GAME_CONFIG.gachaCards[p.reward_payload?.item as keyof typeof GAME_CONFIG.gachaCards])}
+                    alt=""
+                    className="h-7 w-7 shrink-0 rounded-[6px] object-cover"
+                  />
                 ) : (
                   <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: GRADE_COLORS[p.grade] }} />
                 )}

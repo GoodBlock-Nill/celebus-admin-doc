@@ -5,6 +5,7 @@
 // 카드 안에는 텍스트를 두지 않으며 보상명은 카드 하단(밖)에 표기 (사용자 결정 2026-08-12).
 // 등급(S~D)은 내부 분류로만 쓰고 유저에게 글자로 노출하지 않는다 — 색 연출(글로우·컨페티)로만 희소성 표현.
 import { Gift } from "lucide-react";
+import { GAME_CONFIG } from "@/lib/game-config";
 import type { GachaDrawCard, GachaGrade } from "@/lib/game-api";
 import { useLang } from "./LangProvider";
 
@@ -35,6 +36,15 @@ export const ITEM_ART: Record<string, string> = {
 function rewardArt(card: GachaDrawCard): string | null {
   if (card.reward?.cp) return "/currency.png";
   if (card.reward?.item) return ITEM_ART[card.reward.item] ?? null;
+  return null;
+}
+
+// 카드 앞면 이미지 — 행별 업로드 > 재화 기본 카드 이미지(관리자 등록, 재사용) 순
+export function cardImage(card: GachaDrawCard): string | null {
+  if (card.image_url) return card.image_url;
+  const d = GAME_CONFIG.gachaCards;
+  if (card.reward?.cp != null) return d.cp ?? null;
+  if (card.reward?.item) return d[card.reward.item as keyof typeof d] ?? null;
   return null;
 }
 
@@ -91,9 +101,9 @@ export default function GachaCard({
             }}
           >
             {card &&
-              (card.image_url ? (
+              (cardImage(card) ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={card.image_url} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                <img src={cardImage(card)!} alt="" className="absolute inset-0 h-full w-full object-cover" />
               ) : (
                 <div className="flex h-full w-full items-center justify-center">
                   {art ? (

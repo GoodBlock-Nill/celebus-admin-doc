@@ -53,7 +53,7 @@ const int1 = (v: string) => Math.max(1, Math.floor(Number(v) || 1));
 const ITEM_LABEL: Record<string, string> = Object.fromEntries(ITEM_OPTIONS.map((o) => [o.value, o.label]));
 
 // 결과 카드 미리보기 — 유저 화면(GachaCard 앞면)과 동일한 규격·스타일. 이미지 비율이 다르면 잘리는 모습이 그대로 보인다.
-function CardPreview({ p }: { p: PoolItem }) {
+function CardPreview({ p, defaults }: { p: PoolItem; defaults: Record<string, string | undefined> }) {
   const color = GRADE_COLORS[p.grade];
   const label = p.is_physical
     ? p.prize.ko || "(상품명)"
@@ -61,6 +61,8 @@ function CardPreview({ p }: { p: PoolItem }) {
       ? `+${p.reward_payload.cp.toLocaleString()} CP`
       : `${ITEM_LABEL[p.reward_payload?.item ?? "heart"]} ×${p.reward_payload?.qty ?? 1}`;
   const art = p.reward_payload?.cp != null ? "/currency.png" : p.reward_payload?.item ? ITEM_ART[p.reward_payload.item] : null;
+  // 폴백 체인: 행별 업로드 > 재화 기본 카드 이미지 (유저 화면과 동일)
+  const img = p.image_url ?? (p.reward_payload?.cp != null ? defaults.cp : p.reward_payload?.item ? defaults[p.reward_payload.item] : undefined);
   return (
     <div className="flex w-[110px] shrink-0 flex-col items-center gap-1">
       <div
@@ -70,9 +72,9 @@ function CardPreview({ p }: { p: PoolItem }) {
           boxShadow: `0 0 14px ${color}55, inset 0 0 0 2px ${color}`,
         }}
       >
-        {p.image_url ? (
+        {img ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={p.image_url} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <img src={img} alt="" className="absolute inset-0 h-full w-full object-cover" />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
             {art ? (
@@ -113,6 +115,43 @@ export default function AdminGacha() {
   const [busy, setBusy] = useState(false);
   const [uploadingIdx, setUploadingIdx] = useState<number | null>(null); // 카드 이미지 업로드 중인 행
   const [msg, setMsg] = useState<string | null>(null);
+  // 재화 카드 기본 이미지 — 한 번 등록하면 개별 이미지 없는 재화 행에 자동 재사용 (game_config.gachaCards)
+  const [cardDefaults, setCardDefaults] = useState<Record<string, string | undefined>>({});
+  const [defaultsUploading, setDefaultsUploading] = useState<string | null>(null);
+
+  const loadDefaults = () =>
+    aget<{ config?: { gachaCards?: Record<string, string> } }>("/api/admin/config")
+      .then((d) => setCardDefaults(d.config?.gachaCards ?? {}))
+      .catch(() => {});
+
+  const saveDefaults = async (next: Record<string, string | undefined>) => {
+    setCardDefaults(next);
+    try {
+      // 통짜 오버레이 — 최신 config를 읽어 gachaCards만 병합 후 저장
+      const cur = await aget<{ config?: Record<string, unknown> }>("/api/admin/config");
+      const clean = Object.fromEntries(Object.entries(next).filter(([, v]) => v));
+      await asend("/api/admin/config", "PUT", { config: { ...(cur.config ?? {}), gachaCards: clean } });
+    } catch {
+      setMsg("기본 이미지 저장에 실패했어요.");
+    }
+  };
+
+  const uploadDefault = async (key: string, file?: File | null) => {
+    if (!file || defaultsUploading) return;
+    if (file.size > 3 * 1024 * 1024) return setMsg("이미지가 3MB를 넘어요 — 줄여서 다시 올려 주세요.");
+    setDefaultsUploading(key);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/admin/gacha/image", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data?.url) await saveDefaults({ ...cardDefaults, [key]: data.url });
+      else throw new Error();
+    } catch {
+      setMsg("업로드 실패 — JPG/PNG/WebP 3MB 이하만 가능해요.");
+    }
+    setDefaultsUploading(null);
+  };
 
   // 결과 카드 이미지 업로드 — 공개 버킷 저장 후 URL을 행에 반영 (풀 저장 시 함께 기록)
   const uploadCard = async (i: number, file?: File | null) => {
@@ -138,6 +177,7 @@ export default function AdminGacha() {
       .catch(() => {});
   useEffect(() => {
     void load();
+    void loadDefaults();
   }, []);
 
   const openEdit = (ev?: GachaEvent & { id: string }) => {
@@ -260,6 +300,43 @@ export default function AdminGacha() {
             ))}
           </div>
         )}
+      </Card>
+
+      {/* 재화 카드 기본 이미지 — 개별 업로드 없는 재화 행에 자동 적용 (교체 시 전체 이벤트 즉시 반영) */}
+      <Card title="재화 카드 기본 이미지">
+        <div className="flex flex-wrap gap-3">
+          {([["cp", "CP"], ["heart", "하트"], ["bomb", "폭탄"], ["line", "라인"], ["shuffle", "셔플"], ["time", "시간+"]] as const).map(([key, label]) => (
+            <div key={key} className="flex w-[92px] flex-col items-center gap-1.5">
+              <label className="relative h-[129px] w-[92px] cursor-pointer overflow-hidden rounded-[12px] bg-surface-2 ring-1 ring-hairline" title={`${label} 기본 카드 이미지 (5:7 권장)`}>
+                {cardDefaults[key] ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={cardDefaults[key]} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <span className="flex h-full w-full items-center justify-center text-[20px] text-subtle">{defaultsUploading === key ? "…" : "+"}</span>
+                )}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="hidden"
+                  disabled={defaultsUploading != null}
+                  onChange={(e) => void uploadDefault(key, e.target.files?.[0])}
+                />
+              </label>
+              <div className="flex items-center gap-1">
+                <span className="text-[12px] font-bold text-muted">{label}</span>
+                {cardDefaults[key] && (
+                  <button type="button" onClick={() => void saveDefaults({ ...cardDefaults, [key]: undefined })} title="제거" className="text-subtle hover:text-danger">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-[12.5px] leading-relaxed text-muted break-keep">
+          재화 보상(CP·아이템)의 결과 카드에 기본으로 쓰이는 이미지예요 (세로형 5:7, 권장 500×700px). 풀 행에 개별 이미지를 올리면
+          그쪽이 우선하고, 여기서 교체하면 개별 이미지가 없는 모든 이벤트에 즉시 반영돼요. 업로드 즉시 저장돼요.
+        </p>
       </Card>
 
       {form && (
@@ -475,7 +552,7 @@ export default function AdminGacha() {
               </p>
               <div className="scrollbar-none flex gap-3 overflow-x-auto pb-1">
                 {form.pool.map((p, i) => (
-                  <CardPreview key={i} p={p} />
+                  <CardPreview key={i} p={p} defaults={cardDefaults} />
                 ))}
               </div>
             </div>
