@@ -19,6 +19,22 @@ export function rewardLabel(card: GachaDrawCard, t: (k: string) => string): stri
   return "";
 }
 
+// 보상 아이콘 — 재화·아이템은 실아트, 실물은 상품 이미지(image_url) 우선
+const ITEM_ART: Record<string, string> = {
+  heart: "/items/heart.png",
+  bomb: "/items/item-bomb.png",
+  line: "/items/item-line.png",
+  shuffle: "/items/item-shuffle.png",
+  time: "/items/item-time.png",
+};
+
+function rewardArt(card: GachaDrawCard): string | null {
+  if (card.image_url) return card.image_url;
+  if (card.reward?.cp) return "/currency.png";
+  if (card.reward?.item) return ITEM_ART[card.reward.item] ?? null;
+  return null;
+}
+
 export default function GachaCard({
   card,
   flipped,
@@ -60,24 +76,31 @@ export default function GachaCard({
           <div className="gacha-holo pointer-events-none absolute inset-0" />
         </div>
 
-        {/* 앞면 — 등급 색 테두리 + 상품명 + 보상 */}
+        {/* 앞면 — 등급색 틴트 배경 + 보상 실아트 + 상품명 */}
         <div
-          className="gacha-face gacha-front absolute inset-0 overflow-hidden rounded-[14px] bg-surface-2"
-          style={{ boxShadow: flipped ? `0 0 ${size === "lg" ? 26 : 12}px ${color}66, inset 0 0 0 2px ${color}` : undefined }}
+          className="gacha-face gacha-front absolute inset-0 overflow-hidden rounded-[14px]"
+          style={{
+            background: `radial-gradient(120% 90% at 50% 0%, ${color}30 0%, transparent 55%), linear-gradient(180deg, ${color}14 0%, var(--color-surface-2) 70%)`,
+            boxShadow: flipped ? `0 0 ${size === "lg" ? 26 : 12}px ${color}66, inset 0 0 0 2px ${color}` : undefined,
+          }}
         >
           {card && (
-            <div className={`flex h-full w-full flex-col items-center justify-center ${size === "lg" ? "gap-2 p-3" : "gap-0.5 p-1"}`}>
+            <div className={`flex h-full w-full flex-col items-center justify-center ${size === "lg" ? "gap-1.5 p-3" : "gap-0.5 p-1"}`}>
               <span
-                className={`font-black ${size === "lg" ? "text-[34px]" : "text-[16px]"}`}
+                className={`font-black leading-none ${size === "lg" ? "text-[30px]" : "text-[14px]"}`}
                 style={{ color, textShadow: `0 0 14px ${color}88` }}
               >
                 {card.grade}
               </span>
-              {card.image_url ? (
+              {rewardArt(card) ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={card.image_url} alt="" className={`${size === "lg" ? "h-16 w-16" : "h-7 w-7"} rounded-[8px] object-cover`} />
+                <img
+                  src={rewardArt(card)!}
+                  alt=""
+                  className={`${size === "lg" ? "h-16 w-16" : "h-7 w-7"} rounded-[8px] object-contain drop-shadow-[0_3px_8px_rgba(0,0,0,0.4)]`}
+                />
               ) : null}
-              <span className={`text-center font-black leading-tight text-fg break-keep ${size === "lg" ? "text-[14px]" : "text-[8.5px]"}`}>
+              <span className={`text-center font-black leading-tight text-fg break-keep ${size === "lg" ? "text-[13.5px]" : "text-[8.5px]"}`}>
                 {prizeName}
               </span>
             </div>

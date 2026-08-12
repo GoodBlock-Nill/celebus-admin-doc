@@ -14,6 +14,17 @@ import ScreenHeader from "./ScreenHeader";
 import { useLang } from "./LangProvider";
 
 const GRADE_ORDER = { D: 0, C: 1, B: 2, A: 3, S: 4 } as const;
+// 상위 등급 당첨 컨페티 — 결정적 배치 (랜덤 미사용, WeeklyResultModal 패턴)
+const CONFETTI_COLORS: Record<"S" | "A", string[]> = {
+  S: ["#f5c451", "#ffd97a", "#f0a53c", "#fff0c0", "#e8b64a"],
+  A: ["#a78bfa", "#c4b5fd", "#8b5cf6", "#ede9fe", "#7c4ddb"],
+};
+const confettiPieces = (grade: "S" | "A") =>
+  Array.from({ length: grade === "S" ? 24 : 16 }, (_, i) => ({
+    left: (i * 61) % 100,
+    color: CONFETTI_COLORS[grade][i % CONFETTI_COLORS[grade].length],
+    delay: (i % 6) * 0.12,
+  }));
 const FLIP_INTERVAL_MS = 300;
 const SINGLE_AUTO_FLIP_MS = 2200;
 const DRAW_SUSPENSE_MS = 1100;
@@ -32,6 +43,7 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
   const [cards, setCards] = useState<GachaDrawCard[]>([]);
   const [flipped, setFlipped] = useState<Set<number>>(new Set());
   const [bonus, setBonus] = useState(false);
+  const [partial, setPartial] = useState<number | null>(null); // 재고 소진으로 요청보다 적게 뽑힌 경우 (뽑은 횟수)
   const [showOdds, setShowOdds] = useState(false);
   const [prizeList, setPrizeList] = useState<PrizeWinner[] | null>(null); // 실물 당첨 수령 모달
   const [showIntro, setShowIntro] = useState(false); // 첫 진입 안내 (닫으면 다시 안 뜸)
@@ -126,6 +138,7 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
     const sorted = [...res.results].sort((a, b) => GRADE_ORDER[a.grade] - GRADE_ORDER[b.grade]);
     setCards(sorted);
     setBonus(res.bonus_ticket);
+    setPartial(res.count < count ? res.count : null); // 재고 소진 부분 뽑기 — 차감도 뽑은 만큼만
     setWallet(res.wallet);
     setFlipped(new Set(reducedMotion() ? sorted.map((_, i) => i) : []));
     setStage("reveal");
@@ -138,6 +151,9 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
   };
 
   const allFlipped = stage === "reveal" && flipped.size >= cards.length;
+  // 최고 등급 카드(정렬상 마지막)가 공개되면 S/A 컨페티 (등급색 팔레트)
+  const bestGrade = cards[cards.length - 1]?.grade;
+  const celebrate = stage === "reveal" && (bestGrade === "S" || bestGrade === "A") && flipped.has(cards.length - 1) ? bestGrade : null;
   const cpSum = cards.reduce((s, c) => s + (c.reward?.cp ?? 0), 0);
   const itemCards = cards.filter((c) => c.reward?.item);
   const ticketChip = (
@@ -155,6 +171,10 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
 
   return (
     <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col px-safe pb-safe pt-safe">
+      {celebrate &&
+        confettiPieces(celebrate).map((p, i) => (
+          <span key={i} className="confetti-piece" style={{ left: `${p.left}%`, background: p.color, animationDelay: `${p.delay}s` }} />
+        ))}
       <ScreenHeader title={t("gacha_title")} onBack={stage === "idle" ? onBack : () => {}} right={ticketChip} />
 
       {loading ? (
@@ -246,6 +266,11 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
           {/* 하단 CTA */}
           {stage === "reveal" && allFlipped ? (
             <div className="mb-4 flex flex-col gap-2">
+              {partial != null && (
+                <p className="text-center text-[12px] font-bold leading-snug text-muted break-keep">
+                  {t("gacha_partial_note").replace(/\{n\}/g, String(partial))}
+                </p>
+              )}
               {bonus && (
                 <p className="flex items-center justify-center gap-1 text-[12.5px] font-black text-primary-400">
                   <Sparkles className="h-4 w-4" /> {t("gacha_bonus_ticket")}
@@ -304,11 +329,18 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
                   {isBox && wallet.paid_tickets > 0 ? t("gacha_free_only") : t("gacha_earn_hint")}
                 </p>
               )}
-              <div className="flex items-center justify-center gap-4">
-                <button onClick={() => setShowOdds(true)} className="text-[12px] font-bold text-muted underline underline-offset-2">
+              {/* 확률 공시 접근성 — 링크가 아닌 버튼으로 노출 (공시 의무 대응) */}
+              <div className="flex items-center justify-center gap-2">
+                <button
+                  onClick={() => setShowOdds(true)}
+                  className="rounded-full bg-surface-1 px-4 py-2 text-[12.5px] font-bold text-fg ring-1 ring-hairline active:scale-95"
+                >
                   {t("gacha_odds")}
                 </button>
-                <button onClick={onOpenShop} className="text-[12px] font-bold text-muted underline underline-offset-2">
+                <button
+                  onClick={onOpenShop}
+                  className="rounded-full bg-surface-1 px-4 py-2 text-[12.5px] font-bold text-muted ring-1 ring-hairline active:scale-95"
+                >
                   {t("gacha_go_shop")}
                 </button>
               </div>

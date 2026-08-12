@@ -100,6 +100,9 @@ export default function Shop({ onBack }: { onBack: () => void }) {
             <div className="mt-0.5 text-[11px] leading-tight text-muted break-keep">{t("gacha_ticket_desc")}</div>
             <div className="mt-1 text-[10px] font-bold text-subtle">
               {t("owned")} {(tickets.free_tickets + tickets.paid_tickets).toLocaleString()}
+              <span className="ml-1 text-subtle/80">
+                ({t("gacha_free_short")} {tickets.free_tickets} · {t("gacha_paid_short")} {tickets.paid_tickets})
+              </span>
             </div>
           </div>
           <button
