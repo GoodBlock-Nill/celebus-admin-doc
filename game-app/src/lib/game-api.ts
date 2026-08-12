@@ -138,7 +138,44 @@ export type RankInfo = {
   total: number | null;
   best_level?: number | null;
   best_score?: number | null;
+  // CELEB PASS (Wave A) — 이번 판 적립 XP·시즌 누적 (서버 계산)
+  pass_xp_gained?: number;
+  pass_xp?: number;
+  pass_season?: string;
 };
+
+// CELEB PASS 현황 — 시즌 XP·수령 레벨 (+월초 7일 유예 중 지난 시즌 미수령분)
+export type PassStatus = {
+  season: string;
+  xp: number;
+  claimed: number[];
+  prev: { season: string; xp: number; claimed: number[] } | null;
+};
+
+export async function fetchPassStatus(): Promise<PassStatus | null> {
+  try {
+    const res = await fetch("/api/pass/status");
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.season ? (data as PassStatus) : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function claimPass(season: string): Promise<{ claimed: number; cp: number; hearts: number; balance: number } | null> {
+  try {
+    const res = await fetch("/api/pass/claim", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ season }),
+    });
+    const data = await res.json();
+    return data?.status === "ok" ? data : null;
+  } catch {
+    return null;
+  }
+}
 
 // 리더보드 모드 키 매핑: UI normal/item ↔ 내부 daily/free
 export type LeaderMode = "normal" | "item";
@@ -146,7 +183,10 @@ export type LeaderPeriod = "week" | "month" | "all"; // KST 기준 — 주간=�
 const modeKey = (m: LeaderMode) => (m === "normal" ? "daily" : "free");
 
 // 게임 시작 — 서버가 matchId+seed 발급(점수 위조 방어). 실패 시 null(→ 로컬 시드로 언랭크 플레이).
-export async function startMatch(mode: "daily" | "free"): Promise<{ matchId: string; seed: number } | null> {
+// 시작 보너스(순항 구간, Wave D) — 서버 판정: 웜업(오늘 첫 판)·출석 스트릭 부스터
+export type StartBonus = { warmupSec: number; streakSec: number; streakDays: number };
+
+export async function startMatch(mode: "daily" | "free"): Promise<{ matchId: string; seed: number; bonus: StartBonus } | null> {
   try {
     const res = await fetch("/api/scores/start", {
       method: "POST",
@@ -156,7 +196,11 @@ export async function startMatch(mode: "daily" | "free"): Promise<{ matchId: str
     if (!res.ok) return null;
     const data = await res.json();
     if (!data?.match_id) return null;
-    return { matchId: String(data.match_id), seed: Number(data.seed) };
+    return {
+      matchId: String(data.match_id),
+      seed: Number(data.seed),
+      bonus: { warmupSec: Number(data.warmup_sec) || 0, streakSec: Number(data.streak_sec) || 0, streakDays: Number(data.streak_days) || 0 },
+    };
   } catch {
     return null;
   }
@@ -170,16 +214,20 @@ export async function submitScore(input: {
   level: number;
   matchId: string | null;
   moves?: unknown[]; // 입력 로그(서버 리플레이 검증용, Step 2a 수집)
+  endReason?: "timeout" | "continue_declined"; // 종료 텔레메트리(밸런스 계측, Wave G)
+  continuesUsed?: number;
+  levelProgress?: number; // 종료 시점 현재 레벨 목표 진행도 0~1
   nickname: string;
   avatar: string;
 }): Promise<RankInfo | null> {
   if (!input.matchId) return null; // 서버 발급 matchId 없이는 랭킹 제출 불가
   try {
-    const { matchId, ...rest } = input;
+    const { matchId, endReason, continuesUsed, levelProgress, ...rest } = input;
     const res = await fetch("/api/scores", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...rest, match_id: matchId }),
+      // undefined 필드는 JSON 직렬화에서 자동 제외 — 구버전 서버와도 호환
+      body: JSON.stringify({ ...rest, match_id: matchId, end_reason: endReason, continues_used: continuesUsed, level_progress: levelProgress }),
     });
     const data = await res.json();
     if (data?.status !== "ok") return null;
@@ -199,9 +247,9 @@ export type MyRank = {
   item_best_level: number | null;
 };
 
-export async function fetchMyRank(period: LeaderPeriod = "all"): Promise<MyRank | null> {
+export async function fetchMyRank(period: LeaderPeriod = "all", offset = 0): Promise<MyRank | null> {
   try {
-    const res = await fetch(`/api/scores/my-rank?period=${period}`);
+    const res = await fetch(`/api/scores/my-rank?period=${period}${offset > 0 ? `&offset=${offset}` : ""}`);
     return (await res.json()) as MyRank;
   } catch {
     return null;
@@ -222,17 +270,68 @@ export async function fetchMemberBoard(mode: LeaderMode): Promise<MemberRow[]> {
   return data as MemberRow[];
 }
 
-export async function fetchLeaderboard(mode: LeaderMode, period: LeaderPeriod = "all"): Promise<LeaderRow[]> {
-  const { data, error } = await sb.rpc("game_leaderboard_period", {
-    p_mode: modeKey(mode),
-    p_period: period,
-    p_limit: 100,
-  });
+export async function fetchLeaderboard(mode: LeaderMode, period: LeaderPeriod = "all", offset = 0): Promise<LeaderRow[]> {
+  // offset 0 = 현재 기간(기존 RPC — 구버전 호환), 1+ = 지난 기간(오프셋 RPC)
+  const { data, error } =
+    offset > 0
+      ? await sb.rpc("game_leaderboard_period_at", { p_mode: modeKey(mode), p_period: period, p_offset: offset, p_limit: 100 })
+      : await sb.rpc("game_leaderboard_period", { p_mode: modeKey(mode), p_period: period, p_limit: 100 });
   if (error || !data) return [];
   return data as LeaderRow[];
 }
 
 export { modeKey };
+
+// ── 홈 팝업 공지 — 게시 중(기간 내) 공지만 공개 뷰로 조회. 홈 마운트마다 호출 = 즉시 반영
+export type L10n = { ko?: string; en?: string; ja?: string };
+export type HomeNotice = {
+  id: string;
+  title: L10n;
+  body: L10n;
+  image_url: string | null;
+  cta_label: L10n;
+  cta_url: string | null;
+  policy: "always" | "daily" | "once";
+  sort: number;
+};
+
+export async function fetchHomeNotices(): Promise<HomeNotice[]> {
+  try {
+    const { data, error } = await sb.from("game_notice_public").select("*");
+    return error || !data ? [] : (data as HomeNotice[]);
+  } catch {
+    return [];
+  }
+}
+
+const kstToday = () => new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+
+// 닫기 이력(localStorage) 필터 — once: 닫으면 영구 숨김 / daily: "오늘 하루 보지 않기" 날짜와 일치 시 숨김
+export function visibleNotices(list: HomeNotice[]): HomeNotice[] {
+  return list
+    .filter((n) => {
+      try {
+        const v = localStorage.getItem(`ntc_hide_${n.id}`);
+        if (!v) return true;
+        if (n.policy === "once") return false;
+        if (n.policy === "daily") return v !== kstToday();
+        return true;
+      } catch {
+        return true;
+      }
+    })
+    .slice(0, 3); // 순차 표시 상한(피로 방지)
+}
+
+// 닫기 이력 기록 — once: 닫는 즉시 / daily: "오늘 하루 보지 않기" 탭 시에만 호출
+export function markNoticeHidden(n: HomeNotice) {
+  try {
+    if (n.policy === "once") localStorage.setItem(`ntc_hide_${n.id}`, "1");
+    else if (n.policy === "daily") localStorage.setItem(`ntc_hide_${n.id}`, kstToday());
+  } catch {
+    /* ignore */
+  }
+}
 
 // 상위 % (1위 = 상위 1%로 표기, 반올림, 최소 1)
 export function topPercent(rank: number, total: number): number {
@@ -443,6 +542,8 @@ export type PrizeWinner = {
   snapshot: { prize?: L10nText; grade?: GachaGrade; nickname?: string; celebus_uid?: string };
   requires_address: boolean;
   fulfillment?: "delivery" | "mobile_ticket"; // 모바일 티켓 = 일정 확정 후 CELEBUS 앱으로 지급 (입력·기한 무효 없음)
+  image_url?: string | null; // 카드 썸네일 (보상내역 리스트)
+  created_at?: string; // 당첨일
   info: { name: string; phone: string; address: string; note: string } | null;
 };
 

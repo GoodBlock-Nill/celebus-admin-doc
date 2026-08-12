@@ -255,6 +255,8 @@ export const messages: Record<Lang, Dict> = {
     more_shop: "아이템 상점",
     more_prizes: "내 보상내역",
     prize_history_empty: "아직 당첨된 실물 상품이 없어요. 럭키드로우에 도전해 보세요!",
+    prize_tab_active: "진행 중",
+    prize_tab_done: "완료",
 
     mypage_title: "마이페이지",
     stats: "통계",
@@ -550,6 +552,8 @@ export const messages: Record<Lang, Dict> = {
     more_shop: "Item Shop",
     more_prizes: "My Rewards",
     prize_history_empty: "No prize winnings yet — try the Lucky Draw!",
+    prize_tab_active: "In progress",
+    prize_tab_done: "Done",
 
     mypage_title: "My Page",
     stats: "Stats",
@@ -845,6 +849,8 @@ export const messages: Record<Lang, Dict> = {
     more_shop: "アイテムショップ",
     more_prizes: "当選・報酬履歴",
     prize_history_empty: "まだ当選した商品はありません。ラッキードローに挑戦してみましょう！",
+    prize_tab_active: "進行中",
+    prize_tab_done: "完了",
 
     mypage_title: "マイページ",
     stats: "統計",
