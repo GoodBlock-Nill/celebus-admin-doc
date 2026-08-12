@@ -66,6 +66,32 @@ const GROUPS: { key: string; label: string; fields: [string, string, "num" | "te
     ],
   },
   {
+    key: "pass",
+    label: "CELEB PASS (시즌 누적 트랙)",
+    fields: [
+      ["xpBase", "판당 기본 XP (0=끔)", "num"],
+      ["xpSecCap", "시간 가산 상한(초)", "num"],
+      ["xpSecDiv", "가산 나눗값(초당 XP 밀도)", "num"],
+      ["perLevel", "레벨당 필요 XP", "num"],
+      ["maxLevel", "최대 레벨", "num"],
+      ["defaultCp", "레벨당 기본 보상 CP", "num"],
+    ],
+  },
+  {
+    key: "coasting",
+    label: "순항 구간 (피로 완화)",
+    fields: [
+      ["warmupSec", "오늘 첫 판 웜업(초, 0=끔)", "num"],
+      ["streakT1Days", "스트릭 1단 기준(일)", "num"],
+      ["streakT1Sec", "스트릭 1단 보너스(초)", "num"],
+      ["streakT2Days", "스트릭 2단 기준(일)", "num"],
+      ["streakT2Sec", "스트릭 2단 보너스(초)", "num"],
+      ["graceThreshold", "라스트 스퍼트 임계(레벨 진행 0~1)", "num"],
+      ["graceSec", "라스트 스퍼트(초, 0=끔)", "num"],
+      ["gracePerRun", "판당 스퍼트 횟수", "num"],
+    ],
+  },
+  {
     key: "integrity",
     label: "점수 무결성 (어뷰징 방어)",
     fields: [

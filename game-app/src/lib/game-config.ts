@@ -50,6 +50,13 @@ export interface GameConfig {
   rewards: { weeklyTop: number[] };
   // 이어하기 하트 (일반 매치 전용) — 판당 기본 start개 + 상점 구매 보유분. slots=표시 슬롯 수, maxPerRun=판당 사용 상한(랭킹 공정성), price=상점 폴백 표시가(권위는 카탈로그) — 관리자 튜닝
   hearts: { start: number; slots: number; maxPerRun: number; continueSec: number; price: number };
+  // CELEB PASS 시즌 누적 트랙(Wave A) — 판당 XP = xpBase + floor(min(경과초,xpSecCap)/xpSecDiv), 성과 무관.
+  //   레벨당 perLevel XP, 최대 maxLevel. 보상: 기본 defaultCp CP + milestones(레벨별 CP·하트, 고급 JSON) — 관리자 튜닝
+  pass: { xpBase: number; xpSecCap: number; xpSecDiv: number; perLevel: number; maxLevel: number; defaultCp: number; milestones: { level: number; cp: number; hearts?: number }[] };
+  // 순항 구간(피로감 완화, Wave D) — 웜업·스트릭 보너스는 서버(game_start_match)가 판정, 라스트 스퍼트는 클라 판정. 0=끔 — 관리자 튜닝
+  //   warmupSec: 오늘 첫 일반 매치 시작 시간 보너스 / streakT*: 출석 연속 일수별 시작 보너스
+  //   graceThreshold: 시간 종료 시 레벨 진행도가 이 이상이면 / graceSec: 무료 +초 / gracePerRun: 판당 횟수
+  coasting: { warmupSec: number; streakT1Days: number; streakT1Sec: number; streakT2Days: number; streakT2Sec: number; graceThreshold: number; graceSec: number; gracePerRun: number };
   // 홈 아트 에셋 슬롯(URL) — 없으면 CSS/텍스트 폴백. music = 로비 배경음악(게임 화면 제외 전 메뉴 재생). 관리자가 교체.
   home: { background?: string; logo?: string; hero?: string; music?: string; beta?: boolean; parentAppUrl?: string };
   // 게임 플레이 화면 아트 슬롯(URL) — 스테이지 배경. 없으면 CSS 폴백. 관리자 교체.
@@ -145,6 +152,23 @@ export const GAME_CONFIG: GameConfig = {
   },
   rewards: { weeklyTop: [100, 70, 50, 30, 30, 20, 20, 20, 20, 20] },
   hearts: { start: 1, slots: 6, maxPerRun: 3, continueSec: 30, price: 5 },
+  coasting: { warmupSec: 15, streakT1Days: 3, streakT1Sec: 5, streakT2Days: 7, streakT2Sec: 10, graceThreshold: 0.7, graceSec: 5, gracePerRun: 1 },
+  pass: {
+    xpBase: 10,
+    xpSecCap: 120,
+    xpSecDiv: 12,
+    perLevel: 100,
+    maxLevel: 30,
+    defaultCp: 10,
+    milestones: [
+      { level: 5, cp: 30, hearts: 1 },
+      { level: 10, cp: 30, hearts: 1 },
+      { level: 15, cp: 30, hearts: 1 },
+      { level: 20, cp: 50, hearts: 1 },
+      { level: 25, cp: 50, hearts: 2 },
+      { level: 30, cp: 100, hearts: 2 },
+    ],
+  },
   // beta: 베타 뱃지 노출 — 정식 전환 시 관리자 설정(home.beta=false)으로 배포 없이 제거
   // parentAppUrl: 홈의 'CELEBUS로' 버튼 목적지 — 관리자 교체 가능
   home: { background: "/home-bg.png", logo: "/celeb-title.png", music: "/bgm/rockrock-v2.mp3", beta: true, parentAppUrl: "https://app.celebus.xyz" },
@@ -176,7 +200,7 @@ export function signupAvatars(): AvatarDef[] {
 type ConfigOverride = Partial<Omit<GameConfig, "items">>;
 export function mergeRemoteConfig(override: ConfigOverride | null | undefined): void {
   if (!override || typeof override !== "object") return;
-  const obj = ["theme", "game", "audio", "pacing", "levels", "daily", "home", "match", "specials", "scoring", "hearts", "rewards", "missions", "integrity"] as const;
+  const obj = ["theme", "game", "audio", "pacing", "levels", "daily", "home", "match", "specials", "scoring", "hearts", "rewards", "missions", "integrity", "coasting", "pass"] as const;
   for (const k of obj) {
     const v = override[k];
     if (v && typeof v === "object" && !Array.isArray(v)) Object.assign(GAME_CONFIG[k], v);
