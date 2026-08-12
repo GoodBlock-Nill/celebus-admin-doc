@@ -1,7 +1,8 @@
 "use client";
 
-// 가챠 관리 — digital(재화 확률형: 가중치·확률 미리보기) + physical_box(실물 재고 소진형: 수량·1인 상한·수령 기한).
-// digital 풀 행 id는 뽑기 이력 FK 보존용(제거 시 서버가 아카이브). 실물 풀은 게시 후 잠금(서버 강제, UI 안내).
+// 럭키드로우 관리 — 신규 생성은 수량 기반 단일 모델(v2.4): 풀에 실물·재화를 행 단위로 혼합 등록,
+// 남은 수량 비례 균등 확률로 뽑히고 소진 시 자동 종료. 게시 후 풀 잠금(서버 강제, UI 안내).
+// 구형 재화 확률형(digital, 가중치)은 기존 이벤트 호환용으로만 편집 지원 — 신규 생성 불가.
 import { useEffect, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { aget, asend } from "@/lib/admin-api";
@@ -38,7 +39,7 @@ type GachaEvent = {
 type Form = GachaEvent & { pool: PoolItem[]; originalStatus?: GachaEvent["status"] };
 
 const STATUS_LABEL: Record<GachaEvent["status"], string> = { draft: "작성 중", published: "게시 중", ended: "종료", canceled: "취소" };
-const KIND_LABEL: Record<Kind, string> = { digital: "재화", physical_box: "실물 박스" };
+const KIND_LABEL: Record<Kind, string> = { digital: "재화 확률형 (구형)", physical_box: "럭키드로우" };
 const ITEM_OPTIONS = [
   { value: "heart", label: "하트" },
   { value: "bomb", label: "폭탄" },
@@ -48,26 +49,21 @@ const ITEM_OPTIONS = [
 ];
 const int1 = (v: string) => Math.max(1, Math.floor(Number(v) || 1));
 
-const emptyForm = (kind: Kind): Form => ({
-  kind,
+// 새 럭키드로우 기본 템플릿 — 실물(모바일 티켓·배송)과 재화를 혼합 등록 (v2.4 단일 모델)
+const emptyForm = (): Form => ({
+  kind: "physical_box",
   status: "draft",
   title: {},
   description: {},
   claim_days: 7,
-  pool:
-    kind === "digital"
-      ? [
-          { grade: "A", prize: { ko: "300 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 300 }, weight: 5, total_qty: null, per_user_cap: null, sort: 1 },
-          { grade: "B", prize: { ko: "하트 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "heart", qty: 1 }, weight: 10, total_qty: null, per_user_cap: null, sort: 2 },
-          { grade: "C", prize: { ko: "50 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 50 }, weight: 25, total_qty: null, per_user_cap: null, sort: 3 },
-          { grade: "D", prize: { ko: "20 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 20 }, weight: 60, total_qty: null, per_user_cap: null, sort: 4 },
-        ]
-      : [
-          // 콘서트 티켓 = 모바일 티켓 (일정 확정 후 CELEBUS 앱 지급 — 사용자 결정 2026-08-12)
-          { grade: "S", prize: { ko: "V01D 콘서트 모바일 티켓" }, is_physical: true, fulfillment: "mobile_ticket", requires_address: false, reward_payload: null, weight: null, total_qty: 2, per_user_cap: 2, sort: 1 },
-          { grade: "B", prize: { ko: "한정 포토카드 세트" }, is_physical: true, fulfillment: "delivery", requires_address: true, reward_payload: null, weight: null, total_qty: 30, per_user_cap: null, sort: 2 },
-          { grade: "D", prize: { ko: "30 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 30 }, weight: null, total_qty: 100, per_user_cap: null, sort: 3 },
-        ],
+  pool: [
+    // 콘서트 티켓 = 모바일 티켓 (일정 확정 후 CELEBUS 앱 지급 — 사용자 결정 2026-08-12)
+    { grade: "S", prize: { ko: "V01D 콘서트 모바일 티켓" }, is_physical: true, fulfillment: "mobile_ticket", requires_address: false, reward_payload: null, weight: null, total_qty: 2, per_user_cap: 2, sort: 1 },
+    { grade: "A", prize: { ko: "한정 포토카드 세트" }, is_physical: true, fulfillment: "delivery", requires_address: true, reward_payload: null, weight: null, total_qty: 30, per_user_cap: null, sort: 2 },
+    { grade: "B", prize: { ko: "100 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 100 }, weight: null, total_qty: 50, per_user_cap: null, sort: 3 },
+    { grade: "C", prize: { ko: "하트 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "heart", qty: 1 }, weight: null, total_qty: 100, per_user_cap: null, sort: 4 },
+    { grade: "D", prize: { ko: "30 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 30 }, weight: null, total_qty: 200, per_user_cap: null, sort: 5 },
+  ],
 });
 
 export default function AdminGacha() {
@@ -87,7 +83,7 @@ export default function AdminGacha() {
 
   const openEdit = (ev?: GachaEvent & { id: string }) => {
     setMsg(null);
-    if (!ev) return setForm(emptyForm("digital"));
+    if (!ev) return setForm(emptyForm());
     setForm({
       id: ev.id,
       kind: ev.kind,
@@ -170,23 +166,18 @@ export default function AdminGacha() {
     <div className="flex flex-col gap-4">
       <Card
         title="럭키드로우 이벤트"
-        right={
-          <div className="flex gap-2">
-            <button onClick={() => setForm(emptyForm("digital"))} className={BTN_GHOST}>+ 재화 뽑기</button>
-            <button onClick={() => setForm(emptyForm("physical_box"))} className={BTN}>+ 실물 박스</button>
-          </div>
-        }
+        right={<button onClick={() => openEdit()} className={BTN}>+ 새 럭키드로우</button>}
       >
         {events.length === 0 ? (
-          <p className="text-[13px] text-muted">아직 이벤트가 없어요. 재화 뽑기(상시) 또는 실물 박스(이벤트성)를 만들어 보세요.</p>
+          <p className="text-[13px] text-muted">아직 이벤트가 없어요. [+ 새 럭키드로우]로 실물·재화 보상을 섞어 만들 수 있어요.</p>
         ) : (
           <div className="flex flex-col gap-2">
             {events.map((ev) => (
               <div key={ev.id}>
                 <div className="flex items-center gap-3 rounded-[12px] bg-surface-2 px-3.5 py-3 ring-1 ring-hairline">
-                  <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${ev.kind === "physical_box" ? "bg-gold/15 text-gold" : "bg-surface-1 text-muted"}`}>
-                    {KIND_LABEL[ev.kind]}
-                  </span>
+                  {ev.kind === "digital" && (
+                    <span className="shrink-0 rounded-full bg-surface-1 px-2 py-0.5 text-[11px] font-bold text-muted">{KIND_LABEL.digital}</span>
+                  )}
                   <span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-bold ${ev.status === "published" ? "bg-primary/20 text-primary-400" : "bg-surface-1 text-muted"}`}>
                     {STATUS_LABEL[ev.status]}
                   </span>
@@ -213,7 +204,7 @@ export default function AdminGacha() {
 
       {form && (
         <Card
-          title={`${form.id ? "이벤트 편집" : "새 이벤트"} — ${KIND_LABEL[form.kind]}`}
+          title={form.id ? `이벤트 편집${form.kind === "digital" ? ` — ${KIND_LABEL.digital}` : ""}` : "새 럭키드로우"}
           right={
             <div className="flex gap-2">
               <button onClick={() => setForm(null)} disabled={busy} className={BTN_GHOST}>닫기</button>
