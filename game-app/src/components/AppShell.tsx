@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import GachaScreen from "./GachaScreen";
+import PrizeHistoryScreen from "./PrizeHistoryScreen";
 import Home from "./Home";
 import Match3Game from "./Match3Game";
 import Leaderboard from "./Leaderboard";
@@ -31,7 +32,8 @@ type Screen =
   | { name: "items" }
   | { name: "settings" }
   | { name: "theme" }
-  | { name: "gacha" };
+  | { name: "gacha" }
+  | { name: "prizes" };
 
 export default function AppShell() {
   const { t } = useLang();
@@ -169,6 +171,9 @@ export default function AppShell() {
       break;
     case "gacha":
       body = <GachaScreen onBack={home} onOpenShop={() => go({ name: "shop" })} />;
+      break;
+    case "prizes":
+      body = <PrizeHistoryScreen onBack={more} />;
       break;
     default:
       body = (

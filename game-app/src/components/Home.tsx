@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { LayoutGrid, ChevronLeft } from "lucide-react";
 import { GAME_CONFIG } from "@/lib/game-config";
-import { getNick, getAvatar, fetchAccount, getDailyStatus, claimWeeklyReward, fetchMyPrizes, type WeeklyReward, type PrizeWinner } from "@/lib/game-api";
-import PrizeClaimModal from "./PrizeClaimModal";
+import { getNick, getAvatar, fetchAccount, getDailyStatus, claimWeeklyReward, type WeeklyReward } from "@/lib/game-api";
 import { kstWeekStart } from "@/lib/week";
 import { unlockAudio } from "@/lib/sfx";
 import { unlockBgm } from "@/lib/bgm";
@@ -37,8 +36,6 @@ export default function Home({
   const [dailyClaimable, setDailyClaimable] = useState(false);
   const [showDaily, setShowDaily] = useState(false);
   const [weekly, setWeekly] = useState<WeeklyReward | null>(null);
-  const [pendingPrizes, setPendingPrizes] = useState<PrizeWinner[]>([]); // 실물 당첨 미제출 — 매 접속 리마인드 (푸시 없음)
-  const [showPrizes, setShowPrizes] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
@@ -48,12 +45,6 @@ export default function Home({
     if (!n) setShowProfile(true); // 최초 진입(닉네임 미설정) 시 프로필 설정 모달 자동 노출
     fetchAccount().then((a) => setPoint(a.celeb_point));
     getDailyStatus().then((s) => setDailyClaimable(s.claimable));
-    // 실물 당첨 미제출 리마인드 — 수령 기한 유실 방지 (localStorage 1회성 아님, 제출 전까지 반복)
-    fetchMyPrizes().then((ws) => {
-      const pending = ws.filter((w) => w.status === "pending");
-      setPendingPrizes(pending);
-      if (pending.length > 0) setShowPrizes(true);
-    });
     // 지난주 랭킹 결과 — 새 주(KST 월요일) 첫 진입 시 1회: 순위 표시 + 보상 자동 지급
     const wk = kstWeekStart();
     let seen = false;
@@ -249,15 +240,6 @@ export default function Home({
             setWeekly(null);
             onOpenGacha();
           }}
-        />
-      )}
-
-      {/* 실물 당첨 리마인드 — 주간 결과 모달을 닫은 뒤에 순차 노출 (겹침 방지) */}
-      {!weekly && showPrizes && pendingPrizes.length > 0 && (
-        <PrizeClaimModal
-          winners={pendingPrizes}
-          onClose={() => setShowPrizes(false)}
-          onChanged={() => void fetchMyPrizes().then((ws) => setPendingPrizes(ws.filter((w) => w.status === "pending" || w.status === "submitted")))}
         />
       )}
 
