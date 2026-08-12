@@ -23,8 +23,8 @@ export function rewardLabel(card: GachaDrawCard, t: (k: string) => string): stri
   return "";
 }
 
-// 재화 보상 폴백 아트 — 관리자 카드 이미지가 없을 때 중앙에 표시
-const ITEM_ART: Record<string, string> = {
+// 재화 보상 폴백 아트 — 관리자 카드 이미지가 없을 때 중앙에 표시 (관리자 미리보기에서도 재사용)
+export const ITEM_ART: Record<string, string> = {
   heart: "/items/heart.png",
   bomb: "/items/item-bomb.png",
   line: "/items/item-line.png",

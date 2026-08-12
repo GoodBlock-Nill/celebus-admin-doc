@@ -4,8 +4,9 @@
 // 남은 수량 비례 균등 확률로 뽑히고 소진 시 자동 종료. 게시 후 풀 잠금(서버 강제, UI 안내).
 // 구형 재화 확률형(digital, 가중치)은 기존 이벤트 호환용으로만 편집 지원 — 신규 생성 불가.
 import { useEffect, useState } from "react";
-import { Plus, X } from "lucide-react";
+import { Gift, Plus, X } from "lucide-react";
 import { aget, asend } from "@/lib/admin-api";
+import { GRADE_COLORS, ITEM_ART } from "../GachaCard";
 import AdminGachaWinners from "./AdminGachaWinners";
 import { BTN, BTN_GHOST, Card, INPUT } from "./ui";
 
@@ -49,6 +50,44 @@ const ITEM_OPTIONS = [
   { value: "time", label: "시간+" },
 ];
 const int1 = (v: string) => Math.max(1, Math.floor(Number(v) || 1));
+const ITEM_LABEL: Record<string, string> = Object.fromEntries(ITEM_OPTIONS.map((o) => [o.value, o.label]));
+
+// 결과 카드 미리보기 — 유저 화면(GachaCard 앞면)과 동일한 규격·스타일. 이미지 비율이 다르면 잘리는 모습이 그대로 보인다.
+function CardPreview({ p }: { p: PoolItem }) {
+  const color = GRADE_COLORS[p.grade];
+  const label = p.is_physical
+    ? p.prize.ko || "(상품명)"
+    : p.reward_payload?.cp != null
+      ? `+${p.reward_payload.cp.toLocaleString()} CP`
+      : `${ITEM_LABEL[p.reward_payload?.item ?? "heart"]} ×${p.reward_payload?.qty ?? 1}`;
+  const art = p.reward_payload?.cp != null ? "/currency.png" : p.reward_payload?.item ? ITEM_ART[p.reward_payload.item] : null;
+  return (
+    <div className="flex w-[110px] shrink-0 flex-col items-center gap-1">
+      <div
+        className="relative h-[154px] w-[110px] overflow-hidden rounded-[14px]"
+        style={{
+          background: `radial-gradient(120% 90% at 50% 0%, ${color}30 0%, transparent 55%), linear-gradient(180deg, ${color}14 0%, var(--color-surface-2) 70%)`,
+          boxShadow: `0 0 14px ${color}55, inset 0 0 0 2px ${color}`,
+        }}
+      >
+        {p.image_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={p.image_url} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            {art ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={art} alt="" className="h-12 w-12 object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.45)]" />
+            ) : (
+              <Gift className="h-10 w-10" style={{ color }} strokeWidth={1.5} />
+            )}
+          </div>
+        )}
+      </div>
+      <span className="w-full truncate text-center text-[10.5px] font-black text-fg">{label}</span>
+    </div>
+  );
+}
 
 // 새 럭키드로우 기본 템플릿 — 실물(모바일 티켓·배송)과 재화를 혼합 등록 (v2.4 단일 모델)
 const emptyForm = (): Form => ({
@@ -426,6 +465,21 @@ export default function AdminGacha() {
                 <Plus className="h-4 w-4" /> 행 추가
               </button>
             </div>
+            {/* 결과 카드 미리보기 — 유저 화면과 동일한 모습 (이미지 적용·잘림 확인용) */}
+            <div className="mt-2 rounded-[12px] bg-surface-2 p-3.5 ring-1 ring-hairline">
+              <div className="mb-1 text-[13px] font-bold text-fg">결과 카드 미리보기 — 유저에게 이렇게 보여요</div>
+              <p className="mb-3 text-[12px] leading-relaxed text-muted break-keep">
+                카드 이미지 규격: <b className="text-fg">세로형 5:7 비율, 권장 500 × 700px</b> · JPG/PNG/WebP · 3MB 이하. 비율이 다른
+                이미지는 카드에 꽉 차게 잘려 보여요 — 아래 미리보기가 실제 노출 그대로예요. 이미지가 없는 행은 보상 아트로 표시돼요.
+                보상명은 카드 아래에 자동 표기되니 이미지 안에 글자를 넣지 않아도 돼요.
+              </p>
+              <div className="scrollbar-none flex gap-3 overflow-x-auto pb-1">
+                {form.pool.map((p, i) => (
+                  <CardPreview key={i} p={p} />
+                ))}
+              </div>
+            </div>
+
             <p className="text-[12.5px] leading-relaxed text-muted">
               {form.kind === "digital"
                 ? `확률 = 가중치 ÷ 전체 가중치 합(${totalWeight.toLocaleString()}). 저장 즉시 유저 확률 공시에 반영돼요. 꽝 없음 — 모든 행이 보상을 지급해요.`
