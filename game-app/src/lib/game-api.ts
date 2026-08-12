@@ -313,21 +313,63 @@ export async function claimDaily(): Promise<ClaimResult | null> {
   }
 }
 
-// ── 주간 랭킹 보상 (lazy claim — 새 주 첫 접속 시 1회) ──
+// ── 주간 랭킹 보상 (lazy claim — 새 주 첫 접속 시 1회) — CP + 가챠 이용권 동시 수령 ──
+export type WeeklyTickets = {
+  has_result: boolean;
+  tickets?: Partial<Record<"normal" | "item", { rank: number; tickets: number; paid: boolean }>>;
+  total_tickets?: number;
+  free_tickets?: number;
+  paid_tickets?: number;
+};
+
 export type WeeklyReward = {
   has_result: boolean;
   week_start?: string;
   rewards?: Partial<Record<"normal" | "item", { rank: number; cp: number; paid: boolean }>>;
   total_cp?: number;
   celeb_point?: number;
+  gacha?: WeeklyTickets;
 };
 
 export async function claimWeeklyReward(): Promise<WeeklyReward | null> {
   try {
     const res = await fetch("/api/rewards/weekly", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+    if (!res.ok) return null; // 서버 실패 = 미확인 처리 — 다음 접속에 재시도 (성공 응답만 seen 기록)
     return (await res.json()) as WeeklyReward;
   } catch {
     return null;
+  }
+}
+
+// ── 가챠 이용권 지갑 (무상 = 랭킹 보상 → 실물+재화 가챠 / 유상 = CP 구매 → 재화 가챠 전용) ──
+export type GachaWallet = { free_tickets: number; paid_tickets: number };
+
+export async function fetchGachaWallet(): Promise<GachaWallet> {
+  try {
+    const res = await fetch("/api/gacha/status");
+    const data = await res.json();
+    return { free_tickets: data?.free_tickets ?? 0, paid_tickets: data?.paid_tickets ?? 0 };
+  } catch {
+    return { free_tickets: 0, paid_tickets: 0 };
+  }
+}
+
+export type BuyTicketResult = { ok: true; celeb_point: number; wallet: GachaWallet } | { ok: false; reason: string };
+
+export async function buyGachaTicket(qty = 1): Promise<BuyTicketResult> {
+  try {
+    const res = await fetch("/api/gacha/buy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ qty }),
+    });
+    const data = await res.json();
+    if (data?.status === "ok") {
+      return { ok: true, celeb_point: data.celeb_point ?? 0, wallet: { free_tickets: data.free_tickets ?? 0, paid_tickets: data.paid_tickets ?? 0 } };
+    }
+    return { ok: false, reason: data?.reason ?? "error" };
+  } catch {
+    return { ok: false, reason: "error" };
   }
 }
 

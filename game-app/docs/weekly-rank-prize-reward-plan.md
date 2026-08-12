@@ -1,9 +1,10 @@
 # 주간 랭킹 가챠 보상 (Weekly Rank Gacha) 기획안
 
 - **작성일**: 2026-08-11 · **개정**: 2026-08-12 (v2)
-- **상태**: Phase 1 구현 완료 (2026-08-12) — Phase 2 대기
+- **상태**: Phase 2 구현 완료 (2026-08-12) — Phase 3 (재화 가챠) 대기
 - **구현 이력**:
   - 2026-08-12 Phase 1: 관리자 지급표 전용 폼 (`AdminRewards.tsx`) + `game-config` rewards 확장(weeklyTickets·ticketPrice 기본값) + `/api/admin/config` rewards 스키마 검증(zod, 400 `bad_rewards`) + `AdminConfig` 저장 응답 에러 표시. 브라우저 실측 검증 완료 (겹침 에러·서버 400·저장·재로드 유지·기본값 복귀)
+  - 2026-08-12 Phase 2: 이용권 경제 — 마이그레이션 037(`game_gacha_wallet`·`game_gacha_ticket_ledger`·`game_week_tickets` + RPC `game_claim_week_tickets`·`game_gacha_buy_ticket`) dev 선검증 후 프로드 적용. `/api/rewards/weekly` CP+이용권 동시 claim 병합(한쪽 실패 시 500 → 재시도, `!res.ok` 시 seen 미기록 버그 수정), `/api/gacha/buy`·`/api/gacha/status` 신설, `WeeklyResultModal` 이용권 표시, 상점 이용권 품목(500 CP). dev DB RPC 단위검증(1위 10장·중복 차단·잔액 부족) + 브라우저 E2E(주간 모달 표시·상점 구매) 통과
 - **결정 이력**:
   - 2026-08-11 (v1): ① 기존 주간 CP 자동 보상(`rewards.weeklyTop`) 유지, 상품 보상은 별도 레이어 ② 당첨자 앱 내 수령 정보 입력 ③ 관리자 설정 UI 중심
   - 2026-08-12 (v2): **직접 지급 모델 폐기 → 가챠 이용권 모델로 전환**. ④ 주간 랭킹 순위에 따라 가챠 이용권 차등 지급 (하위 순위 전원 포함) ⑤ 실물 가챠 = 무상 이용권 전용 / CP 구매 이용권 = 재화 가챠 전용 (사행성 분리) ⑥ 실물 가챠는 확률형이 아닌 **박스 가챠(재고 소진형)** ⑦ 카드 뽑기 UI, 출시 게임 수준 연출

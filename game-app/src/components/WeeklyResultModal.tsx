@@ -1,8 +1,8 @@
 "use client";
 
-// 지난주 랭킹 결과 모달 — 새 주 첫 접속 시 1회. 모드별 최종 순위 + 자동 지급된 보상 CP.
+// 지난주 랭킹 결과 모달 — 새 주 첫 접속 시 1회. 모드별 최종 순위 + 자동 지급된 보상 CP·가챠 이용권.
 import { useRef } from "react";
-import { Trophy } from "lucide-react";
+import { Ticket, Trophy } from "lucide-react";
 import type { WeeklyReward } from "@/lib/game-api";
 import { weekRangeLabel } from "@/lib/week";
 import { useFocusTrap } from "@/lib/use-focus-trap";
@@ -20,9 +20,10 @@ export default function WeeklyResultModal({ data, onClose }: { data: WeeklyRewar
   const { t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
   useFocusTrap(ref, true, onClose);
-  const rewarded = (data.total_cp ?? 0) > 0;
+  const ticketTotal = data.gacha?.total_tickets ?? 0;
+  const rewarded = (data.total_cp ?? 0) > 0 || ticketTotal > 0;
 
-  const Row = ({ label, r }: { label: string; r?: { rank: number; cp: number; paid: boolean } }) =>
+  const Row = ({ label, r, tk }: { label: string; r?: { rank: number; cp: number; paid: boolean }; tk?: { tickets: number; paid: boolean } }) =>
     r ? (
       <div className="flex items-center justify-between rounded-[14px] bg-surface-1 px-4 py-3 ring-1 ring-hairline">
         <span className="text-[13px] font-bold text-muted">{label}</span>
@@ -32,6 +33,11 @@ export default function WeeklyResultModal({ data, onClose }: { data: WeeklyRewar
             <span className="text-[11px] font-bold text-muted">{t("rank_unit")}</span>
           </span>
           {r.paid && r.cp > 0 && <span className="text-[12px] font-black text-gold">+{r.cp} CP</span>}
+          {tk?.paid && tk.tickets > 0 && (
+            <span className="inline-flex items-center gap-0.5 text-[12px] font-black text-primary-400">
+              <Ticket className="h-3.5 w-3.5" />+{tk.tickets}
+            </span>
+          )}
         </span>
       </div>
     ) : null;
@@ -55,14 +61,22 @@ export default function WeeklyResultModal({ data, onClose }: { data: WeeklyRewar
         {data.week_start && <div className="mt-0.5 text-[11px] font-bold text-subtle">{weekRangeLabel(data.week_start)} (KST)</div>}
 
         <div className="mt-4 flex flex-col gap-2">
-          <Row label={t("lb_normal")} r={data.rewards?.normal} />
-          <Row label={t("lb_item")} r={data.rewards?.item} />
+          <Row label={t("lb_normal")} r={data.rewards?.normal} tk={data.gacha?.tickets?.normal} />
+          <Row label={t("lb_item")} r={data.rewards?.item} tk={data.gacha?.tickets?.item} />
         </div>
 
         {rewarded ? (
           <div className="mt-3 rounded-[14px] bg-gold/10 px-4 py-3 ring-1 ring-gold/30">
             <div className="text-[11px] font-bold text-subtle">{t("weekly_total")}</div>
-            <div className="text-[24px] font-black tabular-nums text-gold">+{(data.total_cp ?? 0).toLocaleString()} CP</div>
+            {(data.total_cp ?? 0) > 0 && (
+              <div className="text-[24px] font-black tabular-nums text-gold">+{(data.total_cp ?? 0).toLocaleString()} CP</div>
+            )}
+            {ticketTotal > 0 && (
+              <div className="mt-0.5 inline-flex items-center gap-1 text-[15px] font-black text-primary-400">
+                <Ticket className="h-4 w-4" />
+                {t("weekly_tickets").replace("{n}", ticketTotal.toLocaleString())}
+              </div>
+            )}
           </div>
         ) : (
           <p className="mt-3 text-[12px] leading-snug text-muted break-keep">{t("weekly_no_reward")}</p>
