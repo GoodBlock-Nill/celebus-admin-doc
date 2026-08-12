@@ -1,10 +1,11 @@
 # 주간 랭킹 가챠 보상 (Weekly Rank Gacha) 기획안
 
 - **작성일**: 2026-08-11 · **개정**: 2026-08-12 (v2)
-- **상태**: Phase 3 구현 완료 (2026-08-12) — Phase 4 (실물 박스 가챠) 대기
+- **상태**: Phase 4 구현 완료 (2026-08-12) — 핵심 루프 완성. Phase 5 (운영 편의: 대시보드 배지·발행량 모니터링) 잔여
 - **구현 이력**:
   - 2026-08-12 Phase 1: 관리자 지급표 전용 폼 (`AdminRewards.tsx`) + `game-config` rewards 확장(weeklyTickets·ticketPrice 기본값) + `/api/admin/config` rewards 스키마 검증(zod, 400 `bad_rewards`) + `AdminConfig` 저장 응답 에러 표시. 브라우저 실측 검증 완료 (겹침 에러·서버 400·저장·재로드 유지·기본값 복귀)
   - 2026-08-12 Phase 2: 이용권 경제 — 마이그레이션 037(`game_gacha_wallet`·`game_gacha_ticket_ledger`·`game_week_tickets` + RPC `game_claim_week_tickets`·`game_gacha_buy_ticket`) dev 선검증 후 프로드 적용. `/api/rewards/weekly` CP+이용권 동시 claim 병합(한쪽 실패 시 500 → 재시도, `!res.ok` 시 seen 미기록 버그 수정), `/api/gacha/buy`·`/api/gacha/status` 신설, `WeeklyResultModal` 이용권 표시, 상점 이용권 품목(500 CP). dev DB RPC 단위검증(1위 10장·중복 차단·잔액 부족) + 브라우저 E2E(주간 모달 표시·상점 구매) 통과
+  - 2026-08-12 Phase 4: 실물 박스 가챠 — 마이그레이션 039(`game_prize_winner`·`game_prize_claim_info` + `game_gacha_draw_exec` 재작성: 재고 비례 균등 추첨·`per_user_cap` 제외·무상 전용 강제·부분 뽑기 시 차액 미차감·소진 시 자동 종료) dev 선검증 후 프로드 적용. `/api/prize/me`·`/api/prize/claim`(본인·기한·주소필요 검증, 최초 동의 시각 보존)·`/api/admin/gacha/winners`(기본 마스킹·열람/CSV 감사 로그·발송/무효/만료/정보 파기) 신설, `/api/admin/gacha` 실물 이벤트 지원(게시 후 풀 잠금 + draft 회귀 차단 — 재고 리셋 사고 방지). 유저: 가챠 이벤트 전환 칩·재고 실시간 공시·실물 당첨 CTA → `PrizeClaimModal`(수령 폼·동의·기한 카운트다운) + 홈 미제출 반복 리마인드. 관리자: 실물 박스 생성 폼(수량·1인 상한·주소 필요·수령 기한) + `AdminGachaWinners` 당첨자 테이블. dev DB RPC 검증(cap 2 도달 제외·미차감, 소진 자동 종료, 부분 10연) + 브라우저 E2E(생성→10연 실물 3장 당첨→수령 제출→홈 리마인드→관리자 마스킹/열람/발송) 통과
   - 2026-08-12 Phase 3: 재화 가챠 — 마이그레이션 038·038-1(`game_gacha_event`·`game_gacha_pool_item`·`game_gacha_draw` + 공개 뷰 + RPC `game_gacha_draw_exec`: 가중치 추첨·꽝 없음·무상 우선 차감·10연 보너스 유형 승계) dev 선검증 후 프로드 적용. `/api/gacha/draw`·`/api/admin/gacha` 신설, `/api/gacha/status`에 이벤트·풀 공시 포함. 유저 화면 `GachaScreen`(부유→셔플→등급 글로우→CSS 3D 플립, 10연 약→강 순차 공개+스킵, reduced-motion 대응) + `GachaOddsModal`(확률 공시) + 홈 내비 [가챠]. 관리자 [가챠] 탭(`AdminGacha`: 이벤트 CRUD·풀 편집·확률 미리보기, 풀 행은 뽑기 이력 FK 보존 위해 삭제 불가 시 아카이브). dev DB RPC 단위검증(무상/유상 차감·보너스 유형·거부 케이스) + 브라우저 E2E(이벤트 생성→1회/10연 뽑기→원장 정합) 통과
 - **결정 이력**:
   - 2026-08-11 (v1): ① 기존 주간 CP 자동 보상(`rewards.weeklyTop`) 유지, 상품 보상은 별도 레이어 ② 당첨자 앱 내 수령 정보 입력 ③ 관리자 설정 UI 중심

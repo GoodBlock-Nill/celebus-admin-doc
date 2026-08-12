@@ -395,9 +395,18 @@ export async function fetchGachaStatus(): Promise<GachaStatus> {
   }
 }
 
-export type GachaDrawCard = { draw_id: string; grade: GachaGrade; prize: L10nText; image_url: string | null; reward: GachaReward };
+export type GachaDrawCard = {
+  draw_id: string;
+  grade: GachaGrade;
+  prize: L10nText;
+  image_url: string | null;
+  reward: GachaReward;
+  physical?: boolean; // 실물 당첨 (박스 가챠)
+  winner_id?: string | null;
+  requires_address?: boolean;
+};
 export type GachaDrawResponse =
-  | { ok: true; results: GachaDrawCard[]; bonus_ticket: boolean; celeb_point: number; wallet: GachaWallet }
+  | { ok: true; results: GachaDrawCard[]; count: number; bonus_ticket: boolean; celeb_point: number; wallet: GachaWallet }
   | { ok: false; reason: string };
 
 export async function drawGacha(eventId: string, count: 1 | 10): Promise<GachaDrawResponse> {
@@ -412,12 +421,54 @@ export async function drawGacha(eventId: string, count: 1 | 10): Promise<GachaDr
       return {
         ok: true,
         results: data.results ?? [],
+        count: data.count ?? (data.results?.length || 0),
         bonus_ticket: !!data.bonus_ticket,
         celeb_point: data.celeb_point ?? 0,
         wallet: { free_tickets: data.free_tickets ?? 0, paid_tickets: data.paid_tickets ?? 0 },
       };
     }
     return { ok: false, reason: data?.reason ?? "error" };
+  } catch {
+    return { ok: false, reason: "error" };
+  }
+}
+
+// ── 실물 당첨 수령 (Phase 4: 박스 가챠) — 기한 내 수령 정보 제출·수정, 미제출 시 무효 ──
+export type PrizeStatus = "pending" | "submitted" | "shipped" | "expired" | "revoked";
+export type PrizeWinner = {
+  id: string;
+  status: PrizeStatus;
+  claim_deadline: string;
+  snapshot: { prize?: L10nText; grade?: GachaGrade; nickname?: string };
+  requires_address: boolean;
+  info: { name: string; phone: string; address: string; note: string } | null;
+};
+
+export async function fetchMyPrizes(): Promise<PrizeWinner[]> {
+  try {
+    const res = await fetch("/api/prize/me");
+    const data = await res.json();
+    return Array.isArray(data?.winners) ? data.winners : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function submitPrizeClaim(input: {
+  winner_id: string;
+  name: string;
+  phone: string;
+  address?: string;
+  note?: string;
+}): Promise<{ ok: true } | { ok: false; reason: string }> {
+  try {
+    const res = await fetch("/api/prize/claim", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...input, agree: true }),
+    });
+    const data = await res.json();
+    return res.ok && data?.status === "ok" ? { ok: true } : { ok: false, reason: data?.error ?? "error" };
   } catch {
     return { ok: false, reason: "error" };
   }

@@ -5,10 +5,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Sparkles, Ticket } from "lucide-react";
 import { toast } from "sonner";
-import { drawGacha, fetchGachaStatus, type GachaDrawCard, type GachaEvent, type GachaWallet } from "@/lib/game-api";
+import { drawGacha, fetchGachaStatus, fetchMyPrizes, type GachaDrawCard, type GachaEvent, type GachaWallet, type PrizeWinner } from "@/lib/game-api";
 import { sfxCoin, sfxNewBest, sfxPower, sfxSpecial, unlockAudio } from "@/lib/sfx";
 import GachaCard, { rewardLabel } from "./GachaCard";
 import GachaOddsModal from "./GachaOddsModal";
+import PrizeClaimModal from "./PrizeClaimModal";
 import ScreenHeader from "./ScreenHeader";
 import { useLang } from "./LangProvider";
 
@@ -24,25 +25,37 @@ type Stage = "idle" | "drawing" | "reveal";
 export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void; onOpenShop: () => void }) {
   const { t, lang } = useLang();
   const [wallet, setWallet] = useState<GachaWallet>({ free_tickets: 0, paid_tickets: 0 });
-  const [event, setEvent] = useState<GachaEvent | null>(null);
+  const [events, setEvents] = useState<GachaEvent[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [stage, setStage] = useState<Stage>("idle");
   const [cards, setCards] = useState<GachaDrawCard[]>([]);
   const [flipped, setFlipped] = useState<Set<number>>(new Set());
   const [bonus, setBonus] = useState(false);
   const [showOdds, setShowOdds] = useState(false);
+  const [prizeList, setPrizeList] = useState<PrizeWinner[] | null>(null); // 실물 당첨 수령 모달
   const busyRef = useRef(false);
   const sfxDone = useRef<Set<number>>(new Set());
 
+  const refresh = (keepSelection = true) =>
+    fetchGachaStatus().then((s) => {
+      setWallet({ free_tickets: s.free_tickets, paid_tickets: s.paid_tickets });
+      setEvents(s.events);
+      setSelectedId((prev) => {
+        if (keepSelection && prev && s.events.some((e) => e.id === prev)) return prev;
+        // 실물 이벤트 우선 노출 (이벤트성 — 참여 동기), 없으면 상시 재화 가챠
+        return (s.events.find((e) => e.kind === "physical_box") ?? s.events[0])?.id ?? null;
+      });
+    });
+
   useEffect(() => {
     unlockAudio();
-    fetchGachaStatus()
-      .then((s) => {
-        setWallet({ free_tickets: s.free_tickets, paid_tickets: s.paid_tickets });
-        setEvent(s.events.find((e) => e.kind === "digital") ?? null);
-      })
-      .finally(() => setLoading(false));
+    void refresh(false).finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const event = events.find((e) => e.id === selectedId) ?? null;
+  const isBox = event?.kind === "physical_box";
 
   const flipOne = (i: number, grade?: GachaDrawCard["grade"]) => {
     setFlipped((prev) => (prev.has(i) ? prev : new Set(prev).add(i)));
@@ -77,7 +90,9 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
 
   const doDraw = async (count: 1 | 10) => {
     if (busyRef.current || !event) return;
-    if (wallet.free_tickets + wallet.paid_tickets < count) return toast.error(t("gacha_insufficient"));
+    // 실물 박스 = 무상 이용권 전용 (사행성 분리 — 서버 RPC도 강제)
+    if (isBox && wallet.free_tickets < count) return toast.error(wallet.paid_tickets >= count ? t("gacha_free_only") : t("gacha_insufficient"));
+    if (!isBox && wallet.free_tickets + wallet.paid_tickets < count) return toast.error(t("gacha_insufficient"));
     busyRef.current = true;
     sfxDone.current = new Set();
     setStage("drawing");
@@ -86,6 +101,11 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
     busyRef.current = false;
     if (!res.ok) {
       setStage("idle");
+      if (res.reason === "no_stock" || res.reason === "bad_event") {
+        void refresh(); // 소진·종료 반영
+        return toast.error(t("gacha_sold_out"));
+      }
+      if (res.reason === "need_free_tickets") return toast.error(t("gacha_free_only"));
       return toast.error(res.reason === "insufficient_tickets" ? t("gacha_insufficient") : t("load_failed"));
     }
     const sorted = [...res.results].sort((a, b) => GRADE_ORDER[a.grade] - GRADE_ORDER[b.grade]);
@@ -94,6 +114,12 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
     setWallet(res.wallet);
     setFlipped(new Set(reducedMotion() ? sorted.map((_, i) => i) : []));
     setStage("reveal");
+    if (isBox) void refresh(); // 재고·이벤트 상태 최신화 (소진 시 목록에서 제거)
+  };
+
+  const openPrizeClaim = async () => {
+    const winners = await fetchMyPrizes();
+    setPrizeList(winners.filter((w) => w.status === "pending" || w.status === "submitted"));
   };
 
   const allFlipped = stage === "reveal" && flipped.size >= cards.length;
@@ -118,12 +144,30 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
         <p className="mt-20 text-center text-[13px] text-muted break-keep">{t("gacha_no_event")}</p>
       ) : (
         <>
+          {/* 이벤트 전환 (실물 이벤트 진행 중일 때 재화 가챠와 병행 노출) */}
+          {events.length > 1 && stage === "idle" && (
+            <div className="mt-3 flex justify-center gap-1.5">
+              {events.map((e) => (
+                <button
+                  key={e.id}
+                  onClick={() => setSelectedId(e.id)}
+                  className={`rounded-full px-3.5 py-1.5 text-[12px] font-bold ring-1 transition-colors ${
+                    e.id === selectedId ? "bg-primary text-white ring-primary" : "bg-surface-1 text-muted ring-hairline"
+                  }`}
+                >
+                  {e.title[lang] || e.title.ko}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* 이벤트 안내 */}
-          <div className="mt-4 text-center">
+          <div className="mt-3 text-center">
             <div className="text-[17px] font-black text-fg">{event.title[lang] || event.title.ko}</div>
             {(event.description[lang] || event.description.ko) && (
               <p className="mt-1 text-[12px] text-muted break-keep">{event.description[lang] || event.description.ko}</p>
             )}
+            {isBox && <p className="mt-1 text-[11px] font-bold text-gold break-keep">{t("gacha_free_only")}</p>}
           </div>
 
           {/* 카드 스테이지 */}
@@ -177,6 +221,18 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
                   <Sparkles className="h-4 w-4" /> {t("gacha_bonus_ticket")}
                 </p>
               )}
+              {cards.some((c) => c.physical) && (
+                <>
+                  <p className="text-center text-[12.5px] font-black text-gold break-keep">{t("gacha_physical_win")}</p>
+                  <button
+                    onClick={() => void openPrizeClaim()}
+                    className="w-full rounded-full py-3.5 text-[15px] font-black text-white ring-1 ring-white/15 active:scale-[0.99]"
+                    style={{ background: "linear-gradient(180deg, #f0a53c 0%, #c07d1c 100%)" }}
+                  >
+                    {t("prize_input_cta")}
+                  </button>
+                </>
+              )}
               <button onClick={() => setStage("idle")} className="w-full rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
                 {t("gacha_result_done")}
               </button>
@@ -209,6 +265,9 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
       )}
 
       {showOdds && event && <GachaOddsModal event={event} onClose={() => setShowOdds(false)} />}
+      {prizeList && prizeList.length > 0 && (
+        <PrizeClaimModal winners={prizeList} onClose={() => setPrizeList(null)} onChanged={() => void openPrizeClaim()} />
+      )}
     </div>
   );
 }

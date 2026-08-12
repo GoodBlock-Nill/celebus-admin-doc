@@ -10,7 +10,7 @@ export async function aget<T>(path: string): Promise<T> {
   return (await handle(await fetch(path))) as T;
 }
 
-export async function asend<T>(path: string, method: "POST" | "PUT" | "DELETE", body?: unknown): Promise<T> {
+export async function asend<T>(path: string, method: "POST" | "PUT" | "PATCH" | "DELETE", body?: unknown): Promise<T> {
   const res = await fetch(path, {
     method,
     headers: { "Content-Type": "application/json" },

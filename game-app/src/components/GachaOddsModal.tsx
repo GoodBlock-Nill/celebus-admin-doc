@@ -12,7 +12,9 @@ export default function GachaOddsModal({ event, onClose }: { event: GachaEvent; 
   const ref = useRef<HTMLDivElement>(null);
   useFocusTrap(ref, true, onClose);
 
-  const items = event.pool.filter((p) => (p.weight ?? 0) > 0);
+  const isBox = event.kind === "physical_box";
+  // 박스형: 잔여/전체 공시 (남은 수량 비례 균등 확률) / 확률형: 가중치 → %
+  const items = isBox ? event.pool : event.pool.filter((p) => (p.weight ?? 0) > 0);
   const total = items.reduce((s, p) => s + (p.weight ?? 0), 0);
 
   return (
@@ -38,14 +40,18 @@ export default function GachaOddsModal({ event, onClose }: { event: GachaEvent; 
                   {p.grade}
                 </span>
                 <span className="min-w-0 flex-1 truncate text-[13px] font-bold text-fg">{p.prize[lang] || p.prize.ko || ""}</span>
-                <span className="shrink-0 text-[13px] font-black tabular-nums text-muted">
-                  {pct.toFixed(pct >= 10 ? 1 : 2)}%
-                </span>
+                {isBox ? (
+                  <span className={`shrink-0 text-[13px] font-black tabular-nums ${(p.remaining_qty ?? 0) === 0 ? "text-subtle line-through" : "text-muted"}`}>
+                    {t("gacha_stock_left").replace("{r}", String(p.remaining_qty ?? 0)).replace("{t}", String(p.total_qty ?? 0))}
+                  </span>
+                ) : (
+                  <span className="shrink-0 text-[13px] font-black tabular-nums text-muted">{pct.toFixed(pct >= 10 ? 1 : 2)}%</span>
+                )}
               </div>
             );
           })}
         </div>
-        <p className="mt-3 text-[11px] leading-snug text-subtle break-keep">{t("gacha_paid_note")}</p>
+        <p className="mt-3 text-[11px] leading-snug text-subtle break-keep">{isBox ? t("gacha_box_note") : t("gacha_paid_note")}</p>
         <button
           onClick={onClose}
           className="mt-4 w-full rounded-full bg-primary py-3 text-[15px] font-black text-white active:scale-[0.99]"
