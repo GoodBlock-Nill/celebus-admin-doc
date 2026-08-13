@@ -49,7 +49,7 @@ export default function DailyReward({
   const claimable = status?.claimable ?? false;
   const reward = claimedReward ?? status?.next_reward ?? null;
 
-  // 7일 보상 사다리: reward[d] = base + step*(d-1)
+  // 보상 사다리: reward[d] = base + step*(d-1)
   // 서버 적용값(status.daily) 우선 — 빌드 기본값만 쓰면 관리자 설정 변경이 표기에 반영되지 않는다 (지급만 맞고 표는 구값)
   const { base, streakStep, maxStreakDays } = status?.daily ?? GAME_CONFIG.daily;
   const days = Array.from({ length: maxStreakDays }, (_, i) => ({ day: i + 1, reward: base + streakStep * i }));
@@ -62,6 +62,15 @@ export default function DailyReward({
     }
     return i <= todayIdx ? "claimed" : "future";
   };
+
+  // 장기(8일+) 사다리는 주 단위 뷰 — 출시 앱 패턴(현재 주 7칸만 크게, 나머지는 탭으로 미리보기).
+  // 28칸을 한 화면에 깔면 셀이 좁아져 금액이 안 읽힌다. 기본 선택 = 오늘이 속한 주.
+  const weeks: (typeof days)[] = [];
+  for (let i = 0; i < days.length; i += 7) weeks.push(days.slice(i, i + 7));
+  const todayWeek = Math.max(0, Math.floor(todayIdx / 7));
+  const [viewWeek, setViewWeek] = useState<number | null>(null); // null = 자동(오늘 주)
+  const weekIdx = Math.min(viewWeek ?? todayWeek, weeks.length - 1);
+  const doneDays = Math.min(claimable ? streak : todayIdx + 1, maxStreakDays);
 
   return (
     <div className="anim-backdrop-in fixed inset-0 z-50 flex flex-col items-center overflow-y-auto overscroll-contain bg-black/75 p-4">
@@ -91,29 +100,75 @@ export default function DailyReward({
         </div>
 
         <div className="px-5 pb-5 pt-3">
-          {/* 7일 출석 캘린더 */}
-          <div className="mb-1 text-left text-[11px] font-bold text-subtle">{t("daily_week")}</div>
+          {/* 전체 진행도 — 주 마일스톤 눈금 포함 */}
+          <div className="mb-1 flex items-center justify-between">
+            <span className="text-[11px] font-bold text-subtle">{t("daily_week")}</span>
+            <span className="text-[11px] font-black tabular-nums text-muted">
+              {doneDays}<span className="font-bold text-subtle">/{maxStreakDays}</span>
+            </span>
+          </div>
+          <div className="relative mb-2.5 h-1.5 overflow-hidden rounded-full bg-surface-1">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-primary to-primary-400 transition-[width]"
+              style={{ width: `${(doneDays / maxStreakDays) * 100}%` }}
+            />
+            {weeks.length > 1 &&
+              weeks.slice(0, -1).map((w, i) => (
+                <span
+                  key={i}
+                  className="absolute top-0 h-full w-px bg-black/40"
+                  style={{ left: `${(((i + 1) * 7) / maxStreakDays) * 100}%` }}
+                />
+              ))}
+          </div>
+
+          {/* 주 선택 탭 — 오늘이 속한 주 자동 선택, 다른 주는 보상 미리보기 */}
+          {weeks.length > 1 && (
+            <div className="mb-2 flex justify-center gap-1">
+              {weeks.map((w, i) => {
+                const active = i === weekIdx;
+                const weekDone = doneDays >= i * 7 + w.length; // 이 주의 마지막 날까지 수령 완료
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setViewWeek(i)}
+                    className={`rounded-full px-2.5 py-1 text-[10.5px] font-black tabular-nums ring-1 transition-colors ${
+                      active ? "bg-primary/25 text-primary-400 ring-primary-400" : "bg-surface-1 text-subtle ring-hairline"
+                    }`}
+                  >
+                    {weekDone ? <Check className="inline h-3 w-3" strokeWidth={3} /> : `${w[0].day}-${w[w.length - 1].day}`}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* 선택 주 7일 캘린더 — 주 마지막 날(7·14·21·28)은 마일스톤 골드 강조 */}
           <div className="grid grid-cols-7 gap-1">
-            {days.map(({ day, reward: r }, i) => {
+            {weeks[weekIdx].map(({ day, reward: r }) => {
+              const i = day - 1;
               const st = cellState(i);
               const isMax = day === maxStreakDays;
+              const isMilestone = day % 7 === 0 || isMax;
               return (
                 <div
                   key={day}
                   className={[
-                    "relative flex flex-col items-center gap-0.5 rounded-[10px] py-1.5",
+                    "relative flex flex-col items-center gap-1 rounded-[10px] py-2",
                     st === "today"
                       ? "bg-primary/25 ring-2 ring-primary-400"
-                      : st === "claimed"
-                        ? "bg-surface-1 ring-1 ring-hairline"
-                        : "bg-surface-1/60 ring-1 ring-hairline",
+                      : isMilestone
+                        ? "bg-gold/10 ring-1 ring-gold/45"
+                        : st === "claimed"
+                          ? "bg-surface-1 ring-1 ring-hairline"
+                          : "bg-surface-1/60 ring-1 ring-hairline",
                   ].join(" ")}
                 >
-                  <span className={`text-[7.5px] font-bold ${st === "today" ? "text-primary-400" : "text-subtle"}`}>
+                  <span className={`text-[8px] font-bold ${st === "today" ? "text-primary-400" : isMilestone ? "text-gold" : "text-subtle"}`}>
                     {isMax ? t("daily_max") : `D${day}`}
                   </span>
                   {st === "claimed" ? (
-                    <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-verified/20 text-verified">
+                    <span className="flex h-[20px] w-[20px] items-center justify-center rounded-full bg-verified/20 text-verified">
                       <Check className="h-3 w-3" strokeWidth={3} />
                     </span>
                   ) : (
@@ -122,16 +177,16 @@ export default function DailyReward({
                       <img
                         src="/currency.png"
                         alt=""
-                        className={`h-[18px] w-[18px] ${st === "future" ? "opacity-45" : ""}`}
+                        className={`h-[20px] w-[20px] ${st === "future" ? "opacity-45" : ""} ${isMilestone && st !== "future" ? "drop-shadow-[0_0_5px_rgba(245,196,81,0.7)]" : ""}`}
                       />
                     </>
                   )}
                   <span
-                    className={`text-[8px] font-black tabular-nums leading-none ${
-                      st === "today" ? "text-white" : st === "future" ? "text-subtle" : "text-muted"
+                    className={`text-[8.5px] font-black tabular-nums leading-none ${
+                      st === "today" ? "text-white" : isMilestone ? "text-gold" : st === "future" ? "text-subtle" : "text-muted"
                     }`}
                   >
-                    {r}
+                    {r.toLocaleString()}
                   </span>
                 </div>
               );
