@@ -388,7 +388,13 @@ export async function buyItem(itemType: ShopItemType, qty = 1): Promise<BuyResul
 }
 
 // ── 데일리 출석 보상 ──
-export type DailyStatus = { claimable: boolean; streak: number; next_reward: number | null };
+export type DailyStatus = {
+  claimable: boolean;
+  streak: number;
+  next_reward: number | null;
+  // 서버 적용 중인 보상 사다리 설정 — 모달 7일 표기가 관리자 설정 변경을 즉시 따라가도록
+  daily?: { base: number; streakStep: number; maxStreakDays: number };
+};
 export type ClaimResult = { claimed: boolean; reward?: number; streak?: number; celeb_point?: number };
 
 export async function getDailyStatus(): Promise<DailyStatus> {

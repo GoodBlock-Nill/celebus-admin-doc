@@ -40,7 +40,7 @@ export default function DailyReward({
     }
     sfxCoin();
     setClaimedReward(res.reward ?? 0);
-    setStatus({ claimable: false, streak: res.streak ?? 0, next_reward: null });
+    setStatus((s) => ({ claimable: false, streak: res.streak ?? 0, next_reward: null, daily: s?.daily }));
     if (res.celeb_point != null) onClaimed?.(res.celeb_point);
     toast.success(t("daily_got").replace("{n}", String(res.reward ?? 0)));
   };
@@ -49,8 +49,9 @@ export default function DailyReward({
   const claimable = status?.claimable ?? false;
   const reward = claimedReward ?? status?.next_reward ?? null;
 
-  // 7일 보상 사다리(config 기반): reward[d] = base + step*(d-1)
-  const { base, streakStep, maxStreakDays } = GAME_CONFIG.daily;
+  // 7일 보상 사다리: reward[d] = base + step*(d-1)
+  // 서버 적용값(status.daily) 우선 — 빌드 기본값만 쓰면 관리자 설정 변경이 표기에 반영되지 않는다 (지급만 맞고 표는 구값)
+  const { base, streakStep, maxStreakDays } = status?.daily ?? GAME_CONFIG.daily;
   const days = Array.from({ length: maxStreakDays }, (_, i) => ({ day: i + 1, reward: base + streakStep * i }));
   // 현재 위치: 수령 가능하면 다음 칸이 '오늘', 이미 받았으면 마지막 받은 칸이 '오늘'
   const todayIdx = claimable ? Math.min(streak, maxStreakDays - 1) : Math.min(streak - 1, maxStreakDays - 1);
