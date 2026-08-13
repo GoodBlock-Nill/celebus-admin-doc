@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Ticket } from "lucide-react";
 import { GAME_CONFIG } from "@/lib/game-config";
 import { fetchAccount, buyItem, fetchCatalog, fetchGachaWallet, buyGachaTicket, type Account, type GachaWallet } from "@/lib/game-api";
 import type { ItemType, ShopItemType } from "@/lib/game-config";
 import { unlockAudio, sfxCoin } from "@/lib/sfx";
+import DrawTicketIcon from "./DrawTicketIcon";
 import ScreenHeader from "./ScreenHeader";
 import CoinBalance from "./CoinBalance";
 import { useLang } from "./LangProvider";
@@ -93,7 +93,7 @@ export default function Shop({ onBack }: { onBack: () => void }) {
       {!loading && (
         <div className="mt-2.5 flex items-center gap-3 rounded-[16px] bg-surface-1 p-2.5 ring-1 ring-hairline">
           <div className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-[14px] bg-primary/15">
-            <Ticket className="h-9 w-9 text-primary-400" />
+            <DrawTicketIcon className="h-12 w-12" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-[15px] font-black text-fg">{t("gacha_ticket")}</div>
