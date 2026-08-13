@@ -218,11 +218,13 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
             </div>
           )}
 
-          {/* 이벤트 안내 */}
+          {/* 이벤트 안내 — 설명은 본문 크기·행간·읽기 폭을 확보해 제목과 분리 (가독성) */}
           <div className="mt-3 text-center">
             <div className="text-[17px] font-black text-fg">{event.title[lang] || event.title.ko}</div>
             {(event.description[lang] || event.description.ko) && (
-              <p className="mt-1 text-[12px] text-muted break-keep">{event.description[lang] || event.description.ko}</p>
+              <p className="mx-auto mt-1.5 max-w-[300px] text-[13px] font-medium leading-relaxed text-muted break-keep">
+                {event.description[lang] || event.description.ko}
+              </p>
             )}
           </div>
 
