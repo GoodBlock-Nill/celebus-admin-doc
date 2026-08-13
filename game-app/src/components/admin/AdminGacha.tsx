@@ -91,9 +91,9 @@ function CardPreview({ p, defaults }: { p: PoolItem; defaults: Record<string, st
   );
 }
 
-// 새 럭키드로우 기본 템플릿 — 운영 확정 구성 (2026-08-12, 기획안 §운영 확률 설계 가이드):
-// 회차당 박스 1,000개 · 모바일 티켓 20장(2%, 1인 상한 2) · 티켓 = 유일한 전체 최저 확률(위계 유지)
-// 재화 기대값 ≈ 105 CP/뽑기 (유상 티켓 500 CP 대비 회수율 ~21%). 총 40장은 2회차 분할 운영.
+// 새 럭키드로우 기본 템플릿 — 운영 확정 구성 (2026-08-13 확률 상향, 기획안 §운영 확률 설계 가이드):
+// 회차당 박스 570개 · 모바일 티켓 20장(3.5%, 1인 상한 2) · 티켓 = 유일한 전체 최저 확률(위계 유지)
+// 평균 29회(≈14,500 CP)에 티켓 1장 기대. 총 40장은 2회차 분할 운영.
 const emptyForm = (): Form => ({
   kind: "physical_box",
   status: "draft",
@@ -103,15 +103,15 @@ const emptyForm = (): Form => ({
   pool: [
     // 콘서트 티켓 = 모바일 티켓 (일정 확정 후 CELEBUS 앱 지급 — 사용자 결정 2026-08-12)
     { grade: "S", prize: { ko: "V01D 콘서트 모바일 티켓" }, is_physical: true, fulfillment: "mobile_ticket", requires_address: false, reward_payload: null, weight: null, total_qty: 20, per_user_cap: 2, sort: 1 },
-    { grade: "A", prize: { ko: "500 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 500 }, weight: null, total_qty: 30, per_user_cap: null, sort: 2 },
-    { grade: "B", prize: { ko: "폭탄 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "bomb", qty: 1 }, weight: null, total_qty: 60, per_user_cap: null, sort: 3 },
-    { grade: "B", prize: { ko: "라인 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "line", qty: 1 }, weight: null, total_qty: 60, per_user_cap: null, sort: 4 },
-    { grade: "B", prize: { ko: "시간+ 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "time", qty: 1 }, weight: null, total_qty: 70, per_user_cap: null, sort: 5 },
-    { grade: "C", prize: { ko: "300 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 300 }, weight: null, total_qty: 90, per_user_cap: null, sort: 6 },
-    { grade: "C", prize: { ko: "셔플 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "shuffle", qty: 1 }, weight: null, total_qty: 120, per_user_cap: null, sort: 7 },
-    { grade: "D", prize: { ko: "150 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 150 }, weight: null, total_qty: 180, per_user_cap: null, sort: 8 },
-    { grade: "D", prize: { ko: "하트 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "heart", qty: 1 }, weight: null, total_qty: 160, per_user_cap: null, sort: 9 },
-    { grade: "D", prize: { ko: "50 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 50 }, weight: null, total_qty: 210, per_user_cap: null, sort: 10 },
+    { grade: "A", prize: { ko: "500 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 500 }, weight: null, total_qty: 25, per_user_cap: null, sort: 2 },
+    { grade: "B", prize: { ko: "폭탄 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "bomb", qty: 1 }, weight: null, total_qty: 35, per_user_cap: null, sort: 3 },
+    { grade: "B", prize: { ko: "라인 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "line", qty: 1 }, weight: null, total_qty: 35, per_user_cap: null, sort: 4 },
+    { grade: "B", prize: { ko: "시간+ 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "time", qty: 1 }, weight: null, total_qty: 40, per_user_cap: null, sort: 5 },
+    { grade: "C", prize: { ko: "300 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 300 }, weight: null, total_qty: 52, per_user_cap: null, sort: 6 },
+    { grade: "C", prize: { ko: "셔플 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "shuffle", qty: 1 }, weight: null, total_qty: 70, per_user_cap: null, sort: 7 },
+    { grade: "D", prize: { ko: "150 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 150 }, weight: null, total_qty: 95, per_user_cap: null, sort: 8 },
+    { grade: "D", prize: { ko: "하트 1개" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { item: "heart", qty: 1 }, weight: null, total_qty: 90, per_user_cap: null, sort: 9 },
+    { grade: "D", prize: { ko: "50 CP" }, is_physical: false, fulfillment: "delivery", requires_address: false, reward_payload: { cp: 50 }, weight: null, total_qty: 108, per_user_cap: null, sort: 10 },
   ],
 });
 
