@@ -209,6 +209,8 @@ export default function AdminGacha() {
     setForm((f) => f && { ...f, pool: f.pool.map((p, j) => (j === i ? { ...p, ...patch } : p)) });
 
   const totalWeight = form?.pool.reduce((s, p) => s + (p.weight ?? 0), 0) ?? 0;
+  // 수량 기반(박스) 폼의 확률 표시용 — 시작 시점 확률(수량 ÷ 박스 크기). 진행 중엔 잔여 비례로 변동
+  const totalQty = form?.pool.reduce((s, p) => s + (p.total_qty ?? 0), 0) ?? 0;
   const poolLocked = !!form?.id && form.kind === "physical_box" && form.originalStatus !== "draft";
 
   const save = async () => {
@@ -520,6 +522,9 @@ export default function AdminGacha() {
                           inputMode="numeric"
                           className={`${INPUT} w-20 text-right tabular-nums`}
                         />
+                        <span className="w-16 shrink-0 text-right text-[12.5px] font-black tabular-nums text-primary-400">
+                          {totalQty > 0 && p.total_qty ? ((p.total_qty / totalQty) * 100).toFixed(2) : "0"}%
+                        </span>
                       </>
                     )}
                     <button type="button" onClick={() => setForm((f) => f && { ...f, pool: f.pool.filter((_, j) => j !== i) })} title="행 삭제" className="shrink-0 text-subtle hover:text-danger">
@@ -548,6 +553,11 @@ export default function AdminGacha() {
               >
                 <Plus className="h-4 w-4" /> 행 추가
               </button>
+              {form.kind === "physical_box" && (
+                <div className="flex items-center justify-end gap-1.5 text-[12.5px] font-bold text-muted">
+                  박스 크기(수량 합계) <span className="text-[14px] font-black tabular-nums text-fg">{totalQty.toLocaleString()}</span>개
+                </div>
+              )}
             </div>
             {/* 결과 카드 미리보기 — 유저 화면과 동일한 모습 (이미지 적용·잘림 확인용) */}
             <div className="mt-2 rounded-[12px] bg-surface-2 p-3.5 ring-1 ring-hairline">
@@ -567,7 +577,7 @@ export default function AdminGacha() {
             <p className="text-[12.5px] leading-relaxed text-muted">
               {form.kind === "digital"
                 ? `확률 = 가중치 ÷ 전체 가중치 합(${totalWeight.toLocaleString()}). 저장 즉시 유저 확률 공시에 반영돼요. 꽝 없음 — 모든 행이 보상을 지급해요.`
-                : "남은 상품 수에 비례한 균등 확률로 뽑히고, 소진되면 자동 종료돼요. 각 행의 썸네일을 눌러 결과 카드 이미지를 올릴 수 있어요 (세로형 5:7 권장, 예: 500×700 — 없으면 앱이 보상 아트로 표시). 배송형 실물 당첨은 수령 기한 내 정보 미입력 시 무효 처리돼요. 게시 후에는 풀·재고를 수정할 수 없으니 검토 후 게시해 주세요."}
+                : "행의 % 는 시작 시점 확률(수량 ÷ 박스 크기)이에요. 진행 중에는 남은 상품 수에 비례해 실시간으로 변하고(유저 공시도 잔여/전체 기준), 소진되면 자동 종료돼요. 각 행의 썸네일을 눌러 결과 카드 이미지를 올릴 수 있어요 (세로형 5:7 권장, 예: 500×700 — 없으면 앱이 보상 아트로 표시). 배송형 실물 당첨은 수령 기한 내 정보 미입력 시 무효 처리돼요. 게시 후에는 풀·재고를 수정할 수 없으니 검토 후 게시해 주세요."}
             </p>
           </div>
         </Card>
