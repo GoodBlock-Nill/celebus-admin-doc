@@ -93,7 +93,7 @@ export default function Shop({ onBack }: { onBack: () => void }) {
       {!loading && (
         <div className="mt-2.5 flex items-center gap-3 rounded-[16px] bg-surface-1 p-2.5 ring-1 ring-hairline">
           <div className="flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-[14px] bg-primary/15">
-            <DrawTicketIcon className="h-12 w-12" />
+            <DrawTicketIcon className="h-14 w-14" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-[15px] font-black text-fg">{t("gacha_ticket")}</div>

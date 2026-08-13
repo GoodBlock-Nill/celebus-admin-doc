@@ -44,7 +44,7 @@ export default function WeeklyResultModal({
           {r.paid && r.cp > 0 && <span className="text-[12px] font-black text-gold">+{r.cp} CP</span>}
           {tk?.paid && tk.tickets > 0 && (
             <span className="inline-flex items-center gap-0.5 text-[12px] font-black text-primary-400">
-              <DrawTicketIcon className="h-3.5 w-3.5" />+{tk.tickets}
+              <DrawTicketIcon className="h-[18px] w-[18px]" />+{tk.tickets}
             </span>
           )}
         </span>
@@ -82,7 +82,7 @@ export default function WeeklyResultModal({
             )}
             {ticketTotal > 0 && (
               <div className="mt-0.5 inline-flex items-center gap-1 text-[15px] font-black text-primary-400">
-                <DrawTicketIcon className="h-4 w-4" />
+                <DrawTicketIcon className="h-5 w-5" />
                 {t("weekly_tickets").replace("{n}", ticketTotal.toLocaleString())}
               </div>
             )}
@@ -97,7 +97,7 @@ export default function WeeklyResultModal({
             className="mt-5 flex w-full items-center justify-center gap-1.5 rounded-full py-3 text-[15px] font-black text-white ring-1 ring-white/15 active:scale-[0.99]"
             style={{ background: "linear-gradient(180deg, #f0a53c 0%, #c07d1c 100%)" }}
           >
-            <DrawTicketIcon className="h-4 w-4" /> {t("weekly_go_gacha")}
+            <DrawTicketIcon className="h-5 w-5" /> {t("weekly_go_gacha")}
           </button>
         )}
         <button

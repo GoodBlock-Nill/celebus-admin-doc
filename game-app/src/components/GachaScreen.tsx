@@ -166,7 +166,7 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
   const totalTickets = wallet.free_tickets + wallet.paid_tickets;
   const ticketChip = (
     <span className="flex items-center gap-1 rounded-full bg-surface-1 px-3 py-1.5 text-[12px] font-black text-fg ring-1 ring-hairline">
-      <DrawTicketIcon className="h-4 w-4" />
+      <DrawTicketIcon className="h-5 w-5" />
       <span className="tabular-nums">{totalTickets}</span>
     </span>
   );
@@ -189,7 +189,7 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
           {/* 첫 진입 안내 — 이용권 획득 경로·유상 규칙 (닫으면 다시 안 뜸) */}
           {showIntro && stage === "idle" && (
             <div className="mt-3 flex items-start gap-2 rounded-[14px] bg-primary/10 px-3.5 py-3 ring-1 ring-primary/30">
-              <DrawTicketIcon className="mt-0.5 h-4 w-4" />
+              <DrawTicketIcon className="h-5 w-5" />
               <p className="min-w-0 flex-1 text-[12px] leading-snug text-fg break-keep">{t("gacha_ticket_desc")}</p>
               <button onClick={dismissIntro} aria-label={t("notice_close")} className="shrink-0 text-subtle hover:text-fg">
                 <X className="h-4 w-4" />
@@ -317,7 +317,7 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
                   disabled={!canDraw(1)}
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99] disabled:opacity-40"
                 >
-                  {t("gacha_draw1")} <span className="flex items-center text-[12px] font-bold"><DrawTicketIcon className="mr-0.5 h-3.5 w-3.5" />1</span>
+                  {t("gacha_draw1")} <span className="flex items-center text-[12px] font-bold"><DrawTicketIcon className="mr-0.5 h-[18px] w-[18px]" />1</span>
                 </button>
                 <button
                   onClick={() => void doDraw(10)}
@@ -325,7 +325,7 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
                   className="flex flex-1 items-center justify-center gap-1.5 rounded-full py-3.5 text-[15px] font-black text-white ring-1 ring-white/15 active:scale-[0.99] disabled:opacity-40"
                   style={{ background: "linear-gradient(180deg, #f0a53c 0%, #c07d1c 100%)" }}
                 >
-                  {t("gacha_draw10")} <span className="flex items-center text-[12px] font-bold"><DrawTicketIcon className="mr-0.5 h-3.5 w-3.5" />10</span>
+                  {t("gacha_draw10")} <span className="flex items-center text-[12px] font-bold"><DrawTicketIcon className="mr-0.5 h-[18px] w-[18px]" />10</span>
                 </button>
               </div>
               {!canDraw(1) && (
