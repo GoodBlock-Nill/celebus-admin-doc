@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Gift, Plus, X } from "lucide-react";
 import { aget, asend } from "@/lib/admin-api";
 import { GRADE_COLORS, ITEM_ART } from "../GachaCard";
+import AdminGachaDetail from "./AdminGachaDetail";
 import AdminGachaWinners from "./AdminGachaWinners";
 import { BTN, BTN_GHOST, Card, INPUT } from "./ui";
 
@@ -119,6 +120,7 @@ export default function AdminGacha() {
   const [events, setEvents] = useState<(GachaEvent & { id: string })[]>([]);
   const [form, setForm] = useState<Form | null>(null);
   const [winnersFor, setWinnersFor] = useState<string | null>(null); // 당첨자 패널이 열린 이벤트
+  const [detailFor, setDetailFor] = useState<string | null>(null); // 상세 패널이 열린 이벤트 (읽기 전용 운영 현황)
   const [busy, setBusy] = useState(false);
   const [uploadingIdx, setUploadingIdx] = useState<number | null>(null); // 카드 이미지 업로드 중인 행
   const [msg, setMsg] = useState<string | null>(null);
@@ -298,12 +300,21 @@ export default function AdminGacha() {
                     </span>
                   )}
                   {ev.kind === "physical_box" && (
+                    <button
+                      onClick={() => setDetailFor((v) => (v === ev.id ? null : ev.id))}
+                      className={detailFor === ev.id ? BTN : BTN_GHOST}
+                    >
+                      상세
+                    </button>
+                  )}
+                  {ev.kind === "physical_box" && (
                     <button onClick={() => setWinnersFor((v) => (v === ev.id ? null : ev.id))} className={BTN_GHOST}>
                       당첨자
                     </button>
                   )}
                   <button onClick={() => openEdit(ev)} className={BTN_GHOST}>편집</button>
                 </div>
+                {detailFor === ev.id && <AdminGachaDetail eventId={ev.id} pool={ev.game_gacha_pool_item ?? []} />}
                 {winnersFor === ev.id && <AdminGachaWinners eventId={ev.id} />}
               </div>
             ))}
