@@ -18,13 +18,13 @@ import { dailySeed } from "@/lib/match3";
 import { playMusic, stopMusic } from "@/lib/music";
 import { ssoLogin, hasLocalSession, markLocalSession } from "@/lib/auth-api";
 import { track } from "@/lib/track";
-import { setNick, setAvatar, startMatch } from "@/lib/game-api";
+import { setNick, setAvatar, startMatch, type StartBonus } from "@/lib/game-api";
 import { GAME_CONFIG } from "@/lib/game-config";
 import { useLang } from "./LangProvider";
 
 type Screen =
   | { name: "home" }
-  | { name: "game"; mode: "free" | "daily"; seed: number; matchId: string | null }
+  | { name: "game"; mode: "free" | "daily"; seed: number; matchId: string | null; startBonus?: StartBonus; nonce: number }
   | { name: "leaderboard" }
   | { name: "shop" }
   | { name: "more" }
@@ -34,6 +34,19 @@ type Screen =
   | { name: "theme" }
   | { name: "gacha" }
   | { name: "prizes" };
+
+// 딥링크 허용 화면 — ?screen=gacha 접속·팝업 버튼의 앱 내 이동에 사용 (파라미터 필요한 game 제외)
+const DEEPLINK_SCREENS = ["leaderboard", "shop", "more", "mypage", "items", "settings", "theme", "gacha", "prizes"] as const;
+export type DeepLinkScreen = (typeof DEEPLINK_SCREENS)[number];
+
+export function parseDeepLink(url: string): DeepLinkScreen | null {
+  try {
+    const s = new URL(url, "https://x").searchParams.get("screen");
+    return s && (DEEPLINK_SCREENS as readonly string[]).includes(s) ? (s as DeepLinkScreen) : null;
+  } catch {
+    return null;
+  }
+}
 
 export default function AppShell() {
   const { t } = useLang();
@@ -61,8 +74,16 @@ export default function AppShell() {
   const home = () => setScreen({ name: "home" });
   const more = () => setScreen({ name: "more" });
 
+  // 딥링크 — ?screen=gacha 등으로 접속 시 해당 화면으로 시작 (팝업 버튼·외부 홍보 링크용).
+  // SSR 하이드레이션 불일치를 피해 마운트 후 적용한다.
+  useEffect(() => {
+    const target = parseDeepLink(window.location.href);
+    if (target) setScreen({ name: target } as Screen);
+  }, []);
+
   // 게임 시작 — 서버에 matchId+seed 발급 요청(점수 위조 방어). 발급 실패 시 로컬 시드로 언랭크 플레이.
   const startingRef = useRef(false);
+  const gameNonce = useRef(0); // 판마다 증가 — 리마운트 key(언랭크 재도전도 항상 새 판 보장)
   const startGame = async (mode: "free" | "daily") => {
     if (startingRef.current) return; // 더블탭 중복 발급 방지
     startingRef.current = true;
@@ -73,6 +94,8 @@ export default function AppShell() {
       mode,
       seed: m ? m.seed : mode === "daily" ? dailySeed() : Math.floor(Math.random() * 2 ** 31),
       matchId: m ? m.matchId : null,
+      startBonus: m?.bonus,
+      nonce: ++gameNonce.current,
     });
   };
 
@@ -140,9 +163,13 @@ export default function AppShell() {
     case "game":
       body = (
         <Match3Game
+          // matchId는 1회용 — 다시하기는 매치 재발급 후 key 변경으로 완전 리마운트(제출 match_used 거부·웜업 재적용 방지)
+          key={screen.nonce}
           seed={screen.seed}
           mode={screen.mode}
           matchId={screen.matchId}
+          startBonus={screen.startBonus}
+          onRetry={() => startGame(screen.mode)}
           onExit={home}
           onViewRanking={() => go({ name: "leaderboard" })}
         />
@@ -183,6 +210,7 @@ export default function AppShell() {
           onOpenShop={() => go({ name: "shop" })}
           onOpenGacha={() => go({ name: "gacha" })}
           onOpenMore={more}
+          onDeepLink={(name) => go({ name } as Screen)}
         />
       );
   }

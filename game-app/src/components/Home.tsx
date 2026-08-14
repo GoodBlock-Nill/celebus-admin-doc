@@ -3,7 +3,19 @@
 import { useEffect, useState } from "react";
 import { LayoutGrid, ChevronLeft } from "lucide-react";
 import { GAME_CONFIG } from "@/lib/game-config";
-import { getNick, getAvatar, fetchAccount, getDailyStatus, claimWeeklyReward, type WeeklyReward } from "@/lib/game-api";
+import {
+  getNick,
+  getAvatar,
+  fetchAccount,
+  getDailyStatus,
+  claimWeeklyReward,
+  fetchHomeNotices,
+  visibleNotices,
+  type WeeklyReward,
+  type HomeNotice,
+} from "@/lib/game-api";
+import NoticeModal from "./NoticeModal";
+import type { DeepLinkScreen } from "./AppShell";
 import { kstWeekStart } from "@/lib/week";
 import { unlockAudio } from "@/lib/sfx";
 import { unlockBgm } from "@/lib/bgm";
@@ -12,6 +24,7 @@ import BetaBadge from "./BetaBadge";
 import DailyReward from "./DailyReward";
 import WeeklyResultModal from "./WeeklyResultModal";
 import DailyMissions from "./DailyMissions";
+import PassWidget from "./PassWidget";
 import ProfileSetup from "./ProfileSetup";
 import LangSwitcher from "./LangSwitcher";
 import { useLang } from "./LangProvider";
@@ -22,12 +35,14 @@ export default function Home({
   onOpenShop,
   onOpenGacha,
   onOpenMore,
+  onDeepLink,
 }: {
   onPlay: (mode: "free" | "daily") => void;
   onOpenLeaderboard: () => void;
   onOpenShop: () => void;
   onOpenGacha: () => void;
   onOpenMore: () => void;
+  onDeepLink: (name: DeepLinkScreen) => void; // 팝업 버튼의 앱 내 화면 이동
 }) {
   const { t } = useLang();
   const [nick, setNickState] = useState("");
@@ -37,6 +52,8 @@ export default function Home({
   const [showDaily, setShowDaily] = useState(false);
   const [weekly, setWeekly] = useState<WeeklyReward | null>(null);
   const [showProfile, setShowProfile] = useState(false);
+  const [notices, setNotices] = useState<HomeNotice[]>([]); // 홈 팝업 공지(닫기 이력 필터 후 최대 3개)
+  const [weeklyChecked, setWeeklyChecked] = useState(false); // 주간 결과 확인 완료 후에만 공지 표시(레이스 가드)
 
   useEffect(() => {
     const n = getNick();
@@ -55,6 +72,7 @@ export default function Home({
     }
     if (!seen) {
       claimWeeklyReward().then((r) => {
+        setWeeklyChecked(true); // 실패 포함 — 확인 절차 종료 후 공지 표시 허용
         if (!r) return; // 네트워크/서버 실패 — 기록하지 않고 다음 진입에 재시도
         try {
           localStorage.setItem(`wk_seen_${wk}`, "1");
@@ -66,7 +84,11 @@ export default function Home({
           if ((r.total_cp ?? 0) > 0 && r.celeb_point != null) setPoint(r.celeb_point);
         }
       });
+    } else {
+      setWeeklyChecked(true);
     }
+    // 홈 팝업 공지 — 공개 뷰 조회(부팅 캐시 없음, 관리자 변경 즉시 반영) 후 닫기 이력 필터
+    fetchHomeNotices().then((l) => setNotices(visibleNotices(l)));
   }, []);
 
   const home = GAME_CONFIG.home;
@@ -176,6 +198,7 @@ export default function Home({
           />
         </button>
         <DailyMissions onReward={(cp) => setPoint(cp)} />
+        <PassWidget onReward={(cp) => setPoint(cp)} />
       </div>
 
       {/* 대형 CTA 2개 */}
@@ -261,6 +284,11 @@ export default function Home({
             setAvatarState(a);
           }}
         />
+      )}
+
+      {/* 홈 팝업 공지 — 프로필 설정·주간 결과 모달이 모두 닫힌 뒤에만 표시(명시적 순서) */}
+      {!showProfile && !weekly && weeklyChecked && notices.length > 0 && (
+        <NoticeModal notices={notices} onClose={() => setNotices([])} onNavigate={onDeepLink} />
       )}
     </div>
   );
