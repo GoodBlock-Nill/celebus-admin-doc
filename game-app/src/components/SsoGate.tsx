@@ -3,7 +3,7 @@
 // CELEBUS 미로그인 게이트 — 본앱 세션이 없으면 게임 이용 불가.
 // 본앱에서 로그인 후 이 화면의 [다시 확인]으로 재시도한다(자체 가입/로그인 폐기).
 import { useState } from "react";
-import { RefreshCw } from "lucide-react";
+import { ExternalLink, RefreshCw } from "lucide-react";
 import { ssoLogin, markLocalSession } from "@/lib/auth-api";
 import { setNick, setAvatar } from "@/lib/game-api";
 import { GAME_CONFIG } from "@/lib/game-config";
@@ -58,10 +58,22 @@ export default function SsoGate({ onDone }: { onDone: () => void }) {
       <div className="mt-8 w-full rounded-[20px] bg-black/45 p-5 ring-1 ring-white/15 backdrop-blur">
         <div className="text-[16px] font-black text-white break-keep">{t("sso_gate_title")}</div>
         <p className="mt-2 text-[12.5px] leading-relaxed text-white/70 break-keep">{t("sso_gate_body")}</p>
+        {/* 주 동작 = CELEBUS 앱으로 이동(로그인하러) / 보조 = 돌아와서 다시 확인 */}
+        {GAME_CONFIG.home.parentAppUrl && (
+          <button
+            onClick={() => {
+              window.location.href = GAME_CONFIG.home.parentAppUrl!;
+            }}
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3 text-[14px] font-black text-white active:scale-[0.99]"
+          >
+            <ExternalLink className="h-4 w-4" />
+            {t("sso_go_celebus")}
+          </button>
+        )}
         <button
           onClick={() => void retry()}
           disabled={busy}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3 text-[14px] font-black text-white active:scale-[0.99] disabled:opacity-60"
+          className="mt-2 flex w-full items-center justify-center gap-2 rounded-full bg-white/10 py-3 text-[14px] font-black text-white ring-1 ring-white/20 active:scale-[0.99] disabled:opacity-60"
         >
           <RefreshCw className={`h-4 w-4 ${busy ? "anim-spin-slow" : ""}`} />
           {busy ? t("sso_checking") : t("sso_retry")}
