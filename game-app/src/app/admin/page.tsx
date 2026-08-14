@@ -13,7 +13,10 @@ import {
   Settings2,
   ScrollText,
   ExternalLink,
+  Gauge,
+  Megaphone,
   Ticket,
+  CalendarRange,
 } from "lucide-react";
 import { aget } from "@/lib/admin-api";
 import { BTN, INPUT } from "@/components/admin/ui";
@@ -22,15 +25,21 @@ import AdminMembers from "@/components/admin/AdminMembers";
 import AdminBoard from "@/components/admin/AdminBoard";
 import AdminBanned from "@/components/admin/AdminBanned";
 import AdminEconomy from "@/components/admin/AdminEconomy";
+import AdminBalance from "@/components/admin/AdminBalance";
+import AdminNotice from "@/components/admin/AdminNotice";
 import AdminGacha from "@/components/admin/AdminGacha";
 import AdminConfig from "@/components/admin/AdminConfig";
 import AdminLogs from "@/components/admin/AdminLogs";
+import AdminWeeklyReport from "@/components/admin/AdminWeeklyReport";
 
 const TABS = [
   { key: "dash", label: "대시보드", icon: LayoutDashboard, desc: "오늘 지표·활성화·리텐션" },
   { key: "members", label: "회원", icon: Users, desc: "검색·상세·제재·CP·V01D 멤버 지정" },
   { key: "board", label: "리더보드", icon: Trophy, desc: "기간별 기록·보상 정산 CSV·기록 삭제" },
+  { key: "balance", label: "밸런스", icon: Gauge, desc: "레벨 벽·좌절 구간·재도전 과열 계측" },
+  { key: "report", label: "주간 리포트", icon: CalendarRange, desc: "주간 지표·전주 대비·개선 인사이트" },
   { key: "banned", label: "금칙어", icon: Ban, desc: "닉네임 금칙어 관리" },
+  { key: "notice", label: "홈 팝업", icon: Megaphone, desc: "홈 진입 시 팝업 공지 관리" },
   { key: "economy", label: "경제", icon: Coins, desc: "CP 발행·소진·유통 + 아이템 가격" },
   { key: "gacha", label: "럭키드로우", icon: Ticket, desc: "럭키드로우 이벤트·확률표·당첨자 관리" },
   { key: "config", label: "설정", icon: Settings2, desc: "게임 밸런스·연출·테마 원격 설정" },
@@ -173,7 +182,10 @@ export default function AdminPage() {
           {tab === "dash" && <AdminDashboard />}
           {tab === "members" && <AdminMembers />}
           {tab === "board" && <AdminBoard />}
+          {tab === "balance" && <AdminBalance />}
+          {tab === "report" && <AdminWeeklyReport />}
           {tab === "banned" && <AdminBanned />}
+          {tab === "notice" && <AdminNotice />}
           {tab === "economy" && <AdminEconomy />}
           {tab === "gacha" && <AdminGacha />}
           {tab === "config" && <AdminConfig />}

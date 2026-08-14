@@ -21,7 +21,7 @@ export function Card({ title, children, right }: { title: string; children: Reac
   );
 }
 
-export function Stat({ label, value }: { label: string; value: string | number }) {
+export function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="rounded-[12px] bg-surface-2 px-3.5 py-3">
       <div className="text-[12px] font-bold text-muted">{label}</div>
