@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { aget, asend } from "@/lib/admin-api";
 import { GAME_CONFIG } from "@/lib/game-config";
+import AdminMissions, { type MissionsOverlay } from "./AdminMissions";
 import AdminRewards, { type RewardsOverlay } from "./AdminRewards";
 import { BTN, BTN_GHOST, Card, INPUT } from "./ui";
 
@@ -203,12 +204,22 @@ export default function AdminConfig() {
     setMsg(null);
   };
 
-  // rewards 그룹은 배열·중첩 구조라 GROUPS 폼 대신 전용 폼(AdminRewards)으로 편집
+  // rewards·missions 그룹은 배열·중첩 구조라 GROUPS 폼 대신 전용 폼으로 편집
   const setRewards = (v: RewardsOverlay | undefined) => {
     setOverlay((o) => {
       const next = { ...o };
       if (v === undefined) delete next.rewards;
       else next.rewards = v as unknown as Record<string, unknown>;
+      setRaw(JSON.stringify(next, null, 2));
+      return next;
+    });
+    setMsg(null);
+  };
+  const setMissions = (v: MissionsOverlay | undefined) => {
+    setOverlay((o) => {
+      const next = { ...o };
+      if (v === undefined) delete next.missions;
+      else next.missions = v as unknown as Record<string, unknown>;
       setRaw(JSON.stringify(next, null, 2));
       return next;
     });
@@ -280,6 +291,8 @@ export default function AdminConfig() {
       ))}
 
       <AdminRewards value={overlay.rewards as RewardsOverlay | undefined} onChange={setRewards} />
+
+      <AdminMissions value={overlay.missions as MissionsOverlay | undefined} onChange={setMissions} />
 
       {/* 고급 — 원본 JSON (접이식). 데일리 미션 pool·타일·아바타 등 배열/중첩 값 편집용 */}
       <Card title="고급 — 오버레이 원본(JSON)">

@@ -24,6 +24,23 @@ const rewardsSchema = z
   })
   .strict();
 
+// missions 그룹 검증 — 미션 RPC가 이 값으로 보상을 지급하므로 오입력 방어 (AdminMissions.tsx와 규칙 동일)
+const missionsSchema = z
+  .object({
+    count: z.number().int().min(1).max(20).optional(),
+    pool: z
+      .array(
+        z.object({
+          id: z.enum(["plays", "score", "level", "high", "item", "normal"]),
+          goal: z.number().int().min(1).max(1000000),
+          cp: z.number().int().min(1).max(100000),
+        })
+      )
+      .max(20)
+      .optional(),
+  })
+  .strict();
+
 // game_config 오버레이 조회/저장 — 코드 기본값 위에 덮이는 관리자 튜닝 값
 export async function GET(req: Request) {
   if (!requireAdmin(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -41,6 +58,10 @@ export async function PUT(req: Request) {
   const rewards = (body.config as Record<string, unknown>).rewards;
   if (rewards !== undefined && !rewardsSchema.safeParse(rewards).success) {
     return NextResponse.json({ error: "bad_rewards" }, { status: 400 });
+  }
+  const missions = (body.config as Record<string, unknown>).missions;
+  if (missions !== undefined && !missionsSchema.safeParse(missions).success) {
+    return NextResponse.json({ error: "bad_missions" }, { status: 400 });
   }
   const { error } = await admin().from("game_config").upsert({ id: 1, config: body.config, updated_at: new Date().toISOString() });
   if (error) return NextResponse.json({ error: "db" }, { status: 500 });
