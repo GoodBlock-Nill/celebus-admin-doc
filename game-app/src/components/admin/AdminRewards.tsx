@@ -8,7 +8,7 @@ import { BTN_GHOST, Card, INPUT } from "./ui";
 
 export type TicketTier = { from: number; to: number; tickets: number };
 export type WeeklyTickets = { tiers: TicketTier[]; others: number };
-export type RewardsOverlay = { weeklyTop?: number[]; weeklyTickets?: WeeklyTickets; ticketPrice?: number };
+export type RewardsOverlay = { weeklyTop?: number[]; weeklyTickets?: WeeklyTickets; ticketPrice?: number; ticketDailyBuyCap?: number };
 
 export const MAX_TOP_ROWS = 50;
 export const MAX_TIER_ROWS = 20;
@@ -193,6 +193,22 @@ export default function AdminRewards({
             className={NUM_INPUT}
           />
           <span className="shrink-0">CP</span>
+        </label>
+      </div>
+
+      {/* 구매 일일 한도 — 헤비 유저의 하루 소진량 제한 (이벤트 지속성·기회 분산) */}
+      <div className="mt-6">
+        <SubHead label="드로우 티켓 구매 일일 한도 (0 = 무제한)" overridden={value?.ticketDailyBuyCap !== undefined} onReset={() => patch({}, "ticketDailyBuyCap")} />
+        <label className="flex items-center gap-2 text-[13.5px] text-muted">
+          <span className="shrink-0">하루</span>
+          <input
+            value={value?.ticketDailyBuyCap !== undefined ? String(value.ticketDailyBuyCap) : ""}
+            onChange={(e) => (e.target.value === "" ? patch({}, "ticketDailyBuyCap") : patch({ ticketDailyBuyCap: Math.max(0, int(e.target.value)) }))}
+            placeholder={`기본값 ${defaults.ticketDailyBuyCap}`}
+            inputMode="numeric"
+            className={NUM_INPUT}
+          />
+          <span className="shrink-0">장 (KST 기준)</span>
         </label>
       </div>
 

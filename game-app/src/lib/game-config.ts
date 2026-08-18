@@ -52,6 +52,7 @@ export interface GameConfig {
     weeklyTop: number[];
     weeklyTickets: { tiers: { from: number; to: number; tickets: number }[]; others: number };
     ticketPrice: number;
+    ticketDailyBuyCap: number; // 드로우 티켓 구매 일일 한도(KST, 0=무제한) — 헤비 소진 완화
   };
   // 럭키드로우 재화 카드 기본 이미지 — 풀 행에 개별 이미지가 없을 때 재화 종류별로 재사용 (관리자 업로드)
   gachaCards: Partial<Record<"cp" | "heart" | "bomb" | "line" | "shuffle" | "time", string>>;
@@ -168,6 +169,7 @@ export const GAME_CONFIG: GameConfig = {
       others: 1,
     },
     ticketPrice: 500,
+    ticketDailyBuyCap: 10,
   },
   gachaCards: {},
   hearts: { start: 1, slots: 6, maxPerRun: 3, continueSec: 30, price: 5 },

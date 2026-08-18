@@ -21,6 +21,7 @@ const rewardsSchema = z
       })
       .optional(),
     ticketPrice: z.number().int().min(1).optional(),
+    ticketDailyBuyCap: z.number().int().min(0).max(99).optional(),
   })
   .strict();
 

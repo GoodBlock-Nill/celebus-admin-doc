@@ -226,6 +226,12 @@ export default function GachaScreen({ onBack, onOpenShop }: { onBack: () => void
                 {event.description[lang] || event.description.ko}
               </p>
             )}
+            {/* 다음 회차 예고 — 실물 박스 이벤트가 없을 때(소진 종료 등) 재방문 동기 유지 */}
+            {stage === "idle" && !events.some((e) => e.kind === "physical_box") && (
+              <p className="mx-auto mt-2 max-w-[300px] rounded-full bg-surface-1 px-4 py-2 text-[12px] font-bold text-primary-400 ring-1 ring-hairline break-keep">
+                ✨ {t("gacha_next_teaser")}
+              </p>
+            )}
           </div>
 
           {/* 카드 스테이지 */}

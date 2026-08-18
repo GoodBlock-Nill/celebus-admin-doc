@@ -53,7 +53,7 @@ export default function Shop({ onBack }: { onBack: () => void }) {
     setBusy(true);
     const res = await buyGachaTicket(1);
     setBusy(false);
-    if (!res.ok) return toast.error(t("insufficient"));
+    if (!res.ok) return toast.error(res.reason === "daily_cap" ? t("shop_ticket_daily_cap").replace("{n}", String(GAME_CONFIG.rewards.ticketDailyBuyCap)) : t("insufficient"));
     setAccount((a) => ({ ...a, celeb_point: res.celeb_point }));
     setTickets(res.wallet);
     sfxCoin();
