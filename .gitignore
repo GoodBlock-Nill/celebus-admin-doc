@@ -25,3 +25,4 @@ idol/ComfyUI
 .fq-analysis/
 .raffle-analysis/
 analysis-screenshots/
+*.dev-server.log
