@@ -9,7 +9,7 @@ import { GAME_CONFIG } from "@/lib/game-config";
 import Avatar from "../Avatar";
 import { BTN_DANGER, BTN_GHOST, Card, DataTable, TD, TR_HOVER, fmtDate } from "./ui";
 
-type Row = { rank: number; player_hash: string; nickname: string; avatar: string | null; level: number; score: number; created_at: string; flagged?: boolean };
+type Row = { rank: number; player_hash: string; nickname: string; avatar: string | null; level: number; score: number; created_at: string; flagged?: boolean; member?: boolean };
 
 const PRESETS: { key: string; label: string }[] = [
   { key: "this_week", label: "이번 주" },
@@ -22,22 +22,47 @@ const PRESETS: { key: string; label: string }[] = [
 export default function AdminBoard() {
   const [mode, setMode] = useState<"daily" | "free">("daily");
   const [preset, setPreset] = useState("this_week");
+  const [hist, setHist] = useState<{ period: "week" | "month"; offset: number } | null>(null); // 임의 과거 기간(드롭다운)
   const [rows, setRows] = useState<Row[]>([]);
   const [onlyFlagged, setOnlyFlagged] = useState(false);
   const [armed, setArmed] = useState<string | null>(null); // 2단계 삭제 confirm
   const [busy, setBusy] = useState(false);
 
-  const load = async () => setRows(await aget<Row[]>(`/api/admin/leaderboard?mode=${mode}&preset=${preset}`));
+  const load = async () => {
+    const q = hist ? `mode=${mode}&period=${hist.period}&offset=${hist.offset}` : `mode=${mode}&preset=${preset}`;
+    setRows(await aget<Row[]>(`/api/admin/leaderboard?${q}`));
+  };
   useEffect(() => {
     void load();
     setOnlyFlagged(false);
     setArmed(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, preset]);
+  }, [mode, preset, hist]);
 
-  const isWeekly = preset === "this_week" || preset === "last_week";
+  const isWeekly = hist ? hist.period === "week" : preset === "this_week" || preset === "last_week";
+  const isPast = hist !== null || preset === "last_week" || preset === "last_month";
   const rewardTable = GAME_CONFIG.rewards.weeklyTop;
   const rewardFor = (rank: number) => (isWeekly && rank <= rewardTable.length ? rewardTable[rank - 1] : 0);
+
+  // 과거 기간 옵션 — 최근 12주(오프셋 2~13) + 최근 6개월(2~7). KST 기준 날짜 라벨
+  const histOptions = () => {
+    const kst = new Date(Date.now() + 9 * 3600 * 1000);
+    const fmt = (d: Date) => `${d.getUTCMonth() + 1}.${d.getUTCDate()}`;
+    const opts: { v: string; label: string }[] = [];
+    for (let o = 2; o <= 13; o++) {
+      const s = new Date(kst);
+      s.setUTCDate(kst.getUTCDate() - ((kst.getUTCDay() + 6) % 7) - o * 7);
+      const e = new Date(s);
+      e.setUTCDate(s.getUTCDate() + 6);
+      opts.push({ v: `week:${o}`, label: `주간 ${fmt(s)} ~ ${fmt(e)}` });
+    }
+    for (let o = 2; o <= 7; o++) {
+      const s = new Date(kst);
+      s.setUTCMonth(kst.getUTCMonth() - o, 1);
+      opts.push({ v: `month:${o}`, label: `월간 ${s.getUTCFullYear()}.${s.getUTCMonth() + 1}` });
+    }
+    return opts;
+  };
 
   const flaggedCount = useMemo(() => rows.filter((r) => r.flagged).length, [rows]);
   const view = onlyFlagged ? rows.filter((r) => r.flagged) : rows;
@@ -57,15 +82,15 @@ export default function AdminBoard() {
 
   // 보상 정산용 CSV (엑셀 호환 BOM 포함) — 주간이면 보상 열 포함
   const exportCsv = () => {
-    const head = isWeekly ? "rank,nickname,level,score,reward_cp,player_hash,achieved_at" : "rank,nickname,level,score,player_hash,achieved_at";
+    const head = isWeekly ? "rank,nickname,member,level,score,reward_cp,player_hash,achieved_at" : "rank,nickname,member,level,score,player_hash,achieved_at";
     const body = rows.map((r) => {
-      const base = `${r.rank},"${r.nickname.replace(/"/g, '""')}",${r.level},${r.score}`;
+      const base = `${r.rank},"${r.nickname.replace(/"/g, '""')}",${r.member ? "V01D" : ""},${r.level},${r.score}`;
       return isWeekly ? `${base},${rewardFor(r.rank)},${r.player_hash},${r.created_at}` : `${base},${r.player_hash},${r.created_at}`;
     });
     const blob = new Blob(["﻿" + [head, ...body].join("\n")], { type: "text/csv;charset=utf-8" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `celebmatch_${mode === "daily" ? "normal" : "item"}_${preset}.csv`;
+    a.download = `celebmatch_${mode === "daily" ? "normal" : "item"}_${hist ? `${hist.period}-${hist.offset}` : preset}.csv`;
     a.click();
     URL.revokeObjectURL(a.href);
   };
@@ -97,14 +122,40 @@ export default function AdminBoard() {
         {PRESETS.map((p) => (
           <button
             key={p.key}
-            onClick={() => setPreset(p.key)}
+            onClick={() => {
+              setHist(null);
+              setPreset(p.key);
+            }}
             className={`rounded-full px-3 py-1.5 text-[12.5px] font-bold ring-1 ${
-              preset === p.key ? "bg-primary/15 text-primary-400 ring-primary/40" : "bg-surface-2 text-muted ring-hairline"
+              !hist && preset === p.key ? "bg-primary/15 text-primary-400 ring-primary/40" : "bg-surface-2 text-muted ring-hairline"
             }`}
           >
             {p.label}
           </button>
         ))}
+        {/* 임의 과거 기간 — 최근 12주·6개월 (정산·이력 확인용) */}
+        <select
+          value={hist ? `${hist.period}:${hist.offset}` : ""}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (!v) {
+              setHist(null);
+              return;
+            }
+            const [p, o] = v.split(":");
+            setHist({ period: p as "week" | "month", offset: Number(o) });
+          }}
+          className={`rounded-full px-3 py-1.5 text-[12.5px] font-bold ring-1 focus:outline-none ${
+            hist ? "bg-primary/15 text-primary-400 ring-primary/40" : "bg-surface-2 text-muted ring-hairline"
+          }`}
+        >
+          <option value="">더 과거…</option>
+          {histOptions().map((o) => (
+            <option key={o.v} value={o.v}>
+              {o.label}
+            </option>
+          ))}
+        </select>
         {/* 의심(치터) 필터 */}
         <button
           onClick={() => setOnlyFlagged((v) => !v)}
@@ -117,7 +168,7 @@ export default function AdminBoard() {
         </button>
       </div>
 
-      <DataTable head={["순위", "유저", "레벨", "점수", ...(isWeekly ? [preset === "last_week" ? "지급 보상" : "예상 보상"] : []), "달성 시각", ""]}>
+      <DataTable head={["순위", "유저", "레벨", "점수", ...(isWeekly ? [isPast ? "지급 보상" : "예상 보상"] : []), "달성 시각", ""]}>
         {view.map((r) => (
           <tr key={r.player_hash} className={TR_HOVER}>
             <td className={`${TD} w-12 text-center font-black tabular-nums`}>{r.rank}</td>
@@ -125,6 +176,9 @@ export default function AdminBoard() {
               <span className="flex items-center gap-2">
                 <Avatar value={r.avatar} size="sm" />
                 <span className="truncate font-bold">{r.nickname}</span>
+                {r.member && (
+                  <span className="shrink-0 rounded-[4px] bg-primary px-1 py-0.5 text-[9px] font-black leading-none text-white">V01D</span>
+                )}
                 {r.flagged && (
                   <span title="이상 제출 의심 (제출 간격이 물리적 최소 판 길이보다 짧음)" className="text-[11px]">
                     ⚠️

@@ -22,6 +22,8 @@ const ACTION_LABEL: Record<string, string> = {
   adjust_point: "CP 조정",
   banned_add: "금칙어 추가",
   banned_remove: "금칙어 삭제",
+  notice_save: "홈 팝업 저장",
+  notice_delete: "홈 팝업 삭제",
   config_update: "설정 변경",
   catalog_update: "가격 변경",
   set_member: "V01D 멤버",
@@ -30,6 +32,7 @@ const ACTION_LABEL: Record<string, string> = {
   set_member_avatar: "V01D 아바타",
   clear_member_avatar: "V01D 아바타",
   suspect_score: "의심 점수",
+  submit_rejected: "제출 거부",
   replay_mismatch: "리플레이 불일치",
   replay_rejected: "리플레이 거부",
   replay_enforce_on: "리플레이 거부 활성",
@@ -90,6 +93,12 @@ function describe(l: Log): string {
       return `금칙어 추가: ${l.target ?? ""}`;
     case "banned_remove":
       return `금칙어 삭제: ${l.target ?? ""}`;
+    case "notice_save":
+      return `홈 팝업 저장 — "${d.title ?? ""}" (${d.enabled ? "게시" : "꺼짐"} · ${
+        { always: "매번 표시", daily: "오늘 하루 닫기", once: "한 번만" }[String(d.policy)] ?? d.policy
+      })`;
+    case "notice_delete":
+      return "홈 팝업 삭제";
     case "catalog_update":
       return `${ITEM_LABEL[String(l.target)] ?? l.target} 가격 → ${num(d.price)} CP`;
     case "set_member":
@@ -110,6 +119,21 @@ function describe(l: Log): string {
       const gap = d.gap_sec != null ? `제출 간격 ${num(d.gap_sec)}초` : d.elapsed_sec != null ? `경과 ${num(d.elapsed_sec)}초` : "";
       return `의심 점수 감지 — ${MODE_LABEL[String(d.mode)] ?? ""} · 레벨 ${num(d.level)} · ${num(d.score)}점${gap ? ` (${gap})` : ""}`;
     }
+    case "submit_rejected": {
+      const REASON: Record<string, string> = {
+        no_match: "매치 식별자 없음(구버전 클라이언트 가능성)",
+        bad_match: "매치 소유자 불일치",
+        match_used: "이미 사용된 매치(중복 제출)",
+        match_mode: "매치 모드 불일치",
+        too_fast: "물리적 최소 판 길이 미만",
+        score_too_fast: "초당 점수율 상한 초과",
+        bad_score_level: "점수-레벨 정합 실패",
+      };
+      const why = REASON[String(d.reason)] ?? String(d.reason);
+      const range = d.expect_lo != null ? ` (레벨 ${num(d.level)} 유효범위 ${num(d.expect_lo)}~${num(Number(d.expect_hi) - 1)})` : "";
+      const el = d.elapsed_sec != null ? ` · 경과 ${num(d.elapsed_sec)}초` : "";
+      return `점수 제출 거부 — ${why} · ${MODE_LABEL[String(d.mode)] ?? ""} 레벨 ${num(d.level)} ${num(d.score)}점${el}${range} (저장 안 됨)`;
+    }
     case "replay_mismatch":
       return `리플레이 불일치${d.egregious ? " (명백)" : ""} — ${MODE_LABEL[String(d.mode)] ?? ""} 클라 ${num(d.score)}점 (서버 가능 최대 ${num(d.sim_max)} · 위법 수 ${num(d.illegal)} · 로그 ${num(d.moves)}수)`;
     case "replay_rejected":
@@ -128,7 +152,7 @@ function describe(l: Log): string {
 // 대상 표시 — 계정이면 닉네임, 그 외(금칙어·아이템)는 액션 문장에 이미 포함되므로 생략
 function targetText(l: Log): string {
   if (l.target_nickname) return l.target_nickname;
-  if (["banned_add", "banned_remove", "catalog_update", "config_update", "sso_diag"].includes(l.action)) return "-";
+  if (["banned_add", "banned_remove", "catalog_update", "config_update", "sso_diag", "notice_save", "notice_delete"].includes(l.action)) return "-";
   if (l.target) return `${l.target.slice(0, 8)}… (탈퇴/미상)`;
   return "-";
 }

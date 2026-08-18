@@ -132,6 +132,14 @@ export default function ResultModal({
           </div>
         )}
 
+        {/* CELEB PASS +XP — 성과 무관 적립(피로감 개선): 진 판에도 "쌓였다"를 매판 보여주는 핵심 장치 */}
+        {rank && (rank.pass_xp_gained ?? 0) > 0 && (
+          <div className="mb-4 flex items-center justify-between rounded-[14px] bg-gold/15 px-4 py-2.5 ring-1 ring-gold/35">
+            <span className="text-[12px] font-black text-gold">★ {t("pass_title")}</span>
+            <span className="text-[13px] font-black tabular-nums text-gold">+{rank.pass_xp_gained} XP</span>
+          </div>
+        )}
+
         {/* 모드 랭크 (서버 응답) — 상위 50% 이내만 상위% 노출, 그 외 전체 인원 표기 */}
         {(submitting || (rank && rank.rank != null && (rank.total || 0) > 0)) && (
           <div className="mb-4 rounded-[14px] bg-surface-1 px-4 py-3 ring-1 ring-hairline">

@@ -102,6 +102,8 @@ export default function Match3Game({
   seed,
   mode = "free",
   matchId = null,
+  startBonus,
+  onRetry,
   onExit,
   onGameOver,
   onViewRanking,
@@ -109,6 +111,8 @@ export default function Match3Game({
   seed: number;
   mode?: "free" | "daily";
   matchId?: string | null; // 서버 발급 matchId — 점수 제출 시 필수(위조 방어)
+  startBonus?: { warmupSec: number; streakSec: number; streakDays: number }; // 순항 보너스(서버 판정) — 시작 시간 가산
+  onRetry?: () => void; // 다시하기 — 부모에서 매치 재발급(matchId 1회용) 후 리마운트. 미지정 시 로컬 init 폴백(언랭크)
   onExit?: () => void;
   onGameOver?: (score: number) => void;
   onViewRanking?: () => void;
@@ -138,6 +142,7 @@ export default function Match3Game({
   // 이어하기 하트 (일반 매치 전용) — 판당 기본 start개 + 상점 구매 보유분(카운트다운 종료 시 1회 확정)
   const [hearts, setHearts] = useState(GAME_CONFIG.hearts.start);
   const heartsUsedRef = useRef(0); // 이번 판 사용 하트(기본 초과분만 서버 차감)
+  const endReasonRef = useRef<"timeout" | "continue_declined">("timeout"); // 종료 사유 텔레메트리(밸런스 계측)
   const [prevBest, setPrevBest] = useState(0); // 게임오버 시점의 이전 최고 점수(결과 모달 대비 표기)
   const [timeLeft, setTimeLeft] = useState(GAME_CONFIG.game.seconds);
   const [phase, setPhase] = useState<Phase>("countdown");
@@ -178,6 +183,11 @@ export default function Match3Game({
   const prevMulRef = useRef(1); // 피버 단계 진입 감지
   const [timeBonus, setTimeBonus] = useState<{ n: number; key: number } | null>(null); // +초 플라이업
   const timeBonusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // 순항 구간(Wave D) — 시작 보너스 합(서버 판정) + 라스트 스퍼트(시간 종료 직전 레벨 임박 시 무료 +초, 판당 제한)
+  const startBonusSec = (startBonus?.warmupSec ?? 0) + (startBonus?.streakSec ?? 0);
+  const graceLeftRef = useRef(GAME_CONFIG.coasting.gracePerRun);
+  const [spurtBanner, setSpurtBanner] = useState<{ key: number } | null>(null);
+  const spurtTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // W2 타격감 — 파편 파티클 / 보드 펀치(히트스톱) / 스페셜 생성 수렴
   const [particles, setParticles] = useState<Particle[]>([]);
   const [punch, setPunch] = useState(false);
@@ -248,8 +258,12 @@ export default function Match3Game({
     setPrevBest(0);
     setHearts(GAME_CONFIG.hearts.start);
     heartsUsedRef.current = 0;
-    setTimeLeft(GAME_CONFIG.game.seconds);
-    timeLeftRef.current = GAME_CONFIG.game.seconds;
+    endReasonRef.current = "timeout";
+    graceLeftRef.current = GAME_CONFIG.coasting.gracePerRun;
+    setSpurtBanner(null);
+    // 시작 시간 = 기본 + 순항 보너스(웜업·스트릭, 서버 판정) — maxSeconds 상한은 addTime에서만 적용
+    setTimeLeft(GAME_CONFIG.game.seconds + startBonusSec);
+    timeLeftRef.current = GAME_CONFIG.game.seconds + startBonusSec;
     setPending(null);
     setAim(null);
     setSelected(null);
@@ -290,7 +304,7 @@ export default function Match3Game({
     movesRef.current = []; // 새 판 입력 로그 초기화
     // 온보딩: 최초 1회 자동 표시 + 설정으로 강제 표시 시. 이후엔 바로 카운트다운.
     setPhase(getOnboarding() || !getSeenIntro() ? "intro" : "countdown");
-  }, [seed, mode, bestKey, makeTilesFromColors, setBusyState, commitTiles]);
+  }, [seed, mode, bestKey, makeTilesFromColors, setBusyState, commitTiles, startBonusSec]);
 
   useEffect(() => {
     init();
@@ -436,6 +450,26 @@ export default function Match3Game({
   useEffect(() => {
     // 시간이 다 됐어도 진행 중인 캐스케이드(busy)가 끝난 뒤에 종료·제출 → 표시 점수 = 제출 점수
     if (timeLeft === 0 && phase === "playing" && !busy) {
+      // 라스트 스퍼트(순항 구간) — 레벨 목표 임박(진행도 ≥ 임계) 시 판당 제한 횟수만큼 무료 +초.
+      //   하트(유료 30초)보다 먼저 발동하는 가벼운 관용 — near-miss 좌절의 바닥을 잘라낸다.
+      const co = GAME_CONFIG.coasting;
+      if (graceLeftRef.current > 0 && co.graceSec > 0 && levelProgress >= co.graceThreshold) {
+        graceLeftRef.current -= 1;
+        logMove({ k: "g" }); // 리플레이 로그(시뮬레이터는 시간계 이벤트로 무시)
+        endAtRef.current = Date.now() + co.graceSec * 1000;
+        timeLeftRef.current = co.graceSec;
+        setTimeLeft(co.graceSec);
+        prevMulRef.current = scoreMul(co.graceSec); // 재시작 순간 배율 기준 재설정(피버 배너 오발 방지)
+        setTimeBonus({ n: co.graceSec, key: floaterId.current++ });
+        if (timeBonusTimer.current) clearTimeout(timeBonusTimer.current);
+        timeBonusTimer.current = setTimeout(() => setTimeBonus(null), 900);
+        setSpurtBanner({ key: floaterId.current++ });
+        if (spurtTimer.current) clearTimeout(spurtTimer.current);
+        spurtTimer.current = setTimeout(() => setSpurtBanner(null), 1100);
+        sfxLevelUp();
+        vibrate(80);
+        return;
+      }
       // 일반 매치 + 하트 보유 + 판당 상한 미달 → 이어하기 선택지 먼저 (제출은 최종 종료 시에만)
       if (mode === "daily" && hearts > 0 && heartsUsedRef.current < GAME_CONFIG.hearts.maxPerRun) {
         setQuitOpen(false);
@@ -466,7 +500,19 @@ export default function Match3Game({
       // 두 모드 모두 랭킹 제출(모드별 별도 보드) — 랭크는 (최고 레벨, 누적 점수). 0점 제외.
       if (score > 0) {
         setSubmitting(true);
-        submitScore({ mode, seed, score, level: levelRef.current, matchId, moves: movesRef.current, nickname: getNick(), avatar: getAvatar() })
+        submitScore({
+          mode,
+          seed,
+          score,
+          level: levelRef.current,
+          matchId,
+          moves: movesRef.current,
+          endReason: endReasonRef.current,
+          continuesUsed: heartsUsedRef.current,
+          levelProgress,
+          nickname: getNick(),
+          avatar: getAvatar(),
+        })
           .then((r) => {
             setRank(r);
             if (!r) {
@@ -488,7 +534,7 @@ export default function Match3Game({
       }
       consumeUsed(); // 기본 지급 초과 사용분 서버 차감 (free=아이템 / daily=하트)
     }
-  }, [timeLeft, phase, busy, score, best, bestKey, onGameOver, mode, seed, matchId, t, hearts]);
+  }, [timeLeft, phase, busy, score, best, bestKey, onGameOver, mode, seed, matchId, t, hearts, levelProgress]);
 
   // 기본 지급 초과 사용분 서버 인벤토리 차감 — 종료·기권 공통 (기권 시 공짜 사용 악용 방지)
   function consumeUsed() {
@@ -526,6 +572,7 @@ export default function Match3Game({
 
   // 이어하기 포기 — 하트를 0으로 만들어 종료 경로(제출 포함)로 합류
   function giveUpContinue() {
+    endReasonRef.current = "continue_declined";
     setHearts(0);
     setPhase("playing"); // timeLeft=0 + hearts=0 → 위 효과가 즉시 최종 종료 처리
   }
@@ -1293,6 +1340,21 @@ export default function Match3Game({
           </div>
         )}
 
+        {/* 라스트 스퍼트 배너 — 시간 종료 직전 레벨 임박 시 무료 +초(순항 구간) */}
+        {spurtBanner && (
+          <div
+            key={`sp-${spurtBanner.key}`}
+            className="anim-combo-flash pointer-events-none absolute left-1/2 top-[33%] z-30"
+            style={{ transform: "translate(-50%, -50%)" }}
+          >
+            <div className="rounded-2xl bg-gold px-5 py-2 text-center shadow-lg">
+              <div className="font-display text-[22px] font-black leading-none text-black">
+                🔥 {t("spurt_banner")} +{GAME_CONFIG.coasting.graceSec}s
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* 피버 진입 배너 (배율 단계 상승 시 1회) */}
         {feverBanner && (
           <div
@@ -1345,6 +1407,21 @@ export default function Match3Game({
             <div key={countdown} className="anim-count-punch font-display text-[88px] font-black text-white drop-shadow-lg">
               {countdown > 0 ? countdown : t("go")}
             </div>
+            {/* 순항 보너스 칩 — 웜업(오늘 첫 판)·출석 스트릭 부스터 (서버 판정) */}
+            {startBonusSec > 0 && (
+              <div className="absolute bottom-[16%] flex flex-col items-center gap-1.5">
+                {(startBonus?.warmupSec ?? 0) > 0 && (
+                  <span className="rounded-full bg-white/15 px-3.5 py-1.5 text-[13px] font-bold text-white ring-1 ring-white/25 backdrop-blur">
+                    ☀️ {t("bonus_warmup")} +{startBonus!.warmupSec}s
+                  </span>
+                )}
+                {(startBonus?.streakSec ?? 0) > 0 && (
+                  <span className="rounded-full bg-gold/25 px-3.5 py-1.5 text-[13px] font-bold text-white ring-1 ring-gold/50 backdrop-blur">
+                    🔥 {t("bonus_streak").replace("{n}", String(startBonus!.streakDays))} +{startBonus!.streakSec}s
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         )}
         </div>
@@ -1430,7 +1507,7 @@ export default function Match3Game({
           rank={rank}
           submitting={submitting}
           mode={mode}
-          onRetry={init}
+          onRetry={onRetry ?? init}
           onViewRanking={onViewRanking}
           onExit={onExit}
         />

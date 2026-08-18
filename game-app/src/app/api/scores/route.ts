@@ -21,6 +21,10 @@ const scoreSchema = z.object({
   match_id: z.string().uuid(),
   // 입력 로그(Step 2a 수집) — 서버 리플레이 검증 준비. 지금은 저장만(점수 판정에 미사용).
   moves: z.array(z.object({ t: z.number(), k: z.string().max(2), a: z.number().int().optional(), b: z.number().int().optional(), c: z.number().int().optional() })).max(3000).optional(),
+  // 종료 텔레메트리(Wave G 밸런스 계측) — 점수 판정 미사용, game_match에 기록만
+  end_reason: z.enum(["timeout", "continue_declined"]).optional(),
+  continues_used: z.number().int().min(0).max(50).optional(),
+  level_progress: z.number().min(0).max(1).optional(),
   nickname: z.string().trim().max(16).optional(),
   avatar: z.string().trim().max(200).optional(), // 아바타 id 또는 (미래) 프사 URL — 렌더용, 길이만 검증
 });
@@ -30,7 +34,7 @@ export async function POST(req: Request) {
 
   const parsed = scoreSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "잘못된 요청이에요." }, { status: 400 });
-  const { mode, seed, score, level, match_id, moves, nickname, avatar } = parsed.data;
+  const { mode, seed, score, level, match_id, moves, end_reason, continues_used, level_progress, nickname, avatar } = parsed.data;
 
   const ip = getClientIp(req);
   // IP 총량 스로틀 — 한 IP에서 대량 점수 제출로 랭킹 부풀리기 차단
@@ -90,7 +94,12 @@ export async function POST(req: Request) {
   // 입력 로그 저장 + 불일치 기록(섀도우) + 거부 자동 승격 관리(샘플링).
   if (moves) {
     try {
-      await admin().from("game_match").update({ moves, client_score: score }).eq("match_id", match_id);
+      // 텔레메트리는 보낸 필드만 기록(구버전 클라 제출이 null로 덮지 않게)
+      const patch: Record<string, unknown> = { moves, client_score: score };
+      if (end_reason) patch.end_reason = end_reason;
+      if (continues_used !== undefined) patch.continues_used = continues_used;
+      if (level_progress !== undefined) patch.level_progress = level_progress;
+      await admin().from("game_match").update(patch).eq("match_id", match_id);
       if (simVerdict?.suspect) {
         await admin()
           .from("game_admin_log")

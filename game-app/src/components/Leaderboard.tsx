@@ -3,7 +3,8 @@
 // 랭킹 — 모드(일반/아이템) × 기간(주간/월간/V01D). V01D 탭 = 멤버별 주간·월간 성적.
 // 일반 리스트에서 V01D 멤버 행은 뱃지+퍼플 글로우로 특별 표시(팬이 이길 대상 인지).
 import { useEffect, useState } from "react";
-import { ChevronLeft, Star, Trophy } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, Trophy } from "lucide-react";
+import { GAME_CONFIG } from "@/lib/game-config";
 import {
   fetchLeaderboard,
   fetchMemberBoard,
@@ -53,6 +54,7 @@ export default function Leaderboard({ onBack }: { onBack: () => void }) {
   const { t, lang } = useLang();
   const [mode, setMode] = useState<LeaderMode>("normal");
   const [tab, setTab] = useState<Tab>("week"); // 기본 주간 — 보상 이벤트 지향
+  const [offset, setOffset] = useState(0); // 0=현재 기간, 1+=지난 기간(◀▶ 열람, 최대 26)
   const [rows, setRows] = useState<LeaderRow[]>([]);
   const [members, setMembers] = useState<MemberRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,6 +62,23 @@ export default function Leaderboard({ onBack }: { onBack: () => void }) {
   const [myAvatar, setMyAvatar] = useState<string>("");
 
   useEffect(() => setMyAvatar(getAvatar()), []);
+
+  // 집계 기간 표기 (KST) — 주간=월요일 시작, 월간=1일 시작. off 1+ = 지난 기간(시작~끝 날짜)
+  const periodRange = (p: "week" | "month", off: number) => {
+    const kst = new Date(Date.now() + 9 * 3600 * 1000); // KST 벽시계를 UTC 필드로 읽기
+    const start = new Date(kst);
+    if (p === "week") start.setUTCDate(kst.getUTCDate() - ((kst.getUTCDay() + 6) % 7) - off * 7);
+    else start.setUTCMonth(kst.getUTCMonth() - off, 1);
+    const fmt = (d: Date) => `${d.getUTCMonth() + 1}.${d.getUTCDate()}`;
+    if (off === 0) return `${fmt(start)} ~ ${t("lb_today")}`;
+    const end = new Date(start);
+    if (p === "week") end.setUTCDate(start.getUTCDate() + 6);
+    else end.setUTCMonth(start.getUTCMonth() + 1, 0); // 그 달의 마지막 날
+    return `${fmt(start)} ~ ${fmt(end)}`;
+  };
+
+  // 지난 주간 확정 보상 CP (rewards.weeklyTop, 순위-1 인덱스) — 종료된 주간 보드에서만 표기
+  const rewardCpOf = (rank: number) => (tab === "week" && offset > 0 ? (GAME_CONFIG.rewards.weeklyTop[rank - 1] ?? 0) : 0);
 
   useEffect(() => {
     let alive = true;
@@ -72,7 +91,7 @@ export default function Leaderboard({ onBack }: { onBack: () => void }) {
         }
       });
     } else {
-      fetchLeaderboard(mode, tab).then((r) => {
+      fetchLeaderboard(mode, tab, offset).then((r) => {
         if (alive) {
           setRows(r);
           setLoading(false);
@@ -82,13 +101,16 @@ export default function Leaderboard({ onBack }: { onBack: () => void }) {
     return () => {
       alive = false;
     };
-  }, [mode, tab]);
+  }, [mode, tab, offset]);
+
+  // 모드·기간 탭 전환 시 현재 기간으로 복귀 (지난 기간 잔상 방지)
+  useEffect(() => setOffset(0), [mode, tab]);
 
   useEffect(() => {
     if (tab === "v01d") return;
     setMine(null); // 기간 전환 시 이전 순위 잔상 방지
-    fetchMyRank(tab).then(setMine);
-  }, [tab]);
+    fetchMyRank(tab, offset).then(setMine);
+  }, [tab, offset]);
 
   const myRank = mode === "normal" ? mine?.normal_rank : mine?.item_rank;
   const myTotal = mode === "normal" ? mine?.normal_total : mine?.item_total;
@@ -151,7 +173,34 @@ export default function Leaderboard({ onBack }: { onBack: () => void }) {
           </button>
         ))}
       </div>
-      <p className="mt-1.5 px-1 text-[10.5px] text-subtle break-keep">{t(tab === "v01d" ? "lb_member_hint" : "lb_period_note")}</p>
+      {tab === "v01d" ? (
+        <p className="mt-1.5 px-1 text-[10.5px] text-subtle break-keep">{t("lb_member_hint")}</p>
+      ) : (
+        /* 기간 내비 — ◀ 지난 기간 / ▶ 현재로 복귀. 종료된 기간은 골드 톤 + "종료" 표기 */
+        <div className="mt-1.5 flex items-center gap-1 px-1">
+          <button
+            aria-label={t("lb_prev_period")}
+            onClick={() => setOffset((o) => Math.min(26, o + 1))}
+            disabled={offset >= 26}
+            className="shrink-0 rounded-full p-1.5 text-subtle transition-colors active:scale-90 disabled:opacity-30"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <span className={`min-w-0 flex-1 text-center text-[10.5px] break-keep ${offset > 0 ? "font-bold text-gold/90" : "text-subtle"}`}>
+            {offset === 0
+              ? t(tab === "week" ? "lb_range_week" : "lb_range_month").replace("{range}", periodRange(tab, 0))
+              : t(tab === "week" ? "lb_ended_week" : "lb_ended_month").replace("{range}", periodRange(tab, offset))}
+          </span>
+          <button
+            aria-label={t("lb_next_period")}
+            onClick={() => setOffset((o) => Math.max(0, o - 1))}
+            disabled={offset === 0}
+            className="shrink-0 rounded-full p-1.5 text-subtle transition-colors active:scale-90 disabled:opacity-30"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+      )}
 
       {tab === "v01d" ? (
         /* ── V01D 멤버 보드 — 멤버별 주간·월간 성적 ── */
@@ -239,6 +288,11 @@ export default function Leaderboard({ onBack }: { onBack: () => void }) {
                       )}
                       {row.member && <MemberBadge />}
                     </span>
+                    {rewardCpOf(row.rank) > 0 && (
+                      <span className="shrink-0 rounded-full bg-gold/20 px-2 py-0.5 text-[10px] font-black tabular-nums text-gold">
+                        +{rewardCpOf(row.rank)} CP
+                      </span>
+                    )}
                     <span className="flex flex-col items-end leading-tight">
                       <span className="rounded-full bg-primary/15 px-1.5 text-[10px] font-black text-primary-400">
                         {t("lv_prefix")}

@@ -36,7 +36,14 @@ export async function POST(req: Request) {
   if (error) return NextResponse.json({ error: "처리 중 오류가 발생했어요." }, { status: 500 });
   if (data?.error) return NextResponse.json({ error: data.error }, { status: 400 });
 
-  const res = NextResponse.json({ match_id: data.match_id, seed: Number(data.seed) });
+  const res = NextResponse.json({
+    match_id: data.match_id,
+    seed: Number(data.seed),
+    // 순항 보너스(Wave D) — 서버 판정값 그대로 전달(구 RPC엔 키가 없어 0으로 폴백)
+    warmup_sec: Number(data.warmup_sec) || 0,
+    streak_sec: Number(data.streak_sec) || 0,
+    streak_days: Number(data.streak_days) || 0,
+  });
   if (isNew) res.cookies.set(VID_COOKIE, signAnonId(anonId), VID_COOKIE_OPTS);
   return res;
 }
