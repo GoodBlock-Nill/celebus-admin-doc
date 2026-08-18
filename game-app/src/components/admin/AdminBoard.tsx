@@ -41,7 +41,17 @@ export default function AdminBoard() {
 
   const isWeekly = hist ? hist.period === "week" : preset === "this_week" || preset === "last_week";
   const isPast = hist !== null || preset === "last_week" || preset === "last_month";
-  const rewardTable = GAME_CONFIG.rewards.weeklyTop;
+
+  // 예상 보상 = 지급표 오버라이드 우선 — 관리자 화면은 유저 앱과 달리 부트 시 config 병합이 없어
+  // 코드 기본값만 보이던 문제(지급표 수정이 반영 안 됨)를 직접 조회로 해결
+  const [rewardTable, setRewardTable] = useState<number[]>(GAME_CONFIG.rewards.weeklyTop);
+  useEffect(() => {
+    aget<{ config?: { rewards?: { weeklyTop?: number[] } } }>("/api/admin/config")
+      .then((j) => {
+        if (j.config?.rewards?.weeklyTop?.length) setRewardTable(j.config.rewards.weeklyTop);
+      })
+      .catch(() => {}); // 실패 시 기본값 유지
+  }, []);
   const rewardFor = (rank: number) => (isWeekly && rank <= rewardTable.length ? rewardTable[rank - 1] : 0);
 
   // 과거 기간 옵션 — 최근 12주(오프셋 2~13) + 최근 6개월(2~7). KST 기준 날짜 라벨
