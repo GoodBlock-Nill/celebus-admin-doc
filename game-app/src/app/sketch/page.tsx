@@ -40,7 +40,7 @@ export default function SketchProtoPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           {phase.name !== "pick" && (
-            <button onClick={() => setPhase({ name: "pick", words: pick3() })} aria-label="뒤로" className="-ml-2 flex h-10 w-10 items-center justify-center rounded-full text-muted">
+            <button onClick={() => setPhase({ name: "pick", words: pick3() })} aria-label="뒤로" className="-ml-2 flex h-11 w-11 items-center justify-center rounded-full text-muted">
               <ChevronLeft className="h-5 w-5" />
             </button>
           )}

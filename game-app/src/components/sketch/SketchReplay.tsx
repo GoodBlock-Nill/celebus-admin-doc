@@ -91,7 +91,7 @@ export default function SketchReplay({ strokes, autoPlay = true }: { strokes: Sk
         <button
           onClick={togglePlay}
           aria-label={playing ? "일시정지" : "재생"}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-white active:scale-95"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-white active:scale-95"
         >
           {playing ? <Pause className="h-4.5 w-4.5" /> : <Play className="ml-0.5 h-4.5 w-4.5" />}
         </button>

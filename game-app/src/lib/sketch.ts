@@ -13,6 +13,8 @@ export type SketchDrawing = {
 
 // 팔레트 8색 (기획 §4.1 — 의도적 제한) + 지우개는 종이색 스트로크로 기록 (재생 로직 단일화)
 export const SKETCH_COLORS = ["#1f1f24", "#e5484d", "#f0883e", "#f5c451", "#46a758", "#3e8ef7", "#8b5cf6", "#8d6e52"];
+// 접근성 — 스크린리더용 색상명 (헥스코드 노출 금지, 디자인 리뷰 반영)
+export const SKETCH_COLOR_NAMES = ["검정", "빨강", "주황", "노랑", "초록", "파랑", "보라", "갈색"];
 export const SKETCH_PAPER = "#fdfcf8"; // 종이(캔버스) 배경색
 export const SKETCH_WIDTHS = [4, 9, 16]; // 기준 캔버스 360px 대비 굵기 3단
 export const SKETCH_BASE = 360; // 굵기 스케일 기준 크기

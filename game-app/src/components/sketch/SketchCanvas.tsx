@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { Eraser, RotateCcw, Trash2 } from "lucide-react";
 import {
   SKETCH_BASE,
+  SKETCH_COLOR_NAMES,
   SKETCH_COLORS,
   SKETCH_PAPER,
   SKETCH_WIDTHS,
@@ -126,7 +127,16 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
       return next;
     });
   };
+  // 전체 지우기 — 60초 압박 속 오탭 한 번에 그림이 사라지지 않도록 2탭 확인 (디자인 리뷰 Critical 반영)
+  const [clearArmed, setClearArmed] = useState(false);
+  useEffect(() => {
+    if (!clearArmed) return;
+    const tm = setTimeout(() => setClearArmed(false), 2500);
+    return () => clearTimeout(tm);
+  }, [clearArmed]);
   const clearAll = () => {
+    if (!clearArmed) return setClearArmed(true);
+    setClearArmed(false);
     setStrokes(() => {
       redraw([]);
       return [];
@@ -163,34 +173,38 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
         )}
       </div>
 
-      {/* 팔레트 */}
-      <div className="flex items-center justify-between gap-1">
-        {SKETCH_COLORS.map((c) => (
+      {/* 팔레트 — 터치 타깃 44px (시각 크기는 34px, hit 영역은 버튼 전체) */}
+      <div className="flex items-center justify-between">
+        {SKETCH_COLORS.map((c, i) => (
           <button
             key={c}
             onClick={() => {
               setColor(c);
               setEraser(false);
             }}
-            aria-label={`색 ${c}`}
-            className={`h-8 w-8 shrink-0 rounded-full transition-transform ${!eraser && color === c ? "scale-110 ring-2 ring-white" : "ring-1 ring-white/25"}`}
-            style={{ background: c }}
-          />
+            aria-label={SKETCH_COLOR_NAMES[i]}
+            className="flex h-11 w-11 shrink-0 items-center justify-center"
+          >
+            <span
+              className={`h-[34px] w-[34px] rounded-full transition-transform ${!eraser && color === c ? "scale-110 ring-2 ring-white" : "ring-1 ring-white/25"}`}
+              style={{ background: c }}
+            />
+          </button>
         ))}
       </div>
 
-      {/* 도구 줄 — 굵기·지우개·되돌리기·전체 지우기 */}
+      {/* 도구 줄 — 굵기·지우개·되돌리기·전체 지우기 (터치 타깃 44px) */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          {SKETCH_WIDTHS.map((w) => (
+        <div className="flex items-center gap-1">
+          {SKETCH_WIDTHS.map((w, wi) => (
             <button
               key={w}
               onClick={() => {
                 setWidth(w);
                 setEraser(false);
               }}
-              aria-label={`굵기 ${w}`}
-              className={`flex h-9 w-9 items-center justify-center rounded-[10px] ring-1 ${!eraser && width === w ? "bg-primary/25 ring-primary-400" : "bg-surface-1 ring-hairline"}`}
+              aria-label={`굵기 ${wi + 1}단`}
+              className={`flex h-11 w-11 items-center justify-center rounded-[10px] ring-1 ${!eraser && width === w ? "bg-primary/25 ring-primary-400" : "bg-surface-1 ring-hairline"}`}
             >
               <span className="rounded-full" style={{ width: w * 0.9, height: w * 0.9, background: eraser ? "#666" : color }} />
             </button>
@@ -198,26 +212,30 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
           <button
             onClick={() => setEraser((v) => !v)}
             aria-label="지우개"
-            className={`flex h-9 w-9 items-center justify-center rounded-[10px] ring-1 ${eraser ? "bg-primary/25 ring-primary-400 text-primary-400" : "bg-surface-1 ring-hairline text-muted"}`}
+            className={`flex h-11 w-11 items-center justify-center rounded-[10px] ring-1 ${eraser ? "bg-primary/25 ring-primary-400 text-primary-400" : "bg-surface-1 ring-hairline text-muted"}`}
           >
             <Eraser className="h-4.5 w-4.5" />
           </button>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1">
           <button
             onClick={undo}
             disabled={undosLeft <= 0 || strokes.length === 0}
-            className="flex h-9 items-center gap-1 rounded-[10px] bg-surface-1 px-2.5 text-[12px] font-bold text-muted ring-1 ring-hairline disabled:opacity-40"
+            aria-label={`되돌리기 (${undosLeft}회 남음)`}
+            className="flex h-11 items-center gap-1 rounded-[10px] bg-surface-1 px-3 text-[12px] font-bold text-muted ring-1 ring-hairline disabled:opacity-40"
           >
             <RotateCcw className="h-4 w-4" /> {undosLeft}
           </button>
           <button
             onClick={clearAll}
             disabled={strokes.length === 0}
-            aria-label="전체 지우기"
-            className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-surface-1 text-muted ring-1 ring-hairline disabled:opacity-40"
+            aria-label={clearArmed ? "한 번 더 탭하면 전체 지워요" : "전체 지우기"}
+            className={`flex h-11 items-center justify-center gap-1 rounded-[10px] px-3 text-[12px] font-bold ring-1 disabled:opacity-40 ${
+              clearArmed ? "bg-danger/20 text-danger ring-danger/50" : "bg-surface-1 text-muted ring-hairline"
+            }`}
           >
             <Trash2 className="h-4 w-4" />
+            {clearArmed && "한 번 더!"}
           </button>
         </div>
       </div>
