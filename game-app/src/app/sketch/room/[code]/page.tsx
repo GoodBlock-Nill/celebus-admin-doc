@@ -5,7 +5,7 @@
 // 알려진 한계(파일럿): 라운드 중간 재입장 시 이미 그려진 획은 다음 획부터 보인다.
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Check, Copy, Crown, Palette } from "lucide-react";
+import { Check, Copy, Crown, Lightbulb, Palette } from "lucide-react";
 import { toast } from "sonner";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import PartyCanvas from "@/components/sketch/PartyCanvas";
@@ -46,18 +46,21 @@ export default function PartyRoomPage() {
   const [strokes, setStrokes] = useState<SketchStroke[]>([]);
   const [live, setLive] = useState<SketchStroke | null>(null);
   const [tiles, setTiles] = useState<string[]>([]);
-  const [tilesRound, setTilesRound] = useState(0);
   const [slots, setSlots] = useState<(string | null)[]>([]);
   const [used, setUsed] = useState<Set<number>>(new Set());
+  const [bombed, setBombed] = useState<Set<number>>(new Set()); // 힌트로 제거된 더미 타일 (라운드당 1회)
   const [secondsLeft, setSecondsLeft] = useState(0);
   const [online, setOnline] = useState(1);
   const [copied, setCopied] = useState(false);
   const chRef = useRef<RealtimeChannel | null>(null);
   const roundRef = useRef(0);
+  const tilesRoundRef = useRef(0); // state가 아닌 ref — 폴링이 스테일 클로저로 매번 초기화하던 버그 방지
+  const langRef = useRef(lang);
+  langRef.current = lang;
   const advancing = useRef(false);
 
   const refresh = useCallback(async () => {
-    const s = await fetchPartyState(code, lang);
+    const s = await fetchPartyState(code, langRef.current);
     if (!s) return;
     setState(s);
     if (s.room.round !== roundRef.current) {
@@ -66,17 +69,17 @@ export default function PartyRoomPage() {
       setStrokes([]);
       setLive(null);
       setTiles([]);
-      setTilesRound(0);
+      tilesRoundRef.current = 0;
     }
-    if (s.tiles && s.room.round !== tilesRound) {
-      // 타일은 라운드당 1회만 고정 (폴링마다 셔플되지 않게)
+    if (s.tiles && s.room.round !== tilesRoundRef.current) {
+      // 타일은 라운드당 1회만 고정 (폴링마다 입력·폭탄 상태가 리셋되지 않게)
+      tilesRoundRef.current = s.room.round;
       setTiles(s.tiles);
-      setTilesRound(s.room.round);
       setSlots(Array(s.answer_len).fill(null));
       setUsed(new Set());
+      setBombed(new Set());
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [code, tilesRound, lang]);
+  }, [code]);
 
   // 입장 → 채널 구독 → 폴링
   useEffect(() => {
@@ -155,8 +158,18 @@ export default function PartyRoomPage() {
     }
   };
 
+  const useHint = async () => {
+    if (bombed.size > 0) return;
+    const h = await partyApi({ action: "hint", id: room.id, lang, tiles });
+    const remove = (h?.remove as number[] | undefined) ?? [];
+    if (remove.length) {
+      setBombed(new Set(remove));
+      if (Number(h?.charged ?? 0) > 0) toast.success(t("sk_hint_used").replace("{n}", String(h?.charged)));
+      toast.success(t("sk_hint_removed").replace("{n}", String(remove.length)));
+    } else toast.error(h?.error === "insufficient" ? t("sk_no_cp") : t("sk_hint_fail"));
+  };
   const placeTile = (i: number) => {
-    if (used.has(i)) return;
+    if (used.has(i) || bombed.has(i)) return;
     const si = slots.findIndex((s) => s === null);
     if (si < 0) return;
     setSlots((s) => s.map((v, j) => (j === si ? tiles[i] : v)));
@@ -268,14 +281,25 @@ export default function PartyRoomPage() {
                 </div>
                 <div className={`mx-auto grid w-fit gap-1.5 rounded-[16px] bg-surface-2 p-2.5 ring-1 ring-hairline ${state.tile_lang === "ko" ? "grid-cols-5" : "grid-cols-6"}`}>
                   {tiles.map((tile, i) => (
-                    <button key={i} onClick={() => placeTile(i)} disabled={used.has(i)} className={`sk-tile h-11 w-11 ${state.tile_lang === "en" ? "text-[16px] uppercase" : "text-[16px]"}`}>
-                      {tile}
+                    <button key={i} onClick={() => placeTile(i)} disabled={used.has(i) || bombed.has(i)} className={`sk-tile h-11 w-11 ${state.tile_lang === "en" ? "text-[16px] uppercase" : "text-[16px]"}`}>
+                      {bombed.has(i) ? "💥" : tile}
                     </button>
                   ))}
                 </div>
-                <button onClick={() => void submitGuess()} disabled={slots.some((s) => s === null)} className="sk-btn w-full py-3 text-[14px]">
-                  {t("confirm")}
-                </button>
+                <div className="flex gap-2">
+                  {/* 힌트 — 비동기 맞히기와 동일한 폭탄 방식 (10 CP·라운드당 1회) */}
+                  <button
+                    onClick={() => void useHint()}
+                    disabled={bombed.size > 0}
+                    className="sk-btn-ghost flex h-12 shrink-0 items-center gap-1 px-3.5 text-[12.5px] !text-gold disabled:opacity-60"
+                  >
+                    <Lightbulb className="h-4 w-4" />
+                    {t("sk_hint_btn").replace("{n}", "10")}
+                  </button>
+                  <button onClick={() => void submitGuess()} disabled={slots.some((s) => s === null)} className="sk-btn min-w-0 flex-1 py-3 text-[14px]">
+                    {t("confirm")}
+                  </button>
+                </div>
               </>
             )}
             {room.is_host && (

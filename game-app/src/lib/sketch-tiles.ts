@@ -116,3 +116,18 @@ export function buildTileSet(text: WordText, userLang: string, opts: TileOpts = 
 
   return { tiles: shuffleWith(tiles, rnd), answer_len: chars.length, lang: tileLang };
 }
+
+// 힌트(폭탄) — 유저 타일에서 정답에 불필요한 더미의 절반(최소 2개)을 결정적으로 고른다
+export function computeBombIndices(answer: string, tiles: string[]): number[] {
+  const need = new Map<string, number>();
+  for (const c of answer.toLowerCase().replace(/[\s-]/g, "")) need.set(c, (need.get(c) ?? 0) + 1);
+  const dummies: number[] = [];
+  tiles.forEach((tile, i) => {
+    const c = tile.toLowerCase();
+    const n = need.get(c) ?? 0;
+    if (n > 0) need.set(c, n - 1);
+    else dummies.push(i);
+  });
+  const count = Math.max(2, Math.floor(dummies.length / 2));
+  return [...dummies.filter((_, i) => i % 2 === 0), ...dummies.filter((_, i) => i % 2 === 1)].slice(0, count);
+}

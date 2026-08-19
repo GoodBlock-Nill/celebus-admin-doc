@@ -5,6 +5,7 @@ import { playerHash, getClientIp } from "@/lib/hash";
 import { peekVoterId } from "@/lib/anon-identity";
 import { assertSameOrigin } from "@/lib/origin";
 import { voteThrottled } from "@/lib/ratelimit";
+import { computeBombIndices } from "@/lib/sketch-tiles";
 
 // 힌트 = 더미 타일 제거 (Draw Something 폭탄 방식, 10 CP·그림당 1회).
 // "첫 글자 공개"는 한 글자 정답에서 정답 유출이라 폐기 (2026-08-19).
@@ -33,19 +34,6 @@ export async function POST(req: Request) {
   if (error) return NextResponse.json({ error: "힌트를 불러오지 못했어요." }, { status: 500 });
   if (data?.error) return NextResponse.json(data);
 
-  // 정답 문자 멀티셋을 제외한 나머지 = 더미 → 절반 제거 (최소 2개)
-  const need = new Map<string, number>();
-  for (const c of String(data.answer ?? "").toLowerCase().replace(/[\s-]/g, "")) need.set(c, (need.get(c) ?? 0) + 1);
-  const dummyIdx: number[] = [];
-  parsed.data.tiles.forEach((tile, i) => {
-    const c = tile.toLowerCase();
-    const n = need.get(c) ?? 0;
-    if (n > 0) need.set(c, n - 1);
-    else dummyIdx.push(i);
-  });
-  const removeCount = Math.max(2, Math.floor(dummyIdx.length / 2));
-  // 결정적 선택 — 같은 요청이면 같은 타일이 제거되게 (짝수 인덱스 우선)
-  const remove = [...dummyIdx.filter((_, i) => i % 2 === 0), ...dummyIdx.filter((_, i) => i % 2 === 1)].slice(0, removeCount);
-
+  const remove = computeBombIndices(String(data.answer ?? ""), parsed.data.tiles);
   return NextResponse.json({ status: "ok", remove, charged: data.charged ?? 0, celeb_point: data.celeb_point });
 }

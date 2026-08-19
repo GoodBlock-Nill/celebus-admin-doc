@@ -8,11 +8,13 @@ import { CalendarCheck, ChevronLeft, Crown, Palette, Search, Users } from "lucid
 import { useRouter } from "next/navigation";
 import { partyApi } from "@/lib/sketch-party";
 import { toast } from "sonner";
+import LangSwitcher from "@/components/LangSwitcher";
 import SketchCanvas from "@/components/sketch/SketchCanvas";
 import SketchGuess from "@/components/sketch/SketchGuess";
 import SketchReplay from "@/components/sketch/SketchReplay";
 import { loadDrawings, saveDrawing, sketchToPngBlob, type SketchStroke } from "@/lib/sketch";
 import { fetchSketchBest, fetchSketchWords, submitSketch, type SketchBest, type SketchWordChoice } from "@/lib/sketch-api";
+import { GAME_CONFIG } from "@/lib/game-config";
 import { useLang } from "@/components/LangProvider";
 
 type Phase =
@@ -62,6 +64,26 @@ export default function SketchPage() {
 
   return (
     <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col gap-4 px-5 pb-8 pt-6 px-safe pb-safe pt-safe">
+      {/* 상단 슬림 바 — 상위 앱 복귀 + 언어 (match 홈과 동일 패턴, 종이 톤) */}
+      {phase.name === "home" && (
+        <div className="-mb-2 flex items-center justify-between">
+          {GAME_CONFIG.home.parentAppUrl ? (
+            <button
+              onClick={() => {
+                window.location.href = GAME_CONFIG.home.parentAppUrl!;
+              }}
+              aria-label={t("home_back_celebus_aria")}
+              className="flex items-center gap-0.5 rounded-full py-1 pl-1.5 pr-2.5 text-[11.5px] font-bold tracking-wide text-muted transition-colors active:scale-95 hover:text-fg"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              {t("home_back_celebus")}
+            </button>
+          ) : (
+            <span />
+          )}
+          <LangSwitcher />
+        </div>
+      )}
       <div className="flex items-center gap-1">
         {phase.name !== "home" && (
           <button onClick={back} aria-label={t("back")} className="-ml-2 flex h-11 w-11 items-center justify-center rounded-full text-muted">

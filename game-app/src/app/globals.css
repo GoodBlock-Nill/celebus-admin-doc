@@ -630,6 +630,11 @@ body {
   --color-muted: #6f6579;
   --color-subtle: #9a91a4;
   --color-gold: #d99a1b;
+  /* LangSwitcher 등 공용 컴포넌트가 쓰는 카드·보더 변수 — 라이트 종이 톤으로 재정의 */
+  --color-bg: #f6f1e7;
+  --color-card: #ffffff;
+  --color-card-2: #faf6ee;
+  --color-border: #e5dcc9;
   background:
     radial-gradient(120% 60% at 50% 0%, #fdf9f0 0%, transparent 60%),
     var(--color-surface-0);

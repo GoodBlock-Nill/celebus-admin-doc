@@ -4,7 +4,7 @@ import { admin } from "@/lib/db-admin";
 import { playerHash } from "@/lib/hash";
 import { peekVoterId } from "@/lib/anon-identity";
 import { assertSameOrigin } from "@/lib/origin";
-import { answerFor, buildTileSet, type WordText } from "@/lib/sketch-tiles";
+import { answerFor, buildTileSet, computeBombIndices, type WordText } from "@/lib/sketch-tiles";
 
 // 파티룸 — 방 상태 조회(GET) + 개설/입장/시작/정답/진행(POST action). 상태 권위 = DB RPC (기획 §5.5).
 // 제시어는 출제자에게만, 맞히기 타일은 출제자 외에게만 내려간다 (정답 평문 비출제자 미전송).
@@ -83,12 +83,13 @@ export async function GET(req: Request) {
 }
 
 const postSchema = z.object({
-  action: z.enum(["create", "join", "start", "guess", "advance"]),
+  action: z.enum(["create", "join", "start", "guess", "advance", "hint"]),
   code: z.string().max(10).optional(),
   id: z.string().uuid().optional(),
   nick: z.string().max(16).optional(),
   answer: z.string().max(40).optional(),
   lang: z.enum(["ko", "en", "ja"]).optional(),
+  tiles: z.array(z.string().min(1).max(4)).max(24).optional(),
   force: z.boolean().optional(),
 });
 
@@ -113,9 +114,16 @@ export async function POST(req: Request) {
         return admin().rpc("game_sketch_room_guess", { p_room: p.id, p_h: h, p_answer: p.answer ?? "", p_lang: p.lang ?? "ko" });
       case "advance":
         return admin().rpc("game_sketch_room_advance", { p_room: p.id, p_h: h, p_force: p.force ?? false });
+      case "hint":
+        return admin().rpc("game_sketch_room_hint_exec", { p_room: p.id, p_h: h, p_lang: p.lang ?? "ko" });
     }
   };
   const { data, error } = await call();
   if (error) return NextResponse.json({ error: "처리에 실패했어요." }, { status: 500 });
+  if (p.action === "hint" && data && !data.error) {
+    // 폭탄 방식 — 정답은 서버에서만 사용, 제거 인덱스만 응답 (비동기 힌트와 동일)
+    const remove = computeBombIndices(String(data.answer ?? ""), p.tiles ?? []);
+    return NextResponse.json({ status: "ok", remove, charged: data.charged ?? 0 });
+  }
   return NextResponse.json(data ?? {});
 }
