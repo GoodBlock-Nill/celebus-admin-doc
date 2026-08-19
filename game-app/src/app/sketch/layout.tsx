@@ -7,11 +7,26 @@ import { useEffect, useState } from "react";
 import { LangProvider } from "@/components/LangProvider";
 import SsoGate from "@/components/SsoGate";
 import { hasLocalSession, markLocalSession, ssoLogin } from "@/lib/auth-api";
-import { setAvatar, setNick } from "@/lib/game-api";
+import { getNick, setAvatar, setNick } from "@/lib/game-api";
+
+// 테스트 기간 게스트 모드 (celeb-sketch 전용 배포 플래그) — CELEBUS 로그인 없이 기기별 익명 신원으로 진행.
+// 정식 오픈 시 env 제거로 SSO 게이트 복귀. match 배포는 이 플래그가 없어 영향 없음.
+const GUEST_MODE = process.env.NEXT_PUBLIC_SKETCH_GUEST === "1";
 
 function AuthBoundary({ children }: { children: React.ReactNode }) {
   const [auth, setAuth] = useState<"checking" | "need" | "ok">("checking");
   useEffect(() => {
+    if (GUEST_MODE) {
+      void fetch("/api/auth/guest", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" })
+        .then((res) => {
+          if (!res.ok) throw new Error();
+          if (!getNick()) setNick(`팬${Math.floor(1000 + Math.random() * 9000)}`); // 파티룸 표시용 게스트 닉
+          markLocalSession(true);
+          setAuth("ok");
+        })
+        .catch(() => setAuth("need")); // 발급 실패 시에만 게이트 폴백
+      return;
+    }
     ssoLogin().then((p) => {
       if (p.signed_up && p.nickname) {
         setNick(p.nickname);
