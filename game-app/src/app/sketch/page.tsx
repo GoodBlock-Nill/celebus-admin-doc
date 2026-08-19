@@ -68,8 +68,8 @@ export default function SketchPage() {
             <ChevronLeft className="h-5 w-5" />
           </button>
         )}
-        <h1 className="text-[19px] font-black text-fg">CELEB 스케치</h1>
-        <span className="ml-1 rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-black text-gold">BETA</span>
+        <h1 className="sk-wordmark text-[22px]">CELEB SKETCH</h1>
+        <span className="ml-1 rounded-full bg-gold/20 px-2 py-0.5 text-[10px] font-black text-gold">BETA</span>
       </div>
 
       {phase.name === "home" && (
@@ -92,9 +92,9 @@ export default function SketchPage() {
           {/* 데일리 그림 퀴즈 — 전원 동일 5문제, 완주 보너스 */}
           <button
             onClick={() => setPhase({ name: "guess", mode: "daily" })}
-            className="flex items-center gap-3.5 rounded-[18px] bg-gradient-to-r from-gold/20 to-surface-1 p-4 ring-1 ring-gold/40 active:scale-[0.99]"
+            className="sk-card flex items-center gap-3.5 p-4 text-left"
           >
-            <CalendarCheck className="h-8 w-8 shrink-0 text-gold" />
+            <span className="sk-bubble" style={{ background: "#fdeec8" }}>📅</span>
             <span className="min-w-0 flex-1 text-left">
               <span className="block text-[16px] font-black text-fg">{t("sk_daily_card")}</span>
               <span className="mt-0.5 block text-[12px] text-muted break-keep">{t("sk_daily_desc")}</span>
@@ -102,9 +102,9 @@ export default function SketchPage() {
           </button>
           <button
             onClick={() => void startDraw()}
-            className="flex items-center gap-3.5 rounded-[18px] bg-gradient-to-r from-primary/25 to-surface-1 p-4 ring-1 ring-primary/30 active:scale-[0.99]"
+            className="sk-card flex items-center gap-3.5 p-4 text-left"
           >
-            <Palette className="h-8 w-8 shrink-0 text-primary-400" />
+            <span className="sk-bubble" style={{ background: "#e8defc" }}>🎨</span>
             <span className="text-left">
               <span className="block text-[16px] font-black text-fg">{t("sk_draw_card")}</span>
               <span className="mt-0.5 block text-[12px] text-muted break-keep">{t("sk_draw_desc")}</span>
@@ -112,9 +112,9 @@ export default function SketchPage() {
           </button>
           <button
             onClick={() => setPhase({ name: "guess", mode: "pool" })}
-            className="flex items-center gap-3.5 rounded-[18px] bg-surface-1 p-4 ring-1 ring-hairline active:scale-[0.99]"
+            className="sk-card flex items-center gap-3.5 p-4 text-left"
           >
-            <Search className="h-8 w-8 shrink-0 text-primary-400" />
+            <span className="sk-bubble" style={{ background: "#dcedfd" }}>🔍</span>
             <span className="text-left">
               <span className="block text-[16px] font-black text-fg">{t("sk_guess_card")}</span>
               <span className="mt-0.5 block text-[12px] text-muted break-keep">{t("sk_guess_desc")}</span>
@@ -133,9 +133,9 @@ export default function SketchPage() {
               else toast.error(t("sk_room_create_fail"));
             }}
             disabled={creatingRoom}
-            className="flex items-center gap-3.5 rounded-[18px] bg-surface-1 p-4 ring-1 ring-hairline active:scale-[0.99] disabled:opacity-60"
+            className="sk-card flex items-center gap-3.5 p-4 text-left disabled:opacity-60"
           >
-            <Users className="h-8 w-8 shrink-0 text-verified" />
+            <span className="sk-bubble" style={{ background: "#dcf5e6" }}>🎉</span>
             <span className="text-left">
               <span className="block text-[16px] font-black text-fg">{t("sk_party_card")}</span>
               <span className="mt-0.5 block text-[12px] text-muted break-keep">{t("sk_party_desc")}</span>
@@ -144,7 +144,7 @@ export default function SketchPage() {
 
           {/* 명예의 전당 — 지난주 베스트 스케치 (작가 보상 = 드로우 티켓) */}
           {best && (
-            <div className="rounded-[18px] bg-surface-1 p-4 ring-1 ring-hairline">
+            <div className="sk-card p-4">
               <button onClick={() => setShowBestReplay((v) => !v)} className="flex w-full items-center gap-3.5 active:scale-[0.99]">
                 {best.thumb_url ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -180,7 +180,7 @@ export default function SketchPage() {
             <button
               key={w.id}
               onClick={() => setPhase({ name: "draw", word: w })}
-              className="flex items-center justify-between rounded-[16px] bg-surface-1 px-5 py-4 ring-1 ring-hairline active:scale-[0.99]"
+              className="sk-card flex items-center justify-between px-5 py-4"
             >
               <span className="text-[16px] font-black text-fg">{w.text}</span>
               <span className="text-[12px] font-bold text-gold">{"★".repeat(w.difficulty)}</span>
@@ -220,15 +220,15 @@ export default function SketchPage() {
               a.click();
               URL.revokeObjectURL(url);
             }}
-            className="w-full rounded-full bg-surface-1 py-3 text-[13.5px] font-bold text-gold ring-1 ring-gold/40 active:scale-[0.99]"
+            className="sk-btn-ghost w-full py-3 text-[13.5px] !text-gold"
           >
             {t("sk_share")} 🎨
           </button>
           <div className="flex gap-2">
-            <button onClick={() => void startDraw()} className="flex-1 rounded-full bg-surface-1 py-3.5 text-[14px] font-bold text-fg ring-1 ring-hairline active:scale-[0.99]">
+            <button onClick={() => void startDraw()} className="sk-btn-ghost flex-1 py-3.5 text-[14px]">
               {t("sk_one_more")}
             </button>
-            <button onClick={() => setPhase({ name: "guess", mode: "pool" })} className="flex-1 rounded-full bg-primary py-3.5 text-[14px] font-black text-white active:scale-[0.99]">
+            <button onClick={() => setPhase({ name: "guess", mode: "pool" })} className="sk-btn flex-1 py-3.5 text-[14px]">
               {t("sk_go_guess")}
             </button>
           </div>

@@ -617,3 +617,134 @@ body {
   .gacha-float, .gacha-shake, .gacha-glow, .gacha-holo { animation: none; }
   .gacha-card-inner { transition: none; }
 }
+
+/* ══ CELEB SKETCH 전용 테마 — 스케치북 라이트 (장르 표준: Draw Something 종이 톤) ══
+   전용 도메인 배포의 자체 아이덴티티. 변수 스코프 오버라이드로 기존 유틸리티가 그대로 라이트로 전환된다. */
+.sketch-shell {
+  --color-surface-0: #f6f1e7; /* 종이 배경 */
+  --color-surface-1: #ffffff; /* 카드 */
+  --color-surface-2: #faf6ee; /* 상승 */
+  --color-surface-3: #f1ead9;
+  --color-hairline: #e5dcc9;
+  --color-fg: #342d3d;
+  --color-muted: #6f6579;
+  --color-subtle: #9a91a4;
+  --color-gold: #d99a1b;
+  background:
+    radial-gradient(120% 60% at 50% 0%, #fdf9f0 0%, transparent 60%),
+    var(--color-surface-0);
+  color: var(--color-fg);
+  min-height: 100dvh;
+}
+/* 은은한 모눈 종이 질감 */
+.sketch-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(#00000006 1px, transparent 1px),
+    linear-gradient(90deg, #00000006 1px, transparent 1px);
+  background-size: 26px 26px;
+  z-index: 0;
+}
+.sketch-shell > * { position: relative; z-index: 1; }
+
+/* 워드마크 — 손그림 느낌의 통통한 타이틀 */
+.sk-wordmark {
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: #7c5cf0;
+  text-shadow: 0 2px 0 #d8ccf8;
+}
+
+/* 홈 카드 — 청키 라운드 + 아이콘 버블 + 눌림 */
+.sk-card {
+  border-radius: 22px;
+  background: var(--color-surface-1);
+  box-shadow: 0 3px 0 #e2d8c3, 0 10px 24px rgba(70, 50, 20, 0.08);
+  border: 1px solid var(--color-hairline);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.sk-card:active { transform: translateY(2px); box-shadow: 0 1px 0 #e2d8c3, 0 6px 14px rgba(70, 50, 20, 0.08); }
+.sk-bubble {
+  display: flex; align-items: center; justify-content: center;
+  width: 52px; height: 52px; border-radius: 18px; flex-shrink: 0;
+  font-size: 26px;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* 글자 타일 — 키캡 (입체 엣지 + 눌림 + 사용 시 꺼짐) */
+.sk-tile {
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff 0%, #f3edde 100%);
+  border: 1px solid #e0d5bd;
+  box-shadow: 0 3px 0 #d8cbae, 0 5px 8px rgba(70, 50, 20, 0.1);
+  color: #3a3244;
+  font-weight: 900;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.15s ease;
+  user-select: none;
+}
+.sk-tile:active { transform: translateY(2px); box-shadow: 0 1px 0 #d8cbae; }
+.sk-tile:disabled {
+  opacity: 0.35;
+  transform: translateY(2px);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.12);
+  background: #ece5d3;
+}
+/* 정답 슬롯 — 밑줄 스타일 (채워지면 보라 키캡) */
+.sk-slot {
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  background: #efe8d8;
+  border-bottom: 3px solid #cfc2a4;
+  color: #3a3244;
+  font-weight: 900;
+  transition: all 0.12s ease;
+}
+.sk-slot-filled {
+  background: linear-gradient(180deg, #8b6cf3 0%, #7c5cf0 100%);
+  border-bottom: 3px solid #5a3cc0;
+  color: #fff;
+  animation: sk-slot-pop 0.15s ease;
+}
+@keyframes sk-slot-pop { 0% { transform: scale(0.8); } 60% { transform: scale(1.08); } 100% { transform: scale(1); } }
+.sk-slot-wrong { background: #fde8e8 !important; border-bottom-color: #e5484d !important; color: #e5484d !important; }
+
+/* 주 버튼 — 청키 (하단 엣지) */
+.sk-btn {
+  border-radius: 999px;
+  background: linear-gradient(180deg, #8b6cf3 0%, #7c5cf0 100%);
+  color: #fff; font-weight: 900;
+  box-shadow: 0 4px 0 #5a3cc0, 0 8px 16px rgba(124, 92, 240, 0.35);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.sk-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #5a3cc0; }
+.sk-btn:disabled { opacity: 0.45; box-shadow: 0 4px 0 #5a3cc0; }
+.sk-btn-gold {
+  background: linear-gradient(180deg, #f2b53c 0%, #e09b18 100%);
+  box-shadow: 0 4px 0 #a86f0a, 0 8px 16px rgba(224, 155, 24, 0.35);
+}
+.sk-btn-gold:active { box-shadow: 0 1px 0 #a86f0a; }
+.sk-btn-ghost {
+  border-radius: 999px;
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-hairline);
+  box-shadow: 0 2px 0 #e2d8c3;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+.sk-btn-ghost:active { transform: translateY(2px); box-shadow: none; }
+
+/* 캔버스 카드 — 종이 위 종이 (테이프 장식) */
+.sk-canvas-card {
+  border-radius: 18px;
+  box-shadow: 0 4px 0 #e2d8c3, 0 14px 30px rgba(70, 50, 20, 0.12);
+  border: 1px solid #eadfca;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-slot-filled { animation: none; }
+}

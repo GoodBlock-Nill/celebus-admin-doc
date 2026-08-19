@@ -86,7 +86,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
         {daily && (
           <p className="text-[13px] text-muted">{t("sk_daily_done_sub").replace("{t}", String(daily.total)).replace("{c}", String(daily.correct))}</p>
         )}
-        <button onClick={onDrawInstead} className="mt-2 rounded-full bg-primary px-8 py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
+        <button onClick={onDrawInstead} className="sk-btn mt-2 px-8 py-3.5 text-[15px]">
           {t("sk_go_draw")}
         </button>
       </div>
@@ -95,7 +95,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
     return (
       <div className="mt-10 flex flex-col items-center gap-4 text-center">
         <p className="text-[14px] leading-relaxed text-muted break-keep">{t("sk_empty")}</p>
-        <button onClick={onDrawInstead} className="rounded-full bg-primary px-8 py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
+        <button onClick={onDrawInstead} className="sk-btn px-8 py-3.5 text-[15px]">
           {t("sk_go_draw")}
         </button>
       </div>
@@ -104,7 +104,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
     return (
       <div className="mt-10 flex flex-col items-center gap-4">
         <p className="text-[13px] text-muted">{t("load_failed")}</p>
-        <button onClick={() => void load()} className="rounded-full bg-surface-1 px-6 py-3 text-[13.5px] font-bold text-fg ring-1 ring-hairline">
+        <button onClick={() => void load()} className="sk-btn-ghost px-6 py-3 text-[13.5px]">
           {t("retry_btn")}
         </button>
       </div>
@@ -198,11 +198,9 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
               <button
                 key={i}
                 onClick={() => removeSlot(i)}
-                className={`flex items-center justify-center rounded-[12px] font-black ${
-                  slots.length > 7 ? "h-10 w-9 text-[15px]" : "h-12 w-12 text-[19px]"
-                } ${a.tile_lang === "en" ? "uppercase" : ""} ${
-                  s != null ? "bg-primary/25 text-fg ring-2 ring-primary-400" : "bg-surface-1 ring-1 ring-hairline"
-                } ${wrongFlash ? "ring-danger text-danger" : ""}`}
+                className={`sk-slot ${slots.length > 7 ? "h-10 w-9 text-[15px]" : "h-12 w-12 text-[19px]"} ${
+                  a.tile_lang === "en" ? "uppercase" : ""
+                } ${s != null ? "sk-slot-filled" : ""} ${wrongFlash ? "sk-slot-wrong" : ""}`}
               >
                 {s ?? ""}
               </button>
@@ -211,15 +209,13 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
           </div>
 
           {/* 글자 타일 — 언어별 고정 그리드 (en·ja 6열, ko 5열), en은 대문자 표기 */}
-          <div className={`mx-auto grid w-fit gap-1.5 ${a.tile_lang === "ko" ? "grid-cols-5" : "grid-cols-6"}`}>
+          <div className={`mx-auto grid w-fit gap-2 rounded-[18px] bg-surface-2 p-3 ring-1 ring-hairline ${a.tile_lang === "ko" ? "grid-cols-5" : "grid-cols-6"}`}>
             {a.tiles.map((tile, i) => (
               <button
                 key={i}
                 onClick={() => placeTile(i)}
                 disabled={usedTiles.has(i)}
-                className={`flex h-12 w-12 items-center justify-center rounded-[12px] bg-surface-2 font-black text-fg ring-1 ring-hairline active:scale-95 disabled:opacity-25 ${
-                  a.tile_lang === "en" ? "text-[19px] uppercase" : "text-[18px]"
-                }`}
+                className={`sk-tile h-12 w-12 ${a.tile_lang === "en" ? "text-[19px] uppercase" : "text-[18px]"}`}
               >
                 {tile}
               </button>
@@ -234,7 +230,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
               }}
               disabled={slots.every((s) => s === null)}
               aria-label={t("sk_clear_input")}
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-surface-1 text-muted ring-1 ring-hairline disabled:opacity-40"
+              className="sk-btn-ghost flex h-12 w-12 shrink-0 items-center justify-center disabled:opacity-40"
             >
               <X className="h-5 w-5" />
             </button>
@@ -249,7 +245,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
                 } else toast.error(h?.error === "insufficient" ? t("sk_no_cp") : t("sk_hint_fail"));
               }}
               disabled={busy || !!hintChar}
-              className="flex h-12 shrink-0 items-center gap-1 rounded-full bg-surface-1 px-3.5 text-[12.5px] font-bold text-gold ring-1 ring-hairline disabled:opacity-60"
+              className="sk-btn-ghost flex h-12 shrink-0 items-center gap-1 px-3.5 text-[12.5px] !text-gold disabled:opacity-60"
             >
               <Lightbulb className="h-4 w-4" />
               {hintChar ? t("sk_hint_first").replace("{c}", hintChar) : t("sk_hint_btn").replace("{n}", String(HINT_COST))}
@@ -257,7 +253,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
             <button
               onClick={() => void submit()}
               disabled={!filled || busy}
-              className="min-w-0 flex-1 rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99] disabled:opacity-40"
+              className="sk-btn min-w-0 flex-1 py-3.5 text-[15px]"
             >
               {t("confirm")}
             </button>
@@ -295,7 +291,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
           </div>
         </>
       ) : (
-        <button onClick={() => void load()} className="w-full rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
+        <button onClick={() => void load()} className="sk-btn w-full py-3.5 text-[15px]">
           {mode === "daily" ? t("sk_next_q") : t("sk_next")}
         </button>
       )}

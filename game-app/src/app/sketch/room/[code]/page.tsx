@@ -192,7 +192,7 @@ export default function PartyRoomPage() {
     <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col gap-3 px-5 pb-8 pt-6 px-safe pb-safe pt-safe">
       <div className="flex items-center justify-between">
         <h1 className="flex items-center gap-1.5 text-[17px] font-black text-fg">
-          <Palette className="h-5 w-5 text-primary-400" /> {t("sk_party_card")} <span className="text-primary-400">{room.code}</span>
+          <span className="sk-wordmark text-[18px]">{t("sk_party_card")}</span> <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[13px] font-black tabular-nums text-primary-600">{room.code}</span>
         </h1>
         {room.status === "playing" ? (
           <span className="text-[13px] font-black tabular-nums text-muted">
@@ -220,7 +220,7 @@ export default function PartyRoomPage() {
       {room.status === "lobby" && (
         <div className="flex flex-col gap-3">
           <p className="text-[13px] leading-relaxed text-muted break-keep">{t("sk_lobby_hint")}</p>
-          <button onClick={() => void copyInvite()} className="flex items-center justify-center gap-2 rounded-[14px] bg-surface-1 px-4 py-3.5 text-[13.5px] font-bold text-fg ring-1 ring-hairline active:scale-[0.99]">
+          <button onClick={() => void copyInvite()} className="sk-btn-ghost flex items-center justify-center gap-2 px-4 py-3.5 text-[13.5px]">
             {copied ? <Check className="h-4 w-4 text-verified" /> : <Copy className="h-4 w-4" />} {t("sk_copy_invite")}
           </button>
           {room.is_host ? (
@@ -231,7 +231,7 @@ export default function PartyRoomPage() {
                 if (chRef.current) sendPartyEvent(chRef.current, { type: "sync" });
                 void refresh();
               }}
-              className="w-full rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99]"
+              className="sk-btn w-full py-3.5 text-[15px]"
             >
               {t("sk_start").replace("{n}", String(members.length))}
             </button>
@@ -261,19 +261,19 @@ export default function PartyRoomPage() {
               <>
                 <div className="flex flex-wrap items-center justify-center gap-1.5">
                   {slots.map((s, i) => (
-                    <button key={i} onClick={() => removeSlot(i)} className={`flex items-center justify-center rounded-[10px] font-black ${slots.length > 7 ? "h-9 w-8 text-[13px]" : "h-11 w-11 text-[17px]"} ${state.tile_lang === "en" ? "uppercase" : ""} ${s != null ? "bg-primary/25 text-fg ring-2 ring-primary-400" : "bg-surface-1 ring-1 ring-hairline"}`}>
+                    <button key={i} onClick={() => removeSlot(i)} className={`sk-slot ${slots.length > 7 ? "h-9 w-8 text-[13px]" : "h-11 w-11 text-[17px]"} ${state.tile_lang === "en" ? "uppercase" : ""} ${s != null ? "sk-slot-filled" : ""}`}>
                       {s ?? ""}
                     </button>
                   ))}
                 </div>
-                <div className={`mx-auto grid w-fit gap-1.5 ${state.tile_lang === "ko" ? "grid-cols-5" : "grid-cols-6"}`}>
+                <div className={`mx-auto grid w-fit gap-1.5 rounded-[16px] bg-surface-2 p-2.5 ring-1 ring-hairline ${state.tile_lang === "ko" ? "grid-cols-5" : "grid-cols-6"}`}>
                   {tiles.map((tile, i) => (
-                    <button key={i} onClick={() => placeTile(i)} disabled={used.has(i)} className={`flex h-11 w-11 items-center justify-center rounded-[10px] bg-surface-2 font-black text-fg ring-1 ring-hairline active:scale-95 disabled:opacity-25 ${state.tile_lang === "en" ? "text-[16px] uppercase" : "text-[16px]"}`}>
+                    <button key={i} onClick={() => placeTile(i)} disabled={used.has(i)} className={`sk-tile h-11 w-11 ${state.tile_lang === "en" ? "text-[16px] uppercase" : "text-[16px]"}`}>
                       {tile}
                     </button>
                   ))}
                 </div>
-                <button onClick={() => void submitGuess()} disabled={slots.some((s) => s === null)} className="w-full rounded-full bg-primary py-3 text-[14px] font-black text-white active:scale-[0.99] disabled:opacity-40">
+                <button onClick={() => void submitGuess()} disabled={slots.some((s) => s === null)} className="sk-btn w-full py-3 text-[14px]">
                   {t("confirm")}
                 </button>
               </>
@@ -298,7 +298,7 @@ export default function PartyRoomPage() {
               </div>
             ))}
           </div>
-          <button onClick={() => router.push("/sketch")} className="w-full rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
+          <button onClick={() => router.push("/sketch")} className="sk-btn w-full py-3.5 text-[15px]">
             {t("sk_to_home")}
           </button>
         </div>

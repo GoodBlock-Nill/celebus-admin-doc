@@ -54,7 +54,9 @@ function AuthBoundary({ children }: { children: React.ReactNode }) {
 export default function SketchLayout({ children }: { children: React.ReactNode }) {
   return (
     <LangProvider>
-      <AuthBoundary>{children}</AuthBoundary>
+      <div className="sketch-shell">
+        <AuthBoundary>{children}</AuthBoundary>
+      </div>
     </LangProvider>
   );
 }

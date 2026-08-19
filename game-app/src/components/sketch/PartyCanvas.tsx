@@ -107,13 +107,13 @@ export default function PartyCanvas({
 
   return (
     <div className="flex flex-col gap-2.5">
-      <div ref={wrapRef} className="relative aspect-square w-full touch-none overflow-hidden rounded-[16px] ring-1 ring-hairline">
+      <div ref={wrapRef} className="sk-canvas-card relative aspect-square w-full touch-none overflow-hidden">
         <canvas ref={canvasRef} className="h-full w-full" style={{ background: SKETCH_PAPER }} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} />
       </div>
       <div className="flex items-center justify-between">
         {SKETCH_COLORS.map((c, i) => (
           <button key={c} onClick={() => { setColor(c); setEraser(false); }} aria-label={SKETCH_COLOR_NAMES[i]} className="flex h-11 w-11 shrink-0 items-center justify-center">
-            <span className={`h-[30px] w-[30px] rounded-full transition-transform ${!eraser && color === c ? "scale-110 ring-2 ring-white" : "ring-1 ring-white/25"}`} style={{ background: c }} />
+            <span className={`h-[30px] w-[30px] rounded-full transition-transform ${!eraser && color === c ? "scale-110 ring-[3px] ring-primary" : "ring-1 ring-black/15"}`} style={{ background: c }} />
           </button>
         ))}
       </div>

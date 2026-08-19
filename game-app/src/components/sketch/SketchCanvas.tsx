@@ -159,7 +159,7 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
       </div>
 
       {/* 종이 캔버스 (1:1) */}
-      <div ref={wrapRef} className="relative aspect-square w-full touch-none overflow-hidden rounded-[16px] ring-1 ring-hairline">
+      <div ref={wrapRef} className="sk-canvas-card relative aspect-square w-full touch-none overflow-hidden">
         <canvas
           ref={canvasRef}
           className="h-full w-full"
@@ -189,7 +189,7 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
             className="flex h-11 w-11 shrink-0 items-center justify-center"
           >
             <span
-              className={`h-[34px] w-[34px] rounded-full transition-transform ${!eraser && color === c ? "scale-110 ring-2 ring-white" : "ring-1 ring-white/25"}`}
+              className={`h-[34px] w-[34px] rounded-full transition-transform ${!eraser && color === c ? "scale-110 ring-[3px] ring-primary" : "ring-1 ring-black/15"}`}
               style={{ background: c }}
             />
           </button>
@@ -246,7 +246,7 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
       <button
         onClick={finish}
         disabled={strokes.length === 0}
-        className="w-full rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99] disabled:opacity-40"
+        className="sk-btn w-full py-3.5 text-[15px]"
       >
         {t("sk_submit")}
       </button>
