@@ -247,10 +247,10 @@ export default function Home({
           <img src="/nav-draw.png" alt="" className="h-9 w-9 object-contain drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)]" />
           <span className="text-[11px] font-bold text-white">{t("home_gacha")}</span>
         </button>
-        {/* CELEB SKETCH — 별도 라우트 미니게임 (3D 아이콘 준비 전까지 라인 아이콘) */}
+        {/* CELEB SKETCH — 전용 도메인 별도 앱 (3D 아이콘 준비 전까지 라인 아이콘) */}
         <button
           onClick={() => {
-            window.location.href = "/sketch";
+            window.location.href = process.env.NEXT_PUBLIC_SKETCH_URL || "https://celeb-sketch.vercel.app";
           }}
           className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90"
         >
