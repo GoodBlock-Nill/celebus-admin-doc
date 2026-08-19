@@ -4,7 +4,9 @@
 // 그리기(서버 제시어 3택 1 → 제출)와 맞히기(배정 → 리플레이 → 글자 타일 → 서버 판정) 두 루프의 E2E.
 // 게이트: 그리기·맞히기 상호 보상 루프 체감 (기획 §11 W1). CP 보상·검수 큐·신고는 W2.
 import { useEffect, useState } from "react";
-import { CalendarCheck, ChevronLeft, Crown, Palette, Search } from "lucide-react";
+import { CalendarCheck, ChevronLeft, Crown, Palette, Search, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { partyApi } from "@/lib/sketch-party";
 import { toast } from "sonner";
 import SketchCanvas from "@/components/sketch/SketchCanvas";
 import SketchGuess from "@/components/sketch/SketchGuess";
@@ -20,7 +22,9 @@ type Phase =
   | { name: "guess"; mode: "pool" | "daily" };
 
 export default function SketchPage() {
+  const router = useRouter();
   const [phase, setPhase] = useState<Phase>({ name: "home" });
+  const [creatingRoom, setCreatingRoom] = useState(false);
   const [savedCount, setSavedCount] = useState(0);
   const [best, setBest] = useState<SketchBest | null>(null);
   const [showBestReplay, setShowBestReplay] = useState(false);
@@ -91,6 +95,27 @@ export default function SketchPage() {
             <span className="text-left">
               <span className="block text-[16px] font-black text-fg">맞히기</span>
               <span className="mt-0.5 block text-[12px] text-muted break-keep">그려지는 과정을 보고 글자 타일로 정답을 맞혀요</span>
+            </span>
+          </button>
+
+          {/* 파티룸 — 초대 링크 실시간 (W3) */}
+          <button
+            onClick={async () => {
+              if (creatingRoom) return;
+              setCreatingRoom(true);
+              const { getNick } = await import("@/lib/game-api");
+              const r = await partyApi({ action: "create", nick: getNick() });
+              setCreatingRoom(false);
+              if (r?.code) router.push(`/sketch/room/${r.code}`);
+              else toast.error("방을 만들지 못했어요.");
+            }}
+            disabled={creatingRoom}
+            className="flex items-center gap-3.5 rounded-[18px] bg-surface-1 p-4 ring-1 ring-hairline active:scale-[0.99] disabled:opacity-60"
+          >
+            <Users className="h-8 w-8 shrink-0 text-verified" />
+            <span className="text-left">
+              <span className="block text-[16px] font-black text-fg">파티룸</span>
+              <span className="mt-0.5 block text-[12px] text-muted break-keep">친구를 초대해 실시간으로 그리고 맞혀요 (2~8명)</span>
             </span>
           </button>
 
