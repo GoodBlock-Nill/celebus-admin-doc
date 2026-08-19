@@ -36,7 +36,8 @@ export default function SketchPage() {
     if (!moderation) toast.error("서버 제출에 실패했어요 — 그림은 기기에 보관돼 있어요.");
     else if (moderation === "approve") toast.success("제출 완료! 다른 팬들이 맞히기 시작해요.");
     else if (moderation === "hold") toast.success("제출 완료! 확인 후 공개돼요.");
-    else toast.error("커뮤니티 규칙에 맞지 않는 그림으로 판단되어 공개되지 않아요.");
+    else if (moderation === "processing") toast.success("제출 완료! 검토가 끝나면 자동으로 공개돼요.");
+    else toast.error("커뮤니티 규칙에 맞지 않는 그림으로 판단되어 공개되지 않았어요. 오판이라고 생각되면 문의해 주세요 — 다시 확인해드려요.");
     setPhase({ name: "submitted", word, strokes });
   };
 

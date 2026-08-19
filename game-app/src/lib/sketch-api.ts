@@ -18,7 +18,7 @@ export type SketchGuessResult = {
   celeb_point?: number;
   error?: string;
 };
-export type SketchModeration = "approve" | "hold" | "reject";
+export type SketchModeration = "approve" | "hold" | "reject" | "processing";
 
 export async function fetchSketchWords(): Promise<SketchWordChoice[]> {
   try {
