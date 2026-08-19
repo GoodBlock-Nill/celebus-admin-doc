@@ -22,7 +22,20 @@
 | `.env.dev-db-password` | dev DB 비밀번호 (push 스크립트가 사용) | gitignore |
 | Vercel 환경변수 | **프로드 배포**가 사용하는 프로드 키 | 로컬 파일과 무관 |
 
-⚠️ 프로덕션 배포(`npx vercel --prod`)는 Vercel에 저장된 프로드 env를 쓰므로 `.env.local` 전환의 영향을 받지 않는다.
+⚠️ 프로덕션 배포는 Vercel에 저장된 프로드 env를 쓰므로 `.env.local` 전환의 영향을 받지 않는다.
+
+### 프로덕션 배포 방법 (2026-08-19 변경)
+
+game-app Vercel 프로젝트의 Root Directory가 `game-app`으로 설정되면서 `game-app/` 안에서 `npx vercel --prod`를 실행하면 `game-app/game-app` 경로 오류로 실패한다. **리포 루트에서 프로젝트를 env로 지정해 배포**한다:
+
+```bash
+cd <repo-root>
+VERCEL_ORG_ID=team_iLgwD2I2r1ae3kEA4L6oB9K4 \
+VERCEL_PROJECT_ID=prj_oj0D4cJ3HkWW0caIRlwjfmZ7Ytq6 \
+npx vercel --prod
+```
+
+🚨 리포 루트의 `.vercel/`은 **다른 프로젝트(celebus-admin)**에 연결되어 있다 — 루트에서 env 지정 없이 `npx vercel --prod`를 실행하면 celebus-admin 프로덕션을 덮어쓰는 사고가 난다 (2026-08-19 실제 발생, 직전 프로덕션으로 롤백 처리).
 
 ## 마이그레이션 워크플로우 (변경됨)
 
