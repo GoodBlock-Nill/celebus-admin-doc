@@ -34,7 +34,9 @@ import AdminConfig from "@/components/admin/AdminConfig";
 import AdminLogs from "@/components/admin/AdminLogs";
 import AdminWeeklyReport from "@/components/admin/AdminWeeklyReport";
 
-const TABS = [
+// 스케치 전용 배포(celeb-sketch)는 스케치 운영 탭만 노출 — match 운영과 크레덴셜·화면 완전 분리 (2026-08-19 사용자 결정)
+const SKETCH_MODE = process.env.NEXT_PUBLIC_SKETCH_ONLY === "1";
+const ALL_TABS = [
   { key: "dash", label: "대시보드", icon: LayoutDashboard, desc: "오늘 지표·활성화·리텐션" },
   { key: "members", label: "회원", icon: Users, desc: "검색·상세·제재·CP·V01D 멤버 지정" },
   { key: "board", label: "리더보드", icon: Trophy, desc: "기간별 기록·보상 정산 CSV·기록 삭제" },
@@ -48,14 +50,15 @@ const TABS = [
   { key: "config", label: "설정", icon: Settings2, desc: "게임 밸런스·연출·테마 원격 설정" },
   { key: "logs", label: "로그", icon: ScrollText, desc: "관리자 행동·시스템 이벤트 활동 로그" },
 ] as const;
+const TABS = SKETCH_MODE ? ALL_TABS.filter((t) => t.key === "sketch" || t.key === "logs") : ALL_TABS.filter((t) => t.key !== "sketch");
 
-type TabKey = (typeof TABS)[number]["key"];
+type TabKey = (typeof ALL_TABS)[number]["key"];
 
 export default function AdminPage() {
   const [authed, setAuthed] = useState<"checking" | "no" | "yes">("checking");
   const [key, setKey] = useState("");
   const [err, setErr] = useState<string | null>(null);
-  const [tab, setTab] = useState<TabKey>("dash");
+  const [tab, setTab] = useState<TabKey>(SKETCH_MODE ? "sketch" : "dash");
 
   // 세션 유효성 확인 (stats 401 여부)
   useEffect(() => {
@@ -86,7 +89,7 @@ export default function AdminPage() {
         <div className="w-full max-w-sm rounded-[18px] bg-surface-1 p-8 ring-1 ring-hairline">
           <div className="flex flex-col items-center">
             <ShieldCheck className="h-10 w-10 text-primary-400" />
-            <h1 className="mt-3 text-[18px] font-black">CELEB MATCH 관리</h1>
+            <h1 className="mt-3 text-[18px] font-black">{SKETCH_MODE ? "CELEB SKETCH 관리" : "CELEB MATCH 관리"}</h1>
             <p className="mt-1 text-[12.5px] text-muted">내부 운영 전용</p>
           </div>
           {authed === "checking" ? (
@@ -121,7 +124,7 @@ export default function AdminPage() {
         <div className="flex items-center gap-2 px-2">
           <ShieldCheck className="h-5 w-5 text-primary-400" />
           <div>
-            <div className="text-[14px] font-black leading-tight">CELEB MATCH</div>
+            <div className="text-[14px] font-black leading-tight">{SKETCH_MODE ? "CELEB SKETCH" : "CELEB MATCH"}</div>
             <div className="text-[10px] font-bold text-subtle">관리 콘솔</div>
           </div>
         </div>
@@ -158,7 +161,7 @@ export default function AdminPage() {
         <div className="border-b border-hairline px-4 pb-3 pt-4 lg:hidden">
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-primary-400" />
-            <span className="text-[15px] font-black">CELEB MATCH 관리</span>
+            <span className="text-[15px] font-black">{SKETCH_MODE ? "CELEB SKETCH 관리" : "CELEB MATCH 관리"}</span>
           </div>
           <nav className="scrollbar-none mt-3 flex gap-1.5 overflow-x-auto">
             {TABS.map((t) => (

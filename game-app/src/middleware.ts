@@ -19,6 +19,7 @@ export function middleware(req: NextRequest) {
   }
   if (
     pathname.startsWith("/sketch") ||
+    pathname.startsWith("/admin") || // 스케치 전용 관리자 (별도 ADMIN_KEY)
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
     pathname.includes(".") // 정적 파일 (아이콘·이미지·sw.js 등)
