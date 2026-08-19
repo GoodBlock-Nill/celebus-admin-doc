@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LayoutGrid, ChevronLeft } from "lucide-react";
+import { LayoutGrid, ChevronLeft, Palette } from "lucide-react";
 import { GAME_CONFIG } from "@/lib/game-config";
 import {
   getNick,
@@ -230,8 +230,8 @@ export default function Home({
         </div>
       </div>
 
-      {/* 하단 내비 (랭킹 · 아이템상점 · 가챠 · 더보기) — 3D 일러스트 아이콘 */}
-      <div className="mx-5 mb-safe mt-3 grid grid-cols-4 rounded-[22px] bg-black/45 px-2 py-2.5 ring-1 ring-white/15 backdrop-blur">
+      {/* 하단 내비 (랭킹 · 아이템상점 · 가챠 · 스케치 · 더보기) — 3D 일러스트 아이콘 */}
+      <div className="mx-5 mb-safe mt-3 grid grid-cols-5 rounded-[22px] bg-black/45 px-2 py-2.5 ring-1 ring-white/15 backdrop-blur">
         <button onClick={onOpenLeaderboard} className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/nav-ranking.png" alt="" className="h-9 w-9 object-contain drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)]" />
@@ -246,6 +246,18 @@ export default function Home({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/nav-draw.png" alt="" className="h-9 w-9 object-contain drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)]" />
           <span className="text-[11px] font-bold text-white">{t("home_gacha")}</span>
+        </button>
+        {/* CELEB SKETCH — 별도 라우트 미니게임 (3D 아이콘 준비 전까지 라인 아이콘) */}
+        <button
+          onClick={() => {
+            window.location.href = "/sketch";
+          }}
+          className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90"
+        >
+          <span className="flex h-9 w-9 items-center justify-center">
+            <Palette className="h-7 w-7 text-primary-300 drop-shadow-[0_2px_5px_rgba(0,0,0,0.45)]" strokeWidth={2.5} />
+          </span>
+          <span className="text-[11px] font-bold text-white">{t("home_sketch")}</span>
         </button>
         <button onClick={onOpenMore} className="flex flex-col items-center gap-1 py-1 transition-transform active:scale-90">
           <span className="flex h-9 w-9 items-center justify-center">

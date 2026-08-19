@@ -5,6 +5,7 @@
 // 스트로크는 정규화 좌표 + 경과 ms로 기록 — 이 로그가 그대로 리플레이·저장 포맷이 된다.
 import { useEffect, useRef, useState } from "react";
 import { Eraser, RotateCcw, Trash2 } from "lucide-react";
+import { useLang } from "../LangProvider";
 import {
   SKETCH_BASE,
   SKETCH_COLOR_NAMES,
@@ -20,6 +21,8 @@ const DRAW_SECONDS = 60;
 const MAX_UNDO = 3;
 
 export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmit: (strokes: SketchStroke[], durationMs: number) => void }) {
+  const { t } = useLang();
+  const colorNames = t("sk_color_names").split(",");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [strokes, setStrokes] = useState<SketchStroke[]>([]);
@@ -148,10 +151,10 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
       {/* 제시어 + 타이머 */}
       <div className="flex items-center justify-between">
         <span className="text-[15px] font-black text-fg">
-          제시어 <span className="text-primary-400">{word}</span>
+          {t("sk_word")} <span className="text-primary-400">{word}</span>
         </span>
         <span className={`text-[15px] font-black tabular-nums ${secondsLeft <= 10 ? "text-danger" : "text-muted"}`}>
-          {strokes.length === 0 && !current.current ? `${DRAW_SECONDS}초` : `${secondsLeft}초`}
+          {t("sk_seconds").replace("{n}", String(strokes.length === 0 && !current.current ? DRAW_SECONDS : secondsLeft))}
         </span>
       </div>
 
@@ -168,7 +171,7 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
         />
         {strokes.length === 0 && !current.current && (
           <span className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-[13px] font-bold text-black/25">
-            여기에 그려보세요 — 첫 획부터 타이머가 시작돼요
+            {t("sk_canvas_hint")}
           </span>
         )}
       </div>
@@ -182,7 +185,7 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
               setColor(c);
               setEraser(false);
             }}
-            aria-label={SKETCH_COLOR_NAMES[i]}
+            aria-label={colorNames[i] ?? SKETCH_COLOR_NAMES[i]}
             className="flex h-11 w-11 shrink-0 items-center justify-center"
           >
             <span
@@ -203,7 +206,7 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
                 setWidth(w);
                 setEraser(false);
               }}
-              aria-label={`굵기 ${wi + 1}단`}
+              aria-label={t("sk_width").replace("{n}", String(wi + 1))}
               className={`flex h-11 w-11 items-center justify-center rounded-[10px] ring-1 ${!eraser && width === w ? "bg-primary/25 ring-primary-400" : "bg-surface-1 ring-hairline"}`}
             >
               <span className="rounded-full" style={{ width: w * 0.9, height: w * 0.9, background: eraser ? "#666" : color }} />
@@ -211,7 +214,7 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
           ))}
           <button
             onClick={() => setEraser((v) => !v)}
-            aria-label="지우개"
+            aria-label={t("sk_eraser")}
             className={`flex h-11 w-11 items-center justify-center rounded-[10px] ring-1 ${eraser ? "bg-primary/25 ring-primary-400 text-primary-400" : "bg-surface-1 ring-hairline text-muted"}`}
           >
             <Eraser className="h-4.5 w-4.5" />
@@ -221,7 +224,7 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
           <button
             onClick={undo}
             disabled={undosLeft <= 0 || strokes.length === 0}
-            aria-label={`되돌리기 (${undosLeft}회 남음)`}
+            aria-label={t("sk_undo").replace("{n}", String(undosLeft))}
             className="flex h-11 items-center gap-1 rounded-[10px] bg-surface-1 px-3 text-[12px] font-bold text-muted ring-1 ring-hairline disabled:opacity-40"
           >
             <RotateCcw className="h-4 w-4" /> {undosLeft}
@@ -229,13 +232,13 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
           <button
             onClick={clearAll}
             disabled={strokes.length === 0}
-            aria-label={clearArmed ? "한 번 더 탭하면 전체 지워요" : "전체 지우기"}
+            aria-label={clearArmed ? t("sk_clear_confirm") : t("sk_clear")}
             className={`flex h-11 items-center justify-center gap-1 rounded-[10px] px-3 text-[12px] font-bold ring-1 disabled:opacity-40 ${
               clearArmed ? "bg-danger/20 text-danger ring-danger/50" : "bg-surface-1 text-muted ring-hairline"
             }`}
           >
             <Trash2 className="h-4 w-4" />
-            {clearArmed && "한 번 더!"}
+            {clearArmed && t("sk_clear_confirm")}
           </button>
         </div>
       </div>
@@ -245,7 +248,7 @@ export default function SketchCanvas({ word, onSubmit }: { word: string; onSubmi
         disabled={strokes.length === 0}
         className="w-full rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99] disabled:opacity-40"
       >
-        제출하기
+        {t("sk_submit")}
       </button>
     </div>
   );

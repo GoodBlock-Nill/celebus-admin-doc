@@ -58,6 +58,21 @@ export function compressTimeline(strokes: SketchStroke[]): { strokes: SketchStro
   return { strokes: out, durationMs: prevEnd };
 }
 
+// 공유 카드 — 완성 그림을 PNG로 렌더 (제시어는 담지 않는다: "이거 뭐게?" 티저, 기획 §5)
+export async function sketchToPngBlob(strokes: SketchStroke[], size = 720): Promise<Blob | null> {
+  try {
+    const cv = document.createElement("canvas");
+    cv.width = size;
+    cv.height = size;
+    const ctx = cv.getContext("2d");
+    if (!ctx) return null;
+    renderDrawing(ctx, strokes, size);
+    return await new Promise((resolve) => cv.toBlob(resolve, "image/png"));
+  } catch {
+    return null;
+  }
+}
+
 // W0 프로토타입 저장소 — 서버 없이 기기 로컬에 최근 그림 보관 (W1에서 서버 제출로 대체)
 const STORE_KEY = "sketch_proto_drawings";
 export function loadDrawings(): SketchDrawing[] {

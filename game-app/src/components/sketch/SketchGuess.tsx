@@ -15,6 +15,7 @@ import {
   type SketchAssignment,
 } from "@/lib/sketch-api";
 import { sfxCoin, sfxNewBest } from "@/lib/sfx";
+import { useLang } from "../LangProvider";
 import SketchReplay from "./SketchReplay";
 
 const HINT_COST = 10;
@@ -23,6 +24,7 @@ type Result = { correct: boolean; word: string | null; cp: number } | null;
 
 // mode "pool" = 일반 풀 배정 / "daily" = 오늘의 데일리 퀴즈 5문제 (전원 동일, 완주 보너스)
 export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawInstead: () => void; mode?: "pool" | "daily" }) {
+  const { t } = useLang();
   const [assignment, setAssignment] = useState<SketchAssignment | "empty" | "loading" | "error" | "daily-done">("loading");
   const [daily, setDaily] = useState<{ total: number; done: number; correct: number } | null>(null);
   const [slots, setSlots] = useState<(string | null)[]>([]);
@@ -59,7 +61,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
         // 완주 — 보너스 자동 수령 (이미 받았으면 무시)
         if (!d.bonus_claimed && quiz.length > 0) {
           const b = await claimSketchDailyBonus();
-          if (b?.ok) toast.success(`데일리 퀴즈 완주 +${b.cp} CP!`);
+          if (b?.ok) toast.success(t("sk_bonus").replace("{n}", String(b.cp)));
         }
         return setAssignment(quiz.length === 0 ? "empty" : "daily-done");
       }
@@ -80,36 +82,30 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
     return (
       <div className="mt-10 flex flex-col items-center gap-3 text-center">
         <Sparkles className="h-8 w-8 text-gold" />
-        <p className="text-[16px] font-black text-fg">오늘의 퀴즈 완료!</p>
+        <p className="text-[16px] font-black text-fg">{t("sk_daily_done_title")}</p>
         {daily && (
-          <p className="text-[13px] text-muted">
-            {daily.total}문제 중 <b className="text-gold">{daily.correct}문제</b> 정답 — 내일 새 퀴즈로 만나요
-          </p>
+          <p className="text-[13px] text-muted">{t("sk_daily_done_sub").replace("{t}", String(daily.total)).replace("{c}", String(daily.correct))}</p>
         )}
         <button onClick={onDrawInstead} className="mt-2 rounded-full bg-primary px-8 py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
-          그리러 가기
+          {t("sk_go_draw")}
         </button>
       </div>
     );
   if (assignment === "empty")
     return (
       <div className="mt-10 flex flex-col items-center gap-4 text-center">
-        <p className="text-[14px] leading-relaxed text-muted break-keep">
-          아직 맞힐 그림이 없어요.
-          <br />
-          첫 그림의 주인공이 되어보세요!
-        </p>
+        <p className="text-[14px] leading-relaxed text-muted break-keep">{t("sk_empty")}</p>
         <button onClick={onDrawInstead} className="rounded-full bg-primary px-8 py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
-          그리러 가기
+          {t("sk_go_draw")}
         </button>
       </div>
     );
   if (assignment === "error")
     return (
       <div className="mt-10 flex flex-col items-center gap-4">
-        <p className="text-[13px] text-muted">불러오지 못했어요. 다시 시도해주세요.</p>
+        <p className="text-[13px] text-muted">{t("load_failed")}</p>
         <button onClick={() => void load()} className="rounded-full bg-surface-1 px-6 py-3 text-[13.5px] font-bold text-fg ring-1 ring-hairline">
-          다시 시도
+          {t("retry_btn")}
         </button>
       </div>
     );
@@ -166,7 +162,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
     <div className="flex flex-col gap-3">
       {mode === "daily" && daily && (
         <div className="flex items-center justify-center gap-1.5">
-          <span className="rounded-full bg-gold/15 px-2.5 py-1 text-[11.5px] font-black text-gold">데일리 퀴즈</span>
+          <span className="rounded-full bg-gold/15 px-2.5 py-1 text-[11.5px] font-black text-gold">{t("sk_daily_card")}</span>
           <span className="text-[12px] font-bold tabular-nums text-muted">{daily.done + 1}/{daily.total}</span>
         </div>
       )}
@@ -178,17 +174,17 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
             {result.correct ? (
               <>
                 <Sparkles className="h-8 w-8 text-gold" />
-                <div className="text-[24px] font-black text-white">정답!</div>
+                <div className="text-[24px] font-black text-white">{t("sk_correct")}</div>
               </>
             ) : (
-              <div className="text-[18px] font-black text-white/85">아쉬워요!</div>
+              <div className="text-[18px] font-black text-white/85">{t("sk_wrong_end")}</div>
             )}
             {result.word && (
               <div className="rounded-full bg-primary px-5 py-2 text-[18px] font-black text-white">{result.word}</div>
             )}
-            {result.cp > 0 && <div className="text-[14px] font-black text-gold">+{result.cp} CP · 그린 사람도 +3 CP</div>}
+            {result.cp > 0 && <div className="text-[14px] font-black text-gold">{t("sk_cp_award").replace("{n}", String(result.cp))}</div>}
             <div className="rounded-full bg-black/50 px-3.5 py-1.5 text-[12px] font-bold text-white/80 ring-1 ring-white/20">
-              {strokeCount}획 · {drawSecs}초 완성
+              {t("sk_meta").replace("{s}", String(strokeCount)).replace("{t}", String(drawSecs))}
             </div>
           </div>
         )}
@@ -209,7 +205,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
                 {s ?? ""}
               </button>
             ))}
-            <span className="ml-2 text-[12px] font-bold tabular-nums text-subtle">시도 {triesLeft}회</span>
+            <span className="ml-2 text-[12px] font-bold tabular-nums text-subtle">{t("sk_tries").replace("{n}", String(triesLeft))}</span>
           </div>
 
           {/* 글자 타일 */}
@@ -233,7 +229,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
                 setUsedTiles(new Set());
               }}
               disabled={slots.every((s) => s === null)}
-              aria-label="입력 지우기"
+              aria-label={t("sk_clear_input")}
               className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-surface-1 text-muted ring-1 ring-hairline disabled:opacity-40"
             >
               <X className="h-5 w-5" />
@@ -245,38 +241,38 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
                 const h = await fetchSketchHint(a.drawing.id);
                 if (h?.first) {
                   setHintChar(h.first);
-                  if ((h.charged ?? 0) > 0) toast.success(`힌트 사용 -${h.charged} CP`);
-                } else toast.error(h?.error === "insufficient" ? "CP가 부족해요." : "힌트를 불러오지 못했어요.");
+                  if ((h.charged ?? 0) > 0) toast.success(t("sk_hint_used").replace("{n}", String(h.charged)));
+                } else toast.error(h?.error === "insufficient" ? t("sk_no_cp") : t("sk_hint_fail"));
               }}
               disabled={busy || !!hintChar}
               className="flex h-12 shrink-0 items-center gap-1 rounded-full bg-surface-1 px-3.5 text-[12.5px] font-bold text-gold ring-1 ring-hairline disabled:opacity-60"
             >
               <Lightbulb className="h-4 w-4" />
-              {hintChar ? `첫 글자 "${hintChar}"` : `힌트 ${HINT_COST}`}
+              {hintChar ? t("sk_hint_first").replace("{c}", hintChar) : t("sk_hint_btn").replace("{n}", String(HINT_COST))}
             </button>
             <button
               onClick={() => void submit()}
               disabled={!filled || busy}
               className="min-w-0 flex-1 rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99] disabled:opacity-40"
             >
-              확인
+              {t("confirm")}
             </button>
           </div>
 
           {/* 신고 — 부적절/글자 반칙 (§6). 임계 도달 시 서버가 자동 비공개 */}
           <div className="flex justify-center">
             {reported ? (
-              <span className="text-[11.5px] font-bold text-subtle">신고가 접수됐어요. 확인 후 조치할게요.</span>
+              <span className="text-[11.5px] font-bold text-subtle">{t("sk_reported")}</span>
             ) : reporting ? (
               <div className="flex items-center gap-1.5">
-                {([["inappropriate", "부적절한 그림"], ["letters", "글자를 썼어요"]] as const).map(([reason, label]) => (
+                {([["inappropriate", t("sk_report_bad")], ["letters", t("sk_report_letters")]] as const).map(([reason, label]) => (
                   <button
                     key={reason}
                     onClick={async () => {
                       const ok = await reportSketch(a.drawing.id, reason);
                       setReporting(false);
                       if (ok) setReported(true);
-                      else toast.error("신고에 실패했어요.");
+                      else toast.error(t("sk_report_fail"));
                     }}
                     className="rounded-full bg-surface-1 px-3 py-1.5 text-[11.5px] font-bold text-fg ring-1 ring-hairline"
                   >
@@ -284,19 +280,19 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
                   </button>
                 ))}
                 <button onClick={() => setReporting(false)} className="px-2 text-[11.5px] font-bold text-subtle">
-                  취소
+                  {t("sk_cancel")}
                 </button>
               </div>
             ) : (
               <button onClick={() => setReporting(true)} className="flex items-center gap-1 px-2 py-1 text-[11.5px] font-bold text-subtle">
-                <Flag className="h-3 w-3" /> 이 그림 신고
+                <Flag className="h-3 w-3" /> {t("sk_report")}
               </button>
             )}
           </div>
         </>
       ) : (
         <button onClick={() => void load()} className="w-full rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
-          {mode === "daily" ? "다음 문제" : "다음 그림"}
+          {mode === "daily" ? t("sk_next_q") : t("sk_next")}
         </button>
       )}
     </div>
