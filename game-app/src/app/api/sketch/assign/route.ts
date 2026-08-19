@@ -45,14 +45,25 @@ export async function GET(req: Request) {
 
   const { data: d } = await admin()
     .from("game_sketch_drawing")
-    .select("id, strokes, duration_ms, game_sketch_word(text)")
+    .select("id, strokes, duration_ms, word_id, game_sketch_word(text, category)")
     .eq("id", drawingId)
     .single();
   if (!d) return NextResponse.json({ error: "배정에 실패했어요." }, { status: 500 });
 
-  const text = ((d.game_sketch_word as unknown as { text: WordText })?.text ?? {}) as WordText;
-  // 정답 평문은 내려보내지 않는다 (§8) — 유저 언어 타일과 길이만
-  const set = buildTileSet(text, lang);
+  const wordRow = d.game_sketch_word as unknown as { text: WordText; category: string };
+  const text = (wordRow?.text ?? {}) as WordText;
+  // 미끼 단어 — 같은 카테고리 위주 실단어 (타일에 그럴듯한 오답 후보를 심는다)
+  const { data: decoyRows } = await admin()
+    .from("game_sketch_word")
+    .select("text, category")
+    .eq("active", true)
+    .neq("id", d.word_id)
+    .limit(60);
+  const sameCat = (decoyRows ?? []).filter((r) => r.category === wordRow?.category);
+  const stable = (a: { text: unknown }, b: { text: unknown }) => String((a.text as WordText).ko).localeCompare(String((b.text as WordText).ko));
+  const decoys = [...sameCat.sort(stable).slice(0, 6), ...(decoyRows ?? []).sort(stable).slice(0, 6)].map((r) => r.text as WordText);
+  // 정답 평문은 내려보내지 않는다 (§8) — 유저 언어 타일과 길이만. 시드 고정 = 재접속에도 타일 불변
+  const set = buildTileSet(text, lang, { decoys, seed: `${d.id}:${h}:${lang}` });
   return NextResponse.json({
     drawing: { id: d.id, strokes: d.strokes, duration_ms: d.duration_ms },
     answer_len: set.answer_len,

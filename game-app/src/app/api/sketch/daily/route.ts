@@ -19,7 +19,7 @@ export async function GET(req: Request) {
   const day = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10); // KST 오늘
   const { data, error } = await admin()
     .from("game_sketch_daily")
-    .select("slot, game_sketch_drawing(id, player_hash, strokes, duration_ms, game_sketch_word(text))")
+    .select("slot, game_sketch_drawing(id, player_hash, strokes, duration_ms, game_sketch_word(text, category))")
     .eq("day", day)
     .order("slot");
   if (error) return NextResponse.json({ error: "불러오지 못했어요." }, { status: 500 });
@@ -32,19 +32,25 @@ export async function GET(req: Request) {
 
   const { data: bonus } = await admin().from("game_sketch_daily_bonus").select("day").eq("day", day).eq("player_hash", h).maybeSingle();
 
+  // 미끼 단어 풀 (한 번에 조회해 문제별로 배분)
+  const { data: decoyRows } = await admin().from("game_sketch_word").select("text, category").eq("active", true).limit(60);
+
   const items = (data ?? []).map((r) => {
     const d = r.game_sketch_drawing as unknown as {
       id: string;
       player_hash: string;
       strokes: unknown;
       duration_ms: number;
-      game_sketch_word: { text: WordText };
+      game_sketch_word: { text: WordText; category: string };
     };
     const g = gmap.get(d.id);
     const mine = d.player_hash === h;
     const text = (d.game_sketch_word?.text ?? {}) as WordText;
     const done = mine || !!g?.done;
-    const set = done ? null : buildTileSet(text, lang);
+    const sameCat = (decoyRows ?? []).filter((x) => x.category === d.game_sketch_word?.category && (x.text as WordText).ko !== text.ko);
+    const stable = (a: { text: unknown }, b: { text: unknown }) => String((a.text as WordText).ko).localeCompare(String((b.text as WordText).ko));
+    const decoys = [...sameCat.sort(stable).slice(0, 6), ...(decoyRows ?? []).sort(stable).slice(0, 6)].map((x) => x.text as WordText);
+    const set = done ? null : buildTileSet(text, lang, { decoys, seed: `${day}:${d.id}:${h}:${lang}` });
     return {
       slot: r.slot,
       drawing: { id: d.id, strokes: d.strokes, duration_ms: d.duration_ms },

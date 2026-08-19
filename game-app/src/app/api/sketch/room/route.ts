@@ -36,11 +36,16 @@ export async function GET(req: Request) {
   let answerLen = 0;
   let tileLang: string = lang;
   if (room.status === "playing" && room.word_id) {
-    const { data: w } = await admin().from("game_sketch_word").select("text").eq("id", room.word_id).single();
+    const { data: w } = await admin().from("game_sketch_word").select("text, category").eq("id", room.word_id).single();
     const text = ((w?.text ?? {}) as WordText);
     if (isDrawer) word = answerFor(text, lang).answer; // 출제자에게는 유저 언어 표기 (판정은 전 언어 허용)
     else if (!correctSet.has(h)) {
-      const set = buildTileSet(text, lang);
+      const { data: decoyRows } = await admin().from("game_sketch_word").select("text, category").eq("active", true).neq("id", room.word_id).limit(60);
+      const sameCat = (decoyRows ?? []).filter((r) => r.category === (w as { category?: string } | null)?.category);
+      const stable = (a: { text: unknown }, b: { text: unknown }) => String((a.text as WordText).ko).localeCompare(String((b.text as WordText).ko));
+  const decoys = [...sameCat.sort(stable).slice(0, 6), ...(decoyRows ?? []).sort(stable).slice(0, 6)].map((r) => r.text as WordText);
+      // 라운드 시드 고정 — 폴링·재입장에도 타일 불변
+      const set = buildTileSet(text, lang, { decoys, seed: `${room.id}:${room.round}:${h}:${lang}` });
       tiles = set.tiles;
       answerLen = set.answer_len;
       tileLang = set.lang;
