@@ -24,7 +24,7 @@ type Result = { correct: boolean; word: string | null; cp: number } | null;
 
 // mode "pool" = 일반 풀 배정 / "daily" = 오늘의 데일리 퀴즈 5문제 (전원 동일, 완주 보너스)
 export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawInstead: () => void; mode?: "pool" | "daily" }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [assignment, setAssignment] = useState<SketchAssignment | "empty" | "loading" | "error" | "daily-done">("loading");
   const [daily, setDaily] = useState<{ total: number; done: number; correct: number } | null>(null);
   const [slots, setSlots] = useState<(string | null)[]>([]);
@@ -51,7 +51,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
     setAssignment("loading");
     setResult(null);
     if (mode === "daily") {
-      const d = await fetchSketchDaily();
+      const d = await fetchSketchDaily(lang);
       if (!d) return setAssignment("error");
       const quiz = d.items.filter((i) => !i.mine); // 내 그림은 퀴즈·완주 요건에서 제외
       const doneCount = quiz.filter((i) => i.done).length;
@@ -67,7 +67,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
       }
       return present({ drawing: next.drawing, answer_len: next.answer_len, tiles: next.tiles ?? [], tries_left: next.tries_left });
     }
-    const a = await fetchSketchAssignment();
+    const a = await fetchSketchAssignment(lang);
     if (a === "empty") return setAssignment("empty");
     if (!a) return setAssignment("error");
     present(a);
@@ -75,7 +75,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
   useEffect(() => {
     void load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
+  }, [mode, lang]);
 
   if (assignment === "loading") return <div className="mt-4 aspect-square w-full animate-pulse rounded-[16px] bg-surface-1" />;
   if (assignment === "daily-done")
@@ -137,7 +137,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
   const submit = async () => {
     if (!filled || busy || result) return;
     setBusy(true);
-    const res = await submitSketchGuess(a.drawing.id, slots.join(""));
+    const res = await submitSketchGuess(a.drawing.id, slots.join(""), lang);
     setBusy(false);
     if (!res) return;
     if (res.correct) {
@@ -198,7 +198,9 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
               <button
                 key={i}
                 onClick={() => removeSlot(i)}
-                className={`flex h-12 w-12 items-center justify-center rounded-[12px] text-[19px] font-black ${
+                className={`flex items-center justify-center rounded-[12px] font-black ${
+                  slots.length > 7 ? "h-10 w-9 text-[15px]" : "h-12 w-12 text-[19px]"
+                } ${a.tile_lang === "en" ? "uppercase" : ""} ${
                   s != null ? "bg-primary/25 text-fg ring-2 ring-primary-400" : "bg-surface-1 ring-1 ring-hairline"
                 } ${wrongFlash ? "ring-danger text-danger" : ""}`}
               >
@@ -208,16 +210,18 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
             <span className="ml-2 text-[12px] font-bold tabular-nums text-subtle">{t("sk_tries").replace("{n}", String(triesLeft))}</span>
           </div>
 
-          {/* 글자 타일 */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5">
-            {a.tiles.map((t, i) => (
+          {/* 글자 타일 — 언어별 고정 그리드 (en·ja 6열, ko 5열), en은 대문자 표기 */}
+          <div className={`mx-auto grid w-fit gap-1.5 ${a.tile_lang === "ko" ? "grid-cols-5" : "grid-cols-6"}`}>
+            {a.tiles.map((tile, i) => (
               <button
                 key={i}
                 onClick={() => placeTile(i)}
                 disabled={usedTiles.has(i)}
-                className="flex h-12 w-12 items-center justify-center rounded-[12px] bg-surface-2 text-[19px] font-black text-fg ring-1 ring-hairline active:scale-95 disabled:opacity-25"
+                className={`flex h-12 w-12 items-center justify-center rounded-[12px] bg-surface-2 font-black text-fg ring-1 ring-hairline active:scale-95 disabled:opacity-25 ${
+                  a.tile_lang === "en" ? "text-[19px] uppercase" : "text-[18px]"
+                }`}
               >
-                {t}
+                {tile}
               </button>
             ))}
           </div>
@@ -238,7 +242,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
             <button
               onClick={async () => {
                 if (busy || hintChar) return;
-                const h = await fetchSketchHint(a.drawing.id);
+                const h = await fetchSketchHint(a.drawing.id, lang);
                 if (h?.first) {
                   setHintChar(h.first);
                   if ((h.charged ?? 0) > 0) toast.success(t("sk_hint_used").replace("{n}", String(h.charged)));

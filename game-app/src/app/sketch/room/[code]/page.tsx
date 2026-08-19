@@ -39,7 +39,7 @@ function ViewerCanvas({ strokes, live }: { strokes: SketchStroke[]; live: Sketch
 }
 
 export default function PartyRoomPage() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { code } = useParams<{ code: string }>();
   const router = useRouter();
   const [state, setState] = useState<PartyRoomState | null>(null);
@@ -57,7 +57,7 @@ export default function PartyRoomPage() {
   const advancing = useRef(false);
 
   const refresh = useCallback(async () => {
-    const s = await fetchPartyState(code);
+    const s = await fetchPartyState(code, lang);
     if (!s) return;
     setState(s);
     if (s.room.round !== roundRef.current) {
@@ -76,7 +76,7 @@ export default function PartyRoomPage() {
       setUsed(new Set());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [code, tilesRound]);
+  }, [code, tilesRound, lang]);
 
   // 입장 → 채널 구독 → 폴링
   useEffect(() => {
@@ -170,7 +170,7 @@ export default function PartyRoomPage() {
     if (ti != null) setUsed((u) => { const n = new Set(u); n.delete(ti); return n; });
   };
   const submitGuess = async () => {
-    const res = await partyApi({ action: "guess", id: room.id, answer: slots.join("") });
+    const res = await partyApi({ action: "guess", id: room.id, answer: slots.join(""), lang });
     if (!res) return;
     if (res.correct) {
       toast.success(t("sk_party_correct").replace("{n}", String(res.points)));
@@ -261,15 +261,15 @@ export default function PartyRoomPage() {
               <>
                 <div className="flex flex-wrap items-center justify-center gap-1.5">
                   {slots.map((s, i) => (
-                    <button key={i} onClick={() => removeSlot(i)} className={`flex h-11 w-11 items-center justify-center rounded-[10px] text-[17px] font-black ${s != null ? "bg-primary/25 text-fg ring-2 ring-primary-400" : "bg-surface-1 ring-1 ring-hairline"}`}>
+                    <button key={i} onClick={() => removeSlot(i)} className={`flex items-center justify-center rounded-[10px] font-black ${slots.length > 7 ? "h-9 w-8 text-[13px]" : "h-11 w-11 text-[17px]"} ${state.tile_lang === "en" ? "uppercase" : ""} ${s != null ? "bg-primary/25 text-fg ring-2 ring-primary-400" : "bg-surface-1 ring-1 ring-hairline"}`}>
                       {s ?? ""}
                     </button>
                   ))}
                 </div>
-                <div className="flex flex-wrap items-center justify-center gap-1.5">
-                  {tiles.map((t, i) => (
-                    <button key={i} onClick={() => placeTile(i)} disabled={used.has(i)} className="flex h-11 w-11 items-center justify-center rounded-[10px] bg-surface-2 text-[17px] font-black text-fg ring-1 ring-hairline active:scale-95 disabled:opacity-25">
-                      {t}
+                <div className={`mx-auto grid w-fit gap-1.5 ${state.tile_lang === "ko" ? "grid-cols-5" : "grid-cols-6"}`}>
+                  {tiles.map((tile, i) => (
+                    <button key={i} onClick={() => placeTile(i)} disabled={used.has(i)} className={`flex h-11 w-11 items-center justify-center rounded-[10px] bg-surface-2 font-black text-fg ring-1 ring-hairline active:scale-95 disabled:opacity-25 ${state.tile_lang === "en" ? "text-[16px] uppercase" : "text-[16px]"}`}>
+                      {tile}
                     </button>
                   ))}
                 </div>

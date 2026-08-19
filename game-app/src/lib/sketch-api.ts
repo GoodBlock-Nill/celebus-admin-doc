@@ -6,6 +6,7 @@ export type SketchAssignment = {
   drawing: { id: string; strokes: SketchStroke[]; duration_ms: number };
   answer_len: number;
   tiles: string[];
+  tile_lang?: "ko" | "en" | "ja";
   tries_left: number;
 };
 export type SketchGuessResult = {
@@ -63,6 +64,7 @@ export async function reportSketch(drawingId: string, reason: "inappropriate" | 
 
 export type SketchDailyItem = {
   slot: number;
+  tile_lang?: "ko" | "en" | "ja";
   drawing: { id: string; strokes: SketchStroke[]; duration_ms: number };
   mine: boolean;
   done: boolean;
@@ -75,9 +77,9 @@ export type SketchDailyItem = {
 export type SketchDaily = { day: string; items: SketchDailyItem[]; bonus_claimed: boolean };
 export type SketchBest = { week_start: string; correct_count: number; word: string; strokes: SketchStroke[]; thumb_url: string | null };
 
-export async function fetchSketchDaily(): Promise<SketchDaily | null> {
+export async function fetchSketchDaily(lang = "ko"): Promise<SketchDaily | null> {
   try {
-    const res = await fetch("/api/sketch/daily");
+    const res = await fetch(`/api/sketch/daily?lang=${lang}`);
     if (!res.ok) return null;
     return (await res.json()) as SketchDaily;
   } catch {
@@ -105,12 +107,12 @@ export async function fetchSketchBest(): Promise<SketchBest | null> {
   }
 }
 
-export async function fetchSketchHint(drawingId: string): Promise<{ first?: string; charged?: number; error?: string } | null> {
+export async function fetchSketchHint(drawingId: string, lang = "ko"): Promise<{ first?: string; charged?: number; error?: string } | null> {
   try {
     const res = await fetch("/api/sketch/hint", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ drawing_id: drawingId }),
+      body: JSON.stringify({ drawing_id: drawingId, lang }),
     });
     if (!res.ok) return null;
     return await res.json();
@@ -119,9 +121,9 @@ export async function fetchSketchHint(drawingId: string): Promise<{ first?: stri
   }
 }
 
-export async function fetchSketchAssignment(): Promise<SketchAssignment | "empty" | null> {
+export async function fetchSketchAssignment(lang = "ko"): Promise<SketchAssignment | "empty" | null> {
   try {
-    const res = await fetch("/api/sketch/assign");
+    const res = await fetch(`/api/sketch/assign?lang=${lang}`);
     if (!res.ok) return null;
     const data = await res.json();
     if (data.empty) return "empty";
@@ -131,12 +133,12 @@ export async function fetchSketchAssignment(): Promise<SketchAssignment | "empty
   }
 }
 
-export async function submitSketchGuess(drawingId: string, answer: string): Promise<SketchGuessResult | null> {
+export async function submitSketchGuess(drawingId: string, answer: string, lang = "ko"): Promise<SketchGuessResult | null> {
   try {
     const res = await fetch("/api/sketch/guess", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ drawing_id: drawingId, answer }),
+      body: JSON.stringify({ drawing_id: drawingId, answer, lang }),
     });
     if (!res.ok) return null;
     return (await res.json()) as SketchGuessResult;

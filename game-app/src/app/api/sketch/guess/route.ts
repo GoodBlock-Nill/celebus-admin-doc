@@ -6,7 +6,7 @@ import { peekVoterId } from "@/lib/anon-identity";
 import { assertSameOrigin } from "@/lib/origin";
 import { voteThrottled } from "@/lib/ratelimit";
 
-const bodySchema = z.object({ drawing_id: z.string().uuid(), answer: z.string().min(1).max(40) });
+const bodySchema = z.object({ drawing_id: z.string().uuid(), answer: z.string().min(1).max(40), lang: z.enum(["ko", "en", "ja"]).default("ko") });
 
 // 정답 판정 — 서버 RPC 단독 결정 (클라에 정답 평문 미전송, 시도 3회 제한은 RPC가 강제. 기획 §8)
 export async function POST(req: Request) {
@@ -22,6 +22,7 @@ export async function POST(req: Request) {
     p_h: playerHash(anonId),
     p_drawing: parsed.data.drawing_id,
     p_answer: parsed.data.answer,
+    p_lang: parsed.data.lang,
   });
   if (error) return NextResponse.json({ error: "판정에 실패했어요." }, { status: 500 });
   return NextResponse.json(data ?? {});

@@ -22,6 +22,7 @@ export type PartyRoomState = {
   word: string | null;
   tiles: string[] | null;
   answer_len: number;
+  tile_lang?: "ko" | "en" | "ja";
   my_correct: boolean;
 };
 
@@ -42,9 +43,9 @@ export async function partyApi(body: Record<string, unknown>): Promise<Record<st
   }
 }
 
-export async function fetchPartyState(code: string): Promise<PartyRoomState | null> {
+export async function fetchPartyState(code: string, lang = "ko"): Promise<PartyRoomState | null> {
   try {
-    const res = await fetch(`/api/sketch/room?code=${encodeURIComponent(code)}`);
+    const res = await fetch(`/api/sketch/room?code=${encodeURIComponent(code)}&lang=${lang}`);
     if (!res.ok) return null;
     return (await res.json()) as PartyRoomState;
   } catch {
