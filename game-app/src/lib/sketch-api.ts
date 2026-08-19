@@ -61,6 +61,50 @@ export async function reportSketch(drawingId: string, reason: "inappropriate" | 
   }
 }
 
+export type SketchDailyItem = {
+  slot: number;
+  drawing: { id: string; strokes: SketchStroke[]; duration_ms: number };
+  mine: boolean;
+  done: boolean;
+  correct: boolean;
+  word: string | null;
+  answer_len: number;
+  tiles: string[] | null;
+  tries_left: number;
+};
+export type SketchDaily = { day: string; items: SketchDailyItem[]; bonus_claimed: boolean };
+export type SketchBest = { week_start: string; correct_count: number; word: string; strokes: SketchStroke[]; thumb_url: string | null };
+
+export async function fetchSketchDaily(): Promise<SketchDaily | null> {
+  try {
+    const res = await fetch("/api/sketch/daily");
+    if (!res.ok) return null;
+    return (await res.json()) as SketchDaily;
+  } catch {
+    return null;
+  }
+}
+
+export async function claimSketchDailyBonus(): Promise<{ ok?: boolean; cp?: number; error?: string } | null> {
+  try {
+    const res = await fetch("/api/sketch/daily/bonus", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchSketchBest(): Promise<SketchBest | null> {
+  try {
+    const res = await fetch("/api/sketch/best");
+    if (!res.ok) return null;
+    return ((await res.json()).best ?? null) as SketchBest | null;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchSketchHint(drawingId: string): Promise<{ first?: string; charged?: number; error?: string } | null> {
   try {
     const res = await fetch("/api/sketch/hint", {

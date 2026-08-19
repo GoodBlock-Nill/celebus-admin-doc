@@ -5,7 +5,15 @@
 import { useEffect, useState } from "react";
 import { Flag, Lightbulb, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
-import { fetchSketchAssignment, fetchSketchHint, reportSketch, submitSketchGuess, type SketchAssignment } from "@/lib/sketch-api";
+import {
+  claimSketchDailyBonus,
+  fetchSketchAssignment,
+  fetchSketchDaily,
+  fetchSketchHint,
+  reportSketch,
+  submitSketchGuess,
+  type SketchAssignment,
+} from "@/lib/sketch-api";
 import { sfxCoin, sfxNewBest } from "@/lib/sfx";
 import SketchReplay from "./SketchReplay";
 
@@ -13,8 +21,10 @@ const HINT_COST = 10;
 
 type Result = { correct: boolean; word: string | null; cp: number } | null;
 
-export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => void }) {
-  const [assignment, setAssignment] = useState<SketchAssignment | "empty" | "loading" | "error">("loading");
+// mode "pool" = 일반 풀 배정 / "daily" = 오늘의 데일리 퀴즈 5문제 (전원 동일, 완주 보너스)
+export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawInstead: () => void; mode?: "pool" | "daily" }) {
+  const [assignment, setAssignment] = useState<SketchAssignment | "empty" | "loading" | "error" | "daily-done">("loading");
+  const [daily, setDaily] = useState<{ total: number; done: number; correct: number } | null>(null);
   const [slots, setSlots] = useState<(string | null)[]>([]);
   const [usedTiles, setUsedTiles] = useState<Set<number>>(new Set());
   const [triesLeft, setTriesLeft] = useState(3);
@@ -25,12 +35,7 @@ export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => vo
   const [reporting, setReporting] = useState(false); // 신고 사유 선택 시트
   const [reported, setReported] = useState(false);
 
-  const load = async () => {
-    setAssignment("loading");
-    setResult(null);
-    const a = await fetchSketchAssignment();
-    if (a === "empty") return setAssignment("empty");
-    if (!a) return setAssignment("error");
+  const present = (a: SketchAssignment) => {
     setAssignment(a);
     setSlots(Array(a.answer_len).fill(null));
     setUsedTiles(new Set());
@@ -39,11 +44,53 @@ export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => vo
     setReporting(false);
     setReported(false);
   };
+
+  const load = async () => {
+    setAssignment("loading");
+    setResult(null);
+    if (mode === "daily") {
+      const d = await fetchSketchDaily();
+      if (!d) return setAssignment("error");
+      const quiz = d.items.filter((i) => !i.mine); // 내 그림은 퀴즈·완주 요건에서 제외
+      const doneCount = quiz.filter((i) => i.done).length;
+      setDaily({ total: quiz.length, done: doneCount, correct: quiz.filter((i) => i.correct).length });
+      const next = quiz.find((i) => !i.done);
+      if (!next) {
+        // 완주 — 보너스 자동 수령 (이미 받았으면 무시)
+        if (!d.bonus_claimed && quiz.length > 0) {
+          const b = await claimSketchDailyBonus();
+          if (b?.ok) toast.success(`데일리 퀴즈 완주 +${b.cp} CP!`);
+        }
+        return setAssignment(quiz.length === 0 ? "empty" : "daily-done");
+      }
+      return present({ drawing: next.drawing, answer_len: next.answer_len, tiles: next.tiles ?? [], tries_left: next.tries_left });
+    }
+    const a = await fetchSketchAssignment();
+    if (a === "empty") return setAssignment("empty");
+    if (!a) return setAssignment("error");
+    present(a);
+  };
   useEffect(() => {
     void load();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode]);
 
   if (assignment === "loading") return <div className="mt-4 aspect-square w-full animate-pulse rounded-[16px] bg-surface-1" />;
+  if (assignment === "daily-done")
+    return (
+      <div className="mt-10 flex flex-col items-center gap-3 text-center">
+        <Sparkles className="h-8 w-8 text-gold" />
+        <p className="text-[16px] font-black text-fg">오늘의 퀴즈 완료!</p>
+        {daily && (
+          <p className="text-[13px] text-muted">
+            {daily.total}문제 중 <b className="text-gold">{daily.correct}문제</b> 정답 — 내일 새 퀴즈로 만나요
+          </p>
+        )}
+        <button onClick={onDrawInstead} className="mt-2 rounded-full bg-primary px-8 py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
+          그리러 가기
+        </button>
+      </div>
+    );
   if (assignment === "empty")
     return (
       <div className="mt-10 flex flex-col items-center gap-4 text-center">
@@ -117,6 +164,12 @@ export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => vo
 
   return (
     <div className="flex flex-col gap-3">
+      {mode === "daily" && daily && (
+        <div className="flex items-center justify-center gap-1.5">
+          <span className="rounded-full bg-gold/15 px-2.5 py-1 text-[11.5px] font-black text-gold">데일리 퀴즈</span>
+          <span className="text-[12px] font-bold tabular-nums text-muted">{daily.done + 1}/{daily.total}</span>
+        </div>
+      )}
       <div className="relative">
         <SketchReplay strokes={a.drawing.strokes} />
         {/* 정답/종료 리빌 오버레이 — 완성 리빌 + 메타 배지 (보는 재미 연출) */}
@@ -243,7 +296,7 @@ export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => vo
         </>
       ) : (
         <button onClick={() => void load()} className="w-full rounded-full bg-primary py-3.5 text-[15px] font-black text-white active:scale-[0.99]">
-          다음 그림
+          {mode === "daily" ? "다음 문제" : "다음 그림"}
         </button>
       )}
     </div>
