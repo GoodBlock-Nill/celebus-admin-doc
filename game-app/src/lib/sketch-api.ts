@@ -107,12 +107,16 @@ export async function fetchSketchBest(): Promise<SketchBest | null> {
   }
 }
 
-export async function fetchSketchHint(drawingId: string, lang = "ko"): Promise<{ first?: string; charged?: number; error?: string } | null> {
+export async function fetchSketchHint(
+  drawingId: string,
+  lang = "ko",
+  tiles: string[] = []
+): Promise<{ remove?: number[]; charged?: number; error?: string } | null> {
   try {
     const res = await fetch("/api/sketch/hint", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ drawing_id: drawingId, lang }),
+      body: JSON.stringify({ drawing_id: drawingId, lang, tiles }),
     });
     if (!res.ok) return null;
     return await res.json();

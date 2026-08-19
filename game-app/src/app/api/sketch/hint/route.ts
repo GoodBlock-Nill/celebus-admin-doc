@@ -6,9 +6,16 @@ import { peekVoterId } from "@/lib/anon-identity";
 import { assertSameOrigin } from "@/lib/origin";
 import { voteThrottled } from "@/lib/ratelimit";
 
-const bodySchema = z.object({ drawing_id: z.string().uuid(), lang: z.enum(["ko", "en", "ja"]).default("ko") });
+// 힌트 = 더미 타일 제거 (Draw Something 폭탄 방식, 10 CP·그림당 1회).
+// "첫 글자 공개"는 한 글자 정답에서 정답 유출이라 폐기 (2026-08-19).
+// 서버 RPC는 과금·1회 제한·정답 확보만 담당(정답은 클라에 미전송), 이 라우트가 유저 타일에서
+// 정답에 불필요한 더미의 절반을 골라 제거 인덱스만 내려준다.
+const bodySchema = z.object({
+  drawing_id: z.string().uuid(),
+  lang: z.enum(["ko", "en", "ja"]).default("ko"),
+  tiles: z.array(z.string().min(1).max(4)).min(1).max(24),
+});
 
-// 힌트(첫 글자 공개) — 10 CP 소모, 그림당 1회. 차감·공개는 서버 RPC가 원자 처리 (§7 가벼운 CP 소비처)
 export async function POST(req: Request) {
   if (!assertSameOrigin(req)) return NextResponse.json({ error: "허용되지 않은 요청이에요." }, { status: 403 });
   const anonId = peekVoterId(req);
@@ -24,5 +31,21 @@ export async function POST(req: Request) {
     p_lang: parsed.data.lang,
   });
   if (error) return NextResponse.json({ error: "힌트를 불러오지 못했어요." }, { status: 500 });
-  return NextResponse.json(data ?? {});
+  if (data?.error) return NextResponse.json(data);
+
+  // 정답 문자 멀티셋을 제외한 나머지 = 더미 → 절반 제거 (최소 2개)
+  const need = new Map<string, number>();
+  for (const c of String(data.answer ?? "").toLowerCase().replace(/[\s-]/g, "")) need.set(c, (need.get(c) ?? 0) + 1);
+  const dummyIdx: number[] = [];
+  parsed.data.tiles.forEach((tile, i) => {
+    const c = tile.toLowerCase();
+    const n = need.get(c) ?? 0;
+    if (n > 0) need.set(c, n - 1);
+    else dummyIdx.push(i);
+  });
+  const removeCount = Math.max(2, Math.floor(dummyIdx.length / 2));
+  // 결정적 선택 — 같은 요청이면 같은 타일이 제거되게 (짝수 인덱스 우선)
+  const remove = [...dummyIdx.filter((_, i) => i % 2 === 0), ...dummyIdx.filter((_, i) => i % 2 === 1)].slice(0, removeCount);
+
+  return NextResponse.json({ status: "ok", remove, charged: data.charged ?? 0, celeb_point: data.celeb_point });
 }

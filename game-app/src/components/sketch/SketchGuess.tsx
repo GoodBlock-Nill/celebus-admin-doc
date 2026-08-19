@@ -33,7 +33,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
   const [wrongFlash, setWrongFlash] = useState(false);
   const [result, setResult] = useState<Result>(null);
   const [busy, setBusy] = useState(false);
-  const [hintChar, setHintChar] = useState<string | null>(null);
+  const [bombed, setBombed] = useState<Set<number>>(new Set()); // 힌트로 제거된 더미 타일
   const [reporting, setReporting] = useState(false); // 신고 사유 선택 시트
   const [reported, setReported] = useState(false);
 
@@ -42,7 +42,7 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
     setSlots(Array(a.answer_len).fill(null));
     setUsedTiles(new Set());
     setTriesLeft(a.tries_left);
-    setHintChar(null);
+    setBombed(new Set());
     setReporting(false);
     setReported(false);
   };
@@ -214,10 +214,10 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
               <button
                 key={i}
                 onClick={() => placeTile(i)}
-                disabled={usedTiles.has(i)}
+                disabled={usedTiles.has(i) || bombed.has(i)}
                 className={`sk-tile h-12 w-12 ${a.tile_lang === "en" ? "text-[19px] uppercase" : "text-[18px]"}`}
               >
-                {tile}
+                {bombed.has(i) ? "💥" : tile}
               </button>
             ))}
           </div>
@@ -234,21 +234,22 @@ export default function SketchGuess({ onDrawInstead, mode = "pool" }: { onDrawIn
             >
               <X className="h-5 w-5" />
             </button>
-            {/* 힌트 — 첫 글자 공개 (10 CP, 그림당 1회) */}
+            {/* 힌트 — 더미 타일 제거 (Draw Something 폭탄 방식, 10 CP·그림당 1회) */}
             <button
               onClick={async () => {
-                if (busy || hintChar) return;
-                const h = await fetchSketchHint(a.drawing.id, lang);
-                if (h?.first) {
-                  setHintChar(h.first);
+                if (busy || bombed.size > 0) return;
+                const h = await fetchSketchHint(a.drawing.id, lang, a.tiles);
+                if (h?.remove?.length) {
+                  setBombed(new Set(h.remove));
                   if ((h.charged ?? 0) > 0) toast.success(t("sk_hint_used").replace("{n}", String(h.charged)));
+                  toast.success(t("sk_hint_removed").replace("{n}", String(h.remove.length)));
                 } else toast.error(h?.error === "insufficient" ? t("sk_no_cp") : t("sk_hint_fail"));
               }}
-              disabled={busy || !!hintChar}
+              disabled={busy || bombed.size > 0}
               className="sk-btn-ghost flex h-12 shrink-0 items-center gap-1 px-3.5 text-[12.5px] !text-gold disabled:opacity-60"
             >
               <Lightbulb className="h-4 w-4" />
-              {hintChar ? t("sk_hint_first").replace("{c}", hintChar) : t("sk_hint_btn").replace("{n}", String(HINT_COST))}
+              {t("sk_hint_btn").replace("{n}", String(HINT_COST))}
             </button>
             <button
               onClick={() => void submit()}
