@@ -32,9 +32,11 @@ export default function SketchPage() {
 
   const submit = (word: SketchWordChoice) => async (strokes: SketchStroke[], durationMs: number) => {
     saveDrawing({ word: word.text, strokes, durationMs, createdAt: new Date().toISOString() });
-    const ok = await submitSketch(word.id, strokes, durationMs);
-    if (!ok) toast.error("서버 제출에 실패했어요 — 그림은 기기에 보관돼 있어요.");
-    else toast.success("제출 완료! 다른 팬들이 맞히기 시작해요.");
+    const moderation = await submitSketch(word.id, strokes, durationMs);
+    if (!moderation) toast.error("서버 제출에 실패했어요 — 그림은 기기에 보관돼 있어요.");
+    else if (moderation === "approve") toast.success("제출 완료! 다른 팬들이 맞히기 시작해요.");
+    else if (moderation === "hold") toast.success("제출 완료! 확인 후 공개돼요.");
+    else toast.error("커뮤니티 규칙에 맞지 않는 그림으로 판단되어 공개되지 않아요.");
     setPhase({ name: "submitted", word, strokes });
   };
 

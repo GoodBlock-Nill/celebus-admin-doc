@@ -1,14 +1,17 @@
 "use client";
 
-// CELEB 스케치 — 맞히기 화면 (W1): 리플레이 감상 + 글자 타일 조합 + 서버 판정.
+// CELEB 스케치 — 맞히기 화면 (W2): 리플레이 + 글자 타일 + 서버 판정 + 힌트(CP 소비)·신고·상호 보상 CP.
 // 정답 연출(리빌 오버레이 + 획수·시간 메타 배지)은 디자인 리뷰 Critical "보는 재미" 반영.
 import { useEffect, useState } from "react";
-import { Sparkles, X } from "lucide-react";
-import { fetchSketchAssignment, submitSketchGuess, type SketchAssignment } from "@/lib/sketch-api";
+import { Flag, Lightbulb, Sparkles, X } from "lucide-react";
+import { toast } from "sonner";
+import { fetchSketchAssignment, fetchSketchHint, reportSketch, submitSketchGuess, type SketchAssignment } from "@/lib/sketch-api";
 import { sfxCoin, sfxNewBest } from "@/lib/sfx";
 import SketchReplay from "./SketchReplay";
 
-type Result = { correct: boolean; word: string | null } | null;
+const HINT_COST = 10;
+
+type Result = { correct: boolean; word: string | null; cp: number } | null;
 
 export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => void }) {
   const [assignment, setAssignment] = useState<SketchAssignment | "empty" | "loading" | "error">("loading");
@@ -18,6 +21,9 @@ export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => vo
   const [wrongFlash, setWrongFlash] = useState(false);
   const [result, setResult] = useState<Result>(null);
   const [busy, setBusy] = useState(false);
+  const [hintChar, setHintChar] = useState<string | null>(null);
+  const [reporting, setReporting] = useState(false); // 신고 사유 선택 시트
+  const [reported, setReported] = useState(false);
 
   const load = async () => {
     setAssignment("loading");
@@ -29,6 +35,9 @@ export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => vo
     setSlots(Array(a.answer_len).fill(null));
     setUsedTiles(new Set());
     setTriesLeft(a.tries_left);
+    setHintChar(null);
+    setReporting(false);
+    setReported(false);
   };
   useEffect(() => {
     void load();
@@ -90,9 +99,9 @@ export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => vo
     if (!res) return;
     if (res.correct) {
       sfxNewBest();
-      setResult({ correct: true, word: res.word ?? slots.join("") });
+      setResult({ correct: true, word: res.word ?? slots.join(""), cp: res.cp_awarded ?? 0 });
     } else if (res.done) {
-      setResult({ correct: false, word: res.word ?? null });
+      setResult({ correct: false, word: res.word ?? null, cp: 0 });
     } else {
       sfxCoin();
       setTriesLeft(res.tries_left ?? triesLeft - 1);
@@ -124,6 +133,7 @@ export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => vo
             {result.word && (
               <div className="rounded-full bg-primary px-5 py-2 text-[18px] font-black text-white">{result.word}</div>
             )}
+            {result.cp > 0 && <div className="text-[14px] font-black text-gold">+{result.cp} CP · 그린 사람도 +3 CP</div>}
             <div className="rounded-full bg-black/50 px-3.5 py-1.5 text-[12px] font-bold text-white/80 ring-1 ring-white/20">
               {strokeCount}획 · {drawSecs}초 완성
             </div>
@@ -175,6 +185,22 @@ export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => vo
             >
               <X className="h-5 w-5" />
             </button>
+            {/* 힌트 — 첫 글자 공개 (10 CP, 그림당 1회) */}
+            <button
+              onClick={async () => {
+                if (busy || hintChar) return;
+                const h = await fetchSketchHint(a.drawing.id);
+                if (h?.first) {
+                  setHintChar(h.first);
+                  if ((h.charged ?? 0) > 0) toast.success(`힌트 사용 -${h.charged} CP`);
+                } else toast.error(h?.error === "insufficient" ? "CP가 부족해요." : "힌트를 불러오지 못했어요.");
+              }}
+              disabled={busy || !!hintChar}
+              className="flex h-12 shrink-0 items-center gap-1 rounded-full bg-surface-1 px-3.5 text-[12.5px] font-bold text-gold ring-1 ring-hairline disabled:opacity-60"
+            >
+              <Lightbulb className="h-4 w-4" />
+              {hintChar ? `첫 글자 "${hintChar}"` : `힌트 ${HINT_COST}`}
+            </button>
             <button
               onClick={() => void submit()}
               disabled={!filled || busy}
@@ -182,6 +208,37 @@ export default function SketchGuess({ onDrawInstead }: { onDrawInstead: () => vo
             >
               확인
             </button>
+          </div>
+
+          {/* 신고 — 부적절/글자 반칙 (§6). 임계 도달 시 서버가 자동 비공개 */}
+          <div className="flex justify-center">
+            {reported ? (
+              <span className="text-[11.5px] font-bold text-subtle">신고가 접수됐어요. 확인 후 조치할게요.</span>
+            ) : reporting ? (
+              <div className="flex items-center gap-1.5">
+                {([["inappropriate", "부적절한 그림"], ["letters", "글자를 썼어요"]] as const).map(([reason, label]) => (
+                  <button
+                    key={reason}
+                    onClick={async () => {
+                      const ok = await reportSketch(a.drawing.id, reason);
+                      setReporting(false);
+                      if (ok) setReported(true);
+                      else toast.error("신고에 실패했어요.");
+                    }}
+                    className="rounded-full bg-surface-1 px-3 py-1.5 text-[11.5px] font-bold text-fg ring-1 ring-hairline"
+                  >
+                    {label}
+                  </button>
+                ))}
+                <button onClick={() => setReporting(false)} className="px-2 text-[11.5px] font-bold text-subtle">
+                  취소
+                </button>
+              </div>
+            ) : (
+              <button onClick={() => setReporting(true)} className="flex items-center gap-1 px-2 py-1 text-[11.5px] font-bold text-subtle">
+                <Flag className="h-3 w-3" /> 이 그림 신고
+              </button>
+            )}
           </div>
         </>
       ) : (

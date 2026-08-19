@@ -8,6 +8,8 @@ const withSerwist = withSerwistInit({
 
 export default withSerwist({
   reactStrictMode: true,
+  // 네이티브 모듈은 웹팩 번들 제외 (스케치 AI 검수의 서버 캔버스 렌더러)
+  serverExternalPackages: ["@napi-rs/canvas"],
   async headers() {
     return [
       {

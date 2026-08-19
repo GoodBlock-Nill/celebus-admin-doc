@@ -8,6 +8,7 @@
     "start": "next start -p 3400"
   },
   "dependencies": {
+    "@napi-rs/canvas": "^1.0.7",
     "@supabase/supabase-js": "^2.104.0",
     "date-fns": "^4.1.0",
     "galmuri": "^2.40.3",

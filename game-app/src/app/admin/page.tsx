@@ -17,6 +17,7 @@ import {
   Megaphone,
   Ticket,
   CalendarRange,
+  Palette,
 } from "lucide-react";
 import { aget } from "@/lib/admin-api";
 import { BTN, INPUT } from "@/components/admin/ui";
@@ -28,6 +29,7 @@ import AdminEconomy from "@/components/admin/AdminEconomy";
 import AdminBalance from "@/components/admin/AdminBalance";
 import AdminNotice from "@/components/admin/AdminNotice";
 import AdminGacha from "@/components/admin/AdminGacha";
+import AdminSketch from "@/components/admin/AdminSketch";
 import AdminConfig from "@/components/admin/AdminConfig";
 import AdminLogs from "@/components/admin/AdminLogs";
 import AdminWeeklyReport from "@/components/admin/AdminWeeklyReport";
@@ -42,6 +44,7 @@ const TABS = [
   { key: "notice", label: "홈 팝업", icon: Megaphone, desc: "홈 진입 시 팝업 공지 관리" },
   { key: "economy", label: "경제", icon: Coins, desc: "CP 발행·소진·유통 + 아이템 가격" },
   { key: "gacha", label: "럭키드로우", icon: Ticket, desc: "럭키드로우 이벤트·확률표·당첨자 관리" },
+  { key: "sketch", label: "스케치", icon: Palette, desc: "CELEB 스케치 검수 큐·신고 처리" },
   { key: "config", label: "설정", icon: Settings2, desc: "게임 밸런스·연출·테마 원격 설정" },
   { key: "logs", label: "로그", icon: ScrollText, desc: "관리자 행동·시스템 이벤트 활동 로그" },
 ] as const;
@@ -188,6 +191,7 @@ export default function AdminPage() {
           {tab === "notice" && <AdminNotice />}
           {tab === "economy" && <AdminEconomy />}
           {tab === "gacha" && <AdminGacha />}
+          {tab === "sketch" && <AdminSketch />}
           {tab === "config" && <AdminConfig />}
           {tab === "logs" && <AdminLogs />}
         </div>

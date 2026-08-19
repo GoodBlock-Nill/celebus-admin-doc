@@ -14,8 +14,11 @@ export type SketchGuessResult = {
   tries_left?: number;
   done?: boolean;
   word?: string | null;
+  cp_awarded?: number;
+  celeb_point?: number;
   error?: string;
 };
+export type SketchModeration = "approve" | "hold" | "reject";
 
 export async function fetchSketchWords(): Promise<SketchWordChoice[]> {
   try {
@@ -27,16 +30,48 @@ export async function fetchSketchWords(): Promise<SketchWordChoice[]> {
   }
 }
 
-export async function submitSketch(wordId: string, strokes: SketchStroke[], durationMs: number): Promise<boolean> {
+export async function submitSketch(
+  wordId: string,
+  strokes: SketchStroke[],
+  durationMs: number
+): Promise<SketchModeration | null> {
   try {
     const res = await fetch("/api/sketch/submit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ word_id: wordId, strokes, duration_ms: durationMs }),
     });
+    if (!res.ok) return null;
+    return ((await res.json()).moderation ?? "hold") as SketchModeration;
+  } catch {
+    return null;
+  }
+}
+
+export async function reportSketch(drawingId: string, reason: "inappropriate" | "letters"): Promise<boolean> {
+  try {
+    const res = await fetch("/api/sketch/report", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ drawing_id: drawingId, reason }),
+    });
     return res.ok;
   } catch {
     return false;
+  }
+}
+
+export async function fetchSketchHint(drawingId: string): Promise<{ first?: string; charged?: number; error?: string } | null> {
+  try {
+    const res = await fetch("/api/sketch/hint", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ drawing_id: drawingId }),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
   }
 }
 
