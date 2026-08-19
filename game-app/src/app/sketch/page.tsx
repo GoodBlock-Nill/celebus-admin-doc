@@ -81,7 +81,7 @@ export default function SketchPage() {
           ) : (
             <span />
           )}
-          <LangSwitcher />
+          <LangSwitcher variant="ghost" />
         </div>
       )}
       <div className="flex items-center gap-1">
