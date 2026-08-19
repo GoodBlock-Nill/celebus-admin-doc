@@ -44,7 +44,14 @@ export default function GachaOddsModal({ event, onClose }: { event: GachaEvent; 
                 ) : (
                   <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: GRADE_COLORS[p.grade] }} />
                 )}
-                <span className="min-w-0 flex-1 truncate text-[13px] font-bold text-fg">{p.prize[lang] || p.prize.ko || ""}</span>
+                {/* 재화 행은 앱 내장 번역으로 자동 다국어 (결과 카드 라벨과 동일) — 관리자 입력 상품명은 실물 행에만 사용 */}
+                <span className="min-w-0 flex-1 truncate text-[13px] font-bold text-fg">
+                  {p.reward_payload?.cp != null
+                    ? `${p.reward_payload.cp.toLocaleString()} CP`
+                    : p.reward_payload?.item
+                      ? `${t(`item_${p.reward_payload.item}`)}${(p.reward_payload.qty ?? 1) > 1 ? ` ×${p.reward_payload.qty}` : ""}`
+                      : p.prize[lang] || p.prize.ko || ""}
+                </span>
                 {isBox ? (
                   <span className={`shrink-0 text-[13px] font-black tabular-nums ${(p.remaining_qty ?? 0) === 0 ? "text-subtle line-through" : "text-muted"}`}>
                     {t("gacha_stock_left").replace("{r}", String(p.remaining_qty ?? 0)).replace("{t}", String(p.total_qty ?? 0))}

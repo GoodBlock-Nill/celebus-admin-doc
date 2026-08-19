@@ -97,6 +97,18 @@ export async function POST(req: Request) {
     eventId = data.id as string;
   }
 
+  if (poolLocked) {
+    // 게시 후에도 확률·재고에 영향 없는 필드(상품명 다국어·카드 이미지)는 수정 허용 — 기존 행 id 기준
+    for (const p of pool) {
+      if (!p.id) continue;
+      const { error: upErr } = await admin()
+        .from("game_gacha_pool_item")
+        .update({ prize: p.prize, image_url: p.image_url || null })
+        .eq("id", p.id)
+        .eq("event_id", eventId);
+      if (upErr) return NextResponse.json({ error: "db" }, { status: 500 });
+    }
+  }
   if (!poolLocked) {
     const { data: existing } = await admin().from("game_gacha_pool_item").select("id").eq("event_id", eventId);
     const keepIds = new Set(pool.map((p) => p.id).filter(Boolean));

@@ -404,16 +404,17 @@ export default function AdminGacha() {
 
             {poolLocked && (
               <p className="rounded-[10px] bg-gold/10 px-3.5 py-2.5 text-[12.5px] font-bold text-gold">
-                게시된 실물 박스는 풀 구성·재고를 수정할 수 없어요 (뽑기 진행 중 확률 변경 차단). 기간·문구만 수정돼요.
+                게시된 실물 박스는 등급·수량·보상 구성을 수정할 수 없어요 (뽑기 진행 중 확률 변경 차단). 상품명(다국어)·카드
+                이미지·기간·문구는 진행 중에도 수정돼요.
               </p>
             )}
 
-            <div className={`mt-1 flex flex-col gap-1.5 ${poolLocked ? "pointer-events-none opacity-60" : ""}`}>
+            <div className="mt-1 flex flex-col gap-1.5">
               {form.pool.map((p, i) => {
                 const pct = totalWeight > 0 && p.weight ? ((p.weight / totalWeight) * 100).toFixed(2) : "0";
                 return (
                   <div key={i} className="flex flex-wrap items-center gap-1.5 rounded-[12px] bg-surface-2 px-2.5 py-2 ring-1 ring-hairline">
-                    <select value={p.grade} onChange={(e) => setPool(i, { grade: e.target.value as Grade })} className={`${INPUT} w-16`}>
+                    <select disabled={poolLocked} value={p.grade} onChange={(e) => setPool(i, { grade: e.target.value as Grade })} className={`${INPUT} w-16 disabled:opacity-50`}>
                       {(["S", "A", "B", "C", "D"] as const).map((g) => (
                         <option key={g}>{g}</option>
                       ))}
@@ -445,70 +446,93 @@ export default function AdminGacha() {
                       placeholder="상품명 (KO)"
                       className={`${INPUT} w-36 min-w-0 flex-1`}
                     />
+                    {/* 실물 행만 EN/JA 상품명 — 유저 화면(카드·보상내역·공시)에 언어별 노출. 재화 행은 앱이 자동 번역 */}
+                    {p.is_physical && (
+                      <>
+                        <input
+                          value={p.prize.en ?? ""}
+                          onChange={(e) => setPool(i, { prize: { ...p.prize, en: e.target.value } })}
+                          placeholder="상품명 (EN)"
+                          className={`${INPUT} w-32 min-w-0 flex-1`}
+                        />
+                        <input
+                          value={p.prize.ja ?? ""}
+                          onChange={(e) => setPool(i, { prize: { ...p.prize, ja: e.target.value } })}
+                          placeholder="상품명 (JA)"
+                          className={`${INPUT} w-32 min-w-0 flex-1`}
+                        />
+                      </>
+                    )}
                     {form.kind === "physical_box" && (
-                      <label className="flex items-center gap-1 text-[12px] font-bold text-muted">
-                        <input type="checkbox" checked={p.is_physical} onChange={(e) => setPool(i, { is_physical: e.target.checked, reward_payload: e.target.checked ? null : { cp: 20 } })} className="h-4 w-4" />
+                      <label className={`flex items-center gap-1 text-[12px] font-bold text-muted ${poolLocked ? "opacity-50" : ""}`}>
+                        <input disabled={poolLocked} type="checkbox" checked={p.is_physical} onChange={(e) => setPool(i, { is_physical: e.target.checked, reward_payload: e.target.checked ? null : { cp: 20 } })} className="h-4 w-4" />
                         실물
                       </label>
                     )}
                     {p.is_physical ? (
                       <>
                         <select
+                          disabled={poolLocked}
                           value={p.fulfillment}
                           onChange={(e) => setPool(i, { fulfillment: e.target.value as Fulfillment, ...(e.target.value === "mobile_ticket" ? { requires_address: false } : {}) })}
-                          className={`${INPUT} w-32`}
+                          className={`${INPUT} w-32 disabled:opacity-50`}
                         >
                           <option value="delivery">배송</option>
                           <option value="mobile_ticket">모바일 티켓</option>
                         </select>
                         {p.fulfillment !== "mobile_ticket" && (
-                          <label className="flex items-center gap-1 text-[12px] font-bold text-muted">
-                            <input type="checkbox" checked={p.requires_address} onChange={(e) => setPool(i, { requires_address: e.target.checked })} className="h-4 w-4" />
+                          <label className={`flex items-center gap-1 text-[12px] font-bold text-muted ${poolLocked ? "opacity-50" : ""}`}>
+                            <input disabled={poolLocked} type="checkbox" checked={p.requires_address} onChange={(e) => setPool(i, { requires_address: e.target.checked })} className="h-4 w-4" />
                             주소 필요
                           </label>
                         )}
                         <span className="text-[12px] text-subtle">1인 상한</span>
                         <input
+                          disabled={poolLocked}
                           value={p.per_user_cap != null ? String(p.per_user_cap) : ""}
                           onChange={(e) => setPool(i, { per_user_cap: e.target.value === "" ? null : int1(e.target.value) })}
                           placeholder="무제한"
                           inputMode="numeric"
-                          className={`${INPUT} w-16 text-right tabular-nums`}
+                          className={`${INPUT} w-16 text-right tabular-nums disabled:opacity-50`}
                         />
                       </>
                     ) : (
                       <>
                         <select
+                          disabled={poolLocked}
                           value={p.reward_payload?.cp != null ? "cp" : "item"}
                           onChange={(e) => setPool(i, { reward_payload: e.target.value === "cp" ? { cp: 20 } : { item: "heart", qty: 1 } })}
-                          className={`${INPUT} w-20`}
+                          className={`${INPUT} w-20 disabled:opacity-50`}
                         >
                           <option value="cp">CP</option>
                           <option value="item">아이템</option>
                         </select>
                         {p.reward_payload?.cp != null ? (
                           <input
+                            disabled={poolLocked}
                             value={String(p.reward_payload.cp)}
                             onChange={(e) => setPool(i, { reward_payload: { cp: int1(e.target.value) } })}
                             inputMode="numeric"
-                            className={`${INPUT} w-20 text-right tabular-nums`}
+                            className={`${INPUT} w-20 text-right tabular-nums disabled:opacity-50`}
                           />
                         ) : (
                           <>
                             <select
+                              disabled={poolLocked}
                               value={p.reward_payload?.item}
                               onChange={(e) => setPool(i, { reward_payload: { ...p.reward_payload, item: e.target.value } })}
-                              className={`${INPUT} w-20`}
+                              className={`${INPUT} w-20 disabled:opacity-50`}
                             >
                               {ITEM_OPTIONS.map((o) => (
                                 <option key={o.value} value={o.value}>{o.label}</option>
                               ))}
                             </select>
                             <input
+                              disabled={poolLocked}
                               value={String(p.reward_payload?.qty ?? 1)}
                               onChange={(e) => setPool(i, { reward_payload: { ...p.reward_payload, qty: int1(e.target.value) } })}
                               inputMode="numeric"
-                              className={`${INPUT} w-14 text-right tabular-nums`}
+                              className={`${INPUT} w-14 text-right tabular-nums disabled:opacity-50`}
                             />
                           </>
                         )}
@@ -529,19 +553,22 @@ export default function AdminGacha() {
                       <>
                         <span className="text-[12px] text-subtle">수량</span>
                         <input
+                          disabled={poolLocked}
                           value={p.total_qty != null ? String(p.total_qty) : ""}
                           onChange={(e) => setPool(i, { total_qty: int1(e.target.value) })}
                           inputMode="numeric"
-                          className={`${INPUT} w-20 text-right tabular-nums`}
+                          className={`${INPUT} w-20 text-right tabular-nums disabled:opacity-50`}
                         />
                         <span className="w-16 shrink-0 text-right text-[12.5px] font-black tabular-nums text-primary-400">
                           {totalQty > 0 && p.total_qty ? ((p.total_qty / totalQty) * 100).toFixed(2) : "0"}%
                         </span>
                       </>
                     )}
-                    <button type="button" onClick={() => setForm((f) => f && { ...f, pool: f.pool.filter((_, j) => j !== i) })} title="행 삭제" className="shrink-0 text-subtle hover:text-danger">
-                      <X className="h-4 w-4" />
-                    </button>
+                    {!poolLocked && (
+                      <button type="button" onClick={() => setForm((f) => f && { ...f, pool: f.pool.filter((_, j) => j !== i) })} title="행 삭제" className="shrink-0 text-subtle hover:text-danger">
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
                   </div>
                 );
               })}
@@ -561,7 +588,8 @@ export default function AdminGacha() {
                       }
                   )
                 }
-                className={`${BTN_GHOST} inline-flex w-fit items-center gap-1`}
+                disabled={poolLocked}
+                className={`${BTN_GHOST} inline-flex w-fit items-center gap-1 disabled:opacity-50`}
               >
                 <Plus className="h-4 w-4" /> 행 추가
               </button>
