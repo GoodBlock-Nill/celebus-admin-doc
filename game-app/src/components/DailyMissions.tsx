@@ -19,6 +19,8 @@ const LABEL_KEY: Record<string, string> = {
   high: "mission_high",
   item: "mission_item",
   normal: "mission_normal",
+  sketch_draw: "mission_sketch_draw",
+  sketch_guess: "mission_sketch_guess",
 };
 
 export default function DailyMissions({ onReward }: { onReward: (celebPoint: number) => void }) {

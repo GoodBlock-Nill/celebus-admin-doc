@@ -11,7 +11,7 @@ export type ItemType = "bomb" | "line" | "shuffle" | "time";
 // 상점 판매 품목 = 게임 아이템 + 하트(일반 매치 이어하기)
 export type ShopItemType = ItemType | "heart";
 // 데일리 미션 종류 — 모두 game_scores 당일 집계로 검증 가능한 지표
-export type MissionId = "plays" | "score" | "level" | "high" | "item" | "normal";
+export type MissionId = "plays" | "score" | "level" | "high" | "item" | "normal" | "sketch_draw" | "sketch_guess";
 // price = 상점 표시용(CELEB Point). 실제 과금은 서버 game_item_catalog가 권위 — 값 동기 유지 필요.
 export type ItemDef = { type: ItemType; icon: LucideIcon; labelKey: string; start: number; price: number };
 export type ThemePreset = { id: string; label: string; primary: string };
@@ -156,6 +156,8 @@ export const GAME_CONFIG: GameConfig = {
       { id: "high", goal: 1500, cp: 20 }, // 한 판 최고 점수
       { id: "item", goal: 2, cp: 20 }, // 아이템 매치 N판
       { id: "normal", goal: 2, cp: 20 }, // 일반 매치 N판
+      { id: "sketch_draw", goal: 1, cp: 20 }, // 스케치 N장 그리기 (반려 제외)
+      { id: "sketch_guess", goal: 3, cp: 20 }, // 스케치 N문제 맞히기
     ],
   },
   rewards: {

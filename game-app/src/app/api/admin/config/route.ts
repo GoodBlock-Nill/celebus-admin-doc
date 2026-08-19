@@ -32,7 +32,7 @@ const missionsSchema = z
     pool: z
       .array(
         z.object({
-          id: z.enum(["plays", "score", "level", "high", "item", "normal"]),
+          id: z.enum(["plays", "score", "level", "high", "item", "normal", "sketch_draw", "sketch_guess"]),
           goal: z.number().int().min(1).max(1000000),
           cp: z.number().int().min(1).max(100000),
         })

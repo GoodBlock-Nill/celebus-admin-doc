@@ -18,6 +18,8 @@ const MISSION_LABEL: Record<MissionId, { name: string; goalUnit: string }> = {
   high: { name: "한 판 최고 점수", goalUnit: "점" },
   item: { name: "아이템 매치", goalUnit: "판" },
   normal: { name: "일반 매치", goalUnit: "판" },
+  sketch_draw: { name: "스케치 그리기", goalUnit: "장" },
+  sketch_guess: { name: "스케치 맞히기", goalUnit: "문제" },
 };
 
 const int = (v: string) => Math.floor(Number(v) || 0);
