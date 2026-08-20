@@ -52,6 +52,11 @@ function AuthBoundary({ children }: { children: React.ReactNode }) {
 }
 
 export default function SketchLayout({ children }: { children: React.ReactNode }) {
+  // 스케치 전용 토스트 테마 스코프 — 포털(body 직속)이라 CSS 스코프가 닿도록 body 속성 부여
+  useEffect(() => {
+    document.body.dataset.sketch = "1";
+    return () => { delete document.body.dataset.sketch; };
+  }, []);
   return (
     <LangProvider>
       <div className="sketch-shell">

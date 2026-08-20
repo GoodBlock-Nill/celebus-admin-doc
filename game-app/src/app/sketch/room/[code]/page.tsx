@@ -14,6 +14,15 @@ import { getNick } from "@/lib/game-api";
 import { fetchPartyState, joinPartyChannel, partyApi, sendPartyEvent, type PartyEvent, type PartyRoomState } from "@/lib/sketch-party";
 import { useLang } from "@/components/LangProvider";
 
+// 플레이어 칩 컬러 순환 — Violet → Coral → Mint → Sunshine → Sky (디자인 가이드 §2-5)
+const CHIP_COLORS = [
+  { bg: "#f0eafd", fg: "#5e42ca", ring: "#d8ccf8" },
+  { bg: "#ffe9ec", fg: "#c2404f", ring: "#ffc9d0" },
+  { bg: "#e2f8f2", fg: "#1f7a68", ring: "#b8eadf" },
+  { bg: "#fff3d6", fg: "#8a6200", ring: "#f5dfa1" },
+  { bg: "#e8f3ff", fg: "#2f6cb8", ring: "#c4dffc" },
+];
+
 function ViewerCanvas({ strokes, live }: { strokes: SketchStroke[]; live: SketchStroke | null }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -219,15 +228,22 @@ export default function PartyRoomPage() {
 
       {/* 멤버 스코어 줄 */}
       <div className="scrollbar-none flex gap-1.5 overflow-x-auto">
-        {members.map((m, i) => (
-          <span key={i} className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px] font-bold ring-1 ${m.is_me ? "bg-primary/20 text-primary-400 ring-primary/40" : "bg-surface-1 text-muted ring-hairline"}`}>
-            {m.is_host && <Crown className="h-3 w-3 text-gold" />}
-            {m.nick}
-            {m.is_drawer && room.status === "playing" && " ✏️"}
-            {m.correct && <Check className="h-3 w-3 text-verified" strokeWidth={3} />}
-            <b className="tabular-nums">{m.score}</b>
-          </span>
-        ))}
+        {members.map((m, i) => {
+          const c = CHIP_COLORS[i % CHIP_COLORS.length];
+          return (
+            <span
+              key={i}
+              className={`flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px] font-bold ring-1 ${m.is_me ? "ring-2" : ""}`}
+              style={{ background: c.bg, color: c.fg, ["--tw-ring-color" as string]: c.ring }}
+            >
+              {m.is_host && <Crown className="h-3 w-3 text-gold" />}
+              {m.nick}
+              {m.is_drawer && room.status === "playing" && " ✏️"}
+              {m.correct && <Check className="h-3 w-3 text-verified" strokeWidth={3} />}
+              <b className="tabular-nums">{m.score}</b>
+            </span>
+          );
+        })}
       </div>
 
       {room.status === "lobby" && (

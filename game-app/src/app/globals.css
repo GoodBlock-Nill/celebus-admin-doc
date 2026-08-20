@@ -621,36 +621,45 @@ body {
 /* ══ CELEB SKETCH 전용 테마 — 스케치북 라이트 (장르 표준: Draw Something 종이 톤) ══
    전용 도메인 배포의 자체 아이덴티티. 변수 스코프 오버라이드로 기존 유틸리티가 그대로 라이트로 전환된다. */
 .sketch-shell {
-  --color-surface-0: #f6f1e7; /* 종이 배경 */
-  --color-surface-1: #ffffff; /* 카드 */
-  --color-surface-2: #faf6ee; /* 상승 */
-  --color-surface-3: #f1ead9;
-  --color-hairline: #e5dcc9;
-  --color-fg: #342d3d;
-  --color-muted: #6f6579;
-  --color-subtle: #9a91a4;
+  /* GPT 디자이너 가이드 (2026-08-20) — Cute Theme: Soft 3D Clay + Hand-drawn Sticker */
+  --color-surface-0: #fff7ea; /* Vanilla Paper 기본 배경 */
+  --color-surface-1: #fffdf8; /* Chalk White 카드 */
+  --color-surface-2: #f6f1e7; /* Soft Paper 보조 */
+  --color-surface-3: #fff0f3; /* Blush 보조면 */
+  --color-hairline: #e6ddd2;
+  --color-fg: #25213d; /* 텍스트 진함 */
+  --color-muted: #665f78; /* 텍스트 중간 */
+  --color-subtle: #9b94aa; /* 텍스트 연함 */
   --color-gold: #d99a1b;
+  /* 포인트 4색 — 메뉴 카드·플레이어 칩 순환 */
+  --sk-coral: #ff7c8b;
+  --sk-mint: #69d6c2;
+  --sk-sunshine: #ffc94a;
+  --sk-sky: #74b9ff;
   /* LangSwitcher 등 공용 컴포넌트가 쓰는 카드·보더 변수 — 라이트 종이 톤으로 재정의 */
-  --color-bg: #f6f1e7;
-  --color-card: #ffffff;
-  --color-card-2: #faf6ee;
-  --color-border: #e5dcc9;
+  --color-bg: #fff7ea;
+  --color-card: #fffdf8;
+  --color-card-2: #fff7ea;
+  --color-border: #e6ddd2;
+  /* 촉감 토큰 */
+  --sk-shadow-card: 0 4px 0 rgba(37, 33, 61, 0.07), 0 10px 24px rgba(124, 92, 240, 0.08);
+  --sk-shadow-tile: 0 3px 0 rgba(37, 33, 61, 0.1), 0 6px 12px rgba(37, 33, 61, 0.06);
   background:
-    radial-gradient(120% 60% at 50% 0%, #fdf9f0 0%, transparent 60%),
+    radial-gradient(120% 60% at 50% 0%, #fffcf4 0%, transparent 60%),
     var(--color-surface-0);
   color: var(--color-fg);
   min-height: 100dvh;
 }
-/* 은은한 모눈 종이 질감 */
+/* Soft Dot Paper — 모눈 대체 (보라 도트 18px + 은은한 코랄 사선) */
 .sketch-shell::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(#00000006 1px, transparent 1px),
-    linear-gradient(90deg, #00000006 1px, transparent 1px);
-  background-size: 26px 26px;
+    radial-gradient(circle at 1px 1px, rgba(124, 92, 240, 0.07) 1px, transparent 1.2px),
+    linear-gradient(115deg, transparent 0 48%, rgba(255, 124, 139, 0.025) 49% 51%, transparent 52%);
+  background-size: 18px 18px, 100% 100%;
   z-index: 0;
 }
 .sketch-shell > * { position: relative; z-index: 1; }
@@ -664,92 +673,129 @@ body {
   text-shadow: 0 2px 0 #d8ccf8;
 }
 
-/* 홈 카드 — 청키 라운드 + 아이콘 버블 + 눌림 */
+/* 카드 — soft tactile shadow (카드 내부 강조 컬러는 최대 1개) */
 .sk-card {
-  border-radius: 22px;
-  background: var(--color-surface-1);
-  box-shadow: 0 3px 0 #e2d8c3, 0 10px 24px rgba(70, 50, 20, 0.08);
-  border: 1px solid var(--color-hairline);
+  border-radius: 20px;
+  background: var(--color-card);
+  box-shadow: var(--sk-shadow-card);
+  border: 1px solid rgba(230, 221, 210, 0.9);
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
-.sk-card:active { transform: translateY(2px); box-shadow: 0 1px 0 #e2d8c3, 0 6px 14px rgba(70, 50, 20, 0.08); }
+.sk-card:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(37, 33, 61, 0.07), 0 6px 14px rgba(124, 92, 240, 0.08); }
 .sk-bubble {
   display: flex; align-items: center; justify-content: center;
   width: 52px; height: 52px; border-radius: 18px; flex-shrink: 0;
   font-size: 26px;
-  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 -3px 0 rgba(37, 33, 61, 0.08);
 }
 
-/* 글자 타일 — 키캡 (입체 엣지 + 눌림 + 사용 시 꺼짐) */
+/* 글자 타일 — 키캡 촉감 유지 + 상태 컬러 강화 */
 .sk-tile {
   display: flex; align-items: center; justify-content: center;
   border-radius: 12px;
-  background: linear-gradient(180deg, #ffffff 0%, #f3edde 100%);
-  border: 1px solid #e0d5bd;
-  box-shadow: 0 3px 0 #d8cbae, 0 5px 8px rgba(70, 50, 20, 0.1);
-  color: #3a3244;
+  background: var(--color-card);
+  border: 1.5px solid #e1d9ec;
+  box-shadow: var(--sk-shadow-tile);
+  color: var(--color-fg);
   font-weight: 900;
   transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.15s ease;
   user-select: none;
 }
-.sk-tile:active { transform: translateY(2px); box-shadow: 0 1px 0 #d8cbae; }
+.sk-tile:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(37, 33, 61, 0.1); }
 .sk-tile:disabled {
-  opacity: 0.35;
+  color: #aaa3b2;
+  background: #f0ebf2;
+  border-color: #e6e0ec;
   transform: translateY(2px);
-  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.12);
-  background: #ece5d3;
+  box-shadow: none;
 }
-/* 정답 슬롯 — 밑줄 스타일 (채워지면 보라 키캡) */
+/* 정답 슬롯 — 빈 슬롯은 점선, 채워지면 보라 키캡 */
 .sk-slot {
   display: flex; align-items: center; justify-content: center;
-  border-radius: 10px;
-  background: #efe8d8;
-  border-bottom: 3px solid #cfc2a4;
-  color: #3a3244;
+  border-radius: 12px;
+  background: var(--color-card);
+  border: 1.5px dashed #d8cfe6;
+  color: var(--color-fg);
   font-weight: 900;
   transition: all 0.12s ease;
 }
 .sk-slot-filled {
-  background: linear-gradient(180deg, #8b6cf3 0%, #7c5cf0 100%);
-  border-bottom: 3px solid #5a3cc0;
+  background: #7c5cf0;
+  border: 1.5px solid #5e42ca;
   color: #fff;
   animation: sk-slot-pop 0.15s ease;
 }
 @keyframes sk-slot-pop { 0% { transform: scale(0.8); } 60% { transform: scale(1.08); } 100% { transform: scale(1); } }
-.sk-slot-wrong { background: #fde8e8 !important; border-bottom-color: #e5484d !important; color: #e5484d !important; }
+.sk-slot-wrong {
+  background: var(--sk-coral) !important;
+  border: 1.5px solid #d94f62 !important;
+  color: #6f2432 !important;
+  animation: sk-tile-shake 180ms ease;
+}
+@keyframes sk-tile-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
 
-/* 주 버튼 — 청키 (하단 엣지) */
+/* 주 버튼 — 아래 4px 엣지, 누르면 가라앉음 */
 .sk-btn {
-  border-radius: 999px;
-  background: linear-gradient(180deg, #8b6cf3 0%, #7c5cf0 100%);
+  min-height: 48px;
+  border-radius: 14px;
+  background: #7c5cf0;
   color: #fff; font-weight: 900;
-  box-shadow: 0 4px 0 #5a3cc0, 0 8px 16px rgba(124, 92, 240, 0.35);
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  box-shadow: 0 4px 0 #5e42ca;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
-.sk-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #5a3cc0; }
-.sk-btn:disabled { opacity: 0.45; box-shadow: 0 4px 0 #5a3cc0; }
+.sk-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #5e42ca; }
+.sk-btn:disabled { opacity: 0.45; box-shadow: 0 4px 0 #5e42ca; }
 .sk-btn-gold {
-  background: linear-gradient(180deg, #f2b53c 0%, #e09b18 100%);
-  box-shadow: 0 4px 0 #a86f0a, 0 8px 16px rgba(224, 155, 24, 0.35);
+  background: var(--sk-sunshine);
+  color: #513c00;
+  box-shadow: 0 4px 0 #d9a41f;
 }
-.sk-btn-gold:active { box-shadow: 0 1px 0 #a86f0a; }
+.sk-btn-gold:active { box-shadow: 0 1px 0 #d9a41f; }
 .sk-btn-ghost {
-  border-radius: 999px;
-  background: var(--color-surface-1);
-  border: 1px solid var(--color-hairline);
-  box-shadow: 0 2px 0 #e2d8c3;
+  min-height: 44px;
+  border-radius: 14px;
+  background: rgba(255, 253, 248, 0.72);
+  border: 1.5px solid #dcd3e9;
   font-weight: 700;
   color: var(--color-muted);
 }
-.sk-btn-ghost:active { transform: translateY(2px); box-shadow: none; }
+.sk-btn-ghost:active { transform: translateY(1px); background: #f3effe; }
 
-/* 캔버스 카드 — 종이 위 종이 (테이프 장식) */
-.sk-canvas-card {
-  border-radius: 18px;
-  box-shadow: 0 4px 0 #e2d8c3, 0 14px 30px rgba(70, 50, 20, 0.12);
-  border: 1px solid #eadfca;
+/* 점수 칩 — 파티룸 플레이어 (컬러는 TSX에서 순환 배정) */
+.sk-chip {
+  min-height: 32px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-muted);
+  background: var(--color-card);
+  border: 1px solid var(--color-hairline);
 }
 
+/* 캔버스 카드 — 그림이 주인공, 주변은 절제 */
+.sk-canvas-card {
+  border-radius: 18px;
+  background: var(--color-card);
+  box-shadow: var(--sk-shadow-card);
+  border: 1px solid #e9e0d5;
+}
+
+/* 스케치 전용 토스트 — ink 배경 (게스트 모드 레이아웃이 body 속성 부여) */
+body[data-sketch] [data-sonner-toast] {
+  background: #25213d !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 0 rgba(37, 33, 61, 0.15), 0 10px 24px rgba(37, 33, 61, 0.18) !important;
+}
+body[data-sketch] [data-sonner-toast] [data-title] { color: #fff !important; }
+
 @media (prefers-reduced-motion: reduce) {
-  .sk-slot-filled { animation: none; }
+  .sk-slot-filled, .sk-slot-wrong { animation: none; }
 }

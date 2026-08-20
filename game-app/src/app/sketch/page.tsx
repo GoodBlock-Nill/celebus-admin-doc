@@ -90,7 +90,7 @@ export default function SketchPage() {
             <ChevronLeft className="h-5 w-5" />
           </button>
         )}
-        <h1 className="sk-wordmark text-[22px]">CELEB SKETCH</h1>
+        <h1 className="sk-wordmark text-[24px]">CELEB SKETCH</h1>
         <span className="ml-1 rounded-full bg-gold/20 px-2 py-0.5 text-[10px] font-black text-gold">BETA</span>
       </div>
 
@@ -111,58 +111,61 @@ export default function SketchPage() {
               </button>
             </div>
           )}
-          {/* 데일리 그림 퀴즈 — 전원 동일 5문제, 완주 보너스 */}
-          <button
-            onClick={() => setPhase({ name: "guess", mode: "daily" })}
-            className="sk-card flex items-center gap-3.5 p-4 text-left"
-          >
-            <span className="sk-bubble" style={{ background: "#fdeec8" }}>📅</span>
-            <span className="min-w-0 flex-1 text-left">
-              <span className="block text-[16px] font-black text-fg">{t("sk_daily_card")}</span>
-              <span className="mt-0.5 block text-[12px] text-muted break-keep">{t("sk_daily_desc")}</span>
-            </span>
-          </button>
-          <button
-            onClick={() => void startDraw()}
-            className="sk-card flex items-center gap-3.5 p-4 text-left"
-          >
-            <span className="sk-bubble" style={{ background: "#e8defc" }}>🎨</span>
-            <span className="text-left">
-              <span className="block text-[16px] font-black text-fg">{t("sk_draw_card")}</span>
-              <span className="mt-0.5 block text-[12px] text-muted break-keep">{t("sk_draw_desc")}</span>
-            </span>
-          </button>
-          <button
-            onClick={() => setPhase({ name: "guess", mode: "pool" })}
-            className="sk-card flex items-center gap-3.5 p-4 text-left"
-          >
-            <span className="sk-bubble" style={{ background: "#dcedfd" }}>🔍</span>
-            <span className="text-left">
-              <span className="block text-[16px] font-black text-fg">{t("sk_guess_card")}</span>
-              <span className="mt-0.5 block text-[12px] text-muted break-keep">{t("sk_guess_desc")}</span>
-            </span>
-          </button>
+          {/* 메뉴 2열 그리드 — 카드마다 포인트 컬러 1개 (Sunshine·Violet·Sky·Mint) */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* 데일리 그림 퀴즈 — 전원 동일 5문제, 완주 보너스 */}
+            <button
+              onClick={() => setPhase({ name: "guess", mode: "daily" })}
+              className="sk-card flex min-h-[132px] flex-col justify-between gap-2.5 p-4 text-left"
+            >
+              <span className="sk-bubble" style={{ background: "#ffedc2" }}>📅</span>
+              <span className="min-w-0">
+                <span className="block text-[15px] font-black leading-tight text-fg break-keep">{t("sk_daily_card")}</span>
+                <span className="mt-1 block text-[11.5px] leading-snug text-muted break-keep">{t("sk_daily_desc")}</span>
+              </span>
+            </button>
+            <button
+              onClick={() => void startDraw()}
+              className="sk-card flex min-h-[132px] flex-col justify-between gap-2.5 p-4 text-left"
+            >
+              <span className="sk-bubble" style={{ background: "#e8defc" }}>🎨</span>
+              <span className="min-w-0">
+                <span className="block text-[15px] font-black leading-tight text-fg break-keep">{t("sk_draw_card")}</span>
+                <span className="mt-1 block text-[11.5px] leading-snug text-muted break-keep">{t("sk_draw_desc")}</span>
+              </span>
+            </button>
+            <button
+              onClick={() => setPhase({ name: "guess", mode: "pool" })}
+              className="sk-card flex min-h-[132px] flex-col justify-between gap-2.5 p-4 text-left"
+            >
+              <span className="sk-bubble" style={{ background: "#dcedfd" }}>🔍</span>
+              <span className="min-w-0">
+                <span className="block text-[15px] font-black leading-tight text-fg break-keep">{t("sk_guess_card")}</span>
+                <span className="mt-1 block text-[11.5px] leading-snug text-muted break-keep">{t("sk_guess_desc")}</span>
+              </span>
+            </button>
 
-          {/* 파티룸 — 초대 링크 실시간 (W3) */}
-          <button
-            onClick={async () => {
-              if (creatingRoom) return;
-              setCreatingRoom(true);
-              const { getNick } = await import("@/lib/game-api");
-              const r = await partyApi({ action: "create", nick: getNick() });
-              setCreatingRoom(false);
-              if (r?.code) router.push(`/sketch/room/${r.code}`);
-              else toast.error(t("sk_room_create_fail"));
-            }}
-            disabled={creatingRoom}
-            className="sk-card flex items-center gap-3.5 p-4 text-left disabled:opacity-60"
-          >
-            <span className="sk-bubble" style={{ background: "#dcf5e6" }}>🎉</span>
-            <span className="text-left">
-              <span className="block text-[16px] font-black text-fg">{t("sk_party_card")}</span>
-              <span className="mt-0.5 block text-[12px] text-muted break-keep">{t("sk_party_desc")}</span>
-            </span>
-          </button>
+            {/* 파티룸 — 초대 링크 실시간 (W3) */}
+            <button
+              onClick={async () => {
+                if (creatingRoom) return;
+                setCreatingRoom(true);
+                const { getNick } = await import("@/lib/game-api");
+                const r = await partyApi({ action: "create", nick: getNick() });
+                setCreatingRoom(false);
+                if (r?.code) router.push(`/sketch/room/${r.code}`);
+                else toast.error(t("sk_room_create_fail"));
+              }}
+              disabled={creatingRoom}
+              className="sk-card flex min-h-[132px] flex-col justify-between gap-2.5 p-4 text-left disabled:opacity-60"
+            >
+              <span className="sk-bubble" style={{ background: "#d4f4ec" }}>🎉</span>
+              <span className="min-w-0">
+                <span className="block text-[15px] font-black leading-tight text-fg break-keep">{t("sk_party_card")}</span>
+                <span className="mt-1 block text-[11.5px] leading-snug text-muted break-keep">{t("sk_party_desc")}</span>
+              </span>
+            </button>
+          </div>
 
           {/* 명예의 전당 — 지난주 베스트 스케치 (작가 보상 = 드로우 티켓) */}
           {best && (
