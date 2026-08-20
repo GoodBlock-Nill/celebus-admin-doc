@@ -98,7 +98,7 @@ export default function PartyRoomPage() {
       const joined = await partyApi({ action: "join", code, nick: getNick() });
       if (!joined || joined.error) {
         toast.error(joined?.error === "full" ? t("sk_room_full") : joined?.error === "in_progress" ? t("sk_room_started") : t("sk_room_notfound"));
-        router.replace("/sketch");
+        router.replace("/");
         return;
       }
       if (!mounted) return;
@@ -156,7 +156,7 @@ export default function PartyRoomPage() {
     );
 
   const { room, members } = state;
-  const inviteUrl = typeof window !== "undefined" ? `${window.location.origin}/sketch/room/${room.code}` : "";
+  const inviteUrl = typeof window !== "undefined" ? `${window.location.origin}/room/${room.code}` : "";
   const copyInvite = async () => {
     try {
       await navigator.clipboard.writeText(inviteUrl);
@@ -338,7 +338,7 @@ export default function PartyRoomPage() {
               </div>
             ))}
           </div>
-          <button onClick={() => router.push("/sketch")} className="sk-btn w-full py-3.5 text-[15px]">
+          <button onClick={() => router.push("/")} className="sk-btn w-full py-3.5 text-[15px]">
             {t("sk_to_home")}
           </button>
         </div>

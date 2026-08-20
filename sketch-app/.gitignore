@@ -1,0 +1,23 @@
+/node_modules
+/.next
+/out
+/build
+next-env.d.ts
+*.tsbuildinfo
+
+# env
+.env
+.env*.local
+
+# serwist generated
+/public/sw.js
+/public/sw.js.map
+/public/swe-worker*.js
+
+.DS_Store
+.vercel
+.env*
+
+# 원본 음원 소스 (대용량 — 서빙본은 public/bgm)
+/src/bgm
+/src/mp3

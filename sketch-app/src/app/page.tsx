@@ -153,7 +153,7 @@ export default function SketchPage() {
                 const { getNick } = await import("@/lib/game-api");
                 const r = await partyApi({ action: "create", nick: getNick() });
                 setCreatingRoom(false);
-                if (r?.code) router.push(`/sketch/room/${r.code}`);
+                if (r?.code) router.push(`/room/${r.code}`);
                 else toast.error(t("sk_room_create_fail"));
               }}
               disabled={creatingRoom}
@@ -231,7 +231,7 @@ export default function SketchPage() {
               const blob = await sketchToPngBlob(phase.strokes);
               if (!blob) return;
               const file = new File([blob], "celeb-sketch.png", { type: "image/png" });
-              const text = `${t("sk_share_text")} ${window.location.origin}/sketch`;
+              const text = `${t("sk_share_text")} ${window.location.origin}`;
               try {
                 if (navigator.canShare?.({ files: [file] })) {
                   await navigator.share({ files: [file], text });

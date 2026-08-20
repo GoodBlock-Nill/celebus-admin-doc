@@ -1,16 +1,16 @@
 "use client";
 
-// /sketch 라우트 공통 레이아웃 — 언어 컨텍스트 + CELEBUS 세션 확보.
-// 전용 도메인(sketch.celebus.xyz)은 쿠키가 호스트 단위라 본 게임 방문 없이 진입할 수 있다 —
-// AppShell과 동일한 SSO 흐름으로 이 호스트의 세션을 만들고, 실패 시 로그인 게이트를 띄운다.
+// 앱 공통 셸 — 언어 컨텍스트 + 스케치북 테마 + CELEBUS 세션 확보.
+// /admin은 별도 콘솔이므로 테마·세션 게이트를 씌우지 않는다.
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { LangProvider } from "@/components/LangProvider";
 import SsoGate from "@/components/SsoGate";
 import { hasLocalSession, markLocalSession, ssoLogin } from "@/lib/auth-api";
 import { getNick, setAvatar, setNick } from "@/lib/game-api";
 
-// 테스트 기간 게스트 모드 (celeb-sketch 전용 배포 플래그) — CELEBUS 로그인 없이 기기별 익명 신원으로 진행.
-// 정식 오픈 시 env 제거로 SSO 게이트 복귀. match 배포는 이 플래그가 없어 영향 없음.
+// 테스트 기간 게스트 모드 — CELEBUS 로그인 없이 기기별 익명 신원으로 진행.
+// 정식 오픈 시 env 제거로 SSO 게이트 복귀.
 const GUEST_MODE = process.env.NEXT_PUBLIC_SKETCH_GUEST === "1";
 
 function AuthBoundary({ children }: { children: React.ReactNode }) {
@@ -51,12 +51,17 @@ function AuthBoundary({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export default function SketchLayout({ children }: { children: React.ReactNode }) {
+export default function ShellBoundary({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith("/admin");
   // 스케치 전용 토스트 테마 스코프 — 포털(body 직속)이라 CSS 스코프가 닿도록 body 속성 부여
   useEffect(() => {
+    if (isAdmin) return;
     document.body.dataset.sketch = "1";
     return () => { delete document.body.dataset.sketch; };
-  }, []);
+  }, [isAdmin]);
+
+  if (isAdmin) return <>{children}</>;
   return (
     <LangProvider>
       <div className="sketch-shell">
