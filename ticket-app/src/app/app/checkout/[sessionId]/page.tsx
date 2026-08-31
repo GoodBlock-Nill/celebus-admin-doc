@@ -2,46 +2,34 @@
 
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { AppHeader } from '../../_components/app-header';
 import { DepositGuideCard } from '../../_components/deposit-guide';
-import { NotFoundNotice, PageSkeleton } from '../../_components/feedback';
+import { ErrorState, PageSkeleton } from '../../_components/feedback';
+import { useMemberSession } from '../../_components/member-session';
 import { NoticeBox } from '../../_components/section';
 import { GHOST_BUTTON, PRIMARY_BUTTON } from '../../_components/ui';
-import { paidRemaining } from '../../_components/session-option';
-import { useOrderExpiry } from '../../_components/use-app-clock';
+import { useApiResource } from '../../_components/use-api-resource';
 import { CheckoutForm, type CheckoutSubmitInput } from '../checkout-form';
-import { countHeldQty } from '@/lib/store-helpers';
-import { selectCurrentVerification, useTicketStore } from '@/lib/store';
-import { useHydrated } from '@/lib/use-hydrated';
+import { loadCheckout } from '../load-checkout';
+import { api } from '@/lib/api-client';
+import type { OrderDetailView } from '@/lib/api-types';
 
 /** A4 예매 신청 + 입금 안내 */
 export default function CheckoutPage() {
   const params = useParams();
   const sessionId = typeof params.sessionId === 'string' ? params.sessionId : '';
-  const isHydrated = useHydrated();
-  useOrderExpiry();
+  const { me } = useMemberSession();
 
-  const sessions = useTicketStore((state) => state.sessions);
-  const concerts = useTicketStore((state) => state.concerts);
-  const orders = useTicketStore((state) => state.orders);
-  const verification = useTicketStore(selectCurrentVerification);
-  const createOrder = useTicketStore((state) => state.createOrder);
+  const loader = useCallback(() => loadCheckout(sessionId), [sessionId]);
+  const { state, reload } = useApiResource(loader);
 
-  const session = sessions.find((item) => item.id === sessionId);
-  const concert = concerts.find((item) => item.id === session?.concertId);
-  const concertId = session?.concertId ?? '';
-  const heldQty = useTicketStore((state) =>
-    concertId ? countHeldQty(state, state.currentUserId, concertId) : 0,
-  );
-
-  const [createdOrderId, setCreatedOrderId] = useState('');
+  const [createdOrder, setCreatedOrder] = useState<OrderDetailView | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setSubmitting] = useState(false);
 
-  const createdOrder = orders.find((order) => order.id === createdOrderId);
-
-  if (!isHydrated) {
+  if (state.status === 'LOADING') {
     return (
       <main>
         <AppHeader title="예매 신청" backHref="/app" />
@@ -50,18 +38,24 @@ export default function CheckoutPage() {
     );
   }
 
-  if (!session || !concert) {
+  if (state.status === 'ERROR') {
     return (
       <main>
         <AppHeader title="예매 신청" backHref="/app" />
-        <NotFoundNotice message="회차 정보를 찾을 수 없습니다." backHref="/app" />
+        <div className="flex flex-col gap-4 px-4 py-5">
+          <ErrorState message={state.reason} onRetry={() => void reload()} />
+          <Link href="/app" className={GHOST_BUTTON}>
+            목록으로 돌아가기
+          </Link>
+        </div>
       </main>
     );
   }
 
+  const { concert, session, heldQty } = state.data;
   const backHref = `/app/concert/${concert.id}`;
 
-  if (!verification) {
+  if (!me.verified) {
     return (
       <main>
         <AppHeader title="예매 신청" backHref={backHref} />
@@ -98,25 +92,35 @@ export default function CheckoutPage() {
     );
   }
 
-  const seatRemaining = paidRemaining(session);
   const limitRemaining = concert.maxPerUser - heldQty;
-  const maxQty = Math.max(0, Math.min(concert.maxPerUser, limitRemaining, seatRemaining));
+  const maxQty = Math.max(0, Math.min(concert.maxPerUser, limitRemaining, session.remaining));
 
-  const handleSubmit = (input: CheckoutSubmitInput) => {
+  const handleSubmit = async (input: CheckoutSubmitInput) => {
+    if (isSubmitting) return;
+
+    setSubmitting(true);
     setErrorMessage('');
-    const result = createOrder({
-      concertId: concert.id,
+    const created = await api.createOrder({
       sessionId: session.id,
       qty: input.qty,
       wantsCashReceipt: input.wantsCashReceipt,
       cashReceiptPhone: input.wantsCashReceipt ? input.cashReceiptPhone : undefined,
     });
 
-    if (!result.ok) {
-      setErrorMessage(result.reason);
+    if (!created.ok) {
+      setSubmitting(false);
+      setErrorMessage(created.reason);
       return;
     }
-    setCreatedOrderId(result.order.id);
+
+    const detail = await api.order(created.data.orderId);
+    setSubmitting(false);
+
+    if (!detail.ok) {
+      setErrorMessage(detail.reason);
+      return;
+    }
+    setCreatedOrder(detail.data.order);
   };
 
   return (
@@ -126,7 +130,7 @@ export default function CheckoutPage() {
         {maxQty <= 0 ? (
           <>
             <NoticeBox tone="warning">
-              {seatRemaining <= 0
+              {session.remaining <= 0
                 ? '해당 회차의 잔여 좌석이 모두 소진되었습니다.'
                 : `1인 최대 ${concert.maxPerUser}매까지 예매할 수 있습니다. (현재 보유 ${heldQty}매)`}
             </NoticeBox>
@@ -140,9 +144,9 @@ export default function CheckoutPage() {
             session={session}
             maxQty={maxQty}
             heldQty={heldQty}
-            defaultPhone={verification.phone}
             errorMessage={errorMessage}
-            onSubmit={handleSubmit}
+            busy={isSubmitting}
+            onSubmit={(input) => void handleSubmit(input)}
           />
         )}
       </div>

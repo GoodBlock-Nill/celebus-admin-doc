@@ -6,11 +6,13 @@ import { CheckRow, Field, QtyStepper, TextInput, ToggleRow } from '../_component
 import { ErrorBanner } from '../_components/feedback';
 import { InfoRow, NoticeBox, SectionCard } from '../_components/section';
 import { MUTED, NUMERIC, PRIMARY_BUTTON } from '../_components/ui';
+import type { ConcertView, SessionView } from '@/lib/api-types';
 import { formatDateTime, formatKrw } from '@/lib/format';
-import type { Concert, ConcertSession } from '@/lib/types';
 
 const AGREEMENT_TEXT =
   '입금자명은 본인확인 실명과 일치해야 하며, 마감 시각까지 미입금 시 자동 취소됩니다.';
+
+const PHONE_MAX_LENGTH = 11;
 
 export interface CheckoutSubmitInput {
   qty: number;
@@ -19,13 +21,13 @@ export interface CheckoutSubmitInput {
 }
 
 interface CheckoutFormProps {
-  concert: Concert;
-  session: ConcertSession;
+  concert: ConcertView;
+  session: SessionView;
   /** 1인 한도·잔여 좌석을 반영한 최대 예매 매수 */
   maxQty: number;
   heldQty: number;
-  defaultPhone: string;
   errorMessage: string;
+  busy: boolean;
   onSubmit: (input: CheckoutSubmitInput) => void;
 }
 
@@ -35,17 +37,17 @@ export function CheckoutForm({
   session,
   maxQty,
   heldQty,
-  defaultPhone,
   errorMessage,
+  busy,
   onSubmit,
 }: CheckoutFormProps) {
   const [qty, setQty] = useState(1);
   const [wantsCashReceipt, setWantsCashReceipt] = useState(false);
-  const [cashReceiptPhone, setCashReceiptPhone] = useState(defaultPhone);
+  const [cashReceiptPhone, setCashReceiptPhone] = useState('');
   const [isAgreed, setAgreed] = useState(false);
 
   const amount = concert.priceKrw * qty;
-  const canSubmit = isAgreed && qty >= 1 && qty <= maxQty;
+  const canSubmit = isAgreed && qty >= 1 && qty <= maxQty && !busy;
 
   return (
     <div className="flex flex-col gap-3.5">
@@ -73,12 +75,12 @@ export function CheckoutForm({
         <ToggleRow label="현금영수증 신청" checked={wantsCashReceipt} onChange={setWantsCashReceipt} />
         {wantsCashReceipt ? (
           <div className="mt-3">
-            <Field label="발급용 휴대폰 번호" hint="본인확인에 사용한 번호가 기본으로 입력됩니다.">
+            <Field label="발급용 휴대폰 번호" hint="현금영수증 발급에 사용할 번호를 숫자만 입력해 주세요.">
               <TextInput
                 value={cashReceiptPhone}
                 onChange={(value) => setCashReceiptPhone(value.replace(/\D/g, ''))}
                 inputMode="tel"
-                maxLength={11}
+                maxLength={PHONE_MAX_LENGTH}
                 numeric
               />
             </Field>
@@ -102,7 +104,7 @@ export function CheckoutForm({
         onClick={() => onSubmit({ qty, wantsCashReceipt, cashReceiptPhone })}
         className={PRIMARY_BUTTON}
       >
-        입금 안내 받기
+        {busy ? '신청 중…' : '입금 안내 받기'}
       </button>
     </div>
   );

@@ -4,18 +4,11 @@ import { Badge } from '../_components/badge';
 import { ChevronRightIcon, TicketIcon } from '../_components/icons';
 import { TICKET_STATUS_META } from '../_components/status-meta';
 import { CARD, MUTED, NUMERIC } from '../_components/ui';
+import { poolLabel, type TicketSummaryView } from '@/lib/api-types';
 import { formatDateTime } from '@/lib/format';
-import { poolLabel } from '@/lib/store-ticket';
-import type { Concert, ConcertSession, Ticket } from '@/lib/types';
-
-interface TicketCardProps {
-  ticket: Ticket;
-  concert?: Concert;
-  session?: ConcertSession;
-}
 
 /** 내 티켓 목록 카드 */
-export function TicketCard({ ticket, concert, session }: TicketCardProps) {
+export function TicketCard({ ticket }: { ticket: TicketSummaryView }) {
   const statusMeta = TICKET_STATUS_META[ticket.status];
 
   return (
@@ -29,9 +22,9 @@ export function TicketCard({ ticket, concert, session }: TicketCardProps) {
           <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
           <span className={`truncate text-[11.5px] ${MUTED}`}>{poolLabel(ticket.poolType)}</span>
         </div>
-        <p className="mt-2 truncate text-[14px] font-bold">{concert?.title ?? '공연 정보 없음'}</p>
+        <p className="mt-2 truncate text-[14px] font-bold">{ticket.concertTitle}</p>
         <p className={`mt-1 truncate text-[12px] ${MUTED} ${NUMERIC}`}>
-          {session ? `${session.name} · ${formatDateTime(session.startAt)}` : '-'}
+          {ticket.sessionStartAt ? `${ticket.sessionName} · ${formatDateTime(ticket.sessionStartAt)}` : '-'}
         </p>
       </div>
 

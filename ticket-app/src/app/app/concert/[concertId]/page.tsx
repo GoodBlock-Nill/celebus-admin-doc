@@ -2,44 +2,36 @@
 
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { AppHeader } from '../../_components/app-header';
 import { Badge } from '../../_components/badge';
 import { formatSessionPeriod } from '../../_components/concert-card';
-import { NotFoundNotice, PageSkeleton } from '../../_components/feedback';
+import { ErrorState, PageSkeleton } from '../../_components/feedback';
+import { useMemberSession } from '../../_components/member-session';
 import { GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
 import { AppModal } from '../../_components/modal';
 import { CollapsibleSection, InfoRow, SectionCard } from '../../_components/section';
 import { SessionOption } from '../../_components/session-option';
 import { CONCERT_STATUS_META } from '../../_components/status-meta';
-import { useOrderExpiry } from '../../_components/use-app-clock';
+import { useApiResource } from '../../_components/use-api-resource';
+import { api } from '@/lib/api-client';
 import { formatKrw } from '@/lib/format';
-import { selectCurrentVerification, useTicketStore } from '@/lib/store';
-import { useHydrated } from '@/lib/use-hydrated';
 
 /** A2 공연 상세 — 회차 선택 후 예매 진입 */
 export default function ConcertDetailPage() {
   const params = useParams();
   const concertId = typeof params.concertId === 'string' ? params.concertId : '';
   const router = useRouter();
-  const isHydrated = useHydrated();
-  useOrderExpiry();
+  const { me } = useMemberSession();
 
-  const concerts = useTicketStore((state) => state.concerts);
-  const allSessions = useTicketStore((state) => state.sessions);
-  const verification = useTicketStore(selectCurrentVerification);
+  const loadConcert = useCallback(() => api.concert(concertId), [concertId]);
+  const { state, reload } = useApiResource(loadConcert);
 
   const [selectedSessionId, setSelectedSessionId] = useState('');
   const [isVerifyGuideOpen, setVerifyGuideOpen] = useState(false);
 
-  const concert = concerts.find((item) => item.id === concertId);
-  const sessions = useMemo(
-    () => allSessions.filter((session) => session.concertId === concertId),
-    [allSessions, concertId],
-  );
-
-  if (!isHydrated) {
+  if (state.status === 'LOADING') {
     return (
       <main>
         <AppHeader title="공연 상세" backHref="/app" />
@@ -48,22 +40,25 @@ export default function ConcertDetailPage() {
     );
   }
 
-  if (!concert) {
+  if (state.status === 'ERROR') {
     return (
       <main>
         <AppHeader title="공연 상세" backHref="/app" />
-        <NotFoundNotice message="공연 정보를 찾을 수 없습니다." backHref="/app" />
+        <div className="flex flex-col gap-4 px-4 py-5">
+          <ErrorState message={state.reason} onRetry={() => void reload()} />
+        </div>
       </main>
     );
   }
 
+  const { concert, sessions } = state.data;
   const statusMeta = CONCERT_STATUS_META[concert.status];
   const isOnSale = concert.status === 'ON_SALE';
   const canSubmit = isOnSale && selectedSessionId !== '';
 
   const handleReserve = () => {
     if (!canSubmit) return;
-    if (!verification) {
+    if (!me.verified) {
       setVerifyGuideOpen(true);
       return;
     }

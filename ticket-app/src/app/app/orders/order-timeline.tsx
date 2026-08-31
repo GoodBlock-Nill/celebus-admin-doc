@@ -1,7 +1,7 @@
 import { CheckIcon } from '../_components/icons';
 import { MUTED, NUMERIC } from '../_components/ui';
+import type { OrderDetailView, OrderStatus } from '@/lib/api-types';
 import { formatDateTime } from '@/lib/format';
-import type { Order } from '@/lib/types';
 
 type StepState = 'DONE' | 'CURRENT' | 'PENDING' | 'CANCELED';
 
@@ -12,16 +12,17 @@ interface TimelineStep {
   at?: string;
 }
 
-const DEPOSIT_DONE_STATUSES = new Set<Order['status']>([
+const DEPOSIT_DONE_STATUSES = new Set<OrderStatus>([
   'DEPOSIT_CONFIRMED',
   'PAID',
   'CANCEL_REQUESTED',
   'REFUNDED',
 ]);
-const CANCELED_STATUSES = new Set<Order['status']>(['EXPIRED', 'REFUNDED']);
+const CANCELED_STATUSES = new Set<OrderStatus>(['EXPIRED', 'REFUNDED']);
 
 /** 주문 상태로 3단계 진행 상태를 계산한다. */
-function buildSteps(order: Order, ticketIssuedAt?: string): TimelineStep[] {
+function buildSteps(order: OrderDetailView): TimelineStep[] {
+  const ticketIssuedAt = order.ticketIssuedAt ?? undefined;
   const isDepositDone = DEPOSIT_DONE_STATUSES.has(order.status);
   const isCanceled = CANCELED_STATUSES.has(order.status);
 
@@ -75,8 +76,8 @@ const DOT_CLASS: Record<StepState, string> = {
 };
 
 /** 주문 진행 타임라인 */
-export function OrderTimeline({ order, ticketIssuedAt }: { order: Order; ticketIssuedAt?: string }) {
-  const steps = buildSteps(order, ticketIssuedAt);
+export function OrderTimeline({ order }: { order: OrderDetailView }) {
+  const steps = buildSteps(order);
 
   return (
     <ol className="flex flex-col">

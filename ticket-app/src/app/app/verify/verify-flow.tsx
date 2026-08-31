@@ -3,8 +3,9 @@
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
-import { DemoTip } from '../_components/feedback';
-import type { AuthProviderKey } from './verify-providers';
+import { ErrorBanner } from '../_components/feedback';
+import { useMemberSession } from '../_components/member-session';
+import { providerLabel, type AuthProviderKey } from './verify-providers';
 import {
   VerifyBlockedStep,
   VerifyDoneStep,
@@ -12,13 +13,15 @@ import {
   VerifyRequestStep,
   type IdentityForm,
 } from './verify-steps';
-import { useTicketStore } from '@/lib/store';
+import { api } from '@/lib/api-client';
 
 type VerifyStep = 'FORM' | 'REQUESTED' | 'BLOCKED' | 'DONE';
 
 const NAME_PATTERN = /^[가-힣a-zA-Z]{2,20}$/;
 const BIRTH_PATTERN = /^\d{8}$/;
 const PHONE_PATTERN = /^01\d{8,9}$/;
+
+const DUPLICATE_STATUS = 409;
 
 const EMPTY_FORM: IdentityForm = { realName: '', birth: '', phone: '' };
 
@@ -40,13 +43,14 @@ function digitsOnly(value: string): string {
 export function VerifyFlow() {
   const searchParams = useSearchParams();
   const nextHref = searchParams.get('next') ?? '/app';
-
-  const verifyIdentity = useTicketStore((state) => state.verifyIdentity);
+  const { refreshMe } = useMemberSession();
 
   const [step, setStep] = useState<VerifyStep>('FORM');
   const [form, setForm] = useState<IdentityForm>(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<Record<keyof IdentityForm, string>>>({});
   const [provider, setProvider] = useState<AuthProviderKey | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setSubmitting] = useState(false);
 
   const handleChange = (field: keyof IdentityForm, value: string) => {
     const nextValue = field === 'realName' ? value : digitsOnly(value);
@@ -58,23 +62,40 @@ export function VerifyFlow() {
     const nextErrors = validateForm(form);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0 || !provider) return;
+    setErrorMessage('');
     setStep('REQUESTED');
   };
 
-  const handleConfirmAuth = () => {
-    const result = verifyIdentity({
+  const handleConfirmAuth = async () => {
+    if (!provider || isSubmitting) return;
+
+    setSubmitting(true);
+    const result = await api.verify({
       realName: form.realName.trim(),
       birth: form.birth,
       phone: form.phone,
+      provider: providerLabel(provider),
     });
+    setSubmitting(false);
 
-    setStep(result.ok ? 'DONE' : 'BLOCKED');
+    if (result.ok) {
+      await refreshMe();
+      setStep('DONE');
+      return;
+    }
+
+    if (result.status === DUPLICATE_STATUS) {
+      setStep('BLOCKED');
+      return;
+    }
+    setErrorMessage(result.reason);
   };
 
   const handleRetry = () => {
     setForm(EMPTY_FORM);
     setErrors({});
     setProvider(undefined);
+    setErrorMessage('');
     setStep('FORM');
   };
 
@@ -96,7 +117,8 @@ export function VerifyFlow() {
           provider={provider}
           realName={form.realName.trim()}
           phone={form.phone}
-          onSubmit={handleConfirmAuth}
+          busy={isSubmitting}
+          onSubmit={() => void handleConfirmAuth()}
           onBack={() => setStep('FORM')}
         />
       ) : null}
@@ -107,10 +129,7 @@ export function VerifyFlow() {
         <VerifyDoneStep realName={form.realName.trim()} nextHref={nextHref} />
       ) : null}
 
-      <DemoTip>
-        데모: 간편인증은 모의 동작이며 [인증 완료 확인]을 누르면 바로 통과합니다. 허브에서 사용자를 전환해 같은
-        정보로 인증하면 중복 차단을 확인할 수 있습니다.
-      </DemoTip>
+      {errorMessage ? <ErrorBanner message={errorMessage} /> : null}
     </div>
   );
 }

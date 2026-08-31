@@ -128,12 +128,13 @@ interface RequestStepProps {
   provider: AuthProviderKey;
   realName: string;
   phone: string;
+  busy: boolean;
   onSubmit: () => void;
   onBack: () => void;
 }
 
 /** 스텝 2 — 간편인증 앱 요청 후 완료 확인 */
-export function VerifyRequestStep({ provider, realName, phone, onSubmit, onBack }: RequestStepProps) {
+export function VerifyRequestStep({ provider, realName, phone, busy, onSubmit, onBack }: RequestStepProps) {
   const label = providerLabel(provider);
 
   return (
@@ -157,10 +158,10 @@ export function VerifyRequestStep({ provider, realName, phone, onSubmit, onBack 
         </p>
       </SectionCard>
 
-      <button type="button" onClick={onSubmit} className={PRIMARY_BUTTON}>
-        인증 완료 확인
+      <button type="button" disabled={busy} onClick={onSubmit} className={PRIMARY_BUTTON}>
+        {busy ? '확인 중…' : '인증 완료 확인'}
       </button>
-      <button type="button" onClick={onBack} className={GHOST_BUTTON}>
+      <button type="button" disabled={busy} onClick={onBack} className={GHOST_BUTTON}>
         다른 수단으로 인증
       </button>
     </div>

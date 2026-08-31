@@ -8,10 +8,9 @@ import { CopyIcon } from './icons';
 import { InfoRow, NoticeBox } from './section';
 import { CARD, MUTED, NUMERIC } from './ui';
 import { useAppClock } from './use-app-clock';
+import type { OrderDetailView } from '@/lib/api-types';
+import { ORDER_NO_TAIL_LENGTH } from '@/lib/constants';
 import { formatKrw } from '@/lib/format';
-import { orderNoTail } from '@/lib/store-helpers';
-import { selectCurrentVerification, useTicketStore } from '@/lib/store';
-import type { Order } from '@/lib/types';
 
 const COPY_FEEDBACK_MS = 1500;
 
@@ -22,18 +21,16 @@ const DEPOSIT_NOTICES = [
 ];
 
 /** 입금 계좌·입금자명 규칙·마감 카운트다운을 함께 보여주는 안내 카드 */
-export function DepositGuideCard({ order }: { order: Order }) {
-  const settings = useTicketStore((state) => state.settings);
-  const verification = useTicketStore(selectCurrentVerification);
+export function DepositGuideCard({ order }: { order: OrderDetailView }) {
   const now = useAppClock();
   const [isCopied, setIsCopied] = useState(false);
 
-  const realName = verification?.realName ?? '본인확인 실명';
-  const fallbackName = `${realName}${orderNoTail(order.orderNo)}`;
+  const realName = order.depositorName || '본인확인 실명';
+  const fallbackName = `${realName}${order.orderNo.slice(-ORDER_NO_TAIL_LENGTH)}`;
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(settings.bankAccount);
+      await navigator.clipboard.writeText(order.bank.account);
       setIsCopied(true);
       window.setTimeout(() => setIsCopied(false), COPY_FEEDBACK_MS);
     } catch {
@@ -46,9 +43,9 @@ export function DepositGuideCard({ order }: { order: Order }) {
       <section className={`${CARD} p-4`}>
         <p className={`text-[12px] ${MUTED}`}>입금 계좌</p>
         <p className="mt-1 text-[15px] font-bold">
-          {settings.bankName} <span className={NUMERIC}>{settings.bankAccount}</span>
+          {order.bank.name} <span className={NUMERIC}>{order.bank.account}</span>
         </p>
-        <p className={`mt-0.5 text-[12.5px] ${MUTED}`}>예금주 {settings.bankHolder}</p>
+        <p className={`mt-0.5 text-[12.5px] ${MUTED}`}>예금주 {order.bank.holder}</p>
 
         <button
           type="button"

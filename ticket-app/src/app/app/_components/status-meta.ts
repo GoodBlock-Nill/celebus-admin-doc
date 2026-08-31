@@ -1,5 +1,5 @@
 import type { BadgeTone } from './badge';
-import type { Concert, OrderStatus, TicketStatus } from '@/lib/types';
+import type { ConcertStatus, OrderStatus, TicketStatus } from '@/lib/api-types';
 
 export interface StatusMeta {
   label: string;
@@ -7,7 +7,7 @@ export interface StatusMeta {
 }
 
 /** 공연 판매 상태 */
-export const CONCERT_STATUS_META: Record<Concert['status'], StatusMeta> = {
+export const CONCERT_STATUS_META: Record<ConcertStatus, StatusMeta> = {
   ON_SALE: { label: '판매중', tone: 'accent' },
   UPCOMING: { label: '판매예정', tone: 'warning' },
   CLOSED: { label: '판매종료', tone: 'muted' },

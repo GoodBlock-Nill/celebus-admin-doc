@@ -5,11 +5,9 @@ import { useState } from 'react';
 
 import { CheckIcon, ShieldIcon } from '../_components/icons';
 import { NoticeBox, SectionCard } from '../_components/section';
-import { PageSkeleton } from '../_components/feedback';
 import { GHOST_BUTTON, MUTED, NUMERIC } from '../_components/ui';
 import { ReportForm, type ReportSubmitInput } from './report-form';
-import { useTicketStore } from '@/lib/store';
-import { useHydrated } from '@/lib/use-hydrated';
+import { api } from '@/lib/api-client';
 
 /** 접수 번호로 노출할 식별자 뒷자리 길이 */
 const RECEIPT_NO_LENGTH = 8;
@@ -18,20 +16,28 @@ const EXTERNAL_REPORT_URL = 'https://www.culture.go.kr/singo';
 
 /** A7 암표·부정판매 신고 */
 export default function ReportPage() {
-  const isHydrated = useHydrated();
-  const submitReport = useTicketStore((state) => state.submitReport);
-
   const [receiptNo, setReceiptNo] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (input: ReportSubmitInput) => {
-    const result = submitReport({
+  const handleSubmit = async (input: ReportSubmitInput) => {
+    if (isSubmitting) return;
+
+    setSubmitting(true);
+    setErrorMessage('');
+    const result = await api.submitReport({
       targetType: input.targetType,
       reason: input.reason,
       detail: input.detail,
       evidenceUrl: input.evidenceUrl === '' ? undefined : input.evidenceUrl,
-      source: '앱 신고',
     });
-    setReceiptNo(result.report.id.slice(-RECEIPT_NO_LENGTH).toUpperCase());
+    setSubmitting(false);
+
+    if (!result.ok) {
+      setErrorMessage(result.reason);
+      return;
+    }
+    setReceiptNo(result.data.reportId.replace(/-/g, '').slice(-RECEIPT_NO_LENGTH).toUpperCase());
   };
 
   return (
@@ -63,9 +69,7 @@ export default function ReportPage() {
           </a>
         </NoticeBox>
 
-        {!isHydrated ? (
-          <PageSkeleton rows={2} />
-        ) : receiptNo ? (
+        {receiptNo ? (
           <>
             <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#3DC98A55] bg-[#3DC98A14] px-5 py-9 text-center">
               <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#3DC98A] text-[#0F1014]">
@@ -92,7 +96,11 @@ export default function ReportPage() {
             </Link>
           </>
         ) : (
-          <ReportForm onSubmit={handleSubmit} />
+          <ReportForm
+            busy={isSubmitting}
+            serverError={errorMessage}
+            onSubmit={(input) => void handleSubmit(input)}
+          />
         )}
       </div>
     </main>

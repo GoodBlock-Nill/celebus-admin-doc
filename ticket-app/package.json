@@ -8,9 +8,12 @@
     "start": "next start -p 3700"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.4",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "server-only": "^0.0.1",
+    "zod": "^3.25.76",
     "zustand": "^5.0.11"
   },
   "devDependencies": {

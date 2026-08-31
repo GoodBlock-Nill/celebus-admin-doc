@@ -2,21 +2,20 @@
 
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { AppHeader } from '../../_components/app-header';
 import { Badge } from '../../_components/badge';
 import { DepositGuideCard } from '../../_components/deposit-guide';
-import { ErrorBanner, NotFoundNotice, PageSkeleton } from '../../_components/feedback';
+import { ErrorBanner, ErrorState, PageSkeleton } from '../../_components/feedback';
 import { ConfirmModal } from '../../_components/modal';
 import { InfoRow, NoticeBox, SectionCard } from '../../_components/section';
 import { ORDER_STATUS_META, canRequestCancel, needsDepositGuide } from '../../_components/status-meta';
 import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
-import { useOrderExpiry } from '../../_components/use-app-clock';
+import { useApiResource } from '../../_components/use-api-resource';
 import { OrderTimeline } from '../order-timeline';
-import { formatDateTime, formatKrw, maskPhone } from '@/lib/format';
-import { useTicketStore } from '@/lib/store';
-import { useHydrated } from '@/lib/use-hydrated';
+import { api } from '@/lib/api-client';
+import { formatDateTime, formatKrw } from '@/lib/format';
 
 type OpenModal = 'NONE' | 'CANCEL_AWAITING' | 'REQUEST_CANCEL';
 
@@ -24,22 +23,15 @@ type OpenModal = 'NONE' | 'CANCEL_AWAITING' | 'REQUEST_CANCEL';
 export default function OrderDetailPage() {
   const params = useParams();
   const orderId = typeof params.orderId === 'string' ? params.orderId : '';
-  const isHydrated = useHydrated();
-  useOrderExpiry();
 
-  const orders = useTicketStore((state) => state.orders);
-  const concerts = useTicketStore((state) => state.concerts);
-  const sessions = useTicketStore((state) => state.sessions);
-  const tickets = useTicketStore((state) => state.tickets);
-  const cancelAwaitingOrder = useTicketStore((state) => state.cancelAwaitingOrder);
-  const requestCancel = useTicketStore((state) => state.requestCancel);
+  const loadOrder = useCallback(() => api.order(orderId), [orderId]);
+  const { state, reload } = useApiResource(loadOrder);
 
   const [openModal, setOpenModal] = useState<OpenModal>('NONE');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setSubmitting] = useState(false);
 
-  const order = orders.find((item) => item.id === orderId);
-
-  if (!isHydrated) {
+  if (state.status === 'LOADING') {
     return (
       <main>
         <AppHeader title="주문 상세" backHref="/app/orders" />
@@ -48,24 +40,32 @@ export default function OrderDetailPage() {
     );
   }
 
-  if (!order) {
+  if (state.status === 'ERROR') {
     return (
       <main>
         <AppHeader title="주문 상세" backHref="/app/orders" />
-        <NotFoundNotice message="주문 정보를 찾을 수 없습니다." backHref="/app/orders" />
+        <div className="flex flex-col gap-4 px-4 py-5">
+          <ErrorState message={state.reason} onRetry={() => void reload()} />
+          <Link href="/app/orders" className={GHOST_BUTTON}>
+            목록으로 돌아가기
+          </Link>
+        </div>
       </main>
     );
   }
 
-  const concert = concerts.find((item) => item.id === order.concertId);
-  const session = sessions.find((item) => item.id === order.sessionId);
-  const orderTickets = tickets.filter((ticket) => ticket.orderId === order.id);
+  const order = state.data.order;
   const statusMeta = ORDER_STATUS_META[order.status];
 
-  const runAction = (action: () => { ok: true } | { ok: false; reason: string }) => {
-    const result = action();
-    setErrorMessage(result.ok ? '' : result.reason);
+  const handleCancel = async () => {
+    if (isSubmitting) return;
+
+    setSubmitting(true);
+    const result = await api.cancelOrder(order.id);
+    setSubmitting(false);
     setOpenModal('NONE');
+    setErrorMessage(result.ok ? '' : result.reason);
+    if (result.ok) await reload();
   };
 
   return (
@@ -79,9 +79,12 @@ export default function OrderDetailPage() {
       <div className="flex flex-col gap-3.5 px-4 py-5">
         <SectionCard title="주문 정보">
           <InfoRow label="주문번호" value={order.orderNo} />
-          <InfoRow label="공연" value={concert?.title ?? '-'} />
-          <InfoRow label="회차" value={session?.name ?? '-'} />
-          <InfoRow label="관람 일시" value={session ? formatDateTime(session.startAt) : '-'} />
+          <InfoRow label="공연" value={order.concertTitle} />
+          <InfoRow label="회차" value={order.sessionName} />
+          <InfoRow
+            label="관람 일시"
+            value={order.sessionStartAt ? formatDateTime(order.sessionStartAt) : '-'}
+          />
           <InfoRow label="매수" value={`${order.qty}매`} />
           <InfoRow label="결제 금액" value={formatKrw(order.amountKrw)} emphasis />
           <InfoRow label="신청 일시" value={formatDateTime(order.createdAt)} />
@@ -89,14 +92,14 @@ export default function OrderDetailPage() {
             label="현금영수증"
             value={
               order.wantsCashReceipt
-                ? `신청 (${order.cashReceiptPhone ? maskPhone(order.cashReceiptPhone) : '번호 미입력'})`
+                ? `신청 (${order.cashReceiptPhoneMasked ?? '번호 미입력'})`
                 : '미신청'
             }
           />
         </SectionCard>
 
         <SectionCard title="진행 상태">
-          <OrderTimeline order={order} ticketIssuedAt={orderTickets[0]?.issuedAt} />
+          <OrderTimeline order={order} />
         </SectionCard>
 
         {order.status === 'ON_HOLD' ? (
@@ -174,7 +177,7 @@ export default function OrderDetailPage() {
         title="주문을 취소할까요?"
         description="입금 전 주문은 수수료 없이 즉시 취소되며, 확보된 좌석은 바로 반환됩니다."
         confirmLabel="주문 취소하기"
-        onConfirm={() => runAction(() => cancelAwaitingOrder(order.id))}
+        onConfirm={() => void handleCancel()}
         onClose={() => setOpenModal('NONE')}
       />
 
@@ -187,7 +190,7 @@ export default function OrderDetailPage() {
             : '요청 후 24시간 이내에 처리됩니다. 환불이 승인되면 발급된 티켓은 회수됩니다.'
         }
         confirmLabel="취소·환불 요청하기"
-        onConfirm={() => runAction(() => requestCancel(order.id))}
+        onConfirm={() => void handleCancel()}
         onClose={() => setOpenModal('NONE')}
       />
     </main>

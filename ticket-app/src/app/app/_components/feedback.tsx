@@ -24,12 +24,18 @@ export function EmptyState({ title, description, actionLabel, actionHref }: Empt
   );
 }
 
-/** 데모 진행 안내 문구 */
-export function DemoTip({ children }: { children: React.ReactNode }) {
+/** 조회 실패 안내 — 다시 시도 버튼 포함 */
+export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <p className="rounded-xl border border-dashed border-[#2A2C34] px-3.5 py-3 text-[11.5px] leading-relaxed text-[#7B7C87]">
-      {children}
-    </p>
+    <div className={`${CARD} flex flex-col items-center gap-2 px-5 py-12 text-center`}>
+      <p className="text-[14px] font-semibold text-[#F06548]">불러오지 못했습니다</p>
+      <p className={`text-[12.5px] leading-relaxed ${MUTED}`}>{message}</p>
+      {onRetry ? (
+        <button type="button" onClick={onRetry} className={`${GHOST_BUTTON} mt-3 max-w-[220px]`}>
+          다시 시도
+        </button>
+      ) : null}
+    </div>
   );
 }
 

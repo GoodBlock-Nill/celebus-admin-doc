@@ -5,18 +5,13 @@ import { LockIcon } from '../_components/icons';
 import { MockQr } from '../_components/mock-qr';
 import { MUTED, NUMERIC } from '../_components/ui';
 import { useAppClock } from '../_components/use-app-clock';
+import type { TicketDetailView } from '@/lib/api-types';
 import { MS_PER_HOUR, MS_PER_MINUTE } from '@/lib/constants';
 import { formatDateTime } from '@/lib/format';
-import type { ConcertSession, Ticket } from '@/lib/types';
 
 /** 공연 시작 이후 입장 코드가 유지되는 시간 */
 const ENTRY_WINDOW_AFTER_HOURS = 3;
 const QR_SIZE = 196;
-
-interface TicketQrPanelProps {
-  ticket: Ticket;
-  session: ConcertSession;
-}
 
 /** 잠금 상태 안내 박스 */
 function LockedPanel({ title, children }: { title: string; children?: React.ReactNode }) {
@@ -31,12 +26,12 @@ function LockedPanel({ title, children }: { title: string; children?: React.Reac
   );
 }
 
-/** 티켓 상세 하단 — 입장 코드(모의 QR) 영역 */
-export function TicketQrPanel({ ticket, session }: TicketQrPanelProps) {
+/** 티켓 상세 하단 — 입장 코드 영역 (활성화 기준은 서버가 내려준 공연 시작 시각) */
+export function TicketQrPanel({ ticket }: { ticket: TicketDetailView }) {
   const now = useAppClock();
 
-  const startMs = new Date(session.startAt).getTime();
-  const openAt = new Date(startMs - session.entryOpenMinutesBefore * MS_PER_MINUTE).toISOString();
+  const startMs = new Date(ticket.sessionStartAt).getTime();
+  const openAt = new Date(startMs - ticket.entryOpenMinutesBefore * MS_PER_MINUTE).toISOString();
   const closeMs = startMs + ENTRY_WINDOW_AFTER_HOURS * MS_PER_HOUR;
   const nowMs = now.getTime();
 
@@ -78,7 +73,7 @@ export function TicketQrPanel({ ticket, session }: TicketQrPanelProps) {
 
   if (nowMs < new Date(openAt).getTime()) {
     return (
-      <LockedPanel title={`입장 ${session.entryOpenMinutesBefore}분 전에 활성화됩니다`}>
+      <LockedPanel title={`입장 ${ticket.entryOpenMinutesBefore}분 전에 활성화됩니다`}>
         <p className={`text-[12.5px] ${MUTED}`}>
           활성화까지 <Countdown targetAt={openAt} className="font-bold text-[#F5B341]" />
         </p>

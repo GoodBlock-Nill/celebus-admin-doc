@@ -6,26 +6,32 @@ import { ErrorBanner } from '../_components/feedback';
 import { Field, TextInput } from '../_components/form-controls';
 import { SectionCard } from '../_components/section';
 import { INPUT, MUTED, PRIMARY_BUTTON } from '../_components/ui';
-import type { TicketReport } from '@/lib/types';
+import type { ReportTargetType } from '@/lib/api-types';
 
 /** 상세 내용 최소 입력 길이 */
 const MIN_DETAIL_LENGTH = 10;
 const MAX_DETAIL_LENGTH = 500;
 
-const TARGET_TYPES: TicketReport['targetType'][] = ['게시물', '계정', '외부 링크'];
+const TARGET_TYPES: ReportTargetType[] = ['게시물', '계정', '외부 링크'];
 
 const REASONS = ['암표 판매', '매크로 의심', '양도 권유', '기타'] as const;
 
 export interface ReportSubmitInput {
-  targetType: TicketReport['targetType'];
+  targetType: ReportTargetType;
   reason: string;
   detail: string;
   evidenceUrl: string;
 }
 
+interface ReportFormProps {
+  busy: boolean;
+  serverError: string;
+  onSubmit: (input: ReportSubmitInput) => void;
+}
+
 /** A7 신고 접수 폼 */
-export function ReportForm({ onSubmit }: { onSubmit: (input: ReportSubmitInput) => void }) {
-  const [targetType, setTargetType] = useState<TicketReport['targetType']>('게시물');
+export function ReportForm({ busy, serverError, onSubmit }: ReportFormProps) {
+  const [targetType, setTargetType] = useState<ReportTargetType>('게시물');
   const [reason, setReason] = useState<string>(REASONS[0]);
   const [detail, setDetail] = useState('');
   const [evidenceUrl, setEvidenceUrl] = useState('');
@@ -100,10 +106,10 @@ export function ReportForm({ onSubmit }: { onSubmit: (input: ReportSubmitInput) 
         </div>
       </SectionCard>
 
-      {errorMessage ? <ErrorBanner message={errorMessage} /> : null}
+      {errorMessage || serverError ? <ErrorBanner message={errorMessage || serverError} /> : null}
 
-      <button type="button" onClick={handleSubmit} className={PRIMARY_BUTTON}>
-        신고 접수하기
+      <button type="button" disabled={busy} onClick={handleSubmit} className={PRIMARY_BUTTON}>
+        {busy ? '접수 중…' : '신고 접수하기'}
       </button>
 
       <p className={`px-1 text-[11.5px] leading-relaxed ${MUTED}`}>

@@ -4,11 +4,11 @@ import { Badge } from './badge';
 import { ChevronRightIcon } from './icons';
 import { CONCERT_STATUS_META } from './status-meta';
 import { CARD, MUTED, NUMERIC } from './ui';
+import type { ConcertView, SessionView } from '@/lib/api-types';
 import { formatDateWithWeekday, formatKrw } from '@/lib/format';
-import type { Concert, ConcertSession } from '@/lib/types';
 
 /** 회차 목록에서 공연 기간 문구를 만든다. */
-export function formatSessionPeriod(sessions: ConcertSession[]): string {
+export function formatSessionPeriod(sessions: SessionView[]): string {
   if (sessions.length === 0) return '일정 준비중';
 
   const sorted = sessions
@@ -22,8 +22,8 @@ export function formatSessionPeriod(sessions: ConcertSession[]): string {
 }
 
 interface ConcertCardProps {
-  concert: Concert;
-  sessions: ConcertSession[];
+  concert: ConcertView;
+  sessions: SessionView[];
 }
 
 /** 공연 목록 카드 */

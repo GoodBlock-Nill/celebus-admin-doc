@@ -2,25 +2,18 @@
 
 import { Badge } from './badge';
 import { MUTED, NUMERIC } from './ui';
+import type { SessionView } from '@/lib/api-types';
 import { formatDateTime } from '@/lib/format';
-import { poolRemaining } from '@/lib/store-helpers';
-import type { ConcertSession } from '@/lib/types';
-
-/** 유상 판매분 잔여 수량 */
-export function paidRemaining(session: ConcertSession): number {
-  return poolRemaining(session.pools.PAID_SALE);
-}
 
 interface SessionOptionProps {
-  session: ConcertSession;
+  session: SessionView;
   selected: boolean;
   onSelect: (sessionId: string) => void;
 }
 
 /** 회차 선택 카드 — 잔여 수량 0이면 매진 처리 */
 export function SessionOption({ session, selected, onSelect }: SessionOptionProps) {
-  const remaining = paidRemaining(session);
-  const isSoldOut = remaining <= 0;
+  const isSoldOut = session.remaining <= 0;
 
   return (
     <button
@@ -48,7 +41,7 @@ export function SessionOption({ session, selected, onSelect }: SessionOptionProp
       ) : (
         <span className="shrink-0 text-right">
           <span className={`block text-[11px] ${MUTED}`}>잔여</span>
-          <span className={`block text-[15px] font-bold ${NUMERIC}`}>{remaining}석</span>
+          <span className={`block text-[15px] font-bold ${NUMERIC}`}>{session.remaining}석</span>
         </span>
       )}
     </button>
