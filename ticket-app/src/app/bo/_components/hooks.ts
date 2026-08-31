@@ -50,12 +50,14 @@ export function useQueueCounts(): QueueCounts {
 
   return useMemo(
     () => ({
-      depositPending: deposits.filter(
-        (deposit) =>
-          deposit.status === 'AUTO_MATCHED' ||
-          deposit.status === 'UNMATCHED' ||
-          deposit.status === 'HELD',
-      ).length,
+      // 입금 확인 대기 + 티켓 지급 대기를 함께 센다 (두 단계 모두 운영자 처리가 필요)
+      depositPending:
+        deposits.filter(
+          (deposit) =>
+            deposit.status === 'AUTO_MATCHED' ||
+            deposit.status === 'UNMATCHED' ||
+            deposit.status === 'HELD',
+        ).length + orders.filter((order) => order.status === 'DEPOSIT_CONFIRMED').length,
       refundPending: orders.filter((order) => order.status === 'CANCEL_REQUESTED').length,
       reportPending: reports.filter((report) => report.status === 'RECEIVED').length,
     }),

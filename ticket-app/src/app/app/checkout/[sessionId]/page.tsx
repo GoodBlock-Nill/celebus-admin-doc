@@ -67,7 +67,7 @@ export default function CheckoutPage() {
         <AppHeader title="예매 신청" backHref={backHref} />
         <div className="flex flex-col gap-4 px-4 py-5">
           <NoticeBox tone="accent">
-            티켓 예매에는 최초 1회 휴대폰 본인확인이 필요합니다. 본인확인을 마친 뒤 예매를 이어서 진행해
+            티켓 예매에는 최초 1회 간편인증 본인확인이 필요합니다. 본인확인을 마친 뒤 예매를 이어서 진행해
             주세요.
           </NoticeBox>
           <Link href={`/app/verify?next=/app/checkout/${session.id}`} className={PRIMARY_BUTTON}>

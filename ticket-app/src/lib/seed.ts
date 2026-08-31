@@ -14,7 +14,7 @@ export const DEMO_SESSION_1 = 'session-1';
 export const DEMO_SESSION_2 = 'session-2';
 
 const CONCERT_PRICE_KRW = 55_000;
-const MAX_PER_USER = 2;
+const MAX_PER_USER = 4;
 
 const POOL_ALLOCATION: Record<PoolType, number> = {
   PAID_SALE: 300,

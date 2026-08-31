@@ -27,7 +27,7 @@ interface ActiveAction {
   kind: ActionKind;
 }
 
-/** ② 보류 — 이름·금액이 어긋나 운영자 판단이 필요한 입금 */
+/** ③ 보류 — 이름·금액이 어긋나 운영자 판단이 필요한 입금 */
 export function HeldTab({ rows }: { rows: DepositRow[] }) {
   const orders = useTicketStore((state) => state.orders);
   const verifications = useTicketStore((state) => state.verifications);
@@ -79,7 +79,7 @@ export function HeldTab({ rows }: { rows: DepositRow[] }) {
                 const result = confirmDeposit(row.deposit.id);
                 toast.fromResult(
                   result,
-                  `주문 ${row.order?.orderNo ?? ''} 입금 확정 — 티켓 ${row.order?.qty ?? 0}매를 지급했습니다.`,
+                  `주문 ${row.order?.orderNo ?? ''} 입금 확정 — 지급 대기로 전환되었습니다.`,
                 );
               }}
             >

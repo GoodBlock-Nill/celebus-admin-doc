@@ -1,8 +1,22 @@
-import type { DemoUser, DepositRecord, IdentityVerification, Order } from '@/lib/types';
+import type {
+  ConcertSession,
+  DemoUser,
+  DepositRecord,
+  IdentityVerification,
+  Order,
+} from '@/lib/types';
 
 export interface DepositRow {
   deposit: DepositRecord;
   order?: Order;
+  realName?: string;
+  nickname?: string;
+}
+
+/** 티켓 지급 대기(입금 확인 완료) 주문 행 */
+export interface IssuePendingRow {
+  order: Order;
+  sessionName?: string;
   realName?: string;
   nickname?: string;
 }
@@ -25,6 +39,29 @@ export function buildDepositRows(
       const user = order ? users.find((item) => item.id === order.userId) : undefined;
       return { deposit, order, realName: verification?.realName, nickname: user?.nickname };
     });
+}
+
+/** 입금 확인이 끝나 티켓 지급만 남은 주문 행 (입금 확정이 오래된 건이 위) */
+export function buildIssuePendingRows(
+  orders: Order[],
+  sessions: ConcertSession[],
+  verifications: IdentityVerification[],
+  users: DemoUser[],
+): IssuePendingRow[] {
+  return orders
+    .filter((order) => order.status === 'DEPOSIT_CONFIRMED')
+    .slice()
+    .sort(
+      (a, b) =>
+        new Date(a.depositConfirmedAt ?? a.createdAt).getTime() -
+        new Date(b.depositConfirmedAt ?? b.createdAt).getTime(),
+    )
+    .map((order) => ({
+      order,
+      sessionName: sessions.find((session) => session.id === order.sessionId)?.name,
+      realName: verifications.find((item) => item.userId === order.userId)?.realName,
+      nickname: users.find((user) => user.id === order.userId)?.nickname,
+    }));
 }
 
 /** 수동 매칭 후보 — 입금대기·보류 상태의 주문 */

@@ -12,7 +12,7 @@ import { InfoNote } from '../../_components/ui';
 import { amountColumn, depositedAtColumn, depositorColumn, memoColumn } from './deposit-columns';
 import type { DepositRow } from './deposit-rows';
 
-/** ③ 환불 대상 — 마감 이후 입금 등 예매와 연결할 수 없는 입금 */
+/** ④ 환불 대상 — 마감 이후 입금 등 예매와 연결할 수 없는 입금 */
 export function RefundTargetTab({ rows }: { rows: DepositRow[] }) {
   const refundDeposit = useTicketStore((state) => state.refundDeposit);
   const toast = useToast();

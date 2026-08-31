@@ -43,7 +43,7 @@ export default function TicketsPage() {
         ) : myTickets.length === 0 ? (
           <EmptyState
             title="보유한 티켓이 없습니다"
-            description="입금이 확인되면 티켓이 자동으로 지급됩니다."
+            description="입금 확인 후 티켓 지급 처리가 끝나면 이곳에 티켓이 표시됩니다."
             actionLabel="주문 내역 보기"
             actionHref="/app/orders"
           />

@@ -125,7 +125,7 @@ export default function ConcertDetailPage() {
       <AppModal
         open={isVerifyGuideOpen}
         title="본인확인이 필요합니다"
-        description="티켓 예매에는 최초 1회 휴대폰 본인확인이 필요합니다. 실명 확인 후 예매를 이어서 진행할 수 있습니다."
+        description="티켓 예매에는 최초 1회 간편인증 본인확인이 필요합니다. 실명 확인 후 예매를 이어서 진행할 수 있습니다."
         onClose={() => setVerifyGuideOpen(false)}
         footer={
           <>

@@ -1,6 +1,8 @@
 import { ACTOR_OPERATOR } from './constants';
+import { issueTicketsForOrder } from './store-deposit-match';
 import {
   appendLog,
+  clampToZero,
   createId,
   generateTicketCode,
   makeLog,
@@ -11,7 +13,10 @@ import {
 import type { IssueCompTicketsInput, StoreGet, StoreSet, TicketStore } from './store-types';
 import type { CheckInResult, PoolType, Ticket } from './types';
 
-type TicketSlice = Pick<TicketStore, 'issueCompTickets' | 'reallocatePool' | 'checkInTicket'>;
+type TicketSlice = Pick<
+  TicketStore,
+  'issueCompTickets' | 'issueOrderTickets' | 'reallocatePool' | 'checkInTicket'
+>;
 
 const POOL_LABELS: Record<PoolType, string> = {
   PAID_SALE: '유상 판매',
@@ -81,6 +86,41 @@ export function createTicketSlice(set: StoreSet, get: StoreGet): TicketSlice {
             ACTOR_OPERATOR,
             '무상 티켓 발급',
             `${session.name} · ${poolLabel(input.poolType)} ${input.qty}매 → ${userLabel(current, input.userId)}${reason ? ` · 사유 ${reason}` : ''}`,
+            nowDate,
+          ),
+        ),
+      }));
+
+      return { ok: true as const };
+    },
+
+    issueOrderTickets: (orderId) => {
+      const state = get();
+      const order = state.orders.find((item) => item.id === orderId);
+      if (!order) return { ok: false as const, reason: '주문을 찾을 수 없습니다.' };
+      if (order.status !== 'DEPOSIT_CONFIRMED') {
+        return { ok: false as const, reason: '입금 확인이 끝난 지급 대기 주문만 티켓을 지급할 수 있습니다.' };
+      }
+
+      const nowDate = state.now();
+      const newTickets = issueTicketsForOrder(state, order, nowDate.toISOString());
+
+      set((current) => ({
+        orders: current.orders.map((item) =>
+          item.id === order.id ? { ...item, status: 'PAID' as const } : item,
+        ),
+        tickets: [...current.tickets, ...newTickets],
+        sessions: updatePool(current.sessions, order.sessionId, 'PAID_SALE', (stock) => ({
+          ...stock,
+          reserved: clampToZero(stock.reserved - order.qty),
+          issued: stock.issued + order.qty,
+        })),
+        logs: appendLog(
+          current.logs,
+          makeLog(
+            ACTOR_OPERATOR,
+            '티켓 지급',
+            `주문 ${order.orderNo} · 실명 티켓 ${order.qty}매 지급 완료`,
             nowDate,
           ),
         ),

@@ -5,8 +5,11 @@ import { useTicketStore } from '@/lib/store';
 import { useHydrated } from '@/lib/use-hydrated';
 
 const DEMO_STEPS = [
-  { title: '① 앱 — 본인확인·예매', detail: '공연 선택 → 휴대폰 본인확인(모의) → 매수 선택 → 입금 안내 확인' },
-  { title: '② BO — 입금 확인', detail: '주문·입금 확인 메뉴에서 시나리오 프리셋으로 모의 입금 → 자동 대조 → 원클릭 확인' },
+  { title: '① 앱 — 본인확인·예매', detail: '공연 선택 → 간편인증 본인확인(모의) → 매수 선택 → 입금 안내 확인' },
+  {
+    title: '② BO — 입금 확인·티켓 지급',
+    detail: '주문·입금 확인 메뉴에서 모의 입금 → 자동 대조 → 입금 확인(지급 대기) → 지급 대기 탭에서 티켓 지급',
+  },
   { title: '③ 앱 — 티켓 지급 확인', detail: '내 티켓에서 지급 완료 티켓과 QR 활성화 조건 확인 (시간 이동으로 입장 임박 재현)' },
   { title: '④ BO — 현장 체크인', detail: '발권·체크인에서 코드 스캔 모의 → 중복 스캔 경고 확인' },
   { title: '⑤ 신고 창구', detail: '앱에서 암표 신고 접수 → BO 신고 처리 큐의 10시간 SLA 타이머·조치 흐름 확인' },

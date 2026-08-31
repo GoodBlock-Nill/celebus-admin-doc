@@ -21,7 +21,15 @@ export interface IdentityVerification {
   di: string; verifiedAt: string;
 }
 
-export type OrderStatus = 'AWAITING_DEPOSIT' | 'ON_HOLD' | 'PAID' | 'EXPIRED' | 'CANCEL_REQUESTED' | 'REFUNDED';
+/** DEPOSIT_CONFIRMED = 입금 확인 완료·티켓 지급 대기 (운영자 지급 처리 전) */
+export type OrderStatus =
+  | 'AWAITING_DEPOSIT'
+  | 'ON_HOLD'
+  | 'DEPOSIT_CONFIRMED'
+  | 'PAID'
+  | 'EXPIRED'
+  | 'CANCEL_REQUESTED'
+  | 'REFUNDED';
 
 export interface Order {
   id: string; orderNo: string; // 예: T250901-0001
@@ -31,7 +39,7 @@ export interface Order {
   depositorNameRule: string; // "홍길동" 또는 "홍길동+주문번호 끝4자리"
   wantsCashReceipt: boolean; cashReceiptPhone?: string;
   holdReason?: string; cancelRequestedAt?: string; refundedAt?: string;
-  confirmedDepositId?: string;
+  confirmedDepositId?: string; depositConfirmedAt?: string;
 }
 
 export type TicketStatus = 'VALID' | 'USED' | 'REVOKED';

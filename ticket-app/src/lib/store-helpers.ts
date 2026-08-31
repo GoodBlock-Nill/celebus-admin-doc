@@ -90,7 +90,13 @@ export function userLabel(state: TicketDataState, userId: string): string {
 
 /** 1인 구매 한도 계산에 포함되는 수량 (유효 주문 + 무주문 발급 티켓) */
 export function countHeldQty(state: TicketDataState, userId: string, concertId: string): number {
-  const activeOrderStatuses = new Set(['AWAITING_DEPOSIT', 'ON_HOLD', 'PAID', 'CANCEL_REQUESTED']);
+  const activeOrderStatuses = new Set([
+    'AWAITING_DEPOSIT',
+    'ON_HOLD',
+    'DEPOSIT_CONFIRMED',
+    'PAID',
+    'CANCEL_REQUESTED',
+  ]);
   const orderQty = state.orders
     .filter(
       (order) =>

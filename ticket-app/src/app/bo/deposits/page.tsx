@@ -15,14 +15,15 @@ import {
   orderColumn,
   statusColumn,
 } from './_components/deposit-columns';
-import { buildDepositRows } from './_components/deposit-rows';
+import { buildDepositRows, buildIssuePendingRows } from './_components/deposit-rows';
 import type { DepositRow } from './_components/deposit-rows';
 import { HeldTab } from './_components/held-tab';
+import { IssuePendingTab } from './_components/issue-pending-tab';
 import { MockDepositPanel } from './_components/mock-deposit-panel';
 import { PendingTab } from './_components/pending-tab';
 import { RefundTargetTab } from './_components/refund-target-tab';
 
-type TabKey = 'pending' | 'held' | 'refund';
+type TabKey = 'pending' | 'issue' | 'held' | 'refund';
 
 const HISTORY_COLUMNS: Array<Column<DepositRow>> = [
   depositorColumn,
@@ -37,6 +38,7 @@ export default function DepositsPage() {
   const hydrated = useHydrated();
   const deposits = useTicketStore((state) => state.deposits);
   const orders = useTicketStore((state) => state.orders);
+  const sessions = useTicketStore((state) => state.sessions);
   const verifications = useTicketStore((state) => state.verifications);
   const users = useTicketStore((state) => state.users);
   const [activeTab, setActiveTab] = useState<TabKey>('pending');
@@ -44,6 +46,11 @@ export default function DepositsPage() {
   const rows = useMemo(
     () => buildDepositRows(deposits, orders, verifications, users),
     [deposits, orders, verifications, users],
+  );
+
+  const issuePendingRows = useMemo(
+    () => buildIssuePendingRows(orders, sessions, verifications, users),
+    [orders, sessions, verifications, users],
   );
 
   const grouped = useMemo(
@@ -62,7 +69,7 @@ export default function DepositsPage() {
     <>
       <PageHeader
         title="주문·입금 확인"
-        description="무통장입금 건을 자동 대조 결과별로 확인하고, 운영자 확인을 거쳐 티켓을 지급합니다."
+        description="무통장입금 건을 자동 대조 결과별로 확인하고, 입금 확인 → 티켓 지급 두 단계로 나눠 처리합니다."
       />
 
       {!hydrated ? (
@@ -77,14 +84,16 @@ export default function DepositsPage() {
             <Tabs
               items={[
                 { key: 'pending', label: '① 확인 대기', count: grouped.pending.length },
-                { key: 'held', label: '② 보류', count: grouped.held.length },
-                { key: 'refund', label: '③ 환불 대상', count: grouped.refund.length },
+                { key: 'issue', label: '② 지급 대기', count: issuePendingRows.length },
+                { key: 'held', label: '③ 보류', count: grouped.held.length },
+                { key: 'refund', label: '④ 환불 대상', count: grouped.refund.length },
               ]}
               activeKey={activeTab}
               onChange={(key) => setActiveTab(key as TabKey)}
             />
             <div className="pt-4">
               {activeTab === 'pending' ? <PendingTab rows={grouped.pending} /> : null}
+              {activeTab === 'issue' ? <IssuePendingTab rows={issuePendingRows} /> : null}
               {activeTab === 'held' ? <HeldTab rows={grouped.held} /> : null}
               {activeTab === 'refund' ? <RefundTargetTab rows={grouped.refund} /> : null}
             </div>

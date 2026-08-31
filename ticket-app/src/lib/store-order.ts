@@ -121,6 +121,7 @@ export function createOrderSlice(set: StoreSet, get: StoreGet): OrderSlice {
     expireOverdueOrders: () => {
       const state = get();
       const nowDate = state.now();
+      // 입금이 이미 확인된 주문(지급 대기)은 마감 시각이 지나도 자동 취소하지 않는다.
       const overdue = state.orders.filter(
         (order) =>
           (order.status === 'AWAITING_DEPOSIT' || order.status === 'ON_HOLD') &&
@@ -166,7 +167,10 @@ export function createOrderSlice(set: StoreSet, get: StoreGet): OrderSlice {
         return get().cancelAwaitingOrder(orderId);
       }
 
-      if (order.status !== 'PAID') return { ok: false as const, reason: '취소할 수 있는 상태가 아닙니다.' };
+      // 지급 대기 주문도 티켓 지급 완료 주문과 동일하게 취소 요청을 접수한다.
+      if (order.status !== 'PAID' && order.status !== 'DEPOSIT_CONFIRMED') {
+        return { ok: false as const, reason: '취소할 수 있는 상태가 아닙니다.' };
+      }
 
       const nowDate = state.now();
       set((current) => ({
@@ -226,15 +230,18 @@ export function createOrderSlice(set: StoreSet, get: StoreGet): OrderSlice {
       }
 
       const nowDate = state.now();
-      const targetTickets = state.tickets.filter(
-        (ticket) => ticket.orderId === orderId && ticket.status !== 'REVOKED',
-      );
+      const orderTickets = state.tickets.filter((ticket) => ticket.orderId === orderId);
+      const targetTickets = orderTickets.filter((ticket) => ticket.status !== 'REVOKED');
+      // 지급 대기 상태에서 취소된 주문은 발급 이력이 없어 회수할 티켓 대신 선점 좌석을 되돌린다.
+      const isIssued = orderTickets.length > 0;
 
       set((current) => {
         const refundLog: ActivityLog = makeLog(
           ACTOR_OPERATOR,
           '환불 승인',
-          `주문 ${order.orderNo} 환불 처리 · 티켓 ${targetTickets.length}매 무효화`,
+          isIssued
+            ? `주문 ${order.orderNo} 환불 처리 · 티켓 ${targetTickets.length}매 무효화`
+            : `주문 ${order.orderNo} 환불 처리 · 티켓 지급 전 취소로 선점 좌석 ${order.qty}매 반환`,
           nowDate,
         );
 
@@ -249,10 +256,12 @@ export function createOrderSlice(set: StoreSet, get: StoreGet): OrderSlice {
               ? { ...ticket, status: 'REVOKED' as const }
               : ticket,
           ),
-          sessions: updatePool(current.sessions, order.sessionId, 'PAID_SALE', (stock) => ({
-            ...stock,
-            issued: clampToZero(stock.issued - targetTickets.length),
-          })),
+          sessions: isIssued
+            ? updatePool(current.sessions, order.sessionId, 'PAID_SALE', (stock) => ({
+                ...stock,
+                issued: clampToZero(stock.issued - targetTickets.length),
+              }))
+            : releaseReserved(current.sessions, order.sessionId, order.qty),
           deposits: current.deposits.map((deposit) =>
             deposit.id === order.confirmedDepositId
               ? { ...deposit, status: 'REFUNDED' as const }

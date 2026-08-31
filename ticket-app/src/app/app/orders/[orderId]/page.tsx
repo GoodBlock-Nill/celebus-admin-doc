@@ -10,7 +10,7 @@ import { DepositGuideCard } from '../../_components/deposit-guide';
 import { ErrorBanner, NotFoundNotice, PageSkeleton } from '../../_components/feedback';
 import { ConfirmModal } from '../../_components/modal';
 import { InfoRow, NoticeBox, SectionCard } from '../../_components/section';
-import { ORDER_STATUS_META, needsDepositGuide } from '../../_components/status-meta';
+import { ORDER_STATUS_META, canRequestCancel, needsDepositGuide } from '../../_components/status-meta';
 import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
 import { useOrderExpiry } from '../../_components/use-app-clock';
 import { OrderTimeline } from '../order-timeline';
@@ -113,6 +113,13 @@ export default function OrderDetailPage() {
           </>
         ) : null}
 
+        {order.status === 'DEPOSIT_CONFIRMED' ? (
+          <NoticeBox tone="accent">
+            입금 확인 완료 — 티켓 지급 대기 중입니다. 운영자가 지급 처리를 마치면 내 티켓에서 실명 티켓을
+            확인할 수 있습니다.
+          </NoticeBox>
+        ) : null}
+
         {order.status === 'CANCEL_REQUESTED' ? (
           <NoticeBox tone="accent">
             취소 요청이 접수되었습니다. 요청 후 24시간 이내에 환불이 처리됩니다.
@@ -145,7 +152,7 @@ export default function OrderDetailPage() {
             </button>
           ) : null}
 
-          {order.status === 'PAID' ? (
+          {canRequestCancel(order.status) ? (
             <button
               type="button"
               onClick={() => setOpenModal('REQUEST_CANCEL')}
@@ -174,7 +181,11 @@ export default function OrderDetailPage() {
       <ConfirmModal
         open={openModal === 'REQUEST_CANCEL'}
         title="취소·환불을 요청할까요?"
-        description="요청 후 24시간 이내에 처리됩니다. 환불이 승인되면 발급된 티켓은 회수됩니다."
+        description={
+          order.status === 'DEPOSIT_CONFIRMED'
+            ? '요청 후 24시간 이내에 처리됩니다. 아직 티켓이 지급되지 않은 주문으로, 환불이 승인되면 확보된 좌석은 반환됩니다.'
+            : '요청 후 24시간 이내에 처리됩니다. 환불이 승인되면 발급된 티켓은 회수됩니다.'
+        }
         confirmLabel="취소·환불 요청하기"
         onConfirm={() => runAction(() => requestCancel(order.id))}
         onClose={() => setOpenModal('NONE')}

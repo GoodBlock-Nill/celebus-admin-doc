@@ -65,6 +65,7 @@ export default function BackofficeDashboardPage() {
     const autoMatched = deposits.filter((item) => item.status === 'AUTO_MATCHED').length;
     const held = deposits.filter((item) => item.status === 'HELD').length;
     const unmatched = deposits.filter((item) => item.status === 'UNMATCHED').length;
+    const issuePending = orders.filter((order) => order.status === 'DEPOSIT_CONFIRMED').length;
 
     const cancelRequested = orders.filter((order) => order.status === 'CANCEL_REQUESTED');
     const refundRemainList = cancelRequested.map((order) =>
@@ -86,15 +87,19 @@ export default function BackofficeDashboardPage() {
       .slice()
       .sort((a, b) => new Date(a.deadlineAt).getTime() - new Date(b.deadlineAt).getTime())[0];
 
+    // 입금이 확인된 시점부터 판매로 집계한다 (티켓 지급 처리 전 주문 포함)
     const todayPaid = orders.filter(
-      (order) => order.status === 'PAID' && isSameKstDay(order.createdAt, now),
+      (order) =>
+        (order.status === 'DEPOSIT_CONFIRMED' || order.status === 'PAID') &&
+        isSameKstDay(order.createdAt, now),
     );
 
     return {
-      depositPending: autoMatched + held + unmatched,
+      depositPending: autoMatched + held + unmatched + issuePending,
       autoMatched,
       held,
       unmatched,
+      issuePending,
       refundPending: cancelRequested.length,
       refundCaption,
       reportPending: pendingReports.length,
@@ -127,7 +132,7 @@ export default function BackofficeDashboardPage() {
               label="입금 확인 대기"
               value={String(summary.depositPending)}
               unit="건"
-              caption={`자동 대조 ${summary.autoMatched}건 · 보류 ${summary.held}건 · 미대조 ${summary.unmatched}건`}
+              caption={`자동 대조 ${summary.autoMatched}건 · 지급 대기 ${summary.issuePending}건 · 보류 ${summary.held}건 · 미대조 ${summary.unmatched}건`}
               tone={summary.depositPending > 0 ? 'warning' : 'neutral'}
             />
             <StatCard
@@ -161,9 +166,10 @@ export default function BackofficeDashboardPage() {
           <Card title="운영 처리 순서" description="1차 오픈은 무통장입금 수기 확인 흐름을 전제로 합니다.">
             <ol className="flex flex-col gap-2 text-[13px] leading-relaxed text-[#4A4E5A]">
               <li>① 회원 앱에서 예매가 접수되면 좌석이 선점되고 입금 마감 시각이 부여됩니다.</li>
-              <li>② 입금 건이 들어오면 금액·실명 기준으로 자동 대조되고, 운영자가 최종 확인해 티켓을 지급합니다.</li>
-              <li>③ 이름·금액이 어긋난 건은 보류 큐에서 수동 매칭하거나 반환 대상으로 지정합니다.</li>
-              <li>④ 취소 요청은 24시간 이내 환불 승인, 부정 거래 신고는 10시간 이내 조치가 기준입니다.</li>
+              <li>② 입금 건이 들어오면 금액·실명 기준으로 자동 대조되고, 운영자가 입금을 확인하면 지급 대기로 넘어갑니다.</li>
+              <li>③ 지급 대기 주문은 운영자가 티켓 지급 처리를 해야 실명 티켓이 발급됩니다.</li>
+              <li>④ 이름·금액이 어긋난 건은 보류 큐에서 수동 매칭하거나 반환 대상으로 지정합니다.</li>
+              <li>⑤ 취소 요청은 24시간 이내 환불 승인, 부정 거래 신고는 10시간 이내 조치가 기준입니다.</li>
             </ol>
           </Card>
         </>

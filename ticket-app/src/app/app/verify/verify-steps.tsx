@@ -6,6 +6,13 @@ import { CheckIcon, ShieldIcon } from '../_components/icons';
 import { Field, TextInput } from '../_components/form-controls';
 import { NoticeBox, SectionCard } from '../_components/section';
 import { GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../_components/ui';
+import {
+  ProviderMark,
+  ProviderSelector,
+  findProvider,
+  providerLabel,
+  type AuthProviderKey,
+} from './verify-providers';
 
 /** 본인확인 시 수집하는 항목 고지 */
 const COLLECTED_ITEMS = [
@@ -14,6 +21,8 @@ const COLLECTED_ITEMS = [
   '휴대폰 번호 — 예매 안내 및 본인 연락',
   '중복가입확인정보 — 1인 1계정 확인(중복 예매 차단)',
 ];
+
+const PROVIDER_NOTICE = '간편인증 사업자를 통해 본인확인이 진행됩니다.';
 
 export interface IdentityForm {
   realName: string;
@@ -24,18 +33,27 @@ export interface IdentityForm {
 interface FormStepProps {
   form: IdentityForm;
   errors: Partial<Record<keyof IdentityForm, string>>;
+  provider?: AuthProviderKey;
   onChange: (field: keyof IdentityForm, value: string) => void;
+  onSelectProvider: (key: AuthProviderKey) => void;
   onSubmit: () => void;
 }
 
-/** 스텝 1 — 안내 + 정보 입력 */
-export function VerifyFormStep({ form, errors, onChange, onSubmit }: FormStepProps) {
+/** 스텝 1 — 안내 + 정보 입력 + 인증 수단 선택 */
+export function VerifyFormStep({
+  form,
+  errors,
+  provider,
+  onChange,
+  onSelectProvider,
+  onSubmit,
+}: FormStepProps) {
   return (
     <div className="flex flex-col gap-3.5">
       <div className="flex items-start gap-3 rounded-2xl border border-[#2A2C34] bg-[#191A20] p-4">
         <ShieldIcon className="mt-0.5 h-6 w-6 shrink-0 text-[#F0426E]" />
         <div>
-          <p className="text-[14px] font-bold">티켓 예매에는 최초 1회 휴대폰 본인확인이 필요합니다.</p>
+          <p className="text-[14px] font-bold">티켓 예매에는 최초 1회 간편인증 본인확인이 필요합니다.</p>
           <p className={`mt-1.5 text-[12.5px] leading-relaxed ${MUTED}`}>
             암표·부정 예매를 막기 위해 실명으로 확인된 계정만 예매할 수 있습니다. 확인된 정보는 예매 확인과
             입금자명 대조에만 사용됩니다.
@@ -51,6 +69,10 @@ export function VerifyFormStep({ form, errors, onChange, onSubmit }: FormStepPro
               <span>{item}</span>
             </li>
           ))}
+          <li className="flex gap-1.5">
+            <span aria-hidden="true">·</span>
+            <span>{PROVIDER_NOTICE}</span>
+          </li>
         </ul>
       </SectionCard>
 
@@ -87,69 +109,58 @@ export function VerifyFormStep({ form, errors, onChange, onSubmit }: FormStepPro
         </div>
       </SectionCard>
 
-      <button type="button" onClick={onSubmit} className={PRIMARY_BUTTON}>
-        인증번호 받기
+      <SectionCard title="인증 수단 선택" description="사용 중인 간편인증 앱을 선택해 주세요.">
+        <ProviderSelector selected={provider} onSelect={onSelectProvider} />
+        {!provider ? (
+          <p className={`mt-2.5 text-[11.5px] ${MUTED}`}>인증 수단을 선택하면 요청할 수 있습니다.</p>
+        ) : null}
+      </SectionCard>
+
+      <button type="button" disabled={!provider} onClick={onSubmit} className={PRIMARY_BUTTON}>
+        간편인증 요청
       </button>
     </div>
   );
 }
 
-interface CodeStepProps {
+interface RequestStepProps {
+  provider: AuthProviderKey;
+  realName: string;
   phone: string;
-  code: string;
-  error?: string;
-  resendNotice: string;
-  onChangeCode: (value: string) => void;
-  onResend: () => void;
   onSubmit: () => void;
   onBack: () => void;
 }
 
-/** 스텝 2 — 인증번호 확인 */
-export function VerifyCodeStep({
-  phone,
-  code,
-  error,
-  resendNotice,
-  onChangeCode,
-  onResend,
-  onSubmit,
-  onBack,
-}: CodeStepProps) {
+/** 스텝 2 — 간편인증 앱 요청 후 완료 확인 */
+export function VerifyRequestStep({ provider, realName, phone, onSubmit, onBack }: RequestStepProps) {
+  const label = providerLabel(provider);
+
   return (
     <div className="flex flex-col gap-3.5">
       <NoticeBox tone="accent">
-        {phone} 번호로 인증번호를 보냈습니다. 3분 이내에 입력해 주세요.
+        {label} 앱으로 인증 요청을 보냈습니다. 인증을 완료한 뒤 아래 버튼을 눌러 주세요.
       </NoticeBox>
 
-      <SectionCard title="인증번호 입력">
-        <Field label="인증번호 6자리" error={error} hint="데모에서는 임의의 숫자 6자리를 입력하면 통과합니다.">
-          <TextInput
-            value={code}
-            onChange={onChangeCode}
-            placeholder="000000"
-            inputMode="numeric"
-            maxLength={6}
-            numeric
-          />
-        </Field>
-        <button
-          type="button"
-          onClick={onResend}
-          className="mt-3 min-h-[44px] w-full rounded-xl border border-[#2A2C34] text-[13px] font-semibold text-[#9A9AA4]"
-        >
-          인증번호 재전송
-        </button>
-        {resendNotice ? (
-          <p className="mt-2 text-center text-[11.5px] text-[#3DC98A]">{resendNotice}</p>
-        ) : null}
+      <SectionCard title="인증 요청 정보">
+        <div className="flex items-center gap-3 rounded-xl border border-[#2A2C34] bg-[#20222A] px-3.5 py-3">
+          <ProviderMark provider={findProvider(provider)} size="lg" />
+          <div className="min-w-0">
+            <p className="text-[14px] font-bold">{label} 간편인증</p>
+            <p className={`mt-0.5 text-[12px] ${MUTED}`}>
+              {realName} · {phone}
+            </p>
+          </div>
+        </div>
+        <p className={`mt-3 text-[12px] leading-relaxed ${MUTED}`}>
+          {label} 앱의 인증 요청 알림을 확인하고 인증을 완료해 주세요. 요청은 5분간 유효합니다.
+        </p>
       </SectionCard>
 
       <button type="button" onClick={onSubmit} className={PRIMARY_BUTTON}>
-        인증 확인
+        인증 완료 확인
       </button>
       <button type="button" onClick={onBack} className={GHOST_BUTTON}>
-        정보 다시 입력
+        다른 수단으로 인증
       </button>
     </div>
   );

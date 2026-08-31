@@ -98,6 +98,8 @@ export interface TicketActions {
   manualMatch: (depositId: string, orderId: string) => ActionResult;
 
   issueCompTickets: (input: IssueCompTicketsInput) => ActionResult;
+  /** 지급 대기(입금 확인 완료) 주문에 실명 티켓을 발급한다. */
+  issueOrderTickets: (orderId: string) => ActionResult;
   reallocatePool: (sessionId: string, from: PoolType, to: PoolType, qty: number) => ActionResult;
   checkInTicket: (code: string) => CheckInResult;
 

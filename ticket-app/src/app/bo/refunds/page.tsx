@@ -57,15 +57,21 @@ export default function RefundsPage() {
   }, [orders, tickets, users, verifications]);
 
   const askApprove = (row: RefundRow) => {
+    // 지급 대기 상태에서 취소된 주문은 회수할 티켓 없이 선점 좌석만 반환한다.
+    const hasTickets = row.ticketCount > 0;
     confirm.ask({
       title: '환불을 승인할까요?',
-      message: `주문 ${row.order.orderNo}의 티켓 ${row.ticketCount}매가 회수되고 환불 처리됩니다.`,
+      message: hasTickets
+        ? `주문 ${row.order.orderNo}의 티켓 ${row.ticketCount}매가 회수되고 환불 처리됩니다.`
+        : `주문 ${row.order.orderNo}은 티켓 지급 전 주문입니다. 선점 좌석 ${row.order.qty}매가 반환되고 환불 처리됩니다.`,
       confirmLabel: '환불 승인',
       onConfirm: () => {
         const result = approveRefund(row.order.id);
         toast.fromResult(
           result,
-          `주문 ${row.order.orderNo} 환불 처리 완료 — 티켓 ${row.ticketCount}매를 회수했습니다.`,
+          hasTickets
+            ? `주문 ${row.order.orderNo} 환불 처리 완료 — 티켓 ${row.ticketCount}매를 회수했습니다.`
+            : `주문 ${row.order.orderNo} 환불 처리 완료 — 선점 좌석 ${row.order.qty}매를 반환했습니다.`,
         );
       },
     });

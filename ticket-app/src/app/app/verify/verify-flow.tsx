@@ -4,21 +4,21 @@ import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 import { DemoTip } from '../_components/feedback';
+import type { AuthProviderKey } from './verify-providers';
 import {
   VerifyBlockedStep,
-  VerifyCodeStep,
   VerifyDoneStep,
   VerifyFormStep,
+  VerifyRequestStep,
   type IdentityForm,
 } from './verify-steps';
 import { useTicketStore } from '@/lib/store';
 
-type VerifyStep = 'FORM' | 'CODE' | 'BLOCKED' | 'DONE';
+type VerifyStep = 'FORM' | 'REQUESTED' | 'BLOCKED' | 'DONE';
 
 const NAME_PATTERN = /^[가-힣a-zA-Z]{2,20}$/;
 const BIRTH_PATTERN = /^\d{8}$/;
 const PHONE_PATTERN = /^01\d{8,9}$/;
-const CODE_PATTERN = /^\d{6}$/;
 
 const EMPTY_FORM: IdentityForm = { realName: '', birth: '', phone: '' };
 
@@ -36,7 +36,7 @@ function digitsOnly(value: string): string {
   return value.replace(/\D/g, '');
 }
 
-/** A3 본인확인 흐름 — 정보 입력 → 인증번호 → 결과 */
+/** A3 본인확인 흐름 — 정보 입력·수단 선택 → 간편인증 요청 → 결과 */
 export function VerifyFlow() {
   const searchParams = useSearchParams();
   const nextHref = searchParams.get('next') ?? '/app';
@@ -46,9 +46,7 @@ export function VerifyFlow() {
   const [step, setStep] = useState<VerifyStep>('FORM');
   const [form, setForm] = useState<IdentityForm>(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<Record<keyof IdentityForm, string>>>({});
-  const [code, setCode] = useState('');
-  const [codeError, setCodeError] = useState('');
-  const [resendNotice, setResendNotice] = useState('');
+  const [provider, setProvider] = useState<AuthProviderKey | undefined>(undefined);
 
   const handleChange = (field: keyof IdentityForm, value: string) => {
     const nextValue = field === 'realName' ? value : digitsOnly(value);
@@ -56,22 +54,14 @@ export function VerifyFlow() {
     setErrors((current) => ({ ...current, [field]: undefined }));
   };
 
-  const handleRequestCode = () => {
+  const handleRequestAuth = () => {
     const nextErrors = validateForm(form);
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
-    setCode('');
-    setCodeError('');
-    setResendNotice('');
-    setStep('CODE');
+    if (Object.keys(nextErrors).length > 0 || !provider) return;
+    setStep('REQUESTED');
   };
 
-  const handleConfirmCode = () => {
-    if (!CODE_PATTERN.test(code)) {
-      setCodeError('인증번호 6자리를 입력해 주세요.');
-      return;
-    }
-
+  const handleConfirmAuth = () => {
     const result = verifyIdentity({
       realName: form.realName.trim(),
       birth: form.birth,
@@ -84,8 +74,7 @@ export function VerifyFlow() {
   const handleRetry = () => {
     setForm(EMPTY_FORM);
     setErrors({});
-    setCode('');
-    setCodeError('');
+    setProvider(undefined);
     setStep('FORM');
   };
 
@@ -95,23 +84,19 @@ export function VerifyFlow() {
         <VerifyFormStep
           form={form}
           errors={errors}
+          provider={provider}
           onChange={handleChange}
-          onSubmit={handleRequestCode}
+          onSelectProvider={setProvider}
+          onSubmit={handleRequestAuth}
         />
       ) : null}
 
-      {step === 'CODE' ? (
-        <VerifyCodeStep
+      {step === 'REQUESTED' && provider ? (
+        <VerifyRequestStep
+          provider={provider}
+          realName={form.realName.trim()}
           phone={form.phone}
-          code={code}
-          error={codeError}
-          resendNotice={resendNotice}
-          onChangeCode={(value) => {
-            setCode(digitsOnly(value));
-            setCodeError('');
-          }}
-          onResend={() => setResendNotice('인증번호를 다시 보냈습니다.')}
-          onSubmit={handleConfirmCode}
+          onSubmit={handleConfirmAuth}
           onBack={() => setStep('FORM')}
         />
       ) : null}
@@ -123,7 +108,8 @@ export function VerifyFlow() {
       ) : null}
 
       <DemoTip>
-        데모: 허브에서 사용자를 전환해 같은 정보로 인증하면 중복 차단을 확인할 수 있습니다.
+        데모: 간편인증은 모의 동작이며 [인증 완료 확인]을 누르면 바로 통과합니다. 허브에서 사용자를 전환해 같은
+        정보로 인증하면 중복 차단을 확인할 수 있습니다.
       </DemoTip>
     </div>
   );

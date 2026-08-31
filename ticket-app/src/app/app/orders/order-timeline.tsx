@@ -12,7 +12,12 @@ interface TimelineStep {
   at?: string;
 }
 
-const DEPOSIT_DONE_STATUSES = new Set<Order['status']>(['PAID', 'CANCEL_REQUESTED', 'REFUNDED']);
+const DEPOSIT_DONE_STATUSES = new Set<Order['status']>([
+  'DEPOSIT_CONFIRMED',
+  'PAID',
+  'CANCEL_REQUESTED',
+  'REFUNDED',
+]);
 const CANCELED_STATUSES = new Set<Order['status']>(['EXPIRED', 'REFUNDED']);
 
 /** 주문 상태로 3단계 진행 상태를 계산한다. */
@@ -46,14 +51,16 @@ function buildSteps(order: Order, ticketIssuedAt?: string): TimelineStep[] {
             ? '입금이 확인되지 않아 주문이 취소되었습니다.'
             : '입금이 확인되면 다음 단계로 진행됩니다.',
       state: depositState,
-      // 입금 확정과 티켓 발급은 같은 처리에서 일어나므로 발급 시각을 확인 시각으로 사용한다
-      at: isDepositDone ? ticketIssuedAt : undefined,
+      // 입금 확인 시각이 없는 과거 주문은 티켓 발급 시각으로 대체한다
+      at: isDepositDone ? (order.depositConfirmedAt ?? ticketIssuedAt) : undefined,
     },
     {
       title: '티켓 지급',
       description: ticketIssuedAt
         ? '티켓이 지급되었습니다. 내 티켓에서 확인해 주세요.'
-        : '입금 확인 후 티켓이 자동으로 지급됩니다.',
+        : order.status === 'DEPOSIT_CONFIRMED'
+          ? '입금이 확인되었습니다. 티켓 지급을 기다리고 있습니다.'
+          : '입금이 확인되면 운영자가 티켓을 지급합니다.',
       state: issueState,
       at: ticketIssuedAt,
     },

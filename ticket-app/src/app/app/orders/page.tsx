@@ -33,7 +33,7 @@ export default function OrdersPage() {
       <header className="px-4 pb-3 pt-6">
         <h1 className="text-[20px] font-extrabold">주문 내역</h1>
         <p className={`mt-1 text-[12.5px] ${MUTED}`}>
-          입금 확인이 끝나면 티켓이 자동으로 지급됩니다.
+          입금 확인 후 지급 대기로 바뀌고, 티켓 지급이 끝나면 내 티켓에서 확인할 수 있습니다.
         </p>
       </header>
 

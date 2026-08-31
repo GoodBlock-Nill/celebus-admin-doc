@@ -1,11 +1,7 @@
 import { ACTOR_OPERATOR, ACTOR_SYSTEM } from './constants';
 import { formatKrw } from './format';
-import {
-  HOLD_REASON_NAME_MISMATCH,
-  issueTicketsForOrder,
-  matchDeposit,
-} from './store-deposit-match';
-import { appendLog, clampToZero, createId, makeLog, updatePool } from './store-helpers';
+import { HOLD_REASON_NAME_MISMATCH, matchDeposit } from './store-deposit-match';
+import { appendLog, createId, makeLog } from './store-helpers';
 import type { AddDepositInput, StoreGet, StoreSet, TicketStore } from './store-types';
 import type { DepositRecord } from './types';
 
@@ -81,29 +77,30 @@ export function createDepositSlice(set: StoreSet, get: StoreGet): DepositSlice {
       }
 
       const nowDate = state.now();
-      const newTickets = issueTicketsForOrder(state, order, nowDate.toISOString());
 
+      // 입금 확인은 지급 대기까지만 진행한다. 티켓 발급은 별도 지급 처리(issueOrderTickets)에서 수행하고,
+      // 그때까지 좌석은 선점(reserved) 상태로 유지한다.
       set((current) => ({
         deposits: current.deposits.map((item) =>
           item.id === depositId ? { ...item, status: 'CONFIRMED' as const } : item,
         ),
         orders: current.orders.map((item) =>
           item.id === order.id
-            ? { ...item, status: 'PAID' as const, holdReason: undefined, confirmedDepositId: depositId }
+            ? {
+                ...item,
+                status: 'DEPOSIT_CONFIRMED' as const,
+                holdReason: undefined,
+                confirmedDepositId: depositId,
+                depositConfirmedAt: nowDate.toISOString(),
+              }
             : item,
         ),
-        tickets: [...current.tickets, ...newTickets],
-        sessions: updatePool(current.sessions, order.sessionId, 'PAID_SALE', (stock) => ({
-          ...stock,
-          reserved: clampToZero(stock.reserved - order.qty),
-          issued: stock.issued + order.qty,
-        })),
         logs: appendLog(
           current.logs,
           makeLog(
             ACTOR_OPERATOR,
             '입금 확정',
-            `주문 ${order.orderNo} 입금 확정 · 티켓 ${order.qty}매 발급`,
+            `주문 ${order.orderNo} 입금 확정 · 티켓 지급 대기로 전환`,
             nowDate,
           ),
         ),

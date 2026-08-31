@@ -23,7 +23,7 @@ export function PendingTab({ rows }: { rows: DepositRow[] }) {
     const result = confirmDeposit(row.deposit.id);
     toast.fromResult(
       result,
-      `주문 ${row.order?.orderNo ?? ''} 입금 확정 — 티켓 ${row.order?.qty ?? 0}매를 지급했습니다.`,
+      `주문 ${row.order?.orderNo ?? ''} 입금 확정 — 지급 대기로 전환되었습니다.`,
     );
   };
 
@@ -48,8 +48,8 @@ export function PendingTab({ rows }: { rows: DepositRow[] }) {
   return (
     <div className="flex flex-col gap-3">
       <InfoNote>
-        자동 대조는 금액 완전 일치 + 실명(또는 실명 + 주문번호 끝 4자리) 기준으로 이뤄집니다. 최종 확정은 운영자 확인
-        후 처리되며, 확인 즉시 실명 티켓이 발급됩니다.
+        자동 대조는 금액 완전 일치 + 실명(또는 실명 + 주문번호 끝 4자리) 기준으로 이뤄집니다. 입금 확인 후 지급 대기로
+        전환되며, 지급 대기 탭에서 티켓 지급 처리를 해야 티켓이 발급됩니다.
       </InfoNote>
       <DataTable
         columns={columns}
