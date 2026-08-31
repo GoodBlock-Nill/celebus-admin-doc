@@ -27,6 +27,9 @@ export const REPORT_SLA_HOURS = 10;
 /** 회차 입장(QR 활성화) 기본 기준 — 시작 60분 전 */
 export const DEFAULT_ENTRY_OPEN_MINUTES = 60;
 
+/** 공연 시작 이후 입장 코드가 유지되는 시간 */
+export const ENTRY_WINDOW_AFTER_HOURS = 3;
+
 /** 활동 로그 보관 최대 건수 */
 export const MAX_ACTIVITY_LOGS = 300;
 

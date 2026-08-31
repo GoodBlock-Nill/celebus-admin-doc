@@ -73,6 +73,9 @@ export const api = {
   order: (orderId: string) => request<{ order: OrderDetailView }>(`/api/orders/${orderId}`),
   tickets: () => request<{ tickets: TicketSummaryView[] }>('/api/tickets'),
   ticket: (ticketId: string) => request<{ ticket: TicketDetailView }>(`/api/tickets/${ticketId}`),
+  /** 입장 QR용 서명 단기 토큰 — 만료 전에 다시 받아 화면을 갱신한다. */
+  ticketQr: (ticketId: string) =>
+    request<{ token: string; expiresAt: string }>(`/api/tickets/${ticketId}/qr`),
   verify: (input: VerifyInput) => post<Record<string, never>>('/api/verify', input),
   createOrder: (input: CreateOrderInput) => post<{ orderId: string; orderNo: string }>('/api/orders', input),
   cancelOrder: (orderId: string) => post<{ cancelled: boolean; status: string }>(`/api/orders/${orderId}/cancel`),

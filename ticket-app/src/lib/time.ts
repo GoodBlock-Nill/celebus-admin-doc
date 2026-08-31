@@ -32,6 +32,12 @@ export function endOfKstDayIso(base: Date, addDays = 0): string {
   return new Date(endOfDayUtcMs + addDays * MS_PER_DAY - KST_OFFSET_MS).toISOString();
 }
 
+/** KST 기준 해당 일자의 00:00:00 시각을 ISO 문자열로 반환 */
+export function startOfKstDayIso(base: Date): string {
+  const { year, month, day } = kstParts(base);
+  return new Date(Date.UTC(year, month - 1, day, 0, 0, 0) - KST_OFFSET_MS).toISOString();
+}
+
 /** KST 기준 yyMMdd (주문번호 생성용) */
 export function kstYymmdd(date: Date): string {
   const { year, month, day } = kstParts(date);
