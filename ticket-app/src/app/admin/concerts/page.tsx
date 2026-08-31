@@ -61,6 +61,14 @@ export default function AdminConcertListPage() {
       <PageHeader
         title="공연·재고 관리"
         description="공연별 회차 재고를 4개 분류(유상 판매·당첨자·초대·운영 보류)로 나누어 관리합니다."
+        actions={
+          <Link
+            href="/admin/concerts/new"
+            className="rounded-lg border border-[#3056D3] bg-[#3056D3] px-4 py-2 text-[13px] font-semibold text-white hover:border-[#2545A8] hover:bg-[#2545A8]"
+          >
+            공연 등록
+          </Link>
+        }
       />
       <Card>
         {state.status === 'READY' ? (

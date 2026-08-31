@@ -17,6 +17,7 @@ import {
   StatusBadge,
 } from '../../_components/ui';
 import { CompIssueForm } from '../_components/comp-issue-form';
+import { ConcertStatusActions } from '../_components/concert-status-actions';
 import { PoolStockTable } from '../_components/pool-stock-table';
 import { ReallocateForm } from '../_components/reallocate-form';
 import { adminApi } from '@/lib/admin-client';
@@ -122,6 +123,15 @@ export default function AdminConcertDetailPage() {
             <p className="whitespace-pre-line text-[13px] leading-relaxed text-[#4A4E5A]">{concert.refundPolicy}</p>
           </Collapsible>
         </div>
+      </Card>
+
+      <Card title="판매 상태" description="판매를 시작하면 앱에 공개되고, 종료하면 되돌릴 수 없습니다.">
+        <ConcertStatusActions
+          concertId={concertId}
+          concertTitle={concert.title}
+          status={concert.status}
+          onDone={() => void reload()}
+        />
       </Card>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">

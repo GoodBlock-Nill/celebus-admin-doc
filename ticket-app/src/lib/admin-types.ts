@@ -3,7 +3,7 @@
  * 회원 개인정보는 원칙적으로 마스킹해 내려주고, 입금 대조에 필요한 실명만 예외로 노출한다.
  */
 
-import type { ConcertStatus, OrderStatus, PoolType, TicketStatus } from './api-types';
+import type { ConcertStatus, OrderStatus, PoolType, SeatType, TicketStatus } from './api-types';
 
 export type DepositStatus =
   | 'UNMATCHED'
@@ -123,6 +123,33 @@ export interface AdminConcertDetailView {
   refundPolicy: string;
   sessions: AdminSessionView[];
 }
+
+/** 공연 등록 시 함께 만드는 회차 1건 (분류별 배정 수량 포함) */
+export interface ConcertSessionInput {
+  name: string;
+  /** 공연 시작 일시 — 시간대 오프셋을 포함한 문자열 */
+  startAt: string;
+  entryOpenMinutesBefore: number;
+  pools: Record<PoolType, number>;
+}
+
+/** 공연 등록 폼이 서버로 보내는 값 — 등록 직후 상태는 항상 판매 예정이다. */
+export interface ConcertCreateInput {
+  title: string;
+  artist: string;
+  venue: string;
+  priceKrw: number;
+  maxPerUser: number;
+  seatType: SeatType;
+  refundPolicy: string;
+  notice: string;
+  salesStartAt: string;
+  salesEndAt: string;
+  sessions: ConcertSessionInput[];
+}
+
+/** 운영자가 지정할 수 있는 판매 상태 (판매 예정으로 되돌리는 전이는 없다) */
+export type ConcertStatusTransition = Exclude<ConcertStatus, 'UPCOMING'>;
 
 /** 무상 발급 대상 — 본인확인을 마친 회원만 후보가 되며 실명은 마스킹해 노출한다. */
 export interface AdminMemberOptionView {

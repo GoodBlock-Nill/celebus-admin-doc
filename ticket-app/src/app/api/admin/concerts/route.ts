@@ -1,5 +1,7 @@
-import { isGuardFailure, requireAdmin } from '@/lib/server/admin-api';
-import { ok, readFailure } from '@/lib/server/api';
+import { z } from 'zod';
+
+import { callAdminRpc, isGuardFailure, requireAdmin } from '@/lib/server/admin-api';
+import { HTTP_STATUS, fail, guardMutation, ok, readFailure } from '@/lib/server/api';
 import { admin } from '@/lib/server/db-admin';
 import { CONCERT_COLUMNS, type ConcertRow } from '@/lib/server/rows';
 import type { AdminConcertRowView } from '@/lib/admin-types';
@@ -66,4 +68,82 @@ export async function GET(req: Request) {
   });
 
   return ok({ items });
+}
+
+/** 입력 상한 — 실수 입력이 그대로 재고가 되는 것을 막는 안전 상한 */
+const MAX_TITLE_LENGTH = 120;
+const MAX_NAME_LENGTH = 60;
+const MAX_LONG_TEXT_LENGTH = 4000;
+const MAX_PRICE_KRW = 10000000;
+const MAX_PER_USER_LIMIT = 10;
+const MAX_ENTRY_OPEN_MINUTES = 1440;
+const MAX_ALLOCATED = 100000;
+const MAX_SESSIONS = 20;
+
+const datetime = z.string().datetime({ offset: true });
+const allocated = z.number().int().min(0).max(MAX_ALLOCATED);
+
+const sessionSchema = z.object({
+  name: z.string().trim().min(1).max(MAX_NAME_LENGTH),
+  startAt: datetime,
+  entryOpenMinutesBefore: z.number().int().min(0).max(MAX_ENTRY_OPEN_MINUTES),
+  pools: z.object({
+    PAID_SALE: allocated,
+    CELEBUS_WINNER: allocated,
+    IX_INVITATION: allocated,
+    OPERATION_HOLD: allocated,
+  }),
+});
+
+const createSchema = z.object({
+  title: z.string().trim().min(1).max(MAX_TITLE_LENGTH),
+  artist: z.string().trim().min(1).max(MAX_NAME_LENGTH),
+  venue: z.string().trim().min(1).max(MAX_NAME_LENGTH),
+  priceKrw: z.number().int().min(1).max(MAX_PRICE_KRW),
+  maxPerUser: z.number().int().min(1).max(MAX_PER_USER_LIMIT),
+  seatType: z.enum(['자유석', '구역제']),
+  refundPolicy: z.string().max(MAX_LONG_TEXT_LENGTH),
+  notice: z.string().max(MAX_LONG_TEXT_LENGTH),
+  salesStartAt: datetime,
+  salesEndAt: datetime,
+  sessions: z.array(sessionSchema).min(1).max(MAX_SESSIONS),
+});
+
+/** 공연 등록 — 공연·회차·분류별 배정을 한 번에 생성한다(판매 시작은 별도 액션). */
+export async function POST(req: Request) {
+  const blocked = guardMutation(req, 'admin-concert');
+  if (blocked) return blocked;
+
+  const guard = requireAdmin(req);
+  if (isGuardFailure(guard)) return guard;
+
+  const parsed = createSchema.safeParse(await req.json().catch(() => null));
+  if (!parsed.success) return fail('공연 등록 값을 다시 확인해 주세요.', HTTP_STATUS.badRequest);
+
+  const input = parsed.data;
+  return callAdminRpc(
+    'ticket_create_concert',
+    {
+      p_payload: {
+        title: input.title,
+        artist: input.artist,
+        venue: input.venue,
+        price_krw: input.priceKrw,
+        max_per_user: input.maxPerUser,
+        seat_type: input.seatType,
+        refund_policy: input.refundPolicy,
+        notice: input.notice,
+        sales_start_at: input.salesStartAt,
+        sales_end_at: input.salesEndAt,
+        sessions: input.sessions.map((session) => ({
+          name: session.name,
+          start_at: session.startAt,
+          entry_open_minutes_before: session.entryOpenMinutesBefore,
+          pools: session.pools,
+        })),
+      },
+      p_admin: guard,
+    },
+    '공연 등록에 실패했습니다.',
+  );
 }

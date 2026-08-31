@@ -13,6 +13,8 @@ import type {
   AdminSummaryView,
   CheckInResultView,
   CompPoolType,
+  ConcertCreateInput,
+  ConcertStatusTransition,
   IssuanceSessionView,
   ReportActionType,
 } from './admin-types';
@@ -79,6 +81,12 @@ export const adminApi = {
   concerts: () => request<{ items: AdminConcertRowView[] }>('/api/admin/concerts'),
   concert: (concertId: string) =>
     request<{ concert: AdminConcertDetailView; logs: AdminLogView[] }>(`/api/admin/concerts/${concertId}`),
+  createConcert: (input: ConcertCreateInput) => post<{ concert_id: string }>('/api/admin/concerts', input),
+  setConcertStatus: (concertId: string, status: ConcertStatusTransition) =>
+    post<{ status: ConcertStatusTransition }>(`/api/admin/concerts/${concertId}/actions`, {
+      action: 'set-status',
+      status,
+    }),
   reallocate: ({ concertId, ...rest }: ReallocateInput) =>
     post<Record<string, never>>(`/api/admin/concerts/${concertId}/actions`, { action: 'reallocate', ...rest }),
   issueCompTickets: ({ concertId, ...rest }: CompIssueInput) =>

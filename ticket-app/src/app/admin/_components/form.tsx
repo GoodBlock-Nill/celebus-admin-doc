@@ -49,12 +49,15 @@ const CONTROL_CLASS =
 export function Field({
   label,
   hint,
+  error,
   required = false,
   children,
   className = '',
 }: {
   label: string;
   hint?: string;
+  /** 입력 검증 실패 사유 — 있으면 안내 문구 대신 빨간 문구로 보여 준다. */
+  error?: string;
   required?: boolean;
   children: ReactNode;
   className?: string;
@@ -66,7 +69,11 @@ export function Field({
         {required ? <span className="ml-1 text-[#C2402A]">*</span> : null}
       </span>
       {children}
-      {hint ? <span className="text-[11px] leading-relaxed text-[#6B7080]">{hint}</span> : null}
+      {error ? (
+        <span className="text-[11px] font-semibold leading-relaxed text-[#C2402A]">{error}</span>
+      ) : hint ? (
+        <span className="text-[11px] leading-relaxed text-[#6B7080]">{hint}</span>
+      ) : null}
     </label>
   );
 }
