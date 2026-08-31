@@ -33,6 +33,12 @@ export interface ConcertView {
   venueAddress: string | null;
   /** 지도 링크 — 있으면 공연 상세에서 새 창으로 연다 */
   venueMapUrl: string | null;
+  /** 포스터 이미지 주소 (3:4 세로형) — 등록 전 공연은 값이 없을 수 있다 */
+  posterUrl: string | null;
+  /** 공연 소개 — 상세 이미지 안 정보를 보완하는 요약 텍스트 (없을 수 있다) */
+  description: string | null;
+  /** 상세 이미지 주소 목록 — 공연 상세에서 순서대로 세로 나열한다 */
+  detailImageUrls: string[];
   priceKrw: number;
   maxPerUser: number;
   seatType: string;

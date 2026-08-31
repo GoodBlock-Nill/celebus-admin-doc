@@ -25,6 +25,9 @@ export type ReportActionType =
 /** 무상 발급이 가능한 배정 분류 (유상 판매분 제외) */
 export type CompPoolType = Exclude<PoolType, 'PAID_SALE'>;
 
+/** 이미지 업로드 용도 — 용량·보관 위치가 용도별로 다르다 */
+export type AdminImageKind = 'poster' | 'detail';
+
 export interface AdminSummaryView {
   /** 입금 확인 대기 + 티켓 지급 대기 */
   depositPending: number;
@@ -115,6 +118,9 @@ export interface AdminConcertDetailView {
   venue: string;
   venueAddress: string | null;
   venueMapUrl: string | null;
+  posterUrl: string | null;
+  description: string | null;
+  detailImageUrls: string[];
   seatType: string;
   status: ConcertStatus;
   priceKrw: number;
@@ -144,6 +150,12 @@ export interface ConcertCreateInput {
   venueAddress?: string;
   /** 지도 링크 — 선택 입력이라 비우면 보내지 않는다 */
   venueMapUrl?: string;
+  /** 포스터 이미지 주소 — 신규 등록에는 반드시 있어야 한다 */
+  posterUrl: string;
+  /** 공연 소개 — 선택 입력이라 비우면 보내지 않는다 */
+  description?: string;
+  /** 상세 이미지 주소 목록 — 화면에 보이는 순서 그대로 보낸다 (선택 입력) */
+  detailImageUrls?: string[];
   priceKrw: number;
   maxPerUser: number;
   seatType: SeatType;

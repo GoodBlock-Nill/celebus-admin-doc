@@ -9,6 +9,10 @@ export interface ConcertRow {
   venue: string;
   venue_address: string | null;
   venue_map_url: string | null;
+  poster_url: string | null;
+  description: string | null;
+  /** 상세 이미지 주소 목록 — 저장 형식이 자유로운 항목이라 읽은 뒤 화면용으로 다듬는다 */
+  detail_image_urls: unknown;
   price_krw: number;
   max_per_user: number;
   seat_type: string;
@@ -91,7 +95,8 @@ export interface SessionBrief {
 }
 
 export const CONCERT_COLUMNS =
-  'id, title, artist, venue, venue_address, venue_map_url, price_krw, max_per_user, seat_type, ' +
+  'id, title, artist, venue, venue_address, venue_map_url, poster_url, description, ' +
+  'detail_image_urls, price_krw, max_per_user, seat_type, ' +
   'status, refund_policy, notice, sales_start_at, sales_end_at';
 
 export const PUBLIC_SESSION_COLUMNS =

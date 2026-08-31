@@ -25,6 +25,12 @@ import { maskPhone } from '@/lib/format';
 const UNKNOWN_CONCERT = '공연 정보 없음';
 const UNKNOWN_SESSION = '-';
 
+/** 상세 이미지 목록 정리 — 저장 형식이 어긋난 값은 화면에 넘기지 않는다. */
+export function toImageUrlList(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is string => typeof item === 'string' && item.trim() !== '');
+}
+
 export function toConcertView(row: ConcertRow): ConcertView {
   return {
     id: row.id,
@@ -33,6 +39,9 @@ export function toConcertView(row: ConcertRow): ConcertView {
     venue: row.venue,
     venueAddress: row.venue_address,
     venueMapUrl: row.venue_map_url,
+    posterUrl: row.poster_url,
+    description: row.description,
+    detailImageUrls: toImageUrlList(row.detail_image_urls),
     priceKrw: row.price_krw,
     maxPerUser: row.max_per_user,
     seatType: row.seat_type,

@@ -17,6 +17,7 @@ import {
   StatusBadge,
 } from '../../_components/ui';
 import { CompIssueForm } from '../_components/comp-issue-form';
+import { ConcertMediaSummary } from '../_components/concert-media-summary';
 import { ConcertStatusActions } from '../_components/concert-status-actions';
 import { PoolStockTable } from '../_components/pool-stock-table';
 import { ReallocateForm } from '../_components/reallocate-form';
@@ -131,6 +132,13 @@ export default function AdminConcertDetailPage() {
               </span>
             </DefinitionRow>
           </div>
+        </div>
+        <div className="mt-4">
+          <ConcertMediaSummary
+            posterUrl={concert.posterUrl}
+            description={concert.description}
+            detailImageUrls={concert.detailImageUrls}
+          />
         </div>
         <div className="mt-4 flex flex-col gap-2">
           <Collapsible summary="예매 유의사항 원문">

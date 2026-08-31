@@ -70,12 +70,24 @@ export default function ConcertDetailPage() {
     <main className="pb-[92px]">
       <AppHeader title="공연 상세" backHref="/app" />
 
-      <section className="bg-linear-to-br from-[#F0426E] via-[#8B4BD6] to-[#191A20] px-5 pb-7 pt-6">
-        <Badge tone={statusMeta.tone} className="bg-black/30 text-white">
-          {statusMeta.label}
-        </Badge>
-        <p className="mt-3 text-[12px] font-bold tracking-[0.2em] text-white/85">{concert.artist}</p>
-        <h2 className="mt-1.5 text-[22px] font-extrabold leading-snug text-white">{concert.title}</h2>
+      {/* 포스터가 있으면 3:4 비율로 함께 보여 주고, 없으면 기존 그라디언트 화면을 유지한다. */}
+      <section className="flex gap-4 bg-linear-to-br from-[#F0426E] via-[#8B4BD6] to-[#191A20] px-5 pb-7 pt-6">
+        {concert.posterUrl ? (
+          <img
+            src={concert.posterUrl}
+            alt={`${concert.title} 포스터`}
+            className="aspect-[3/4] w-[112px] shrink-0 rounded-xl object-cover shadow-[0_6px_20px_rgba(0,0,0,0.35)]"
+            loading="lazy"
+            decoding="async"
+          />
+        ) : null}
+        <div className="min-w-0">
+          <Badge tone={statusMeta.tone} className="bg-black/30 text-white">
+            {statusMeta.label}
+          </Badge>
+          <p className="mt-3 text-[12px] font-bold tracking-[0.2em] text-white/85">{concert.artist}</p>
+          <h2 className="mt-1.5 text-[22px] font-extrabold leading-snug text-white">{concert.title}</h2>
+        </div>
       </section>
 
       <div className="flex flex-col gap-3 px-4 pt-4">
@@ -111,6 +123,31 @@ export default function ConcertDetailPage() {
             잔여 수량은 유료 판매분 기준이며, 입금 대기 중인 좌석도 차감되어 표시됩니다.
           </p>
         </SectionCard>
+
+        {concert.description ? (
+          <SectionCard title="공연 소개">
+            <p className="whitespace-pre-line text-[13px] leading-relaxed text-[#C9C8CE]">
+              {concert.description}
+            </p>
+          </SectionCard>
+        ) : null}
+
+        {concert.detailImageUrls.length > 0 ? (
+          <SectionCard title="상세 안내">
+            <div className="flex flex-col gap-2">
+              {concert.detailImageUrls.map((url, index) => (
+                <img
+                  key={url}
+                  src={url}
+                  alt={`${concert.title} 상세 안내 ${index + 1}`}
+                  className="h-auto w-full rounded-lg"
+                  loading="lazy"
+                  decoding="async"
+                />
+              ))}
+            </div>
+          </SectionCard>
+        ) : null}
 
         <CollapsibleSection title="환불 정책">{concert.refundPolicy}</CollapsibleSection>
         <CollapsibleSection title="유의사항">{concert.notice}</CollapsibleSection>

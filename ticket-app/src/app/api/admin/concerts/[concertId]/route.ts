@@ -1,6 +1,7 @@
 import { isGuardFailure, requireAdmin } from '@/lib/server/admin-api';
 import { HTTP_STATUS, fail, ok, readFailure } from '@/lib/server/api';
 import { admin } from '@/lib/server/db-admin';
+import { toImageUrlList } from '@/lib/server/mappers';
 import { CONCERT_COLUMNS, type ConcertRow } from '@/lib/server/rows';
 import type {
   AdminConcertDetailView,
@@ -107,6 +108,9 @@ export async function GET(req: Request, context: { params: Promise<{ concertId: 
     venue: row.venue,
     venueAddress: row.venue_address,
     venueMapUrl: row.venue_map_url,
+    posterUrl: row.poster_url,
+    description: row.description,
+    detailImageUrls: toImageUrlList(row.detail_image_urls),
     seatType: row.seat_type,
     status: row.status,
     priceKrw: row.price_krw,

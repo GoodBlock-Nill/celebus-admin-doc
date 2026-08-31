@@ -20,6 +20,7 @@ import {
   type FieldErrors,
   type SessionDraft,
 } from './concert-form-state';
+import { ConcertMediaFields } from './concert-media-fields';
 import { SessionFieldset } from './session-fieldset';
 import { adminApi } from '@/lib/admin-client';
 import type { PoolType, SeatType } from '@/lib/api-types';
@@ -46,6 +47,10 @@ export function ConcertCreateForm() {
 
   const updateSeatType = (seatType: SeatType) => {
     setDraft((current) => ({ ...current, seatType }));
+  };
+
+  const updateDetailImages = (detailImageUrls: string[]) => {
+    setDraft((current) => ({ ...current, detailImageUrls }));
   };
 
   const updateSession = (key: string, patch: Partial<SessionDraft>) => {
@@ -115,6 +120,14 @@ export function ConcertCreateForm() {
         errors={errors}
         onChange={updateField}
         onSeatTypeChange={updateSeatType}
+        mediaFields={
+          <ConcertMediaFields
+            draft={draft}
+            errors={errors}
+            onChange={updateField}
+            onDetailImagesChange={updateDetailImages}
+          />
+        }
       />
 
       <Card

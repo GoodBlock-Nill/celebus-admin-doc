@@ -3,6 +3,7 @@
  * 화면은 문자열만 다루고, 서버로 보내기 직전에 숫자·일시로 변환한다.
  */
 
+import { MAX_DESCRIPTION_LENGTH, MAX_DETAIL_IMAGE_COUNT } from './concert-image-rules';
 import type { ConcertCreateInput } from '@/lib/admin-types';
 import type { PoolType, SeatType } from '@/lib/api-types';
 import { DEFAULT_ENTRY_OPEN_MINUTES } from '@/lib/constants';
@@ -47,6 +48,12 @@ export interface ConcertDraft {
   venueAddress: string;
   /** 지도 링크 (선택 입력) */
   venueMapUrl: string;
+  /** 포스터 이미지 주소 — 업로드에 성공하면 채워지는 필수 항목 */
+  posterUrl: string;
+  /** 공연 소개 (선택 입력) */
+  description: string;
+  /** 상세 이미지 주소 목록 — 화면에 보이는 순서가 곧 앱 노출 순서다 (선택 입력) */
+  detailImageUrls: string[];
   priceKrw: string;
   maxPerUser: string;
   seatType: SeatType;
@@ -57,8 +64,8 @@ export interface ConcertDraft {
   sessions: SessionDraft[];
 }
 
-/** 문자열로 다루는 단일 입력 항목 이름 (좌석 방식·회차는 별도 처리) */
-export type ConcertField = Exclude<keyof ConcertDraft, 'sessions' | 'seatType'>;
+/** 문자열로 다루는 단일 입력 항목 이름 (좌석 방식·회차·상세 이미지 목록은 별도 처리) */
+export type ConcertField = Exclude<keyof ConcertDraft, 'sessions' | 'seatType' | 'detailImageUrls'>;
 
 /** 필드 이름 → 검증 실패 사유 (회차 항목은 `${회차키}:${항목}` 형태) */
 export type FieldErrors = Record<string, string>;
@@ -103,6 +110,9 @@ export function createConcertDraft(): ConcertDraft {
     venue: '',
     venueAddress: '',
     venueMapUrl: '',
+    posterUrl: '',
+    description: '',
+    detailImageUrls: [],
     priceKrw: '',
     maxPerUser: DEFAULT_MAX_PER_USER,
     seatType: '자유석',
@@ -174,6 +184,19 @@ function validateVenueDetail(draft: ConcertDraft, errors: FieldErrors): void {
   }
 }
 
+/** 포스터는 필수, 공연 소개·상세 이미지는 선택이라 값이 있을 때만 상한을 본다. */
+function validateMedia(draft: ConcertDraft, errors: FieldErrors): void {
+  if (draft.posterUrl === '') {
+    errors.posterUrl = '포스터 이미지를 등록해 주세요.';
+  }
+  if (draft.description.length > MAX_DESCRIPTION_LENGTH) {
+    errors.description = `공연 소개는 ${MAX_DESCRIPTION_LENGTH.toLocaleString('ko-KR')}자 이내로 입력해 주세요.`;
+  }
+  if (draft.detailImageUrls.length > MAX_DETAIL_IMAGE_COUNT) {
+    errors.detailImageUrls = `상세 이미지는 최대 ${MAX_DETAIL_IMAGE_COUNT}장까지 등록할 수 있습니다.`;
+  }
+}
+
 /** 전송 전 검증 — 비어 있는 결과는 통과를 뜻한다. */
 export function validateDraft(draft: ConcertDraft): FieldErrors {
   const errors: FieldErrors = {};
@@ -182,6 +205,7 @@ export function validateDraft(draft: ConcertDraft): FieldErrors {
   if (draft.artist.trim() === '') errors.artist = '아티스트명을 입력해 주세요.';
   if (draft.venue.trim() === '') errors.venue = '공연장을 입력해 주세요.';
   validateVenueDetail(draft, errors);
+  validateMedia(draft, errors);
 
   const price = toCount(draft.priceKrw);
   if (price === null || price <= 0) errors.priceKrw = '티켓 가격을 1원 이상으로 입력해 주세요.';
@@ -207,6 +231,7 @@ export function validateDraft(draft: ConcertDraft): FieldErrors {
 export function toCreateInput(draft: ConcertDraft): ConcertCreateInput {
   const venueAddress = draft.venueAddress.trim();
   const venueMapUrl = draft.venueMapUrl.trim();
+  const description = draft.description.trim();
 
   return {
     title: draft.title.trim(),
@@ -214,6 +239,9 @@ export function toCreateInput(draft: ConcertDraft): ConcertCreateInput {
     venue: draft.venue.trim(),
     venueAddress: venueAddress === '' ? undefined : venueAddress,
     venueMapUrl: venueMapUrl === '' ? undefined : venueMapUrl,
+    posterUrl: draft.posterUrl,
+    description: description === '' ? undefined : description,
+    detailImageUrls: draft.detailImageUrls.length === 0 ? undefined : [...draft.detailImageUrls],
     priceKrw: Number(draft.priceKrw),
     maxPerUser: Number(draft.maxPerUser),
     seatType: draft.seatType,

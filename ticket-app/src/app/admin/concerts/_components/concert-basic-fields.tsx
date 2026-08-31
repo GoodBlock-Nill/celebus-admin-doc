@@ -1,5 +1,7 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 import { Field, NumberInput, Select, Textarea, TextInput } from '../../_components/form';
 import { Card } from '../../_components/ui';
 import {
@@ -23,10 +25,18 @@ interface BasicFieldsProps {
   errors: FieldErrors;
   onChange: (field: ConcertField, value: string) => void;
   onSeatTypeChange: (seatType: SeatType) => void;
+  /** 기본 정보 바로 다음에 보여 줄 영역 (포스터 · 상세정보) */
+  mediaFields?: ReactNode;
 }
 
-/** 공연 기본 정보 · 판매 기간 · 안내 문구 입력 영역 */
-export function ConcertBasicFields({ draft, errors, onChange, onSeatTypeChange }: BasicFieldsProps) {
+/** 공연 기본 정보 · 포스터 · 판매 기간 · 안내 문구 입력 영역 */
+export function ConcertBasicFields({
+  draft,
+  errors,
+  onChange,
+  onSeatTypeChange,
+  mediaFields,
+}: BasicFieldsProps) {
   return (
     <>
       <Card title="기본 정보" description="앱 공연 카드와 상세 화면에 그대로 노출되는 정보입니다.">
@@ -89,6 +99,8 @@ export function ConcertBasicFields({ draft, errors, onChange, onSeatTypeChange }
           </Field>
         </div>
       </Card>
+
+      {mediaFields}
 
       <Card
         title="판매 기간"

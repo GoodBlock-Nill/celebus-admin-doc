@@ -5,6 +5,7 @@ import type {
   AdminConcertDetailView,
   AdminConcertRowView,
   AdminDepositView,
+  AdminImageKind,
   AdminLogView,
   AdminMemberOptionView,
   AdminOrderView,
@@ -24,6 +25,17 @@ import type { PoolType, ReportTargetType } from './api-types';
 const NETWORK_FAILURE = '네트워크 상태를 확인한 뒤 다시 시도해 주세요.';
 const NETWORK_STATUS = 0;
 const REQUEST_TIMEOUT_MS = 10000;
+/** 이미지 업로드는 파일 전송 시간이 필요해 조회보다 넉넉하게 기다린다. */
+const UPLOAD_TIMEOUT_MS = 60000;
+
+/**
+ * 본문 형식에 맞는 헤더를 고른다.
+ * 파일 업로드(FormData)는 브라우저가 경계 문자열이 포함된 형식 헤더를 직접 붙여야 하므로 건드리지 않는다.
+ */
+function requestHeaders(init?: RequestInit): HeadersInit | undefined {
+  if (!init?.body || init.body instanceof FormData) return init?.headers;
+  return { 'Content-Type': 'application/json', ...init.headers };
+}
 
 async function request<T>(path: string, init?: RequestInit): Promise<ApiResult<T>> {
   try {
@@ -31,7 +43,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<ApiResult<T
       cache: 'no-store',
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       ...init,
-      headers: init?.body ? { 'Content-Type': 'application/json', ...init.headers } : init?.headers,
+      headers: requestHeaders(init),
     });
 
     const body = (await response.json().catch(() => null)) as Record<string, unknown> | null;
@@ -92,6 +104,18 @@ export const adminApi = {
     post<Record<string, never>>(`/api/admin/concerts/${concertId}/actions`, { action: 'reallocate', ...rest }),
   issueCompTickets: ({ concertId, ...rest }: CompIssueInput) =>
     post<{ codes: string[] }>(`/api/admin/concerts/${concertId}/actions`, { action: 'comp-issue', ...rest }),
+
+  /** 이미지 업로드 — 저장에 성공하면 화면·앱에서 그대로 쓰는 공개 주소를 돌려준다. */
+  uploadImage: (file: File, kind: AdminImageKind) => {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('kind', kind);
+    return request<{ url: string }>('/api/admin/images', {
+      method: 'POST',
+      body: form,
+      signal: AbortSignal.timeout(UPLOAD_TIMEOUT_MS),
+    });
+  },
 
   /** 공연장 검색 — 검색어를 비우면 검색 사용 가능 여부만 확인한다. */
   searchVenues: (keyword: string) =>
