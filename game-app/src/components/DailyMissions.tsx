@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { sfxCoin } from "@/lib/sfx";
 import { useLang } from "./LangProvider";
 
-type MissionRow = { id: string; value: number; goal: number; cp: number; claimed: boolean };
+type MissionRow = { id: string; value: number; goal: number; cp: number; tickets?: number; claimed: boolean };
 type Status = { day?: string; missions?: MissionRow[] };
 
 // 미션 id별 문구 키 (goal 값 {n} 치환)
@@ -64,7 +64,11 @@ export default function DailyMissions({ onReward }: { onReward: (celebPoint: num
       const data = await res.json();
       if (data?.status === "ok") {
         sfxCoin();
-        toast.success(t("mission_got").replace("{n}", String(data.cp)));
+        toast.success(
+          (data.tickets ?? 0) > 0
+            ? `${t("mission_got").replace("{n}", String(data.cp))} 🎟️ +${data.tickets}`
+            : t("mission_got").replace("{n}", String(data.cp)),
+        );
         onReward(data.celeb_point ?? 0);
       }
     } catch {
@@ -136,7 +140,9 @@ export default function DailyMissions({ onReward }: { onReward: (celebPoint: num
                     {t("mission_claim")}
                   </button>
                 ) : (
-                  <span className="w-[64px] shrink-0 text-center text-[10.5px] font-bold tabular-nums text-white/35">+{m.cp} CP</span>
+                  <span className="w-[64px] shrink-0 text-center text-[10.5px] font-bold tabular-nums text-white/35">
+                    +{m.cp} CP{(m.tickets ?? 0) > 0 && <span className="block text-gold">🎟️ +{m.tickets}</span>}
+                  </span>
                 )}
               </div>
             );

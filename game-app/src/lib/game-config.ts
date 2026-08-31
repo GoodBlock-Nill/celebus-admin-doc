@@ -45,7 +45,7 @@ export interface GameConfig {
   bgmTracks: { url: string; title: string; artist?: string }[];
   // 데일리 미션 목표·보상 (KST 일 리셋) — 관리자 튜닝
   // 데일리 미션 — 풀에서 매일 count개 로테이션(KST 날짜 결정론). id별 목표·보상 CP. 관리자 튜닝.
-  missions: { count: number; pool: { id: MissionId; goal: number; cp: number }[] };
+  missions: { count: number; pool: { id: MissionId; goal: number; cp: number; tickets?: number }[] };
   // 주간 랭킹 보상 — weeklyTop: 인덱스 = 순위-1 (CP). weeklyTickets: 순위 구간별 가챠 이용권(무상) + others(구간 밖 기록 보유자 전원 지급 장수).
   //   ticketPrice: 유상 이용권 상점 가격(CP). 두 모드 각각 지급, 수령 시점에 적용(소급 주의) — 관리자 튜닝(전용 폼)
   rewards: {

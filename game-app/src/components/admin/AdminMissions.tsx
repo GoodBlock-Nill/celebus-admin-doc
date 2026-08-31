@@ -7,7 +7,7 @@ import { RotateCcw } from "lucide-react";
 import { GAME_CONFIG, type MissionId } from "@/lib/game-config";
 import { Card, INPUT } from "./ui";
 
-export type MissionRow = { id: MissionId; goal: number; cp: number };
+export type MissionRow = { id: MissionId; goal: number; cp: number; tickets?: number };
 export type MissionsOverlay = { count?: number; pool?: MissionRow[] };
 
 // 유저 화면 문구와 동일한 의미의 관리자 라벨 (i18n mission_* 대응)
@@ -41,7 +41,7 @@ export default function AdminMissions({
     onChange(Object.keys(next).length === 0 ? undefined : next);
   };
 
-  const setRow = (id: MissionId, field: "goal" | "cp", v: number) =>
+  const setRow = (id: MissionId, field: "goal" | "cp" | "tickets", v: number) =>
     patch({ pool: pool.map((m) => (m.id === id ? { ...m, [field]: v } : m)) });
 
   const overridden = value?.pool !== undefined;
@@ -65,7 +65,7 @@ export default function AdminMissions({
           const d = defaults.pool.find((x) => x.id === m.id);
           const label = MISSION_LABEL[m.id] ?? { name: m.id, goalUnit: "" };
           return (
-            <div key={m.id} className="grid grid-cols-1 items-center gap-x-3 gap-y-1 rounded-[10px] bg-surface-2 px-3 py-2 ring-1 ring-hairline sm:grid-cols-[11rem_1fr_1fr_auto]">
+            <div key={m.id} className="grid grid-cols-1 items-center gap-x-3 gap-y-1 rounded-[10px] bg-surface-2 px-3 py-2 ring-1 ring-hairline sm:grid-cols-[11rem_1fr_1fr_1fr_auto]">
               <span className="text-[13.5px] font-bold text-fg">{label.name}</span>
               <label className="flex items-center gap-1.5 text-[13px] text-muted">
                 <span className="w-8 shrink-0 text-subtle">목표</span>
@@ -87,8 +87,20 @@ export default function AdminMissions({
                 />
                 <span className="w-9 shrink-0">CP</span>
               </label>
+              <label className="flex items-center gap-1.5 text-[13px] text-muted">
+                <span className="w-8 shrink-0 text-subtle">티켓</span>
+                <input
+                  value={String(m.tickets ?? 0)}
+                  onChange={(e) => setRow(m.id, "tickets", Math.max(0, int(e.target.value)))}
+                  inputMode="numeric"
+                  className={`${INPUT} w-full min-w-0 text-right tabular-nums`}
+                />
+                <span className="w-9 shrink-0">장</span>
+              </label>
               <span className="text-[11.5px] text-subtle">
-                {d && (d.goal !== m.goal || d.cp !== m.cp) ? `기본 ${d.goal}${label.goalUnit} · ${d.cp} CP` : ""}
+                {d && (d.goal !== m.goal || d.cp !== m.cp || (d.tickets ?? 0) !== (m.tickets ?? 0))
+                  ? `기본 ${d.goal}${label.goalUnit} · ${d.cp} CP`
+                  : ""}
               </span>
             </div>
           );
