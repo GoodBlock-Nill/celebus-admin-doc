@@ -2,8 +2,8 @@
 
 import { useCallback } from 'react';
 
+import { AppHeader } from '../_components/app-header';
 import { EmptyState, ErrorState, PageSkeleton } from '../_components/feedback';
-import { MUTED } from '../_components/ui';
 import { useApiResource } from '../_components/use-api-resource';
 import { TicketCard } from './ticket-card';
 import { api } from '@/lib/api-client';
@@ -15,14 +15,12 @@ export default function TicketsPage() {
 
   return (
     <main>
-      <header className="px-4 pb-3 pt-6">
-        <h1 className="text-[20px] font-extrabold">내 티켓</h1>
-        <p className={`mt-1 text-[12.5px] ${MUTED}`}>
-          지급된 티켓의 상태를 확인하는 화면입니다. 입장 QR과 발권은 CELEBUS 앱에서 확인할 수 있습니다.
-        </p>
-      </header>
+      <AppHeader
+        title="내 티켓"
+        description="지급된 티켓의 상태를 확인하는 화면입니다. 입장 QR과 발권은 CELEBUS 앱에서 확인할 수 있습니다."
+      />
 
-      <section className="flex flex-col gap-3 px-4 pb-6">
+      <section className="flex flex-col gap-3 px-4 pb-2">
         {state.status === 'LOADING' ? (
           <PageSkeleton rows={2} />
         ) : state.status === 'ERROR' ? (

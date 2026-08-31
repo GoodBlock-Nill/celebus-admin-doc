@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import { useCallback } from 'react';
 
+import { AppHeader } from './_components/app-header';
 import { Badge } from './_components/badge';
 import { ConcertCard } from './_components/concert-card';
 import { EmptyState, ErrorState, PageSkeleton } from './_components/feedback';
 import { useMemberSession } from './_components/member-session';
-import { MUTED } from './_components/ui';
+import { CARD_TITLE } from './_components/ui';
 import { useApiResource } from './_components/use-api-resource';
 import { api } from '@/lib/api-client';
 
@@ -19,16 +20,9 @@ export default function MemberAppHomePage() {
 
   return (
     <main>
-      <header className="px-4 pb-3 pt-6">
-        <div className="flex items-end justify-between gap-3">
-          <div>
-            <p className="text-[11px] font-bold tracking-[0.28em] text-[#F0426E]">CELEBUS</p>
-            <h1 className="mt-1 text-[26px] font-extrabold leading-none">TICKET</h1>
-          </div>
-        </div>
-
-        <div className="mt-4 flex items-center gap-2">
-          <span className="text-[13.5px] font-semibold">{me.nickname || '회원'}</span>
+      <AppHeader title="공연 예매">
+        <div className="mt-2.5 flex items-center gap-2">
+          <span className="text-[14px] font-semibold text-[#191F28]">{me.nickname || '회원'}</span>
           {me.verified ? (
             <Badge tone="success">본인확인 완료</Badge>
           ) : (
@@ -37,10 +31,10 @@ export default function MemberAppHomePage() {
             </Link>
           )}
         </div>
-      </header>
+      </AppHeader>
 
-      <section className="px-4 pb-6">
-        <h2 className="mb-2.5 text-[14px] font-bold">예매 가능한 공연</h2>
+      <section className="px-4 pb-2">
+        <h2 className={`mb-2.5 ${CARD_TITLE}`}>예매 가능한 공연</h2>
 
         {state.status === 'LOADING' ? (
           <PageSkeleton rows={2} />

@@ -31,20 +31,21 @@ export function DepositGuideCard({ order }: { order: OrderDetailView }) {
 
       <DepositorNameChip value={depositorValue} />
 
-      <section className={`${CARD} p-4`}>
+      {/* 마감이 임박한 정보라 경고 톤 배경으로 한 덩어리로 묶어 보여 준다. */}
+      <section className="rounded-2xl bg-[#FFFAEB] p-4">
         <div className="flex items-center justify-between gap-3">
-          <span className={`text-[13px] ${MUTED}`}>입금 마감</span>
-          <span className={`text-[13px] font-semibold ${NUMERIC}`}>
+          <span className="text-[14px] font-semibold text-[#B54708]">입금 마감</span>
+          <span className={`text-[13.5px] text-[#B54708] ${NUMERIC}`}>
             {formatDeadlineLabel(order.depositDeadline, now)}
           </span>
         </div>
-        <p className="mt-2 text-center text-[22px] font-extrabold text-[#F5B341]">
+        <p className="mt-2 text-center text-[22px] font-extrabold text-[#B54708]">
           <Countdown targetAt={order.depositDeadline} expiredLabel="입금 마감 지남" />
         </p>
       </section>
 
       {/* 자동 취소·확인 보류 조건은 놓치면 손해가 커서 본문에 가까운 크기·대비로 노출한다. */}
-      <ul className="flex flex-col gap-2 px-1 text-[13px] leading-relaxed text-[#C9C8CE]">
+      <ul className="flex flex-col gap-2 px-1 text-[13.5px] leading-[1.65] text-[#4E5968]">
         {DEPOSIT_NOTICES.map((notice) => (
           <li key={notice} className="flex gap-1.5">
             <span aria-hidden="true">·</span>
@@ -77,24 +78,24 @@ function DepositorNameChip({ value }: { value: string }) {
   return (
     <section className={`${CARD} p-4`}>
       <div className="flex items-center gap-2">
-        <span aria-hidden="true" className="h-[14px] w-[3px] rounded-full bg-[#F0426E]" />
-        <p className="text-[13px] font-semibold">입금자명 (필수)</p>
+        <span aria-hidden="true" className="h-[14px] w-[3px] rounded-full bg-[#D6336C]" />
+        <p className="text-[14px] font-bold text-[#191F28]">입금자명 (필수)</p>
       </div>
 
-      <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-[#2A2C34] bg-[#0F1014] py-3 pl-4 pr-2">
-        <p className={`truncate text-[22px] font-extrabold tracking-wide ${NUMERIC}`}>{value}</p>
+      <div className="mt-3 flex items-center justify-between gap-3 rounded-xl bg-[#F2F4F6] py-3 pl-4 pr-2">
+        <p className={`truncate text-[22px] font-extrabold text-[#191F28] ${NUMERIC}`}>{value}</p>
         <button
           type="button"
           onClick={() => void handleCopy()}
-          className="flex min-h-[40px] shrink-0 items-center gap-1.5 rounded-lg border border-[#2A2C34] bg-[#20222A] px-3 text-[12.5px] font-semibold"
+          className="flex min-h-[40px] shrink-0 items-center gap-1.5 rounded-[10px] border border-[#E5E8EB] bg-white px-3 text-[13px] font-semibold text-[#191F28]"
         >
           <CopyIcon />
           {copied ? '복사했습니다' : '입금자명 복사'}
         </button>
       </div>
 
-      <p className={`mt-2 text-[12px] ${MUTED}`}>실명 + 주문번호 끝 {ORDER_NO_TAIL_LENGTH}자리</p>
-      <p className={`mt-0.5 text-[12px] ${MUTED}`}>다르면 확인이 보류돼요</p>
+      <p className={`mt-2 text-[13px] ${MUTED}`}>실명 + 주문번호 끝 {ORDER_NO_TAIL_LENGTH}자리</p>
+      <p className={`mt-0.5 text-[13px] ${MUTED}`}>다르면 확인이 보류돼요</p>
     </section>
   );
 }

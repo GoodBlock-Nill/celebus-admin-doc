@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import { ChevronDownIcon } from './icons';
-import { CARD, MUTED, NUMERIC } from './ui';
+import { CARD, CARD_TITLE, MUTED, NUMERIC } from './ui';
 
 interface SectionCardProps {
   title?: string;
@@ -16,8 +16,8 @@ interface SectionCardProps {
 export function SectionCard({ title, description, children, className = '' }: SectionCardProps) {
   return (
     <section className={`${CARD} p-4 ${className}`}>
-      {title ? <h2 className="text-[14px] font-bold">{title}</h2> : null}
-      {description ? <p className={`mt-1 text-[12px] ${MUTED}`}>{description}</p> : null}
+      {title ? <h2 className={CARD_TITLE}>{title}</h2> : null}
+      {description ? <p className={`mt-1 text-[13px] leading-relaxed ${MUTED}`}>{description}</p> : null}
       <div className={title || description ? 'mt-3' : ''}>{children}</div>
     </section>
   );
@@ -29,13 +29,13 @@ interface InfoRowProps {
   emphasis?: boolean;
 }
 
-/** 라벨-값 한 줄 */
+/** 라벨-값 한 줄 — 라벨은 좌측 보조색, 값은 우측 잉크색 */
 export function InfoRow({ label, value, emphasis = false }: InfoRowProps) {
   return (
     <div className="flex items-start justify-between gap-3 py-2">
-      <span className={`shrink-0 text-[13px] ${MUTED}`}>{label}</span>
+      <span className={`shrink-0 text-[14px] ${MUTED}`}>{label}</span>
       <span
-        className={`${NUMERIC} text-right text-[13px] ${emphasis ? 'font-bold text-[#F1F0EC]' : 'text-[#F1F0EC]'}`}
+        className={`${NUMERIC} text-right text-[14px] text-[#191F28] ${emphasis ? 'font-bold' : ''}`}
       >
         {value}
       </span>
@@ -59,15 +59,15 @@ export function CollapsibleSection({ title, children, defaultOpen = false }: Col
         type="button"
         onClick={() => setIsOpen((value) => !value)}
         aria-expanded={isOpen}
-        className="flex min-h-[52px] w-full items-center justify-between px-4 py-3 text-left text-[14px] font-bold"
+        className="flex min-h-[54px] w-full items-center justify-between px-4 py-3 text-left text-[15px] font-bold text-[#191F28]"
       >
         {title}
         <ChevronDownIcon
-          className={`h-5 w-5 text-[#9A9AA4] transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`h-5 w-5 text-[#8B95A1] transition-transform ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
       {isOpen ? (
-        <div className="whitespace-pre-line border-t border-[#2A2C34] px-4 py-3.5 text-[12.5px] leading-relaxed text-[#C9C8CE]">
+        <div className="whitespace-pre-line border-t border-[#E5E8EB] px-4 py-3.5 text-[14px] leading-[1.7] text-[#4E5968]">
           {children}
         </div>
       ) : null}
@@ -75,21 +75,23 @@ export function CollapsibleSection({ title, children, defaultOpen = false }: Col
   );
 }
 
+type NoticeTone = 'warning' | 'accent' | 'muted';
+
 interface NoticeBoxProps {
-  tone?: 'warning' | 'accent' | 'muted';
+  tone?: NoticeTone;
   children: React.ReactNode;
 }
 
-const NOTICE_TONE: Record<'warning' | 'accent' | 'muted', string> = {
-  warning: 'border-[#F5B34155] bg-[#F5B3410F] text-[#F5B341]',
-  accent: 'border-[#F0426E55] bg-[#F0426E0F] text-[#F0426E]',
-  muted: 'border-[#2A2C34] bg-[#20222A] text-[#9A9AA4]',
+const NOTICE_TONE: Record<NoticeTone, string> = {
+  warning: 'bg-[#FFFAEB] text-[#B54708]',
+  accent: 'bg-[#FDF2F7] text-[#A61E4D]',
+  muted: 'border border-[#E5E8EB] bg-white text-[#4E5968]',
 };
 
 /** 강조 안내 박스 */
 export function NoticeBox({ tone = 'muted', children }: NoticeBoxProps) {
   return (
-    <div className={`rounded-xl border px-3.5 py-3 text-[12.5px] leading-relaxed ${NOTICE_TONE[tone]}`}>
+    <div className={`rounded-xl px-3.5 py-3 text-[13.5px] leading-[1.65] ${NOTICE_TONE[tone]}`}>
       {children}
     </div>
   );

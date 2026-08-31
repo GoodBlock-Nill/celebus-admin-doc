@@ -100,7 +100,7 @@ export function VerifyFlow() {
   };
 
   return (
-    <div className="flex flex-col gap-4 px-4 py-5">
+    <div className="flex flex-col gap-4 px-4 pb-5">
       {step === 'FORM' ? (
         <VerifyFormStep
           form={form}

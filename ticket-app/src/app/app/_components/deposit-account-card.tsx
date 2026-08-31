@@ -37,16 +37,16 @@ export function DepositAccountCard({ order }: { order: OrderDetailView }) {
 
   return (
     <section className={`${CARD} p-4`}>
-      <p className={`text-[12px] ${MUTED}`}>입금 계좌</p>
-      <p className="mt-1 text-[15px] font-bold">
+      <p className={`text-[13px] ${MUTED}`}>입금 계좌</p>
+      <p className="mt-1 text-[16px] font-bold text-[#191F28]">
         {order.bank.name} <span className={NUMERIC}>{order.bank.account}</span>
       </p>
-      <p className={`mt-0.5 text-[12.5px] ${MUTED}`}>예금주 {order.bank.holder}</p>
+      <p className={`mt-0.5 text-[13px] ${MUTED}`}>예금주 {order.bank.holder}</p>
 
-      <div className="mt-3 border-t border-[#2A2C34] pt-2">
+      <div className="mt-3 border-t border-[#E5E8EB] pt-2">
         <div className="flex items-center justify-between gap-3 py-1.5">
-          <span className={`text-[13px] ${MUTED}`}>입금 금액</span>
-          <span className={`text-[20px] font-extrabold text-[#F0426E] ${NUMERIC}`}>
+          <span className={`text-[14px] ${MUTED}`}>입금 금액</span>
+          <span className={`text-[22px] font-extrabold text-[#191F28] ${NUMERIC}`}>
             {formatKrw(order.amountKrw)}
           </span>
         </div>
@@ -77,7 +77,7 @@ export function DepositAccountCard({ order }: { order: OrderDetailView }) {
       >
         토스로 송금하기
       </button>
-      <p className={`mt-1.5 text-center text-[11.5px] ${MUTED}`}>
+      <p className={`mt-1.5 text-center text-[12.5px] ${MUTED}`}>
         토스 앱이 설치된 휴대폰에서 동작합니다
       </p>
     </section>
@@ -96,7 +96,7 @@ function CopyButton({ label, copied, onClick }: CopyButtonProps) {
     <button
       type="button"
       onClick={onClick}
-      className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-[#2A2C34] bg-[#20222A] text-[13px] font-semibold"
+      className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-[#E5E8EB] bg-white text-[13.5px] font-semibold text-[#191F28]"
     >
       <CopyIcon />
       {copied ? '복사했습니다' : label}

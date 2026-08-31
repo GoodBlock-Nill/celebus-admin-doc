@@ -77,9 +77,9 @@ export function CheckoutForm({
         description={`1인 최대 ${concert.maxPerUser}매 · 현재 보유 ${heldQty}매 (이번 주문 가능 ${maxQty}매)`}
       >
         <QtyStepper value={qty} min={1} max={maxQty} onChange={setQty} />
-        <div className="mt-3 flex items-center justify-between border-t border-[#2A2C34] pt-3">
-          <span className={`text-[13px] ${MUTED}`}>결제 예정 금액</span>
-          <span className={`text-[19px] font-extrabold text-[#F0426E] ${NUMERIC}`}>
+        <div className="mt-3 flex items-center justify-between border-t border-[#E5E8EB] pt-3">
+          <span className={`text-[14px] ${MUTED}`}>결제 예정 금액</span>
+          <span className={`text-[22px] font-extrabold text-[#191F28] ${NUMERIC}`}>
             {formatKrw(amount)}
           </span>
         </div>

@@ -13,7 +13,7 @@ const APP_GUIDE = '입장 QR과 발권은 CELEBUS 앱에서 확인할 수 있습
 function NoticePanel({
   icon,
   title,
-  titleClassName = 'text-[#C9C8CE]',
+  titleClassName = 'text-[#191F28]',
   children,
 }: {
   icon: ReactNode;
@@ -23,10 +23,10 @@ function NoticePanel({
 }) {
   return (
     <div className="flex flex-col items-center gap-2.5 px-5 py-9 text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#20222A] text-[#6B6C77]">
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F2F4F6] text-[#6B7684]">
         {icon}
       </span>
-      <p className={`text-[14px] font-bold ${titleClassName}`}>{title}</p>
+      <p className={`text-[15px] font-bold ${titleClassName}`}>{title}</p>
       {children}
     </div>
   );
@@ -40,7 +40,7 @@ export function TicketEntryNotice({ ticket }: { ticket: TicketDetailView }) {
   if (ticket.status === 'REVOKED') {
     return (
       <NoticePanel icon={<LockIcon className="h-7 w-7" />} title="환불로 회수된 티켓입니다">
-        <p className={`text-[12px] leading-relaxed ${MUTED}`}>
+        <p className={`text-[13.5px] leading-relaxed ${MUTED}`}>
           이 티켓으로는 입장할 수 없습니다. 다시 관람을 원하시면 새로 예매해 주세요.
         </p>
       </NoticePanel>
@@ -52,19 +52,19 @@ export function TicketEntryNotice({ ticket }: { ticket: TicketDetailView }) {
       <NoticePanel
         icon={<TicketIcon className="h-7 w-7" />}
         title="입장이 완료된 티켓입니다"
-        titleClassName="text-[#3DC98A]"
+        titleClassName="text-[#067647]"
       >
-        <p className={`text-[12.5px] ${MUTED} ${NUMERIC}`}>
+        <p className={`text-[13.5px] ${MUTED} ${NUMERIC}`}>
           입장 시각 {ticket.usedAt ? formatDateTime(ticket.usedAt) : '-'}
         </p>
-        <p className={`text-[12px] leading-relaxed ${MUTED}`}>{APP_GUIDE}</p>
+        <p className={`text-[13.5px] leading-relaxed ${MUTED}`}>{APP_GUIDE}</p>
       </NoticePanel>
     );
   }
 
   return (
     <NoticePanel icon={<TicketIcon className="h-7 w-7" />} title="티켓이 지급되었습니다">
-      <p className={`text-[12.5px] leading-relaxed ${MUTED}`}>{APP_GUIDE}</p>
+      <p className={`text-[13.5px] leading-relaxed ${MUTED}`}>{APP_GUIDE}</p>
     </NoticePanel>
   );
 }

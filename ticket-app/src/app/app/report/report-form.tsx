@@ -57,9 +57,9 @@ export function ReportForm({ busy, serverError, onSubmit }: ReportFormProps) {
                 name="targetType"
                 checked={targetType === type}
                 onChange={() => setTargetType(type)}
-                className="h-4.5 w-4.5 accent-[#F0426E]"
+                className="h-4.5 w-4.5 accent-[#D6336C]"
               />
-              <span className="text-[13.5px]">{type}</span>
+              <span className="text-[14.5px] text-[#191F28]">{type}</span>
             </label>
           ))}
         </div>
@@ -112,7 +112,7 @@ export function ReportForm({ busy, serverError, onSubmit }: ReportFormProps) {
         {busy ? '접수 중…' : '신고 접수하기'}
       </button>
 
-      <p className={`px-1 text-[11.5px] leading-relaxed ${MUTED}`}>
+      <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
         허위 신고가 반복되면 신고 기능 사용이 제한될 수 있습니다.
       </p>
     </div>

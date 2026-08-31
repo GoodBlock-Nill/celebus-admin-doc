@@ -69,10 +69,10 @@ function buildSteps(order: OrderDetailView): TimelineStep[] {
 }
 
 const DOT_CLASS: Record<StepState, string> = {
-  DONE: 'border-[#3DC98A] bg-[#3DC98A] text-[#0F1014]',
-  CURRENT: 'border-[#F0426E] bg-[#F0426E1F] text-[#F0426E]',
-  PENDING: 'border-[#2A2C34] bg-[#20222A] text-[#5F606B]',
-  CANCELED: 'border-[#2A2C34] bg-[#20222A] text-[#5F606B]',
+  DONE: 'border-[#12B76A] bg-[#12B76A] text-white',
+  CURRENT: 'border-[#D6336C] bg-[#FDF2F7] text-[#D6336C]',
+  PENDING: 'border-[#E5E8EB] bg-[#F2F4F6] text-[#B0B8C1]',
+  CANCELED: 'border-[#E5E8EB] bg-[#F2F4F6] text-[#B0B8C1]',
 };
 
 /** 주문 진행 타임라인 */
@@ -89,24 +89,24 @@ export function OrderTimeline({ order }: { order: OrderDetailView }) {
             >
               {step.state === 'DONE' ? <CheckIcon className="h-4 w-4" /> : index + 1}
             </span>
-            {index < steps.length - 1 ? <span className="h-full w-px flex-1 bg-[#2A2C34]" /> : null}
+            {index < steps.length - 1 ? <span className="h-full w-px flex-1 bg-[#E5E8EB]" /> : null}
           </div>
 
           <div className={index < steps.length - 1 ? 'pb-4' : ''}>
             <p
-              className={`text-[13.5px] font-bold ${
+              className={`text-[14.5px] font-bold ${
                 step.state === 'CURRENT'
-                  ? 'text-[#F0426E]'
+                  ? 'text-[#D6336C]'
                   : step.state === 'DONE'
-                    ? 'text-[#F1F0EC]'
-                    : 'text-[#6B6C77]'
+                    ? 'text-[#191F28]'
+                    : 'text-[#B0B8C1]'
               }`}
             >
               {step.title}
             </p>
-            <p className={`mt-0.5 text-[12px] leading-relaxed ${MUTED}`}>{step.description}</p>
+            <p className={`mt-0.5 text-[13px] leading-relaxed ${MUTED}`}>{step.description}</p>
             {step.at ? (
-              <p className={`mt-0.5 text-[11.5px] text-[#6B6C77] ${NUMERIC}`}>
+              <p className={`mt-0.5 text-[12.5px] text-[#8B95A1] ${NUMERIC}`}>
                 {formatDateTime(step.at)}
               </p>
             ) : null}

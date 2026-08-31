@@ -9,7 +9,8 @@ import { Badge } from '../../_components/badge';
 import { formatSessionPeriod } from '../../_components/concert-card';
 import { ErrorState, PageSkeleton } from '../../_components/feedback';
 import { useMemberSession } from '../../_components/member-session';
-import { GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
+import { CARD, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
+import { PosterPlaceholder } from '../../_components/wordmark';
 import { AppModal } from '../../_components/modal';
 import { CollapsibleSection, InfoRow, SectionCard } from '../../_components/section';
 import { SessionOption } from '../../_components/session-option';
@@ -70,28 +71,28 @@ export default function ConcertDetailPage() {
     <main>
       <AppHeader title="공연 상세" backHref="/app" />
 
-      {/* 포스터가 있으면 3:4 비율로 함께 보여 주고, 없으면 기존 그라디언트 화면을 유지한다. */}
-      <section className="flex gap-4 bg-linear-to-br from-[#F0426E] via-[#8B4BD6] to-[#191A20] px-5 pb-7 pt-6">
-        {concert.posterUrl ? (
-          <img
-            src={concert.posterUrl}
-            alt={`${concert.title} 포스터`}
-            className="aspect-[3/4] w-[112px] shrink-0 rounded-xl object-cover shadow-[0_6px_20px_rgba(0,0,0,0.35)]"
-            loading="lazy"
-            decoding="async"
-          />
-        ) : null}
-        <div className="min-w-0">
-          <Badge tone={statusMeta.tone} className="bg-black/30 text-white">
-            {statusMeta.label}
-          </Badge>
-          <p className="mt-3 text-[12px] font-bold tracking-[0.2em] text-white/85">{concert.artist}</p>
-          <h2 className="mt-1.5 text-[22px] font-extrabold leading-snug text-white">{concert.title}</h2>
-        </div>
-      </section>
-
       {/* 하단 고정 예매 바가 마지막 카드를 가리지 않도록 바 높이 + 여유만큼 아래 여백을 둔다. */}
-      <div className="flex flex-col gap-3 px-4 pb-28 pt-4">
+      <div className="flex flex-col gap-3 px-4 pb-28">
+        {/* 포스터가 있으면 3:4 비율로 함께 보여 주고, 없으면 제목 영역만 보여 준다. */}
+        <section className={`${CARD} flex gap-4 p-4`}>
+          {concert.posterUrl ? (
+            <img
+              src={concert.posterUrl}
+              alt={`${concert.title} 포스터`}
+              className="aspect-[3/4] w-[96px] shrink-0 rounded-lg object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <PosterPlaceholder className="aspect-[3/4] w-[96px] shrink-0 rounded-lg" />
+          )}
+          <div className="min-w-0 flex-1">
+            <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
+            <p className={`mt-2.5 text-[13px] font-semibold ${MUTED}`}>{concert.artist}</p>
+            <h2 className="mt-1 text-[19px] font-bold leading-snug text-[#191F28]">{concert.title}</h2>
+          </div>
+        </section>
+
         <SectionCard title="공연 정보">
           <InfoRow label="일시" value={formatSessionPeriod(sessions)} />
           <InfoRow
@@ -121,14 +122,14 @@ export default function ConcertDetailPage() {
               />
             ))}
           </div>
-          <p className={`mt-2.5 text-[11.5px] ${MUTED}`}>
+          <p className={`mt-2.5 text-[12.5px] leading-relaxed ${MUTED}`}>
             잔여석은 실시간으로 반영됩니다. 입금 확인 중인 좌석도 예약된 것으로 계산됩니다.
           </p>
         </SectionCard>
 
         {concert.description ? (
           <SectionCard title="공연 소개">
-            <p className="whitespace-pre-line text-[13px] leading-relaxed text-[#C9C8CE]">
+            <p className="whitespace-pre-line text-[14px] leading-[1.7] text-[#4E5968]">
               {concert.description}
             </p>
           </SectionCard>
@@ -155,10 +156,10 @@ export default function ConcertDetailPage() {
         <CollapsibleSection title="유의사항">{concert.notice}</CollapsibleSection>
       </div>
 
-      <div className="fixed bottom-0 left-1/2 w-full max-w-[420px] -translate-x-1/2 border-t border-[#2A2C34] bg-[#0F1014F5] px-4 pb-5 pt-3 backdrop-blur">
+      <div className="fixed bottom-0 left-1/2 w-full max-w-[420px] -translate-x-1/2 border-t border-[#E5E8EB] bg-white px-4 pb-5 pt-3">
         {/* 버튼이 왜 눌리지 않는지 바로 알 수 있도록 비활성 사유를 버튼 위에 표시한다. */}
         {isOnSale && selectedSessionId === '' ? (
-          <p className={`mb-2 text-center text-[12px] ${MUTED}`}>회차를 선택해 주세요</p>
+          <p className={`mb-2 text-center text-[13px] ${MUTED}`}>회차를 선택해 주세요</p>
         ) : null}
         <button
           type="button"

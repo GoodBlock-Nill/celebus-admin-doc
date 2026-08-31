@@ -14,13 +14,13 @@ export function VenueValue({ venue, address, mapUrl }: VenueValueProps) {
   return (
     <span className="flex flex-col items-end gap-0.5">
       <span>{venue}</span>
-      {address ? <span className={`text-[12px] leading-snug ${MUTED}`}>{address}</span> : null}
+      {address ? <span className={`text-[13px] leading-snug ${MUTED}`}>{address}</span> : null}
       {mapUrl ? (
         <a
           href={mapUrl}
           target="_blank"
           rel="noreferrer"
-          className="text-[12px] font-semibold text-[#F0426E] underline underline-offset-2"
+          className="text-[13px] font-semibold text-[#D6336C] underline underline-offset-2"
         >
           네이버지도 보기
         </a>

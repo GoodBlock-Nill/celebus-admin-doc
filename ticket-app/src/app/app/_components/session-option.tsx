@@ -21,17 +21,19 @@ export function SessionOption({ session, selected, onSelect }: SessionOptionProp
       disabled={isSoldOut}
       aria-pressed={selected}
       onClick={() => onSelect(session.id)}
-      className={`flex min-h-[76px] w-full items-center justify-between gap-3 rounded-2xl border px-4 py-3.5 text-left transition ${
+      className={`flex min-h-[76px] w-full items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-left transition ${
         isSoldOut
-          ? 'border-[#2A2C34] bg-[#15161B] opacity-55'
+          ? 'border-[#E5E8EB] bg-[#F7F7FA] text-[#B0B8C1]'
           : selected
-            ? 'border-[#F0426E] bg-[#F0426E14]'
-            : 'border-[#2A2C34] bg-[#191A20]'
+            ? 'border-[#D6336C] bg-[#FDF2F7]'
+            : 'border-[#E5E8EB] bg-white'
       }`}
     >
       <span className="min-w-0 flex-1">
-        <span className="block text-[14px] font-bold">{session.name}</span>
-        <span className={`mt-1 block text-[12.5px] ${MUTED} ${NUMERIC}`}>
+        <span className={`block text-[15px] font-bold ${isSoldOut ? '' : 'text-[#191F28]'}`}>
+          {session.name}
+        </span>
+        <span className={`mt-1 block text-[13px] ${isSoldOut ? '' : MUTED} ${NUMERIC}`}>
           {formatDateTime(session.startAt)}
         </span>
       </span>
@@ -40,8 +42,10 @@ export function SessionOption({ session, selected, onSelect }: SessionOptionProp
         <Badge tone="muted">매진</Badge>
       ) : (
         <span className="shrink-0 text-right">
-          <span className={`block text-[11px] ${MUTED}`}>잔여</span>
-          <span className={`block text-[15px] font-bold ${NUMERIC}`}>{session.remaining}석</span>
+          <span className={`block text-[12px] ${MUTED}`}>잔여</span>
+          <span className={`block text-[16px] font-bold text-[#191F28] ${NUMERIC}`}>
+            {session.remaining}석
+          </span>
         </span>
       )}
     </button>

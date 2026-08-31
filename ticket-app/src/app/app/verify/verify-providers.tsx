@@ -5,8 +5,8 @@ import { CheckIcon } from '../_components/icons';
 /**
  * 간편인증 수단 — 실제 연동 없이 모의로 동작한다.
  *
- * 색 토큰은 각 수단의 브랜드 색을 그대로 쓰되, 어두운 배경에서 글자 대비가 떨어지는 색
- * (토스 파랑)은 본문 표기용으로 밝은 톤을 따로 둔다.
+ * 원형 마크는 각 수단의 브랜드 색을 그대로 쓰고, 선택 상태는 같은 브랜드 색의
+ * 옅은 배경으로 표시한다.
  */
 export const AUTH_PROVIDERS = [
   {
@@ -14,24 +14,24 @@ export const AUTH_PROVIDERS = [
     label: '카카오',
     initial: '카',
     markClass: 'bg-[#FEE500] text-[#3C1E1E]',
-    selectedClass: 'border-[#FEE500] bg-[#FEE5001F]',
-    toneClass: 'text-[#FEE500]',
+    selectedClass: 'border-[#F2CE00] bg-[#FFFBE6]',
+    toneClass: 'text-[#7A6100]',
   },
   {
     key: 'TOSS',
     label: '토스',
     initial: '토',
     markClass: 'bg-[#0064FF] text-white',
-    selectedClass: 'border-[#0064FF] bg-[#0064FF1F]',
-    toneClass: 'text-[#7FB2FF]',
+    selectedClass: 'border-[#0064FF] bg-[#EFF5FF]',
+    toneClass: 'text-[#0052D4]',
   },
   {
     key: 'NAVER',
     label: '네이버',
     initial: 'N',
     markClass: 'bg-[#03C75A] text-white',
-    selectedClass: 'border-[#03C75A] bg-[#03C75A1F]',
-    toneClass: 'text-[#3FDE87]',
+    selectedClass: 'border-[#03C75A] bg-[#EDFBF2]',
+    toneClass: 'text-[#028A3F]',
   },
 ] as const;
 
@@ -71,7 +71,7 @@ export function ProviderMark({
 /** 선택 표시 — 미선택은 빈 원, 선택은 브랜드 색 체크 */
 function SelectIndicator({ provider, selected }: { provider: AuthProvider; selected: boolean }) {
   if (!selected) {
-    return <span aria-hidden="true" className="h-5 w-5 shrink-0 rounded-full border border-[#3A3C46]" />;
+    return <span aria-hidden="true" className="h-5 w-5 shrink-0 rounded-full border border-[#D1D6DB]" />;
   }
   return (
     <span
@@ -101,10 +101,10 @@ export function ProviderSelector({ selected, onSelect }: ProviderSelectorProps) 
             role="radio"
             aria-checked={isSelected}
             onClick={() => onSelect(provider.key)}
-            className={`flex min-h-[56px] w-full items-center gap-3 rounded-xl border px-3.5 text-[14px] font-semibold transition ${
+            className={`flex min-h-[56px] w-full items-center gap-3 rounded-xl border px-3.5 text-[15px] font-semibold transition ${
               isSelected
-                ? `${provider.selectedClass} text-[#F1F0EC]`
-                : 'border-[#2A2C34] bg-[#20222A] text-[#C9C8CE]'
+                ? `${provider.selectedClass} text-[#191F28]`
+                : 'border-[#E5E8EB] bg-white text-[#4E5968]'
             }`}
           >
             <ProviderMark provider={provider} />

@@ -44,7 +44,7 @@ export default function OrderDetailPage() {
     return (
       <main>
         <AppHeader title="주문 상세" backHref="/app/orders" />
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 px-4 pb-5">
           <ErrorState message={state.reason} onRetry={() => void reload()} />
           <Link href="/app/orders" className={GHOST_BUTTON}>
             목록으로 돌아가기
@@ -76,7 +76,7 @@ export default function OrderDetailPage() {
         right={<Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>}
       />
 
-      <div className="flex flex-col gap-3.5 px-4 py-5">
+      <div className="flex flex-col gap-3.5 px-4 pb-5">
         <SectionCard title="주문 정보">
           <InfoRow label="주문번호" value={order.orderNo} />
           <InfoRow label="공연" value={order.concertTitle} />
@@ -111,7 +111,7 @@ export default function OrderDetailPage() {
 
         {needsDepositGuide(order.status) ? (
           <>
-            <h2 className="px-1 text-[14px] font-bold">입금 계좌 확인</h2>
+            <h2 className="px-1 text-[16px] font-bold text-[#191F28]">입금 계좌 확인</h2>
             <DepositGuideCard order={order} />
           </>
         ) : null}
@@ -166,7 +166,7 @@ export default function OrderDetailPage() {
           ) : null}
         </div>
 
-        <p className={`px-1 text-[11.5px] leading-relaxed ${MUTED}`}>
+        <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
           환불 수수료는 관람일 기준으로 단계별 적용됩니다. 자세한 내용은 공연 상세의 환불 정책을 확인해
           주세요.
         </p>

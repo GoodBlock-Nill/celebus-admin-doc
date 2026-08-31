@@ -42,7 +42,7 @@ export default function CheckoutPage() {
     return (
       <main>
         <AppHeader title="예매 신청" backHref="/app" />
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 px-4 pb-5">
           <ErrorState message={state.reason} onRetry={() => void reload()} />
           <Link href="/app" className={GHOST_BUTTON}>
             목록으로 돌아가기
@@ -59,7 +59,7 @@ export default function CheckoutPage() {
     return (
       <main>
         <AppHeader title="예매 신청" backHref={backHref} />
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 px-4 pb-5">
           <NoticeBox tone="accent">
             티켓 예매에는 최초 1회 간편인증 본인확인이 필요합니다. 본인확인을 마친 뒤 예매를 이어서 진행해
             주세요.
@@ -76,7 +76,7 @@ export default function CheckoutPage() {
     return (
       <main>
         <AppHeader title="입금 안내" backHref="/app/orders" />
-        <div className="flex flex-col gap-4 px-4 py-5">
+        <div className="flex flex-col gap-4 px-4 pb-5">
           <NoticeBox tone="warning">
             아직 예매가 확정되지 않았습니다. 안내된 계좌로 마감 시각까지 입금해 주세요.
           </NoticeBox>
@@ -132,7 +132,7 @@ export default function CheckoutPage() {
   return (
     <main>
       <AppHeader title="예매 신청" backHref={backHref} />
-      <div className="flex flex-col gap-4 px-4 py-5">
+      <div className="flex flex-col gap-4 px-4 pb-5">
         {maxQty <= 0 ? (
           <>
             <NoticeBox tone="warning">

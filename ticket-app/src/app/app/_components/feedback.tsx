@@ -13,8 +13,8 @@ interface EmptyStateProps {
 export function EmptyState({ title, description, actionLabel, actionHref }: EmptyStateProps) {
   return (
     <div className={`${CARD} flex flex-col items-center gap-2 px-5 py-12 text-center`}>
-      <p className="text-[14px] font-semibold">{title}</p>
-      {description ? <p className={`text-[12.5px] leading-relaxed ${MUTED}`}>{description}</p> : null}
+      <p className="text-[15px] font-bold text-[#191F28]">{title}</p>
+      {description ? <p className={`text-[13.5px] leading-relaxed ${MUTED}`}>{description}</p> : null}
       {actionLabel && actionHref ? (
         <Link href={actionHref} className={`${GHOST_BUTTON} mt-3 max-w-[220px]`}>
           {actionLabel}
@@ -28,8 +28,8 @@ export function EmptyState({ title, description, actionLabel, actionHref }: Empt
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
     <div className={`${CARD} flex flex-col items-center gap-2 px-5 py-12 text-center`}>
-      <p className="text-[14px] font-semibold text-[#F06548]">불러오지 못했습니다</p>
-      <p className={`text-[12.5px] leading-relaxed ${MUTED}`}>{message}</p>
+      <p className="text-[15px] font-bold text-[#D92D20]">불러오지 못했습니다</p>
+      <p className={`text-[13.5px] leading-relaxed ${MUTED}`}>{message}</p>
       {onRetry ? (
         <button type="button" onClick={onRetry} className={`${GHOST_BUTTON} mt-3 max-w-[220px]`}>
           다시 시도
@@ -44,7 +44,7 @@ export function ErrorBanner({ message }: { message: string }) {
   return (
     <p
       role="alert"
-      className="rounded-xl border border-[#F0654855] bg-[#F065481A] px-3.5 py-3 text-[12.5px] leading-relaxed text-[#F06548]"
+      className="rounded-xl bg-[#FEF3F2] px-3.5 py-3 text-[13.5px] leading-relaxed text-[#D92D20]"
     >
       {message}
     </p>
@@ -56,7 +56,7 @@ export function PageSkeleton({ rows = 3 }: { rows?: number }) {
   return (
     <div className="flex flex-col gap-3 px-4 py-5">
       {Array.from({ length: rows }, (_, index) => (
-        <div key={index} className="h-24 animate-pulse rounded-2xl border border-[#2A2C34] bg-[#191A20]" />
+        <div key={index} className="h-24 animate-pulse rounded-2xl border border-[#E5E8EB] bg-white" />
       ))}
     </div>
   );
@@ -66,7 +66,7 @@ export function PageSkeleton({ rows = 3 }: { rows?: number }) {
 export function NotFoundNotice({ message, backHref }: { message: string; backHref: string }) {
   return (
     <div className="flex flex-col gap-4 px-4 py-8">
-      <p className={`text-[13px] ${MUTED}`}>{message}</p>
+      <p className={`text-[14px] ${MUTED}`}>{message}</p>
       <Link href={backHref} className={GHOST_BUTTON}>
         목록으로 돌아가기
       </Link>

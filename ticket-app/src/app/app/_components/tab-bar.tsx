@@ -23,7 +23,7 @@ export function TabBar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-1/2 z-40 w-full max-w-[420px] -translate-x-1/2 border-t border-[#2A2C34] bg-[#0F1014F5] backdrop-blur">
+    <nav className="fixed bottom-0 left-1/2 z-40 w-full max-w-[420px] -translate-x-1/2 border-t border-[#E5E8EB] bg-white">
       <ul className="flex">
         {TABS.map(({ href, label, Icon }) => {
           const isActive = pathname === href || pathname.startsWith(`${href}/`);
@@ -33,7 +33,7 @@ export function TabBar() {
                 href={href}
                 aria-current={isActive ? 'page' : undefined}
                 className={`flex min-h-[60px] flex-col items-center justify-center gap-1 pb-1 pt-2 text-[11px] font-semibold ${
-                  isActive ? 'text-[#F0426E]' : 'text-[#9A9AA4]'
+                  isActive ? 'text-[#D6336C]' : 'text-[#8B95A1]'
                 }`}
               >
                 <Icon className="h-[22px] w-[22px]" />

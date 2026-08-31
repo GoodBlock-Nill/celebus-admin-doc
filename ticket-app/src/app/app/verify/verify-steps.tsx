@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { CheckIcon, ShieldIcon } from '../_components/icons';
 import { Field, TextInput } from '../_components/form-controls';
 import { CollapsibleSection, NoticeBox, SectionCard } from '../_components/section';
-import { GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../_components/ui';
+import { CARD, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../_components/ui';
 import {
   ProviderMark,
   ProviderSelector,
@@ -50,11 +50,13 @@ export function VerifyFormStep({
 }: FormStepProps) {
   return (
     <div className="flex flex-col gap-3.5">
-      <div className="flex items-start gap-3 rounded-2xl border border-[#2A2C34] bg-[#191A20] p-4">
-        <ShieldIcon className="mt-0.5 h-6 w-6 shrink-0 text-[#F0426E]" />
+      <div className={`${CARD} flex items-start gap-3 p-4`}>
+        <ShieldIcon className="mt-0.5 h-6 w-6 shrink-0 text-[#D6336C]" />
         <div>
-          <p className="text-[14px] font-bold">티켓 예매에는 최초 1회 간편인증 본인확인이 필요합니다.</p>
-          <p className={`mt-1.5 text-[12.5px] leading-relaxed ${MUTED}`}>
+          <p className="text-[15px] font-bold text-[#191F28]">
+            티켓 예매에는 최초 1회 간편인증 본인확인이 필요합니다.
+          </p>
+          <p className={`mt-1.5 text-[13.5px] leading-[1.65] ${MUTED}`}>
             암표·부정 예매를 막기 위해 실명으로 확인된 계정만 예매할 수 있습니다. 확인된 정보는 예매 확인과
             입금자명 대조에만 사용됩니다.
           </p>
@@ -65,7 +67,9 @@ export function VerifyFormStep({
       <SectionCard title="인증 수단 선택" description="사용 중인 간편인증 앱을 먼저 선택해 주세요.">
         <ProviderSelector selected={provider} onSelect={onSelectProvider} />
         {!provider ? (
-          <p className={`mt-2.5 text-[11.5px] ${MUTED}`}>인증 수단을 선택한 뒤 본인 정보를 입력해 주세요.</p>
+          <p className={`mt-2.5 text-[12.5px] ${MUTED}`}>
+            인증 수단을 선택한 뒤 본인 정보를 입력해 주세요.
+          </p>
         ) : null}
       </SectionCard>
 
@@ -146,13 +150,13 @@ export function VerifyRequestStep({ provider, realName, phone, busy, onSubmit, o
         <div className={`flex items-center gap-3 rounded-xl border px-3.5 py-3 ${selected.selectedClass}`}>
           <ProviderMark provider={selected} size="lg" />
           <div className="min-w-0">
-            <p className={`text-[13px] font-extrabold ${selected.toneClass}`}>{label} 간편인증</p>
-            <p className="mt-0.5 text-[12.5px] font-semibold text-[#F1F0EC]">
+            <p className={`text-[14px] font-bold ${selected.toneClass}`}>{label} 간편인증</p>
+            <p className="mt-0.5 text-[13.5px] font-semibold text-[#191F28]">
               {realName} · {phone}
             </p>
           </div>
         </div>
-        <p className={`mt-3 text-[12px] leading-relaxed ${MUTED}`}>
+        <p className={`mt-3 text-[13px] leading-relaxed ${MUTED}`}>
           {label} 앱의 인증 요청 알림을 확인하고 인증을 완료해 주세요. 요청은 5분간 유효합니다.
         </p>
       </SectionCard>
@@ -171,15 +175,15 @@ export function VerifyRequestStep({ provider, realName, phone, busy, onSubmit, o
 export function VerifyBlockedStep({ onRetry }: { onRetry: () => void }) {
   return (
     <div className="flex flex-col gap-3.5">
-      <div className="rounded-2xl border border-[#F0654855] bg-[#F065481A] p-5 text-center">
-        <p className="text-[16px] font-extrabold text-[#F06548]">이미 본인확인된 계정이 있습니다</p>
-        <p className="mt-2 text-[12.5px] leading-relaxed text-[#E3B0A6]">
+      <div className="rounded-2xl bg-[#FEF3F2] p-5 text-center">
+        <p className="text-[16px] font-bold text-[#D92D20]">이미 본인확인된 계정이 있습니다</p>
+        <p className="mt-2 text-[13.5px] leading-relaxed text-[#B42318]">
           동일한 명의로 이미 본인확인을 마친 계정이 있어 이 계정에서는 본인확인을 완료할 수 없습니다.
         </p>
       </div>
 
       <SectionCard title="왜 차단되나요?">
-        <ul className={`flex flex-col gap-1.5 text-[12.5px] leading-relaxed ${MUTED}`}>
+        <ul className={`flex flex-col gap-1.5 text-[13.5px] leading-relaxed ${MUTED}`}>
           <li>· 티켓 예매는 1인 1계정 원칙으로 운영됩니다.</li>
           <li>· 여러 계정으로 나눠 구매하는 행위를 막기 위해 명의 중복을 차단합니다.</li>
           <li>· 기존에 본인확인을 마친 계정으로 로그인해 예매를 진행해 주세요.</li>
@@ -200,12 +204,12 @@ export function VerifyBlockedStep({ onRetry }: { onRetry: () => void }) {
 export function VerifyDoneStep({ realName, nextHref }: { realName: string; nextHref: string }) {
   return (
     <div className="flex flex-col gap-3.5">
-      <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#3DC98A55] bg-[#3DC98A14] px-5 py-9 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#3DC98A] text-[#0F1014]">
+      <div className="flex flex-col items-center gap-3 rounded-2xl bg-[#ECFDF3] px-5 py-9 text-center">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#12B76A] text-white">
           <CheckIcon className="h-7 w-7" />
         </span>
-        <p className="text-[17px] font-extrabold text-[#3DC98A]">본인확인이 완료되었습니다</p>
-        <p className="text-[12.5px] leading-relaxed text-[#9CC9B6]">
+        <p className="text-[17px] font-bold text-[#067647]">본인확인이 완료되었습니다</p>
+        <p className="text-[13.5px] leading-relaxed text-[#3E7C60]">
           {realName} 님 명의로 확인되었습니다. 이제 티켓을 예매할 수 있습니다.
         </p>
       </div>

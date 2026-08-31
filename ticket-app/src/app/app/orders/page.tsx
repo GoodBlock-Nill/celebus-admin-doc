@@ -2,8 +2,8 @@
 
 import { useCallback } from 'react';
 
+import { AppHeader } from '../_components/app-header';
 import { EmptyState, ErrorState, PageSkeleton } from '../_components/feedback';
-import { MUTED } from '../_components/ui';
 import { useApiResource } from '../_components/use-api-resource';
 import { OrderCard } from './order-card';
 import { api } from '@/lib/api-client';
@@ -15,14 +15,12 @@ export default function OrdersPage() {
 
   return (
     <main>
-      <header className="px-4 pb-3 pt-6">
-        <h1 className="text-[20px] font-extrabold">주문 내역</h1>
-        <p className={`mt-1 text-[12.5px] ${MUTED}`}>
-          입금 확인 후 지급 대기로 바뀌고, 티켓 지급이 끝나면 내 티켓에서 확인할 수 있습니다.
-        </p>
-      </header>
+      <AppHeader
+        title="주문 내역"
+        description="입금 확인 후 지급 대기로 바뀌고, 티켓 지급이 끝나면 내 티켓에서 확인할 수 있습니다."
+      />
 
-      <section className="px-4 pb-6">
+      <section className="px-4 pb-2">
         {state.status === 'LOADING' ? (
           <PageSkeleton rows={2} />
         ) : state.status === 'ERROR' ? (

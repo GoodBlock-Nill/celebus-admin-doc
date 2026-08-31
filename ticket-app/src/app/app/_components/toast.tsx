@@ -25,8 +25,8 @@ export interface AppToastApi {
 const AppToastContext = createContext<AppToastApi | null>(null);
 
 const TOAST_STYLE: Record<ToastKind, string> = {
-  success: 'border-[#3DC98A55] bg-[#17251F] text-[#8FE3BE]',
-  info: 'border-[#2A2C34] bg-[#20222A] text-[#E4E3E8]',
+  success: 'border-[#E5E8EB] bg-white text-[#067647]',
+  info: 'border-[#E5E8EB] bg-white text-[#191F28]',
 };
 
 /** 회원 앱 공통 알림 — 화면 상단 중앙, 3초 뒤 자동 닫힘 */
@@ -76,7 +76,7 @@ function ToastStack({ items, onClose }: { items: ToastItem[]; onClose: (id: numb
       {items.map((item) => (
         <div
           key={item.id}
-          className={`pointer-events-auto flex items-start gap-2 rounded-xl border px-3.5 py-3 text-[13px] leading-relaxed shadow-[0_8px_24px_rgba(0,0,0,0.45)] ${TOAST_STYLE[item.kind]}`}
+          className={`pointer-events-auto flex items-start gap-2 rounded-xl border px-3.5 py-3 text-[13.5px] leading-relaxed shadow-[0_4px_16px_rgba(25,31,40,0.12)] ${TOAST_STYLE[item.kind]}`}
         >
           {item.kind === 'success' ? <CheckIcon className="mt-0.5 h-4 w-4 shrink-0" /> : null}
           <span className="flex-1 break-words">{item.message}</span>

@@ -2,8 +2,10 @@ import Link from 'next/link';
 
 import { Badge } from './badge';
 import { ChevronRightIcon } from './icons';
+import { TicketPerforation } from './perforation';
 import { CONCERT_STATUS_META } from './status-meta';
 import { CARD, MUTED, NUMERIC } from './ui';
+import { PosterPlaceholder } from './wordmark';
 import type { ConcertView, SessionView } from '@/lib/api-types';
 import { formatDateWithWeekday, formatKrw } from '@/lib/format';
 
@@ -26,43 +28,53 @@ interface ConcertCardProps {
   sessions: SessionView[];
 }
 
-/** 공연 목록 카드 */
+/** 공연 목록 카드 — 포스터 썸네일 + 절취선 스텁 */
 export function ConcertCard({ concert, sessions }: ConcertCardProps) {
   const statusMeta = CONCERT_STATUS_META[concert.status];
 
   return (
-    <Link href={`/app/concert/${concert.id}`} className={`${CARD} block overflow-hidden`}>
-      {/* 포스터가 있으면 3:4 썸네일을 왼쪽에 두고, 없으면 기존 그라디언트만 보여 준다. */}
-      <div className="flex h-24 items-stretch bg-linear-to-br from-[#F0426E] via-[#8B4BD6] to-[#2A2C34]">
+    <Link href={`/app/concert/${concert.id}`} className={`${CARD} block px-4 pb-3 pt-4`}>
+      <div className="flex gap-3.5">
         {concert.posterUrl ? (
           <img
             src={concert.posterUrl}
             alt={`${concert.title} 포스터`}
-            className="aspect-[3/4] h-24 shrink-0 object-cover"
+            className="aspect-[3/4] w-[72px] shrink-0 rounded-lg object-cover"
             loading="lazy"
             decoding="async"
           />
-        ) : null}
-        <div className="min-w-0 px-4 py-3">
-          <p className="text-[11px] font-bold tracking-wider text-white/80">{concert.artist}</p>
-          <p className="mt-1 line-clamp-2 text-[15px] font-extrabold leading-snug text-white">
+        ) : (
+          <PosterPlaceholder className="aspect-[3/4] w-[72px] shrink-0 rounded-lg" />
+        )}
+
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex items-center gap-2">
+            <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
+            <span className={`truncate text-[12.5px] ${MUTED}`}>{concert.artist}</span>
+          </div>
+
+          <p className="mt-1.5 line-clamp-2 text-[16px] font-bold leading-snug text-[#191F28]">
             {concert.title}
           </p>
+
+          <p className={`mt-auto pt-2 text-[13px] ${MUTED} ${NUMERIC}`}>
+            {formatSessionPeriod(sessions)}
+          </p>
+          <p className={`truncate text-[13px] ${MUTED}`}>{concert.venue}</p>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 px-4 py-3.5">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
-            <span className={`truncate text-[12.5px] ${MUTED}`}>{concert.venue}</span>
-          </div>
-          <p className={`mt-1.5 text-[12.5px] ${MUTED} ${NUMERIC}`}>
-            {formatSessionPeriod(sessions)}
-          </p>
-          <p className={`mt-0.5 text-[14px] font-bold ${NUMERIC}`}>{formatKrw(concert.priceKrw)}</p>
-        </div>
-        <ChevronRightIcon className="h-5 w-5 shrink-0 text-[#5F606B]" />
+      {/* 카드 좌우 끝까지 닿아야 노치가 절취 자국으로 보이므로 좌우 여백을 상쇄한다. */}
+      <TicketPerforation className="-mx-4 mt-3" />
+
+      <div className="flex items-center justify-between gap-2 pt-2.5">
+        <span className={`text-[13px] ${MUTED}`}>예매가</span>
+        <span className="flex items-center gap-1">
+          <span className={`text-[17px] font-extrabold text-[#191F28] ${NUMERIC}`}>
+            {formatKrw(concert.priceKrw)}
+          </span>
+          <ChevronRightIcon className="h-5 w-5 shrink-0 text-[#B0B8C1]" />
+        </span>
       </div>
     </Link>
   );

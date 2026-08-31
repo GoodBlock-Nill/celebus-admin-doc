@@ -13,12 +13,12 @@ interface FieldProps {
 export function Field({ label, hint, error, children }: FieldProps) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="text-[13px] font-semibold">{label}</span>
+      <span className="text-[14px] font-semibold text-[#191F28]">{label}</span>
       {children}
       {error ? (
-        <span className="text-[11.5px] text-[#F06548]">{error}</span>
+        <span className="text-[12.5px] text-[#D92D20]">{error}</span>
       ) : hint ? (
-        <span className={`text-[11.5px] ${MUTED}`}>{hint}</span>
+        <span className={`text-[12.5px] ${MUTED}`}>{hint}</span>
       ) : null}
     </label>
   );
@@ -63,7 +63,7 @@ interface QtyStepperProps {
 }
 
 const STEPPER_BUTTON =
-  'flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-[#2A2C34] bg-[#20222A] text-[18px] font-bold text-[#F1F0EC] disabled:text-[#5F606B]';
+  'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#E5E8EB] bg-white text-[18px] font-bold text-[#191F28] disabled:border-[#F2F4F6] disabled:text-[#B0B8C1]';
 
 /** 매수 스테퍼 */
 export function QtyStepper({ value, min, max, onChange }: QtyStepperProps) {
@@ -106,9 +106,9 @@ export function CheckRow({ checked, onChange, children }: CheckRowProps) {
         type="checkbox"
         checked={checked}
         onChange={(event) => onChange(event.target.checked)}
-        className="mt-0.5 h-5 w-5 shrink-0 accent-[#F0426E]"
+        className="mt-0.5 h-5 w-5 shrink-0 accent-[#D6336C]"
       />
-      <span className="text-[12.5px] leading-relaxed text-[#C9C8CE]">{children}</span>
+      <span className="text-[14px] leading-relaxed text-[#4E5968]">{children}</span>
     </label>
   );
 }
@@ -144,7 +144,7 @@ export function RadioGroup<T extends string>({
           <label
             key={option.value}
             className={`flex min-h-[48px] cursor-pointer items-center gap-2.5 rounded-xl border px-3.5 py-2.5 transition ${
-              isSelected ? 'border-[#F0426E] bg-[#F0426E14]' : 'border-[#2A2C34] bg-[#20222A]'
+              isSelected ? 'border-[#D6336C] bg-[#FDF2F7]' : 'border-[#E5E8EB] bg-white'
             }`}
           >
             <input
@@ -153,12 +153,12 @@ export function RadioGroup<T extends string>({
               value={option.value}
               checked={isSelected}
               onChange={() => onChange(option.value)}
-              className="h-4 w-4 shrink-0 accent-[#F0426E]"
+              className="h-4 w-4 shrink-0 accent-[#D6336C]"
             />
             <span className="flex min-w-0 flex-col gap-0.5">
-              <span className="text-[13px] font-semibold text-[#F1F0EC]">{option.label}</span>
+              <span className="text-[14px] font-semibold text-[#191F28]">{option.label}</span>
               {option.description ? (
-                <span className={`text-[11.5px] ${NUMERIC} ${MUTED}`}>{option.description}</span>
+                <span className={`text-[12.5px] ${NUMERIC} ${MUTED}`}>{option.description}</span>
               ) : null}
             </span>
           </label>
@@ -178,7 +178,7 @@ interface ToggleRowProps {
 export function ToggleRow({ label, checked, onChange }: ToggleRowProps) {
   return (
     <div className="flex min-h-[44px] items-center justify-between gap-3">
-      <span className="text-[13px] font-semibold">{label}</span>
+      <span className="text-[14px] font-semibold text-[#191F28]">{label}</span>
       <button
         type="button"
         role="switch"
@@ -186,11 +186,11 @@ export function ToggleRow({ label, checked, onChange }: ToggleRowProps) {
         aria-label={label}
         onClick={() => onChange(!checked)}
         className={`relative h-7 w-12 shrink-0 rounded-full transition ${
-          checked ? 'bg-[#F0426E]' : 'bg-[#2A2C34]'
+          checked ? 'bg-[#D6336C]' : 'bg-[#E5E8EB]'
         }`}
       >
         <span
-          className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-all ${
+          className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow-[0_1px_3px_rgba(25,31,40,0.2)] transition-all ${
             checked ? 'left-6' : 'left-1'
           }`}
         />
