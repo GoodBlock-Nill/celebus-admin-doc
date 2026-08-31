@@ -99,6 +99,23 @@ export default function AdminConcertDetailPage() {
               <StatusBadge view={CONCERT_STATUS_VIEW[concert.status]} />
             </DefinitionRow>
             <DefinitionRow label="공연장">{concert.venue}</DefinitionRow>
+            <DefinitionRow label="공연장 주소">
+              {concert.venueAddress ?? <span className="text-[#6B7080]">미입력</span>}
+            </DefinitionRow>
+            <DefinitionRow label="지도 링크">
+              {concert.venueMapUrl ? (
+                <a
+                  href={concert.venueMapUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-semibold text-[#3056D3] hover:underline"
+                >
+                  네이버지도 보기
+                </a>
+              ) : (
+                <span className="text-[#6B7080]">미입력</span>
+              )}
+            </DefinitionRow>
             <DefinitionRow label="좌석 방식">{concert.seatType}</DefinitionRow>
           </div>
           <div>

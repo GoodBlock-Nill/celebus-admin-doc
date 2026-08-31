@@ -31,6 +31,8 @@ export function toConcertView(row: ConcertRow): ConcertView {
     title: row.title,
     artist: row.artist,
     venue: row.venue,
+    venueAddress: row.venue_address,
+    venueMapUrl: row.venue_map_url,
     priceKrw: row.price_krw,
     maxPerUser: row.max_per_user,
     seatType: row.seat_type,

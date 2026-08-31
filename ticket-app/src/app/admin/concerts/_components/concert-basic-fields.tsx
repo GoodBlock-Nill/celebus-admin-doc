@@ -9,9 +9,10 @@ import {
   type ConcertField,
   type FieldErrors,
 } from './concert-form-state';
+import { VenueFields } from './venue-fields';
 import type { SeatType } from '@/lib/api-types';
 
-const SEAT_TYPES: SeatType[] = ['자유석', '구역제'];
+const SEAT_TYPES: SeatType[] = ['자유석', '구역제', '현장배정'];
 
 function isSeatType(value: string): value is SeatType {
   return (SEAT_TYPES as string[]).includes(value);
@@ -46,14 +47,25 @@ export function ConcertBasicFields({ draft, errors, onChange, onSeatTypeChange }
               maxLength={60}
             />
           </Field>
-          <Field label="공연장" required error={errors.venue}>
-            <TextInput
-              value={draft.venue}
-              onChange={(event) => onChange('venue', event.target.value)}
-              placeholder="예) 예스24 라이브홀"
-              maxLength={60}
-            />
+          <Field
+            label="좌석 방식"
+            required
+            hint="현장배정 = 입장 순서대로 현장에서 자리를 안내하는 방식"
+          >
+            <Select
+              value={draft.seatType}
+              onChange={(event) => {
+                if (isSeatType(event.target.value)) onSeatTypeChange(event.target.value);
+              }}
+            >
+              {SEAT_TYPES.map((seatType) => (
+                <option key={seatType} value={seatType}>
+                  {seatType}
+                </option>
+              ))}
+            </Select>
           </Field>
+          <VenueFields draft={draft} errors={errors} onChange={onChange} />
           <Field label="티켓 가격 (원)" required error={errors.priceKrw}>
             <NumberInput
               min={1}
@@ -74,20 +86,6 @@ export function ConcertBasicFields({ draft, errors, onChange, onSeatTypeChange }
               value={draft.maxPerUser}
               onChange={(event) => onChange('maxPerUser', event.target.value)}
             />
-          </Field>
-          <Field label="좌석 방식" required>
-            <Select
-              value={draft.seatType}
-              onChange={(event) => {
-                if (isSeatType(event.target.value)) onSeatTypeChange(event.target.value);
-              }}
-            >
-              {SEAT_TYPES.map((seatType) => (
-                <option key={seatType} value={seatType}>
-                  {seatType}
-                </option>
-              ))}
-            </Select>
           </Field>
         </div>
       </Card>

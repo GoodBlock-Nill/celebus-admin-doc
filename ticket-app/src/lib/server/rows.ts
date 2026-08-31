@@ -7,6 +7,8 @@ export interface ConcertRow {
   title: string;
   artist: string;
   venue: string;
+  venue_address: string | null;
+  venue_map_url: string | null;
   price_krw: number;
   max_per_user: number;
   seat_type: string;
@@ -89,7 +91,8 @@ export interface SessionBrief {
 }
 
 export const CONCERT_COLUMNS =
-  'id, title, artist, venue, price_krw, max_per_user, seat_type, status, refund_policy, notice, sales_start_at, sales_end_at';
+  'id, title, artist, venue, venue_address, venue_map_url, price_krw, max_per_user, seat_type, ' +
+  'status, refund_policy, notice, sales_start_at, sales_end_at';
 
 export const PUBLIC_SESSION_COLUMNS =
   'id, concert_id, name, start_at, entry_open_minutes_before, remaining';

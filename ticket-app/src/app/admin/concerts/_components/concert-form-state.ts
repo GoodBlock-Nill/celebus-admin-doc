@@ -19,6 +19,11 @@ export const DEFAULT_MAX_PER_USER = '4';
 export const MIN_MAX_PER_USER = 1;
 export const MAX_MAX_PER_USER = 10;
 export const MAX_SESSION_COUNT = 20;
+export const MAX_VENUE_ADDRESS_LENGTH = 200;
+export const MAX_VENUE_MAP_URL_LENGTH = 500;
+
+/** 지도 링크는 새 창으로 여는 웹 주소만 허용한다. */
+const WEB_URL_PATTERN = /^https?:\/\/\S+$/;
 
 /** 입력 일시는 한국 시각 벽시계로 받고, 전송 시 오프셋을 붙인다. */
 const KST_OFFSET_SUFFIX = '+09:00';
@@ -38,6 +43,10 @@ export interface ConcertDraft {
   title: string;
   artist: string;
   venue: string;
+  /** 공연장 도로명 주소 (선택 입력) */
+  venueAddress: string;
+  /** 지도 링크 (선택 입력) */
+  venueMapUrl: string;
   priceKrw: string;
   maxPerUser: string;
   seatType: SeatType;
@@ -92,6 +101,8 @@ export function createConcertDraft(): ConcertDraft {
     title: '',
     artist: '',
     venue: '',
+    venueAddress: '',
+    venueMapUrl: '',
     priceKrw: '',
     maxPerUser: DEFAULT_MAX_PER_USER,
     seatType: '자유석',
@@ -145,6 +156,24 @@ function validateSessions(draft: ConcertDraft, errors: FieldErrors): void {
   });
 }
 
+/** 공연장 주소·지도 링크는 선택 입력이므로 값이 있을 때만 형식을 본다. */
+function validateVenueDetail(draft: ConcertDraft, errors: FieldErrors): void {
+  const address = draft.venueAddress.trim();
+  if (address.length > MAX_VENUE_ADDRESS_LENGTH) {
+    errors.venueAddress = `공연장 주소는 ${MAX_VENUE_ADDRESS_LENGTH}자 이내로 입력해 주세요.`;
+  }
+
+  const mapUrl = draft.venueMapUrl.trim();
+  if (mapUrl === '') return;
+  if (mapUrl.length > MAX_VENUE_MAP_URL_LENGTH) {
+    errors.venueMapUrl = `지도 링크는 ${MAX_VENUE_MAP_URL_LENGTH}자 이내로 입력해 주세요.`;
+    return;
+  }
+  if (!WEB_URL_PATTERN.test(mapUrl)) {
+    errors.venueMapUrl = '지도 링크는 http로 시작하는 주소로 입력해 주세요.';
+  }
+}
+
 /** 전송 전 검증 — 비어 있는 결과는 통과를 뜻한다. */
 export function validateDraft(draft: ConcertDraft): FieldErrors {
   const errors: FieldErrors = {};
@@ -152,6 +181,7 @@ export function validateDraft(draft: ConcertDraft): FieldErrors {
   if (draft.title.trim() === '') errors.title = '공연 타이틀을 입력해 주세요.';
   if (draft.artist.trim() === '') errors.artist = '아티스트명을 입력해 주세요.';
   if (draft.venue.trim() === '') errors.venue = '공연장을 입력해 주세요.';
+  validateVenueDetail(draft, errors);
 
   const price = toCount(draft.priceKrw);
   if (price === null || price <= 0) errors.priceKrw = '티켓 가격을 1원 이상으로 입력해 주세요.';
@@ -175,10 +205,15 @@ export function validateDraft(draft: ConcertDraft): FieldErrors {
 
 /** 검증을 통과한 입력을 서버 전송 형태로 변환 */
 export function toCreateInput(draft: ConcertDraft): ConcertCreateInput {
+  const venueAddress = draft.venueAddress.trim();
+  const venueMapUrl = draft.venueMapUrl.trim();
+
   return {
     title: draft.title.trim(),
     artist: draft.artist.trim(),
     venue: draft.venue.trim(),
+    venueAddress: venueAddress === '' ? undefined : venueAddress,
+    venueMapUrl: venueMapUrl === '' ? undefined : venueMapUrl,
     priceKrw: Number(draft.priceKrw),
     maxPerUser: Number(draft.maxPerUser),
     seatType: draft.seatType,

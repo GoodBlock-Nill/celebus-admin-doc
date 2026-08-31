@@ -105,6 +105,8 @@ export async function GET(req: Request, context: { params: Promise<{ concertId: 
     title: row.title,
     artist: row.artist,
     venue: row.venue,
+    venueAddress: row.venue_address,
+    venueMapUrl: row.venue_map_url,
     seatType: row.seat_type,
     status: row.status,
     priceKrw: row.price_krw,

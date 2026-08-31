@@ -17,6 +17,7 @@ import type {
   ConcertStatusTransition,
   IssuanceSessionView,
   ReportActionType,
+  VenueSearchItemView,
 } from './admin-types';
 import type { PoolType, ReportTargetType } from './api-types';
 
@@ -91,6 +92,10 @@ export const adminApi = {
     post<Record<string, never>>(`/api/admin/concerts/${concertId}/actions`, { action: 'reallocate', ...rest }),
   issueCompTickets: ({ concertId, ...rest }: CompIssueInput) =>
     post<{ codes: string[] }>(`/api/admin/concerts/${concertId}/actions`, { action: 'comp-issue', ...rest }),
+
+  /** 공연장 검색 — 검색어를 비우면 검색 사용 가능 여부만 확인한다. */
+  searchVenues: (keyword: string) =>
+    request<{ items: VenueSearchItemView[] }>(`/api/admin/venue-search?q=${encodeURIComponent(keyword)}`),
 
   members: (keyword: string) =>
     request<{ items: AdminMemberOptionView[] }>(`/api/admin/members?q=${encodeURIComponent(keyword)}`),

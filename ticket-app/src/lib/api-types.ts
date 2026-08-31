@@ -7,8 +7,8 @@ export type PoolType = 'PAID_SALE' | 'CELEBUS_WINNER' | 'IX_INVITATION' | 'OPERA
 
 export type ConcertStatus = 'UPCOMING' | 'ON_SALE' | 'CLOSED';
 
-/** 좌석 방식 — 등록 시 선택하는 두 가지 */
-export type SeatType = '자유석' | '구역제';
+/** 좌석 방식 — 등록 시 선택하는 세 가지 (현장배정 = 입장 순서대로 현장에서 자리 안내) */
+export type SeatType = '자유석' | '구역제' | '현장배정';
 
 /** DEPOSIT_CONFIRMED = 입금 확인 완료·티켓 지급 대기 (운영자 지급 처리 전) */
 export type OrderStatus =
@@ -29,6 +29,10 @@ export interface ConcertView {
   title: string;
   artist: string;
   venue: string;
+  /** 공연장 도로명 주소 — 등록 시 선택 입력이라 없을 수 있다 */
+  venueAddress: string | null;
+  /** 지도 링크 — 있으면 공연 상세에서 새 창으로 연다 */
+  venueMapUrl: string | null;
   priceKrw: number;
   maxPerUser: number;
   seatType: string;

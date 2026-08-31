@@ -22,6 +22,8 @@ export const HTTP_STATUS = {
   conflict: 409,
   tooManyRequests: 429,
   serverError: 500,
+  /** 외부 연동 키가 설정되지 않아 기능을 제공할 수 없는 상태 */
+  serviceUnavailable: 503,
 } as const;
 
 /** 실패 응답 — 화면에 그대로 노출할 한국어 사유만 담는다(내부 정보 비노출). */

@@ -79,6 +79,8 @@ const MAX_PER_USER_LIMIT = 10;
 const MAX_ENTRY_OPEN_MINUTES = 1440;
 const MAX_ALLOCATED = 100000;
 const MAX_SESSIONS = 20;
+const MAX_VENUE_ADDRESS_LENGTH = 200;
+const MAX_VENUE_MAP_URL_LENGTH = 500;
 
 const datetime = z.string().datetime({ offset: true });
 const allocated = z.number().int().min(0).max(MAX_ALLOCATED);
@@ -99,9 +101,12 @@ const createSchema = z.object({
   title: z.string().trim().min(1).max(MAX_TITLE_LENGTH),
   artist: z.string().trim().min(1).max(MAX_NAME_LENGTH),
   venue: z.string().trim().min(1).max(MAX_NAME_LENGTH),
+  // 주소·지도 링크는 선택 입력이라 미입력(빈 값)도 허용한다.
+  venueAddress: z.string().trim().max(MAX_VENUE_ADDRESS_LENGTH).optional(),
+  venueMapUrl: z.string().trim().max(MAX_VENUE_MAP_URL_LENGTH).optional(),
   priceKrw: z.number().int().min(1).max(MAX_PRICE_KRW),
   maxPerUser: z.number().int().min(1).max(MAX_PER_USER_LIMIT),
-  seatType: z.enum(['자유석', '구역제']),
+  seatType: z.enum(['자유석', '구역제', '현장배정']),
   refundPolicy: z.string().max(MAX_LONG_TEXT_LENGTH),
   notice: z.string().max(MAX_LONG_TEXT_LENGTH),
   salesStartAt: datetime,
@@ -128,6 +133,8 @@ export async function POST(req: Request) {
         title: input.title,
         artist: input.artist,
         venue: input.venue,
+        venue_address: input.venueAddress ?? '',
+        venue_map_url: input.venueMapUrl ?? '',
         price_krw: input.priceKrw,
         max_per_user: input.maxPerUser,
         seat_type: input.seatType,

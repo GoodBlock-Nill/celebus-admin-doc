@@ -15,6 +15,7 @@ import { CollapsibleSection, InfoRow, SectionCard } from '../../_components/sect
 import { SessionOption } from '../../_components/session-option';
 import { CONCERT_STATUS_META } from '../../_components/status-meta';
 import { useApiResource } from '../../_components/use-api-resource';
+import { VenueValue } from './venue-value';
 import { api } from '@/lib/api-client';
 import { formatKrw } from '@/lib/format';
 
@@ -80,7 +81,16 @@ export default function ConcertDetailPage() {
       <div className="flex flex-col gap-3 px-4 pt-4">
         <SectionCard title="공연 정보">
           <InfoRow label="일시" value={formatSessionPeriod(sessions)} />
-          <InfoRow label="장소" value={concert.venue} />
+          <InfoRow
+            label="장소"
+            value={
+              <VenueValue
+                venue={concert.venue}
+                address={concert.venueAddress}
+                mapUrl={concert.venueMapUrl}
+              />
+            }
+          />
           <InfoRow label="좌석" value={concert.seatType} />
           <InfoRow label="가격" value={formatKrw(concert.priceKrw)} emphasis />
           <InfoRow label="1인 구매 한도" value={`${concert.maxPerUser}매`} />

@@ -113,6 +113,8 @@ export interface AdminConcertDetailView {
   title: string;
   artist: string;
   venue: string;
+  venueAddress: string | null;
+  venueMapUrl: string | null;
   seatType: string;
   status: ConcertStatus;
   priceKrw: number;
@@ -138,6 +140,10 @@ export interface ConcertCreateInput {
   title: string;
   artist: string;
   venue: string;
+  /** 공연장 주소 — 선택 입력이라 비우면 보내지 않는다 */
+  venueAddress?: string;
+  /** 지도 링크 — 선택 입력이라 비우면 보내지 않는다 */
+  venueMapUrl?: string;
   priceKrw: number;
   maxPerUser: number;
   seatType: SeatType;
@@ -150,6 +156,14 @@ export interface ConcertCreateInput {
 
 /** 운영자가 지정할 수 있는 판매 상태 (판매 예정으로 되돌리는 전이는 없다) */
 export type ConcertStatusTransition = Exclude<ConcertStatus, 'UPCOMING'>;
+
+/** 공연장 검색 결과 1건 — 이름·주소는 검색 서비스 표기를 그대로 쓴다. */
+export interface VenueSearchItemView {
+  name: string;
+  roadAddress: string;
+  address: string;
+  mapUrl: string;
+}
 
 /** 무상 발급 대상 — 본인확인을 마친 회원만 후보가 되며 실명은 마스킹해 노출한다. */
 export interface AdminMemberOptionView {
