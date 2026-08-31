@@ -11,7 +11,7 @@ import { kcpProvider, kcpConfigured } from './kcp-provider';
 import { mockProvider } from './mock-provider';
 
 /** 인증 수단 — 화면의 간편인증 수단 선택과 동일한 목록 */
-export const IDENTITY_PROVIDERS = ['PASS', '카카오', '토스', '네이버'] as const;
+export const IDENTITY_PROVIDERS = ['카카오', '토스', '네이버'] as const;
 
 export type IdentityProviderName = (typeof IDENTITY_PROVIDERS)[number];
 

@@ -103,11 +103,14 @@ export default function CheckoutPage() {
 
     setSubmitting(true);
     setErrorMessage('');
+    // 본인확인 번호로 발급할 때는 번호를 보내지 않는다 — 서버가 보관 중인 값을 사용한다.
+    const usesManualPhone = input.wantsCashReceipt && input.cashReceiptSource === 'manual';
     const created = await api.createOrder({
       sessionId: session.id,
       qty: input.qty,
       wantsCashReceipt: input.wantsCashReceipt,
-      cashReceiptPhone: input.wantsCashReceipt ? input.cashReceiptPhone : undefined,
+      cashReceiptSource: input.cashReceiptSource,
+      cashReceiptPhone: usesManualPhone ? input.cashReceiptPhone : undefined,
     });
 
     if (!created.ok) {
@@ -147,6 +150,7 @@ export default function CheckoutPage() {
             session={session}
             maxQty={maxQty}
             heldQty={heldQty}
+            verifiedPhoneMasked={me.verification?.phoneMasked ?? ''}
             errorMessage={errorMessage}
             busy={isSubmitting}
             onSubmit={(input) => void handleSubmit(input)}

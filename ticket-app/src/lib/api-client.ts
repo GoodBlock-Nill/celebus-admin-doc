@@ -1,6 +1,7 @@
 'use client';
 
 import type {
+  CashReceiptSource,
   ConcertView,
   ConcertWithSessions,
   MeView,
@@ -54,6 +55,8 @@ export interface CreateOrderInput {
   sessionId: string;
   qty: number;
   wantsCashReceipt: boolean;
+  cashReceiptSource?: CashReceiptSource;
+  /** 직접 입력한 번호로 발급할 때만 보낸다. */
   cashReceiptPhone?: string;
 }
 

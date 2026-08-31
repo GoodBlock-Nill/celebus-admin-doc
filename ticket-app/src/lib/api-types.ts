@@ -24,6 +24,13 @@ export type TicketStatus = 'VALID' | 'USED' | 'REVOKED';
 
 export type ReportTargetType = '게시물' | '계정' | '외부 링크';
 
+/**
+ * 현금영수증 발급 번호의 출처.
+ *  · verified = 본인확인에 사용한 휴대폰 번호 (번호 원문은 서버에서만 다룬다)
+ *  · manual   = 회원이 직접 입력한 다른 번호
+ */
+export type CashReceiptSource = 'verified' | 'manual';
+
 export interface ConcertView {
   id: string;
   title: string;

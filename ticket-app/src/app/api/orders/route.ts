@@ -10,19 +10,66 @@ import {
   requireMember,
   type RpcResult,
 } from '@/lib/server/api';
-import { encryptText } from '@/lib/server/crypto';
+import { decryptText, encryptText } from '@/lib/server/crypto';
 import { admin } from '@/lib/server/db-admin';
 import { loadConcertBriefs, loadSessionBriefs, toOrderSummary } from '@/lib/server/mappers';
-import { ORDER_COLUMNS, type OrderRow } from '@/lib/server/rows';
+import { ORDER_COLUMNS, type OrderRow, type VerificationRow } from '@/lib/server/rows';
 
 const MAX_QTY_PER_ORDER = 10;
 
-const createSchema = z.object({
-  sessionId: z.string().uuid(),
-  qty: z.number().int().min(1).max(MAX_QTY_PER_ORDER),
-  wantsCashReceipt: z.boolean(),
-  cashReceiptPhone: z.string().regex(/^01\d{8,9}$/).optional(),
-});
+const PHONE_PATTERN = /^01\d{8,9}$/;
+
+const VERIFIED_PHONE_FAILURE =
+  '본인확인 휴대폰 번호를 확인하지 못했습니다. 다른 번호로 발급을 선택해 주세요.';
+
+const createSchema = z
+  .object({
+    sessionId: z.string().uuid(),
+    qty: z.number().int().min(1).max(MAX_QTY_PER_ORDER),
+    wantsCashReceipt: z.boolean(),
+    /** 발급 번호 출처 — 본인확인 번호(기본) / 직접 입력 */
+    cashReceiptSource: z.enum(['verified', 'manual']).default('verified'),
+    cashReceiptPhone: z.string().regex(PHONE_PATTERN).optional(),
+  })
+  .refine(
+    (input) =>
+      !input.wantsCashReceipt ||
+      input.cashReceiptSource === 'verified' ||
+      Boolean(input.cashReceiptPhone),
+    { path: ['cashReceiptPhone'] },
+  );
+
+type CreateOrderInput = z.infer<typeof createSchema>;
+
+type CashReceiptCipher = { ok: true; cipher: string | null } | { ok: false };
+
+/**
+ * 현금영수증 발급 번호를 저장용 암호문으로 준비한다.
+ *
+ * 본인확인 번호로 발급하는 경우 화면에서 번호를 받지 않고 서버가 보관 중인 본인확인 번호를
+ * 복호해 다시 암호화한다. 번호 원문은 서버 밖으로 나가지 않으며, 주문에는 본인확인 기록과
+ * 별개의 암호문이 남는다.
+ */
+async function resolveCashReceiptCipher(
+  memberId: string,
+  input: CreateOrderInput,
+): Promise<CashReceiptCipher> {
+  if (!input.wantsCashReceipt) return { ok: true, cipher: null };
+
+  if (input.cashReceiptSource === 'manual') {
+    return { ok: true, cipher: input.cashReceiptPhone ? encryptText(input.cashReceiptPhone) : null };
+  }
+
+  const { data } = await admin()
+    .from('ticket_identity_verifications')
+    .select('phone_enc')
+    .eq('member_id', memberId)
+    .maybeSingle<Pick<VerificationRow, 'phone_enc'>>();
+
+  const phone = decryptText(data?.phone_enc);
+  if (!phone) return { ok: false };
+  return { ok: true, cipher: encryptText(phone) };
+}
 
 /** 내 주문 목록 — 조회 전에 입금 마감이 지난 주문을 먼저 정리한다(설계서 §5 lazy 만료). */
 export async function GET(req: Request) {
@@ -63,15 +110,16 @@ export async function POST(req: Request) {
   const parsed = createSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return fail('예매 정보를 다시 확인해 주세요.', HTTP_STATUS.badRequest);
 
-  const { sessionId, qty, wantsCashReceipt, cashReceiptPhone } = parsed.data;
-  const encryptedPhone = wantsCashReceipt && cashReceiptPhone ? encryptText(cashReceiptPhone) : null;
+  const { sessionId, qty, wantsCashReceipt } = parsed.data;
+  const cashReceipt = await resolveCashReceiptCipher(member.id, parsed.data);
+  if (!cashReceipt.ok) return fail(VERIFIED_PHONE_FAILURE, HTTP_STATUS.badRequest);
 
   const { data, error } = await admin().rpc('ticket_create_order', {
     p_member_id: member.id,
     p_session_id: sessionId,
     p_qty: qty,
     p_wants_cash_receipt: wantsCashReceipt,
-    p_cash_receipt_phone: encryptedPhone,
+    p_cash_receipt_phone: cashReceipt.cipher,
   });
 
   const result = data as RpcResult | null;

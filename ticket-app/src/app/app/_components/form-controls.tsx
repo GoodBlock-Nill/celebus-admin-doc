@@ -113,6 +113,61 @@ export function CheckRow({ checked, onChange, children }: CheckRowProps) {
   );
 }
 
+export interface RadioOption<T extends string> {
+  value: T;
+  label: string;
+  description?: string;
+}
+
+interface RadioGroupProps<T extends string> {
+  /** 묶음 이름 — 입력 그룹 식별 및 읽기 도구 안내에 사용 */
+  name: string;
+  groupLabel: string;
+  value: T;
+  options: readonly RadioOption<T>[];
+  onChange: (value: T) => void;
+}
+
+/** 단일 선택 목록 — 선택지가 두세 개인 분기에 사용 */
+export function RadioGroup<T extends string>({
+  name,
+  groupLabel,
+  value,
+  options,
+  onChange,
+}: RadioGroupProps<T>) {
+  return (
+    <div role="radiogroup" aria-label={groupLabel} className="flex flex-col gap-2">
+      {options.map((option) => {
+        const isSelected = option.value === value;
+        return (
+          <label
+            key={option.value}
+            className={`flex min-h-[48px] cursor-pointer items-center gap-2.5 rounded-xl border px-3.5 py-2.5 transition ${
+              isSelected ? 'border-[#F0426E] bg-[#F0426E14]' : 'border-[#2A2C34] bg-[#20222A]'
+            }`}
+          >
+            <input
+              type="radio"
+              name={name}
+              value={option.value}
+              checked={isSelected}
+              onChange={() => onChange(option.value)}
+              className="h-4 w-4 shrink-0 accent-[#F0426E]"
+            />
+            <span className="flex min-w-0 flex-col gap-0.5">
+              <span className="text-[13px] font-semibold text-[#F1F0EC]">{option.label}</span>
+              {option.description ? (
+                <span className={`text-[11.5px] ${NUMERIC} ${MUTED}`}>{option.description}</span>
+              ) : null}
+            </span>
+          </label>
+        );
+      })}
+    </div>
+  );
+}
+
 interface ToggleRowProps {
   label: string;
   checked: boolean;

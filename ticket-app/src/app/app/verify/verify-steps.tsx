@@ -132,6 +132,7 @@ interface RequestStepProps {
 
 /** 스텝 2 — 간편인증 앱 요청 후 완료 확인 */
 export function VerifyRequestStep({ provider, realName, phone, busy, onSubmit, onBack }: RequestStepProps) {
+  const selected = findProvider(provider);
   const label = providerLabel(provider);
 
   return (
@@ -141,11 +142,12 @@ export function VerifyRequestStep({ provider, realName, phone, busy, onSubmit, o
       </NoticeBox>
 
       <SectionCard title="인증 요청 정보">
-        <div className="flex items-center gap-3 rounded-xl border border-[#2A2C34] bg-[#20222A] px-3.5 py-3">
-          <ProviderMark provider={findProvider(provider)} size="lg" />
+        {/* 수단 선택 화면과 같은 브랜드 톤을 이어 붙여 어떤 수단으로 요청했는지 한눈에 보이게 한다. */}
+        <div className={`flex items-center gap-3 rounded-xl border px-3.5 py-3 ${selected.selectedClass}`}>
+          <ProviderMark provider={selected} size="lg" />
           <div className="min-w-0">
-            <p className="text-[14px] font-bold">{label} 간편인증</p>
-            <p className={`mt-0.5 text-[12px] ${MUTED}`}>
+            <p className={`text-[13px] font-extrabold ${selected.toneClass}`}>{label} 간편인증</p>
+            <p className="mt-0.5 text-[12.5px] font-semibold text-[#F1F0EC]">
               {realName} · {phone}
             </p>
           </div>
