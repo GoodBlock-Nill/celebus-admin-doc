@@ -18,7 +18,7 @@ export default function TicketsPage() {
       <header className="px-4 pb-3 pt-6">
         <h1 className="text-[20px] font-extrabold">내 티켓</h1>
         <p className={`mt-1 text-[12.5px] ${MUTED}`}>
-          입장 코드는 공연 시작 60분 전부터 활성화됩니다.
+          지급된 티켓의 상태를 확인하는 화면입니다. 입장 QR과 발권은 CELEBUS 앱에서 확인할 수 있습니다.
         </p>
       </header>
 

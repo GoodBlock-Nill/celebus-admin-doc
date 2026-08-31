@@ -9,9 +9,9 @@ export const MS_PER_DAY = 24 * MS_PER_HOUR;
 /** 한국 표준시(UTC+9) 오프셋 */
 export const KST_OFFSET_MS = 9 * MS_PER_HOUR;
 
-/** 체크인 코드 길이 */
+/** 티켓 식별 코드 길이 (발권·입장 확인은 CELEBUS 앱이 담당한다) */
 export const TICKET_CODE_LENGTH = 8;
-/** 체크인 코드에 사용하는 문자 집합 (혼동 문자 0/O/1/I 제외) */
+/** 티켓 식별 코드에 사용하는 문자 집합 (혼동 문자 0/O/1/I 제외) */
 export const TICKET_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
 /** 주문번호 접두 문자 */
@@ -24,11 +24,8 @@ export const ORDER_NO_TAIL_LENGTH = 4;
 /** 신고 처리 기한(시간) — 접수 후 10시간 */
 export const REPORT_SLA_HOURS = 10;
 
-/** 회차 입장(QR 활성화) 기본 기준 — 시작 60분 전 */
+/** 회차 입장 확인 개시 기본 기준 — 시작 60분 전 (CELEBUS 앱 체크인 기준값) */
 export const DEFAULT_ENTRY_OPEN_MINUTES = 60;
-
-/** 공연 시작 이후 입장 코드가 유지되는 시간 */
-export const ENTRY_WINDOW_AFTER_HOURS = 3;
 
 /** 활동 로그 보관 최대 건수 */
 export const MAX_ACTIVITY_LOGS = 300;

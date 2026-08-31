@@ -7,9 +7,10 @@ import type {
   AdminConcertDetailView,
   AdminLogView,
   AdminSessionView,
+  IssuanceRowView,
   PoolStockView,
 } from '@/lib/admin-types';
-import type { PoolType } from '@/lib/api-types';
+import type { PoolType, TicketStatus } from '@/lib/api-types';
 
 /** 상세 화면에 함께 노출하는 관련 활동 로그 건수 */
 const RECENT_LOG_LIMIT = 10;
@@ -41,6 +42,14 @@ interface LogRow {
   created_at: string;
 }
 
+/** 지급된 티켓 1건 — 지급 현황 집계와 관련 로그 대조에 함께 쓴다 */
+interface TicketRow {
+  code: string;
+  session_id: string;
+  pool_type: PoolType;
+  status: TicketStatus;
+}
+
 function toPools(rows: PoolRow[], sessionId: string): PoolStockView[] {
   return POOL_ORDER.map((poolType) => {
     const found = rows.find((row) => row.session_id === sessionId && row.pool_type === poolType);
@@ -53,7 +62,22 @@ function toPools(rows: PoolRow[], sessionId: string): PoolStockView[] {
   });
 }
 
-/** 공연 상세 — 회차별 4분류 재고 + 관련 최근 활동 로그 */
+/** 회차 1건의 분류별 지급 집계 — 입장 완료·입장 전은 CELEBUS 앱 체크인 결과가 반영된 값이다 */
+function toIssuance(rows: TicketRow[], sessionId: string): IssuanceRowView[] {
+  const own = rows.filter((row) => row.session_id === sessionId);
+  return POOL_ORDER.map((poolType) => {
+    const pooled = own.filter((row) => row.pool_type === poolType);
+    return {
+      poolType,
+      issued: pooled.length,
+      used: pooled.filter((row) => row.status === 'USED').length,
+      waiting: pooled.filter((row) => row.status === 'VALID').length,
+      revoked: pooled.filter((row) => row.status === 'REVOKED').length,
+    };
+  });
+}
+
+/** 공연 상세 — 회차별 4분류 재고·지급 현황 + 관련 최근 활동 로그 */
 export async function GET(req: Request, context: { params: Promise<{ concertId: string }> }) {
   const guard = requireAdmin(req);
   if (isGuardFailure(guard)) return guard;
@@ -92,12 +116,21 @@ export async function GET(req: Request, context: { params: Promise<{ concertId: 
           )
           .returns<PoolRow[]>();
 
+  const tickets = await client
+    .from('ticket_tickets')
+    .select('code, session_id, pool_type, status')
+    .eq('concert_id', concertId)
+    .returns<TicketRow[]>();
+
+  const ticketRows = tickets.data ?? [];
+
   const sessionViews: AdminSessionView[] = sessionRows.map((row) => ({
     id: row.id,
     name: row.name,
     startAt: row.start_at,
     entryOpenMinutesBefore: row.entry_open_minutes_before,
     pools: toPools(pools.data ?? [], row.id),
+    issuance: toIssuance(ticketRows, row.id),
   }));
 
   const row = concert.data;
@@ -122,11 +155,10 @@ export async function GET(req: Request, context: { params: Promise<{ concertId: 
     sessions: sessionViews,
   };
 
-  // 관련 로그 — 공연명·회차명·주문번호·입장 코드가 상세 문구에 포함된 기록.
+  // 관련 로그 — 공연명·회차명·주문번호·티켓 코드가 상세 문구에 포함된 기록.
   // 문구에 괄호·쉼표가 섞여 있어 조회 조건으로 넘기기 어렵기 때문에 최근 로그를 받아 대조한다.
-  const [orders, tickets, logs] = await Promise.all([
+  const [orders, logs] = await Promise.all([
     client.from('ticket_orders').select('order_no').eq('concert_id', concertId).returns<{ order_no: string }[]>(),
-    client.from('ticket_tickets').select('code').eq('concert_id', concertId).returns<{ code: string }[]>(),
     client
       .from('ticket_admin_logs')
       .select('id, actor, action, detail, created_at')
@@ -139,7 +171,7 @@ export async function GET(req: Request, context: { params: Promise<{ concertId: 
     row.title,
     ...sessionRows.map((session) => session.name),
     ...(orders.data ?? []).map((order) => order.order_no),
-    ...(tickets.data ?? []).map((ticket) => ticket.code),
+    ...ticketRows.map((ticket) => ticket.code),
   ].filter(Boolean);
 
   const relatedLogs: AdminLogView[] = (logs.data ?? [])

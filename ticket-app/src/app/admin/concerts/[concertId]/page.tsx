@@ -19,6 +19,7 @@ import {
 import { CompIssueForm } from '../_components/comp-issue-form';
 import { ConcertMediaSummary } from '../_components/concert-media-summary';
 import { ConcertStatusActions } from '../_components/concert-status-actions';
+import { IssuanceTable } from '../_components/issuance-table';
 import { PoolStockTable } from '../_components/pool-stock-table';
 import { ReallocateForm } from '../_components/reallocate-form';
 import { adminApi } from '@/lib/admin-client';
@@ -164,9 +165,17 @@ export default function AdminConcertDetailPage() {
           <Card
             key={session.id}
             title={session.name}
-            description={`공연 시작 ${formatDateTime(session.startAt)} · 입장 확인은 시작 ${session.entryOpenMinutesBefore}분 전부터`}
+            description={`공연 시작 ${formatDateTime(session.startAt)} · CELEBUS 앱 입장 확인은 시작 ${session.entryOpenMinutesBefore}분 전부터`}
           >
             <PoolStockTable session={session} />
+            <div className="mt-5 border-t border-[#E3E5EA] pt-4">
+              <p className="text-[13px] font-bold text-[#1B1D22]">티켓 지급 현황</p>
+              <p className="mt-1 mb-3 text-[12px] leading-relaxed text-[#6B7080]">
+                입금 확인 후 지급된 실명 티켓의 분류별 현황입니다. 입장 완료·입장 전 수치는 CELEBUS 앱에서 처리된
+                체크인 결과가 그대로 반영됩니다.
+              </p>
+              <IssuanceTable rows={session.issuance} />
+            </div>
           </Card>
         ))}
       </div>

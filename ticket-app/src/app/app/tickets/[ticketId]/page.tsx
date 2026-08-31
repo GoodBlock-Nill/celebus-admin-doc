@@ -11,14 +11,15 @@ import { InfoRow } from '../../_components/section';
 import { TICKET_STATUS_META } from '../../_components/status-meta';
 import { GHOST_BUTTON, MUTED } from '../../_components/ui';
 import { useApiResource } from '../../_components/use-api-resource';
-import { TicketQrPanel } from '../ticket-qr-panel';
+import { TicketEntryNotice } from '../ticket-entry-notice';
 import { api } from '@/lib/api-client';
 import { poolLabel } from '@/lib/api-types';
 import { formatDateTime } from '@/lib/format';
 
-const TICKET_NOTICE = '본 티켓은 양도할 수 없으며, 캡처 화면으로는 입장할 수 없습니다.';
+const TICKET_NOTICE =
+  '본 티켓은 양도할 수 없습니다. 공연 당일 입장 확인은 CELEBUS 앱의 티켓 화면에서 진행됩니다.';
 
-/** A6 티켓 상세 — 절취선 티켓 카드 + 입장 코드 */
+/** A6 티켓 상세 — 절취선 티켓 카드 + 지급 상태·입장 안내 */
 export default function TicketDetailPage() {
   const params = useParams();
   const ticketId = typeof params.ticketId === 'string' ? params.ticketId : '';
@@ -83,7 +84,7 @@ export default function TicketDetailPage() {
             <div className="mx-5 border-t border-dashed border-[#3A3C46]" />
           </div>
 
-          <TicketQrPanel ticket={ticket} />
+          <TicketEntryNotice ticket={ticket} />
         </article>
 
         <p className={`px-1 text-[11.5px] leading-relaxed ${MUTED}`}>{TICKET_NOTICE}</p>

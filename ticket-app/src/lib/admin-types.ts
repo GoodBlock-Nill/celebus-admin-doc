@@ -3,7 +3,7 @@
  * 회원 개인정보는 원칙적으로 마스킹해 내려주고, 입금 대조에 필요한 실명만 예외로 노출한다.
  */
 
-import type { ConcertStatus, OrderStatus, PoolType, SeatType, TicketStatus } from './api-types';
+import type { ConcertStatus, OrderStatus, PoolType, SeatType } from './api-types';
 
 export type DepositStatus =
   | 'UNMATCHED'
@@ -89,12 +89,26 @@ export interface PoolStockView {
   issued: number;
 }
 
+/**
+ * 회차·분류별 티켓 지급 집계.
+ * 입장 완료·입장 전 수치는 CELEBUS 앱 체크인 결과가 반영된 값을 그대로 보여주는 확인용이다.
+ */
+export interface IssuanceRowView {
+  poolType: PoolType;
+  issued: number;
+  used: number;
+  waiting: number;
+  revoked: number;
+}
+
 export interface AdminSessionView {
   id: string;
   name: string;
   startAt: string;
   entryOpenMinutesBefore: number;
   pools: PoolStockView[];
+  /** 실제 지급된 티켓의 분류별 상태 집계 */
+  issuance: IssuanceRowView[];
 }
 
 export interface AdminConcertRowView {
@@ -209,36 +223,4 @@ export interface AdminReportView {
   deadlineAt: string;
   status: ReportStatus;
   actions: AdminReportActionView[];
-}
-
-export type CheckInKind = 'OK' | 'DUPLICATE' | 'REVOKED' | 'INVALID' | 'EXPIRED_TOKEN';
-
-export interface CheckInTicketView {
-  code: string;
-  concertTitle: string;
-  sessionName: string;
-  poolType: PoolType;
-  status: TicketStatus;
-  usedAt: string | null;
-  memberNickname: string;
-}
-
-export interface CheckInResultView {
-  kind: CheckInKind;
-  ticket: CheckInTicketView | null;
-}
-
-/** 회차·분류별 발급/입장 집계 */
-export interface IssuanceRowView {
-  poolType: PoolType;
-  issued: number;
-  used: number;
-  waiting: number;
-  revoked: number;
-}
-
-export interface IssuanceSessionView {
-  sessionId: string;
-  sessionName: string;
-  rows: IssuanceRowView[];
 }

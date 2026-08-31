@@ -19,7 +19,6 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/admin/concerts', label: '공연·재고 관리' },
   { href: '/admin/deposits', label: '주문·입금 확인', badgeKey: 'depositPending' },
   { href: '/admin/refunds', label: '취소·환불' },
-  { href: '/admin/checkin', label: '발권·체크인' },
   { href: '/admin/reports', label: '신고 처리', badgeKey: 'reportPending' },
   { href: '/admin/logs', label: '활동 로그' },
 ];

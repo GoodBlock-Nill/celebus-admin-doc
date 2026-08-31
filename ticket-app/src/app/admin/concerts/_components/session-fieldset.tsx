@@ -61,7 +61,7 @@ export function SessionFieldset({
           label="입장 오픈 (분 전)"
           required
           error={errors[`${session.key}:entry`]}
-          hint="이 시각부터 앱에서 입장 코드가 활성화됩니다."
+          hint="이 시각부터 CELEBUS 앱에서 입장 확인이 시작됩니다."
         >
           <NumberInput
             min={0}

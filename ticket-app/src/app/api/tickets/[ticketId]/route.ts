@@ -5,7 +5,7 @@ import { TICKET_COLUMNS, type TicketRow } from '@/lib/server/rows';
 
 /**
  * 티켓 상세 — 본인 티켓만 조회된다.
- * 입장 코드는 그대로 내려주며, 캡처 무력화용 서명 토큰은 2주차 과제다(설계서 §5).
+ * 예매 웹은 지급 상태 확인까지만 담당하고, 발권·입장 확인은 CELEBUS 본 앱이 처리한다.
  */
 export async function GET(req: Request, context: { params: Promise<{ ticketId: string }> }) {
   const member = await requireMember(req);

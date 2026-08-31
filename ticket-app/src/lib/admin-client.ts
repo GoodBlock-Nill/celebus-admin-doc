@@ -12,11 +12,9 @@ import type {
   AdminRefundView,
   AdminReportView,
   AdminSummaryView,
-  CheckInResultView,
   CompPoolType,
   ConcertCreateInput,
   ConcertStatusTransition,
-  IssuanceSessionView,
   ReportActionType,
   VenueSearchItemView,
 } from './admin-types';
@@ -145,9 +143,6 @@ export const adminApi = {
 
   refunds: () => request<{ pending: AdminRefundView[]; done: AdminRefundView[] }>('/api/admin/refunds'),
   approveRefund: (orderId: string) => post<{ revoked_tickets?: number }>('/api/admin/refunds', { orderId }),
-
-  issuance: () => request<{ items: IssuanceSessionView[] }>('/api/admin/checkin'),
-  checkIn: (input: string) => post<{ result: CheckInResultView }>('/api/admin/checkin', { input }),
 
   reports: () => request<{ items: AdminReportView[] }>('/api/admin/reports'),
   submitReport: (input: ManualReportInput) =>
