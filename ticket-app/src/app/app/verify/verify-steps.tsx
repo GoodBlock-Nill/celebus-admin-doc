@@ -39,7 +39,7 @@ interface FormStepProps {
   onSubmit: () => void;
 }
 
-/** 스텝 1 — 안내 + 정보 입력 + 인증 수단 선택 */
+/** 스텝 1 — 안내 + 인증 수단 선택 + 정보 입력 (공공 간편인증 표준창 순서) */
 export function VerifyFormStep({
   form,
   errors,
@@ -76,6 +76,14 @@ export function VerifyFormStep({
         </ul>
       </SectionCard>
 
+      {/* 공공 간편인증 표준창 관행에 따라 수단 선택을 정보 입력보다 먼저 배치 */}
+      <SectionCard title="인증 수단 선택" description="사용 중인 간편인증 앱을 먼저 선택해 주세요.">
+        <ProviderSelector selected={provider} onSelect={onSelectProvider} />
+        {!provider ? (
+          <p className={`mt-2.5 text-[11.5px] ${MUTED}`}>인증 수단을 선택한 뒤 본인 정보를 입력해 주세요.</p>
+        ) : null}
+      </SectionCard>
+
       <SectionCard title="본인 정보 입력">
         <div className="flex flex-col gap-3.5">
           <Field label="실명" error={errors.realName} hint="예매자 본인 명의로만 확인할 수 있습니다.">
@@ -107,13 +115,6 @@ export function VerifyFormStep({
             />
           </Field>
         </div>
-      </SectionCard>
-
-      <SectionCard title="인증 수단 선택" description="사용 중인 간편인증 앱을 선택해 주세요.">
-        <ProviderSelector selected={provider} onSelect={onSelectProvider} />
-        {!provider ? (
-          <p className={`mt-2.5 text-[11.5px] ${MUTED}`}>인증 수단을 선택하면 요청할 수 있습니다.</p>
-        ) : null}
       </SectionCard>
 
       <button type="button" disabled={!provider} onClick={onSubmit} className={PRIMARY_BUTTON}>
