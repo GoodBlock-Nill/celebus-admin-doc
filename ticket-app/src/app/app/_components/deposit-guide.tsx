@@ -1,9 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+
 import { Countdown } from './countdown';
 import { formatDeadlineLabel } from './datetime';
 import { DepositAccountCard } from './deposit-account-card';
-import { NoticeBox } from './section';
+import { CopyIcon } from './icons';
+import { useAppToast } from './toast';
 import { CARD, MUTED, NUMERIC } from './ui';
 import { useAppClock } from './use-app-clock';
 import type { OrderDetailView } from '@/lib/api-types';
@@ -20,20 +23,13 @@ export function DepositGuideCard({ order }: { order: OrderDetailView }) {
   const now = useAppClock();
 
   const realName = order.depositorName || '본인확인 실명';
-  const fallbackName = `${realName}${order.orderNo.slice(-ORDER_NO_TAIL_LENGTH)}`;
+  const depositorValue = `${realName}${order.orderNo.slice(-ORDER_NO_TAIL_LENGTH)}`;
 
   return (
     <div className="flex flex-col gap-3">
       <DepositAccountCard order={order} />
 
-      <NoticeBox tone="accent">
-        <span className="font-bold">
-          반드시 &lsquo;{realName}&rsquo; 이름으로 입금해 주세요.
-        </span>
-        <br />
-        부득이하게 다른 이름으로 입금해야 한다면 &lsquo;{fallbackName}&rsquo;(실명 + 주문번호 끝 4자리)로
-        입금해 주세요.
-      </NoticeBox>
+      <DepositorNameChip value={depositorValue} />
 
       <section className={`${CARD} p-4`}>
         <div className="flex items-center justify-between gap-3">
@@ -57,5 +53,48 @@ export function DepositGuideCard({ order }: { order: OrderDetailView }) {
         ))}
       </ul>
     </div>
+  );
+}
+
+const CHIP_COPY_FEEDBACK_MS = 1500;
+
+/** 입금자명을 규칙 해석 없이 그대로 붙여넣도록 단일 값으로 크게 노출하는 칩 카드 */
+function DepositorNameChip({ value }: { value: string }) {
+  const toast = useAppToast();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), CHIP_COPY_FEEDBACK_MS);
+      toast.success('입금자명이 복사되었습니다');
+    } catch {
+      toast.info('복사할 수 없는 환경입니다. 화면에 표시된 값을 직접 입력해 주세요.');
+    }
+  };
+
+  return (
+    <section className={`${CARD} p-4`}>
+      <div className="flex items-center gap-2">
+        <span aria-hidden="true" className="h-[14px] w-[3px] rounded-full bg-[#F0426E]" />
+        <p className="text-[13px] font-semibold">입금자명 (필수)</p>
+      </div>
+
+      <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-[#2A2C34] bg-[#0F1014] py-3 pl-4 pr-2">
+        <p className={`truncate text-[22px] font-extrabold tracking-wide ${NUMERIC}`}>{value}</p>
+        <button
+          type="button"
+          onClick={() => void handleCopy()}
+          className="flex min-h-[40px] shrink-0 items-center gap-1.5 rounded-lg border border-[#2A2C34] bg-[#20222A] px-3 text-[12.5px] font-semibold"
+        >
+          <CopyIcon />
+          {copied ? '복사했습니다' : '입금자명 복사'}
+        </button>
+      </div>
+
+      <p className={`mt-2 text-[12px] ${MUTED}`}>실명 + 주문번호 끝 {ORDER_NO_TAIL_LENGTH}자리</p>
+      <p className={`mt-0.5 text-[12px] ${MUTED}`}>다르면 확인이 보류돼요</p>
+    </section>
   );
 }
