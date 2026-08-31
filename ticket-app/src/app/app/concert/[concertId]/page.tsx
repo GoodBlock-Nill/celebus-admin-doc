@@ -17,7 +17,7 @@ import { CONCERT_STATUS_META } from '../../_components/status-meta';
 import { useApiResource } from '../../_components/use-api-resource';
 import { VenueValue } from './venue-value';
 import { api } from '@/lib/api-client';
-import { formatKrw } from '@/lib/format';
+import { formatDateTimeWithWeekday, formatKrw } from '@/lib/format';
 
 /** A2 공연 상세 — 회차 선택 후 예매 진입 */
 export default function ConcertDetailPage() {
@@ -67,7 +67,7 @@ export default function ConcertDetailPage() {
   };
 
   return (
-    <main className="pb-[92px]">
+    <main>
       <AppHeader title="공연 상세" backHref="/app" />
 
       {/* 포스터가 있으면 3:4 비율로 함께 보여 주고, 없으면 기존 그라디언트 화면을 유지한다. */}
@@ -90,7 +90,8 @@ export default function ConcertDetailPage() {
         </div>
       </section>
 
-      <div className="flex flex-col gap-3 px-4 pt-4">
+      {/* 하단 고정 예매 바가 마지막 카드를 가리지 않도록 바 높이 + 여유만큼 아래 여백을 둔다. */}
+      <div className="flex flex-col gap-3 px-4 pb-28 pt-4">
         <SectionCard title="공연 정보">
           <InfoRow label="일시" value={formatSessionPeriod(sessions)} />
           <InfoRow
@@ -106,6 +107,7 @@ export default function ConcertDetailPage() {
           <InfoRow label="좌석" value={concert.seatType} />
           <InfoRow label="가격" value={formatKrw(concert.priceKrw)} emphasis />
           <InfoRow label="1인 구매 한도" value={`${concert.maxPerUser}매`} />
+          <InfoRow label="판매 기간" value={`~ ${formatDateTimeWithWeekday(concert.salesEndAt)}까지`} />
         </SectionCard>
 
         <SectionCard title="회차 선택" description="원하는 회차를 선택하면 예매를 진행할 수 있습니다.">
@@ -120,7 +122,7 @@ export default function ConcertDetailPage() {
             ))}
           </div>
           <p className={`mt-2.5 text-[11.5px] ${MUTED}`}>
-            잔여 수량은 유료 판매분 기준이며, 입금 대기 중인 좌석도 차감되어 표시됩니다.
+            잔여석은 실시간으로 반영됩니다. 입금 확인 중인 좌석도 예약된 것으로 계산됩니다.
           </p>
         </SectionCard>
 
@@ -154,6 +156,10 @@ export default function ConcertDetailPage() {
       </div>
 
       <div className="fixed bottom-0 left-1/2 w-full max-w-[420px] -translate-x-1/2 border-t border-[#2A2C34] bg-[#0F1014F5] px-4 pb-5 pt-3 backdrop-blur">
+        {/* 버튼이 왜 눌리지 않는지 바로 알 수 있도록 비활성 사유를 버튼 위에 표시한다. */}
+        {isOnSale && selectedSessionId === '' ? (
+          <p className={`mb-2 text-center text-[12px] ${MUTED}`}>회차를 선택해 주세요</p>
+        ) : null}
         <button
           type="button"
           disabled={!canSubmit}

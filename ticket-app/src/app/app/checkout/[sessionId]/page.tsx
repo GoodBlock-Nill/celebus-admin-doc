@@ -81,12 +81,15 @@ export default function CheckoutPage() {
             아직 예매가 확정되지 않았습니다. 안내된 계좌로 마감 시각까지 입금해 주세요.
           </NoticeBox>
           <DepositGuideCard order={createdOrder} />
-          <Link href={`/app/orders/${createdOrder.id}`} className={PRIMARY_BUTTON}>
-            주문 내역에서 확인
-          </Link>
-          <Link href="/app" className={GHOST_BUTTON}>
-            홈으로 이동
-          </Link>
+          {/* 주요 행동은 입금 안내 카드의 송금 버튼이므로 이동 링크는 보조 버튼으로 나란히 둔다. */}
+          <div className="grid grid-cols-2 gap-2">
+            <Link href={`/app/orders/${createdOrder.id}`} className={GHOST_BUTTON}>
+              주문 내역에서 확인
+            </Link>
+            <Link href="/app" className={GHOST_BUTTON}>
+              홈으로 이동
+            </Link>
+          </div>
         </div>
       </main>
     );

@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 
 import { MemberSessionProvider } from './_components/member-session';
 import { TabBar } from './_components/tab-bar';
+import { AppToastProvider } from './_components/toast';
 
 /** 하단 탭바를 노출하는 최상위 화면 경로 */
 const TAB_ROUTES = new Set(['/app', '/app/orders', '/app/tickets', '/app/report']);
@@ -15,10 +16,12 @@ export default function MemberAppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="relative mx-auto min-h-dvh w-full max-w-[420px] bg-[#0F1014] text-[#F1F0EC]">
-      <MemberSessionProvider>
-        <div className={showTabBar ? 'pb-[76px]' : 'pb-8'}>{children}</div>
-        {showTabBar ? <TabBar /> : null}
-      </MemberSessionProvider>
+      <AppToastProvider>
+        <MemberSessionProvider>
+          <div className={showTabBar ? 'pb-[76px]' : 'pb-8'}>{children}</div>
+          {showTabBar ? <TabBar /> : null}
+        </MemberSessionProvider>
+      </AppToastProvider>
     </div>
   );
 }

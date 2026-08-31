@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { CheckIcon, ShieldIcon } from '../_components/icons';
 import { Field, TextInput } from '../_components/form-controls';
-import { NoticeBox, SectionCard } from '../_components/section';
+import { CollapsibleSection, NoticeBox, SectionCard } from '../_components/section';
 import { GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../_components/ui';
 import {
   ProviderMark,
@@ -61,21 +61,6 @@ export function VerifyFormStep({
         </div>
       </div>
 
-      <SectionCard title="수집 항목">
-        <ul className={`flex flex-col gap-1.5 text-[12.5px] leading-relaxed ${MUTED}`}>
-          {COLLECTED_ITEMS.map((item) => (
-            <li key={item} className="flex gap-1.5">
-              <span aria-hidden="true">·</span>
-              <span>{item}</span>
-            </li>
-          ))}
-          <li className="flex gap-1.5">
-            <span aria-hidden="true">·</span>
-            <span>{PROVIDER_NOTICE}</span>
-          </li>
-        </ul>
-      </SectionCard>
-
       {/* 공공 간편인증 표준창 관행에 따라 수단 선택을 정보 입력보다 먼저 배치 */}
       <SectionCard title="인증 수단 선택" description="사용 중인 간편인증 앱을 먼저 선택해 주세요.">
         <ProviderSelector selected={provider} onSelect={onSelectProvider} />
@@ -116,6 +101,18 @@ export function VerifyFormStep({
           </Field>
         </div>
       </SectionCard>
+
+      {/* 첫 화면 부담을 줄이기 위해 고지 항목은 접어 두고, 필요할 때 펼쳐 보게 한다. */}
+      <CollapsibleSection title="수집 항목 안내 보기">
+        <ul className="flex flex-col gap-1.5">
+          {[...COLLECTED_ITEMS, PROVIDER_NOTICE].map((item) => (
+            <li key={item} className="flex gap-1.5">
+              <span aria-hidden="true">·</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </CollapsibleSection>
 
       <button type="button" disabled={!provider} onClick={onSubmit} className={PRIMARY_BUTTON}>
         간편인증 요청

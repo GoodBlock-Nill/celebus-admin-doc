@@ -30,6 +30,14 @@ export function formatDateWithWeekday(iso: string): string {
   return `${year}.${pad2(month)}.${pad2(day)}(${KST_WEEKDAY_LABELS[weekdayIndex]})`;
 }
 
+/** 날짜 + 시각 표시 — 2026.10.14(수) 23:59 */
+export function formatDateTimeWithWeekday(iso: string): string {
+  const parsed = new Date(iso);
+  if (Number.isNaN(parsed.getTime())) return '-';
+  const { hour, minute } = kstParts(parsed);
+  return `${formatDateWithWeekday(iso)} ${pad2(hour)}:${pad2(minute)}`;
+}
+
 /** 남은 시간 표시 — "3시간 20분 남음" / "마감 지남" */
 export function formatRemaining(deadlineIso: string, now: Date): string {
   const parsed = new Date(deadlineIso);

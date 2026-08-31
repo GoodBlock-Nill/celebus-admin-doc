@@ -42,11 +42,16 @@ export function SessionFieldset({
       </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <Field label="회차 이름" required error={errors[`${session.key}:name`]}>
+        <Field
+          label="회차 이름"
+          required
+          error={errors[`${session.key}:name`]}
+          hint="공연 일시는 자동 표시되므로 이름은 '1회차'처럼 간단히 입력해 주세요."
+        >
           <TextInput
             value={session.name}
             onChange={(event) => onChangeName(event.target.value)}
-            placeholder="예) 1회차 10/15(목) 19:00"
+            placeholder="예) 1회차"
             maxLength={60}
           />
         </Field>
