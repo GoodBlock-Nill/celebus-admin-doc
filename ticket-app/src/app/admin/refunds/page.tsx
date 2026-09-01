@@ -36,7 +36,7 @@ export default function AdminRefundsPage() {
   };
 
   const askApprove = (row: AdminRefundView) => {
-    // 지급 대기 상태에서 취소된 주문은 회수할 티켓 없이 선점 좌석만 반환한다.
+    // 입금 확인 상태에서 취소된 주문은 회수할 티켓 없이 선점 좌석만 반환한다.
     const hasTickets = row.ticketCount > 0;
     confirm.ask({
       title: '환불을 승인할까요?',

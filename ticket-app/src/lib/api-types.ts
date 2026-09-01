@@ -10,9 +10,16 @@ export type ConcertStatus = 'UPCOMING' | 'ON_SALE' | 'CLOSED';
 /** 좌석 방식 — 등록 시 선택하는 세 가지 (현장배정 = 입장 순서대로 현장에서 자리 안내) */
 export type SeatType = '자유석' | '구역제' | '현장배정';
 
-/** DEPOSIT_CONFIRMED = 입금 확인 완료·티켓 지급 대기 (운영자 지급 처리 전) */
+/**
+ * 예매 진행 상태.
+ *  · AWAITING_DEPOSIT  = 입금 대기 (계좌 이체 전)
+ *  · DEPOSIT_REPORTED  = 입금 확인중 (회원이 입금확인을 요청해 운영자가 확인하는 중)
+ *  · DEPOSIT_CONFIRMED = 입금 확인 (티켓 지급 처리 전)
+ *  · PAID              = 티켓 지급
+ */
 export type OrderStatus =
   | 'AWAITING_DEPOSIT'
+  | 'DEPOSIT_REPORTED'
   | 'ON_HOLD'
   | 'DEPOSIT_CONFIRMED'
   | 'PAID'
@@ -93,6 +100,10 @@ export interface OrderSummaryView {
   amountKrw: number;
   createdAt: string;
   depositDeadline: string;
+  /** 회원이 입금확인을 요청한 시각 (요청 전·취소 후에는 없다) */
+  depositReportedAt: string | null;
+  /** 운영자가 미입금으로 반려한 시각 (재요청 안내에 사용) */
+  reportRejectedAt: string | null;
   concertId: string;
   concertTitle: string;
   sessionId: string;

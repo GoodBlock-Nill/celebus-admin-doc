@@ -31,6 +31,8 @@ export type AdminImageKind = 'poster' | 'detail';
 export interface AdminSummaryView {
   /** 입금 확인 대기 + 티켓 지급 대기 */
   depositPending: number;
+  /** 회원이 입금확인을 요청해 우선 확인이 필요한 예매 건수 */
+  depositReported: number;
   autoMatched: number;
   unmatched: number;
   held: number;
@@ -61,6 +63,10 @@ export interface AdminOrderView {
   depositDeadline: string;
   sessionName: string;
   holdReason: string | null;
+  /** 회원이 입금확인을 요청한 시각 (요청이 없으면 null) */
+  depositReportedAt: string | null;
+  /** 운영자가 미입금으로 반려한 시각 */
+  reportRejectedAt: string | null;
   depositConfirmedAt: string | null;
   cancelRequestedAt: string | null;
   refundedAt: string | null;

@@ -4,18 +4,18 @@ import { DataTable } from '../../_components/data-table';
 import type { Column } from '../../_components/data-table';
 import { Button } from '../../_components/form';
 import { useToast } from '../../_components/toast';
-import { InfoNote } from '../../_components/ui';
+import { Badge, InfoNote } from '../../_components/ui';
 import { adminApi } from '@/lib/admin-client';
 import type { AdminOrderView } from '@/lib/admin-types';
 import { formatDateTime, formatKrw } from '@/lib/format';
 
-/** ③ 티켓 지급 대기 — 입금 확인이 끝나 운영자의 티켓 지급 처리만 남은 주문 */
-export function IssuePendingTab({ rows, onDone }: { rows: AdminOrderView[]; onDone: () => void }) {
+/** ① 입금 확인 요청 — 회원이 "입금했다"고 알린 주문 (우선 확인 대상) */
+export function ReportedTab({ rows, onDone }: { rows: AdminOrderView[]; onDone: () => void }) {
   const toast = useToast();
 
-  const handleIssue = async (row: AdminOrderView) => {
-    const result = await adminApi.issueOrderTickets(row.id);
-    toast.fromResult(result, `주문 ${row.orderNo} 티켓 ${row.qty}매를 지급했습니다.`);
+  const handleReject = async (row: AdminOrderView) => {
+    const result = await adminApi.rejectDepositReport(row.id);
+    toast.fromResult(result, `주문 ${row.orderNo} 미입금 반려 — 입금 대기로 되돌렸습니다.`);
     if (result.ok) onDone();
   };
 
@@ -23,8 +23,13 @@ export function IssuePendingTab({ rows, onDone }: { rows: AdminOrderView[]; onDo
     {
       key: 'orderNo',
       header: '주문번호',
-      width: '130px',
-      render: (row) => <span className="font-semibold tabular-nums">{row.orderNo}</span>,
+      width: '150px',
+      render: (row) => (
+        <div className="flex flex-col gap-1">
+          <span className="font-semibold tabular-nums">{row.orderNo}</span>
+          <Badge tone="accent">회원 요청</Badge>
+        </div>
+      ),
     },
     {
       key: 'user',
@@ -53,12 +58,12 @@ export function IssuePendingTab({ rows, onDone }: { rows: AdminOrderView[]; onDo
       render: (row) => formatKrw(row.amountKrw),
     },
     {
-      key: 'confirmedAt',
-      header: '입금 확정 시각',
+      key: 'reportedAt',
+      header: '요청 시각',
       width: '150px',
       render: (row) => (
         <span className="whitespace-nowrap tabular-nums text-[12px] text-[#4A4E5A]">
-          {row.depositConfirmedAt ? formatDateTime(row.depositConfirmedAt) : '-'}
+          {row.depositReportedAt ? formatDateTime(row.depositReportedAt) : '-'}
         </span>
       ),
     },
@@ -66,10 +71,10 @@ export function IssuePendingTab({ rows, onDone }: { rows: AdminOrderView[]; onDo
       key: 'action',
       header: '처리',
       align: 'right',
-      width: '120px',
+      width: '130px',
       render: (row) => (
-        <Button variant="primary" size="sm" onClick={() => void handleIssue(row)}>
-          티켓 지급
+        <Button variant="danger" size="sm" onClick={() => void handleReject(row)}>
+          미입금 반려
         </Button>
       ),
     },
@@ -78,16 +83,16 @@ export function IssuePendingTab({ rows, onDone }: { rows: AdminOrderView[]; onDo
   return (
     <div className="flex flex-col gap-3">
       <InfoNote>
-        입금이 확인된 주문입니다. 좌석은 선점 상태로 유지되며, 티켓 지급 처리를 해야 실명 티켓이 발급되고 회원
-        예매내역·CELEBUS 앱 지급으로 반영됩니다. 티켓 지급 처리는 공연 당일 CELEBUS 앱 발권 일정에 맞춰 진행하는
-        것이 원칙입니다.
+        회원이 입금을 마쳤다고 알린 주문입니다. 은행 입금 내역에서 금액·입금자명을 찾아 위 입금 등록으로 처리하면
+        자동 대조되고, 확인 대기 탭에서 입금 확인을 누르면 됩니다. 요청 건은 입금 마감이 지나도 자동 취소되지
+        않으니 우선 확인해 주세요. 입금이 확인되지 않으면 미입금 반려로 입금 대기 상태에 되돌립니다.
       </InfoNote>
       <DataTable
         columns={columns}
         rows={rows}
         rowKey={(row) => row.id}
-        emptyText="티켓 지급을 기다리는 주문이 없습니다."
-        minWidth="900px"
+        emptyText="입금 확인 요청이 없습니다."
+        minWidth="940px"
       />
     </div>
   );

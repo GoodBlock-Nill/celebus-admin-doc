@@ -9,7 +9,7 @@
 | 기획담당자 | @Nill Yoo |
 | 기능영역 | 티켓 (TKT) |
 | 상태 | 초안 (승인 후 구현 착수) |
-| 버전 | v1.5 |
+| 버전 | v1.6 |
 | 최근 업데이트 | 2026.09.01 |
 | 선행 문서 | [CEB-TKT-001-A] 티켓 예매 서비스 기획 리포트 v1.2 / 프로토타입 `ticket-app/` (동작 사양 SSOT) |
 
@@ -137,7 +137,8 @@ concert_sessions        회차 (concert_id, name, start_at, entry_open_minutes_b
 session_pools           재고 4분류 (session_id, pool_type: PAID_SALE|CELEBUS_WINNER|IX_INVITATION|OPERATION_HOLD,
                          allocated, reserved, issued — UNIQUE(session_id, pool_type))
 orders                  주문 (order_no, member_id, session_id, qty, amount_krw,
-                         status: AWAITING_DEPOSIT|ON_HOLD|DEPOSIT_CONFIRMED|PAID|EXPIRED|CANCEL_REQUESTED|REFUNDED,
+                         status: AWAITING_DEPOSIT|DEPOSIT_REPORTED|ON_HOLD|DEPOSIT_CONFIRMED|PAID|EXPIRED|CANCEL_REQUESTED|REFUNDED,
+                         deposit_reported_at, report_rejected_at (입금확인 요청·미입금 반려 시각),
                          deposit_deadline, depositor_name_rule, wants_cash_receipt, cash_receipt_phone_enc,
                          hold_reason, deposit_confirmed_at, cancel_requested_at, refunded_at)
 tickets                 티켓 (code UNIQUE, order_id NULL 허용(무상 발급), member_id, session_id, pool_type,
@@ -167,7 +168,9 @@ admin_logs              관리자 활동 로그 (admin_id, action, detail, creat
 | 함수 | 프로토 대응 | 핵심 처리 |
 | --- | --- | --- |
 | `create_order(session, qty, …)` | `createOrder` | 한도·판매기간 검증 → **`UPDATE session_pools SET reserved = reserved + qty WHERE … AND allocated - reserved - issued >= qty`** 원자적 선점(0행이면 매진 실패) → 주문 생성, 마감=주문일 당일 23:59:59 KST |
-| `expire_overdue_orders()` | `expireOverdueOrders` | 마감 지난 `AWAITING_DEPOSIT`·`ON_HOLD` → `EXPIRED` + reserved 원복. `DEPOSIT_CONFIRMED` 제외 |
+| `expire_overdue_orders()` | `expireOverdueOrders` | 마감 지난 `AWAITING_DEPOSIT`·`ON_HOLD` → `EXPIRED` + reserved 원복. `DEPOSIT_CONFIRMED`·**`DEPOSIT_REPORTED`(입금확인 요청 접수 건) 제외** — 요청 건은 운영자가 확인 또는 미입금 반려로 수동 종결 |
+| `report_deposit(order)` / `cancel_deposit_report(order)` | 동일 | **회원 액션** — 입금 대기 → "입금 확인중"(입금했어요 신호) 전환·취소. 게이트가 아닌 신호: 요청 없이도 운영자 입금 매칭으로 입금 확인 직행 가능 |
+| `reject_deposit_report(order)` | `rejectDepositReport` | 운영자 액션 — 미입금 반려: 입금 확인중 → 입금 대기 복귀 + 반려 시각 기록, 회원 화면에 재요청 안내 |
 | `register_deposit(...)` + 자동 대조 | `addDeposit` | 관리자 수기 입금 등록 → 금액 완전 일치 + 실명(또는 실명+주문번호 끝4자리) 매칭 → `AUTO_MATCHED`/`HELD`/`UNMATCHED`/`REFUND_TARGET` 분류 |
 | `confirm_deposit(deposit)` | `confirmDeposit` | 운영자 액션 ① — deposit `CONFIRMED`, 주문 `DEPOSIT_CONFIRMED`(+확정 시각). **티켓 미발급·선점 유지** |
 | `issue_order_tickets(order)` | `issueOrderTickets` | 운영자 액션 ② — 티켓 qty매 생성, reserved→issued 전환, 주문 `PAID`. 중복 지급 차단 |
@@ -283,5 +286,6 @@ admin_logs              관리자 활동 로그 (admin_id, action, detail, creat
 | v1.1 | 2026.08.31 | @Nill Yoo | 본인확인 연동 후보 구체화 (§3.2·§8.1) — NHN KCP 본인확인 V2 검토 반영: 거래등록→인증창→콜백→서버 결과 조회 플로우, CI/DI 반환 확인, 테스트 키로 개발 선행 가능. 어댑터 경계 정의. 간편인증 4종 커버 범위는 영업 확인 항목 |
 | v1.2 | 2026.08.31 | @Nill Yoo | 발권·체크인 역할 분담 확정 (§2·§5·§6) — 발권(QR)·현장 체크인은 CELEBUS 본 앱 담당, 예매 웹은 입금 확인·티켓 지급 처리까지. 예매 웹의 QR·체크인 화면 제거, 회원 내 티켓은 지급 상태 확인 전용. 티켓 코드·사용 처리 규칙은 본 앱 연동 기반으로 보존, 서버 간 연동 스펙을 결정 필요 #7로 등록 |
 | v1.3 | 2026.09.01 | @Nill Yoo | 본인확인 수단 3종 확정 반영 — 카카오·토스·네이버 (PASS 제외, §2·§3.2). 현금영수증 기본값 = 본인확인 휴대폰 번호를 서버에서 자동 사용 (전화번호 원문은 클라이언트에 내려보내지 않고 마스킹 표시, 다른 번호 직접 입력 옵션 병행) |
+| v1.6 | 2026.09.01 | @Nill Yoo | 예매 진행 상태 흐름 개편 — ① 회원 표기 정정: 입금 대기(예매 직후) → 입금 확인중(회원 [입금확인 요청] 클릭) → 입금 확인(운영자) → 티켓 지급(운영자). 기존 "입금 확인중"(예매 직후)·"지급 대기"·"지급 완료" 표기의 주체 혼동 해소 ② 회원 [입금확인 요청]·[요청 취소] 신설 — 요청은 게이트가 아닌 신호(운영자 직행 확인 허용) ③ 입금 확인중 상태는 자정 자동 만료에서 제외(운영자 확인·미입금 반려로 수동 종결) ④ 운영자 미입금 반려 액션 신설 ⑤ 예매내역 목록을 진행중(입금 대기·입금 확인중·확인 보류·입금 확인)/완료(티켓 지급)/취소(취소 요청·환불·만료) 3탭으로 분할 — 기본 탭 진행중, 탭별 건수·빈 상태 문구 ⑥ 티켓 지급은 공연 당일 처리되므로 지급 후 취소·환불 요청 불가 — 지급 완료 화면에서 취소 버튼 제거·불가 안내, 진행 상태 티켓 지급 단계 안내문에 명시 |
 | v1.5 | 2026.09.01 | @Nill Yoo | "지급받은 티켓" 섹션 제거 — 무상 지급 티켓(래플 당첨·초대)의 확인·사용을 CELEBUS 앱으로 일원화, 예매 웹 회원 화면은 본인 예매 건의 진행 상태 확인만 담당. 티켓 조회 경로는 본 앱 연동 기반으로 유지 |
 | v1.4 | 2026.09.01 | @Nill Yoo | 회원 IA 개편 (§2·§5·§6) — ① "내 티켓" 메뉴 폐지: 탭 3개(홈·예매내역·신고), 지급 확인은 예매내역 4단계 진행 상태(예매 접수·입금 대기·입금 확인·티켓 지급)로 통합, 무상 지급 티켓은 예매내역 하단 "지급받은 티켓" 섹션 ② 티켓 지급 처리는 공연 당일 CELEBUS 앱 발권 일정에 맞춰 실행하는 운영 원칙 명문화 ③ 회원 화면 용어 "주문"→"예매" 통일. 티켓 조회 경로는 본 앱 연동 기반으로 보존 |

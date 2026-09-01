@@ -75,7 +75,7 @@ export function CollapsibleSection({ title, children, defaultOpen = false }: Col
   );
 }
 
-type NoticeTone = 'warning' | 'accent' | 'muted';
+type NoticeTone = 'warning' | 'accent' | 'info' | 'muted';
 
 interface NoticeBoxProps {
   tone?: NoticeTone;
@@ -85,6 +85,8 @@ interface NoticeBoxProps {
 const NOTICE_TONE: Record<NoticeTone, string> = {
   warning: 'bg-[#FFFAEB] text-[#B54708]',
   accent: 'bg-[#FDF2F7] text-[#A61E4D]',
+  // 처리 진행 중임을 알리는 정보 톤 — 입금 확인 요청 접수 안내에 사용
+  info: 'bg-[#EFF4FF] text-[#175CD3]',
   muted: 'border border-[#E5E8EB] bg-white text-[#4E5968]',
 };
 

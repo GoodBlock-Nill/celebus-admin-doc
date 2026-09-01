@@ -60,6 +60,18 @@ export function isResponse(value: MemberRow | NextResponse): value is NextRespon
   return value instanceof NextResponse;
 }
 
+/**
+ * 서버 함수의 실패 사유는 운영 로그와 같은 문장을 쓰기 때문에 "주문" 표현이 섞여 있다.
+ * 회원 화면에는 예매 용어만 노출해야 하므로 전달 직전에 회원 문구로 바꾼다.
+ */
+const MEMBER_REASON_TEXT: Record<string, string> = {
+  '주문을 찾을 수 없습니다.': '예매 내역을 찾을 수 없습니다.',
+};
+
+export function toMemberReason(reason: string): string {
+  return MEMBER_REASON_TEXT[reason] ?? reason.replaceAll('주문', '예매');
+}
+
 /** 조회 실패를 공통 문구로 변환 */
 export function readFailure(): NextResponse {
   return fail('정보를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.', HTTP_STATUS.serverError);

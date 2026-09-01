@@ -3,6 +3,7 @@ import type { OrderStatus, OrderSummaryView, TicketSummaryView } from './api-typ
 /** 1인 구매 한도에 포함되는 주문 상태 (서버 판정과 동일 기준) */
 const ACTIVE_ORDER_STATUSES = new Set<OrderStatus>([
   'AWAITING_DEPOSIT',
+  'DEPOSIT_REPORTED',
   'ON_HOLD',
   'DEPOSIT_CONFIRMED',
   'PAID',

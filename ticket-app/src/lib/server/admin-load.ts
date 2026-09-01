@@ -13,7 +13,8 @@ const UNKNOWN_REAL_NAME = '실명 미확인';
 
 export const ADMIN_ORDER_COLUMNS =
   'id, order_no, status, qty, amount_krw, created_at, deposit_deadline, member_id, session_id, ' +
-  'hold_reason, deposit_confirmed_at, cancel_requested_at, refunded_at';
+  'hold_reason, deposit_reported_at, report_rejected_at, deposit_confirmed_at, ' +
+  'cancel_requested_at, refunded_at';
 
 const ADMIN_DEPOSIT_COLUMNS =
   'id, depositor_name, amount_krw, deposited_at, status, matched_order_id, memo';
@@ -29,6 +30,8 @@ export interface AdminOrderRow {
   member_id: string;
   session_id: string;
   hold_reason: string | null;
+  deposit_reported_at: string | null;
+  report_rejected_at: string | null;
   deposit_confirmed_at: string | null;
   cancel_requested_at: string | null;
   refunded_at: string | null;
@@ -103,6 +106,8 @@ function toOrderView(
     depositDeadline: row.deposit_deadline,
     sessionName,
     holdReason: row.hold_reason,
+    depositReportedAt: row.deposit_reported_at,
+    reportRejectedAt: row.report_rejected_at,
     depositConfirmedAt: row.deposit_confirmed_at,
     cancelRequestedAt: row.cancel_requested_at,
     refundedAt: row.refunded_at,

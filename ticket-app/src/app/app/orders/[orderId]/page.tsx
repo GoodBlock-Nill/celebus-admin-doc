@@ -13,6 +13,7 @@ import { InfoRow, SectionCard } from '../../_components/section';
 import { ORDER_STATUS_META, canRequestCancel, needsDepositGuide } from '../../_components/status-meta';
 import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
 import { useApiResource } from '../../_components/use-api-resource';
+import { DepositReportActions } from '../deposit-report-actions';
 import { OrderStatusNotice } from '../order-status-notice';
 import { OrderTimeline } from '../order-timeline';
 import { api } from '@/lib/api-client';
@@ -58,6 +59,7 @@ export default function OrderDetailPage() {
 
   const order = state.data.order;
   const statusMeta = ORDER_STATUS_META[order.status];
+  const showsDepositGuide = needsDepositGuide(order.status);
 
   const handleCancel = async () => {
     if (isSubmitting) return;
@@ -104,22 +106,24 @@ export default function OrderDetailPage() {
           <OrderTimeline order={order} />
         </SectionCard>
 
-        {/* 입금 안내는 보류 상태에서도 다시 보여줘야 하므로 상태 안내 박스와 순서를 나눠 배치한다. */}
-        {order.status === 'ON_HOLD' ? <OrderStatusNotice order={order} /> : null}
+        {/* 입금 안내가 함께 뜨는 상태(입금 대기·확인중·보류)에서는 안내 박스를 계좌 안내 위에 둔다. */}
+        {showsDepositGuide ? <OrderStatusNotice order={order} /> : null}
 
-        {needsDepositGuide(order.status) ? (
+        {showsDepositGuide ? (
           <>
             <h2 className="px-1 text-[16px] font-bold text-[#191F28]">입금 계좌 확인</h2>
             <DepositGuideCard order={order} />
           </>
         ) : null}
 
-        {order.status === 'ON_HOLD' ? null : <OrderStatusNotice order={order} />}
+        {showsDepositGuide ? null : <OrderStatusNotice order={order} />}
 
         {errorMessage ? <ErrorBanner message={errorMessage} /> : null}
 
         <div className="flex flex-col gap-2">
-          {/* 발권·입장 확인은 CELEBUS 본앱이 담당하므로 지급 완료 예매는 본앱으로 보낸다. */}
+          <DepositReportActions order={order} onDone={() => void reload()} onFail={setErrorMessage} />
+
+          {/* 발권·입장 확인은 CELEBUS 본앱이 담당하므로 티켓이 지급된 예매는 본앱으로 보낸다. */}
           {order.status === 'PAID' ? (
             <a
               href={CELEBUS_APP_URL}
@@ -131,7 +135,7 @@ export default function OrderDetailPage() {
             </a>
           ) : null}
 
-          {needsDepositGuide(order.status) ? (
+          {showsDepositGuide ? (
             <button
               type="button"
               onClick={() => setOpenModal('CANCEL_AWAITING')}
@@ -152,10 +156,17 @@ export default function OrderDetailPage() {
           ) : null}
         </div>
 
-        <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
-          환불 수수료는 관람일 기준으로 단계별 적용됩니다. 자세한 내용은 공연 상세의 환불 정책을 확인해
-          주세요.
-        </p>
+        {/* 티켓 지급은 공연 당일에 이뤄지므로 지급된 예매는 취소·환불 안내 대신 불가 안내를 노출한다. */}
+        {order.status === 'PAID' ? (
+          <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
+            티켓이 지급된 예매는 취소·환불이 불가능합니다.
+          </p>
+        ) : (
+          <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
+            환불 수수료는 관람일 기준으로 단계별 적용됩니다. 자세한 내용은 공연 상세의 환불 정책을 확인해
+            주세요.
+          </p>
+        )}
       </div>
 
       <ConfirmModal
@@ -170,11 +181,7 @@ export default function OrderDetailPage() {
       <ConfirmModal
         open={openModal === 'REQUEST_CANCEL'}
         title="취소·환불을 요청할까요?"
-        description={
-          order.status === 'DEPOSIT_CONFIRMED'
-            ? '요청 후 24시간 이내에 처리됩니다. 아직 티켓이 지급되지 않은 예매로, 환불이 승인되면 확보된 좌석은 반환됩니다.'
-            : '요청 후 24시간 이내에 처리됩니다. 환불이 승인되면 발급된 티켓은 회수됩니다.'
-        }
+        description="요청 후 24시간 이내에 처리됩니다. 아직 티켓이 지급되지 않은 예매로, 환불이 승인되면 확보된 좌석은 반환됩니다."
         confirmLabel="취소·환불 요청하기"
         onConfirm={() => void handleCancel()}
         onClose={() => setOpenModal('NONE')}

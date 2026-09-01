@@ -18,12 +18,20 @@ const DEPOSIT_NOTICES = [
   '금액이 다르게 입금된 경우 확인 보류로 전환되며, 전액 환불 후 다시 예매해 주세요.',
 ];
 
+/** 입금확인 요청이 접수된 예매 — 자동 취소가 보류된다는 점을 먼저 알린다. */
+const REPORTED_NOTICES = [
+  '입금 확인 요청이 접수되어 운영자가 입금 내역을 확인하고 있습니다.',
+  '요청이 접수된 예매는 마감 시각이 지나도 자동 취소되지 않습니다.',
+  '입금이 확인되지 않으면 입금 대기로 되돌아가며, 입금 후 다시 요청할 수 있습니다.',
+];
+
 /** 입금 계좌·입금자명 규칙·마감 카운트다운을 함께 보여주는 안내 카드 */
 export function DepositGuideCard({ order }: { order: OrderDetailView }) {
   const now = useAppClock();
 
   const realName = order.depositorName || '본인확인 실명';
   const depositorValue = `${realName}${order.orderNo.slice(-ORDER_NO_TAIL_LENGTH)}`;
+  const isReported = order.status === 'DEPOSIT_REPORTED';
 
   return (
     <div className="flex flex-col gap-3">
@@ -42,11 +50,16 @@ export function DepositGuideCard({ order }: { order: OrderDetailView }) {
         <p className="mt-2 text-center text-[22px] font-extrabold text-[#B54708]">
           <Countdown targetAt={order.depositDeadline} expiredLabel="입금 마감 지남" />
         </p>
+        {isReported ? (
+          <p className="mt-2 text-center text-[13px] font-semibold text-[#B54708]">
+            요청 접수됨 — 자동 취소가 보류됩니다
+          </p>
+        ) : null}
       </section>
 
       {/* 자동 취소·확인 보류 조건은 놓치면 손해가 커서 본문에 가까운 크기·대비로 노출한다. */}
       <ul className="flex flex-col gap-2 px-1 text-[13.5px] leading-[1.65] text-[#4E5968]">
-        {DEPOSIT_NOTICES.map((notice) => (
+        {(isReported ? REPORTED_NOTICES : DEPOSIT_NOTICES).map((notice) => (
           <li key={notice} className="flex gap-1.5">
             <span aria-hidden="true">·</span>
             <span>{notice}</span>

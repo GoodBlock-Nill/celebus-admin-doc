@@ -58,10 +58,11 @@ export default function AdminDashboardPage() {
     <Card title="운영 처리 순서" description="1차 오픈은 무통장입금 수기 확인 흐름을 전제로 합니다.">
       <ol className="flex flex-col gap-2 text-[13px] leading-relaxed text-[#4A4E5A]">
         <li>① 회원 앱에서 예매가 접수되면 좌석이 선점되고 입금 마감 시각이 부여됩니다.</li>
-        <li>② 입금 건이 들어오면 금액·실명 기준으로 자동 대조되고, 운영자가 입금을 확인하면 지급 대기로 넘어갑니다.</li>
-        <li>③ 지급 대기 주문은 운영자가 티켓 지급 처리를 해야 실명 티켓이 발급됩니다.</li>
-        <li>④ 이름·금액이 어긋난 건은 보류 큐에서 수동 매칭하거나 반환 대상으로 지정합니다.</li>
-        <li>⑤ 취소 요청은 24시간 이내 환불 승인, 부정 거래 신고는 10시간 이내 조치가 기준입니다.</li>
+        <li>② 회원이 입금 확인을 요청하면 입금 확인중으로 바뀌고 자동 취소가 보류됩니다. 요청이 없어도 입금이 확인되면 바로 처리할 수 있습니다.</li>
+        <li>③ 입금 건이 들어오면 금액·실명 기준으로 자동 대조되고, 운영자가 입금을 확인하면 티켓 지급 대기로 넘어갑니다.</li>
+        <li>④ 티켓 지급 대기 주문은 운영자가 티켓 지급 처리를 해야 실명 티켓이 발급됩니다.</li>
+        <li>⑤ 이름·금액이 어긋난 건은 보류 큐에서 수동 매칭하거나 반환 대상으로 지정하고, 입금이 확인되지 않은 요청은 미입금 반려로 되돌립니다.</li>
+        <li>⑥ 취소 요청은 24시간 이내 환불 승인, 부정 거래 신고는 10시간 이내 조치가 기준입니다.</li>
       </ol>
     </Card>
   );
@@ -111,7 +112,7 @@ export default function AdminDashboardPage() {
           label="입금 확인 대기"
           value={String(summary.depositPending)}
           unit="건"
-          caption={`자동 대조 ${summary.autoMatched}건 · 지급 대기 ${summary.issuePending}건 · 보류 ${summary.held}건 · 미대조 ${summary.unmatched}건`}
+          caption={`회원 요청 ${summary.depositReported}건 · 자동 대조 ${summary.autoMatched}건 · 티켓 지급 대기 ${summary.issuePending}건 · 보류 ${summary.held}건 · 미대조 ${summary.unmatched}건`}
           tone={summary.depositPending > 0 ? 'warning' : 'neutral'}
         />
         <StatCard

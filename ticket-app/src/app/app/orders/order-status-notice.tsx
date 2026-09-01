@@ -13,6 +13,25 @@ export function OrderStatusNotice({ order }: { order: OrderDetailView }) {
     return <NoticeBox tone="warning">{order.holdReason ?? HOLD_DEFAULT_REASON}</NoticeBox>;
   }
 
+  if (order.status === 'DEPOSIT_REPORTED') {
+    return (
+      <NoticeBox tone="info">
+        입금 확인 요청이 접수되었습니다. 운영자가 확인하면 입금 확인으로 바뀝니다.
+        {order.depositReportedAt ? ` (요청 ${formatDateTime(order.depositReportedAt)})` : ''}
+      </NoticeBox>
+    );
+  }
+
+  // 미입금 반려 이력이 있는 입금 대기 예매 — 다시 요청하도록 안내한다.
+  if (order.status === 'AWAITING_DEPOSIT' && order.reportRejectedAt) {
+    return (
+      <NoticeBox tone="warning">
+        입금이 확인되지 않아 입금 대기로 되돌아갔습니다. 입금 후 다시 요청해 주세요.
+        {` (반려 ${formatDateTime(order.reportRejectedAt)})`}
+      </NoticeBox>
+    );
+  }
+
   if (order.status === 'DEPOSIT_CONFIRMED') {
     return (
       <NoticeBox tone="accent">

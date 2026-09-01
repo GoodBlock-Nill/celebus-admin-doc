@@ -29,21 +29,27 @@ export async function GET(req: Request) {
   await expireOverdueOrders();
   const client = admin();
 
-  const [deposits, issuePending, matchable] = await Promise.all([
+  const [deposits, reported, issuePending, matchable] = await Promise.all([
     loadDepositViews(client),
+    // 회원이 입금확인을 요청한 예매 — 오래 기다린 요청이 위로 오게 정렬한다.
+    loadOrdersByStatus(client, {
+      statuses: ['DEPOSIT_REPORTED'],
+      orderBy: 'deposit_reported_at',
+      ascending: true,
+    }),
     loadOrdersByStatus(client, {
       statuses: ['DEPOSIT_CONFIRMED'],
       orderBy: 'deposit_confirmed_at',
       ascending: true,
     }),
     loadOrdersByStatus(client, {
-      statuses: ['AWAITING_DEPOSIT', 'ON_HOLD'],
+      statuses: ['AWAITING_DEPOSIT', 'DEPOSIT_REPORTED', 'ON_HOLD'],
       orderBy: 'created_at',
       ascending: true,
     }),
   ]);
 
-  return ok({ deposits, issuePending, matchable });
+  return ok({ deposits, reported, issuePending, matchable });
 }
 
 /**

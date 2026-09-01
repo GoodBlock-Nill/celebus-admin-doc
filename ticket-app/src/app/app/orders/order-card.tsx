@@ -8,7 +8,7 @@ import { CARD, MUTED, NUMERIC } from '../_components/ui';
 import type { OrderSummaryView } from '@/lib/api-types';
 import { formatDateTime, formatKrw } from '@/lib/format';
 
-/** 입금 확인중 카드 상단 — 마감 카운트다운·입금액 요약 행 */
+/** 입금 대기 카드 상단 — 마감 카운트다운·입금액 요약 행 (입금 확인중 예매는 뱃지로 구분한다) */
 function DeadlineRow({ order }: { order: OrderSummaryView }) {
   return (
     <div className="mb-3 flex items-center gap-1.5 rounded-xl border border-[#F6C6DA] bg-[#FDF2F7] px-3 py-2.5 text-[13.5px] font-semibold text-[#D6336C]">

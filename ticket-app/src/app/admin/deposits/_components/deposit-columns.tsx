@@ -2,7 +2,7 @@
 
 import type { Column } from '../../_components/data-table';
 import { DEPOSIT_STATUS_VIEW } from '../../_components/labels';
-import { StatusBadge } from '../../_components/ui';
+import { Badge, StatusBadge } from '../../_components/ui';
 import type { AdminDepositView } from '@/lib/admin-types';
 import { formatDateTime, formatKrw } from '@/lib/format';
 
@@ -45,7 +45,13 @@ export const orderColumn: Column<AdminDepositView> = {
   render: (row) =>
     row.order ? (
       <div className="flex flex-col gap-0.5">
-        <span className="font-semibold tabular-nums">{row.order.orderNo}</span>
+        <span className="flex items-center gap-1.5">
+          <span className="font-semibold tabular-nums">{row.order.orderNo}</span>
+          {/* 회원이 입금 확인을 요청한 주문은 우선 확인 대상임을 표시한다 */}
+          {row.order.depositReportedAt ? (
+            <Badge tone="accent">회원 요청 {formatDateTime(row.order.depositReportedAt)}</Badge>
+          ) : null}
+        </span>
         <span className="text-[12px] text-[#6B7080]">
           {row.order.party.realName}
           {row.order.party.nickname ? ` (${row.order.party.nickname})` : ''} · {row.order.qty}매 ·{' '}

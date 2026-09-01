@@ -39,7 +39,7 @@ export async function GET(req: Request) {
     client
       .from('ticket_orders')
       .select('status, qty, amount_krw, created_at, cancel_requested_at')
-      .in('status', ['DEPOSIT_CONFIRMED', 'PAID', 'CANCEL_REQUESTED'])
+      .in('status', ['DEPOSIT_REPORTED', 'DEPOSIT_CONFIRMED', 'PAID', 'CANCEL_REQUESTED'])
       .returns<OrderQueueRow[]>(),
     client
       .from('ticket_reports')
@@ -59,6 +59,7 @@ export async function GET(req: Request) {
     depositRows.filter((row) => row.status === status).length;
 
   const issuePending = orderRows.filter((row) => row.status === 'DEPOSIT_CONFIRMED');
+  const depositReported = orderRows.filter((row) => row.status === 'DEPOSIT_REPORTED');
   const cancelRequested = orderRows
     .filter((row) => row.status === 'CANCEL_REQUESTED')
     .sort((a, b) => (a.cancel_requested_at ?? '').localeCompare(b.cancel_requested_at ?? ''));
@@ -71,7 +72,8 @@ export async function GET(req: Request) {
   );
 
   const summary: AdminSummaryView = {
-    depositPending: depositRows.length + issuePending.length,
+    depositPending: depositRows.length + issuePending.length + depositReported.length,
+    depositReported: depositReported.length,
     autoMatched: countDeposits('AUTO_MATCHED'),
     unmatched: countDeposits('UNMATCHED'),
     held: countDeposits('HELD'),

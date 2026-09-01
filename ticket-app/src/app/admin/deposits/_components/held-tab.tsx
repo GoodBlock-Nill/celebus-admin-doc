@@ -32,7 +32,7 @@ function candidateLabel(order: AdminOrderView): string {
   return `${order.orderNo} · ${order.party.realName} · ${order.qty}매 · ${formatKrw(order.amountKrw)}`;
 }
 
-/** ③ 보류 — 이름·금액이 어긋나 운영자 판단이 필요한 입금 */
+/** ④ 보류 — 이름·금액이 어긋나 운영자 판단이 필요한 입금 */
 export function HeldTab({
   rows,
   candidates,
@@ -58,7 +58,7 @@ export function HeldTab({
 
   const handleConfirm = async (row: AdminDepositView) => {
     const result = await adminApi.confirmDeposit(row.id);
-    toast.fromResult(result, `주문 ${row.order?.orderNo ?? ''} 입금 확정 — 지급 대기로 전환되었습니다.`);
+    toast.fromResult(result, `주문 ${row.order?.orderNo ?? ''} 입금 확인 — 티켓 지급 대기로 전환되었습니다.`);
     if (result.ok) onDone();
   };
 

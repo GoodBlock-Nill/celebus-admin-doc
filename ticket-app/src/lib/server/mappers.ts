@@ -109,6 +109,8 @@ export function toOrderSummary(
     amountKrw: row.amount_krw,
     createdAt: row.created_at,
     depositDeadline: row.deposit_deadline,
+    depositReportedAt: row.deposit_reported_at,
+    reportRejectedAt: row.report_rejected_at,
     concertId: row.concert_id,
     concertTitle: concert?.title ?? UNKNOWN_CONCERT,
     sessionId: row.session_id,

@@ -10,10 +10,11 @@ export interface StatusView {
 }
 
 export const ORDER_STATUS_VIEW: Record<OrderStatus, StatusView> = {
-  AWAITING_DEPOSIT: { label: '입금 대기', tone: 'accent' },
+  AWAITING_DEPOSIT: { label: '입금 대기', tone: 'neutral' },
+  DEPOSIT_REPORTED: { label: '입금 확인중', tone: 'accent' },
   ON_HOLD: { label: '확인 보류', tone: 'warning' },
-  DEPOSIT_CONFIRMED: { label: '지급 대기', tone: 'accent' },
-  PAID: { label: '지급 완료', tone: 'success' },
+  DEPOSIT_CONFIRMED: { label: '입금 확인', tone: 'accent' },
+  PAID: { label: '티켓 지급', tone: 'success' },
   EXPIRED: { label: '자동 취소', tone: 'neutral' },
   CANCEL_REQUESTED: { label: '취소 요청', tone: 'warning' },
   REFUNDED: { label: '환불 완료', tone: 'neutral' },

@@ -123,9 +123,13 @@ export const adminApi = {
     request<{ items: AdminMemberOptionView[] }>(`/api/admin/members?q=${encodeURIComponent(keyword)}`),
 
   deposits: () =>
-    request<{ deposits: AdminDepositView[]; issuePending: AdminOrderView[]; matchable: AdminOrderView[] }>(
-      '/api/admin/deposits',
-    ),
+    request<{
+      deposits: AdminDepositView[];
+      /** 회원이 입금확인을 요청한 예매 */
+      reported: AdminOrderView[];
+      issuePending: AdminOrderView[];
+      matchable: AdminOrderView[];
+    }>('/api/admin/deposits'),
   registerDeposit: (depositorName: string, amountKrw: number) =>
     post<{ status: string; memo: string | null }>('/api/admin/deposits', { depositorName, amountKrw }),
   confirmDeposit: (depositId: string) =>
@@ -140,6 +144,8 @@ export const adminApi = {
     post<Record<string, never>>('/api/admin/deposits/actions', { action: 'manual-match', depositId, orderId }),
   issueOrderTickets: (orderId: string) =>
     post<{ issued_qty?: number }>('/api/admin/deposits/actions', { action: 'issue-tickets', orderId }),
+  rejectDepositReport: (orderId: string) =>
+    post<{ order_no?: string }>('/api/admin/deposits/actions', { action: 'reject-report', orderId }),
 
   refunds: () => request<{ pending: AdminRefundView[]; done: AdminRefundView[] }>('/api/admin/refunds'),
   approveRefund: (orderId: string) => post<{ revoked_tickets?: number }>('/api/admin/refunds', { orderId }),

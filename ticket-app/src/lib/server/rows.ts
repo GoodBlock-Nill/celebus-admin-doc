@@ -40,6 +40,8 @@ export interface OrderRow {
   amount_krw: number;
   created_at: string;
   deposit_deadline: string;
+  deposit_reported_at: string | null;
+  report_rejected_at: string | null;
   concert_id: string;
   session_id: string;
   depositor_name_rule: string;
@@ -103,7 +105,8 @@ export const PUBLIC_SESSION_COLUMNS =
   'id, concert_id, name, start_at, entry_open_minutes_before, remaining';
 
 export const ORDER_COLUMNS =
-  'id, order_no, status, qty, amount_krw, created_at, deposit_deadline, concert_id, session_id, ' +
+  'id, order_no, status, qty, amount_krw, created_at, deposit_deadline, ' +
+  'deposit_reported_at, report_rejected_at, concert_id, session_id, ' +
   'depositor_name_rule, wants_cash_receipt, cash_receipt_phone_enc, hold_reason, ' +
   'deposit_confirmed_at, cancel_requested_at, refunded_at';
 

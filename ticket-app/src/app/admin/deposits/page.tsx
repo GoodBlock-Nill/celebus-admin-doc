@@ -20,10 +20,11 @@ import { IssuePendingTab } from './_components/issue-pending-tab';
 import { ManualDepositForm } from './_components/manual-deposit-form';
 import { PendingTab } from './_components/pending-tab';
 import { RefundTargetTab } from './_components/refund-target-tab';
+import { ReportedTab } from './_components/reported-tab';
 import { adminApi } from '@/lib/admin-client';
 import type { AdminDepositView } from '@/lib/admin-types';
 
-type TabKey = 'pending' | 'issue' | 'held' | 'refund';
+type TabKey = 'reported' | 'pending' | 'issue' | 'held' | 'refund';
 
 const HISTORY_COLUMNS: Array<Column<AdminDepositView>> = [
   depositorColumn,
@@ -37,7 +38,7 @@ const HISTORY_COLUMNS: Array<Column<AdminDepositView>> = [
 export default function AdminDepositsPage() {
   const loadDeposits = useCallback(() => adminApi.deposits(), []);
   const { state, reload } = useAdminResource(loadDeposits);
-  const [activeTab, setActiveTab] = useState<TabKey>('pending');
+  const [activeTab, setActiveTab] = useState<TabKey>('reported');
 
   const deposits = state.status === 'READY' ? state.data.deposits : [];
   const grouped = useMemo(
@@ -56,7 +57,7 @@ export default function AdminDepositsPage() {
     <>
       <PageHeader
         title="주문·입금 확인"
-        description="무통장입금 건을 자동 대조 결과별로 확인하고, 입금 확인 → 티켓 지급 두 단계로 나눠 처리합니다."
+        description="회원의 입금 확인 요청과 무통장입금 건을 함께 확인하고, 입금 확인 → 티켓 지급 두 단계로 나눠 처리합니다."
       />
 
       {state.status !== 'READY' ? (
@@ -72,15 +73,19 @@ export default function AdminDepositsPage() {
           <Card>
             <Tabs
               items={[
-                { key: 'pending', label: '① 확인 대기', count: grouped.pending.length },
-                { key: 'issue', label: '② 지급 대기', count: state.data.issuePending.length },
-                { key: 'held', label: '③ 보류', count: grouped.held.length },
-                { key: 'refund', label: '④ 환불 대상', count: grouped.refund.length },
+                { key: 'reported', label: '① 입금 확인 요청', count: state.data.reported.length },
+                { key: 'pending', label: '② 확인 대기', count: grouped.pending.length },
+                { key: 'issue', label: '③ 티켓 지급 대기', count: state.data.issuePending.length },
+                { key: 'held', label: '④ 보류', count: grouped.held.length },
+                { key: 'refund', label: '⑤ 환불 대상', count: grouped.refund.length },
               ]}
               activeKey={activeTab}
               onChange={(key) => setActiveTab(key as TabKey)}
             />
             <div className="pt-4">
+              {activeTab === 'reported' ? (
+                <ReportedTab rows={state.data.reported} onDone={refresh} />
+              ) : null}
               {activeTab === 'pending' ? <PendingTab rows={grouped.pending} onDone={refresh} /> : null}
               {activeTab === 'issue' ? (
                 <IssuePendingTab rows={state.data.issuePending} onDone={refresh} />

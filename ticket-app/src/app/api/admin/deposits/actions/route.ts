@@ -24,9 +24,10 @@ const schema = z.discriminatedUnion('action', [
     orderId: z.string().uuid(),
   }),
   z.object({ action: z.literal('issue-tickets'), orderId: z.string().uuid() }),
+  z.object({ action: z.literal('reject-report'), orderId: z.string().uuid() }),
 ]);
 
-/** 입금 확정·보류·반환 지정·반환 완료·수동 매칭·티켓 지급 처리 */
+/** 입금 확정·보류·반환 지정·반환 완료·수동 매칭·티켓 지급·미입금 반려 처리 */
 export async function POST(req: Request) {
   const blocked = guardMutation(req, 'admin-deposit-action');
   if (blocked) return blocked;
@@ -69,6 +70,12 @@ export async function POST(req: Request) {
         'ticket_manual_match',
         { p_deposit_id: input.depositId, p_order_id: input.orderId, p_admin: guard },
         '수동 매칭에 실패했습니다.',
+      );
+    case 'reject-report':
+      return callAdminRpc(
+        'ticket_reject_deposit_report',
+        { p_order_id: input.orderId, p_admin: guard },
+        '미입금 반려에 실패했습니다.',
       );
     default:
       return callAdminRpc(

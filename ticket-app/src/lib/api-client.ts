@@ -79,5 +79,7 @@ export const api = {
   verify: (input: VerifyInput) => post<Record<string, never>>('/api/verify', input),
   createOrder: (input: CreateOrderInput) => post<{ orderId: string; orderNo: string }>('/api/orders', input),
   cancelOrder: (orderId: string) => post<{ cancelled: boolean; status: string }>(`/api/orders/${orderId}/cancel`),
+  reportDeposit: (orderId: string) => post<{ status: string }>(`/api/orders/${orderId}/report-deposit`),
+  cancelDepositReport: (orderId: string) => post<{ status: string }>(`/api/orders/${orderId}/cancel-report`),
   submitReport: (input: ReportInput) => post<{ reportId: string }>('/api/reports', input),
 };
