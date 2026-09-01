@@ -15,6 +15,7 @@ import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_compo
 import { useApiResource } from '../../_components/use-api-resource';
 import { DepositReportActions } from '../deposit-report-actions';
 import { OrderStatusNotice } from '../order-status-notice';
+import { PinnedActionBar } from '../pinned-action-bar';
 import { OrderTimeline } from '../order-timeline';
 import { api } from '@/lib/api-client';
 import { CELEBUS_APP_URL } from '@/lib/constants';
@@ -60,6 +61,8 @@ export default function OrderDetailPage() {
   const order = state.data.order;
   const statusMeta = ORDER_STATUS_META[order.status];
   const showsDepositGuide = needsDepositGuide(order.status);
+  // 입금 대기에서는 하단 고정 액션바가 핵심 행동(토스 송금·입금확인 요청)을 상시 노출한다.
+  const showsPinnedBar = order.status === 'AWAITING_DEPOSIT';
 
   const handleCancel = async () => {
     if (isSubmitting) return;
@@ -80,7 +83,7 @@ export default function OrderDetailPage() {
         right={<Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>}
       />
 
-      <div className="flex flex-col gap-3.5 px-4 pb-5">
+      <div className={`flex flex-col gap-3.5 px-4 ${showsPinnedBar ? 'pb-24' : 'pb-5'}`}>
         <SectionCard title="예매 정보">
           <InfoRow label="예매번호" value={order.orderNo} />
           <InfoRow label="공연" value={order.concertTitle} />
@@ -121,7 +124,14 @@ export default function OrderDetailPage() {
         {errorMessage ? <ErrorBanner message={errorMessage} /> : null}
 
         <div className="flex flex-col gap-2">
-          <DepositReportActions order={order} onDone={() => void reload()} onFail={setErrorMessage} />
+          {/* 입금 대기의 요청 버튼은 하단 고정 액션바가 담당한다 (요청 취소 등 나머지 상태만 본문 렌더) */}
+          {showsPinnedBar ? null : (
+            <DepositReportActions
+              order={order}
+              onDone={() => void reload()}
+              onFail={setErrorMessage}
+            />
+          )}
 
           {/* 발권·입장 확인은 CELEBUS 본앱이 담당하므로 티켓이 지급된 예매는 본앱으로 보낸다. */}
           {order.status === 'PAID' ? (
@@ -168,6 +178,10 @@ export default function OrderDetailPage() {
           </p>
         )}
       </div>
+
+      {showsPinnedBar ? (
+        <PinnedActionBar order={order} onDone={() => void reload()} onFail={setErrorMessage} />
+      ) : null}
 
       <ConfirmModal
         open={openModal === 'CANCEL_AWAITING'}

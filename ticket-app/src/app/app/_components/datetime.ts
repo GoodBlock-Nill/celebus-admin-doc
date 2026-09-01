@@ -19,6 +19,19 @@ export function formatCountdown(remainMs: number): string {
   return `${minutes}분 ${pad2(seconds)}초`;
 }
 
+/** 분 단위까지의 간략 표기 — 고정 액션바처럼 좁은 자리에 쓴다 */
+export function formatCountdownCoarse(remainMs: number): string {
+  if (remainMs <= 0) return '';
+
+  const days = Math.floor(remainMs / MS_PER_DAY);
+  const hours = Math.floor((remainMs % MS_PER_DAY) / MS_PER_HOUR);
+  const minutes = Math.floor((remainMs % MS_PER_HOUR) / MS_PER_MINUTE);
+
+  if (days > 0) return `${days}일 ${hours}시간`;
+  if (hours > 0) return `${hours}시간 ${minutes}분`;
+  return `${minutes}분`;
+}
+
 /** HH:MM:SS 디지털 표기 (24시간 초과분은 시간 자리에 합산) */
 export function formatCountdownDigital(remainMs: number): string {
   if (remainMs <= 0) return '00:00:00';
