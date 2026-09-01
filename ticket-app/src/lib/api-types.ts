@@ -29,6 +29,15 @@ export type OrderStatus =
 
 export type TicketStatus = 'VALID' | 'USED' | 'REVOKED';
 
+/**
+ * 확인 보류 표준 사유 구분.
+ *  · NAME   = 입금자명이 예매 정보와 다름
+ *  · AMOUNT = 보낸 금액이 예매 금액과 다름 (오입금)
+ *  · BOTH   = 두 가지 모두 다름
+ *  · OTHER  = 그 밖의 사유 (운영자가 직접 보류한 건)
+ */
+export type HoldCauseCode = 'NAME' | 'AMOUNT' | 'BOTH' | 'OTHER';
+
 export type ReportTargetType = '게시물' | '계정' | '외부 링크';
 
 /**
@@ -128,6 +137,13 @@ export interface OrderDetailView extends OrderSummaryView {
   wantsCashReceipt: boolean;
   cashReceiptPhoneMasked: string | null;
   holdReason: string | null;
+  /** 확인 보류 표준 사유 구분 — 화면 분기는 이 값을 먼저 본다 (없으면 사유 문구로 판단) */
+  holdCause: HoldCauseCode | null;
+  /**
+   * 이 예매에 연결된 반환 대상 입금이 있는지 여부.
+   * 마감·취소 이후 도착한 입금처럼 "돌려줘야 할 돈"이 남아 있음을 뜻한다.
+   */
+  hasRefundTargetDeposit: boolean;
   /** 확인 보류를 풀기 위해 회원이 알린 실제 입금자명 (미제출이면 null) */
   holdActualDepositor: string | null;
   /** 오입금 환불 계좌 — 계좌번호는 마스킹 값만 내려받는다 */

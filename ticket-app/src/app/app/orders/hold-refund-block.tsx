@@ -40,7 +40,8 @@ export function HoldRefundBlock({
   onDone,
 }: {
   order: OrderDetailView;
-  step: number;
+  /** 확인 보류 해결 순서에서 몇 번째인지 — 단독 사용 시에는 생략한다 */
+  step?: number;
   onDone?: () => void;
 }) {
   const { isSubmitting, errorMessage, setErrorMessage, submit } = useHoldInfoSubmit(order.id, onDone);

@@ -5,12 +5,18 @@ import { HTTP_STATUS, fail, guardMutation } from '@/lib/server/api';
 
 const MAX_MEMO_LENGTH = 100;
 
+/** 확인 보류 표준 사유 구분 (서버 함수의 허용값과 같다) */
+const HOLD_CAUSES = ['NAME', 'AMOUNT', 'BOTH', 'OTHER'] as const;
+const DEFAULT_HOLD_CAUSE = 'OTHER';
+
 const schema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('confirm'), depositId: z.string().uuid() }),
   z.object({
     action: z.literal('hold'),
     depositId: z.string().uuid(),
     memo: z.string().trim().min(1).max(MAX_MEMO_LENGTH),
+    /** 확인 보류 표준 사유 구분 — 생략하면 '그 밖의 사유'로 기록한다 */
+    cause: z.enum(HOLD_CAUSES).optional(),
   }),
   z.object({
     action: z.literal('refund-target'),
@@ -51,7 +57,12 @@ export async function POST(req: Request) {
     case 'hold':
       return callAdminRpc(
         'ticket_hold_deposit',
-        { p_deposit_id: input.depositId, p_memo: input.memo, p_admin: guard },
+        {
+          p_deposit_id: input.depositId,
+          p_memo: input.memo,
+          p_admin: guard,
+          p_cause: input.cause ?? DEFAULT_HOLD_CAUSE,
+        },
         '입금 보류 처리에 실패했습니다.',
       );
     case 'refund-target':

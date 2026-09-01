@@ -10,7 +10,9 @@ import { Card, Collapsible, InfoNote, PageHeader } from '../_components/ui';
 import {
   BASE_COLUMNS,
   REFUNDED_AT_COLUMN,
+  REFUND_ACCOUNT_COLUMN,
   approveColumn,
+  hasRefundAccount,
   slaColumn,
 } from './_components/refund-columns';
 import { adminApi } from '@/lib/admin-client';
@@ -36,13 +38,31 @@ export default function AdminRefundsPage() {
   };
 
   const askApprove = (row: AdminRefundView) => {
+    // 계좌가 없으면 돈을 보낼 수 없다 — 서버도 같은 조건으로 거부한다.
+    if (!hasRefundAccount(row)) {
+      confirm.ask({
+        title: '환불 계좌가 없습니다',
+        message: `주문 ${row.orderNo}은 회원이 환불 계좌를 등록하지 않아 승인할 수 없습니다. 회원에게 예매 상세에서 환불 계좌를 등록하도록 안내해 주세요.`,
+        confirmLabel: '확인',
+        onConfirm: () => undefined,
+      });
+      return;
+    }
+
     // 입금 확인 상태에서 취소된 주문은 회수할 티켓 없이 선점 좌석만 반환한다.
     const hasTickets = row.ticketCount > 0;
     confirm.ask({
       title: '환불을 승인할까요?',
-      message: hasTickets
-        ? `주문 ${row.orderNo}의 티켓 ${row.ticketCount}매가 회수되고 환불 처리됩니다.`
-        : `주문 ${row.orderNo}은 티켓 지급 전 주문입니다. 선점 좌석 ${row.qty}매가 반환되고 환불 처리됩니다.`,
+      message: (
+        <>
+          {hasTickets
+            ? `주문 ${row.orderNo}의 티켓 ${row.ticketCount}매가 회수되고 환불 처리됩니다.`
+            : `주문 ${row.orderNo}은 티켓 지급 전 주문입니다. 선점 좌석 ${row.qty}매가 반환되고 환불 처리됩니다.`}
+          <span className="mt-2 block font-semibold text-[#1B1D22]">
+            환불 계좌 {row.refundBank} {row.refundAccountMasked} · 예금주 {row.refundHolder}
+          </span>
+        </>
+      ),
       confirmLabel: '환불 승인',
       onConfirm: () => void approve(row),
     });
@@ -67,14 +87,15 @@ export default function AdminRefundsPage() {
             <div className="flex flex-col gap-3">
               <InfoNote>
                 취소 요청은 접수 후 24시간 이내에 처리하는 것이 기준입니다. 잔여 6시간 미만은 주의, 기한이 지난 건은
-                위험으로 표시됩니다.
+                위험으로 표시됩니다. 환불 계좌가 등록되지 않은 건은 승인할 수 없으며, 회원이 예매 상세에서 계좌를
+                등록해야 처리할 수 있습니다.
               </InfoNote>
               <DataTable
-                columns={[...BASE_COLUMNS, slaColumn(now), approveColumn(askApprove)]}
+                columns={[...BASE_COLUMNS, REFUND_ACCOUNT_COLUMN, slaColumn(now), approveColumn(askApprove)]}
                 rows={state.data.pending}
                 rowKey={(row) => row.id}
                 emptyText="대기 중인 취소 요청이 없습니다."
-                minWidth="900px"
+                minWidth="1140px"
               />
             </div>
           </Card>

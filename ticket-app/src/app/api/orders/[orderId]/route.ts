@@ -16,6 +16,10 @@ interface IssuedAtRow {
   issued_at: string;
 }
 
+interface RefundTargetRow {
+  id: string;
+}
+
 /**
  * 예매 상세 — 본인 예매만 조회된다(신원은 서명 쿠키에서만 읽는다).
  * 입금 안내에 필요한 수납 계좌·입금자명 규칙을 함께 내려준다.
@@ -39,7 +43,7 @@ export async function GET(req: Request, context: { params: Promise<{ orderId: st
   if (!order.data) return fail('예매 내역을 찾을 수 없습니다.', HTTP_STATUS.notFound);
 
   const row = order.data;
-  const [concerts, sessions, settings, verification, issued] = await Promise.all([
+  const [concerts, sessions, settings, verification, issued, refundTarget] = await Promise.all([
     loadConcertBriefs(client, [row.concert_id]),
     loadSessionBriefs(client, [row.session_id]),
     client.from('ticket_app_settings').select(SETTINGS_COLUMNS).eq('id', 'default').maybeSingle<SettingsRow>(),
@@ -55,6 +59,14 @@ export async function GET(req: Request, context: { params: Promise<{ orderId: st
       .order('issued_at', { ascending: true })
       .limit(1)
       .maybeSingle<IssuedAtRow>(),
+    // 돌려줘야 할 입금이 남아 있는지 — 환불 계좌 안내를 열지 판단하는 근거
+    client
+      .from('ticket_deposits')
+      .select('id')
+      .eq('matched_order_id', orderId)
+      .eq('status', 'REFUND_TARGET')
+      .limit(1)
+      .maybeSingle<RefundTargetRow>(),
   ]);
 
   const concert = concerts.get(row.concert_id);
@@ -66,6 +78,8 @@ export async function GET(req: Request, context: { params: Promise<{ orderId: st
     wantsCashReceipt: row.wants_cash_receipt,
     cashReceiptPhoneMasked: maskedCashReceiptPhone(row),
     holdReason: row.hold_reason,
+    holdCause: row.hold_cause,
+    hasRefundTargetDeposit: Boolean(refundTarget.data),
     holdActualDepositor: row.hold_actual_depositor,
     refundBank: row.refund_bank,
     refundAccountMasked: maskedRefundAccount(row.refund_account_enc),

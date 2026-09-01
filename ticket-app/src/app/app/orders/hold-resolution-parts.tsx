@@ -7,6 +7,7 @@ import { formatDateTime } from '@/lib/format';
 /**
  * 해결 블록 껍데기 — 번호 + 제목 + 설명 + 내용.
  * 회원이 "지금 할 일"을 순서대로 따라갈 수 있도록 번호를 앞세운다.
+ * 순서가 없는 단독 사용(취소 요청·만료 예매의 환불 계좌 등록)에서는 번호를 생략한다.
  */
 export function ResolutionBlock({
   step,
@@ -14,7 +15,7 @@ export function ResolutionBlock({
   description,
   children,
 }: {
-  step: number;
+  step?: number;
   title: string;
   description: string;
   children: React.ReactNode;
@@ -22,12 +23,14 @@ export function ResolutionBlock({
   return (
     <section className="rounded-2xl border border-[#E5E8EB] bg-white p-4">
       <div className="flex items-start gap-2.5">
-        <span
-          aria-hidden="true"
-          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#FDF2F7] text-[13px] font-bold text-[#D6336C] ${NUMERIC}`}
-        >
-          {step}
-        </span>
+        {step ? (
+          <span
+            aria-hidden="true"
+            className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#FDF2F7] text-[13px] font-bold text-[#D6336C] ${NUMERIC}`}
+          >
+            {step}
+          </span>
+        ) : null}
         <div className="min-w-0">
           <h4 className="text-[15px] font-bold text-[#191F28]">{title}</h4>
           <p className="mt-1 text-[13.5px] leading-relaxed text-[#4E5968]">{description}</p>

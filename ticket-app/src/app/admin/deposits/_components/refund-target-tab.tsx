@@ -13,6 +13,7 @@ import {
   depositorColumn,
   holdSubmissionColumn,
   memoColumn,
+  orderColumn,
 } from './deposit-columns';
 import { adminApi } from '@/lib/admin-client';
 import type { AdminDepositView } from '@/lib/admin-types';
@@ -34,6 +35,8 @@ export function RefundTargetTab({ rows, onDone }: { rows: AdminDepositView[]; on
     amountColumn,
     depositedAtColumn,
     memoColumn,
+    // 마감·취소 이후 입금은 어느 예매의 돈인지 연결이 남아 있다 — 회원 확인의 근거가 된다.
+    orderColumn,
     // 보류 반려로 넘어온 건은 회원이 등록한 환불 계좌로 반환해야 한다.
     holdSubmissionColumn,
     {
@@ -66,15 +69,16 @@ export function RefundTargetTab({ rows, onDone }: { rows: AdminDepositView[]; on
   return (
     <div className="flex flex-col gap-3">
       <InfoNote tone="danger">
-        입금 마감 이후 입금, 취소된 주문에 대한 입금 등 티켓으로 연결할 수 없는 건입니다. 계좌로 반환한 뒤 완료 처리해
-        주세요.
+        입금 마감 이후 입금, 취소된 주문에 대한 입금 등 티켓으로 연결할 수 없는 건입니다. 매칭 주문이 남아 있으면 그
+        회원에게 돌려줄 돈이며, 회원이 등록한 환불 계좌는 &lsquo;회원이 알린 정보&rsquo;에 표시됩니다. 계좌로 반환한
+        뒤 완료 처리해 주세요.
       </InfoNote>
       <DataTable
         columns={columns}
         rows={rows}
         rowKey={(row) => row.id}
         emptyText="반환 대상 입금이 없습니다."
-        minWidth="1000px"
+        minWidth="1240px"
       />
       <ConfirmDialog request={confirm.request} onClose={confirm.close} />
     </div>

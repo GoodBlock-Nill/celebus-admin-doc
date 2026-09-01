@@ -77,7 +77,18 @@ export function OrderStatusNotice({ order }: { order: OrderDetailView }) {
   if (order.status === 'CANCEL_REQUESTED') {
     return (
       <NoticeBox tone="accent">
-        취소 요청이 접수되었습니다. 요청 후 24시간 이내에 환불이 처리됩니다.
+        취소 요청이 접수되었습니다. 요청 후 24시간 이내에 환불이 처리됩니다. 환불은 아래에 등록하신
+        계좌로 보내드리므로, 계좌가 없으면 먼저 등록해 주세요.
+      </NoticeBox>
+    );
+  }
+
+  // 마감·취소 이후 도착한 입금이 남아 있는 예매 — "미입금 취소"가 아니라 환불 절차다.
+  if (order.status === 'EXPIRED' && order.hasRefundTargetDeposit) {
+    return (
+      <NoticeBox tone="accent">
+        보내주신 입금이 확인되어 환불 절차가 진행됩니다. 아래에 환불 계좌를 등록해 주시면 확인 후
+        돌려드립니다.
       </NoticeBox>
     );
   }

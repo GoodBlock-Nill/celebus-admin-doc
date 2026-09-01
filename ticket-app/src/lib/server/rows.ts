@@ -1,4 +1,10 @@
-import type { ConcertStatus, OrderStatus, PoolType, TicketStatus } from '@/lib/api-types';
+import type {
+  ConcertStatus,
+  HoldCauseCode,
+  OrderStatus,
+  PoolType,
+  TicketStatus,
+} from '@/lib/api-types';
 
 /** 데이터베이스 조회 결과 형태 — 컬럼 표기 그대로 받아 화면용 타입으로 변환한다. */
 
@@ -50,6 +56,8 @@ export interface OrderRow {
   wants_cash_receipt: boolean;
   cash_receipt_phone_enc: string | null;
   hold_reason: string | null;
+  /** 확인 보류 표준 사유 코드 — 화면 분기 기준 (사유 문구 해석보다 우선한다) */
+  hold_cause: HoldCauseCode | null;
   /** 회원이 알린 실제 입금자명 (확인 보류 대조용) */
   hold_actual_depositor: string | null;
   /** 오입금 환불 계좌 — 계좌번호는 암호문이라 복호 후 마스킹만 내려준다 */
@@ -116,7 +124,7 @@ export const PUBLIC_SESSION_COLUMNS =
 export const ORDER_COLUMNS =
   'id, order_no, status, qty, amount_krw, created_at, deposit_deadline, ' +
   'deposit_reported_at, report_rejected_at, hold_rejected_at, concert_id, session_id, ' +
-  'depositor_name_rule, wants_cash_receipt, cash_receipt_phone_enc, hold_reason, ' +
+  'depositor_name_rule, wants_cash_receipt, cash_receipt_phone_enc, hold_reason, hold_cause, ' +
   'hold_actual_depositor, refund_bank, refund_account_enc, refund_holder, hold_info_submitted_at, ' +
   'deposit_confirmed_at, cancel_requested_at, refunded_at';
 

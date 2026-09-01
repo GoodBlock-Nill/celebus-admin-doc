@@ -8,7 +8,6 @@ import { AppHeader } from '../../_components/app-header';
 import { Badge } from '../../_components/badge';
 import { DepositGuideCard } from '../../_components/deposit-guide';
 import { ErrorBanner, ErrorState, PageSkeleton } from '../../_components/feedback';
-import { ConfirmModal } from '../../_components/modal';
 import { SectionCard } from '../../_components/section';
 import {
   ORDER_STATUS_META,
@@ -18,17 +17,17 @@ import {
 } from '../../_components/status-meta';
 import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
 import { useApiResource } from '../../_components/use-api-resource';
+import { CancelModals, type CancelModalKind } from '../cancel-modals';
 import { DepositReportActions } from '../deposit-report-actions';
 import { HoldFlowCard } from '../hold-view';
 import { OrderInfoCard } from '../order-info-card';
 import { OrderStatusNotice } from '../order-status-notice';
 import { PinnedActionBar } from '../pinned-action-bar';
+import { RefundAccountSection } from '../refund-account-section';
 import { ReportedView } from '../reported-view';
 import { OrderTimeline } from '../order-timeline';
 import { api } from '@/lib/api-client';
 import { CELEBUS_APP_URL } from '@/lib/constants';
-
-type OpenModal = 'NONE' | 'CANCEL_AWAITING' | 'REQUEST_CANCEL';
 
 /** A5 예매 상세 */
 export default function OrderDetailPage() {
@@ -38,7 +37,7 @@ export default function OrderDetailPage() {
   const loadOrder = useCallback(() => api.order(orderId), [orderId]);
   const { state, reload } = useApiResource(loadOrder);
 
-  const [openModal, setOpenModal] = useState<OpenModal>('NONE');
+  const [openModal, setOpenModal] = useState<CancelModalKind>('NONE');
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setSubmitting] = useState(false);
 
@@ -74,6 +73,20 @@ export default function OrderDetailPage() {
   const isReported = order.status === 'DEPOSIT_REPORTED';
   // 확인 보류는 해결 플로우 카드(다른 점·지금 할 일·확인되면)가 안내와 계좌 섹션을 대신한다.
   const isHold = order.status === 'ON_HOLD';
+  const hasRefundAccount = Boolean(
+    order.refundBank && order.refundAccountMasked && order.refundHolder,
+  );
+  // 돈을 돌려줘야 하는 예매에는 상태와 무관하게 환불 계좌 등록 구획을 연다.
+  //   · 취소·환불 요청 접수  · 보류 반려로 되돌아온 입금 대기  · 반환 대상 입금이 남은 예매
+  const showsRefundAccount =
+    !isHold &&
+    (order.status === 'CANCEL_REQUESTED' ||
+      (order.status === 'AWAITING_DEPOSIT' && Boolean(order.holdRejectedAt)) ||
+      order.hasRefundTargetDeposit);
+
+  const refundAccountSection = showsRefundAccount ? (
+    <RefundAccountSection order={order} onDone={() => void reload()} />
+  ) : null;
 
   const handleCancel = async () => {
     if (isSubmitting) return;
@@ -110,6 +123,9 @@ export default function OrderDetailPage() {
         {/* 입금 대기에서는 안내 박스를 계좌 안내 위에 둔다. 확인중·보류는 전용 구성이 대신한다. */}
         {showsDepositGuide && !isReported && !isHold ? <OrderStatusNotice order={order} /> : null}
 
+        {/* 보류 반려로 되돌아온 예매는 재송금 안내보다 환불 계좌 등록을 먼저 보여 준다. */}
+        {showsDepositGuide ? refundAccountSection : null}
+
         {showsDepositGuide && !isReported && !isHold ? (
           <>
             <h2 className="px-1 text-[16px] font-bold text-[#191F28]">입금 계좌 확인</h2>
@@ -118,6 +134,8 @@ export default function OrderDetailPage() {
         ) : null}
 
         {showsDepositGuide ? null : <OrderStatusNotice order={order} />}
+
+        {showsDepositGuide ? null : refundAccountSection}
 
         {errorMessage ? <ErrorBanner message={errorMessage} /> : null}
 
@@ -189,20 +207,9 @@ export default function OrderDetailPage() {
         <PinnedActionBar order={order} onDone={() => void reload()} onFail={setErrorMessage} />
       ) : null}
 
-      <ConfirmModal
-        open={openModal === 'CANCEL_AWAITING'}
-        title="예매를 취소할까요?"
-        description="입금 전 예매는 수수료 없이 즉시 취소되며, 확보된 좌석은 바로 반환됩니다."
-        confirmLabel="예매 취소하기"
-        onConfirm={() => void handleCancel()}
-        onClose={() => setOpenModal('NONE')}
-      />
-
-      <ConfirmModal
-        open={openModal === 'REQUEST_CANCEL'}
-        title="취소·환불을 요청할까요?"
-        description="요청 후 24시간 이내에 처리됩니다. 아직 티켓이 지급되지 않은 예매로, 환불이 승인되면 확보된 좌석은 반환됩니다."
-        confirmLabel="취소·환불 요청하기"
+      <CancelModals
+        kind={openModal}
+        hasRefundAccount={hasRefundAccount}
         onConfirm={() => void handleCancel()}
         onClose={() => setOpenModal('NONE')}
       />

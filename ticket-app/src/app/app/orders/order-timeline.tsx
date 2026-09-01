@@ -25,7 +25,12 @@ function waitingDescription(order: OrderDetailView): string {
   if (DEPOSIT_DONE_STATUSES.has(order.status)) return '입금이 접수되었습니다.';
   if (order.status === 'DEPOSIT_REPORTED') return '입금 확인 요청 접수 — 운영자 확인 중입니다.';
   if (order.status === 'ON_HOLD') return '입금 정보 확인이 필요해 보류 중입니다.';
-  if (order.status === 'EXPIRED') return '입금이 확인되지 않아 예매가 취소되었습니다.';
+  if (order.status === 'EXPIRED') {
+    // 마감 이후 도착한 입금이 있으면 "미입금 취소"는 사실과 다르다 — 환불 절차로 안내한다.
+    return order.hasRefundTargetDeposit
+      ? '입금이 확인되어 환불 절차가 진행됩니다.'
+      : '입금이 확인되지 않아 예매가 취소되었습니다.';
+  }
   return '안내된 계좌로 마감 시각까지 입금해 주세요.';
 }
 

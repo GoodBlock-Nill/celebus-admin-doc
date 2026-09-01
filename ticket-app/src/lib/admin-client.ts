@@ -18,7 +18,7 @@ import type {
   ReportActionType,
   VenueSearchItemView,
 } from './admin-types';
-import type { PoolType, ReportTargetType } from './api-types';
+import type { HoldCauseCode, PoolType, ReportTargetType } from './api-types';
 
 const NETWORK_FAILURE = '네트워크 상태를 확인한 뒤 다시 시도해 주세요.';
 const NETWORK_STATUS = 0;
@@ -134,8 +134,14 @@ export const adminApi = {
     post<{ status: string; memo: string | null }>('/api/admin/deposits', { depositorName, amountKrw }),
   confirmDeposit: (depositId: string) =>
     post<{ order_no?: string }>('/api/admin/deposits/actions', { action: 'confirm', depositId }),
-  holdDeposit: (depositId: string, memo: string) =>
-    post<Record<string, never>>('/api/admin/deposits/actions', { action: 'hold', depositId, memo }),
+  /** 입금 보류 — 사유 구분을 함께 보내면 회원 화면의 해결 안내가 그 기준으로 갈린다 */
+  holdDeposit: (depositId: string, memo: string, cause?: HoldCauseCode) =>
+    post<Record<string, never>>('/api/admin/deposits/actions', {
+      action: 'hold',
+      depositId,
+      memo,
+      ...(cause ? { cause } : {}),
+    }),
   markRefundTarget: (depositId: string, memo: string) =>
     post<Record<string, never>>('/api/admin/deposits/actions', { action: 'refund-target', depositId, memo }),
   refundDeposit: (depositId: string) =>

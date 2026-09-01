@@ -3,7 +3,7 @@
  * 회원 개인정보는 원칙적으로 마스킹해 내려주고, 입금 대조에 필요한 실명만 예외로 노출한다.
  */
 
-import type { ConcertStatus, OrderStatus, PoolType, SeatType } from './api-types';
+import type { ConcertStatus, HoldCauseCode, OrderStatus, PoolType, SeatType } from './api-types';
 
 export type DepositStatus =
   | 'UNMATCHED'
@@ -63,6 +63,8 @@ export interface AdminOrderView {
   depositDeadline: string;
   sessionName: string;
   holdReason: string | null;
+  /** 확인 보류 표준 사유 구분 — 사유 문구와 함께 뱃지로 보여 준다 */
+  holdCause: HoldCauseCode | null;
   /** 확인 보류 해결을 위해 회원이 알린 실제 입금자명 — 은행 내역 대조 힌트 */
   holdActualDepositor: string | null;
   /** 회원이 등록한 오입금 환불 계좌 (계좌번호는 마스킹 값만 내려준다) */

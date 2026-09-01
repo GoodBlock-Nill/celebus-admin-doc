@@ -1,5 +1,5 @@
 import type { DepositStatus, ReportStatus } from '@/lib/admin-types';
-import type { ConcertStatus, OrderStatus, TicketStatus } from '@/lib/api-types';
+import type { ConcertStatus, HoldCauseCode, OrderStatus, TicketStatus } from '@/lib/api-types';
 
 /** 뱃지·상태 표기에 사용하는 색 톤 */
 export type Tone = 'neutral' | 'accent' | 'success' | 'warning' | 'danger';
@@ -27,6 +27,14 @@ export const DEPOSIT_STATUS_VIEW: Record<DepositStatus, StatusView> = {
   HELD: { label: '보류', tone: 'warning' },
   REFUND_TARGET: { label: '반환 대상', tone: 'danger' },
   REFUNDED: { label: '반환 완료', tone: 'neutral' },
+};
+
+/** 확인 보류 표준 사유 구분 표기 — 운영자와 회원이 같은 기준을 본다 */
+export const HOLD_CAUSE_VIEW: Record<HoldCauseCode, StatusView> = {
+  NAME: { label: '입금자명 불일치', tone: 'warning' },
+  AMOUNT: { label: '입금액 불일치', tone: 'danger' },
+  BOTH: { label: '입금자명·입금액 불일치', tone: 'danger' },
+  OTHER: { label: '그 밖의 사유', tone: 'neutral' },
 };
 
 export const TICKET_STATUS_VIEW: Record<TicketStatus, StatusView> = {

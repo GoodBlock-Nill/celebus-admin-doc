@@ -6,14 +6,14 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { loadSessionBriefs, maskedRefundAccount } from './mappers';
 import type { AdminDepositView, AdminOrderView, DepositStatus, OrderPartyView } from '@/lib/admin-types';
-import type { OrderStatus } from '@/lib/api-types';
+import type { HoldCauseCode, OrderStatus } from '@/lib/api-types';
 
 const UNKNOWN_SESSION = '-';
 const UNKNOWN_REAL_NAME = '실명 미확인';
 
 export const ADMIN_ORDER_COLUMNS =
   'id, order_no, status, qty, amount_krw, created_at, deposit_deadline, member_id, session_id, ' +
-  'hold_reason, hold_actual_depositor, refund_bank, refund_account_enc, refund_holder, ' +
+  'hold_reason, hold_cause, hold_actual_depositor, refund_bank, refund_account_enc, refund_holder, ' +
   'hold_info_submitted_at, deposit_reported_at, report_rejected_at, deposit_confirmed_at, ' +
   'cancel_requested_at, refunded_at';
 
@@ -31,6 +31,7 @@ export interface AdminOrderRow {
   member_id: string;
   session_id: string;
   hold_reason: string | null;
+  hold_cause: HoldCauseCode | null;
   hold_actual_depositor: string | null;
   refund_bank: string | null;
   /** 환불 계좌번호 암호문 — 화면에는 마스킹만 내려준다(원문 비노출) */
@@ -113,6 +114,7 @@ function toOrderView(
     depositDeadline: row.deposit_deadline,
     sessionName,
     holdReason: row.hold_reason,
+    holdCause: row.hold_cause,
     holdActualDepositor: row.hold_actual_depositor,
     refundBank: row.refund_bank,
     refundAccountMasked: maskedRefundAccount(row.refund_account_enc),

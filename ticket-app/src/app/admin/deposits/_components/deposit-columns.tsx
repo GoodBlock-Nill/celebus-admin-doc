@@ -1,7 +1,7 @@
 'use client';
 
 import type { Column } from '../../_components/data-table';
-import { DEPOSIT_STATUS_VIEW } from '../../_components/labels';
+import { DEPOSIT_STATUS_VIEW, HOLD_CAUSE_VIEW } from '../../_components/labels';
 import { Badge, StatusBadge } from '../../_components/ui';
 import type { AdminDepositView } from '@/lib/admin-types';
 import { formatDateTime, formatKrw } from '@/lib/format';
@@ -103,9 +103,17 @@ export const holdSubmissionColumn: Column<AdminDepositView> = {
 export const memoColumn: Column<AdminDepositView> = {
   key: 'memo',
   header: '보류·반환 사유',
-  render: (row) => (
-    <span className="text-[12px] leading-relaxed text-[#4A4E5A]">
-      {row.memo ?? row.order?.holdReason ?? '-'}
-    </span>
-  ),
+  render: (row) => {
+    const cause = row.order?.holdCause;
+
+    return (
+      <div className="flex flex-col gap-1">
+        {/* 표준 사유 구분 — 회원 화면의 해결 안내도 같은 기준으로 갈린다 */}
+        {cause ? <StatusBadge view={HOLD_CAUSE_VIEW[cause]} /> : null}
+        <span className="text-[12px] leading-relaxed text-[#4A4E5A]">
+          {row.memo ?? row.order?.holdReason ?? '-'}
+        </span>
+      </div>
+    );
+  },
 };

@@ -2,7 +2,7 @@
 
 import { CARD } from '../_components/ui';
 import { HoldDepositorBlock } from './hold-depositor-block';
-import { holdCauseOf, mismatchRows } from './hold-reason';
+import { holdMismatchOf, mismatchRows } from './hold-reason';
 import { HoldRefundBlock, HoldResendFold } from './hold-refund-block';
 import type { OrderDetailView } from '@/lib/api-types';
 
@@ -44,8 +44,9 @@ function HoldStepper() {
 }
 
 /** 무엇이 다른가요 — 어긋난 항목을 먼저 짚어 회원이 원인을 납득하게 한다 */
-function MismatchSummary({ holdReason }: { holdReason: string | null }) {
-  const rows = mismatchRows(holdReason);
+function MismatchSummary({ order }: { order: OrderDetailView }) {
+  const rows = mismatchRows(order.holdCause, order.holdReason);
+  const { holdReason } = order;
 
   return (
     <div className="border-t border-[#F2F4F6] pt-3.5">
@@ -77,9 +78,9 @@ function MismatchSummary({ holdReason }: { holdReason: string | null }) {
  * 회원은 이미 송금을 마친 상태이므로 "송금 유도"가 아니라 "해결"을 앞세운다.
  */
 export function HoldFlowCard({ order, onDone }: { order: OrderDetailView; onDone?: () => void }) {
-  const cause = holdCauseOf(order.holdReason);
+  const mismatch = holdMismatchOf(order.holdCause, order.holdReason);
   const depositorStep = 1;
-  const refundStep = cause.isNameMismatch ? 2 : 1;
+  const refundStep = mismatch.isNameMismatch ? 2 : 1;
 
   return (
     <div className="flex flex-col gap-3">
@@ -102,15 +103,15 @@ export function HoldFlowCard({ order, onDone }: { order: OrderDetailView; onDone
           <HoldStepper />
         </div>
 
-        <MismatchSummary holdReason={order.holdReason} />
+        <MismatchSummary order={order} />
 
         <div className="border-t border-[#F2F4F6] pt-3.5">
           <h3 className="text-[15px] font-bold text-[#191F28]">지금 할 일</h3>
           <div className="mt-2.5 flex flex-col gap-2.5">
-            {cause.isNameMismatch ? (
+            {mismatch.isNameMismatch ? (
               <HoldDepositorBlock order={order} step={depositorStep} onDone={onDone} />
             ) : null}
-            {cause.isAmountMismatch ? (
+            {mismatch.isAmountMismatch ? (
               <>
                 <HoldRefundBlock order={order} step={refundStep} onDone={onDone} />
                 <HoldResendFold order={order} />
