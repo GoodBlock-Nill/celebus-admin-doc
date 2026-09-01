@@ -2,12 +2,16 @@
 
 import { useState } from 'react';
 
+import { ConfirmDialog } from '../../_components/confirm-dialog';
 import { DataTable } from '../../_components/data-table';
 import type { Column } from '../../_components/data-table';
 import { Button, TextInput } from '../../_components/form';
+import { useConfirm } from '../../_components/hooks';
 import { useToast } from '../../_components/toast';
 import { InfoNote } from '../../_components/ui';
 import { amountColumn, depositedAtColumn, depositorColumn, orderColumn } from './deposit-columns';
+import { DepositVoidForm } from './deposit-void-form';
+import { useVoidDeposit } from './use-void-deposit';
 import { adminApi } from '@/lib/admin-client';
 import type { AdminDepositView } from '@/lib/admin-types';
 
@@ -17,7 +21,7 @@ const DEFAULT_HOLD_MEMO = '중복 입금 — 확인 필요';
 const DEFAULT_REFUND_MEMO = '중복 입금 — 반환 대상';
 
 /** 행에서 펼쳐 둔 보조 처리 구분 */
-type ActionKind = 'hold' | 'refund';
+type ActionKind = 'hold' | 'refund' | 'void';
 
 interface ActiveAction {
   depositId: string;
@@ -33,6 +37,8 @@ interface ActiveAction {
  */
 export function PendingTab({ rows, onDone }: { rows: AdminDepositView[]; onDone: () => void }) {
   const toast = useToast();
+  const confirm = useConfirm();
+  const voidDeposit = useVoidDeposit(confirm, onDone);
 
   const [active, setActive] = useState<ActiveAction | null>(null);
   const [memo, setMemo] = useState(DEFAULT_HOLD_MEMO);
@@ -41,7 +47,8 @@ export function PendingTab({ rows, onDone }: { rows: AdminDepositView[]; onDone:
     setActive((current) =>
       current && current.depositId === depositId && current.kind === kind ? null : { depositId, kind },
     );
-    setMemo(kind === 'hold' ? DEFAULT_HOLD_MEMO : DEFAULT_REFUND_MEMO);
+    if (kind === 'void') voidDeposit.resetReason();
+    else setMemo(kind === 'hold' ? DEFAULT_HOLD_MEMO : DEFAULT_REFUND_MEMO);
   };
 
   const handleConfirm = async (row: AdminDepositView) => {
@@ -77,7 +84,7 @@ export function PendingTab({ rows, onDone }: { rows: AdminDepositView[]; onDone:
       key: 'action',
       header: '처리',
       align: 'right',
-      width: '270px',
+      width: '350px',
       render: (row) => (
         <div className="flex flex-wrap justify-end gap-1.5">
           <Button variant="primary" size="sm" onClick={() => void handleConfirm(row)}>
@@ -89,6 +96,10 @@ export function PendingTab({ rows, onDone }: { rows: AdminDepositView[]; onDone:
           <Button variant="danger" size="sm" onClick={() => openAction(row.id, 'refund')}>
             반환 대상 지정
           </Button>
+          {/* 은행 내역을 잘못 옮겨 적은 건은 대조가 아니라 등록 자체를 되돌린다 */}
+          <Button variant="danger" size="sm" onClick={() => openAction(row.id, 'void')}>
+            등록 취소
+          </Button>
         </div>
       ),
     },
@@ -96,6 +107,18 @@ export function PendingTab({ rows, onDone }: { rows: AdminDepositView[]; onDone:
 
   const renderSubRow = (row: AdminDepositView) => {
     if (!active || active.depositId !== row.id) return null;
+
+    if (active.kind === 'void') {
+      return (
+        <DepositVoidForm
+          reason={voidDeposit.reason}
+          onChange={voidDeposit.setReason}
+          onSubmit={() => voidDeposit.ask(row)}
+          onClose={() => setActive(null)}
+        />
+      );
+    }
+
     const isHold = active.kind === 'hold';
 
     return (
@@ -129,16 +152,18 @@ export function PendingTab({ rows, onDone }: { rows: AdminDepositView[]; onDone:
       <InfoNote>
         자동 대조는 금액 완전 일치 + 실명(또는 실명 + 주문번호 끝 4자리) 기준으로 이뤄집니다. 입금 확인 후 티켓 지급
         대기로 전환되며, 티켓 지급 대기 탭에서 지급 처리를 해야 티켓이 발급됩니다. 같은 예매에 입금이 두 건 이상
-        대조된 경우, 대금으로 인정할 1건만 확인하고 나머지는 보류 또는 반환 대상으로 지정해 종결하세요.
+        대조된 경우, 대금으로 인정할 1건만 확인하고 나머지는 보류 또는 반환 대상으로 지정해 종결하세요. 은행
+        내역과 다르게 잘못 등록한 입금은 등록 취소로 무효 처리합니다.
       </InfoNote>
       <DataTable
         columns={columns}
         rows={rows}
         rowKey={(row) => row.id}
         emptyText="확인 대기 중인 입금이 없습니다."
-        minWidth="900px"
+        minWidth="1000px"
         renderSubRow={renderSubRow}
       />
+      <ConfirmDialog request={confirm.request} onClose={confirm.close} />
     </div>
   );
 }

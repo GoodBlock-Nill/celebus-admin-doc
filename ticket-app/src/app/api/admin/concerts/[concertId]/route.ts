@@ -19,6 +19,15 @@ const LOG_SCAN_LIMIT = 300;
 
 const POOL_ORDER: PoolType[] = ['PAID_SALE', 'CELEBUS_WINNER', 'IX_INVITATION', 'OPERATION_HOLD'];
 
+/** 공연 취소 시 일괄 처리 대상이 되는 예매 상태 (진행중 예매) */
+const ACTIVE_ORDER_STATUSES = [
+  'AWAITING_DEPOSIT',
+  'DEPOSIT_REPORTED',
+  'ON_HOLD',
+  'DEPOSIT_CONFIRMED',
+  'PAID',
+];
+
 interface SessionRow {
   id: string;
   name: string;
@@ -153,7 +162,17 @@ export async function GET(req: Request, context: { params: Promise<{ concertId: 
     notice: row.notice,
     refundPolicy: row.refund_policy,
     sessions: sessionViews,
+    activeOrderCount: 0,
   };
+
+  // 공연 취소 확인 문구에 쓸 진행중 예매 건수
+  const activeOrders = await client
+    .from('ticket_orders')
+    .select('id', { count: 'exact', head: true })
+    .eq('concert_id', concertId)
+    .in('status', ACTIVE_ORDER_STATUSES);
+
+  detail.activeOrderCount = activeOrders.count ?? 0;
 
   // 관련 로그 — 공연명·회차명·주문번호·티켓 코드가 상세 문구에 포함된 기록.
   // 문구에 괄호·쉼표가 섞여 있어 조회 조건으로 넘기기 어렵기 때문에 최근 로그를 받아 대조한다.

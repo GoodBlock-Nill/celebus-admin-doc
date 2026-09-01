@@ -11,6 +11,7 @@ export const CONCERT_STATUS_META: Record<ConcertStatus, StatusMeta> = {
   ON_SALE: { label: '판매중', tone: 'accent' },
   UPCOMING: { label: '판매예정', tone: 'warning' },
   CLOSED: { label: '판매종료', tone: 'muted' },
+  CANCELED: { label: '공연 취소', tone: 'muted' },
 };
 
 /** 예매 상태 */

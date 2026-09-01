@@ -11,7 +11,11 @@ import { HTTP_STATUS, fail, guardMutation, ok } from '@/lib/server/api';
 import { admin } from '@/lib/server/db-admin';
 import type { AdminRefundView } from '@/lib/admin-types';
 
-const approveSchema = z.object({ orderId: z.string().uuid() });
+/** 환불 승인 · 취소 요청 반려 — 구분을 생략하면 기존과 같이 승인으로 본다. */
+const actionSchema = z.object({
+  orderId: z.string().uuid(),
+  action: z.enum(['approve', 'reject']).optional(),
+});
 
 interface TicketCountRow {
   order_id: string | null;
@@ -54,7 +58,10 @@ export async function GET(req: Request) {
   return ok({ pending: withTickets(pending), done: withTickets(done) });
 }
 
-/** 환불 승인 — 발급 전이면 선점 좌석 반환, 발급 후면 티켓 무효화 후 발급분 반환 */
+/**
+ * 환불 승인 — 발급 전이면 선점 좌석 반환, 발급 후면 티켓 무효화 후 발급분 반환.
+ * 취소 요청 반려 — 예매를 취소 요청 직전 상태로 되돌린다.
+ */
 export async function POST(req: Request) {
   const blocked = guardMutation(req, 'admin-refund');
   if (blocked) return blocked;
@@ -62,8 +69,16 @@ export async function POST(req: Request) {
   const guard = requireAdmin(req);
   if (isGuardFailure(guard)) return guard;
 
-  const parsed = approveSchema.safeParse(await req.json().catch(() => null));
+  const parsed = actionSchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return fail('주문 정보를 확인해 주세요.', HTTP_STATUS.badRequest);
+
+  if (parsed.data.action === 'reject') {
+    return callAdminRpc(
+      'ticket_reject_cancel_request',
+      { p_order_id: parsed.data.orderId, p_admin: guard },
+      '취소 요청 반려에 실패했습니다.',
+    );
+  }
 
   return callAdminRpc(
     'ticket_approve_refund',

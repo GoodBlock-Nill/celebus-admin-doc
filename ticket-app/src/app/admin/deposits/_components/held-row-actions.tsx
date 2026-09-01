@@ -13,12 +13,15 @@ export function HeldRowActions({
   onMatch,
   onRefundTarget,
   onRejectHold,
+  onVoid,
 }: {
   row: AdminDepositView;
   onConfirm: () => void;
   onMatch: () => void;
   onRefundTarget: () => void;
   onRejectHold: () => void;
+  /** 입금 등록 자체를 되돌린다 (은행 내역과 다르게 등록한 건) */
+  onVoid: () => void;
 }) {
   return (
     <div className="flex flex-wrap justify-end gap-1.5">
@@ -38,6 +41,9 @@ export function HeldRowActions({
           보류 반려
         </Button>
       ) : null}
+      <Button variant="danger" size="sm" onClick={onVoid}>
+        등록 취소
+      </Button>
     </div>
   );
 }

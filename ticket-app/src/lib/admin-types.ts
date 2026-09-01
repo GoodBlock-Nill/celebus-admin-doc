@@ -5,13 +5,15 @@
 
 import type { ConcertStatus, HoldCauseCode, OrderStatus, PoolType, SeatType } from './api-types';
 
+/** VOIDED = 운영자가 잘못 등록한 입금을 사유와 함께 등록 취소한 상태 */
 export type DepositStatus =
   | 'UNMATCHED'
   | 'AUTO_MATCHED'
   | 'CONFIRMED'
   | 'HELD'
   | 'REFUND_TARGET'
-  | 'REFUNDED';
+  | 'REFUNDED'
+  | 'VOIDED';
 
 export type ReportStatus = 'RECEIVED' | 'BLOCKED' | 'SUBMITTED' | 'CLOSED';
 
@@ -79,8 +81,17 @@ export interface AdminOrderView {
   reportRejectedAt: string | null;
   depositConfirmedAt: string | null;
   cancelRequestedAt: string | null;
+  /** 운영자가 취소 요청을 반려한 시각 */
+  cancelRejectedAt: string | null;
+  /** 입금 확인 요청 누적 횟수 — 남용 여부 판단에 쓴다 */
+  depositReportCount: number;
   refundedAt: string | null;
   party: OrderPartyView;
+}
+
+/** 최근 지급 완료 목록 1건 — 지급 취소 판단에 필요한 지급 시각을 함께 내려준다 */
+export interface AdminIssuedOrderView extends AdminOrderView {
+  issuedAt: string;
 }
 
 export interface AdminDepositView {
@@ -160,6 +171,8 @@ export interface AdminConcertDetailView {
   notice: string;
   refundPolicy: string;
   sessions: AdminSessionView[];
+  /** 공연 취소 시 일괄 처리 대상이 되는 진행중 예매 건수 (확인 다이얼로그 예고 문구용) */
+  activeOrderCount: number;
 }
 
 /** 공연 등록 시 함께 만드는 회차 1건 (분류별 배정 수량 포함) */
@@ -196,8 +209,11 @@ export interface ConcertCreateInput {
   sessions: ConcertSessionInput[];
 }
 
-/** 운영자가 지정할 수 있는 판매 상태 (판매 예정으로 되돌리는 전이는 없다) */
-export type ConcertStatusTransition = Exclude<ConcertStatus, 'UPCOMING'>;
+/**
+ * 운영자가 판매 상태 액션으로 지정할 수 있는 값.
+ * 판매 예정으로 되돌리는 전이는 없고, 공연 취소는 일괄 환불이 따르는 별도 액션이라 제외한다.
+ */
+export type ConcertStatusTransition = Exclude<ConcertStatus, 'UPCOMING' | 'CANCELED'>;
 
 /** 공연장 검색 결과 1건 — 이름·주소는 검색 서비스 표기를 그대로 쓴다. */
 export interface VenueSearchItemView {

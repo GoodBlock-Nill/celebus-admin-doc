@@ -5,11 +5,9 @@ import { useState } from 'react';
 import { ConfirmDialog } from '../../_components/confirm-dialog';
 import { DataTable } from '../../_components/data-table';
 import type { Column } from '../../_components/data-table';
-import { Button, Select, TextInput } from '../../_components/form';
 import { useConfirm } from '../../_components/hooks';
 import { useToast } from '../../_components/toast';
 import { InfoNote } from '../../_components/ui';
-import { HeldRowActions } from './held-row-actions';
 import {
   amountColumn,
   depositedAtColumn,
@@ -19,21 +17,20 @@ import {
   orderColumn,
   statusColumn,
 } from './deposit-columns';
+import { DepositVoidForm } from './deposit-void-form';
+import { HeldMatchForm, HeldRefundForm } from './held-match-form';
+import { HeldRowActions } from './held-row-actions';
+import { useVoidDeposit } from './use-void-deposit';
 import { adminApi } from '@/lib/admin-client';
 import type { AdminDepositView, AdminOrderView } from '@/lib/admin-types';
-import { formatKrw } from '@/lib/format';
 
 const DEFAULT_REFUND_MEMO = '입금 마감 이후 입금 — 반환 대상';
 
-type ActionKind = 'match' | 'refund';
+type ActionKind = 'match' | 'refund' | 'void';
 
 interface ActiveAction {
   depositId: string;
   kind: ActionKind;
-}
-
-function candidateLabel(order: AdminOrderView): string {
-  return `${order.orderNo} · ${order.party.realName} · ${order.qty}매 · ${formatKrw(order.amountKrw)}`;
 }
 
 /** ④ 보류 — 이름·금액이 어긋나 운영자 판단이 필요한 입금 */
@@ -48,6 +45,7 @@ export function HeldTab({
 }) {
   const toast = useToast();
   const confirm = useConfirm();
+  const voidDeposit = useVoidDeposit(confirm, onDone);
 
   const [active, setActive] = useState<ActiveAction | null>(null);
   const [selectedOrderId, setSelectedOrderId] = useState('');
@@ -59,6 +57,7 @@ export function HeldTab({
     );
     if (kind === 'match') setSelectedOrderId(candidates[0]?.id ?? '');
     if (kind === 'refund') setMemo(DEFAULT_REFUND_MEMO);
+    if (kind === 'void') voidDeposit.resetReason();
   };
 
   const handleConfirm = async (row: AdminDepositView) => {
@@ -123,7 +122,7 @@ export function HeldTab({
       key: 'action',
       header: '처리',
       align: 'right',
-      width: '230px',
+      width: '300px',
       render: (row) => (
         <HeldRowActions
           row={row}
@@ -131,6 +130,7 @@ export function HeldTab({
           onMatch={() => openAction(row.id, 'match')}
           onRefundTarget={() => openAction(row.id, 'refund')}
           onRejectHold={() => askRejectHold(row)}
+          onVoid={() => openAction(row.id, 'void')}
         />
       ),
     },
@@ -139,39 +139,36 @@ export function HeldTab({
   const renderSubRow = (row: AdminDepositView) => {
     if (!active || active.depositId !== row.id) return null;
 
+    if (active.kind === 'void') {
+      return (
+        <DepositVoidForm
+          reason={voidDeposit.reason}
+          onChange={voidDeposit.setReason}
+          onSubmit={() => voidDeposit.ask(row)}
+          onClose={() => setActive(null)}
+        />
+      );
+    }
+
     if (active.kind === 'match') {
       return (
-        <div className="flex flex-wrap items-end gap-2">
-          <div className="flex min-w-[280px] flex-1 flex-col gap-1.5">
-            <span className="text-[12px] font-semibold text-[#4A4E5A]">연결할 주문 선택</span>
-            <Select value={selectedOrderId} onChange={(event) => setSelectedOrderId(event.target.value)}>
-              {candidates.length === 0 ? <option value="">연결 가능한 주문이 없습니다</option> : null}
-              {candidates.map((order) => (
-                <option key={order.id} value={order.id}>
-                  {candidateLabel(order)}
-                </option>
-              ))}
-            </Select>
-          </div>
-          <Button variant="primary" disabled={!selectedOrderId} onClick={() => void handleMatch(row)}>
-            주문에 연결
-          </Button>
-          <Button onClick={() => setActive(null)}>닫기</Button>
-        </div>
+        <HeldMatchForm
+          candidates={candidates}
+          selectedOrderId={selectedOrderId}
+          onSelect={setSelectedOrderId}
+          onSubmit={() => void handleMatch(row)}
+          onClose={() => setActive(null)}
+        />
       );
     }
 
     return (
-      <div className="flex flex-wrap items-end gap-2">
-        <div className="flex min-w-[280px] flex-1 flex-col gap-1.5">
-          <span className="text-[12px] font-semibold text-[#4A4E5A]">반환 사유</span>
-          <TextInput value={memo} onChange={(event) => setMemo(event.target.value)} maxLength={100} />
-        </div>
-        <Button variant="danger" onClick={() => void handleRefundTarget(row)}>
-          반환 대상으로 지정
-        </Button>
-        <Button onClick={() => setActive(null)}>닫기</Button>
-      </div>
+      <HeldRefundForm
+        memo={memo}
+        onChange={setMemo}
+        onSubmit={() => void handleRefundTarget(row)}
+        onClose={() => setActive(null)}
+      />
     );
   };
 
@@ -182,14 +179,15 @@ export function HeldTab({
         예매와 무관한 입금은 반환 대상으로 지정하세요. 회원이 실제 입금자명·환불 계좌를 알려온 건은
         &lsquo;회원이 알린 정보&rsquo;에 표시되며, 그 이름으로 은행 내역을 대조하면 됩니다. 끝내 대조되지 않으면
         보류 반려로 예매를 입금 대기에 되돌리세요. 받은 입금은 반환 대상으로 넘어가고, 회원에게는 환불 후 재송금
-        안내가 표시됩니다.
+        안내가 표시됩니다. 은행 내역과 다르게 잘못 등록한 입금은 등록 취소로 무효 처리하며, 그 입금 때문에 보류된
+        예매는 보류가 함께 풀립니다.
       </InfoNote>
       <DataTable
         columns={columns}
         rows={rows}
         rowKey={(row) => row.id}
         emptyText="보류 중인 입금이 없습니다."
-        minWidth="1320px"
+        minWidth="1390px"
         renderSubRow={renderSubRow}
       />
       <ConfirmDialog request={confirm.request} onClose={confirm.close} />

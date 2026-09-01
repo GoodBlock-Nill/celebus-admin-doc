@@ -27,6 +27,7 @@ export const DEPOSIT_STATUS_VIEW: Record<DepositStatus, StatusView> = {
   HELD: { label: '보류', tone: 'warning' },
   REFUND_TARGET: { label: '반환 대상', tone: 'danger' },
   REFUNDED: { label: '반환 완료', tone: 'neutral' },
+  VOIDED: { label: '등록 취소', tone: 'neutral' },
 };
 
 /** 확인 보류 표준 사유 구분 표기 — 운영자와 회원이 같은 기준을 본다 */
@@ -54,4 +55,5 @@ export const CONCERT_STATUS_VIEW: Record<ConcertStatus, StatusView> = {
   UPCOMING: { label: '판매 예정', tone: 'neutral' },
   ON_SALE: { label: '판매 중', tone: 'success' },
   CLOSED: { label: '판매 종료', tone: 'neutral' },
+  CANCELED: { label: '공연 취소', tone: 'danger' },
 };

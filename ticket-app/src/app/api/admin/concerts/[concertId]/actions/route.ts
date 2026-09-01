@@ -17,6 +17,8 @@ const schema = z.discriminatedUnion('action', [
     action: z.literal('set-status'),
     status: z.enum(CONCERT_STATUS_TARGETS),
   }),
+  /** 공연 취소 — 소속 예매를 상태에 맞게 일괄 정리한다 */
+  z.object({ action: z.literal('cancel-concert') }),
   z.object({
     action: z.literal('reallocate'),
     sessionId: z.string().uuid(),
@@ -34,7 +36,10 @@ const schema = z.discriminatedUnion('action', [
   }),
 ]);
 
-/** 판매 상태 전이 · 배정 수량 이동 · 무상 티켓 발급 — 검증과 로그 기록은 서버 함수가 담당한다. */
+/**
+ * 판매 상태 전이 · 공연 취소 · 배정 수량 이동 · 무상 티켓 발급.
+ * 검증과 로그 기록은 서버 함수가 담당한다.
+ */
 export async function POST(req: Request, context: { params: Promise<{ concertId: string }> }) {
   const blocked = guardMutation(req, 'admin-concert');
   if (blocked) return blocked;
@@ -51,6 +56,15 @@ export async function POST(req: Request, context: { params: Promise<{ concertId:
       'ticket_set_concert_status',
       { p_concert_id: concertId, p_status: parsed.data.status, p_admin: guard },
       '판매 상태 변경에 실패했습니다.',
+    );
+  }
+
+  if (parsed.data.action === 'cancel-concert') {
+    const { concertId } = await context.params;
+    return callAdminRpc(
+      'ticket_cancel_concert',
+      { p_concert_id: concertId, p_admin: guard },
+      '공연 취소에 실패했습니다.',
     );
   }
 

@@ -7,6 +7,7 @@ import { useAppToast } from '../_components/toast';
 import { buildTossSendUrl, useTossTransfer } from '../_components/toss-transfer';
 import { NUMERIC } from '../_components/ui';
 import { useAppClock } from '../_components/use-app-clock';
+import { depositReportCaption, isDepositReportExhausted } from './deposit-report-limit';
 import { api } from '@/lib/api-client';
 import type { OrderDetailView } from '@/lib/api-types';
 
@@ -32,6 +33,9 @@ export function PinnedActionBar({ order, onDone, onFail }: PinnedActionBarProps)
 
   const remainMs = new Date(order.depositDeadline).getTime() - now.getTime();
   const remainLabel = formatCountdownCoarse(remainMs);
+  // 입금 확인 요청 횟수를 다 쓰면 버튼을 잠그고 남은 횟수·고객센터 안내를 바 위에 올린다.
+  const isExhausted = isDepositReportExhausted(order);
+  const caption = depositReportCaption(order);
 
   const handleReport = async () => {
     if (isSubmitting) return;
@@ -46,6 +50,9 @@ export function PinnedActionBar({ order, onDone, onFail }: PinnedActionBarProps)
 
   return (
     <div className="fixed bottom-0 left-1/2 z-40 w-full max-w-[420px] -translate-x-1/2 border-t border-[#E5E8EB] bg-white px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3">
+      {caption ? (
+        <p className="mb-2 text-[12.5px] leading-relaxed text-[#6B7684]">{caption}</p>
+      ) : null}
       <div className="flex items-center gap-2.5">
         <p className={`min-w-0 shrink text-[12.5px] leading-tight text-[#6B7684] ${NUMERIC}`}>
           {remainLabel ? (
@@ -70,7 +77,7 @@ export function PinnedActionBar({ order, onDone, onFail }: PinnedActionBarProps)
           </button>
           <button
             type="button"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isExhausted}
             onClick={() => void handleReport()}
             className="flex min-h-[48px] items-center justify-center rounded-xl bg-[#D6336C] px-4 text-[15px] font-bold text-white disabled:bg-[#E5E8EB] disabled:text-[#B0B8C1]"
           >

@@ -50,6 +50,10 @@ export interface OrderRow {
   report_rejected_at: string | null;
   /** 운영자가 확인 보류를 반려해 입금 대기로 되돌린 시각 */
   hold_rejected_at: string | null;
+  /** 운영자가 취소 요청을 반려한 시각 */
+  cancel_rejected_at: string | null;
+  /** 입금 확인 요청 누적 횟수 (요청 취소로는 줄지 않는다) */
+  deposit_report_count: number;
   concert_id: string;
   session_id: string;
   depositor_name_rule: string;
@@ -103,6 +107,8 @@ export interface ConcertBrief {
   artist: string;
   venue: string;
   seat_type: string;
+  /** 공연 취소 안내를 예매 화면에서 보여 주기 위해 함께 읽는다 */
+  status: ConcertStatus;
 }
 
 /** 주문·티켓 목록에 곁들이는 회차 요약 */
@@ -123,7 +129,8 @@ export const PUBLIC_SESSION_COLUMNS =
 
 export const ORDER_COLUMNS =
   'id, order_no, status, qty, amount_krw, created_at, deposit_deadline, ' +
-  'deposit_reported_at, report_rejected_at, hold_rejected_at, concert_id, session_id, ' +
+  'deposit_reported_at, report_rejected_at, hold_rejected_at, cancel_rejected_at, ' +
+  'deposit_report_count, concert_id, session_id, ' +
   'depositor_name_rule, wants_cash_receipt, cash_receipt_phone_enc, hold_reason, hold_cause, ' +
   'hold_actual_depositor, refund_bank, refund_account_enc, refund_holder, hold_info_submitted_at, ' +
   'deposit_confirmed_at, cancel_requested_at, refunded_at';
@@ -131,6 +138,6 @@ export const ORDER_COLUMNS =
 export const TICKET_COLUMNS =
   'id, code, order_id, concert_id, session_id, pool_type, status, issued_at, used_at';
 
-export const CONCERT_BRIEF_COLUMNS = 'id, title, artist, venue, seat_type';
+export const CONCERT_BRIEF_COLUMNS = 'id, title, artist, venue, seat_type, status';
 
 export const SESSION_BRIEF_COLUMNS = 'id, name, start_at, entry_open_minutes_before';

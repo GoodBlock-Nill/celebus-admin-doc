@@ -6,12 +6,18 @@ import {
   isGuardFailure,
   requireAdmin,
 } from '@/lib/server/admin-api';
-import { loadDepositViews, loadOrdersByStatus } from '@/lib/server/admin-load';
+import {
+  loadDepositViews,
+  loadOrdersByStatus,
+  loadRecentIssuedOrders,
+} from '@/lib/server/admin-load';
 import { HTTP_STATUS, fail, guardMutation, ok } from '@/lib/server/api';
 import { admin } from '@/lib/server/db-admin';
 
 const MAX_DEPOSITOR_NAME_LENGTH = 30;
 const MAX_AMOUNT_KRW = 100_000_000;
+/** 지급 취소(오지급 정정) 후보로 보여 주는 최근 지급 완료 건수 */
+const RECENT_ISSUED_LIMIT = 20;
 
 const registerSchema = z.object({
   depositorName: z.string().trim().min(1).max(MAX_DEPOSITOR_NAME_LENGTH),
@@ -29,7 +35,7 @@ export async function GET(req: Request) {
   await expireOverdueOrders();
   const client = admin();
 
-  const [deposits, reported, issuePending, matchable] = await Promise.all([
+  const [deposits, reported, issuePending, matchable, recentIssued] = await Promise.all([
     loadDepositViews(client),
     // 회원이 입금확인을 요청한 예매 — 오래 기다린 요청이 위로 오게 정렬한다.
     loadOrdersByStatus(client, {
@@ -47,9 +53,11 @@ export async function GET(req: Request) {
       orderBy: 'created_at',
       ascending: true,
     }),
+    // 잘못 지급한 건을 되돌릴 수 있도록 최근 지급 완료 예매를 함께 내려준다.
+    loadRecentIssuedOrders(client, RECENT_ISSUED_LIMIT),
   ]);
 
-  return ok({ deposits, reported, issuePending, matchable });
+  return ok({ deposits, reported, issuePending, matchable, recentIssued });
 }
 
 /**

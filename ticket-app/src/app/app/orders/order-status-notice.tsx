@@ -24,10 +24,89 @@ function latestRejection(order: OrderDetailView): { isHold: boolean; at: string 
 }
 
 /**
+ * 공연이 취소된 예매 안내 — 다른 어떤 안내보다 먼저 보여 준다.
+ * 같은 "기한 만료·취소" 표시라도 공연 취소로 정리된 예매는 회원 잘못이 아니므로 문구를 나눈다.
+ */
+function ConcertCanceledNotice({ order }: { order: OrderDetailView }) {
+  if (order.status === 'REFUNDED') {
+    return (
+      <NoticeBox tone="muted">
+        공연이 취소되어 환불이 완료되었습니다.
+        {order.refundedAt ? ` (${formatDateTime(order.refundedAt)})` : ''}
+      </NoticeBox>
+    );
+  }
+
+  if (order.status === 'EXPIRED') {
+    return (
+      <NoticeBox tone="warning">
+        공연 취소로 예매가 취소되었습니다. 입금하신 내역이 있다면 등록하신 환불 계좌로 돌려드립니다.
+      </NoticeBox>
+    );
+  }
+
+  return (
+    <NoticeBox tone="warning">
+      공연이 취소되었습니다. 결제하신 금액은 전액 환불되며, 아래에 환불 계좌를 등록해 주시면 확인 후
+      돌려드립니다.
+    </NoticeBox>
+  );
+}
+
+/** 운영자가 취소 요청을 반려한 예매 안내 */
+function CancelRejectedNotice({ at }: { at: string }) {
+  return (
+    <NoticeBox tone="warning">
+      취소 요청이 반려되었습니다. 자세한 내용은 고객센터로 문의해 주세요.
+      {` (반려 ${formatDateTime(at)})`}
+    </NoticeBox>
+  );
+}
+
+/** 입금 대기 예매 안내 — 반려 이력이 있으면 사유에 맞는 다음 행동을 알려 준다. */
+function AwaitingNotice({ order }: { order: OrderDetailView }) {
+  const rejection = latestRejection(order);
+
+  if (rejection?.isHold) {
+    return (
+      <NoticeBox tone="warning">
+        보내주신 입금을 예매와 대조하지 못해 입금 대기로 되돌렸어요. 이미 보내신 금액은 등록하신 환불
+        계좌로 환불해 드립니다. 관람을 원하시면 정확한 금액·입금자명으로 다시 송금해 주세요.
+        {` (반려 ${formatDateTime(rejection.at)})`}
+      </NoticeBox>
+    );
+  }
+
+  if (rejection) {
+    return (
+      <NoticeBox tone="warning">
+        입금이 확인되지 않아 입금 대기로 되돌아갔습니다. 입금 후 다시 요청해 주세요.
+        {` (반려 ${formatDateTime(rejection.at)})`}
+      </NoticeBox>
+    );
+  }
+
+  return null;
+}
+
+/**
  * 예매 상세의 상태별 안내 박스.
  * 티켓 확인처는 CELEBUS 본앱이므로 지급 관련 안내는 모두 본앱을 가리킨다.
  */
 export function OrderStatusNotice({ order }: { order: OrderDetailView }) {
+  // 공연 자체가 취소된 예매는 다른 안내보다 이 사실을 먼저 알려야 한다.
+  if (order.concertStatus === 'CANCELED') {
+    return <ConcertCanceledNotice order={order} />;
+  }
+
+  // 취소 요청이 반려돼 원래 상태로 돌아온 예매
+  if (
+    order.cancelRejectedAt &&
+    (order.status === 'DEPOSIT_CONFIRMED' || order.status === 'AWAITING_DEPOSIT')
+  ) {
+    return <CancelRejectedNotice at={order.cancelRejectedAt} />;
+  }
+
   if (order.status === 'ON_HOLD') {
     return <NoticeBox tone="warning">{order.holdReason ?? HOLD_DEFAULT_REASON}</NoticeBox>;
   }
@@ -41,28 +120,8 @@ export function OrderStatusNotice({ order }: { order: OrderDetailView }) {
     );
   }
 
-  // 반려 이력이 있는 입금 대기 예매 — 사유에 맞는 다음 행동을 안내한다.
   if (order.status === 'AWAITING_DEPOSIT') {
-    const rejection = latestRejection(order);
-
-    if (rejection?.isHold) {
-      return (
-        <NoticeBox tone="warning">
-          보내주신 입금을 예매와 대조하지 못해 입금 대기로 되돌렸어요. 이미 보내신 금액은 등록하신 환불
-          계좌로 환불해 드립니다. 관람을 원하시면 정확한 금액·입금자명으로 다시 송금해 주세요.
-          {` (반려 ${formatDateTime(rejection.at)})`}
-        </NoticeBox>
-      );
-    }
-
-    if (rejection) {
-      return (
-        <NoticeBox tone="warning">
-          입금이 확인되지 않아 입금 대기로 되돌아갔습니다. 입금 후 다시 요청해 주세요.
-          {` (반려 ${formatDateTime(rejection.at)})`}
-        </NoticeBox>
-      );
-    }
+    return <AwaitingNotice order={order} />;
   }
 
   if (order.status === 'DEPOSIT_CONFIRMED') {

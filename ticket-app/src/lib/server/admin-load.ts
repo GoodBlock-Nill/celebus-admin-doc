@@ -5,7 +5,13 @@ import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 import { loadSessionBriefs, maskedRefundAccount } from './mappers';
-import type { AdminDepositView, AdminOrderView, DepositStatus, OrderPartyView } from '@/lib/admin-types';
+import type {
+  AdminDepositView,
+  AdminIssuedOrderView,
+  AdminOrderView,
+  DepositStatus,
+  OrderPartyView,
+} from '@/lib/admin-types';
 import type { HoldCauseCode, OrderStatus } from '@/lib/api-types';
 
 const UNKNOWN_SESSION = '-';
@@ -14,8 +20,8 @@ const UNKNOWN_REAL_NAME = '실명 미확인';
 export const ADMIN_ORDER_COLUMNS =
   'id, order_no, status, qty, amount_krw, created_at, deposit_deadline, member_id, session_id, ' +
   'hold_reason, hold_cause, hold_actual_depositor, refund_bank, refund_account_enc, refund_holder, ' +
-  'hold_info_submitted_at, deposit_reported_at, report_rejected_at, deposit_confirmed_at, ' +
-  'cancel_requested_at, refunded_at';
+  'hold_info_submitted_at, deposit_reported_at, report_rejected_at, deposit_report_count, ' +
+  'deposit_confirmed_at, cancel_requested_at, cancel_rejected_at, refunded_at';
 
 const ADMIN_DEPOSIT_COLUMNS =
   'id, depositor_name, amount_krw, deposited_at, status, matched_order_id, memo';
@@ -40,8 +46,12 @@ export interface AdminOrderRow {
   hold_info_submitted_at: string | null;
   deposit_reported_at: string | null;
   report_rejected_at: string | null;
+  /** 입금 확인 요청 누적 횟수 (요청 취소로는 줄지 않는다) */
+  deposit_report_count: number;
   deposit_confirmed_at: string | null;
   cancel_requested_at: string | null;
+  /** 운영자가 취소 요청을 반려한 시각 */
+  cancel_rejected_at: string | null;
   refunded_at: string | null;
 }
 
@@ -122,8 +132,10 @@ function toOrderView(
     holdInfoSubmittedAt: row.hold_info_submitted_at,
     depositReportedAt: row.deposit_reported_at,
     reportRejectedAt: row.report_rejected_at,
+    depositReportCount: row.deposit_report_count,
     depositConfirmedAt: row.deposit_confirmed_at,
     cancelRequestedAt: row.cancel_requested_at,
+    cancelRejectedAt: row.cancel_rejected_at,
     refundedAt: row.refunded_at,
     party: party ?? { realName: UNKNOWN_REAL_NAME, nickname: '' },
   };
@@ -165,6 +177,55 @@ export async function loadOrdersByStatus(
     .returns<AdminOrderRow[]>();
 
   return buildOrderViews(client, data ?? []);
+}
+
+/** 최근 지급 완료 조회 상한 — 한 예매에 여러 매가 있어 넉넉히 읽은 뒤 예매 단위로 묶는다 */
+const ISSUED_TICKET_SCAN_LIMIT = 200;
+
+interface IssuedTicketRow {
+  order_id: string | null;
+  issued_at: string;
+}
+
+/**
+ * 최근 티켓 지급 완료 예매 — 잘못 지급한 건을 되돌리기 위한 목록이다.
+ * 예매에는 지급 시각 항목이 없으므로 발급된 티켓의 발급 시각을 지급 시각으로 본다.
+ */
+export async function loadRecentIssuedOrders(
+  client: SupabaseClient,
+  limit: number,
+): Promise<AdminIssuedOrderView[]> {
+  const { data } = await client
+    .from('ticket_tickets')
+    .select('order_id, issued_at')
+    .not('order_id', 'is', null)
+    .eq('status', 'VALID')
+    .order('issued_at', { ascending: false })
+    .limit(ISSUED_TICKET_SCAN_LIMIT)
+    .returns<IssuedTicketRow[]>();
+
+  const issuedAtByOrder = new Map<string, string>();
+  for (const row of data ?? []) {
+    if (row.order_id && !issuedAtByOrder.has(row.order_id)) {
+      issuedAtByOrder.set(row.order_id, row.issued_at);
+    }
+  }
+
+  const orderIds = [...issuedAtByOrder.keys()].slice(0, limit);
+  if (orderIds.length === 0) return [];
+
+  const orders = await client
+    .from('ticket_orders')
+    .select(ADMIN_ORDER_COLUMNS)
+    .in('id', orderIds)
+    .eq('status', 'PAID')
+    .returns<AdminOrderRow[]>();
+
+  const views = await buildOrderViews(client, orders.data ?? []);
+
+  return views
+    .map((order) => ({ ...order, issuedAt: issuedAtByOrder.get(order.id) ?? order.createdAt }))
+    .sort((left, right) => Date.parse(right.issuedAt) - Date.parse(left.issuedAt));
 }
 
 /** 입금 내역 전체 — 최근 입금이 위. 매칭된 주문 정보를 함께 붙인다. */

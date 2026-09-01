@@ -6,6 +6,7 @@ import type {
   AdminConcertRowView,
   AdminDepositView,
   AdminImageKind,
+  AdminIssuedOrderView,
   AdminLogView,
   AdminMemberOptionView,
   AdminOrderView,
@@ -98,6 +99,12 @@ export const adminApi = {
       action: 'set-status',
       status,
     }),
+  /** 공연 취소 — 소속 예매를 상태에 맞게 일괄 정리한다 (되돌릴 수 없음) */
+  cancelConcert: (concertId: string) =>
+    post<{ title?: string; refund_requested?: number; expired?: number; revoked_tickets?: number }>(
+      `/api/admin/concerts/${concertId}/actions`,
+      { action: 'cancel-concert' },
+    ),
   reallocate: ({ concertId, ...rest }: ReallocateInput) =>
     post<Record<string, never>>(`/api/admin/concerts/${concertId}/actions`, { action: 'reallocate', ...rest }),
   issueCompTickets: ({ concertId, ...rest }: CompIssueInput) =>
@@ -129,6 +136,8 @@ export const adminApi = {
       reported: AdminOrderView[];
       issuePending: AdminOrderView[];
       matchable: AdminOrderView[];
+      /** 최근 지급 완료 예매 — 오지급을 되돌릴 때 쓴다 */
+      recentIssued: AdminIssuedOrderView[];
     }>('/api/admin/deposits'),
   registerDeposit: (depositorName: string, amountKrw: number) =>
     post<{ status: string; memo: string | null }>('/api/admin/deposits', { depositorName, amountKrw }),
@@ -158,9 +167,32 @@ export const adminApi = {
       action: 'reject-hold',
       orderId,
     }),
+  /** 입금 확인 취소 — 잘못 확인한 예매를 입금 대기로 되돌린다 */
+  undoConfirmDeposit: (orderId: string) =>
+    post<{ order_no?: string; deposit_deadline?: string }>('/api/admin/deposits/actions', {
+      action: 'undo-confirm',
+      orderId,
+    }),
+  /** 티켓 지급 취소 — 잘못 지급한 티켓을 회수하고 지급 대기로 되돌린다 */
+  undoIssueTickets: (orderId: string) =>
+    post<{ order_no?: string; revoked_tickets?: number }>('/api/admin/deposits/actions', {
+      action: 'undo-issue',
+      orderId,
+    }),
+  /** 입금 등록 취소 — 잘못 등록한 입금을 사유와 함께 무효로 돌린다 */
+  voidDeposit: (depositId: string, reason: string) =>
+    post<{ hold_released?: boolean }>('/api/admin/deposits/actions', {
+      action: 'void',
+      depositId,
+      reason,
+    }),
 
   refunds: () => request<{ pending: AdminRefundView[]; done: AdminRefundView[] }>('/api/admin/refunds'),
-  approveRefund: (orderId: string) => post<{ revoked_tickets?: number }>('/api/admin/refunds', { orderId }),
+  approveRefund: (orderId: string) =>
+    post<{ revoked_tickets?: number }>('/api/admin/refunds', { orderId, action: 'approve' }),
+  /** 취소 요청 반려 — 예매를 취소 요청 직전 상태로 되돌린다 */
+  rejectCancelRequest: (orderId: string) =>
+    post<{ order_no?: string; status?: string }>('/api/admin/refunds', { orderId, action: 'reject' }),
 
   reports: () => request<{ items: AdminReportView[] }>('/api/admin/reports'),
   submitReport: (input: ManualReportInput) =>

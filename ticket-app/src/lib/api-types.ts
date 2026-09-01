@@ -5,7 +5,11 @@
 
 export type PoolType = 'PAID_SALE' | 'CELEBUS_WINNER' | 'IX_INVITATION' | 'OPERATION_HOLD';
 
-export type ConcertStatus = 'UPCOMING' | 'ON_SALE' | 'CLOSED';
+/**
+ * 공연 판매 상태.
+ *  · CANCELED = 공연 취소 (예매 중단 + 전 예매 환불 전환)
+ */
+export type ConcertStatus = 'UPCOMING' | 'ON_SALE' | 'CLOSED' | 'CANCELED';
 
 /** 좌석 방식 — 등록 시 선택하는 세 가지 (현장배정 = 입장 순서대로 현장에서 자리 안내) */
 export type SeatType = '자유석' | '구역제' | '현장배정';
@@ -115,8 +119,14 @@ export interface OrderSummaryView {
   reportRejectedAt: string | null;
   /** 운영자가 확인 보류를 반려해 입금 대기로 되돌린 시각 (환불·재송금 안내에 사용) */
   holdRejectedAt: string | null;
+  /** 운영자가 취소 요청을 반려한 시각 (반려 안내에 사용) */
+  cancelRejectedAt: string | null;
+  /** 입금 확인 요청 누적 횟수 — 남은 요청 횟수 안내에 사용 */
+  depositReportCount: number;
   concertId: string;
   concertTitle: string;
+  /** 공연 판매 상태 — 공연 취소 안내를 예매 화면에서 함께 보여 주기 위해 내려준다 */
+  concertStatus: ConcertStatus;
   sessionId: string;
   sessionName: string;
   sessionStartAt: string;

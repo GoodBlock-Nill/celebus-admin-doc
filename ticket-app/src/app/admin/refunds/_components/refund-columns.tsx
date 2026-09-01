@@ -95,23 +95,35 @@ export const REFUND_ACCOUNT_COLUMN: Column<AdminRefundView> = {
     ),
 };
 
-export function approveColumn(onApprove: (row: AdminRefundView) => void): Column<AdminRefundView> {
+/**
+ * 처리 손잡이 — 환불 승인과 취소 요청 반려를 나란히 둔다.
+ * 반려는 회원의 요청을 되돌리는 처리라 승인 옆의 보조 자리에 위험 표시로 배치한다.
+ */
+export function approveColumn(
+  onApprove: (row: AdminRefundView) => void,
+  onReject: (row: AdminRefundView) => void,
+): Column<AdminRefundView> {
   return {
     key: 'action',
     header: '처리',
     align: 'right',
-    width: '120px',
+    width: '210px',
     render: (row) => (
-      <Button
-        variant="primary"
-        size="sm"
-        // 서버도 같은 조건으로 막지만, 누르기 전에 이유를 알 수 있게 화면에서 먼저 잠근다.
-        disabled={!hasRefundAccount(row)}
-        title={hasRefundAccount(row) ? undefined : '회원이 환불 계좌를 등록해야 승인할 수 있습니다.'}
-        onClick={() => onApprove(row)}
-      >
-        환불 승인
-      </Button>
+      <div className="flex flex-wrap justify-end gap-1.5">
+        <Button
+          variant="primary"
+          size="sm"
+          // 서버도 같은 조건으로 막지만, 누르기 전에 이유를 알 수 있게 화면에서 먼저 잠근다.
+          disabled={!hasRefundAccount(row)}
+          title={hasRefundAccount(row) ? undefined : '회원이 환불 계좌를 등록해야 승인할 수 있습니다.'}
+          onClick={() => onApprove(row)}
+        >
+          환불 승인
+        </Button>
+        <Button variant="danger" size="sm" onClick={() => onReject(row)}>
+          취소 요청 반려
+        </Button>
+      </div>
     ),
   };
 }

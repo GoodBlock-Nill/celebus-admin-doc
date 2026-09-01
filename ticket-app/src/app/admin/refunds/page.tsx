@@ -37,6 +37,21 @@ export default function AdminRefundsPage() {
     if (result.ok) void reload();
   };
 
+  const reject = async (row: AdminRefundView) => {
+    const result = await adminApi.rejectCancelRequest(row.id);
+    toast.fromResult(result, `주문 ${row.orderNo} 취소 요청을 반려했습니다.`);
+    if (result.ok) void reload();
+  };
+
+  const askReject = (row: AdminRefundView) =>
+    confirm.ask({
+      title: '취소 요청을 반려할까요?',
+      message: `주문 ${row.orderNo}을(를) 취소 요청 직전 상태로 되돌립니다. 회원 화면에는 "취소 요청이 반려되었습니다. 자세한 내용은 고객센터로 문의해 주세요."가 표시되므로, 반려 사유는 고객센터를 통해 안내해 주세요.`,
+      confirmLabel: '취소 요청 반려',
+      confirmVariant: 'danger',
+      onConfirm: () => void reject(row),
+    });
+
   const askApprove = (row: AdminRefundView) => {
     // 계좌가 없으면 돈을 보낼 수 없다 — 서버도 같은 조건으로 거부한다.
     if (!hasRefundAccount(row)) {
@@ -88,14 +103,20 @@ export default function AdminRefundsPage() {
               <InfoNote>
                 취소 요청은 접수 후 24시간 이내에 처리하는 것이 기준입니다. 잔여 6시간 미만은 주의, 기한이 지난 건은
                 위험으로 표시됩니다. 환불 계좌가 등록되지 않은 건은 승인할 수 없으며, 회원이 예매 상세에서 계좌를
-                등록해야 처리할 수 있습니다.
+                등록해야 처리할 수 있습니다. 환불 대상이 아닌 요청은 취소 요청 반려로 원래 상태로 되돌릴 수 있습니다
+                (공연 취소로 생긴 환불 대상은 반려할 수 없습니다).
               </InfoNote>
               <DataTable
-                columns={[...BASE_COLUMNS, REFUND_ACCOUNT_COLUMN, slaColumn(now), approveColumn(askApprove)]}
+                columns={[
+                  ...BASE_COLUMNS,
+                  REFUND_ACCOUNT_COLUMN,
+                  slaColumn(now),
+                  approveColumn(askApprove, askReject),
+                ]}
                 rows={state.data.pending}
                 rowKey={(row) => row.id}
                 emptyText="대기 중인 취소 요청이 없습니다."
-                minWidth="1140px"
+                minWidth="1230px"
               />
             </div>
           </Card>

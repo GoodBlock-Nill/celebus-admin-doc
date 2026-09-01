@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../_components/ui';
+import { depositReportCaption, isDepositReportExhausted } from './deposit-report-limit';
 import { api } from '@/lib/api-client';
 import type { OrderDetailView } from '@/lib/api-types';
 
@@ -34,18 +35,22 @@ export function DepositReportActions({ order, onDone, onFail }: DepositReportAct
   };
 
   if (order.status === 'AWAITING_DEPOSIT') {
+    // 요청 횟수를 다 쓰면 눌러도 서버가 거부하므로 화면에서 먼저 잠그고 이유를 알린다.
+    const isExhausted = isDepositReportExhausted(order);
+    const caption = depositReportCaption(order);
+
     return (
       <div className="flex flex-col gap-2">
         <button
           type="button"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isExhausted}
           onClick={() => void run('REPORT')}
           className={PRIMARY_BUTTON}
         >
           입금확인 요청
         </button>
         <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
-          입금을 마치셨다면 눌러 주세요. 운영자가 입금 내역을 확인합니다.
+          {caption ?? '입금을 마치셨다면 눌러 주세요. 운영자가 입금 내역을 확인합니다.'}
         </p>
       </div>
     );

@@ -46,7 +46,10 @@ export default function AdminDepositsPage() {
       pending: deposits.filter((row) => row.status === 'AUTO_MATCHED'),
       held: deposits.filter((row) => row.status === 'HELD' || row.status === 'UNMATCHED'),
       refund: deposits.filter((row) => row.status === 'REFUND_TARGET'),
-      done: deposits.filter((row) => row.status === 'CONFIRMED' || row.status === 'REFUNDED'),
+      // 등록 취소한 입금도 처리 이력에 남겨 어떤 건을 왜 무효로 돌렸는지 확인할 수 있게 한다.
+      done: deposits.filter(
+        (row) => row.status === 'CONFIRMED' || row.status === 'REFUNDED' || row.status === 'VOIDED',
+      ),
     }),
     [deposits],
   );
@@ -88,7 +91,11 @@ export default function AdminDepositsPage() {
               ) : null}
               {activeTab === 'pending' ? <PendingTab rows={grouped.pending} onDone={refresh} /> : null}
               {activeTab === 'issue' ? (
-                <IssuePendingTab rows={state.data.issuePending} onDone={refresh} />
+                <IssuePendingTab
+                  rows={state.data.issuePending}
+                  recentIssued={state.data.recentIssued}
+                  onDone={refresh}
+                />
               ) : null}
               {activeTab === 'held' ? (
                 <HeldTab rows={grouped.held} candidates={state.data.matchable} onDone={refresh} />

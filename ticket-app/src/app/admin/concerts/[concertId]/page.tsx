@@ -151,11 +151,15 @@ export default function AdminConcertDetailPage() {
         </div>
       </Card>
 
-      <Card title="판매 상태" description="판매를 시작하면 앱에 공개되고, 종료하면 되돌릴 수 없습니다.">
+      <Card
+        title="판매 상태"
+        description="판매를 시작하면 앱에 공개되고, 종료하면 되돌릴 수 없습니다. 공연이 열리지 못하게 된 경우에는 공연 취소로 예매를 일괄 정리합니다."
+      >
         <ConcertStatusActions
           concertId={concertId}
           concertTitle={concert.title}
           status={concert.status}
+          activeOrderCount={concert.activeOrderCount}
           onDone={() => void reload()}
         />
       </Card>

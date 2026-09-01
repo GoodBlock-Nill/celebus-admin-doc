@@ -12,7 +12,7 @@ import { useMemberSession } from '../../_components/member-session';
 import { CARD, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
 import { PosterPlaceholder } from '../../_components/wordmark';
 import { AppModal } from '../../_components/modal';
-import { CollapsibleSection, InfoRow, SectionCard } from '../../_components/section';
+import { CollapsibleSection, InfoRow, NoticeBox, SectionCard } from '../../_components/section';
 import { SessionOption } from '../../_components/session-option';
 import { CONCERT_STATUS_META } from '../../_components/status-meta';
 import { useApiResource } from '../../_components/use-api-resource';
@@ -56,6 +56,7 @@ export default function ConcertDetailPage() {
   const { concert, sessions } = state.data;
   const statusMeta = CONCERT_STATUS_META[concert.status];
   const isOnSale = concert.status === 'ON_SALE';
+  const isCanceled = concert.status === 'CANCELED';
   const canSubmit = isOnSale && selectedSessionId !== '';
 
   const handleReserve = () => {
@@ -73,6 +74,14 @@ export default function ConcertDetailPage() {
 
       {/* 하단 고정 예매 바가 마지막 카드를 가리지 않도록 바 높이 + 여유만큼 아래 여백을 둔다. */}
       <div className="flex flex-col gap-3 px-4 pb-28">
+        {/* 공연이 취소되면 다른 어떤 정보보다 먼저 알려야 한다. */}
+        {isCanceled ? (
+          <NoticeBox tone="warning">
+            공연이 취소되었습니다. 예매하신 분께는 등록하신 환불 계좌로 전액 환불해 드리며, 자세한 내용은
+            예매 상세에서 확인하실 수 있습니다.
+          </NoticeBox>
+        ) : null}
+
         {/* 포스터가 있으면 3:4 비율로 함께 보여 주고, 없으면 제목 영역만 보여 준다. */}
         <section className={`${CARD} flex gap-4 p-4`}>
           {concert.posterUrl ? (
