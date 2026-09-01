@@ -84,7 +84,7 @@ export default function CheckoutPage() {
           {/* 주요 행동은 입금 안내 카드의 송금 버튼이므로 이동 링크는 보조 버튼으로 나란히 둔다. */}
           <div className="grid grid-cols-2 gap-2">
             <Link href={`/app/orders/${createdOrder.id}`} className={GHOST_BUTTON}>
-              주문 내역에서 확인
+              예매 내역에서 확인
             </Link>
             <Link href="/app" className={GHOST_BUTTON}>
               홈으로 이동

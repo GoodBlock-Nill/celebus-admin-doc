@@ -47,7 +47,7 @@ type CashReceiptCipher = { ok: true; cipher: string | null } | { ok: false };
  * 현금영수증 발급 번호를 저장용 암호문으로 준비한다.
  *
  * 본인확인 번호로 발급하는 경우 화면에서 번호를 받지 않고 서버가 보관 중인 본인확인 번호를
- * 복호해 다시 암호화한다. 번호 원문은 서버 밖으로 나가지 않으며, 주문에는 본인확인 기록과
+ * 복호해 다시 암호화한다. 번호 원문은 서버 밖으로 나가지 않으며, 예매 기록에는 본인확인 기록과
  * 별개의 암호문이 남는다.
  */
 async function resolveCashReceiptCipher(
@@ -71,7 +71,7 @@ async function resolveCashReceiptCipher(
   return { ok: true, cipher: encryptText(phone) };
 }
 
-/** 내 주문 목록 — 조회 전에 입금 마감이 지난 주문을 먼저 정리한다(설계서 §5 lazy 만료). */
+/** 내 예매 목록 — 조회 전에 입금 마감이 지난 예매를 먼저 정리한다(설계서 §5 lazy 만료). */
 export async function GET(req: Request) {
   const member = await requireMember(req);
   if (isResponse(member)) return member;

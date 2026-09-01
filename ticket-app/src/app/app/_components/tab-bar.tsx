@@ -13,7 +13,7 @@ interface TabItem {
 
 const TABS: TabItem[] = [
   { href: '/app', label: '홈', Icon: HomeIcon },
-  { href: '/app/orders', label: '주문내역', Icon: ReceiptIcon },
+  { href: '/app/orders', label: '예매내역', Icon: ReceiptIcon },
   { href: '/app/tickets', label: '내 티켓', Icon: TicketIcon },
   { href: '/app/report', label: '신고', Icon: SirenIcon },
 ];

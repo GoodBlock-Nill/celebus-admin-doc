@@ -14,8 +14,8 @@ import { ORDER_NO_TAIL_LENGTH } from '@/lib/constants';
 
 const DEPOSIT_NOTICES = [
   '입금이 확인되면 지급 대기로 바뀌고, 운영자의 티켓 지급 처리가 끝나면 내 티켓에서 확인할 수 있습니다.',
-  '마감 시각까지 입금이 확인되지 않으면 주문은 자동 취소되고 좌석이 반환됩니다.',
-  '금액이 다르게 입금된 경우 확인 보류로 전환되며, 전액 환불 후 다시 주문해 주세요.',
+  '마감 시각까지 입금이 확인되지 않으면 예매가 자동 취소되고 좌석이 반환됩니다.',
+  '금액이 다르게 입금된 경우 확인 보류로 전환되며, 전액 환불 후 다시 예매해 주세요.',
 ];
 
 /** 입금 계좌·입금자명 규칙·마감 카운트다운을 함께 보여주는 안내 카드 */
@@ -94,7 +94,7 @@ function DepositorNameChip({ value }: { value: string }) {
         </button>
       </div>
 
-      <p className={`mt-2 text-[13px] ${MUTED}`}>실명 + 주문번호 끝 {ORDER_NO_TAIL_LENGTH}자리</p>
+      <p className={`mt-2 text-[13px] ${MUTED}`}>실명 + 예매번호 끝 {ORDER_NO_TAIL_LENGTH}자리</p>
       <p className={`mt-0.5 text-[13px] ${MUTED}`}>다르면 확인이 보류돼요</p>
     </section>
   );

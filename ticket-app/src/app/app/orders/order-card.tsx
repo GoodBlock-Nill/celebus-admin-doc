@@ -7,7 +7,7 @@ import { CARD, MUTED, NUMERIC } from '../_components/ui';
 import type { OrderSummaryView } from '@/lib/api-types';
 import { formatDateTime, formatKrw } from '@/lib/format';
 
-/** 주문 내역 목록 카드 */
+/** 예매 내역 목록 카드 */
 export function OrderCard({ order }: { order: OrderSummaryView }) {
   const statusMeta = ORDER_STATUS_META[order.status];
 

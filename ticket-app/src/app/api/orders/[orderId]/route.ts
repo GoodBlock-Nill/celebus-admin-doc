@@ -11,7 +11,7 @@ interface IssuedAtRow {
 }
 
 /**
- * 주문 상세 — 본인 주문만 조회된다(신원은 서명 쿠키에서만 읽는다).
+ * 예매 상세 — 본인 예매만 조회된다(신원은 서명 쿠키에서만 읽는다).
  * 입금 안내에 필요한 수납 계좌·입금자명 규칙을 함께 내려준다.
  */
 export async function GET(req: Request, context: { params: Promise<{ orderId: string }> }) {
@@ -30,7 +30,7 @@ export async function GET(req: Request, context: { params: Promise<{ orderId: st
     .maybeSingle<OrderRow>();
 
   if (order.error) return readFailure();
-  if (!order.data) return fail('주문 정보를 찾을 수 없습니다.', HTTP_STATUS.notFound);
+  if (!order.data) return fail('예매 내역을 찾을 수 없습니다.', HTTP_STATUS.notFound);
 
   const row = order.data;
   const [concerts, sessions, settings, verification, issued] = await Promise.all([

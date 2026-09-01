@@ -8,7 +8,7 @@ import { useApiResource } from '../_components/use-api-resource';
 import { OrderCard } from './order-card';
 import { api } from '@/lib/api-client';
 
-/** A5 주문 내역 목록 */
+/** A5 예매 내역 목록 */
 export default function OrdersPage() {
   const loadOrders = useCallback(() => api.orders(), []);
   const { state, reload } = useApiResource(loadOrders);
@@ -16,7 +16,7 @@ export default function OrdersPage() {
   return (
     <main>
       <AppHeader
-        title="주문 내역"
+        title="예매 내역"
         description="입금 확인 후 지급 대기로 바뀌고, 티켓 지급이 끝나면 내 티켓에서 확인할 수 있습니다."
       />
 
@@ -27,7 +27,7 @@ export default function OrdersPage() {
           <ErrorState message={state.reason} onRetry={() => void reload()} />
         ) : state.data.orders.length === 0 ? (
           <EmptyState
-            title="주문 내역이 없습니다"
+            title="예매 내역이 없습니다"
             description="예매를 신청하면 이곳에서 입금 안내와 진행 상태를 확인할 수 있습니다."
             actionLabel="공연 보러가기"
             actionHref="/app"

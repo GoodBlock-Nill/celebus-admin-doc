@@ -19,7 +19,7 @@ import { formatDateTime, formatKrw } from '@/lib/format';
 
 type OpenModal = 'NONE' | 'CANCEL_AWAITING' | 'REQUEST_CANCEL';
 
-/** A5 주문 상세 */
+/** A5 예매 상세 */
 export default function OrderDetailPage() {
   const params = useParams();
   const orderId = typeof params.orderId === 'string' ? params.orderId : '';
@@ -34,7 +34,7 @@ export default function OrderDetailPage() {
   if (state.status === 'LOADING') {
     return (
       <main>
-        <AppHeader title="주문 상세" backHref="/app/orders" />
+        <AppHeader title="예매 상세" backHref="/app/orders" />
         <PageSkeleton rows={3} />
       </main>
     );
@@ -43,7 +43,7 @@ export default function OrderDetailPage() {
   if (state.status === 'ERROR') {
     return (
       <main>
-        <AppHeader title="주문 상세" backHref="/app/orders" />
+        <AppHeader title="예매 상세" backHref="/app/orders" />
         <div className="flex flex-col gap-4 px-4 pb-5">
           <ErrorState message={state.reason} onRetry={() => void reload()} />
           <Link href="/app/orders" className={GHOST_BUTTON}>
@@ -71,14 +71,14 @@ export default function OrderDetailPage() {
   return (
     <main>
       <AppHeader
-        title="주문 상세"
+        title="예매 상세"
         backHref="/app/orders"
         right={<Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>}
       />
 
       <div className="flex flex-col gap-3.5 px-4 pb-5">
-        <SectionCard title="주문 정보">
-          <InfoRow label="주문번호" value={order.orderNo} />
+        <SectionCard title="예매 정보">
+          <InfoRow label="예매번호" value={order.orderNo} />
           <InfoRow label="공연" value={order.concertTitle} />
           <InfoRow label="회차" value={order.sessionName} />
           <InfoRow
@@ -151,7 +151,7 @@ export default function OrderDetailPage() {
               onClick={() => setOpenModal('CANCEL_AWAITING')}
               className={DANGER_BUTTON}
             >
-              주문 취소
+              예매 취소
             </button>
           ) : null}
 
@@ -174,9 +174,9 @@ export default function OrderDetailPage() {
 
       <ConfirmModal
         open={openModal === 'CANCEL_AWAITING'}
-        title="주문을 취소할까요?"
-        description="입금 전 주문은 수수료 없이 즉시 취소되며, 확보된 좌석은 바로 반환됩니다."
-        confirmLabel="주문 취소하기"
+        title="예매를 취소할까요?"
+        description="입금 전 예매는 수수료 없이 즉시 취소되며, 확보된 좌석은 바로 반환됩니다."
+        confirmLabel="예매 취소하기"
         onConfirm={() => void handleCancel()}
         onClose={() => setOpenModal('NONE')}
       />
@@ -186,7 +186,7 @@ export default function OrderDetailPage() {
         title="취소·환불을 요청할까요?"
         description={
           order.status === 'DEPOSIT_CONFIRMED'
-            ? '요청 후 24시간 이내에 처리됩니다. 아직 티켓이 지급되지 않은 주문으로, 환불이 승인되면 확보된 좌석은 반환됩니다.'
+            ? '요청 후 24시간 이내에 처리됩니다. 아직 티켓이 지급되지 않은 예매로, 환불이 승인되면 확보된 좌석은 반환됩니다.'
             : '요청 후 24시간 이내에 처리됩니다. 환불이 승인되면 발급된 티켓은 회수됩니다.'
         }
         confirmLabel="취소·환불 요청하기"

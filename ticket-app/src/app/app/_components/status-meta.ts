@@ -13,7 +13,7 @@ export const CONCERT_STATUS_META: Record<ConcertStatus, StatusMeta> = {
   CLOSED: { label: '판매종료', tone: 'muted' },
 };
 
-/** 주문 상태 */
+/** 예매 상태 */
 export const ORDER_STATUS_META: Record<OrderStatus, StatusMeta> = {
   AWAITING_DEPOSIT: { label: '입금 확인중', tone: 'warning' },
   ON_HOLD: { label: '확인 보류', tone: 'warning' },
@@ -31,12 +31,12 @@ export const TICKET_STATUS_META: Record<TicketStatus, StatusMeta> = {
   REVOKED: { label: '회수됨', tone: 'danger' },
 };
 
-/** 입금 안내를 다시 보여줘야 하는 주문 상태 */
+/** 입금 안내를 다시 보여줘야 하는 예매 상태 */
 export function needsDepositGuide(status: OrderStatus): boolean {
   return status === 'AWAITING_DEPOSIT' || status === 'ON_HOLD';
 }
 
-/** 취소·환불 요청을 접수할 수 있는 주문 상태 (입금 확인 이후) */
+/** 취소·환불 요청을 접수할 수 있는 예매 상태 (입금 확인 이후) */
 export function canRequestCancel(status: OrderStatus): boolean {
   return status === 'DEPOSIT_CONFIRMED' || status === 'PAID';
 }

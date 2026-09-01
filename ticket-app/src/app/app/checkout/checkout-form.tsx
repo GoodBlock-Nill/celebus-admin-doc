@@ -74,7 +74,7 @@ export function CheckoutForm({
 
       <SectionCard
         title="예매 매수"
-        description={`1인 최대 ${concert.maxPerUser}매 · 현재 보유 ${heldQty}매 (이번 주문 가능 ${maxQty}매)`}
+        description={`1인 최대 ${concert.maxPerUser}매 · 현재 보유 ${heldQty}매 (이번 예매 가능 ${maxQty}매)`}
       >
         <QtyStepper value={qty} min={1} max={maxQty} onChange={setQty} />
         <div className="mt-3 flex items-center justify-between border-t border-[#E5E8EB] pt-3">

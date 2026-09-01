@@ -50,7 +50,7 @@ export function DepositAccountCard({ order }: { order: OrderDetailView }) {
             {formatKrw(order.amountKrw)}
           </span>
         </div>
-        <InfoRow label="주문번호" value={order.orderNo} />
+        <InfoRow label="예매번호" value={order.orderNo} />
       </div>
 
       <div className="mt-3 grid grid-cols-2 gap-2">

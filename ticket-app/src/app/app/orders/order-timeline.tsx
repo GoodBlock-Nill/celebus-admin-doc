@@ -20,7 +20,7 @@ const DEPOSIT_DONE_STATUSES = new Set<OrderStatus>([
 ]);
 const CANCELED_STATUSES = new Set<OrderStatus>(['EXPIRED', 'REFUNDED']);
 
-/** 주문 상태로 3단계 진행 상태를 계산한다. */
+/** 예매 상태로 3단계 진행 상태를 계산한다. */
 function buildSteps(order: OrderDetailView): TimelineStep[] {
   const ticketIssuedAt = order.ticketIssuedAt ?? undefined;
   const isDepositDone = DEPOSIT_DONE_STATUSES.has(order.status);
@@ -37,7 +37,7 @@ function buildSteps(order: OrderDetailView): TimelineStep[] {
 
   return [
     {
-      title: '주문 생성',
+      title: '예매 접수',
       description: '예매 신청이 접수되고 좌석이 임시 확보되었습니다.',
       state: 'DONE',
       at: order.createdAt,
@@ -49,10 +49,10 @@ function buildSteps(order: OrderDetailView): TimelineStep[] {
         : order.status === 'ON_HOLD'
           ? '입금 정보 확인이 필요해 보류 중입니다.'
           : order.status === 'EXPIRED'
-            ? '입금이 확인되지 않아 주문이 취소되었습니다.'
+            ? '입금이 확인되지 않아 예매가 취소되었습니다.'
             : '입금이 확인되면 다음 단계로 진행됩니다.',
       state: depositState,
-      // 입금 확인 시각이 없는 과거 주문은 티켓 발급 시각으로 대체한다
+      // 입금 확인 시각이 없는 과거 예매는 티켓 발급 시각으로 대체한다
       at: isDepositDone ? (order.depositConfirmedAt ?? ticketIssuedAt) : undefined,
     },
     {
@@ -75,7 +75,7 @@ const DOT_CLASS: Record<StepState, string> = {
   CANCELED: 'border-[#E5E8EB] bg-[#F2F4F6] text-[#B0B8C1]',
 };
 
-/** 주문 진행 타임라인 */
+/** 예매 진행 타임라인 */
 export function OrderTimeline({ order }: { order: OrderDetailView }) {
   const steps = buildSteps(order);
 
