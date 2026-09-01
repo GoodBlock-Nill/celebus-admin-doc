@@ -146,6 +146,12 @@ export const adminApi = {
     post<{ issued_qty?: number }>('/api/admin/deposits/actions', { action: 'issue-tickets', orderId }),
   rejectDepositReport: (orderId: string) =>
     post<{ order_no?: string }>('/api/admin/deposits/actions', { action: 'reject-report', orderId }),
+  /** 보류 반려 — 예매를 입금 대기로 되돌리고 보류 입금은 반환 대상으로 넘긴다 */
+  rejectHold: (orderId: string) =>
+    post<{ order_no?: string; refund_targets?: number }>('/api/admin/deposits/actions', {
+      action: 'reject-hold',
+      orderId,
+    }),
 
   refunds: () => request<{ pending: AdminRefundView[]; done: AdminRefundView[] }>('/api/admin/refunds'),
   approveRefund: (orderId: string) => post<{ revoked_tickets?: number }>('/api/admin/refunds', { orderId }),

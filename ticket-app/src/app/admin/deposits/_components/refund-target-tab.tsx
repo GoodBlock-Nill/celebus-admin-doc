@@ -7,7 +7,13 @@ import { Button } from '../../_components/form';
 import { useConfirm } from '../../_components/hooks';
 import { useToast } from '../../_components/toast';
 import { InfoNote } from '../../_components/ui';
-import { amountColumn, depositedAtColumn, depositorColumn, memoColumn } from './deposit-columns';
+import {
+  amountColumn,
+  depositedAtColumn,
+  depositorColumn,
+  holdSubmissionColumn,
+  memoColumn,
+} from './deposit-columns';
 import { adminApi } from '@/lib/admin-client';
 import type { AdminDepositView } from '@/lib/admin-types';
 import { formatKrw } from '@/lib/format';
@@ -28,6 +34,8 @@ export function RefundTargetTab({ rows, onDone }: { rows: AdminDepositView[]; on
     amountColumn,
     depositedAtColumn,
     memoColumn,
+    // 보류 반려로 넘어온 건은 회원이 등록한 환불 계좌로 반환해야 한다.
+    holdSubmissionColumn,
     {
       key: 'action',
       header: '처리',
@@ -66,7 +74,7 @@ export function RefundTargetTab({ rows, onDone }: { rows: AdminDepositView[]; on
         rows={rows}
         rowKey={(row) => row.id}
         emptyText="반환 대상 입금이 없습니다."
-        minWidth="720px"
+        minWidth="1000px"
       />
       <ConfirmDialog request={confirm.request} onClose={confirm.close} />
     </div>

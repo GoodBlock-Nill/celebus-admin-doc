@@ -104,6 +104,8 @@ export interface OrderSummaryView {
   depositReportedAt: string | null;
   /** 운영자가 미입금으로 반려한 시각 (재요청 안내에 사용) */
   reportRejectedAt: string | null;
+  /** 운영자가 확인 보류를 반려해 입금 대기로 되돌린 시각 (환불·재송금 안내에 사용) */
+  holdRejectedAt: string | null;
   concertId: string;
   concertTitle: string;
   sessionId: string;

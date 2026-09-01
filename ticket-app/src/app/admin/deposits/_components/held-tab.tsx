@@ -2,11 +2,14 @@
 
 import { useState } from 'react';
 
+import { ConfirmDialog } from '../../_components/confirm-dialog';
 import { DataTable } from '../../_components/data-table';
 import type { Column } from '../../_components/data-table';
 import { Button, Select, TextInput } from '../../_components/form';
+import { useConfirm } from '../../_components/hooks';
 import { useToast } from '../../_components/toast';
 import { InfoNote } from '../../_components/ui';
+import { HeldRowActions } from './held-row-actions';
 import {
   amountColumn,
   depositedAtColumn,
@@ -44,6 +47,7 @@ export function HeldTab({
   onDone: () => void;
 }) {
   const toast = useToast();
+  const confirm = useConfirm();
 
   const [active, setActive] = useState<ActiveAction | null>(null);
   const [selectedOrderId, setSelectedOrderId] = useState('');
@@ -81,6 +85,32 @@ export function HeldTab({
     }
   };
 
+  /** 보류 반려 — 예매를 입금 대기로 되돌리고 이 입금은 반환 대상으로 넘긴다 */
+  const handleRejectHold = async (row: AdminDepositView) => {
+    const order = row.order;
+    if (!order) return;
+
+    const result = await adminApi.rejectHold(order.id);
+    toast.fromResult(
+      result,
+      `주문 ${order.orderNo} 보류 반려 — 입금 대기로 되돌리고 입금은 반환 대상으로 넘겼습니다.`,
+    );
+    if (result.ok) {
+      setActive(null);
+      onDone();
+    }
+  };
+
+  const askRejectHold = (row: AdminDepositView) =>
+    confirm.ask({
+      title: '보류를 반려할까요?',
+      message:
+        '이 입금을 예매와 대조하지 않고 반환 대상으로 지정합니다. 주문은 입금 대기로 되돌아갑니다.',
+      confirmLabel: '보류 반려',
+      confirmVariant: 'danger',
+      onConfirm: () => void handleRejectHold(row),
+    });
+
   const columns: Array<Column<AdminDepositView>> = [
     depositorColumn,
     amountColumn,
@@ -93,21 +123,15 @@ export function HeldTab({
       key: 'action',
       header: '처리',
       align: 'right',
-      width: '190px',
+      width: '230px',
       render: (row) => (
-        <div className="flex flex-wrap justify-end gap-1.5">
-          {row.order ? (
-            <Button variant="primary" size="sm" onClick={() => void handleConfirm(row)}>
-              입금 확인
-            </Button>
-          ) : null}
-          <Button size="sm" onClick={() => openAction(row.id, 'match')}>
-            수동 매칭
-          </Button>
-          <Button variant="danger" size="sm" onClick={() => openAction(row.id, 'refund')}>
-            환불 대상 지정
-          </Button>
-        </div>
+        <HeldRowActions
+          row={row}
+          onConfirm={() => void handleConfirm(row)}
+          onMatch={() => openAction(row.id, 'match')}
+          onRefundTarget={() => openAction(row.id, 'refund')}
+          onRejectHold={() => askRejectHold(row)}
+        />
       ),
     },
   ];
@@ -156,16 +180,19 @@ export function HeldTab({
       <InfoNote tone="warning">
         금액만 맞고 입금자명이 다른 건은 자동으로 보류됩니다. 동명이인·대리 입금은 주문을 확인한 뒤 수동 매칭하고,
         예매와 무관한 입금은 반환 대상으로 지정하세요. 회원이 실제 입금자명·환불 계좌를 알려온 건은
-        &lsquo;회원이 알린 정보&rsquo;에 표시되며, 그 이름으로 은행 내역을 대조하면 됩니다.
+        &lsquo;회원이 알린 정보&rsquo;에 표시되며, 그 이름으로 은행 내역을 대조하면 됩니다. 끝내 대조되지 않으면
+        보류 반려로 예매를 입금 대기에 되돌리세요. 받은 입금은 반환 대상으로 넘어가고, 회원에게는 환불 후 재송금
+        안내가 표시됩니다.
       </InfoNote>
       <DataTable
         columns={columns}
         rows={rows}
         rowKey={(row) => row.id}
         emptyText="보류 중인 입금이 없습니다."
-        minWidth="1280px"
+        minWidth="1320px"
         renderSubRow={renderSubRow}
       />
+      <ConfirmDialog request={confirm.request} onClose={confirm.close} />
     </div>
   );
 }
