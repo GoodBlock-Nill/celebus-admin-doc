@@ -1,5 +1,8 @@
 /** 데모 전역 상수 — 매직넘버 금지 규칙에 따라 여기에 모아둔다. */
 
+/** CELEBUS 본앱 주소 — 로그인 이동·앱으로 돌아가기 공용 */
+export const CELEBUS_APP_URL = process.env.NEXT_PUBLIC_CELEBUS_APP_URL ?? 'https://app.celebus.xyz';
+
 /** 밀리초 단위 시간 상수 */
 export const MS_PER_SECOND = 1000;
 export const MS_PER_MINUTE = 60 * MS_PER_SECOND;

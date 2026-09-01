@@ -5,12 +5,27 @@ import { useCallback } from 'react';
 import { AppHeader } from './_components/app-header';
 import { Badge } from './_components/badge';
 import { ConcertCard } from './_components/concert-card';
+import { ChevronLeftIcon } from './_components/icons';
 import { VerifyBanner } from './_components/verify-banner';
+import { CELEBUS_APP_URL } from '@/lib/constants';
 import { EmptyState, ErrorState, PageSkeleton } from './_components/feedback';
 import { useMemberSession } from './_components/member-session';
 import { CARD_TITLE } from './_components/ui';
 import { useApiResource } from './_components/use-api-resource';
 import { api } from '@/lib/api-client';
+
+/** CELEBUS 본앱으로 돌아가는 상단 바 우측 버튼 */
+function CelebusAppLink() {
+  return (
+    <a
+      href={CELEBUS_APP_URL}
+      className="flex min-h-[34px] items-center gap-1 rounded-full border border-[#E5E8EB] bg-white px-3 text-[12.5px] font-semibold text-[#4E5968]"
+    >
+      <ChevronLeftIcon className="h-3.5 w-3.5" />
+      CELEBUS 앱
+    </a>
+  );
+}
 
 /** A1 공연 목록 — 회원 앱 홈 */
 export default function MemberAppHomePage() {
@@ -20,7 +35,7 @@ export default function MemberAppHomePage() {
 
   return (
     <main>
-      <AppHeader title="공연 예매">
+      <AppHeader title="공연 예매" right={<CelebusAppLink />}>
         {me.verified ? (
           <div className="mt-2.5 flex items-center gap-2">
             <span className="text-[14px] font-semibold text-[#191F28]">{me.nickname || '회원'}</span>

@@ -5,9 +5,9 @@
 import { GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from './ui';
 import { ShieldIcon } from './icons';
 import { Wordmark } from './wordmark';
+import { CELEBUS_APP_URL } from '@/lib/constants';
 
-/** CELEBUS 본앱 주소 — 로그인하러 이동할 대상 */
-const PARENT_APP_URL = 'https://app.celebus.xyz';
+const PARENT_APP_URL = CELEBUS_APP_URL;
 
 export type GateReason = 'NO_SESSION' | 'BRIDGE_FAIL' | 'OFFLINE';
 
