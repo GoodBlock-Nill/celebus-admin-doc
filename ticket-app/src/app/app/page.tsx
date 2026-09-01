@@ -22,7 +22,7 @@ function CelebusAppLink() {
       className="flex min-h-[34px] items-center gap-1 rounded-full border border-[#E5E8EB] bg-white px-3 text-[12.5px] font-semibold text-[#4E5968]"
     >
       <ChevronLeftIcon className="h-3.5 w-3.5" />
-      CELEBUS 앱
+      CELEBUS
     </a>
   );
 }
