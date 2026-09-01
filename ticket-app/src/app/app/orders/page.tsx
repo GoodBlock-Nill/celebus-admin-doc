@@ -17,7 +17,7 @@ export default function OrdersPage() {
     <main>
       <AppHeader
         title="예매 내역"
-        description="입금 확인 후 지급 대기로 바뀌고, 티켓 지급이 끝나면 내 티켓에서 확인할 수 있습니다."
+        description="입금이 확인되면 예매가 확정되고, 티켓은 공연 당일 CELEBUS 앱으로 지급됩니다."
       />
 
       <section className="px-4 pb-2">

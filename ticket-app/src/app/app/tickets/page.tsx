@@ -28,7 +28,7 @@ export default function TicketsPage() {
         ) : state.data.tickets.length === 0 ? (
           <EmptyState
             title="보유한 티켓이 없습니다"
-            description="입금 확인 후 티켓 지급 처리가 끝나면 이곳에 티켓이 표시됩니다."
+            description="입금이 확인된 예매의 티켓이 공연 당일 지급되면 이곳에 표시됩니다."
             actionLabel="예매 내역 보기"
             actionHref="/app/orders"
           />

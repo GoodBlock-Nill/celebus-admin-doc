@@ -79,7 +79,7 @@ export function IssuePendingTab({ rows, onDone }: { rows: AdminOrderView[]; onDo
     <div className="flex flex-col gap-3">
       <InfoNote>
         입금이 확인된 주문입니다. 좌석은 선점 상태로 유지되며, 티켓 지급 처리를 해야 실명 티켓이 발급되고 회원 앱의
-        내 티켓에 표시됩니다.
+        내 티켓에 표시됩니다. 티켓 지급 처리는 공연 당일 CELEBUS 앱 발권 일정에 맞춰 진행하는 것이 원칙입니다.
       </InfoNote>
       <DataTable
         columns={columns}

@@ -13,7 +13,7 @@ import type { OrderDetailView } from '@/lib/api-types';
 import { ORDER_NO_TAIL_LENGTH } from '@/lib/constants';
 
 const DEPOSIT_NOTICES = [
-  '입금이 확인되면 지급 대기로 바뀌고, 운영자의 티켓 지급 처리가 끝나면 내 티켓에서 확인할 수 있습니다.',
+  '입금이 확인되면 예매가 확정되며, 티켓은 공연 당일 CELEBUS 앱으로 지급됩니다.',
   '마감 시각까지 입금이 확인되지 않으면 예매가 자동 취소되고 좌석이 반환됩니다.',
   '금액이 다르게 입금된 경우 확인 보류로 전환되며, 전액 환불 후 다시 예매해 주세요.',
 ];

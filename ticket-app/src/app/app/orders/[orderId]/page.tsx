@@ -118,8 +118,8 @@ export default function OrderDetailPage() {
 
         {order.status === 'DEPOSIT_CONFIRMED' ? (
           <NoticeBox tone="accent">
-            입금 확인 완료 — 티켓 지급 대기 중입니다. 운영자가 지급 처리를 마치면 내 티켓에서 실명 티켓을
-            확인할 수 있습니다.
+            입금 확인 완료 — 예매가 확정되었습니다. 티켓은 공연 당일 CELEBUS 앱으로 지급되며, 지급되면 내
+            티켓에서 확인할 수 있습니다.
           </NoticeBox>
         ) : null}
 

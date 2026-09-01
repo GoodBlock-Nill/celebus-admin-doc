@@ -20,13 +20,23 @@ const DEPOSIT_DONE_STATUSES = new Set<OrderStatus>([
 ]);
 const CANCELED_STATUSES = new Set<OrderStatus>(['EXPIRED', 'REFUNDED']);
 
-/** 예매 상태로 3단계 진행 상태를 계산한다. */
+/** 예매 상태로 4단계(예매 접수 → 입금 대기 → 입금 확인 → 티켓 지급) 진행 상태를 계산한다. */
 function buildSteps(order: OrderDetailView): TimelineStep[] {
   const ticketIssuedAt = order.ticketIssuedAt ?? undefined;
   const isDepositDone = DEPOSIT_DONE_STATUSES.has(order.status);
   const isCanceled = CANCELED_STATUSES.has(order.status);
+  const isWaitingDeposit = order.status === 'AWAITING_DEPOSIT' || order.status === 'ON_HOLD';
 
-  const depositState: StepState = isDepositDone ? 'DONE' : order.status === 'EXPIRED' ? 'CANCELED' : 'CURRENT';
+  const waitingState: StepState = isDepositDone
+    ? 'DONE'
+    : order.status === 'EXPIRED'
+      ? 'CANCELED'
+      : 'CURRENT';
+  const confirmState: StepState = isDepositDone
+    ? 'DONE'
+    : order.status === 'EXPIRED'
+      ? 'CANCELED'
+      : 'PENDING';
   const issueState: StepState = ticketIssuedAt
     ? 'DONE'
     : isCanceled
@@ -43,15 +53,24 @@ function buildSteps(order: OrderDetailView): TimelineStep[] {
       at: order.createdAt,
     },
     {
-      title: '입금 확인',
+      title: '입금 대기',
       description: isDepositDone
-        ? '입금자명과 금액 확인이 완료되었습니다.'
+        ? '입금이 접수되었습니다.'
         : order.status === 'ON_HOLD'
           ? '입금 정보 확인이 필요해 보류 중입니다.'
           : order.status === 'EXPIRED'
             ? '입금이 확인되지 않아 예매가 취소되었습니다.'
-            : '입금이 확인되면 다음 단계로 진행됩니다.',
-      state: depositState,
+            : '안내된 계좌로 마감 시각까지 입금해 주세요.',
+      state: waitingState,
+    },
+    {
+      title: '입금 확인',
+      description: isDepositDone
+        ? '입금자명과 금액 확인이 완료되어 예매가 확정되었습니다.'
+        : isWaitingDeposit
+          ? '입금이 접수되면 운영자가 확인합니다.'
+          : '입금이 확인되면 예매가 확정됩니다.',
+      state: confirmState,
       // 입금 확인 시각이 없는 과거 예매는 티켓 발급 시각으로 대체한다
       at: isDepositDone ? (order.depositConfirmedAt ?? ticketIssuedAt) : undefined,
     },
@@ -59,9 +78,9 @@ function buildSteps(order: OrderDetailView): TimelineStep[] {
       title: '티켓 지급',
       description: ticketIssuedAt
         ? '티켓이 지급되었습니다. 내 티켓에서 확인해 주세요.'
-        : order.status === 'DEPOSIT_CONFIRMED'
-          ? '입금이 확인되었습니다. 티켓 지급을 기다리고 있습니다.'
-          : '입금이 확인되면 운영자가 티켓을 지급합니다.',
+        : isDepositDone
+          ? '공연 당일 CELEBUS 앱으로 티켓이 지급됩니다.'
+          : '입금 확인 후 공연 당일 CELEBUS 앱으로 지급됩니다.',
       state: issueState,
       at: ticketIssuedAt,
     },
