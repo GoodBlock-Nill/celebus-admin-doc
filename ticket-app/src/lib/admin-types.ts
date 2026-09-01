@@ -5,8 +5,9 @@
 
 import type { HoldCauseCode, OrderStatus, PoolType } from './api-types';
 
-// 공연·회차·배정 타입은 분량이 커 별도 파일에 두고 여기서 함께 내보낸다.
+// 공연·회차·배정 타입, 주문 작업함 타입은 분량이 커 별도 파일에 두고 여기서 함께 내보낸다.
 export * from './admin-concert-types';
+export * from './admin-worklist-types';
 
 /** VOIDED = 운영자가 잘못 등록한 입금을 사유와 함께 등록 취소한 상태 */
 export type DepositStatus =
@@ -133,14 +134,17 @@ export interface SplitDepositHintView {
   order: DepositMatchCandidateView;
 }
 
-export interface AdminDepositView {
+/**
+ * 입금 1건의 기본 표시 항목.
+ * 주문 작업함에서는 예매가 이미 행의 주인이라 예매 정보를 겹쳐 싣지 않는다.
+ */
+export interface AdminLinkedDepositView {
   id: string;
   depositorName: string;
   amountKrw: number;
   depositedAt: string;
   status: DepositStatus;
   memo: string | null;
-  order: AdminOrderView | null;
   /**
    * 예매가 연결되지 않은 입금의 동일 금액 진행 중 예매 후보.
    * 2건 이상이면 자동 매칭을 하지 않았다는 뜻이며 운영자 확인이 필요하다.
@@ -148,6 +152,11 @@ export interface AdminDepositView {
   matchCandidates: DepositMatchCandidateView[];
   /** 분할 입금 후보 (없으면 null) */
   splitHint: SplitDepositHintView | null;
+}
+
+/** 입금 목록용 — 어느 예매의 돈인지 함께 보여 준다 */
+export interface AdminDepositView extends AdminLinkedDepositView {
+  order: AdminOrderView | null;
 }
 
 /** 취소·환불 화면 행 — 회수 대상 티켓 매수 + 자동 계산 환불 수수료 포함 */

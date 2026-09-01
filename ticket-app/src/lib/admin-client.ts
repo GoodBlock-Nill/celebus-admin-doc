@@ -6,6 +6,7 @@ import type {
   AdminConcertRowView,
   AdminDepositView,
   AdminImageKind,
+  AdminIssueSessionView,
   AdminIssuedOrderView,
   AdminLogView,
   AdminMemberOptionView,
@@ -14,11 +15,15 @@ import type {
   AdminRefundView,
   AdminReportView,
   AdminSummaryView,
+  AdminWorklistItemView,
   CompPoolType,
   ConcertCreateInput,
   ConcertStatusTransition,
   PoolIntegrityView,
+  ReconcileInput,
+  ReconcileResultView,
   ReportActionType,
+  SessionIssueResultItem,
   VenueSearchItemView,
 } from './admin-types';
 import type { HoldCauseCode, OrderStatus, PoolType, ReportTargetType } from './api-types';
@@ -160,16 +165,23 @@ export const adminApi = {
 
   deposits: () =>
     request<{
+      /** 처리 필요한 예매 큐 (우선순위 순) */
+      worklist: AdminWorklistItemView[];
+      /** 공연 당일 일괄 지급 대상 회차 */
+      issueSessions: AdminIssueSessionView[];
       deposits: AdminDepositView[];
-      /** 회원이 입금확인을 요청한 예매 */
-      reported: AdminOrderView[];
-      issuePending: AdminOrderView[];
       matchable: AdminOrderView[];
       /** 최근 지급 완료 예매 — 오지급을 되돌릴 때 쓴다 */
       recentIssued: AdminIssuedOrderView[];
     }>('/api/admin/deposits'),
   registerDeposit: (depositorName: string, amountKrw: number) =>
     post<{ status: string; memo: string | null }>('/api/admin/deposits', { depositorName, amountKrw }),
+  /**
+   * 은행 내역 대조 — 지목한 예매를 기준으로 입금 등록·자동 대조·입금 확인을 한 번에 처리한다.
+   * 지목한 예매와 다른 결과가 나오면 처리 결과 구분으로 알려 준다.
+   */
+  reconcileDeposit: (input: ReconcileInput) =>
+    post<ReconcileResultView>('/api/admin/deposits/reconcile', input),
   confirmDeposit: (depositId: string) =>
     post<{ order_no?: string }>('/api/admin/deposits/actions', { action: 'confirm', depositId }),
   /** 입금 보류 — 사유 구분을 함께 보내면 회원 화면의 해결 안내가 그 기준으로 갈린다 */
@@ -193,6 +205,15 @@ export const adminApi = {
     }),
   issueOrderTickets: (orderId: string) =>
     post<{ issued_qty?: number }>('/api/admin/deposits/actions', { action: 'issue-tickets', orderId }),
+  /** 회차 일괄 지급 — 건별 결과를 함께 돌려준다 (부분 실패 허용) */
+  issueSessionTickets: (sessionId: string) =>
+    post<{
+      session_name?: string;
+      issued_orders?: number;
+      issued_qty?: number;
+      failed_orders?: number;
+      results?: SessionIssueResultItem[];
+    }>('/api/admin/deposits/actions', { action: 'issue-session', sessionId }),
   rejectDepositReport: (orderId: string) =>
     post<{ order_no?: string }>('/api/admin/deposits/actions', { action: 'reject-report', orderId }),
   /** 보류 반려 — 예매를 입금 대기로 되돌리고 보류 입금은 반환 대상으로 넘긴다 */

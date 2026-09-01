@@ -65,6 +65,29 @@ export function formatRemaining(deadlineIso: string, now: Date): string {
   return `${minutes}분 남음`;
 }
 
+/** 경과 시간 표시 — "2일 3시간 경과" / "12분 경과" */
+export function formatElapsed(startIso: string, now: Date): string {
+  const parsed = new Date(startIso);
+  if (Number.isNaN(parsed.getTime())) return '-';
+
+  const elapsedMs = now.getTime() - parsed.getTime();
+  if (elapsedMs < MS_PER_MINUTE) return '방금';
+
+  if (elapsedMs >= MS_PER_DAY) {
+    const days = Math.floor(elapsedMs / MS_PER_DAY);
+    const hours = Math.floor((elapsedMs % MS_PER_DAY) / MS_PER_HOUR);
+    return `${days}일 ${hours}시간 경과`;
+  }
+
+  if (elapsedMs >= MS_PER_HOUR) {
+    const hours = Math.floor(elapsedMs / MS_PER_HOUR);
+    const minutes = Math.floor((elapsedMs % MS_PER_HOUR) / MS_PER_MINUTE);
+    return `${hours}시간 ${minutes}분 경과`;
+  }
+
+  return `${Math.floor(elapsedMs / MS_PER_MINUTE)}분 경과`;
+}
+
 /** 이름 마스킹 — 홍길동 → 홍*동 */
 export function maskName(name: string): string {
   const trimmed = name.trim();

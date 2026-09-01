@@ -2,19 +2,17 @@
 
 import { useState } from 'react';
 
-import { Button, Select, TextInput } from '../../_components/form';
+import { Button, Select } from '../../_components/form';
 import { InfoNote } from '../../_components/ui';
-import type { AdminDepositView, AdminOrderView } from '@/lib/admin-types';
+import type { AdminLinkedDepositView, AdminOrderView } from '@/lib/admin-types';
 import { formatKrw } from '@/lib/format';
-
-const MAX_MEMO_LENGTH = 100;
 
 function candidateLabel(order: AdminOrderView): string {
   return `${order.orderNo} · ${order.party.realName} · ${order.qty}매 · ${formatKrw(order.amountKrw)}`;
 }
 
 /** 처음 열었을 때 고를 예매 — 분할 입금 후보 → 동일 금액 후보 → 첫 번째 예매 순 */
-function defaultOrderId(row: AdminDepositView, candidates: AdminOrderView[]): string {
+function defaultOrderId(row: AdminLinkedDepositView, candidates: AdminOrderView[]): string {
   return (
     row.splitHint?.order.orderId ??
     row.matchCandidates[0]?.orderId ??
@@ -27,17 +25,17 @@ function defaultOrderId(row: AdminDepositView, candidates: AdminOrderView[]): st
  * 수동 매칭 — 이 입금을 어느 예매의 대금으로 볼지 고른다.
  * 나눠 들어온 입금은 함께 연결할 건을 골라 한 번에 잇는다(합계가 예매 금액과 같아야 한다).
  */
-export function HeldMatchForm({
+export function DepositMatchForm({
   row,
   candidates,
   siblings,
   onSubmit,
   onClose,
 }: {
-  row: AdminDepositView;
+  row: AdminLinkedDepositView;
   candidates: AdminOrderView[];
   /** 같은 입금자명으로 나눠 들어온 다른 입금들 (분할 입금 후보) */
-  siblings: AdminDepositView[];
+  siblings: AdminLinkedDepositView[];
   onSubmit: (depositIds: string[], orderId: string) => void;
   onClose: () => void;
 }) {
@@ -126,36 +124,6 @@ export function HeldMatchForm({
         </Button>
         <Button onClick={onClose}>닫기</Button>
       </div>
-    </div>
-  );
-}
-
-/** 반환 대상 지정 — 예매 대금으로 인정하지 않고 돌려줄 돈으로 분류한다 */
-export function HeldRefundForm({
-  memo,
-  onChange,
-  onSubmit,
-  onClose,
-}: {
-  memo: string;
-  onChange: (value: string) => void;
-  onSubmit: () => void;
-  onClose: () => void;
-}) {
-  return (
-    <div className="flex flex-wrap items-end gap-2">
-      <div className="flex min-w-[280px] flex-1 flex-col gap-1.5">
-        <span className="text-[12px] font-semibold text-[#4A4E5A]">반환 사유</span>
-        <TextInput
-          value={memo}
-          onChange={(event) => onChange(event.target.value)}
-          maxLength={MAX_MEMO_LENGTH}
-        />
-      </div>
-      <Button variant="danger" onClick={onSubmit}>
-        반환 대상으로 지정
-      </Button>
-      <Button onClick={onClose}>닫기</Button>
     </div>
   );
 }

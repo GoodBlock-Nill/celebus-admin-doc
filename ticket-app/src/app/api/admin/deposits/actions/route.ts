@@ -14,6 +14,7 @@ const MAX_MATCH_DEPOSITS = 10;
 
 const depositId = z.string().uuid();
 const orderId = z.string().uuid();
+const sessionId = z.string().uuid();
 const memo = z.string().trim().min(1).max(MAX_MEMO_LENGTH);
 
 const schema = z.discriminatedUnion('action', [
@@ -36,6 +37,8 @@ const schema = z.discriminatedUnion('action', [
   /** 입금 오등록 정정 — 사유를 반드시 남긴다 */
   z.object({ action: z.literal('void'), depositId, reason: memo }),
   z.object({ action: z.literal('issue-tickets'), orderId }),
+  /** 회차 일괄 지급 — 공연 당일 지급 대상 예매를 한 번에 처리한다 */
+  z.object({ action: z.literal('issue-session'), sessionId }),
   z.object({ action: z.literal('reject-report'), orderId }),
   z.object({ action: z.literal('reject-hold'), orderId }),
   /** 운영자 오처리 정정 — 입금 확인 취소 · 티켓 지급 취소 */
@@ -53,7 +56,11 @@ interface RpcCall {
 
 type DepositAction = Extract<ActionInput, { depositId: string }>;
 type MatchAction = Extract<ActionInput, { action: 'manual-match' }>;
-type OrderAction = Exclude<ActionInput, { depositId: string } | { action: 'manual-match' }>;
+type SessionAction = Extract<ActionInput, { action: 'issue-session' }>;
+type OrderAction = Exclude<
+  ActionInput,
+  { depositId: string } | { action: 'manual-match' } | { action: 'issue-session' }
+>;
 
 /** 입금 건을 대상으로 하는 처리 */
 function resolveDepositCall(input: DepositAction, adminName: string): RpcCall {
@@ -141,9 +148,19 @@ function resolveMatchCall(input: MatchAction, adminName: string): RpcCall {
   };
 }
 
+/** 회차 일괄 지급 — 건별 처리는 단건 지급 함수가 그대로 수행한다 (부분 실패 허용) */
+function resolveSessionCall(input: SessionAction, adminName: string): RpcCall {
+  return {
+    name: 'ticket_issue_session_tickets',
+    params: { p_session_id: input.sessionId, p_admin: adminName },
+    failure: '회차 일괄 지급에 실패했습니다.',
+  };
+}
+
 /** 요청 구분 → 호출할 서버 함수·인자·실패 문구 */
 function resolveCall(input: ActionInput, adminName: string): RpcCall {
   if (input.action === 'manual-match') return resolveMatchCall(input, adminName);
+  if (input.action === 'issue-session') return resolveSessionCall(input, adminName);
   return 'depositId' in input
     ? resolveDepositCall(input, adminName)
     : resolveOrderCall(input, adminName);
@@ -151,7 +168,7 @@ function resolveCall(input: ActionInput, adminName: string): RpcCall {
 
 /**
  * 입금·예매 처리 액션 한 곳.
- * 확정·보류·반환 지정·반환 완료·수동 매칭·등록 취소·티켓 지급·미입금 반려·보류 반려,
+ * 확정·보류·반환 지정·반환 완료·수동 매칭·등록 취소·티켓 지급·회차 일괄 지급·미입금 반려·보류 반려,
  * 그리고 오처리 정정(입금 확인 취소·티켓 지급 취소)을 모두 받는다.
  */
 export async function POST(req: Request) {

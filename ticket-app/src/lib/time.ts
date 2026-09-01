@@ -47,6 +47,22 @@ export function kstYymmdd(date: Date): string {
   return `${yy}${mm}${dd}`;
 }
 
+/**
+ * KST 날짜 기준으로 기준 시각에서 대상 날짜까지 며칠 남았는지 (공연 D-day 계산).
+ * 0이면 당일, 1이면 하루 뒤, 음수면 이미 지난 날짜다.
+ */
+export function kstDayDiff(targetIso: string, now: Date): number | null {
+  const target = new Date(targetIso);
+  if (Number.isNaN(target.getTime())) return null;
+
+  const targetParts = kstParts(target);
+  const nowParts = kstParts(now);
+  const targetDay = Date.UTC(targetParts.year, targetParts.month - 1, targetParts.day);
+  const nowDay = Date.UTC(nowParts.year, nowParts.month - 1, nowParts.day);
+
+  return Math.round((targetDay - nowDay) / MS_PER_DAY);
+}
+
 /** ISO 문자열이 기준 시각보다 과거인지 여부 */
 export function isPast(iso: string, now: Date): boolean {
   return new Date(iso).getTime() < now.getTime();

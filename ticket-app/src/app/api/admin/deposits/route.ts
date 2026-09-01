@@ -11,6 +11,7 @@ import {
   loadOrdersByStatus,
   loadRecentIssuedOrders,
 } from '@/lib/server/admin-load';
+import { loadWorklist } from '@/lib/server/admin-worklist';
 import { HTTP_STATUS, fail, guardMutation, ok } from '@/lib/server/api';
 import { admin } from '@/lib/server/db-admin';
 
@@ -25,7 +26,7 @@ const registerSchema = z.object({
 });
 
 /**
- * 주문·입금 확인 화면 데이터.
+ * 주문·입금 확인 화면 데이터 (주문 중심 작업함).
  * 조회 진입 시 입금 마감이 지난 주문을 먼저 정리한다(설계서 §5 lazy 만료).
  */
 export async function GET(req: Request) {
@@ -35,19 +36,12 @@ export async function GET(req: Request) {
   await expireOverdueOrders();
   const client = admin();
 
-  const [deposits, reported, issuePending, matchable, recentIssued] = await Promise.all([
+  const [worklist, deposits, matchable, recentIssued] = await Promise.all([
+    // 구획 1·2 — 처리 필요한 예매 큐와 회차별 지급 대상
+    loadWorklist(client),
+    // 구획 3 — 주문 미상 입금·처리 완료 이력에 쓰는 입금 전체
     loadDepositViews(client),
-    // 회원이 입금확인을 요청한 예매 — 오래 기다린 요청이 위로 오게 정렬한다.
-    loadOrdersByStatus(client, {
-      statuses: ['DEPOSIT_REPORTED'],
-      orderBy: 'deposit_reported_at',
-      ascending: true,
-    }),
-    loadOrdersByStatus(client, {
-      statuses: ['DEPOSIT_CONFIRMED'],
-      orderBy: 'deposit_confirmed_at',
-      ascending: true,
-    }),
+    // 주문 미상 입금을 이어 붙일 수 있는 진행 중 예매 후보
     loadOrdersByStatus(client, {
       statuses: ['AWAITING_DEPOSIT', 'DEPOSIT_REPORTED', 'ON_HOLD'],
       orderBy: 'created_at',
@@ -57,7 +51,13 @@ export async function GET(req: Request) {
     loadRecentIssuedOrders(client, RECENT_ISSUED_LIMIT),
   ]);
 
-  return ok({ deposits, reported, issuePending, matchable, recentIssued });
+  return ok({
+    worklist: worklist.items,
+    issueSessions: worklist.issueSessions,
+    deposits,
+    matchable,
+    recentIssued,
+  });
 }
 
 /**

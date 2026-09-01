@@ -6,7 +6,7 @@ import type { FormEvent } from 'react';
 import { Button, Field, NumberInput, TextInput } from '../../_components/form';
 import { DEPOSIT_STATUS_VIEW } from '../../_components/labels';
 import { useToast } from '../../_components/toast';
-import { Card, InfoNote } from '../../_components/ui';
+import { InfoNote } from '../../_components/ui';
 import { adminApi } from '@/lib/admin-client';
 import type { DepositStatus } from '@/lib/admin-types';
 import { formatKrw } from '@/lib/format';
@@ -51,10 +51,12 @@ export function ManualDepositForm({ onDone }: { onDone: () => void }) {
   };
 
   return (
-    <Card
-      title="수기 입금 등록"
-      description="은행 입금 내역을 확인해 입금 건을 등록합니다. 등록 즉시 금액·실명 기준으로 자동 대조됩니다."
-    >
+    <div className="flex flex-col gap-2">
+      <p className="text-[13px] font-bold text-[#1B1D22]">수기 입금 등록</p>
+      <p className="text-[12px] leading-relaxed text-[#6B7080]">
+        어느 예매의 돈인지 모르는 입금을 등록합니다. 처리 중인 예매가 정해져 있다면 할 일 큐의 은행 내역 대조를
+        쓰면 입금 확인까지 한 번에 끝납니다.
+      </p>
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[320px_1fr]">
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <Field label="입금자명" required>
@@ -84,6 +86,6 @@ export function ManualDepositForm({ onDone }: { onDone: () => void }) {
           <b>미대조</b>로 분류됩니다.
         </InfoNote>
       </div>
-    </Card>
+    </div>
   );
 }

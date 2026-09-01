@@ -6,7 +6,7 @@ import type { ConfirmRequest } from '../../_components/confirm-dialog';
 import { useToast } from '../../_components/toast';
 import { DEFAULT_VOID_REASON } from './deposit-void-form';
 import { adminApi } from '@/lib/admin-client';
-import type { AdminDepositView } from '@/lib/admin-types';
+import type { AdminLinkedDepositView } from '@/lib/admin-types';
 import { formatKrw } from '@/lib/format';
 
 interface ConfirmApi {
@@ -21,13 +21,13 @@ export function useVoidDeposit(confirm: ConfirmApi, onDone: () => void) {
   const toast = useToast();
   const [reason, setReason] = useState(DEFAULT_VOID_REASON);
 
-  const submit = async (row: AdminDepositView) => {
+  const submit = async (row: AdminLinkedDepositView) => {
     const result = await adminApi.voidDeposit(row.id, reason.trim());
     toast.fromResult(result, `${row.depositorName} 입금 등록을 취소했습니다.`);
     if (result.ok) onDone();
   };
 
-  const ask = (row: AdminDepositView) =>
+  const ask = (row: AdminLinkedDepositView) =>
     confirm.ask({
       title: '입금 등록을 취소할까요?',
       message: `${row.depositorName} · ${formatKrw(row.amountKrw)} 입금을 등록 취소합니다. 이 입금 때문에 보류된 예매가 있다면 보류도 함께 해제됩니다. (사유: ${reason.trim()})`,
