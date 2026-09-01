@@ -14,6 +14,7 @@ import { ORDER_STATUS_META, canRequestCancel, needsDepositGuide } from '../../_c
 import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
 import { useApiResource } from '../../_components/use-api-resource';
 import { DepositReportActions } from '../deposit-report-actions';
+import { HoldFlowCard } from '../hold-view';
 import { OrderInfoCard } from '../order-info-card';
 import { OrderStatusNotice } from '../order-status-notice';
 import { PinnedActionBar } from '../pinned-action-bar';
@@ -66,6 +67,8 @@ export default function OrderDetailPage() {
   const showsPinnedBar = order.status === 'AWAITING_DEPOSIT';
   // 입금 확인중은 대기 중심 구성(처리중 히어로·가로 스텝퍼·송금 정보 접힘)으로 바꾼다.
   const isReported = order.status === 'DEPOSIT_REPORTED';
+  // 확인 보류는 해결 플로우 카드(다른 점·지금 할 일·확인되면)가 안내와 계좌 섹션을 대신한다.
+  const isHold = order.status === 'ON_HOLD';
 
   const handleCancel = async () => {
     if (isSubmitting) return;
@@ -88,6 +91,7 @@ export default function OrderDetailPage() {
 
       <div className={`flex flex-col gap-3.5 px-4 ${showsPinnedBar ? 'pb-24' : 'pb-5'}`}>
         {isReported ? <ReportedView order={order} /> : null}
+        {isHold ? <HoldFlowCard order={order} /> : null}
 
         {isReported ? null : (
           <>
@@ -98,10 +102,10 @@ export default function OrderDetailPage() {
           </>
         )}
 
-        {/* 입금 안내가 함께 뜨는 상태(입금 대기·보류)에서는 안내 박스를 계좌 안내 위에 둔다. 확인중은 히어로가 대신한다. */}
-        {showsDepositGuide && !isReported ? <OrderStatusNotice order={order} /> : null}
+        {/* 입금 대기에서는 안내 박스를 계좌 안내 위에 둔다. 확인중·보류는 전용 구성이 대신한다. */}
+        {showsDepositGuide && !isReported && !isHold ? <OrderStatusNotice order={order} /> : null}
 
-        {showsDepositGuide && !isReported ? (
+        {showsDepositGuide && !isReported && !isHold ? (
           <>
             <h2 className="px-1 text-[16px] font-bold text-[#191F28]">입금 계좌 확인</h2>
             <DepositGuideCard order={order} />

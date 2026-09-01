@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 
-import { DepositGuideCard } from '../_components/deposit-guide';
 import { CheckIcon, ChevronDownIcon, ClockIcon } from '../_components/icons';
 import { InfoRow, SectionCard } from '../_components/section';
 import { CARD, NUMERIC } from '../_components/ui';
 import type { OrderDetailView } from '@/lib/api-types';
+import { ORDER_NO_TAIL_LENGTH } from '@/lib/constants';
 import { formatDateTime, formatKrw } from '@/lib/format';
 
 const INFO_BLUE = '#175CD3';
@@ -85,25 +85,40 @@ function ReportedStepper() {
   );
 }
 
-/** 후순위로 내린 송금 정보 — 기본 접힘, 필요할 때만 펼쳐 본다 */
+/**
+ * 후순위로 내린 송금 정보 — 이미 입금을 마친 상태이므로
+ * 마감·송금 버튼 없이 읽기 전용 요약만 보여준다 (혼동 방지).
+ */
 function DepositFold({ order }: { order: OrderDetailView }) {
   const [isOpen, setIsOpen] = useState(false);
+  const realName = order.depositorName || '본인확인 실명';
+  const depositorValue = `${realName}${order.orderNo.slice(-ORDER_NO_TAIL_LENGTH)}`;
 
   return (
-    <div className="flex flex-col gap-3">
+    <section className={`${CARD} overflow-hidden`}>
       <button
         type="button"
         onClick={() => setIsOpen((value) => !value)}
         aria-expanded={isOpen}
-        className={`${CARD} flex min-h-[54px] w-full items-center justify-between px-4 py-3 text-left text-[15px] font-bold text-[#191F28]`}
+        className="flex min-h-[54px] w-full items-center justify-between px-4 py-3 text-left text-[15px] font-bold text-[#191F28]"
       >
-        입금 계좌/마감
+        내가 보낸 입금 정보
         <ChevronDownIcon
           className={`h-5 w-5 text-[#8B95A1] transition-transform ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
-      {isOpen ? <DepositGuideCard order={order} /> : null}
-    </div>
+      {isOpen ? (
+        <div className="border-t border-[#F2F4F6] px-4 pb-4 pt-1">
+          <InfoRow label="입금 계좌" value={`${order.bank.name} ${order.bank.account}`} />
+          <InfoRow label="예금주" value={order.bank.holder} />
+          <InfoRow label="입금 금액" value={formatKrw(order.amountKrw)} />
+          <InfoRow label="입금자명" value={depositorValue} />
+          <p className="mt-2.5 text-[12.5px] leading-relaxed text-[#6B7684]">
+            운영자가 위 정보로 입금 내역을 대조합니다. 다르게 입금하셨다면 확인이 보류될 수 있어요.
+          </p>
+        </div>
+      ) : null}
+    </section>
   );
 }
 
