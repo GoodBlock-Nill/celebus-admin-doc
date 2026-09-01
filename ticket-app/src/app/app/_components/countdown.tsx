@@ -1,6 +1,6 @@
 'use client';
 
-import { formatCountdown } from './datetime';
+import { formatCountdown, formatCountdownDigital } from './datetime';
 import { NUMERIC } from './ui';
 import { useAppClock } from './use-app-clock';
 
@@ -11,6 +11,8 @@ interface CountdownProps {
   expiredLabel?: string;
   /** 남은 시간 뒤에 붙는 문구 */
   suffix?: string;
+  /** true면 HH:MM:SS 디지털 표기 (suffix 미표시) */
+  digital?: boolean;
   className?: string;
 }
 
@@ -19,6 +21,7 @@ export function Countdown({
   targetAt,
   expiredLabel = '마감 지남',
   suffix = '남음',
+  digital = false,
   className = '',
 }: CountdownProps) {
   const now = useAppClock();
@@ -26,6 +29,10 @@ export function Countdown({
 
   if (Number.isNaN(remainMs)) return <span className={className}>-</span>;
   if (remainMs <= 0) return <span className={className}>{expiredLabel}</span>;
+
+  if (digital) {
+    return <span className={`${NUMERIC} ${className}`}>{formatCountdownDigital(remainMs)}</span>;
+  }
 
   return (
     <span className={`${NUMERIC} ${className}`}>

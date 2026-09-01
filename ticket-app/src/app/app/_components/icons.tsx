@@ -30,6 +30,15 @@ export function ReceiptIcon({ className = 'h-6 w-6' }: IconProps) {
   );
 }
 
+export function ClockIcon({ className = 'h-4 w-4' }: IconProps) {
+  return (
+    <svg {...BASE_PROPS} className={className} aria-hidden="true">
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 7.5V12l3 2" />
+    </svg>
+  );
+}
+
 export function SirenIcon({ className = 'h-6 w-6' }: IconProps) {
   return (
     <svg {...BASE_PROPS} className={className} aria-hidden="true">

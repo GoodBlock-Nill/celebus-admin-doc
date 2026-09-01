@@ -19,6 +19,17 @@ export function formatCountdown(remainMs: number): string {
   return `${minutes}분 ${pad2(seconds)}초`;
 }
 
+/** HH:MM:SS 디지털 표기 (24시간 초과분은 시간 자리에 합산) */
+export function formatCountdownDigital(remainMs: number): string {
+  if (remainMs <= 0) return '00:00:00';
+
+  const totalHours = Math.floor(remainMs / MS_PER_HOUR);
+  const minutes = Math.floor((remainMs % MS_PER_HOUR) / MS_PER_MINUTE);
+  const seconds = Math.floor((remainMs % MS_PER_MINUTE) / MS_PER_SECOND);
+
+  return `${pad2(totalHours)}:${pad2(minutes)}:${pad2(seconds)}`;
+}
+
 /** 한국 시각 기준 시:분:초 — "23:59:59" */
 export function formatKstClock(iso: string): string {
   const parsed = new Date(iso);
