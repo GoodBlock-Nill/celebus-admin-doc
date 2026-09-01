@@ -9,17 +9,18 @@ import { Badge } from '../../_components/badge';
 import { DepositGuideCard } from '../../_components/deposit-guide';
 import { ErrorBanner, ErrorState, PageSkeleton } from '../../_components/feedback';
 import { ConfirmModal } from '../../_components/modal';
-import { InfoRow, SectionCard } from '../../_components/section';
+import { SectionCard } from '../../_components/section';
 import { ORDER_STATUS_META, canRequestCancel, needsDepositGuide } from '../../_components/status-meta';
 import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
 import { useApiResource } from '../../_components/use-api-resource';
 import { DepositReportActions } from '../deposit-report-actions';
+import { OrderInfoCard } from '../order-info-card';
 import { OrderStatusNotice } from '../order-status-notice';
 import { PinnedActionBar } from '../pinned-action-bar';
+import { ReportedView } from '../reported-view';
 import { OrderTimeline } from '../order-timeline';
 import { api } from '@/lib/api-client';
 import { CELEBUS_APP_URL } from '@/lib/constants';
-import { formatDateTime, formatKrw } from '@/lib/format';
 
 type OpenModal = 'NONE' | 'CANCEL_AWAITING' | 'REQUEST_CANCEL';
 
@@ -63,6 +64,8 @@ export default function OrderDetailPage() {
   const showsDepositGuide = needsDepositGuide(order.status);
   // 입금 대기에서는 하단 고정 액션바가 핵심 행동(토스 송금·입금확인 요청)을 상시 노출한다.
   const showsPinnedBar = order.status === 'AWAITING_DEPOSIT';
+  // 입금 확인중은 대기 중심 구성(처리중 히어로·가로 스텝퍼·송금 정보 접힘)으로 바꾼다.
+  const isReported = order.status === 'DEPOSIT_REPORTED';
 
   const handleCancel = async () => {
     if (isSubmitting) return;
@@ -84,35 +87,21 @@ export default function OrderDetailPage() {
       />
 
       <div className={`flex flex-col gap-3.5 px-4 ${showsPinnedBar ? 'pb-24' : 'pb-5'}`}>
-        <SectionCard title="예매 정보">
-          <InfoRow label="예매번호" value={order.orderNo} />
-          <InfoRow label="공연" value={order.concertTitle} />
-          <InfoRow label="회차" value={order.sessionName} />
-          <InfoRow
-            label="관람 일시"
-            value={order.sessionStartAt ? formatDateTime(order.sessionStartAt) : '-'}
-          />
-          <InfoRow label="매수" value={`${order.qty}매`} />
-          <InfoRow label="결제 금액" value={formatKrw(order.amountKrw)} emphasis />
-          <InfoRow label="신청 일시" value={formatDateTime(order.createdAt)} />
-          <InfoRow
-            label="현금영수증"
-            value={
-              order.wantsCashReceipt
-                ? `신청 (${order.cashReceiptPhoneMasked ?? '번호 미입력'})`
-                : '미신청'
-            }
-          />
-        </SectionCard>
+        {isReported ? <ReportedView order={order} /> : null}
 
-        <SectionCard title="진행 상태">
-          <OrderTimeline order={order} />
-        </SectionCard>
+        {isReported ? null : (
+          <>
+            <OrderInfoCard order={order} />
+            <SectionCard title="진행 상태">
+              <OrderTimeline order={order} />
+            </SectionCard>
+          </>
+        )}
 
-        {/* 입금 안내가 함께 뜨는 상태(입금 대기·확인중·보류)에서는 안내 박스를 계좌 안내 위에 둔다. */}
-        {showsDepositGuide ? <OrderStatusNotice order={order} /> : null}
+        {/* 입금 안내가 함께 뜨는 상태(입금 대기·보류)에서는 안내 박스를 계좌 안내 위에 둔다. 확인중은 히어로가 대신한다. */}
+        {showsDepositGuide && !isReported ? <OrderStatusNotice order={order} /> : null}
 
-        {showsDepositGuide ? (
+        {showsDepositGuide && !isReported ? (
           <>
             <h2 className="px-1 text-[16px] font-bold text-[#191F28]">입금 계좌 확인</h2>
             <DepositGuideCard order={order} />
