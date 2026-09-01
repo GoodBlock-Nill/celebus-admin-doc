@@ -1,11 +1,11 @@
 'use client';
 
-import Link from 'next/link';
 import { useCallback } from 'react';
 
 import { AppHeader } from './_components/app-header';
 import { Badge } from './_components/badge';
 import { ConcertCard } from './_components/concert-card';
+import { VerifyBanner } from './_components/verify-banner';
 import { EmptyState, ErrorState, PageSkeleton } from './_components/feedback';
 import { useMemberSession } from './_components/member-session';
 import { CARD_TITLE } from './_components/ui';
@@ -21,16 +21,16 @@ export default function MemberAppHomePage() {
   return (
     <main>
       <AppHeader title="공연 예매">
-        <div className="mt-2.5 flex items-center gap-2">
-          <span className="text-[14px] font-semibold text-[#191F28]">{me.nickname || '회원'}</span>
-          {me.verified ? (
+        {me.verified ? (
+          <div className="mt-2.5 flex items-center gap-2">
+            <span className="text-[14px] font-semibold text-[#191F28]">{me.nickname || '회원'}</span>
             <Badge tone="success">본인확인 완료</Badge>
-          ) : (
-            <Link href="/app/verify">
-              <Badge tone="muted">본인확인 필요</Badge>
-            </Link>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="mt-3">
+            <VerifyBanner />
+          </div>
+        )}
       </AppHeader>
 
       <section className="px-4 pb-2">
