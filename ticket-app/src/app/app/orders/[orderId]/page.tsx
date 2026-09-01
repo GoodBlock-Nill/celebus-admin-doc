@@ -9,12 +9,14 @@ import { Badge } from '../../_components/badge';
 import { DepositGuideCard } from '../../_components/deposit-guide';
 import { ErrorBanner, ErrorState, PageSkeleton } from '../../_components/feedback';
 import { ConfirmModal } from '../../_components/modal';
-import { InfoRow, NoticeBox, SectionCard } from '../../_components/section';
+import { InfoRow, SectionCard } from '../../_components/section';
 import { ORDER_STATUS_META, canRequestCancel, needsDepositGuide } from '../../_components/status-meta';
 import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
 import { useApiResource } from '../../_components/use-api-resource';
+import { OrderStatusNotice } from '../order-status-notice';
 import { OrderTimeline } from '../order-timeline';
 import { api } from '@/lib/api-client';
+import { CELEBUS_APP_URL } from '@/lib/constants';
 import { formatDateTime, formatKrw } from '@/lib/format';
 
 type OpenModal = 'NONE' | 'CANCEL_AWAITING' | 'REQUEST_CANCEL';
@@ -102,12 +104,8 @@ export default function OrderDetailPage() {
           <OrderTimeline order={order} />
         </SectionCard>
 
-        {order.status === 'ON_HOLD' ? (
-          <NoticeBox tone="warning">
-            {order.holdReason ??
-              '입금자명이 일치하지 않아 확인 중입니다. 운영자 확인 후 안내해 드리겠습니다.'}
-          </NoticeBox>
-        ) : null}
+        {/* 입금 안내는 보류 상태에서도 다시 보여줘야 하므로 상태 안내 박스와 순서를 나눠 배치한다. */}
+        {order.status === 'ON_HOLD' ? <OrderStatusNotice order={order} /> : null}
 
         {needsDepositGuide(order.status) ? (
           <>
@@ -116,33 +114,21 @@ export default function OrderDetailPage() {
           </>
         ) : null}
 
-        {order.status === 'DEPOSIT_CONFIRMED' ? (
-          <NoticeBox tone="accent">
-            입금 확인 완료 — 예매가 확정되었습니다. 티켓은 공연 당일 CELEBUS 앱으로 지급되며, 지급되면 내
-            티켓에서 확인할 수 있습니다.
-          </NoticeBox>
-        ) : null}
-
-        {order.status === 'CANCEL_REQUESTED' ? (
-          <NoticeBox tone="accent">
-            취소 요청이 접수되었습니다. 요청 후 24시간 이내에 환불이 처리됩니다.
-          </NoticeBox>
-        ) : null}
-
-        {order.status === 'REFUNDED' ? (
-          <NoticeBox tone="muted">
-            환불이 완료되었습니다. 발급되었던 티켓은 회수 처리되었습니다.
-            {order.refundedAt ? ` (${formatDateTime(order.refundedAt)})` : ''}
-          </NoticeBox>
-        ) : null}
+        {order.status === 'ON_HOLD' ? null : <OrderStatusNotice order={order} />}
 
         {errorMessage ? <ErrorBanner message={errorMessage} /> : null}
 
         <div className="flex flex-col gap-2">
+          {/* 발권·입장 확인은 CELEBUS 본앱이 담당하므로 지급 완료 예매는 본앱으로 보낸다. */}
           {order.status === 'PAID' ? (
-            <Link href="/app/tickets" className={PRIMARY_BUTTON}>
-              내 티켓 보기
-            </Link>
+            <a
+              href={CELEBUS_APP_URL}
+              target="_blank"
+              rel="noreferrer"
+              className={PRIMARY_BUTTON}
+            >
+              CELEBUS 앱에서 티켓 확인
+            </a>
           ) : null}
 
           {needsDepositGuide(order.status) ? (

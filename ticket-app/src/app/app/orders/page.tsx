@@ -5,6 +5,7 @@ import { useCallback } from 'react';
 import { AppHeader } from '../_components/app-header';
 import { EmptyState, ErrorState, PageSkeleton } from '../_components/feedback';
 import { useApiResource } from '../_components/use-api-resource';
+import { GrantedTicketSection } from './granted-tickets';
 import { OrderCard } from './order-card';
 import { api } from '@/lib/api-client';
 
@@ -42,6 +43,8 @@ export default function OrdersPage() {
           </ul>
         )}
       </section>
+
+      <GrantedTicketSection />
     </main>
   );
 }

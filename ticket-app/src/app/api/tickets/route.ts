@@ -3,7 +3,7 @@ import { admin } from '@/lib/server/db-admin';
 import { loadConcertBriefs, loadSessionBriefs, toTicketSummary } from '@/lib/server/mappers';
 import { TICKET_COLUMNS, type TicketRow } from '@/lib/server/rows';
 
-/** 내 티켓 목록 — 발급 순 */
+/** 회원 보유 티켓 목록 — 발급 순 (예매내역의 지급받은 티켓 섹션·CELEBUS 본앱 연동 공용) */
 export async function GET(req: Request) {
   const member = await requireMember(req);
   if (isResponse(member)) return member;

@@ -81,15 +81,6 @@ export function CopyIcon({ className = 'h-4 w-4' }: IconProps) {
   );
 }
 
-export function LockIcon({ className = 'h-6 w-6' }: IconProps) {
-  return (
-    <svg {...BASE_PROPS} className={className} aria-hidden="true">
-      <rect x="5" y="10.5" width="14" height="10" rx="2.4" />
-      <path d="M8.5 10.5V8a3.5 3.5 0 1 1 7 0v2.5" />
-    </svg>
-  );
-}
-
 export function CheckIcon({ className = 'h-5 w-5' }: IconProps) {
   return (
     <svg {...BASE_PROPS} className={className} aria-hidden="true">

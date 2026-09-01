@@ -77,7 +77,7 @@ function buildSteps(order: OrderDetailView): TimelineStep[] {
     {
       title: '티켓 지급',
       description: ticketIssuedAt
-        ? '티켓이 지급되었습니다. 내 티켓에서 확인해 주세요.'
+        ? '티켓이 지급되었습니다. 공연 당일 CELEBUS 앱에서 확인해 주세요.'
         : isDepositDone
           ? '공연 당일 CELEBUS 앱으로 티켓이 지급됩니다.'
           : '입금 확인 후 공연 당일 CELEBUS 앱으로 지급됩니다.',

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { HomeIcon, ReceiptIcon, SirenIcon, TicketIcon } from './icons';
+import { HomeIcon, ReceiptIcon, SirenIcon } from './icons';
 
 interface TabItem {
   href: string;
@@ -11,10 +11,10 @@ interface TabItem {
   Icon: (props: { className?: string }) => React.ReactElement;
 }
 
+/** 발권·입장은 CELEBUS 본앱이 담당하므로 예매 웹 탭은 홈·예매내역·신고 3개만 둔다. */
 const TABS: TabItem[] = [
   { href: '/app', label: '홈', Icon: HomeIcon },
   { href: '/app/orders', label: '예매내역', Icon: ReceiptIcon },
-  { href: '/app/tickets', label: '내 티켓', Icon: TicketIcon },
   { href: '/app/report', label: '신고', Icon: SirenIcon },
 ];
 

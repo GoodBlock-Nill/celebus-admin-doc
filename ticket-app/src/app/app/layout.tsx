@@ -8,7 +8,7 @@ import { TabBar } from './_components/tab-bar';
 import { AppToastProvider } from './_components/toast';
 
 /** 하단 탭바를 노출하는 최상위 화면 경로 */
-const TAB_ROUTES = new Set(['/app', '/app/orders', '/app/tickets', '/app/report']);
+const TAB_ROUTES = new Set(['/app', '/app/orders', '/app/report']);
 
 /** 로그인 없이도 열람할 수 있는 약관·방침 경로 */
 const PUBLIC_ROUTES = new Set(['/app/terms', '/app/privacy']);
