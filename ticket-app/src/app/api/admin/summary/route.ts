@@ -1,9 +1,61 @@
 import { expireOverdueOrders, isGuardFailure, requireAdmin } from '@/lib/server/admin-api';
 import { ok, readFailure } from '@/lib/server/api';
 import { admin } from '@/lib/server/db-admin';
-import type { AdminSummaryView, DepositStatus, ReportStatus } from '@/lib/admin-types';
+import type {
+  AdminSummaryView,
+  DepositStatus,
+  PoolIntegrityItemView,
+  PoolIntegrityView,
+  ReportStatus,
+} from '@/lib/admin-types';
 import type { OrderStatus } from '@/lib/api-types';
 import { startOfKstDayIso } from '@/lib/time';
+
+interface IntegrityItemRow {
+  session_id: string;
+  session_name: string;
+  concert_title: string;
+  pool_type: PoolIntegrityItemView['poolType'];
+  pool_label: string;
+  reserved: number;
+  expected_reserved: number;
+  issued: number;
+  expected_issued: number;
+}
+
+interface IntegrityRow {
+  checked_at: string;
+  checked_count: number;
+  mismatch_count: number;
+  items: IntegrityItemRow[];
+}
+
+/**
+ * 재고 정합 점검 (F-3) — 선점·발급 수치를 예매·티켓 실측으로 다시 계산해 비교한다.
+ * 읽기 전용이라 어긋난 값을 고치지는 않고, 운영자가 원인을 찾도록 목록만 보여 준다.
+ */
+async function loadIntegrity(client: ReturnType<typeof admin>): Promise<PoolIntegrityView | null> {
+  const { data, error } = await client.rpc('ticket_pool_integrity_check');
+  if (error || !data) return null;
+
+  const row = data as IntegrityRow;
+  return {
+    checkedAt: row.checked_at,
+    checkedCount: row.checked_count,
+    mismatchCount: row.mismatch_count,
+    items: (row.items ?? []).map((item) => ({
+      sessionId: item.session_id,
+      sessionName: item.session_name,
+      concertTitle: item.concert_title,
+      poolType: item.pool_type,
+      poolLabel: item.pool_label,
+      reserved: item.reserved,
+      expectedReserved: item.expected_reserved,
+      issued: item.issued,
+      expectedIssued: item.expected_issued,
+    })),
+  };
+}
 
 interface DepositStatusRow {
   status: DepositStatus;
@@ -30,7 +82,7 @@ export async function GET(req: Request) {
   await expireOverdueOrders();
   const client = admin();
 
-  const [deposits, orders, reports] = await Promise.all([
+  const [deposits, orders, reports, integrity] = await Promise.all([
     client
       .from('ticket_deposits')
       .select('status')
@@ -47,6 +99,7 @@ export async function GET(req: Request) {
       .eq('status', 'RECEIVED')
       .order('deadline_at', { ascending: true })
       .returns<ReportQueueRow[]>(),
+    loadIntegrity(client),
   ]);
 
   if (deposits.error || orders.error || reports.error) return readFailure();
@@ -86,5 +139,5 @@ export async function GET(req: Request) {
     todayAmountKrw: todaySold.reduce((sum, row) => sum + row.amount_krw, 0),
   };
 
-  return ok({ summary, adminName: guard });
+  return ok({ summary, integrity, adminName: guard });
 }

@@ -3,7 +3,10 @@
  * 회원 개인정보는 원칙적으로 마스킹해 내려주고, 입금 대조에 필요한 실명만 예외로 노출한다.
  */
 
-import type { ConcertStatus, HoldCauseCode, OrderStatus, PoolType, SeatType } from './api-types';
+import type { HoldCauseCode, OrderStatus, PoolType } from './api-types';
+
+// 공연·회차·배정 타입은 분량이 커 별도 파일에 두고 여기서 함께 내보낸다.
+export * from './admin-concert-types';
 
 /** VOIDED = 운영자가 잘못 등록한 입금을 사유와 함께 등록 취소한 상태 */
 export type DepositStatus =
@@ -86,12 +89,48 @@ export interface AdminOrderView {
   /** 입금 확인 요청 누적 횟수 — 남용 여부 판단에 쓴다 */
   depositReportCount: number;
   refundedAt: string | null;
+  /** 환불 승인 때 확정된 환불 수수료 (승인 전에는 null) */
+  refundFeeKrw: number | null;
+  /** 환불 승인 때 실제로 돌려준 금액 (승인 전에는 null) */
+  refundAmountKrw: number | null;
   party: OrderPartyView;
+}
+
+/**
+ * 환불 수수료 자동 계산 결과 — 서버 단계표(관람일 기준)로 계산한 값이다.
+ * 운영자가 조정하지 않으면 이 금액 그대로 승인된다.
+ */
+export interface RefundFeeQuoteView {
+  ratePercent: number;
+  feeKrw: number;
+  refundKrw: number;
+  /** 어떤 단계가 적용됐는지 알려 주는 한 줄 설명 */
+  basis: string;
 }
 
 /** 최근 지급 완료 목록 1건 — 지급 취소 판단에 필요한 지급 시각을 함께 내려준다 */
 export interface AdminIssuedOrderView extends AdminOrderView {
   issuedAt: string;
+}
+
+/** 수동 매칭 후보 예매 1건 — 어느 예매의 돈인지 고를 때 쓰는 최소 정보 */
+export interface DepositMatchCandidateView {
+  orderId: string;
+  orderNo: string;
+  realName: string;
+  qty: number;
+  amountKrw: number;
+}
+
+/**
+ * 분할 입금 후보 — 같은 입금자명으로 나눠 들어온 미대조 입금의 합계가
+ * 어떤 진행 중 예매 금액과 딱 맞을 때 서버가 계산해 붙여 주는 힌트다.
+ */
+export interface SplitDepositHintView {
+  /** 함께 연결해야 하는 입금 식별자 묶음 (이 입금 포함) */
+  depositIds: string[];
+  totalKrw: number;
+  order: DepositMatchCandidateView;
 }
 
 export interface AdminDepositView {
@@ -102,125 +141,54 @@ export interface AdminDepositView {
   status: DepositStatus;
   memo: string | null;
   order: AdminOrderView | null;
+  /**
+   * 예매가 연결되지 않은 입금의 동일 금액 진행 중 예매 후보.
+   * 2건 이상이면 자동 매칭을 하지 않았다는 뜻이며 운영자 확인이 필요하다.
+   */
+  matchCandidates: DepositMatchCandidateView[];
+  /** 분할 입금 후보 (없으면 null) */
+  splitHint: SplitDepositHintView | null;
 }
 
-/** 취소·환불 화면 행 — 회수 대상 티켓 매수 포함 */
+/** 취소·환불 화면 행 — 회수 대상 티켓 매수 + 자동 계산 환불 수수료 포함 */
 export interface AdminRefundView extends AdminOrderView {
   ticketCount: number;
+  /** 승인 전 미리 보여 주는 자동 계산 수수료 (계산 실패 시 null) */
+  feeQuote: RefundFeeQuoteView | null;
 }
 
-export interface PoolStockView {
+/** 재고 정합 점검 결과 1건 — 기대값과 어긋난 회차·분류 */
+export interface PoolIntegrityItemView {
+  sessionId: string;
+  sessionName: string;
+  concertTitle: string;
   poolType: PoolType;
-  allocated: number;
+  poolLabel: string;
   reserved: number;
+  expectedReserved: number;
   issued: number;
+  expectedIssued: number;
 }
 
-/**
- * 회차·분류별 티켓 지급 집계.
- * 입장 완료·입장 전 수치는 CELEBUS 앱 체크인 결과가 반영된 값을 그대로 보여주는 확인용이다.
- */
-export interface IssuanceRowView {
-  poolType: PoolType;
-  issued: number;
-  used: number;
-  waiting: number;
-  revoked: number;
+export interface PoolIntegrityView {
+  checkedAt: string;
+  checkedCount: number;
+  mismatchCount: number;
+  items: PoolIntegrityItemView[];
 }
 
-export interface AdminSessionView {
-  id: string;
-  name: string;
-  startAt: string;
-  entryOpenMinutesBefore: number;
-  pools: PoolStockView[];
-  /** 실제 지급된 티켓의 분류별 상태 집계 */
-  issuance: IssuanceRowView[];
-}
-
-export interface AdminConcertRowView {
-  id: string;
-  title: string;
-  artist: string;
-  status: ConcertStatus;
-  priceKrw: number;
-  salesStartAt: string;
-  salesEndAt: string;
-  sessionCount: number;
-  allocated: number;
-  reserved: number;
-  issued: number;
-}
-
-export interface AdminConcertDetailView {
-  id: string;
-  title: string;
-  artist: string;
-  venue: string;
-  venueAddress: string | null;
-  venueMapUrl: string | null;
-  posterUrl: string | null;
-  description: string | null;
-  detailImageUrls: string[];
-  seatType: string;
-  status: ConcertStatus;
-  priceKrw: number;
-  maxPerUser: number;
-  salesStartAt: string;
-  salesEndAt: string;
-  notice: string;
-  refundPolicy: string;
-  sessions: AdminSessionView[];
-  /** 공연 취소 시 일괄 처리 대상이 되는 진행중 예매 건수 (확인 다이얼로그 예고 문구용) */
-  activeOrderCount: number;
-}
-
-/** 공연 등록 시 함께 만드는 회차 1건 (분류별 배정 수량 포함) */
-export interface ConcertSessionInput {
-  name: string;
-  /** 공연 시작 일시 — 시간대 오프셋을 포함한 문자열 */
-  startAt: string;
-  entryOpenMinutesBefore: number;
-  pools: Record<PoolType, number>;
-}
-
-/** 공연 등록 폼이 서버로 보내는 값 — 등록 직후 상태는 항상 판매 예정이다. */
-export interface ConcertCreateInput {
-  title: string;
-  artist: string;
-  venue: string;
-  /** 공연장 주소 — 선택 입력이라 비우면 보내지 않는다 */
-  venueAddress?: string;
-  /** 지도 링크 — 선택 입력이라 비우면 보내지 않는다 */
-  venueMapUrl?: string;
-  /** 포스터 이미지 주소 — 신규 등록에는 반드시 있어야 한다 */
-  posterUrl: string;
-  /** 공연 소개 — 선택 입력이라 비우면 보내지 않는다 */
-  description?: string;
-  /** 상세 이미지 주소 목록 — 화면에 보이는 순서 그대로 보낸다 (선택 입력) */
-  detailImageUrls?: string[];
-  priceKrw: number;
-  maxPerUser: number;
-  seatType: SeatType;
-  refundPolicy: string;
-  notice: string;
-  salesStartAt: string;
-  salesEndAt: string;
-  sessions: ConcertSessionInput[];
-}
-
-/**
- * 운영자가 판매 상태 액션으로 지정할 수 있는 값.
- * 판매 예정으로 되돌리는 전이는 없고, 공연 취소는 일괄 환불이 따르는 별도 액션이라 제외한다.
- */
-export type ConcertStatusTransition = Exclude<ConcertStatus, 'UPCOMING' | 'CANCELED'>;
-
-/** 공연장 검색 결과 1건 — 이름·주소는 검색 서비스 표기를 그대로 쓴다. */
-export interface VenueSearchItemView {
-  name: string;
-  roadAddress: string;
-  address: string;
-  mapUrl: string;
+/** 주문 조회 결과 1건 — 연결 입금·티켓 요약을 함께 내려준다 */
+export interface AdminOrderSearchView extends AdminOrderView {
+  concertTitle: string;
+  deposits: Array<{
+    id: string;
+    depositorName: string;
+    amountKrw: number;
+    depositedAt: string;
+    status: DepositStatus;
+  }>;
+  ticketCount: number;
+  revokedTicketCount: number;
 }
 
 /** 무상 발급 대상 — 본인확인을 마친 회원만 후보가 되며 실명은 마스킹해 노출한다. */

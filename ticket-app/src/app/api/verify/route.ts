@@ -1,11 +1,23 @@
 import { z } from 'zod';
 
-import { HTTP_STATUS, fail, guardMutation, isResponse, ok, requireMember, type RpcResult } from '@/lib/server/api';
+import {
+  HTTP_STATUS,
+  fail,
+  failWith,
+  guardMutation,
+  isResponse,
+  ok,
+  requireMember,
+  type RpcResult,
+} from '@/lib/server/api';
 import { diHashFromProvider, encryptText } from '@/lib/server/crypto';
 import { admin } from '@/lib/server/db-admin';
 import { IDENTITY_PROVIDERS, identityProvider } from '@/lib/server/identity/provider';
 
 const DUPLICATE_REASON = '중복';
+
+/** 진행 중인 예매가 있어 실명을 바꿀 수 없는 경우 (재설계서 A-7) */
+const ACTIVE_ORDER_CODE = 'ACTIVE_ORDER';
 
 const schema = z.object({
   realName: z.string().trim().min(2).max(20).regex(/^[가-힣a-zA-Z]+$/),
@@ -56,6 +68,11 @@ export async function POST(req: Request) {
   const result = data as RpcResult | null;
   if (error || !result) return fail('본인확인 처리에 실패했습니다.', HTTP_STATUS.serverError);
   if (!result.ok) {
+    // 진행 중인 예매가 있어 실명 교체가 막힌 경우 — 화면이 전용 안내를 띄울 수 있게 구분값을 함께 준다.
+    if (result.code === ACTIVE_ORDER_CODE) {
+      return failWith(String(result.reason), HTTP_STATUS.badRequest, { code: ACTIVE_ORDER_CODE });
+    }
+
     const isDuplicate = result.reason === DUPLICATE_REASON;
     return fail(
       isDuplicate

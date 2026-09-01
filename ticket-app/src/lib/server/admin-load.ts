@@ -4,6 +4,7 @@ import 'server-only';
 // 상태 변경은 전부 RPC 담당이며, 여기서는 service_role 읽기만 수행한다.
 import type { SupabaseClient } from '@supabase/supabase-js';
 
+import { buildDepositHints } from './deposit-hints';
 import { loadSessionBriefs, maskedRefundAccount } from './mappers';
 import type {
   AdminDepositView,
@@ -21,7 +22,8 @@ export const ADMIN_ORDER_COLUMNS =
   'id, order_no, status, qty, amount_krw, created_at, deposit_deadline, member_id, session_id, ' +
   'hold_reason, hold_cause, hold_actual_depositor, refund_bank, refund_account_enc, refund_holder, ' +
   'hold_info_submitted_at, deposit_reported_at, report_rejected_at, deposit_report_count, ' +
-  'deposit_confirmed_at, cancel_requested_at, cancel_rejected_at, refunded_at';
+  'deposit_confirmed_at, cancel_requested_at, cancel_rejected_at, refunded_at, ' +
+  'refund_fee_krw, refund_amount_krw';
 
 const ADMIN_DEPOSIT_COLUMNS =
   'id, depositor_name, amount_krw, deposited_at, status, matched_order_id, memo';
@@ -53,6 +55,9 @@ export interface AdminOrderRow {
   /** 운영자가 취소 요청을 반려한 시각 */
   cancel_rejected_at: string | null;
   refunded_at: string | null;
+  /** 환불 승인 때 확정된 수수료·실환불액 (승인 전에는 비어 있다) */
+  refund_fee_krw: number | null;
+  refund_amount_krw: number | null;
 }
 
 interface AdminDepositRow {
@@ -137,6 +142,8 @@ function toOrderView(
     cancelRequestedAt: row.cancel_requested_at,
     cancelRejectedAt: row.cancel_rejected_at,
     refundedAt: row.refunded_at,
+    refundFeeKrw: row.refund_fee_krw,
+    refundAmountKrw: row.refund_amount_krw,
     party: party ?? { realName: UNKNOWN_REAL_NAME, nickname: '' },
   };
 }
@@ -254,6 +261,18 @@ export async function loadDepositViews(client: SupabaseClient): Promise<AdminDep
 
   const orders = new Map((await buildOrderViews(client, orderRows)).map((order) => [order.id, order]));
 
+  // 자동 매칭이 보류된 건·나눠 들어온 입금을 운영자가 알아볼 수 있도록 대조 힌트를 붙인다.
+  const hints = await buildDepositHints(
+    client,
+    deposits.map((deposit) => ({
+      id: deposit.id,
+      depositorName: deposit.depositor_name,
+      amountKrw: deposit.amount_krw,
+      status: deposit.status,
+      matchedOrderId: deposit.matched_order_id,
+    })),
+  );
+
   return deposits.map((deposit) => ({
     id: deposit.id,
     depositorName: deposit.depositor_name,
@@ -262,5 +281,7 @@ export async function loadDepositViews(client: SupabaseClient): Promise<AdminDep
     status: deposit.status,
     memo: deposit.memo,
     order: deposit.matched_order_id ? (orders.get(deposit.matched_order_id) ?? null) : null,
+    matchCandidates: hints.get(deposit.id)?.matchCandidates ?? [],
+    splitHint: hints.get(deposit.id)?.splitHint ?? null,
   }));
 }

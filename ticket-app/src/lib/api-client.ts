@@ -13,8 +13,13 @@ import type {
   TicketSummaryView,
 } from './api-types';
 
-/** 서버 API 호출 결과 — 실패 사유는 화면에 그대로 노출할 한국어 문구다. */
-export type ApiResult<T> = { ok: true; data: T } | { ok: false; reason: string; status: number };
+/**
+ * 서버 API 호출 결과 — 실패 사유는 화면에 그대로 노출할 한국어 문구다.
+ * body는 사유 문구만으로 분기할 수 없는 실패에서 서버가 함께 내려준 정보다.
+ */
+export type ApiResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; reason: string; status: number; body?: Record<string, unknown> };
 
 const NETWORK_FAILURE = '네트워크 상태를 확인한 뒤 다시 시도해 주세요.';
 const NETWORK_STATUS = 0;
@@ -32,7 +37,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<ApiResult<T
     const body = (await response.json().catch(() => null)) as Record<string, unknown> | null;
     if (!response.ok || !body || body.ok !== true) {
       const reason = typeof body?.reason === 'string' ? body.reason : NETWORK_FAILURE;
-      return { ok: false, reason, status: response.status };
+      return { ok: false, reason, status: response.status, body: body ?? undefined };
     }
     return { ok: true, data: body as T };
   } catch {
@@ -58,6 +63,8 @@ export interface CreateOrderInput {
   cashReceiptSource?: CashReceiptSource;
   /** 직접 입력한 번호로 발급할 때만 보낸다. */
   cashReceiptPhone?: string;
+  /** 같은 회차에 진행 중인 예매가 있어도 추가로 신청하겠다고 회원이 확인한 경우 */
+  allowAdditional?: boolean;
 }
 
 export interface ReportInput {

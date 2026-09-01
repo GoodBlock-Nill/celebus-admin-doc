@@ -12,9 +12,10 @@ import { NoticeBox } from '../../_components/section';
 import { GHOST_BUTTON, PRIMARY_BUTTON } from '../../_components/ui';
 import { useApiResource } from '../../_components/use-api-resource';
 import { CheckoutForm, type CheckoutSubmitInput } from '../checkout-form';
+import { ExistingOrderModal, readExistingOrder } from '../existing-order-modal';
 import { loadCheckout } from '../load-checkout';
 import { api } from '@/lib/api-client';
-import type { OrderDetailView } from '@/lib/api-types';
+import type { ExistingOrderInfo, OrderDetailView } from '@/lib/api-types';
 
 /** A4 예매 신청 + 입금 안내 */
 export default function CheckoutPage() {
@@ -28,6 +29,9 @@ export default function CheckoutPage() {
   const [createdOrder, setCreatedOrder] = useState<OrderDetailView | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setSubmitting] = useState(false);
+  // 같은 회차에 진행 중인 예매가 있어 멈춘 신청 — 회원이 확인하면 같은 내용으로 다시 보낸다.
+  const [existingOrder, setExistingOrder] = useState<ExistingOrderInfo | null>(null);
+  const [pendingInput, setPendingInput] = useState<CheckoutSubmitInput | null>(null);
 
   if (state.status === 'LOADING') {
     return (
@@ -98,7 +102,7 @@ export default function CheckoutPage() {
   const limitRemaining = concert.maxPerUser - heldQty;
   const maxQty = Math.max(0, Math.min(concert.maxPerUser, limitRemaining, session.remaining));
 
-  const handleSubmit = async (input: CheckoutSubmitInput) => {
+  const handleSubmit = async (input: CheckoutSubmitInput, allowAdditional = false) => {
     if (isSubmitting) return;
 
     setSubmitting(true);
@@ -111,13 +115,26 @@ export default function CheckoutPage() {
       wantsCashReceipt: input.wantsCashReceipt,
       cashReceiptSource: input.cashReceiptSource,
       cashReceiptPhone: usesManualPhone ? input.cashReceiptPhone : undefined,
+      ...(allowAdditional ? { allowAdditional: true } : {}),
     });
 
     if (!created.ok) {
       setSubmitting(false);
+
+      // 같은 회차에 진행 중인 예매가 있는 경우 — 오류 문구 대신 선택을 묻는다.
+      const existing = readExistingOrder(created.body);
+      if (existing) {
+        setPendingInput(input);
+        setExistingOrder(existing);
+        return;
+      }
+
       setErrorMessage(created.reason);
       return;
     }
+
+    setExistingOrder(null);
+    setPendingInput(null);
 
     const detail = await api.order(created.data.orderId);
     setSubmitting(false);
@@ -156,6 +173,17 @@ export default function CheckoutPage() {
             onSubmit={(input) => void handleSubmit(input)}
           />
         )}
+
+        <ExistingOrderModal
+          info={existingOrder}
+          busy={isSubmitting}
+          onClose={() => setExistingOrder(null)}
+          onProceed={() => {
+            if (!pendingInput) return;
+            setExistingOrder(null);
+            void handleSubmit(pendingInput, true);
+          }}
+        />
       </div>
     </main>
   );

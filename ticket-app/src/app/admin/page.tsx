@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useCallback } from 'react';
 
 import { useAdminResource, useNow } from './_components/hooks';
+import { IntegrityCard } from './_components/integrity-card';
 import type { Tone } from './_components/labels';
 import { resolveSla } from './_components/sla-countdown';
 import { Badge, Card, PageHeader } from './_components/ui';
@@ -140,6 +141,8 @@ export default function AdminDashboardPage() {
           tone="accent"
         />
       </div>
+
+      <IntegrityCard integrity={state.data.integrity} />
 
       {guide}
     </>

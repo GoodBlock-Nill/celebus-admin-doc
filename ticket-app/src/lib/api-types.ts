@@ -34,6 +34,19 @@ export type OrderStatus =
 export type TicketStatus = 'VALID' | 'USED' | 'REVOKED';
 
 /**
+ * 같은 회차에 아직 끝나지 않은 예매가 있어 신청이 거부됐을 때 서버가 함께 내려주는 안내 정보.
+ * 화면은 이 정보로 "기존 예매 보기 / 추가로 예매하기"를 묻는다.
+ */
+export interface ExistingOrderInfo {
+  orderId: string;
+  orderNo: string;
+  status: OrderStatus;
+  qty: number;
+  amountKrw: number;
+  depositDeadline: string;
+}
+
+/**
  * 확인 보류 표준 사유 구분.
  *  · NAME   = 입금자명이 예매 정보와 다름
  *  · AMOUNT = 보낸 금액이 예매 금액과 다름 (오입금)

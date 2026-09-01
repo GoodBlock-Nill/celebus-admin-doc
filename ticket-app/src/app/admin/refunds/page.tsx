@@ -1,22 +1,26 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 import { ConfirmDialog } from '../_components/confirm-dialog';
 import { DataTable } from '../_components/data-table';
 import { useAdminResource, useConfirm, useNow } from '../_components/hooks';
 import { useToast } from '../_components/toast';
 import { Card, Collapsible, InfoNote, PageHeader } from '../_components/ui';
+import { RefundApproveDialog } from './_components/refund-approve-dialog';
 import {
   BASE_COLUMNS,
+  FEE_QUOTE_COLUMN,
   REFUNDED_AT_COLUMN,
   REFUND_ACCOUNT_COLUMN,
+  REFUND_RESULT_COLUMN,
   approveColumn,
   hasRefundAccount,
   slaColumn,
 } from './_components/refund-columns';
 import { adminApi } from '@/lib/admin-client';
 import type { AdminRefundView } from '@/lib/admin-types';
+import { formatKrw } from '@/lib/format';
 
 export default function AdminRefundsPage() {
   const now = useNow();
@@ -24,15 +28,18 @@ export default function AdminRefundsPage() {
   const { state, reload } = useAdminResource(loadRefunds);
   const toast = useToast();
   const confirm = useConfirm();
+  const [approveTarget, setApproveTarget] = useState<AdminRefundView | null>(null);
 
-  const approve = async (row: AdminRefundView) => {
-    const hasTickets = row.ticketCount > 0;
-    const result = await adminApi.approveRefund(row.id);
+  const approve = async (row: AdminRefundView, feeKrw: number | undefined) => {
+    const result = await adminApi.approveRefund(row.id, feeKrw);
+    const settled = result.ok
+      ? ` (수수료 ${formatKrw(result.data.fee_krw ?? 0)} · 실환불 ${formatKrw(result.data.refund_krw ?? 0)})`
+      : '';
     toast.fromResult(
       result,
-      hasTickets
-        ? `주문 ${row.orderNo} 환불 처리 완료 — 티켓 ${row.ticketCount}매를 회수했습니다.`
-        : `주문 ${row.orderNo} 환불 처리 완료 — 선점 좌석 ${row.qty}매를 반환했습니다.`,
+      row.ticketCount > 0
+        ? `주문 ${row.orderNo} 환불 처리 완료 — 티켓 ${row.ticketCount}매를 회수했습니다.${settled}`
+        : `주문 ${row.orderNo} 환불 처리 완료 — 선점 좌석 ${row.qty}매를 반환했습니다.${settled}`,
     );
     if (result.ok) void reload();
   };
@@ -64,23 +71,8 @@ export default function AdminRefundsPage() {
       return;
     }
 
-    // 입금 확인 상태에서 취소된 주문은 회수할 티켓 없이 선점 좌석만 반환한다.
-    const hasTickets = row.ticketCount > 0;
-    confirm.ask({
-      title: '환불을 승인할까요?',
-      message: (
-        <>
-          {hasTickets
-            ? `주문 ${row.orderNo}의 티켓 ${row.ticketCount}매가 회수되고 환불 처리됩니다.`
-            : `주문 ${row.orderNo}은 티켓 지급 전 주문입니다. 선점 좌석 ${row.qty}매가 반환되고 환불 처리됩니다.`}
-          <span className="mt-2 block font-semibold text-[#1B1D22]">
-            환불 계좌 {row.refundBank} {row.refundAccountMasked} · 예금주 {row.refundHolder}
-          </span>
-        </>
-      ),
-      confirmLabel: '환불 승인',
-      onConfirm: () => void approve(row),
-    });
+    // 수수료 확인·조정이 필요하므로 전용 승인 창을 띄운다.
+    setApproveTarget(row);
   };
 
   return (
@@ -103,34 +95,45 @@ export default function AdminRefundsPage() {
               <InfoNote>
                 취소 요청은 접수 후 24시간 이내에 처리하는 것이 기준입니다. 잔여 6시간 미만은 주의, 기한이 지난 건은
                 위험으로 표시됩니다. 환불 계좌가 등록되지 않은 건은 승인할 수 없으며, 회원이 예매 상세에서 계좌를
-                등록해야 처리할 수 있습니다. 환불 대상이 아닌 요청은 취소 요청 반려로 원래 상태로 되돌릴 수 있습니다
-                (공연 취소로 생긴 환불 대상은 반려할 수 없습니다).
+                등록해야 처리할 수 있습니다. 환불 수수료는 관람일 기준 단계(10일 전 이전 없음 / 9~7일 전 10% / 6~3일
+                전 20% / 2~1일 전 30% / 당일 90%)로 자동 계산되며, 예매 후 24시간 이내 취소와 공연 취소 환불은 수수료가
+                없습니다. 승인 창에서 금액을 조정할 수 있습니다. 환불 대상이 아닌 요청은 취소 요청 반려로 원래 상태로
+                되돌릴 수 있습니다 (공연 취소로 생긴 환불 대상은 반려할 수 없습니다).
               </InfoNote>
               <DataTable
                 columns={[
                   ...BASE_COLUMNS,
                   REFUND_ACCOUNT_COLUMN,
+                  FEE_QUOTE_COLUMN,
                   slaColumn(now),
                   approveColumn(askApprove, askReject),
                 ]}
                 rows={state.data.pending}
                 rowKey={(row) => row.id}
                 emptyText="대기 중인 취소 요청이 없습니다."
-                minWidth="1230px"
+                minWidth="1430px"
               />
             </div>
           </Card>
 
           <Collapsible summary={`환불 완료 이력 (${state.data.done.length}건)`}>
             <DataTable
-              columns={[...BASE_COLUMNS, REFUNDED_AT_COLUMN]}
+              columns={[...BASE_COLUMNS, REFUND_RESULT_COLUMN, REFUNDED_AT_COLUMN]}
               rows={state.data.done}
               rowKey={(row) => row.id}
               emptyText="환불 완료 내역이 없습니다."
-              minWidth="820px"
+              minWidth="1010px"
             />
           </Collapsible>
 
+          <RefundApproveDialog
+            row={approveTarget}
+            onClose={() => setApproveTarget(null)}
+            onConfirm={(row, feeKrw) => {
+              setApproveTarget(null);
+              void approve(row, feeKrw);
+            }}
+          />
           <ConfirmDialog request={confirm.request} onClose={confirm.close} />
         </>
       )}

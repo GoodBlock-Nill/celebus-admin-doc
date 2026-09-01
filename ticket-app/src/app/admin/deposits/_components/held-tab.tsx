@@ -7,12 +7,13 @@ import { DataTable } from '../../_components/data-table';
 import type { Column } from '../../_components/data-table';
 import { useConfirm } from '../../_components/hooks';
 import { useToast } from '../../_components/toast';
-import { InfoNote } from '../../_components/ui';
+import { HeldTabGuide } from './held-tab-guide';
 import {
   amountColumn,
   depositedAtColumn,
   depositorColumn,
   holdSubmissionColumn,
+  matchHintColumn,
   memoColumn,
   orderColumn,
   statusColumn,
@@ -48,14 +49,12 @@ export function HeldTab({
   const voidDeposit = useVoidDeposit(confirm, onDone);
 
   const [active, setActive] = useState<ActiveAction | null>(null);
-  const [selectedOrderId, setSelectedOrderId] = useState('');
   const [memo, setMemo] = useState(DEFAULT_REFUND_MEMO);
 
   const openAction = (depositId: string, kind: ActionKind) => {
     setActive((current) =>
       current && current.depositId === depositId && current.kind === kind ? null : { depositId, kind },
     );
-    if (kind === 'match') setSelectedOrderId(candidates[0]?.id ?? '');
     if (kind === 'refund') setMemo(DEFAULT_REFUND_MEMO);
     if (kind === 'void') voidDeposit.resetReason();
   };
@@ -66,9 +65,14 @@ export function HeldTab({
     if (result.ok) onDone();
   };
 
-  const handleMatch = async (row: AdminDepositView) => {
-    const result = await adminApi.manualMatch(row.id, selectedOrderId);
-    toast.fromResult(result, `${row.depositorName} 입금을 선택한 주문에 연결했습니다.`);
+  const handleMatch = async (row: AdminDepositView, depositIds: string[], orderId: string) => {
+    const result = await adminApi.manualMatch(depositIds, orderId);
+    toast.fromResult(
+      result,
+      depositIds.length > 1
+        ? `${row.depositorName} 분할 입금 ${depositIds.length}건을 선택한 주문에 연결했습니다.`
+        : `${row.depositorName} 입금을 선택한 주문에 연결했습니다.`,
+    );
     if (result.ok) {
       setActive(null);
       onDone();
@@ -117,6 +121,7 @@ export function HeldTab({
     statusColumn,
     memoColumn,
     orderColumn,
+    matchHintColumn,
     holdSubmissionColumn,
     {
       key: 'action',
@@ -151,12 +156,15 @@ export function HeldTab({
     }
 
     if (active.kind === 'match') {
+      // 분할 입금 후보로 함께 묶인 다른 입금은 이 화면에서 바로 골라 한 번에 연결한다.
+      const siblingIds = row.splitHint?.depositIds.filter((id) => id !== row.id) ?? [];
       return (
         <HeldMatchForm
+          key={row.id}
+          row={row}
           candidates={candidates}
-          selectedOrderId={selectedOrderId}
-          onSelect={setSelectedOrderId}
-          onSubmit={() => void handleMatch(row)}
+          siblings={rows.filter((deposit) => siblingIds.includes(deposit.id))}
+          onSubmit={(depositIds, orderId) => void handleMatch(row, depositIds, orderId)}
           onClose={() => setActive(null)}
         />
       );
@@ -174,20 +182,13 @@ export function HeldTab({
 
   return (
     <div className="flex flex-col gap-3">
-      <InfoNote tone="warning">
-        금액만 맞고 입금자명이 다른 건은 자동으로 보류됩니다. 동명이인·대리 입금은 주문을 확인한 뒤 수동 매칭하고,
-        예매와 무관한 입금은 반환 대상으로 지정하세요. 회원이 실제 입금자명·환불 계좌를 알려온 건은
-        &lsquo;회원이 알린 정보&rsquo;에 표시되며, 그 이름으로 은행 내역을 대조하면 됩니다. 끝내 대조되지 않으면
-        보류 반려로 예매를 입금 대기에 되돌리세요. 받은 입금은 반환 대상으로 넘어가고, 회원에게는 환불 후 재송금
-        안내가 표시됩니다. 은행 내역과 다르게 잘못 등록한 입금은 등록 취소로 무효 처리하며, 그 입금 때문에 보류된
-        예매는 보류가 함께 풀립니다.
-      </InfoNote>
+      <HeldTabGuide />
       <DataTable
         columns={columns}
         rows={rows}
         rowKey={(row) => row.id}
         emptyText="보류 중인 입금이 없습니다."
-        minWidth="1390px"
+        minWidth="1640px"
         renderSubRow={renderSubRow}
       />
       <ConfirmDialog request={confirm.request} onClose={confirm.close} />

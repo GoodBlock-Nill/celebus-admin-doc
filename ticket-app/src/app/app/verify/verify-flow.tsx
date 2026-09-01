@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import { ErrorBanner } from '../_components/feedback';
 import { useMemberSession } from '../_components/member-session';
+import { VerifyLockedStep } from './verify-locked-step';
 import { providerLabel, type AuthProviderKey } from './verify-providers';
 import {
   VerifyBlockedStep,
@@ -15,13 +16,16 @@ import {
 } from './verify-steps';
 import { api } from '@/lib/api-client';
 
-type VerifyStep = 'FORM' | 'REQUESTED' | 'BLOCKED' | 'DONE';
+type VerifyStep = 'FORM' | 'REQUESTED' | 'BLOCKED' | 'LOCKED' | 'DONE';
 
 const NAME_PATTERN = /^[가-힣a-zA-Z]{2,20}$/;
 const BIRTH_PATTERN = /^\d{8}$/;
 const PHONE_PATTERN = /^01\d{8,9}$/;
 
 const DUPLICATE_STATUS = 409;
+
+/** 진행 중인 예매가 있어 실명을 바꿀 수 없는 경우 서버가 알려 주는 구분값 */
+const ACTIVE_ORDER_CODE = 'ACTIVE_ORDER';
 
 const EMPTY_FORM: IdentityForm = { realName: '', birth: '', phone: '' };
 
@@ -88,6 +92,11 @@ export function VerifyFlow() {
       setStep('BLOCKED');
       return;
     }
+    // 진행 중인 예매가 있어 실명을 바꿀 수 없는 경우 — 사유와 다음 행동을 함께 안내한다.
+    if (result.body?.code === ACTIVE_ORDER_CODE) {
+      setStep('LOCKED');
+      return;
+    }
     setErrorMessage(result.reason);
   };
 
@@ -124,6 +133,8 @@ export function VerifyFlow() {
       ) : null}
 
       {step === 'BLOCKED' ? <VerifyBlockedStep onRetry={handleRetry} /> : null}
+
+      {step === 'LOCKED' ? <VerifyLockedStep onRetry={handleRetry} /> : null}
 
       {step === 'DONE' ? (
         <VerifyDoneStep realName={form.realName.trim()} nextHref={nextHref} />

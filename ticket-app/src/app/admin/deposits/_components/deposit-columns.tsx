@@ -100,6 +100,49 @@ export const holdSubmissionColumn: Column<AdminDepositView> = {
   },
 };
 
+/**
+ * 대조 힌트 — 자동 매칭이 멈춘 이유와 이어 붙일 후보를 알려 준다.
+ * 동일 조건 예매가 여럿이면 자동 매칭을 하지 않으므로 운영자가 직접 골라야 한다(B-5).
+ * 나눠 들어온 입금은 합계가 맞는 예매를 함께 알려 준다(B-6).
+ */
+export const matchHintColumn: Column<AdminDepositView> = {
+  key: 'matchHint',
+  header: '대조 힌트',
+  width: '250px',
+  render: (row) => {
+    if (!row.splitHint && row.matchCandidates.length === 0) {
+      return <span className="text-[12px] text-[#6B7080]">-</span>;
+    }
+
+    return (
+      <div className="flex flex-col gap-1.5">
+        {row.splitHint ? (
+          <span className="flex flex-col gap-0.5">
+            <Badge tone="accent">분할 입금 후보</Badge>
+            <span className="text-[12px] leading-relaxed text-[#4A4E5A]">
+              합계 {formatKrw(row.splitHint.totalKrw)} · 예매 {row.splitHint.order.orderNo} (
+              {row.splitHint.order.realName})
+            </span>
+          </span>
+        ) : null}
+        {row.matchCandidates.length >= 2 ? (
+          <span className="flex flex-col gap-0.5">
+            <Badge tone="warning">동일 조건 예매 {row.matchCandidates.length}건</Badge>
+            <span className="text-[12px] leading-relaxed text-[#4A4E5A]">
+              {row.matchCandidates.map((candidate) => candidate.orderNo).join(' · ')}
+            </span>
+          </span>
+        ) : null}
+        {row.matchCandidates.length === 1 ? (
+          <span className="text-[12px] leading-relaxed text-[#4A4E5A]">
+            동일 금액 예매 {row.matchCandidates[0].orderNo} ({row.matchCandidates[0].realName})
+          </span>
+        ) : null}
+      </div>
+    );
+  },
+};
+
 export const memoColumn: Column<AdminDepositView> = {
   key: 'memo',
   header: '보류·반환 사유',

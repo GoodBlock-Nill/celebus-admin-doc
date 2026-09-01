@@ -9,6 +9,9 @@ const MAX_MEMO_LENGTH = 100;
 const HOLD_CAUSES = ['NAME', 'AMOUNT', 'BOTH', 'OTHER'] as const;
 const DEFAULT_HOLD_CAUSE = 'OTHER';
 
+/** 한 예매에 함께 연결할 수 있는 입금 건수 상한 (분할 입금) */
+const MAX_MATCH_DEPOSITS = 10;
+
 const depositId = z.string().uuid();
 const orderId = z.string().uuid();
 const memo = z.string().trim().min(1).max(MAX_MEMO_LENGTH);
@@ -24,7 +27,12 @@ const schema = z.discriminatedUnion('action', [
   }),
   z.object({ action: z.literal('refund-target'), depositId, memo }),
   z.object({ action: z.literal('refund'), depositId }),
-  z.object({ action: z.literal('manual-match'), depositId, orderId }),
+  /** 수동 매칭 — 나눠 들어온 입금은 여러 건을 한 예매에 함께 연결한다 */
+  z.object({
+    action: z.literal('manual-match'),
+    depositIds: z.array(depositId).min(1).max(MAX_MATCH_DEPOSITS),
+    orderId,
+  }),
   /** 입금 오등록 정정 — 사유를 반드시 남긴다 */
   z.object({ action: z.literal('void'), depositId, reason: memo }),
   z.object({ action: z.literal('issue-tickets'), orderId }),
@@ -44,7 +52,8 @@ interface RpcCall {
 }
 
 type DepositAction = Extract<ActionInput, { depositId: string }>;
-type OrderAction = Exclude<ActionInput, { depositId: string }>;
+type MatchAction = Extract<ActionInput, { action: 'manual-match' }>;
+type OrderAction = Exclude<ActionInput, { depositId: string } | { action: 'manual-match' }>;
 
 /** 입금 건을 대상으로 하는 처리 */
 function resolveDepositCall(input: DepositAction, adminName: string): RpcCall {
@@ -77,12 +86,6 @@ function resolveDepositCall(input: DepositAction, adminName: string): RpcCall {
         name: 'ticket_refund_deposit',
         params: { p_deposit_id: input.depositId, p_admin: adminName },
         failure: '반환 처리에 실패했습니다.',
-      };
-    case 'manual-match':
-      return {
-        name: 'ticket_manual_match',
-        params: { p_deposit_id: input.depositId, p_order_id: input.orderId, p_admin: adminName },
-        failure: '수동 매칭에 실패했습니다.',
       };
     default:
       return {
@@ -129,8 +132,18 @@ function resolveOrderCall(input: OrderAction, adminName: string): RpcCall {
   }
 }
 
+/** 수동 매칭 — 입금 여러 건을 한 예매에 함께 연결한다 (분할 입금) */
+function resolveMatchCall(input: MatchAction, adminName: string): RpcCall {
+  return {
+    name: 'ticket_manual_match',
+    params: { p_deposit_ids: input.depositIds, p_order_id: input.orderId, p_admin: adminName },
+    failure: '수동 매칭에 실패했습니다.',
+  };
+}
+
 /** 요청 구분 → 호출할 서버 함수·인자·실패 문구 */
 function resolveCall(input: ActionInput, adminName: string): RpcCall {
+  if (input.action === 'manual-match') return resolveMatchCall(input, adminName);
   return 'depositId' in input
     ? resolveDepositCall(input, adminName)
     : resolveOrderCall(input, adminName);

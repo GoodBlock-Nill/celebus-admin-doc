@@ -3,6 +3,7 @@ import { z } from 'zod';
 import {
   HTTP_STATUS,
   fail,
+  failWith,
   guardMutation,
   isResponse,
   ok,
@@ -17,6 +18,9 @@ import { ORDER_COLUMNS, type OrderRow, type VerificationRow } from '@/lib/server
 
 const MAX_QTY_PER_ORDER = 10;
 
+/** 같은 회차에 진행 중인 예매가 있어 신청이 멈췄음을 화면에 알리는 구분값 */
+const EXISTING_ORDER_CODE = 'EXISTING_ORDER';
+
 const PHONE_PATTERN = /^01\d{8,9}$/;
 
 const VERIFIED_PHONE_FAILURE =
@@ -30,6 +34,8 @@ const createSchema = z
     /** 발급 번호 출처 — 본인확인 번호(기본) / 직접 입력 */
     cashReceiptSource: z.enum(['verified', 'manual']).default('verified'),
     cashReceiptPhone: z.string().regex(PHONE_PATTERN).optional(),
+    /** 같은 회차에 진행 중인 예매가 있어도 추가로 신청하겠다는 회원의 확인 */
+    allowAdditional: z.boolean().optional(),
   })
   .refine(
     (input) =>
@@ -120,10 +126,27 @@ export async function POST(req: Request) {
     p_qty: qty,
     p_wants_cash_receipt: wantsCashReceipt,
     p_cash_receipt_phone: cashReceipt.cipher,
+    p_allow_additional: parsed.data.allowAdditional ?? false,
   });
 
   const result = data as RpcResult | null;
   if (error || !result) return fail('예매 신청 처리에 실패했습니다.', HTTP_STATUS.serverError);
+
+  // 같은 회차에 진행 중인 예매가 있어 멈춘 경우 — 화면이 안내 모달을 띄울 수 있게 함께 알려 준다.
+  if (!result.ok && result.code === EXISTING_ORDER_CODE) {
+    return failWith('이미 진행 중인 예매가 있습니다.', HTTP_STATUS.conflict, {
+      code: EXISTING_ORDER_CODE,
+      existingOrder: {
+        orderId: String(result.existing_order_id),
+        orderNo: String(result.existing_order_no),
+        status: String(result.existing_status),
+        qty: Number(result.existing_qty),
+        amountKrw: Number(result.existing_amount_krw),
+        depositDeadline: String(result.existing_deposit_deadline),
+      },
+    });
+  }
+
   if (!result.ok) return fail(String(result.reason ?? '예매 신청에 실패했습니다.'), HTTP_STATUS.badRequest);
 
   return ok({ orderId: String(result.order_id), orderNo: String(result.order_no) });

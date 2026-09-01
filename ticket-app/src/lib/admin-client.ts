@@ -9,6 +9,7 @@ import type {
   AdminIssuedOrderView,
   AdminLogView,
   AdminMemberOptionView,
+  AdminOrderSearchView,
   AdminOrderView,
   AdminRefundView,
   AdminReportView,
@@ -16,10 +17,11 @@ import type {
   CompPoolType,
   ConcertCreateInput,
   ConcertStatusTransition,
+  PoolIntegrityView,
   ReportActionType,
   VenueSearchItemView,
 } from './admin-types';
-import type { HoldCauseCode, PoolType, ReportTargetType } from './api-types';
+import type { HoldCauseCode, OrderStatus, PoolType, ReportTargetType } from './api-types';
 
 const NETWORK_FAILURE = '네트워크 상태를 확인한 뒤 다시 시도해 주세요.';
 const NETWORK_STATUS = 0;
@@ -77,6 +79,14 @@ export interface ReallocateInput {
   qty: number;
 }
 
+export interface OrderSearchInput {
+  /** 예매번호 일부 또는 주문자 실명 */
+  keyword?: string;
+  /** 비우면 모든 상태 */
+  statuses?: OrderStatus[];
+  page?: number;
+}
+
 export interface ManualReportInput {
   targetType: ReportTargetType;
   reason: string;
@@ -88,7 +98,26 @@ export const adminApi = {
   login: (key: string, adminName: string) => post<{ adminName: string }>('/api/admin/login', { key, adminName }),
   logout: () => request<Record<string, never>>('/api/admin/login', { method: 'DELETE' }),
 
-  summary: () => request<{ summary: AdminSummaryView; adminName: string }>('/api/admin/summary'),
+  summary: () =>
+    request<{
+      summary: AdminSummaryView;
+      /** 재고 정합 점검 결과 (조회 실패 시 null) */
+      integrity: PoolIntegrityView | null;
+      adminName: string;
+    }>('/api/admin/summary'),
+
+  /** 주문 조회 — 예매번호·실명·상태로 전 구간을 찾는다 (20건씩) */
+  orders: (input: OrderSearchInput) =>
+    request<{
+      items: AdminOrderSearchView[];
+      total: number;
+      page: number;
+      pageSize: number;
+    }>(
+      `/api/admin/orders?q=${encodeURIComponent(input.keyword ?? '')}` +
+        `&status=${encodeURIComponent((input.statuses ?? []).join(','))}` +
+        `&page=${input.page ?? 1}`,
+    ),
 
   concerts: () => request<{ items: AdminConcertRowView[] }>('/api/admin/concerts'),
   concert: (concertId: string) =>
@@ -155,8 +184,13 @@ export const adminApi = {
     post<Record<string, never>>('/api/admin/deposits/actions', { action: 'refund-target', depositId, memo }),
   refundDeposit: (depositId: string) =>
     post<Record<string, never>>('/api/admin/deposits/actions', { action: 'refund', depositId }),
-  manualMatch: (depositId: string, orderId: string) =>
-    post<Record<string, never>>('/api/admin/deposits/actions', { action: 'manual-match', depositId, orderId }),
+  /** 수동 매칭 — 나눠 들어온 입금은 여러 건을 한 예매에 함께 연결한다 */
+  manualMatch: (depositIds: string[], orderId: string) =>
+    post<{ matched_count?: number; total_krw?: number }>('/api/admin/deposits/actions', {
+      action: 'manual-match',
+      depositIds,
+      orderId,
+    }),
   issueOrderTickets: (orderId: string) =>
     post<{ issued_qty?: number }>('/api/admin/deposits/actions', { action: 'issue-tickets', orderId }),
   rejectDepositReport: (orderId: string) =>
@@ -188,8 +222,12 @@ export const adminApi = {
     }),
 
   refunds: () => request<{ pending: AdminRefundView[]; done: AdminRefundView[] }>('/api/admin/refunds'),
-  approveRefund: (orderId: string) =>
-    post<{ revoked_tickets?: number }>('/api/admin/refunds', { orderId, action: 'approve' }),
+  /** 환불 승인 — 수수료를 비우면 관람일 기준 단계표로 자동 계산한 금액이 적용된다 */
+  approveRefund: (orderId: string, feeKrw?: number) =>
+    post<{ revoked_tickets?: number; fee_krw?: number; refund_krw?: number; basis?: string }>(
+      '/api/admin/refunds',
+      { orderId, action: 'approve', ...(feeKrw === undefined ? {} : { feeKrw }) },
+    ),
   /** 취소 요청 반려 — 예매를 취소 요청 직전 상태로 되돌린다 */
   rejectCancelRequest: (orderId: string) =>
     post<{ order_no?: string; status?: string }>('/api/admin/refunds', { orderId, action: 'reject' }),

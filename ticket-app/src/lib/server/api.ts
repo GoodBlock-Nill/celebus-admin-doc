@@ -31,6 +31,19 @@ export function fail(reason: string, status: number): NextResponse {
   return NextResponse.json({ ok: false, reason }, { status });
 }
 
+/**
+ * 실패 응답 + 화면 분기에 필요한 추가 정보.
+ * 사유 문구만으로는 화면이 무엇을 물어야 할지 알 수 없는 경우에만 쓴다
+ * (예: 같은 회차에 이미 진행 중인 예매가 있어 "기존 예매 보기 / 추가 예매"를 물을 때).
+ */
+export function failWith(
+  reason: string,
+  status: number,
+  extra: Record<string, unknown>,
+): NextResponse {
+  return NextResponse.json({ ok: false, reason, ...extra }, { status });
+}
+
 /** 성공 응답 */
 export function ok<T extends Record<string, unknown>>(data: T): NextResponse {
   return NextResponse.json({ ok: true, ...data });

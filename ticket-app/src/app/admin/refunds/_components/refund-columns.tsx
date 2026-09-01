@@ -96,6 +96,47 @@ export const REFUND_ACCOUNT_COLUMN: Column<AdminRefundView> = {
 };
 
 /**
+ * 승인 전 자동 계산 수수료 — 관람일 기준 단계표로 서버가 계산한 값이다.
+ * 승인 화면에서 조정할 수 있으므로 여기서는 예고 값으로만 보여 준다.
+ */
+export const FEE_QUOTE_COLUMN: Column<AdminRefundView> = {
+  key: 'feeQuote',
+  header: '환불 수수료 (자동 계산)',
+  width: '200px',
+  render: (row) =>
+    row.feeQuote ? (
+      <div className="flex flex-col gap-0.5">
+        <span className="text-[13px] font-semibold tabular-nums text-[#1B1D22]">
+          {formatKrw(row.feeQuote.feeKrw)}
+          <span className="ml-1 text-[12px] font-normal text-[#6B7080]">
+            (실환불 {formatKrw(row.feeQuote.refundKrw)})
+          </span>
+        </span>
+        <span className="text-[11.5px] leading-relaxed text-[#6B7080]">{row.feeQuote.basis}</span>
+      </div>
+    ) : (
+      <span className="text-[12px] text-[#6B7080]">-</span>
+    ),
+};
+
+/** 환불 완료 건의 확정 수수료·실환불액 */
+export const REFUND_RESULT_COLUMN: Column<AdminRefundView> = {
+  key: 'refundResult',
+  header: '수수료 / 실환불액',
+  width: '190px',
+  render: (row) =>
+    row.refundAmountKrw === null ? (
+      <span className="text-[12px] text-[#6B7080]">-</span>
+    ) : (
+      <span className="text-[13px] tabular-nums text-[#1B1D22]">
+        {formatKrw(row.refundFeeKrw ?? 0)}
+        <span className="mx-1 text-[#A2A7B4]">/</span>
+        <span className="font-semibold">{formatKrw(row.refundAmountKrw)}</span>
+      </span>
+    ),
+};
+
+/**
  * 처리 손잡이 — 환불 승인과 취소 요청 반려를 나란히 둔다.
  * 반려는 회원의 요청을 되돌리는 처리라 승인 옆의 보조 자리에 위험 표시로 배치한다.
  */
