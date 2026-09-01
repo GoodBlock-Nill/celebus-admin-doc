@@ -4,7 +4,7 @@ import 'server-only';
 // 상태 변경은 전부 RPC 담당이며, 여기서는 service_role 읽기만 수행한다.
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import { loadSessionBriefs } from './mappers';
+import { loadSessionBriefs, maskedRefundAccount } from './mappers';
 import type { AdminDepositView, AdminOrderView, DepositStatus, OrderPartyView } from '@/lib/admin-types';
 import type { OrderStatus } from '@/lib/api-types';
 
@@ -13,7 +13,8 @@ const UNKNOWN_REAL_NAME = '실명 미확인';
 
 export const ADMIN_ORDER_COLUMNS =
   'id, order_no, status, qty, amount_krw, created_at, deposit_deadline, member_id, session_id, ' +
-  'hold_reason, deposit_reported_at, report_rejected_at, deposit_confirmed_at, ' +
+  'hold_reason, hold_actual_depositor, refund_bank, refund_account_enc, refund_holder, ' +
+  'hold_info_submitted_at, deposit_reported_at, report_rejected_at, deposit_confirmed_at, ' +
   'cancel_requested_at, refunded_at';
 
 const ADMIN_DEPOSIT_COLUMNS =
@@ -30,6 +31,12 @@ export interface AdminOrderRow {
   member_id: string;
   session_id: string;
   hold_reason: string | null;
+  hold_actual_depositor: string | null;
+  refund_bank: string | null;
+  /** 환불 계좌번호 암호문 — 화면에는 마스킹만 내려준다(원문 비노출) */
+  refund_account_enc: string | null;
+  refund_holder: string | null;
+  hold_info_submitted_at: string | null;
   deposit_reported_at: string | null;
   report_rejected_at: string | null;
   deposit_confirmed_at: string | null;
@@ -106,6 +113,11 @@ function toOrderView(
     depositDeadline: row.deposit_deadline,
     sessionName,
     holdReason: row.hold_reason,
+    holdActualDepositor: row.hold_actual_depositor,
+    refundBank: row.refund_bank,
+    refundAccountMasked: maskedRefundAccount(row.refund_account_enc),
+    refundHolder: row.refund_holder,
+    holdInfoSubmittedAt: row.hold_info_submitted_at,
     depositReportedAt: row.deposit_reported_at,
     reportRejectedAt: row.report_rejected_at,
     depositConfirmedAt: row.deposit_confirmed_at,

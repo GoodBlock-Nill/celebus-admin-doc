@@ -10,7 +10,12 @@ import { DepositGuideCard } from '../../_components/deposit-guide';
 import { ErrorBanner, ErrorState, PageSkeleton } from '../../_components/feedback';
 import { ConfirmModal } from '../../_components/modal';
 import { SectionCard } from '../../_components/section';
-import { ORDER_STATUS_META, canRequestCancel, needsDepositGuide } from '../../_components/status-meta';
+import {
+  ORDER_STATUS_META,
+  canCancelBeforeDeposit,
+  canRequestCancel,
+  needsDepositGuide,
+} from '../../_components/status-meta';
 import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
 import { useApiResource } from '../../_components/use-api-resource';
 import { DepositReportActions } from '../deposit-report-actions';
@@ -91,7 +96,7 @@ export default function OrderDetailPage() {
 
       <div className={`flex flex-col gap-3.5 px-4 ${showsPinnedBar ? 'pb-24' : 'pb-5'}`}>
         {isReported ? <ReportedView order={order} /> : null}
-        {isHold ? <HoldFlowCard order={order} /> : null}
+        {isHold ? <HoldFlowCard order={order} onDone={() => void reload()} /> : null}
 
         {isReported ? null : (
           <>
@@ -138,7 +143,7 @@ export default function OrderDetailPage() {
             </a>
           ) : null}
 
-          {showsDepositGuide ? (
+          {canCancelBeforeDeposit(order.status) ? (
             <button
               type="button"
               onClick={() => setOpenModal('CANCEL_AWAITING')}
@@ -146,6 +151,14 @@ export default function OrderDetailPage() {
             >
               예매 취소
             </button>
+          ) : null}
+
+          {/* 입금 확인중에는 운영자가 입금 내역을 대조하므로 취소 경로를 요청 취소로 한정한다. */}
+          {isReported ? (
+            <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
+              입금 확인중에는 예매를 취소할 수 없어요. 취소가 필요하면 먼저 입금확인 요청을 취소해
+              주세요.
+            </p>
           ) : null}
 
           {canRequestCancel(order.status) ? (
@@ -164,7 +177,7 @@ export default function OrderDetailPage() {
           <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
             티켓이 지급된 예매는 취소·환불이 불가능합니다.
           </p>
-        ) : (
+        ) : isReported ? null : (
           <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
             환불 수수료는 관람일 기준으로 단계별 적용됩니다. 자세한 내용은 공연 상세의 환불 정책을 확인해
             주세요.

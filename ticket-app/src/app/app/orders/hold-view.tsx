@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-
-import { DepositGuideCard } from '../_components/deposit-guide';
 import { CARD } from '../_components/ui';
+import { HoldDepositorBlock } from './hold-depositor-block';
+import { holdCauseOf, mismatchRows } from './hold-reason';
+import { HoldRefundBlock, HoldResendFold } from './hold-refund-block';
 import type { OrderDetailView } from '@/lib/api-types';
 
 // 사업자 정보 확정 전 자리표시 — 실값 수급 시 푸터와 함께 일괄 교체
@@ -43,22 +43,43 @@ function HoldStepper() {
   );
 }
 
-/** 보류 사유 텍스트에서 불일치 항목을 추려 낸다 */
-function mismatchRows(holdReason: string | null): string[] {
-  const reason = holdReason ?? '';
-  const rows = [];
-  if (reason.includes('입금자명')) rows.push('입금자명');
-  if (reason.includes('금액')) rows.push('금액');
-  return rows;
+/** 무엇이 다른가요 — 어긋난 항목을 먼저 짚어 회원이 원인을 납득하게 한다 */
+function MismatchSummary({ holdReason }: { holdReason: string | null }) {
+  const rows = mismatchRows(holdReason);
+
+  return (
+    <div className="border-t border-[#F2F4F6] pt-3.5">
+      <h3 className="text-[15px] font-bold text-[#191F28]">무엇이 다른가요</h3>
+      {rows.length > 0 ? (
+        <ul className="mt-2.5 flex flex-col gap-2">
+          {rows.map((label) => (
+            <li key={label} className="flex items-center gap-3 text-[14px] text-[#4E5968]">
+              {label}
+              <span className="rounded-lg border border-[#F6C6DA] bg-[#FDF2F7] px-2.5 py-1 text-[12.5px] font-semibold text-[#D6336C]">
+                불일치
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-2 text-[14px] leading-relaxed text-[#4E5968]">
+          {holdReason ?? '운영자가 입금 내역을 대조하고 있습니다.'}
+        </p>
+      )}
+    </div>
+  );
 }
 
 /**
- * 확인 보류 전용 해결 플로우 카드 — 무엇이 다른지·지금 할 일·확인되면
- * 어떻게 되는지를 한 흐름으로 묶어 상황을 예측 가능하게 만든다.
+ * 확인 보류 전용 해결 플로우 — 사유에 따라 다음 단계를 다르게 안내한다.
+ *  · 입금자명이 어긋남 → 실제로 쓴 입금자명을 알려주면 운영자가 그 이름으로 대조
+ *  · 금액이 어긋남     → 환불 계좌를 등록하고, 관람을 원하면 정확한 금액으로 다시 송금
+ * 회원은 이미 송금을 마친 상태이므로 "송금 유도"가 아니라 "해결"을 앞세운다.
  */
-export function HoldFlowCard({ order }: { order: OrderDetailView }) {
-  const [showsResend, setShowsResend] = useState(false);
-  const rows = mismatchRows(order.holdReason);
+export function HoldFlowCard({ order, onDone }: { order: OrderDetailView; onDone?: () => void }) {
+  const cause = holdCauseOf(order.holdReason);
+  const depositorStep = 1;
+  const refundStep = cause.isNameMismatch ? 2 : 1;
 
   return (
     <div className="flex flex-col gap-3">
@@ -73,50 +94,28 @@ export function HoldFlowCard({ order }: { order: OrderDetailView }) {
             <div className="min-w-0">
               <h2 className="text-[19px] font-bold text-[#C9184A]">입금 확인 보류</h2>
               <p className="mt-1 text-[14px] leading-relaxed text-[#4E5968]">
-                입금자명/금액이 예매 정보와 달라 운영자가 수동으로 대조하고 있어요.
+                입금 내역이 예매 정보와 달라 운영자가 대조하고 있어요. 아래 내용만 알려주시면 이어서
+                처리됩니다.
               </p>
             </div>
           </div>
           <HoldStepper />
         </div>
 
-        <div className="border-t border-[#F2F4F6] pt-3.5">
-          <h3 className="text-[15px] font-bold text-[#191F28]">무엇이 다른가요</h3>
-          {rows.length > 0 ? (
-            <ul className="mt-2.5 flex flex-col gap-2">
-              {rows.map((label) => (
-                <li key={label} className="flex items-center gap-3 text-[14px] text-[#4E5968]">
-                  {label}
-                  <span className="rounded-lg border border-[#F6C6DA] bg-[#FDF2F7] px-2.5 py-1 text-[12.5px] font-semibold text-[#D6336C]">
-                    불일치
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="mt-2 text-[14px] leading-relaxed text-[#4E5968]">
-              {order.holdReason ?? '운영자가 입금 내역을 대조하고 있습니다.'}
-            </p>
-          )}
-        </div>
+        <MismatchSummary holdReason={order.holdReason} />
 
         <div className="border-t border-[#F2F4F6] pt-3.5">
           <h3 className="text-[15px] font-bold text-[#191F28]">지금 할 일</h3>
-          <div className="mt-2.5 flex gap-2">
-            <a
-              href={`tel:${CS_TEL}`}
-              className="flex min-h-[48px] flex-1 items-center justify-center rounded-xl bg-[#D6336C] px-3 text-[15px] font-bold text-white"
-            >
-              고객센터 문의
-            </a>
-            <button
-              type="button"
-              onClick={() => setShowsResend((value) => !value)}
-              aria-expanded={showsResend}
-              className="flex min-h-[48px] flex-1 items-center justify-center rounded-xl border border-[#D6336C] bg-white px-3 text-[15px] font-bold text-[#D6336C]"
-            >
-              재송금 안내 보기
-            </button>
+          <div className="mt-2.5 flex flex-col gap-2.5">
+            {cause.isNameMismatch ? (
+              <HoldDepositorBlock order={order} step={depositorStep} onDone={onDone} />
+            ) : null}
+            {cause.isAmountMismatch ? (
+              <>
+                <HoldRefundBlock order={order} step={refundStep} onDone={onDone} />
+                <HoldResendFold order={order} />
+              </>
+            ) : null}
           </div>
         </div>
 
@@ -126,17 +125,14 @@ export function HoldFlowCard({ order }: { order: OrderDetailView }) {
             확인 완료 후, 공연 당일 CELEBUS 앱으로 티켓이 지급돼요.
           </p>
         </div>
-      </section>
 
-      {showsResend ? (
-        <div className="flex flex-col gap-3">
-          <p className="px-1 text-[13px] leading-relaxed text-[#6B7684]">
-            다르게 입금된 금액은 전액 환불 후 다시 예매하는 것이 원칙입니다. 재송금이 필요한 경우
-            고객센터 안내에 따라 아래 계좌로 정확한 금액·입금자명으로 보내 주세요.
-          </p>
-          <DepositGuideCard order={order} />
-        </div>
-      ) : null}
+        <a
+          href={`tel:${CS_TEL}`}
+          className="flex min-h-[48px] items-center justify-center rounded-xl border border-[#E5E8EB] bg-white px-4 text-[15px] font-semibold text-[#191F28]"
+        >
+          고객센터 문의
+        </a>
+      </section>
     </div>
   );
 }

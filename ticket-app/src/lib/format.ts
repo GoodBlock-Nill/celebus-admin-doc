@@ -4,6 +4,8 @@ import { KST_WEEKDAY_LABELS, kstParts } from './time';
 const MASK_CHARACTER = '*';
 const PHONE_MIDDLE_MASK = '****';
 const MIN_MASKABLE_NAME_LENGTH = 2;
+/** 계좌번호에서 그대로 노출하는 앞자리 수 */
+const ACCOUNT_VISIBLE_LENGTH = 3;
 
 function pad2(value: number): string {
   return String(value).padStart(2, '0');
@@ -71,6 +73,15 @@ export function maskName(name: string): string {
   if (trimmed.length === MIN_MASKABLE_NAME_LENGTH) return `${trimmed[0]}${MASK_CHARACTER}`;
   const middle = MASK_CHARACTER.repeat(trimmed.length - 2);
   return `${trimmed[0]}${middle}${trimmed[trimmed.length - 1]}`;
+}
+
+/** 계좌번호 마스킹 — 110123456789 → 110********* (앞 3자리만 노출) */
+export function maskAccountNumber(account: string): string {
+  const trimmed = account.trim();
+  if (trimmed.length === 0) return '';
+  if (trimmed.length <= ACCOUNT_VISIBLE_LENGTH) return MASK_CHARACTER.repeat(trimmed.length);
+  const head = trimmed.slice(0, ACCOUNT_VISIBLE_LENGTH);
+  return `${head}${MASK_CHARACTER.repeat(trimmed.length - ACCOUNT_VISIBLE_LENGTH)}`;
 }
 
 /** 휴대폰번호 마스킹 — 01012345678 → 010-****-5678 */

@@ -11,6 +11,7 @@ import {
   amountColumn,
   depositedAtColumn,
   depositorColumn,
+  holdSubmissionColumn,
   memoColumn,
   orderColumn,
   statusColumn,
@@ -87,6 +88,7 @@ export function HeldTab({
     statusColumn,
     memoColumn,
     orderColumn,
+    holdSubmissionColumn,
     {
       key: 'action',
       header: '처리',
@@ -153,14 +155,15 @@ export function HeldTab({
     <div className="flex flex-col gap-3">
       <InfoNote tone="warning">
         금액만 맞고 입금자명이 다른 건은 자동으로 보류됩니다. 동명이인·대리 입금은 주문을 확인한 뒤 수동 매칭하고,
-        예매와 무관한 입금은 반환 대상으로 지정하세요.
+        예매와 무관한 입금은 반환 대상으로 지정하세요. 회원이 실제 입금자명·환불 계좌를 알려온 건은
+        &lsquo;회원이 알린 정보&rsquo;에 표시되며, 그 이름으로 은행 내역을 대조하면 됩니다.
       </InfoNote>
       <DataTable
         columns={columns}
         rows={rows}
         rowKey={(row) => row.id}
         emptyText="보류 중인 입금이 없습니다."
-        minWidth="1020px"
+        minWidth="1280px"
         renderSubRow={renderSubRow}
       />
     </div>

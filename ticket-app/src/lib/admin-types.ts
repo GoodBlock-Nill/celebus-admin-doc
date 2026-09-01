@@ -63,6 +63,14 @@ export interface AdminOrderView {
   depositDeadline: string;
   sessionName: string;
   holdReason: string | null;
+  /** 확인 보류 해결을 위해 회원이 알린 실제 입금자명 — 은행 내역 대조 힌트 */
+  holdActualDepositor: string | null;
+  /** 회원이 등록한 오입금 환불 계좌 (계좌번호는 마스킹 값만 내려준다) */
+  refundBank: string | null;
+  refundAccountMasked: string | null;
+  refundHolder: string | null;
+  /** 회원이 보류 해결 정보를 마지막으로 알린 시각 */
+  holdInfoSubmittedAt: string | null;
   /** 회원이 입금확인을 요청한 시각 (요청이 없으면 null) */
   depositReportedAt: string | null;
   /** 운영자가 미입금으로 반려한 시각 */

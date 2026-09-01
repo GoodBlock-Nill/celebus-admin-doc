@@ -56,3 +56,12 @@ export function orderTabOf(status: OrderStatus): OrderTabKey {
 export function canRequestCancel(status: OrderStatus): boolean {
   return status === 'DEPOSIT_CONFIRMED';
 }
+
+/**
+ * 회원이 즉시 취소할 수 있는 예매 상태 (입금 확인 전).
+ * 입금 확인중은 운영자가 입금 내역을 대조하는 중이라 제외한다 —
+ * 취소가 필요하면 입금확인 요청을 먼저 취소해야 한다.
+ */
+export function canCancelBeforeDeposit(status: OrderStatus): boolean {
+  return status === 'AWAITING_DEPOSIT' || status === 'ON_HOLD';
+}

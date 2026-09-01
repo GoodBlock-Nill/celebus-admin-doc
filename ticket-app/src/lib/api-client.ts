@@ -67,6 +67,22 @@ export interface ReportInput {
   evidenceUrl?: string;
 }
 
+/**
+ * 확인 보류 해결 정보 — 필요한 항목만 골라 보낸다(부분 제출 허용).
+ * 환불 계좌는 은행·계좌번호·예금주를 한 묶음으로 보낸다.
+ */
+export interface HoldInfoInput {
+  actualDepositor?: string;
+  refundBank?: string;
+  refundAccount?: string;
+  refundHolder?: string;
+}
+
+export interface HoldInfoResult {
+  holdInfoSubmittedAt: string;
+  refundAccountMasked: string | null;
+}
+
 export const api = {
   me: () => request<{ me: MeView }>('/api/me'),
   concerts: () => request<{ items: ConcertWithSessions[] }>('/api/concerts'),
@@ -81,5 +97,7 @@ export const api = {
   cancelOrder: (orderId: string) => post<{ cancelled: boolean; status: string }>(`/api/orders/${orderId}/cancel`),
   reportDeposit: (orderId: string) => post<{ status: string }>(`/api/orders/${orderId}/report-deposit`),
   cancelDepositReport: (orderId: string) => post<{ status: string }>(`/api/orders/${orderId}/cancel-report`),
+  submitHoldInfo: (orderId: string, input: HoldInfoInput) =>
+    post<HoldInfoResult>(`/api/orders/${orderId}/hold-info`, input),
   submitReport: (input: ReportInput) => post<{ reportId: string }>('/api/reports', input),
 };

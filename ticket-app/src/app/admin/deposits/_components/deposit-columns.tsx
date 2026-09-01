@@ -63,6 +63,43 @@ export const orderColumn: Column<AdminDepositView> = {
     ),
 };
 
+/**
+ * 회원이 확인 보류를 풀려고 알려 온 정보.
+ * 실제 입금자명은 은행 내역 대조의 직접적인 힌트이므로 강조해 보여 준다.
+ */
+export const holdSubmissionColumn: Column<AdminDepositView> = {
+  key: 'holdSubmission',
+  header: '회원이 알린 정보',
+  width: '260px',
+  render: (row) => {
+    const order = row.order;
+    if (!order || !order.holdInfoSubmittedAt) {
+      return <span className="text-[12px] text-[#6B7080]">알려온 정보 없음</span>;
+    }
+
+    return (
+      <div className="flex flex-col gap-1">
+        {order.holdActualDepositor ? (
+          <span className="flex flex-wrap items-center gap-1.5">
+            <Badge tone="accent">실제 입금자명</Badge>
+            <span className="text-[13px] font-semibold text-[#191F28]">
+              {order.holdActualDepositor}
+            </span>
+          </span>
+        ) : null}
+        {order.refundBank && order.refundAccountMasked ? (
+          <span className="text-[12px] text-[#4A4E5A]">
+            환불 계좌 {order.refundBank} {order.refundAccountMasked} · 예금주 {order.refundHolder}
+          </span>
+        ) : null}
+        <span className="text-[11.5px] tabular-nums text-[#6B7080]">
+          전달 {formatDateTime(order.holdInfoSubmittedAt)}
+        </span>
+      </div>
+    );
+  },
+};
+
 export const memoColumn: Column<AdminDepositView> = {
   key: 'memo',
   header: '보류·반환 사유',

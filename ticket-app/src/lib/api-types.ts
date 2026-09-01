@@ -126,6 +126,14 @@ export interface OrderDetailView extends OrderSummaryView {
   wantsCashReceipt: boolean;
   cashReceiptPhoneMasked: string | null;
   holdReason: string | null;
+  /** 확인 보류를 풀기 위해 회원이 알린 실제 입금자명 (미제출이면 null) */
+  holdActualDepositor: string | null;
+  /** 오입금 환불 계좌 — 계좌번호는 마스킹 값만 내려받는다 */
+  refundBank: string | null;
+  refundAccountMasked: string | null;
+  refundHolder: string | null;
+  /** 보류 해결 정보를 마지막으로 알린 시각 (미제출이면 null) */
+  holdInfoSubmittedAt: string | null;
   depositConfirmedAt: string | null;
   cancelRequestedAt: string | null;
   refundedAt: string | null;

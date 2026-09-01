@@ -20,7 +20,7 @@ import type {
   TicketDetailView,
   TicketSummaryView,
 } from '@/lib/api-types';
-import { maskPhone } from '@/lib/format';
+import { maskAccountNumber, maskPhone } from '@/lib/format';
 
 const UNKNOWN_CONCERT = '공연 정보 없음';
 const UNKNOWN_SESSION = '-';
@@ -124,6 +124,12 @@ export function maskedCashReceiptPhone(row: OrderRow): string | null {
   if (!row.wants_cash_receipt) return null;
   const phone = decryptText(row.cash_receipt_phone_enc);
   return phone ? maskPhone(phone) : null;
+}
+
+/** 환불 계좌번호도 복호 후 마스킹만 반환한다(원문 비노출). */
+export function maskedRefundAccount(encrypted: string | null): string | null {
+  const account = decryptText(encrypted);
+  return account ? maskAccountNumber(account) : null;
 }
 
 export function toTicketSummary(

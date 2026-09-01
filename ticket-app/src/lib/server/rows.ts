@@ -48,6 +48,13 @@ export interface OrderRow {
   wants_cash_receipt: boolean;
   cash_receipt_phone_enc: string | null;
   hold_reason: string | null;
+  /** 회원이 알린 실제 입금자명 (확인 보류 대조용) */
+  hold_actual_depositor: string | null;
+  /** 오입금 환불 계좌 — 계좌번호는 암호문이라 복호 후 마스킹만 내려준다 */
+  refund_bank: string | null;
+  refund_account_enc: string | null;
+  refund_holder: string | null;
+  hold_info_submitted_at: string | null;
   deposit_confirmed_at: string | null;
   cancel_requested_at: string | null;
   refunded_at: string | null;
@@ -108,6 +115,7 @@ export const ORDER_COLUMNS =
   'id, order_no, status, qty, amount_krw, created_at, deposit_deadline, ' +
   'deposit_reported_at, report_rejected_at, concert_id, session_id, ' +
   'depositor_name_rule, wants_cash_receipt, cash_receipt_phone_enc, hold_reason, ' +
+  'hold_actual_depositor, refund_bank, refund_account_enc, refund_holder, hold_info_submitted_at, ' +
   'deposit_confirmed_at, cancel_requested_at, refunded_at';
 
 export const TICKET_COLUMNS =

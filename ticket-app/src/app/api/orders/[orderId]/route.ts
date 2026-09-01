@@ -1,6 +1,12 @@
 import { HTTP_STATUS, fail, isResponse, ok, readFailure, requireMember } from '@/lib/server/api';
 import { admin } from '@/lib/server/db-admin';
-import { loadConcertBriefs, loadSessionBriefs, maskedCashReceiptPhone, toOrderSummary } from '@/lib/server/mappers';
+import {
+  loadConcertBriefs,
+  loadSessionBriefs,
+  maskedCashReceiptPhone,
+  maskedRefundAccount,
+  toOrderSummary,
+} from '@/lib/server/mappers';
 import { ORDER_COLUMNS, type OrderRow, type SettingsRow, type VerificationRow } from '@/lib/server/rows';
 import type { OrderDetailView } from '@/lib/api-types';
 
@@ -60,6 +66,11 @@ export async function GET(req: Request, context: { params: Promise<{ orderId: st
     wantsCashReceipt: row.wants_cash_receipt,
     cashReceiptPhoneMasked: maskedCashReceiptPhone(row),
     holdReason: row.hold_reason,
+    holdActualDepositor: row.hold_actual_depositor,
+    refundBank: row.refund_bank,
+    refundAccountMasked: maskedRefundAccount(row.refund_account_enc),
+    refundHolder: row.refund_holder,
+    holdInfoSubmittedAt: row.hold_info_submitted_at,
     depositConfirmedAt: row.deposit_confirmed_at,
     cancelRequestedAt: row.cancel_requested_at,
     refundedAt: row.refunded_at,
