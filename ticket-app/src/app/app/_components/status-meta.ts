@@ -1,5 +1,5 @@
 import type { BadgeTone } from './badge';
-import type { ConcertStatus, OrderStatus, TicketStatus } from '@/lib/api-types';
+import type { ConcertStatus, OrderStatus } from '@/lib/api-types';
 
 export interface StatusMeta {
   label: string;
@@ -25,12 +25,6 @@ export const ORDER_STATUS_META: Record<OrderStatus, StatusMeta> = {
 };
 
 /** 티켓 상태 */
-export const TICKET_STATUS_META: Record<TicketStatus, StatusMeta> = {
-  VALID: { label: '사용 가능', tone: 'success' },
-  USED: { label: '입장 완료', tone: 'muted' },
-  REVOKED: { label: '회수됨', tone: 'danger' },
-};
-
 /** 입금 안내를 다시 보여줘야 하는 예매 상태 */
 export function needsDepositGuide(status: OrderStatus): boolean {
   return status === 'AWAITING_DEPOSIT' || status === 'ON_HOLD';
