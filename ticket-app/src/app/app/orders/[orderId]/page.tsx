@@ -18,6 +18,7 @@ import {
 import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_components/ui';
 import { useApiResource } from '../../_components/use-api-resource';
 import { CancelModals, type CancelModalKind } from '../cancel-modals';
+import { DdayScheduleCard } from '../dday-schedule-card';
 import { DepositReportActions } from '../deposit-report-actions';
 import { HoldFlowCard } from '../hold-view';
 import { OrderInfoCard } from '../order-info-card';
@@ -110,6 +111,8 @@ export default function OrderDetailPage() {
       <div className={`flex flex-col gap-3.5 px-4 ${showsPinnedBar ? 'pb-24' : 'pb-5'}`}>
         {isReported ? <ReportedView order={order} /> : null}
         {isHold ? <HoldFlowCard order={order} onDone={() => void reload()} /> : null}
+        {/* 예매 확정(입금 확인) 후에는 다음 일정(공연 당일 발권)이 첫 시선에 오도록 D-Day 카드를 최상단에 둔다. */}
+        {order.status === 'DEPOSIT_CONFIRMED' ? <DdayScheduleCard order={order} /> : null}
 
         {isReported ? null : (
           <>
