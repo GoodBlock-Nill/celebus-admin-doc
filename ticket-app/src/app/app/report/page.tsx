@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { AppHeader } from '../_components/app-header';
-import { CheckIcon, ShieldIcon } from '../_components/icons';
-import { NoticeBox, SectionCard } from '../_components/section';
+import { CheckIcon, ChevronDownIcon, ShieldIcon } from '../_components/icons';
+import { SectionCard } from '../_components/section';
 import { CARD, GHOST_BUTTON, MUTED, NUMERIC } from '../_components/ui';
 import { ReportForm, type ReportSubmitInput } from './report-form';
 import { api } from '@/lib/api-client';
@@ -49,25 +49,6 @@ export default function ReportPage() {
       />
 
       <div className="flex flex-col gap-3.5 px-4 pb-2">
-        <div className={`${CARD} flex items-start gap-3 p-4`}>
-          <ShieldIcon className="mt-0.5 h-6 w-6 shrink-0 text-[#6B7684]" />
-          <p className="text-[13.5px] leading-[1.65] text-[#4E5968]">
-            접수된 신고는 관련 법령에 따라 신속히 조치되며, 필요한 경우 수사기관에 제공될 수 있습니다.
-          </p>
-        </div>
-
-        <NoticeBox tone="muted">
-          정부 통합 창구에도 신고할 수 있습니다.{' '}
-          <a
-            href={EXTERNAL_REPORT_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="font-semibold text-[#191F28] underline underline-offset-2"
-          >
-            문화체육관광부 암표 통합 신고 누리집 (culture.go.kr/singo)
-          </a>
-        </NoticeBox>
-
         {receiptNo ? (
           <>
             <div className="flex flex-col items-center gap-3 rounded-2xl bg-[#ECFDF3] px-5 py-9 text-center">
@@ -95,13 +76,59 @@ export default function ReportPage() {
             </Link>
           </>
         ) : (
-          <ReportForm
-            busy={isSubmitting}
-            serverError={errorMessage}
-            onSubmit={(input) => void handleSubmit(input)}
-          />
+          <>
+            <ReportForm
+              busy={isSubmitting}
+              serverError={errorMessage}
+              onSubmit={(input) => void handleSubmit(input)}
+            />
+            <ReportGuideFold />
+          </>
         )}
       </div>
     </main>
+  );
+}
+
+/** 법령·정부 창구 안내 접힘 — 신고 진입을 막지 않도록 폼 아래에 둔다 */
+function ReportGuideFold() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <section className={`${CARD} overflow-hidden`}>
+      <button
+        type="button"
+        onClick={() => setIsOpen((value) => !value)}
+        aria-expanded={isOpen}
+        className="flex w-full items-center gap-3 px-4 py-3.5 text-left"
+      >
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#F2F4F6]">
+          <ShieldIcon className="h-5 w-5 text-[#4E5968]" />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[15px] font-bold text-[#191F28]">안내</span>
+          <span className={`block text-[12.5px] ${MUTED}`}>접수 후 24시간 이내 노출 차단 등 조치</span>
+        </span>
+        <ChevronDownIcon
+          className={`h-5 w-5 shrink-0 text-[#8B95A1] transition-transform ${isOpen ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {isOpen ? (
+        <div className="flex flex-col gap-2.5 border-t border-[#F2F4F6] px-4 pb-4 pt-3 text-[13px] leading-[1.65] text-[#4E5968]">
+          <p>접수된 신고는 관련 법령에 따라 신속히 조치되며, 필요한 경우 수사기관에 제공될 수 있습니다.</p>
+          <p>
+            정부 통합 창구에도 신고할 수 있습니다.{' '}
+            <a
+              href={EXTERNAL_REPORT_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-[#191F28] underline underline-offset-2"
+            >
+              문화체육관광부 암표 통합 신고 누리집 (culture.go.kr/singo)
+            </a>
+          </p>
+        </div>
+      ) : null}
+    </section>
   );
 }

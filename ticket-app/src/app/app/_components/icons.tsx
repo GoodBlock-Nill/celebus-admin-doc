@@ -57,6 +57,34 @@ export function DoorEnterIcon({ className = 'h-6 w-6' }: IconProps) {
   );
 }
 
+export function PostIcon({ className = 'h-6 w-6' }: IconProps) {
+  return (
+    <svg {...BASE_PROPS} className={className} aria-hidden="true">
+      <rect x="4.5" y="6.5" width="12" height="13" rx="2" />
+      <path d="M8 10.5h5M8 13.5h5M9.5 3.5h8a2 2 0 0 1 2 2v9" />
+    </svg>
+  );
+}
+
+export function UserIcon({ className = 'h-6 w-6' }: IconProps) {
+  return (
+    <svg {...BASE_PROPS} className={className} aria-hidden="true">
+      <circle cx="12" cy="8.5" r="3.5" />
+      <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
+    </svg>
+  );
+}
+
+export function LinkIcon({ className = 'h-5 w-5' }: IconProps) {
+  return (
+    <svg {...BASE_PROPS} className={className} aria-hidden="true">
+      <path d="M10.5 13.5 13.5 10.5" />
+      <path d="M8.5 12 6.8 13.7a3.1 3.1 0 0 0 4.4 4.4L12.9 16.4" />
+      <path d="M15.5 12l1.7-1.7a3.1 3.1 0 0 0-4.4-4.4L11.1 7.6" />
+    </svg>
+  );
+}
+
 export function SirenIcon({ className = 'h-6 w-6' }: IconProps) {
   return (
     <svg {...BASE_PROPS} className={className} aria-hidden="true">

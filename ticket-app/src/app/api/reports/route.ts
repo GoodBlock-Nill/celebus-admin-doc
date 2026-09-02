@@ -11,8 +11,7 @@ import {
 } from '@/lib/server/api';
 import { admin } from '@/lib/server/db-admin';
 
-const MIN_DETAIL_LENGTH = 10;
-const MAX_DETAIL_LENGTH = 500;
+const MAX_DETAIL_LENGTH = 1000;
 const MAX_URL_LENGTH = 500;
 
 const APP_REPORT_SOURCE = '앱 신고';
@@ -20,7 +19,8 @@ const APP_REPORT_SOURCE = '앱 신고';
 const schema = z.object({
   targetType: z.enum(['게시물', '계정', '외부 링크']),
   reason: z.string().trim().min(1).max(50),
-  detail: z.string().trim().min(MIN_DETAIL_LENGTH).max(MAX_DETAIL_LENGTH),
+  // 상세 내용은 선택 — 대상·사유 두 선택만으로 접수할 수 있게 한다.
+  detail: z.string().trim().max(MAX_DETAIL_LENGTH),
   evidenceUrl: z.union([z.literal(''), z.string().url().max(MAX_URL_LENGTH)]).optional(),
 });
 
