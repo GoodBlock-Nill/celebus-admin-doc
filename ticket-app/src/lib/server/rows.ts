@@ -54,6 +54,9 @@ export interface OrderRow {
   cancel_rejected_at: string | null;
   /** 입금 확인 요청 누적 횟수 (요청 취소로는 줄지 않는다) */
   deposit_report_count: number;
+  /** 환불 확정 수수료·실환불액 (환불 승인 시 기록, 그 전엔 null) */
+  refund_fee_krw: number | null;
+  refund_amount_krw: number | null;
   concert_id: string;
   session_id: string;
   depositor_name_rule: string;
@@ -133,7 +136,7 @@ export const ORDER_COLUMNS =
   'deposit_report_count, concert_id, session_id, ' +
   'depositor_name_rule, wants_cash_receipt, cash_receipt_phone_enc, hold_reason, hold_cause, ' +
   'hold_actual_depositor, refund_bank, refund_account_enc, refund_holder, hold_info_submitted_at, ' +
-  'deposit_confirmed_at, cancel_requested_at, refunded_at';
+  'deposit_confirmed_at, cancel_requested_at, refunded_at, refund_fee_krw, refund_amount_krw';
 
 export const TICKET_COLUMNS =
   'id, code, order_id, concert_id, session_id, pool_type, status, issued_at, used_at';

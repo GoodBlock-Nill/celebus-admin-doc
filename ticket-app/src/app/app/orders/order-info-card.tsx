@@ -2,10 +2,10 @@ import { InfoRow, SectionCard } from '../_components/section';
 import type { OrderDetailView } from '@/lib/api-types';
 import { formatDateTime, formatKrw } from '@/lib/format';
 
-/** 예매 정보 카드 — 예매 상세 기본 구성용 전체 항목 */
-export function OrderInfoCard({ order }: { order: OrderDetailView }) {
+/** 예매 정보 행 묶음 — 카드 없이 재사용할 수 있게 분리 */
+export function OrderInfoRows({ order }: { order: OrderDetailView }) {
   return (
-    <SectionCard title="예매 정보">
+    <>
       <InfoRow label="예매번호" value={order.orderNo} />
       <InfoRow label="공연" value={order.concertTitle} />
       <InfoRow label="회차" value={order.sessionName} />
@@ -24,6 +24,15 @@ export function OrderInfoCard({ order }: { order: OrderDetailView }) {
             : '미신청'
         }
       />
+    </>
+  );
+}
+
+/** 예매 정보 카드 — 예매 상세 기본 구성용 전체 항목 */
+export function OrderInfoCard({ order }: { order: OrderDetailView }) {
+  return (
+    <SectionCard title="예매 정보">
+      <OrderInfoRows order={order} />
     </SectionCard>
   );
 }

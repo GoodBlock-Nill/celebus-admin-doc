@@ -26,6 +26,7 @@ import { OrderInfoCard } from '../order-info-card';
 import { OrderStatusNotice } from '../order-status-notice';
 import { PinnedActionBar } from '../pinned-action-bar';
 import { RefundAccountSection } from '../refund-account-section';
+import { CollapsedOrderInfo, RefundReceiptCard } from '../refund-receipt';
 import { RefundSummaryCard } from '../refund-summary-card';
 import { ReportedView } from '../reported-view';
 import { OrderTimeline } from '../order-timeline';
@@ -80,6 +81,8 @@ export default function OrderDetailPage() {
   );
   // 취소 요청은 환불 요약(수수료·예상 환불액·입금처)이 계좌 구획까지 담당한다.
   const isCancelRequested = order.status === 'CANCEL_REQUESTED';
+  // 환불 완료는 영수증이 화면을 완결한다 — 정보 카드는 접고 진행 상태·안내는 생략.
+  const isRefunded = order.status === 'REFUNDED';
   // 돈을 돌려줘야 하는 예매에는 상태와 무관하게 환불 계좌 등록 구획을 연다.
   //   · 보류 반려로 되돌아온 입금 대기  · 반환 대상 입금이 남은 예매
   const showsRefundAccount =
@@ -126,7 +129,14 @@ export default function OrderDetailPage() {
           </>
         ) : null}
 
-        {isReported ? null : (
+        {isRefunded ? (
+          <>
+            <RefundReceiptCard order={order} />
+            <CollapsedOrderInfo order={order} />
+          </>
+        ) : null}
+
+        {isReported || isRefunded ? null : (
           <>
             <OrderInfoCard order={order} />
             <SectionCard title="진행 상태">
@@ -148,7 +158,7 @@ export default function OrderDetailPage() {
           </>
         ) : null}
 
-        {showsDepositGuide ? null : <OrderStatusNotice order={order} />}
+        {showsDepositGuide || isRefunded ? null : <OrderStatusNotice order={order} />}
 
         {showsDepositGuide ? null : refundAccountSection}
 
@@ -198,7 +208,7 @@ export default function OrderDetailPage() {
           <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
             티켓이 지급된 예매는 취소·환불이 불가능합니다.
           </p>
-        ) : isReported ? null : (
+        ) : isReported || isRefunded ? null : (
           <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
             환불 수수료는 관람일 기준으로 단계별 적용됩니다. 자세한 내용은 공연 상세의 환불 정책을 확인해
             주세요.

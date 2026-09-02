@@ -114,6 +114,8 @@ export function toOrderSummary(
     holdRejectedAt: row.hold_rejected_at,
     cancelRejectedAt: row.cancel_rejected_at,
     depositReportCount: row.deposit_report_count,
+    refundFeeKrw: row.refund_fee_krw,
+    refundAmountKrw: row.refund_amount_krw,
     concertId: row.concert_id,
     concertTitle: concert?.title ?? UNKNOWN_CONCERT,
     concertStatus: concert?.status ?? 'CLOSED',

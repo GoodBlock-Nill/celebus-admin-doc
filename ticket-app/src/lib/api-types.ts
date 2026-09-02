@@ -136,6 +136,9 @@ export interface OrderSummaryView {
   cancelRejectedAt: string | null;
   /** 입금 확인 요청 누적 횟수 — 남은 요청 횟수 안내에 사용 */
   depositReportCount: number;
+  /** 환불 확정 수수료·실환불액 (환불 승인 시 기록, 그 전엔 null) */
+  refundFeeKrw: number | null;
+  refundAmountKrw: number | null;
   concertId: string;
   concertTitle: string;
   /** 공연 판매 상태 — 공연 취소 안내를 예매 화면에서 함께 보여 주기 위해 내려준다 */
