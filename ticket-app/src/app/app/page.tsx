@@ -3,9 +3,9 @@
 import { useCallback } from 'react';
 
 import { AppHeader } from './_components/app-header';
-import { Badge } from './_components/badge';
 import { ConcertCard } from './_components/concert-card';
 import { ChevronLeftIcon } from './_components/icons';
+import { MyStatusCard } from './_components/my-status-card';
 import { VerifyBanner } from './_components/verify-banner';
 import { CELEBUS_APP_URL } from '@/lib/constants';
 import { EmptyState, ErrorState, PageSkeleton } from './_components/feedback';
@@ -37,9 +37,8 @@ export default function MemberAppHomePage() {
     <main>
       <AppHeader title="공연 예매" right={<CelebusAppLink />}>
         {me.verified ? (
-          <div className="mt-2.5 flex items-center gap-2">
-            <span className="text-[14px] font-semibold text-[#191F28]">{me.nickname || '회원'}</span>
-            <Badge tone="success">본인확인 완료</Badge>
+          <div className="mt-3">
+            <MyStatusCard me={me} />
           </div>
         ) : (
           <div className="mt-3">
