@@ -39,6 +39,24 @@ export function ClockIcon({ className = 'h-4 w-4' }: IconProps) {
   );
 }
 
+export function TicketIcon({ className = 'h-6 w-6' }: IconProps) {
+  return (
+    <svg {...BASE_PROPS} className={className} aria-hidden="true">
+      <path d="M4 8.5V6h16v2.5a2.2 2.2 0 0 0 0 7V18H4v-2.5a2.2 2.2 0 0 0 0-7z" />
+      <path d="M13 7.5v9" strokeDasharray="2 2.5" />
+    </svg>
+  );
+}
+
+export function DoorEnterIcon({ className = 'h-6 w-6' }: IconProps) {
+  return (
+    <svg {...BASE_PROPS} className={className} aria-hidden="true">
+      <path d="M13 4h6v16h-6" />
+      <path d="M4 12h9M10 8.5 13.5 12 10 15.5" />
+    </svg>
+  );
+}
+
 export function SirenIcon({ className = 'h-6 w-6' }: IconProps) {
   return (
     <svg {...BASE_PROPS} className={className} aria-hidden="true">

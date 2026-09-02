@@ -19,6 +19,7 @@ import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_compo
 import { useApiResource } from '../../_components/use-api-resource';
 import { CancelModals, type CancelModalKind } from '../cancel-modals';
 import { DdayScheduleCard } from '../dday-schedule-card';
+import { EntryGuideCard, PaidHero } from '../paid-hero';
 import { DepositReportActions } from '../deposit-report-actions';
 import { HoldFlowCard } from '../hold-view';
 import { OrderInfoCard } from '../order-info-card';
@@ -28,7 +29,6 @@ import { RefundAccountSection } from '../refund-account-section';
 import { ReportedView } from '../reported-view';
 import { OrderTimeline } from '../order-timeline';
 import { api } from '@/lib/api-client';
-import { CELEBUS_APP_URL } from '@/lib/constants';
 
 /** A5 예매 상세 */
 export default function OrderDetailPage() {
@@ -113,6 +113,13 @@ export default function OrderDetailPage() {
         {isHold ? <HoldFlowCard order={order} onDone={() => void reload()} /> : null}
         {/* 예매 확정(입금 확인) 후에는 다음 일정(공연 당일 발권)이 첫 시선에 오도록 D-Day 카드를 최상단에 둔다. */}
         {order.status === 'DEPOSIT_CONFIRMED' ? <DdayScheduleCard order={order} /> : null}
+        {/* 지급 완료는 성공 히어로가 다음 행동(본앱 발권)까지 담당한다. */}
+        {order.status === 'PAID' ? (
+          <>
+            <PaidHero />
+            <EntryGuideCard />
+          </>
+        ) : null}
 
         {isReported ? null : (
           <>
@@ -151,18 +158,6 @@ export default function OrderDetailPage() {
               onFail={setErrorMessage}
             />
           )}
-
-          {/* 발권·입장 확인은 CELEBUS 본앱이 담당하므로 티켓이 지급된 예매는 본앱으로 보낸다. */}
-          {order.status === 'PAID' ? (
-            <a
-              href={CELEBUS_APP_URL}
-              target="_blank"
-              rel="noreferrer"
-              className={PRIMARY_BUTTON}
-            >
-              CELEBUS 앱에서 티켓 확인
-            </a>
-          ) : null}
 
           {canCancelBeforeDeposit(order.status) ? (
             <button
