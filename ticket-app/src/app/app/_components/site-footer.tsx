@@ -6,11 +6,11 @@ import Link from 'next/link';
  */
 const COMPANY = {
   name: '(주)굿블록',
-  ceo: '{대표자명}',
-  businessNo: '{000-00-00000}',
+  ceo: '고경민',
+  businessNo: '111-81-35074',
   mailOrderNo: '{제0000-서울OO-0000호}',
-  address: '{서울특별시 ...}',
-  tel: '{0000-0000}',
+  address: '서울특별시 강남구 테헤란로25길 7, 7층(역삼동, 창성재단빌딩)',
+  email: 'cs@celebus.xyz',
   officeHours: '평일 10:00~18:00',
 } as const;
 
@@ -24,7 +24,7 @@ export function SiteFooter() {
         사업자등록번호: {COMPANY.businessNo} | 통신판매업신고: {COMPANY.mailOrderNo}
       </p>
       <p>
-        주소: {COMPANY.address} | 고객센터: {COMPANY.tel} ({COMPANY.officeHours})
+        주소: {COMPANY.address} | 고객센터: {COMPANY.email} ({COMPANY.officeHours})
       </p>
 
       <p className="mt-2.5 flex items-center gap-2">

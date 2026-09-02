@@ -85,6 +85,24 @@ export function LinkIcon({ className = 'h-5 w-5' }: IconProps) {
   );
 }
 
+export function ImageIcon({ className = 'h-5 w-5' }: IconProps) {
+  return (
+    <svg {...BASE_PROPS} className={className} aria-hidden="true">
+      <rect x="3.5" y="4.5" width="17" height="15" rx="2.5" />
+      <circle cx="9" cy="9.75" r="1.5" />
+      <path d="M4 16.5 9 12l3.5 3 2.5-2.2 5 4.2" />
+    </svg>
+  );
+}
+
+export function CloseIcon({ className = 'h-4 w-4' }: IconProps) {
+  return (
+    <svg {...BASE_PROPS} className={className} aria-hidden="true">
+      <path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5" />
+    </svg>
+  );
+}
+
 export function SirenIcon({ className = 'h-6 w-6' }: IconProps) {
   return (
     <svg {...BASE_PROPS} className={className} aria-hidden="true">

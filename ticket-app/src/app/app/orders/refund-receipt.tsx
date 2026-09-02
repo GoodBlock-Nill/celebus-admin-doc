@@ -6,10 +6,8 @@ import { ChevronDownIcon } from '../_components/icons';
 import { CARD, NUMERIC } from '../_components/ui';
 import { OrderInfoRows } from './order-info-card';
 import type { OrderDetailView } from '@/lib/api-types';
+import { CS_EMAIL } from '@/lib/constants';
 import { formatDateTime, formatKrw } from '@/lib/format';
-
-// 사업자 정보 확정 전 자리표시 — 실값 수급 시 푸터와 함께 일괄 교체
-const CS_TEL = '{0000-0000}';
 
 /** 영수증 번호 — 예매번호에서 파생되는 결정적 표기 (T260901-0001 → RF-260901-0001) */
 function receiptNoOf(orderNo: string): string {
@@ -66,7 +64,7 @@ export function RefundReceiptCard({ order }: { order: OrderDetailView }) {
         </button>
         <span aria-hidden="true" className="my-3 w-px bg-[#E5E8EB]" />
         <a
-          href={`tel:${CS_TEL}`}
+          href={`mailto:${CS_EMAIL}`}
           className="flex min-h-[52px] flex-1 items-center justify-center text-[15px] font-bold text-[#191F28]"
         >
           문의하기

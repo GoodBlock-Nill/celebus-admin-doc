@@ -5,7 +5,9 @@ import { useState } from 'react';
 import { ErrorBanner } from '../_components/feedback';
 import { LinkIcon, PostIcon, UserIcon } from '../_components/icons';
 import { INPUT, MUTED, PRIMARY_BUTTON } from '../_components/ui';
+import { EvidenceField } from './evidence-field';
 import { StepCard } from './step-card';
+import { useEvidenceUpload } from './use-evidence-upload';
 import type { ReportTargetType } from '@/lib/api-types';
 
 /** 상세 내용 최대 입력 길이 — 3단계 중 유일한 자유 입력이며 선택 사항이다 */
@@ -31,6 +33,8 @@ export interface ReportSubmitInput {
   reason: string;
   detail: string;
   evidenceUrl: string;
+  /** 미리 올려 둔 증빙 이미지의 보관함 경로 목록 */
+  evidenceFiles: string[];
 }
 
 interface ReportFormProps {
@@ -47,10 +51,10 @@ export function ReportForm({ busy, serverError, onSubmit }: ReportFormProps) {
   const [targetType, setTargetType] = useState<ReportTargetType | null>(null);
   const [reason, setReason] = useState<string>('');
   const [detail, setDetail] = useState('');
-  const [showsEvidence, setShowsEvidence] = useState(false);
   const [evidenceUrl, setEvidenceUrl] = useState('');
+  const evidence = useEvidenceUpload();
 
-  const canSubmit = targetType !== null && reason !== '';
+  const canSubmit = targetType !== null && reason !== '' && !evidence.isUploading;
 
   const handleSubmit = () => {
     if (!canSubmit || busy) return;
@@ -59,6 +63,7 @@ export function ReportForm({ busy, serverError, onSubmit }: ReportFormProps) {
       reason,
       detail: detail.trim(),
       evidenceUrl: evidenceUrl.trim(),
+      evidenceFiles: evidence.attachments.map((item) => item.path),
     });
   };
 
@@ -137,34 +142,15 @@ export function ReportForm({ busy, serverError, onSubmit }: ReportFormProps) {
             </div>
           </div>
 
-          <div>
-            <p className="mb-1.5 text-[13.5px] font-semibold text-[#191F28]">
-              증거 자료 <span className={`font-medium ${MUTED}`}>(선택)</span>
-            </p>
-            <button
-              type="button"
-              onClick={() => setShowsEvidence((value) => !value)}
-              aria-expanded={showsEvidence}
-              className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl border border-[#E5E8EB] bg-white text-[14.5px] font-semibold text-[#191F28]"
-            >
-              <LinkIcon className="h-4.5 w-4.5 text-[#4E5968]" />
-              링크 추가
-            </button>
-            {showsEvidence ? (
-              <div className="mt-2.5">
-                <input
-                  value={evidenceUrl}
-                  inputMode="url"
-                  placeholder="https://"
-                  onChange={(event) => setEvidenceUrl(event.target.value)}
-                  className={INPUT}
-                />
-                <p className={`mt-1.5 text-[12.5px] ${MUTED}`}>
-                  게시물 주소나 대화 캡처를 올려둔 주소를 입력해 주세요.
-                </p>
-              </div>
-            ) : null}
-          </div>
+          <EvidenceField
+            evidenceUrl={evidenceUrl}
+            onEvidenceUrlChange={setEvidenceUrl}
+            attachments={evidence.attachments}
+            isUploading={evidence.isUploading}
+            uploadError={evidence.errorMessage}
+            onAttach={(file) => void evidence.attach(file)}
+            onRemove={evidence.remove}
+          />
         </div>
       </StepCard>
 

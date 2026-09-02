@@ -221,12 +221,24 @@ export interface AdminReportActionView {
   adminName: string;
 }
 
+/**
+ * 신고 증빙 이미지 한 장.
+ * 보관함이 비공개라 저장 경로만으로는 열 수 없고, 서버가 만든 한시적 열람 주소로만 볼 수 있다.
+ */
+export interface AdminReportEvidenceView {
+  path: string;
+  /** 한시적 열람 주소 (1시간) */
+  url: string;
+}
+
 export interface AdminReportView {
   id: string;
   targetType: string;
   reason: string;
   detail: string;
   evidenceUrl: string | null;
+  /** 신고자가 첨부한 증빙 이미지 (없으면 빈 배열) */
+  evidenceFiles: AdminReportEvidenceView[];
   source: string;
   createdAt: string;
   deadlineAt: string;

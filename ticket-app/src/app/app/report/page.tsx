@@ -32,6 +32,7 @@ export default function ReportPage() {
       reason: input.reason,
       detail: input.detail,
       evidenceUrl: input.evidenceUrl === '' ? undefined : input.evidenceUrl,
+      evidenceFiles: input.evidenceFiles,
     });
     setSubmitting(false);
 

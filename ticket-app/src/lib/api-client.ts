@@ -24,6 +24,17 @@ export type ApiResult<T> =
 const NETWORK_FAILURE = '네트워크 상태를 확인한 뒤 다시 시도해 주세요.';
 const NETWORK_STATUS = 0;
 const REQUEST_TIMEOUT_MS = 10000;
+/** 파일 첨부는 전송 시간이 필요해 조회보다 넉넉하게 기다린다. */
+const UPLOAD_TIMEOUT_MS = 60000;
+
+/**
+ * 본문 형식에 맞는 헤더를 고른다.
+ * 파일 첨부(FormData)는 브라우저가 경계 문자열이 포함된 형식 헤더를 직접 붙여야 하므로 건드리지 않는다.
+ */
+function requestHeaders(init?: RequestInit): HeadersInit | undefined {
+  if (!init?.body || init.body instanceof FormData) return init?.headers;
+  return { 'Content-Type': 'application/json', ...init.headers };
+}
 
 async function request<T>(path: string, init?: RequestInit): Promise<ApiResult<T>> {
   try {
@@ -31,7 +42,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<ApiResult<T
       cache: 'no-store',
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       ...init,
-      headers: init?.body ? { 'Content-Type': 'application/json', ...init.headers } : init?.headers,
+      headers: requestHeaders(init),
     });
 
     const body = (await response.json().catch(() => null)) as Record<string, unknown> | null;
@@ -72,6 +83,8 @@ export interface ReportInput {
   reason: string;
   detail: string;
   evidenceUrl?: string;
+  /** 먼저 첨부해 둔 증빙 이미지의 보관함 경로 목록 */
+  evidenceFiles?: string[];
 }
 
 /**
@@ -107,4 +120,15 @@ export const api = {
   submitHoldInfo: (orderId: string, input: HoldInfoInput) =>
     post<HoldInfoResult>(`/api/orders/${orderId}/hold-info`, input),
   submitReport: (input: ReportInput) => post<{ reportId: string }>('/api/reports', input),
+
+  /** 신고 증빙 이미지 첨부 — 저장에 성공하면 접수 때 함께 보낼 보관함 경로를 돌려준다. */
+  uploadReportEvidence: (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return request<{ path: string }>('/api/reports/evidence', {
+      method: 'POST',
+      body: form,
+      signal: AbortSignal.timeout(UPLOAD_TIMEOUT_MS),
+    });
+  },
 };

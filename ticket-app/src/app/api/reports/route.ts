@@ -10,9 +10,11 @@ import {
   type RpcResult,
 } from '@/lib/server/api';
 import { admin } from '@/lib/server/db-admin';
+import { EVIDENCE_MAX_COUNT } from '@/lib/server/report-evidence';
 
 const MAX_DETAIL_LENGTH = 1000;
 const MAX_URL_LENGTH = 500;
+const MAX_EVIDENCE_PATH_LENGTH = 100;
 
 const APP_REPORT_SOURCE = '앱 신고';
 
@@ -22,6 +24,8 @@ const schema = z.object({
   // 상세 내용은 선택 — 대상·사유 두 선택만으로 접수할 수 있게 한다.
   detail: z.string().trim().max(MAX_DETAIL_LENGTH),
   evidenceUrl: z.union([z.literal(''), z.string().url().max(MAX_URL_LENGTH)]).optional(),
+  // 먼저 업로드해 둔 증빙 이미지의 보관함 경로 — 경로 형식은 서버 함수가 다시 확인한다.
+  evidenceFiles: z.array(z.string().max(MAX_EVIDENCE_PATH_LENGTH)).max(EVIDENCE_MAX_COUNT).optional(),
 });
 
 /** 부정 거래 신고 접수 — 접수 시각 기준 10시간 처리 기한이 서버에서 부여된다. */
@@ -42,6 +46,7 @@ export async function POST(req: Request) {
     p_evidence_url: parsed.data.evidenceUrl ?? '',
     p_source: APP_REPORT_SOURCE,
     p_member_id: member.id,
+    p_evidence_files: parsed.data.evidenceFiles ?? [],
   });
 
   const result = data as RpcResult | null;

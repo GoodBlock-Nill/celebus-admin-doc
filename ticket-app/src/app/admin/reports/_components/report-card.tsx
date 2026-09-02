@@ -4,7 +4,7 @@ import { Button } from '../../_components/form';
 import { REPORT_STATUS_VIEW } from '../../_components/labels';
 import { SlaCountdown } from '../../_components/sla-countdown';
 import { Badge, StatusBadge } from '../../_components/ui';
-import type { AdminReportView, ReportActionType } from '@/lib/admin-types';
+import type { AdminReportEvidenceView, AdminReportView, ReportActionType } from '@/lib/admin-types';
 import { MS_PER_HOUR } from '@/lib/constants';
 import { formatDateTime } from '@/lib/format';
 
@@ -12,6 +12,35 @@ import { formatDateTime } from '@/lib/format';
 const REPORT_WARNING_MS = 3 * MS_PER_HOUR;
 
 const ACTIONS: ReportActionType[] = ['노출 차단', '수사기관 제출', '계정 제재', '티켓 무효화', '종결'];
+
+/**
+ * 신고자가 첨부한 증빙 이미지.
+ * 보관함이 비공개라 원본 저장 경로로는 열 수 없고, 서버가 만든 1시간짜리 열람 주소로만 볼 수 있다.
+ */
+function EvidenceThumbnails({ files }: { files: AdminReportEvidenceView[] }) {
+  if (files.length === 0) return null;
+
+  return (
+    <div className="mt-2.5">
+      <p className="text-[12px] font-semibold text-[#4A4E5A]">증빙 이미지 {files.length}장</p>
+      <ul className="mt-1.5 flex flex-wrap gap-2">
+        {files.map((file) => (
+          <li key={file.path}>
+            <a href={file.url} target="_blank" rel="noreferrer" title="증빙 보기">
+              <img
+                src={file.url}
+                alt="신고 증빙 이미지"
+                className="h-20 w-20 rounded-lg border border-[#E3E5EA] object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export function ReportCard({
   report,
@@ -39,6 +68,7 @@ export function ReportCard({
             <span className="tabular-nums">접수 {formatDateTime(report.createdAt)}</span>
             {report.evidenceUrl ? <span className="break-all">증빙 {report.evidenceUrl}</span> : null}
           </div>
+          <EvidenceThumbnails files={report.evidenceFiles} />
         </div>
         <SlaCountdown deadlineAt={report.deadlineAt} now={now} warningMs={REPORT_WARNING_MS} />
       </div>

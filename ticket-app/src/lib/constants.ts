@@ -3,6 +3,9 @@
 /** CELEBUS 본앱 주소 — 로그인 이동·앱으로 돌아가기 공용 */
 export const CELEBUS_APP_URL = process.env.NEXT_PUBLIC_CELEBUS_APP_URL ?? 'https://app.celebus.xyz';
 
+/** 고객센터 이메일 — 유선 전화 없이 이메일로 문의를 받는다 */
+export const CS_EMAIL = 'cs@celebus.xyz';
+
 /** 밀리초 단위 시간 상수 */
 export const MS_PER_SECOND = 1000;
 export const MS_PER_MINUTE = 60 * MS_PER_SECOND;

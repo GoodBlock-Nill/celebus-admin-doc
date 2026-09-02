@@ -3,7 +3,8 @@ import { z } from 'zod';
 import { callAdminRpc, isGuardFailure, requireAdmin } from '@/lib/server/admin-api';
 import { HTTP_STATUS, fail, guardMutation, ok, readFailure } from '@/lib/server/api';
 import { admin } from '@/lib/server/db-admin';
-import type { AdminReportView, ReportStatus } from '@/lib/admin-types';
+import { signEvidencePaths } from '@/lib/server/report-evidence';
+import type { AdminReportEvidenceView, AdminReportView, ReportStatus } from '@/lib/admin-types';
 
 const MAX_REASON_LENGTH = 50;
 const MAX_DETAIL_LENGTH = 500;
@@ -32,6 +33,7 @@ interface ReportRow {
   reason: string;
   detail: string;
   evidence_url: string | null;
+  evidence_files: string[] | null;
   source: string;
   created_at: string;
   deadline_at: string;
@@ -53,7 +55,9 @@ export async function GET(req: Request) {
   const client = admin();
   const reports = await client
     .from('ticket_reports')
-    .select('id, target_type, reason, detail, evidence_url, source, created_at, deadline_at, status')
+    .select(
+      'id, target_type, reason, detail, evidence_url, evidence_files, source, created_at, deadline_at, status',
+    )
     .order('deadline_at', { ascending: true })
     .returns<ReportRow[]>();
 
@@ -73,12 +77,21 @@ export async function GET(req: Request) {
           .order('acted_at', { ascending: true })
           .returns<ReportActionRow[]>();
 
+  // 증빙 이미지는 비공개 보관함에 있어 한시적 열람 주소를 만들어야 화면에서 볼 수 있다.
+  const signed = await signEvidencePaths(rows.flatMap((row) => row.evidence_files ?? []));
+
+  const toEvidence = (paths: string[] | null): AdminReportEvidenceView[] =>
+    (paths ?? [])
+      .map((path) => ({ path, url: signed.get(path) ?? '' }))
+      .filter((item) => item.url !== '');
+
   const items: AdminReportView[] = rows.map((row) => ({
     id: row.id,
     targetType: row.target_type,
     reason: row.reason,
     detail: row.detail,
     evidenceUrl: row.evidence_url,
+    evidenceFiles: toEvidence(row.evidence_files),
     source: row.source,
     createdAt: row.created_at,
     deadlineAt: row.deadline_at,

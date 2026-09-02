@@ -8,10 +8,8 @@ import { InfoRow } from '../_components/section';
 import { CARD } from '../_components/ui';
 import { OrderTimeline } from './order-timeline';
 import type { OrderDetailView } from '@/lib/api-types';
+import { CS_EMAIL } from '@/lib/constants';
 import { formatDateTime } from '@/lib/format';
-
-// 사업자 정보 확정 전 자리표시 — 실값 수급 시 푸터와 함께 일괄 교체
-const CS_TEL = '{0000-0000}';
 
 /**
  * 만료된 예매 아카이브 카드 — 실패 프로세스를 앞세우지 않고
@@ -63,7 +61,7 @@ export function ExpiredActions({ order }: { order: OrderDetailView }) {
         다시 예매하기
       </Link>
       <a
-        href={`tel:${CS_TEL}`}
+        href={`mailto:${CS_EMAIL}`}
         className="flex min-h-[52px] flex-1 items-center justify-center rounded-xl bg-[#D6336C] px-3 text-[15px] font-bold text-white"
       >
         고객센터 문의

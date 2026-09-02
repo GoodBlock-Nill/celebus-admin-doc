@@ -5,9 +5,7 @@ import { HoldDepositorBlock } from './hold-depositor-block';
 import { holdMismatchOf, mismatchRows } from './hold-reason';
 import { HoldRefundBlock, HoldResendFold } from './hold-refund-block';
 import type { OrderDetailView } from '@/lib/api-types';
-
-// 사업자 정보 확정 전 자리표시 — 실값 수급 시 푸터와 함께 일괄 교체
-const CS_TEL = '{0000-0000}';
+import { CS_EMAIL } from '@/lib/constants';
 
 const HOLD_STEPS = ['입금 확인 요청', '수동 대조', '확인 완료'] as const;
 
@@ -128,7 +126,7 @@ export function HoldFlowCard({ order, onDone }: { order: OrderDetailView; onDone
         </div>
 
         <a
-          href={`tel:${CS_TEL}`}
+          href={`mailto:${CS_EMAIL}`}
           className="flex min-h-[48px] items-center justify-center rounded-xl border border-[#E5E8EB] bg-white px-4 text-[15px] font-semibold text-[#191F28]"
         >
           고객센터 문의
