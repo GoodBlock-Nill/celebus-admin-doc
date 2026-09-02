@@ -19,6 +19,7 @@ import { DANGER_BUTTON, GHOST_BUTTON, MUTED, PRIMARY_BUTTON } from '../../_compo
 import { useApiResource } from '../../_components/use-api-resource';
 import { CancelModals, type CancelModalKind } from '../cancel-modals';
 import { DdayScheduleCard } from '../dday-schedule-card';
+import { ExpiredActions, ExpiredArchiveCard } from '../expired-archive';
 import { EntryGuideCard, PaidHero } from '../paid-hero';
 import { DepositReportActions } from '../deposit-report-actions';
 import { HoldFlowCard } from '../hold-view';
@@ -83,6 +84,8 @@ export default function OrderDetailPage() {
   const isCancelRequested = order.status === 'CANCEL_REQUESTED';
   // 환불 완료는 영수증이 화면을 완결한다 — 정보 카드는 접고 진행 상태·안내는 생략.
   const isRefunded = order.status === 'REFUNDED';
+  // 만료는 아카이브 카드가 요약을 담당하고, 진행 내역은 접힘·다음 행동(재예매)을 앞세운다.
+  const isExpired = order.status === 'EXPIRED';
   // 돈을 돌려줘야 하는 예매에는 상태와 무관하게 환불 계좌 등록 구획을 연다.
   //   · 보류 반려로 되돌아온 입금 대기  · 반환 대상 입금이 남은 예매
   const showsRefundAccount =
@@ -111,6 +114,7 @@ export default function OrderDetailPage() {
   return (
     <main>
       <AppHeader
+        eyebrow={isExpired ? '지난 예매' : undefined}
         title="예매 상세"
         backHref="/app/orders"
         right={<Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>}
@@ -136,7 +140,14 @@ export default function OrderDetailPage() {
           </>
         ) : null}
 
-        {isReported || isRefunded ? null : (
+        {isExpired ? (
+          <>
+            <ExpiredArchiveCard order={order} />
+            <ExpiredActions order={order} />
+          </>
+        ) : null}
+
+        {isReported || isRefunded || isExpired ? null : (
           <>
             <OrderInfoCard order={order} />
             <SectionCard title="진행 상태">
@@ -158,7 +169,9 @@ export default function OrderDetailPage() {
           </>
         ) : null}
 
-        {showsDepositGuide || isRefunded ? null : <OrderStatusNotice order={order} />}
+        {showsDepositGuide || isRefunded || (isExpired && !order.hasRefundTargetDeposit) ? null : (
+          <OrderStatusNotice order={order} />
+        )}
 
         {showsDepositGuide ? null : refundAccountSection}
 
@@ -208,7 +221,7 @@ export default function OrderDetailPage() {
           <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
             티켓이 지급된 예매는 취소·환불이 불가능합니다.
           </p>
-        ) : isReported || isRefunded ? null : (
+        ) : isReported || isRefunded || isExpired ? null : (
           <p className={`px-1 text-[12.5px] leading-relaxed ${MUTED}`}>
             환불 수수료는 관람일 기준으로 단계별 적용됩니다. 자세한 내용은 공연 상세의 환불 정책을 확인해
             주세요.

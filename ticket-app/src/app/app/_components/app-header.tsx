@@ -5,6 +5,8 @@ import { MUTED, PAGE_TITLE } from './ui';
 import { Wordmark } from './wordmark';
 
 interface AppHeaderProps {
+  /** 제목 위에 붙는 작은 분류 칩 (예: "지난 예매") */
+  eyebrow?: string;
   /** 화면 제목 — 상단 바 아래에 본문 제목으로 노출한다. */
   title: string;
   /** 제목 아래 보조 설명 */
@@ -21,7 +23,7 @@ interface AppHeaderProps {
  * 회원 앱 공통 상단 헤더.
  * 모든 화면이 같은 구조(워드마크 바 + 화면 제목)를 쓰도록 한 곳에서 관리한다.
  */
-export function AppHeader({ title, description, backHref, right, children }: AppHeaderProps) {
+export function AppHeader({ eyebrow, title, description, backHref, right, children }: AppHeaderProps) {
   return (
     <>
       <div className="sticky top-0 z-30 flex h-14 items-center gap-1 border-b border-[#E5E8EB] bg-white px-1.5">
@@ -43,6 +45,11 @@ export function AppHeader({ title, description, backHref, right, children }: App
       </div>
 
       <header className="px-4 pb-3 pt-5">
+        {eyebrow ? (
+          <span className="mb-2 inline-flex rounded-full border border-[#E5E8EB] bg-white px-3 py-1 text-[12.5px] font-semibold text-[#6B7684]">
+            {eyebrow}
+          </span>
+        ) : null}
         <h1 className={PAGE_TITLE}>{title}</h1>
         {description ? (
           <p className={`mt-1 text-[13px] leading-relaxed ${MUTED}`}>{description}</p>
