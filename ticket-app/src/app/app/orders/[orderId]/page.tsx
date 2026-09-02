@@ -26,6 +26,7 @@ import { OrderInfoCard } from '../order-info-card';
 import { OrderStatusNotice } from '../order-status-notice';
 import { PinnedActionBar } from '../pinned-action-bar';
 import { RefundAccountSection } from '../refund-account-section';
+import { RefundSummaryCard } from '../refund-summary-card';
 import { ReportedView } from '../reported-view';
 import { OrderTimeline } from '../order-timeline';
 import { api } from '@/lib/api-client';
@@ -77,15 +78,19 @@ export default function OrderDetailPage() {
   const hasRefundAccount = Boolean(
     order.refundBank && order.refundAccountMasked && order.refundHolder,
   );
+  // 취소 요청은 환불 요약(수수료·예상 환불액·입금처)이 계좌 구획까지 담당한다.
+  const isCancelRequested = order.status === 'CANCEL_REQUESTED';
   // 돈을 돌려줘야 하는 예매에는 상태와 무관하게 환불 계좌 등록 구획을 연다.
-  //   · 취소·환불 요청 접수  · 보류 반려로 되돌아온 입금 대기  · 반환 대상 입금이 남은 예매
+  //   · 보류 반려로 되돌아온 입금 대기  · 반환 대상 입금이 남은 예매
   const showsRefundAccount =
     !isHold &&
-    (order.status === 'CANCEL_REQUESTED' ||
-      (order.status === 'AWAITING_DEPOSIT' && Boolean(order.holdRejectedAt)) ||
+    !isCancelRequested &&
+    ((order.status === 'AWAITING_DEPOSIT' && Boolean(order.holdRejectedAt)) ||
       order.hasRefundTargetDeposit);
 
-  const refundAccountSection = showsRefundAccount ? (
+  const refundAccountSection = isCancelRequested ? (
+    <RefundSummaryCard order={order} onDone={() => void reload()} />
+  ) : showsRefundAccount ? (
     <RefundAccountSection order={order} onDone={() => void reload()} />
   ) : null;
 

@@ -20,6 +20,13 @@ interface RefundTargetRow {
   id: string;
 }
 
+interface RawFeeQuote {
+  rate_percent: number;
+  fee_krw: number;
+  refund_krw: number;
+  basis: string;
+}
+
 /**
  * 예매 상세 — 본인 예매만 조회된다(신원은 서명 쿠키에서만 읽는다).
  * 입금 안내에 필요한 수납 계좌·입금자명 규칙을 함께 내려준다.
@@ -69,6 +76,21 @@ export async function GET(req: Request, context: { params: Promise<{ orderId: st
       .maybeSingle<RefundTargetRow>(),
   ]);
 
+  // 취소 요청 상태에서는 환불 요약(수수료·예상 환불액)을 화면이 먼저 답할 수 있게 견적을 동봉한다.
+  let refundQuote: OrderDetailView['refundQuote'] = null;
+  if (row.status === 'CANCEL_REQUESTED') {
+    const quotes = await client.rpc('ticket_refund_fee_quotes', { p_order_ids: [row.id] });
+    const raw = (quotes.data as Record<string, RawFeeQuote> | null)?.[row.id];
+    if (raw) {
+      refundQuote = {
+        ratePercent: raw.rate_percent,
+        feeKrw: raw.fee_krw,
+        refundKrw: raw.refund_krw,
+        basis: raw.basis,
+      };
+    }
+  }
+
   const concert = concerts.get(row.concert_id);
   const detail: OrderDetailView = {
     ...toOrderSummary(row, concert, sessions.get(row.session_id)),
@@ -89,6 +111,7 @@ export async function GET(req: Request, context: { params: Promise<{ orderId: st
     cancelRequestedAt: row.cancel_requested_at,
     refundedAt: row.refunded_at,
     ticketIssuedAt: issued.data?.issued_at ?? null,
+    refundQuote,
     bank: {
       name: settings.data?.bank_name ?? '',
       account: settings.data?.bank_account ?? '',

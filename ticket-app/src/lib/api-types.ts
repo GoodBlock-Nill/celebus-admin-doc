@@ -180,6 +180,13 @@ export interface OrderDetailView extends OrderSummaryView {
   refundedAt: string | null;
   /** 이 주문으로 지급된 티켓의 최초 발급 시각 (미지급이면 null) */
   ticketIssuedAt: string | null;
+  /** 취소 요청 상태의 환불 견적 — 수수료·예상 환불액·적용 기준 (그 외 상태는 null) */
+  refundQuote: {
+    ratePercent: number;
+    feeKrw: number;
+    refundKrw: number;
+    basis: string;
+  } | null;
   bank: BankAccountView;
 }
 
